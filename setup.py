@@ -7,21 +7,21 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 setup(
-    name='observation-execution-tool',
+    name='cdm-shared-library',
     version='0.1.0',
     description="",
     long_description=readme + '\n\n',
     author="Your Name",
-    author_email='stewart.williams@stfc.ac.uk',
-    url='https://github.com/ska-telescope/observation-execution-tool',
+    author_email='helder.ribeiro@fc.up.pt',
+    url='https://github.com/ska-telescope/cdm-shared-library',
     packages=[
-        'oet',
+        'cdm-lib',
     ],
-    package_dir={'observation-execution-tool': 'oet'},
+    package_dir={'cdm-shared-library': 'cdm-lib'},
     include_package_data=True,
     license="BSD license",
     zip_safe=False,
-    keywords='ska_observation_execution_tool',
+    keywords='ska_cdm_shared_library',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

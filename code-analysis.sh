@@ -5,7 +5,7 @@ echo
 
 echo "MODULE ANALYSIS"
 echo "---------------"
-pylint oet
+pylint cdm-lib
 
 echo "TESTS ANALYSIS"
 echo "--------------"

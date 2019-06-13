@@ -1,7 +1,7 @@
 """
 Unit tests for echo module.
 """
-from oet import echo
+from cdm-lib import echo
 
 
 def test_echo():
