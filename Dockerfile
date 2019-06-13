@@ -1,9 +1,7 @@
 FROM nexus.engageska-portugal.pt/ska-docker/ska-python-buildenv:latest AS buildenv
 FROM nexus.engageska-portugal.pt/ska-docker/ska-python-runtime:latest AS runtime
 
-# copy the SKA profile that will handle initialising the OET domain objects and any other
-# aspects of the configuration
-RUN mkdir -p ~/.ipython/profile_ska
-RUN cp -r /app/profile_ska ~/.ipython/
+# create ipython profile to so that itango doesn't fail if ipython hasn't run yet
+RUN ipython profile create
 
-CMD ["/venv/bin/itango3","--profile=ska"]
+CMD ["/venv/bin/python", "/app/oet/oet.py"]
