@@ -15,9 +15,9 @@ setup(
     author_email='helder.ribeiro@fc.up.pt',
     url='https://github.com/ska-telescope/cdm-shared-library',
     packages=[
-        'cdm-lib',
+        'cdm_lib',
     ],
-    package_dir={'cdm-shared-library': 'cdm-lib'},
+    package_dir={'cdm-shared-library': 'cdm_lib'},
     include_package_data=True,
     license="BSD license",
     zip_safe=False,
