@@ -69,6 +69,9 @@ build_wheel for publication: # Executed on a tag:
   script:
     - pip install setuptools
     - python setup.py egg_info -b+dev.$CI_COMMIT_SHORT_SHA sdist bdist_wheel # --universal option to used for pure python packages
+  artifacts:
+    paths:
+      - ./dist/
 
 publish to nexus:
   stage: publish
