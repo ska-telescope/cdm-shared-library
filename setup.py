@@ -9,9 +9,9 @@ with open('README.md') as readme_file:
 setup(
     name='cdm-shared-library',
     version='0.1.0',
-    description="",
+    description="Configuration data model library",
     long_description=readme + '\n\n',
-    author="Your Name",
+    author="Hélder Ribeiro",
     author_email='helder.ribeiro@fc.up.pt',
     url='https://github.com/ska-telescope/cdm-shared-library',
     packages=[
