@@ -33,13 +33,16 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
-    install_requires=['pytango'],  # FIXME: add your package's dependencies to this list
+    install_requires=['pytango',
+        'marshmallow',
+        'typing',
+    ], 
     setup_requires=[
         # dependency for `python setup.py test`
         'pytest-runner',
         # dependencies for `python setup.py build_sphinx`
         'sphinx',
-        'recommonmark'
+        'recommonmark',
     ],
     tests_require=[
         'pytest',
