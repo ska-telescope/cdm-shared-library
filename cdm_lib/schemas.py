@@ -63,7 +63,7 @@ class SubArraySchema(Schema):
 
 
     @post_load
-    def create_subarray(self, data, **kwargs):
+    def create_subarray(self, data, **kwargs): # pylint: disable=no-self-use
         """ this method hdles  any operations needed after the JSON is loaded """
         return SubArray(**data)
 
