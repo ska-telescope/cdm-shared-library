@@ -62,18 +62,20 @@ pages:
       - public
     expire_in: 30 days
 
-build_wheel for publication: # Executed on a tag:
+build_wheel_for_publication: # Executed on a tag:
   stage: build
   tags:
     - docker-executor
   script:
-    - pip install setuptools
-    - python setup.py egg_info -b+dev.$CI_COMMIT_SHORT_SHA sdist bdist_wheel # --universal option to used for pure python packages
+    - apt-get update
+    - apt-get install -y python3-pip
+    - pip3 install setuptools
+    - python3 setup.py egg_info -b+dev.$CI_COMMIT_SHORT_SHA sdist bdist_wheel # --universal option to used for pure python packages
   artifacts:
     paths:
       - ./dist/
 
-publish to nexus:
+publish_to_nexus:
   stage: publish
   tags:
     - docker-executor
