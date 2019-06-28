@@ -6,6 +6,7 @@ from typing import Optional, List
 from ast import literal_eval
 from marshmallow import Schema, fields, post_load
 
+
 class Dish:
     """ Represents an SKA Dish allocation - it contains the list of receptor IDs to be used"""
 
@@ -73,7 +74,7 @@ def cdm_to_json(schema, obj):
     #We could use schema.dump
     # if we only needed it as a dictionary representation
     result = schema.dumps(obj)
-    return result
+    return result.data
 
 
 def cdm_to_obj(schema, json_str):
@@ -82,4 +83,4 @@ def cdm_to_obj(schema, json_str):
     # dictionary representation
     json_dict = literal_eval(json_str)
     result = schema.load(json_dict)
-    return result
+    return result.data
