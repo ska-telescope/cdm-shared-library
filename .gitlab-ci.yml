@@ -84,8 +84,11 @@ publish_to_nexus:
     TWINE_PASSWORD: $TWINE_PASSWORD
   script:
     # check metadata requirements
+    - apt-get update
+    - apt-get install -y python3-pip
+    - pip3 install setuptools
     - scripts/validate-metadata.sh
-    - pip install twine
+    - pip3 install twine
     - twine upload --repository-url $PYPI_REPOSITORY_URL dist/*
   only:
     variables:
