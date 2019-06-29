@@ -7,16 +7,11 @@ name = "pypi"
 # numpy and pytango versions must match those in the ska-python-builder image,
 # otherwise pytango will be recompiled.
 numpy = "==1.15.4"
-pytango = "==9.2.5"
-# itango is added to make it easier to exercise the device in a CLI session,
-# but it's not mandatory. If you remove itango, you should also remove the
-# 'RUN ipython profile create' line from Dockerfile.
-itango = "*"
 # If you want to debug devices running in containers, add pydevd to the dependencies
-# pydevd = "*"
+#pydevd = "*"
 
-#Used for message marshalling / unmarshaling
-marshmallow = "==2.19.5"
+marshmallow = ">=3.0.0rc7"
+astropy = "*"
 
 
 [dev-packages]
@@ -39,3 +34,6 @@ sphinxcontrib-websupport = "*"
 
 [requires]
 python_version = "3"
+
+[pipenv]
+allow_prereleases = true
