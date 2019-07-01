@@ -180,6 +180,17 @@ class MarshmallowCodec:
             DishAllocation: DishAllocationSchema
         }
 
+    def load_from_file(self, cls, path):
+        """
+        Load an instance of a CDM class from disk.
+
+        :param cls: the class to create from the file
+        :param path: the path to the file
+        :return: an instance of cls
+        """
+        with open(path, 'r') as json_data:
+            return self.loads(cls, json_data)
+
     def loads(self, cls, json_data):
         """
         Create an instance of a CDM class from a JSON string.
