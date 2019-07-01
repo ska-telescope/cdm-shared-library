@@ -15,9 +15,9 @@ setup(
     author_email='helder.ribeiro@fc.up.pt',
     url='https://github.com/ska-telescope/cdm-shared-library',
     packages=[
-        'cdm_lib',
+        'ska',
     ],
-    package_dir={'cdm-shared-library': 'cdm_lib'},
+    package_dir={'cdm-shared-library': 'ska'},
     include_package_data=True,
     license="BSD license",
     zip_safe=False,
@@ -28,15 +28,15 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
     ],
     test_suite='tests',
-    install_requires=['pytango',
+    install_requires=[
+        'astropy',
         'marshmallow',
-        'typing',
-    ], 
+    ],
     setup_requires=[
         # dependency for `python setup.py test`
         'pytest-runner',
@@ -45,7 +45,6 @@ setup(
         'recommonmark',
     ],
     tests_require=[
-        'marshmallow',
         'pytest',
         'pytest-cov',
         'pytest-json-report',

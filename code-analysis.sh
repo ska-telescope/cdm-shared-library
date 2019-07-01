@@ -5,7 +5,7 @@ echo
 
 echo "MODULE ANALYSIS"
 echo "---------------"
-pylint cdm_lib
+pylint ska
 
 echo "TESTS ANALYSIS"
 echo "--------------"
