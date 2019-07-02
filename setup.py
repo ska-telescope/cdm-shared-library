@@ -8,7 +8,7 @@ with open('README.md') as readme_file:
 
 setup(
     name='cdm-shared-library',
-    version="0.1.8",
+    version="0.1.9",
     description="Configuration data model library",
     long_description=readme + '\n\n',
     author="Hélder Ribeiro",
