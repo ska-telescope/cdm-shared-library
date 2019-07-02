@@ -33,7 +33,7 @@ setup(
     test_suite='tests',
     install_requires=[
         'astropy',
-        'marshmallow',
+        'marshmallow>=3.0.0rc7',
     ],
     setup_requires=[
         # dependency for `python setup.py test`
