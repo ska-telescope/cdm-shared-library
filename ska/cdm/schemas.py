@@ -188,7 +188,8 @@ class MarshmallowCodec:
         :param path: the path to the file
         :return: an instance of cls
         """
-        with open(path, 'r') as json_data:
+        with open(path, 'r') as json_file:
+            json_data = json_file.read()
             return self.loads(cls, json_data)
 
     def loads(self, cls, json_data):
