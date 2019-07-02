@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open('README.md') as readme_file:
     readme = readme_file.read()
@@ -14,9 +14,7 @@ setup(
     author="Hélder Ribeiro",
     author_email='helder.ribeiro@fc.up.pt',
     url='https://github.com/ska-telescope/cdm-shared-library',
-    packages=[
-        'ska',
-    ],
+    packages=find_packages(exclude='tests'),
     package_dir={'cdm-shared-library': 'ska'},
     include_package_data=True,
     license="BSD license",
