@@ -21,6 +21,5 @@ with open('SubArrayNodeConfig.csv', 'rt') as csvfile:
         delay = float(row[1])
 
         assign_resources_request = CODEC.load_from_file(AssignResourcesRequest, filepath)
-        pprint(vars(assign_resources_request))
-        pprint("Sleeping for {0} secs".format(delay))
-        time.sleep(delay)
+        tuplevalue = (vars(assign_resources_request), delay)
+        pprint(tuplevalue)
