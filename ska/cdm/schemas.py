@@ -2,10 +2,12 @@
 The schemas module defines Marshmallow schemas that map CDM message classes
 and data model classes to/from a JSON representation.
 """
-from marshmallow import Schema, fields, post_load, post_dump
+from marshmallow import Schema, fields, post_load, post_dump, pre_dump
+from astropy.coordinates import SkyCoord
 
 from .messages.central_node import AssignResourcesRequest, AssignResourcesResponse, \
     DishAllocation, ReleaseResourcesRequest
+from .messages.subarray_node import ConfigureRequest, DishConfiguration, PointingConfiguration
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
            'ReleaseResourcesRequestSchema', 'MarshmallowCodec']
@@ -164,6 +166,56 @@ class ReleaseResourcesRequestSchema(Schema):
         return ReleaseResourcesRequest(subarray_id, release_all=release_all,
                                        dish_allocation=dish_allocation)
 
+class SkyCoordSchema(Schema):
+    ra = fields.Float(attribute='ra.rad')
+    dec = fields.Float(attribute='dec.rad')
+    frame = fields.String(attribute='frame.name')
+    name = fields.String(attribute='info.name')
+
+    @pre_dump
+    def convert_to_icrs(self, data, **_):
+        converted = data.transform_to('icrs')
+        converted.info.name = data.info.name
+        return converted
+
+    @post_load
+    def create_skycoord(self, data):
+        ra = data['ra']
+        dec = data['dec']
+        frame = data['frame']
+        name = data['name']
+        sky_coord = SkyCoord(ra=ra, dec=dec, frame=frame)
+        sky_coord.info.name = name
+        return sky_coord
+
+
+class PointingSchema(Schema):
+    target = fields.Nested(SkyCoordSchema)
+
+    @post_load
+    def create(self, data, **_):
+        target = data['target']
+        return PointingConfiguration(target)
+
+
+class DishConfigurationSchema(Schema):
+    receiver_band = fields.String(data_key='receiverBand', required=True)
+
+    @post_load
+    def create_dish_configuration(self, data, **_):
+        receiver_band = data['receiver_band']
+        return DishConfiguration(receiver_band)
+
+
+class ConfigureRequestSchema(Schema):
+    pointing = fields.Nested(PointingSchema)
+    dish = fields.Nested(DishConfigurationSchema)
+
+    @post_load
+    def create_configuration(self, data, **_):
+        pointing = data['pointing']
+        dish_configuration = data['dish']
+        return ConfigureRequest(pointing, dish_configuration)
 
 class MarshmallowCodec:
     """
