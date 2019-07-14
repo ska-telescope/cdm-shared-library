@@ -4,8 +4,16 @@ request and response for the TMC SubArrayNode.Configure command.
 """
 from typing import Optional, List
 from astropy.coordinates import SkyCoord
+from astropy.table import Column
 
 __all__ = ['ConfigureRequest', 'DishConfiguration', 'PointingConfiguration', 'SubarrayConfiguration']
+
+
+class Target:
+    def __init__(self, ra, dec, frame="icrs", name, unit="rad" ):
+        self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=frame )
+        c = Column(name=name)
+        self.coord.info = c.info
 
 
 class PointingConfiguration:
