@@ -5,14 +5,18 @@ import json
 
 from ska.cdm.messages.central_node import AssignResourcesRequest, AssignResourcesResponse, \
     DishAllocation, ReleaseResourcesRequest
+from ska.cdm.messages.subarray_node import PointingConfiguration, DishConfiguration,ConfigureRequest
 from ska.cdm.schemas import AssignResourcesRequestSchema, AssignResourcesResponseSchema, \
-    ReleaseResourcesRequestSchema, MarshmallowCodec
+    ReleaseResourcesRequestSchema, ConfigureRequestSchema, MarshmallowCodec
+from astropy.coordinates import SkyCoord
 
 VALID_ASSIGN_RESOURCES_REQUEST = '{"subarrayID": 1, "dish": {"receptorIDList": ["0001", "0002"]}}'
 VALID_RELEASE_RESOURCES_REQUEST = '{"subarrayID": 1, "dish": {"receptorIDList": ["0001", "0002"]}}'
 VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": true}'
 VALID_ASSIGN_RESOURCES_RESPONSE = '{"dish": {"receptorIDList_success": ["0001", "0002"]}}'
 
+VALID_CONFIGURE_RESOURCES_REQUEST ='{"dish": {"receiverBand": "5a"}, "pointing": {"target": \
+{"dec": 0.05235987755982989, "ra": 0.017453292519943295, "frame": "icrs", "name": "NGC123"}}}'
 
 def json_is_equal(json_a, json_b):
     """
@@ -117,6 +121,20 @@ def test_unmarshall_release_resources_with_release_all_set():
     expected = ReleaseResourcesRequest(1, release_all=True)
     assert request == expected
 
+def test_marshall_configure_subarray_request():
+    """
+    Verify that ConfigureRequest is marshalled to JSON correctly.
+    """
+    sky_coord = SkyCoord(ra=1, dec=3, unit='deg')
+    sky_coord.info.name = 'NGC123'
+
+    pointing_config = PointingConfiguration(sky_coord)
+    dish_config = DishConfiguration('5a')
+
+    request = ConfigureRequest(pointing_config, dish_config)
+    request_json = ConfigureRequestSchema().dumps(request)
+
+    assert json_is_equal(request_json, VALID_CONFIGURE_RESOURCES_REQUEST)
 
 def test_codec_loads():
     """
