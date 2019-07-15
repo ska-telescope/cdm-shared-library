@@ -1,8 +1,6 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
-from ska.cdm.messages.subarray_node.configure_subarray import ConfigureRequest,\
-    DishConfiguration, PointingConfiguration
 
 
 # TODO
