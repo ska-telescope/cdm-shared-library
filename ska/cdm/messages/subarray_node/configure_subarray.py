@@ -10,7 +10,7 @@ __all__ = ['ConfigureRequest', 'DishConfiguration', 'PointingConfiguration', 'Su
 
 
 class Target:
-    def __init__(self, ra, dec, frame="icrs", name, unit="rad" ):
+    def __init__(self, ra, dec, name, frame="icrs", unit="rad" ):
         self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=frame )
         c = Column(name=name)
         self.coord.info = c.info
