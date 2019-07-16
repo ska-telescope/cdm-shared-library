@@ -5,15 +5,18 @@ import json
 
 from ska.cdm.messages.central_node import AssignResourcesRequest, AssignResourcesResponse, \
     DishAllocation, ReleaseResourcesRequest
-from ska.cdm.messages.subarray_node import PointingConfiguration, DishConfiguration,ConfigureRequest
+from ska.cdm.messages.subarray_node import PointingConfiguration, DishConfiguration,ConfigureRequest, ScanRequest
 from ska.cdm.schemas import AssignResourcesRequestSchema, AssignResourcesResponseSchema, \
-    ReleaseResourcesRequestSchema, ConfigureRequestSchema, MarshmallowCodec
+    ReleaseResourcesRequestSchema, ConfigureRequestSchema, MarshmallowCodec, ScanRequestSchema, ScanDurationSchema
 from astropy.coordinates import SkyCoord
+import datetime
+from datetime import timedelta
 
 VALID_ASSIGN_RESOURCES_REQUEST = '{"subarrayID": 1, "dish": {"receptorIDList": ["0001", "0002"]}}'
 VALID_RELEASE_RESOURCES_REQUEST = '{"subarrayID": 1, "dish": {"receptorIDList": ["0001", "0002"]}}'
 VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": true}'
 VALID_ASSIGN_RESOURCES_RESPONSE = '{"dish": {"receptorIDList_success": ["0001", "0002"]}}'
+VALID_ASSIGN_STARTSCAN_REQUEST = '{"scan_duration": 10.0}'
 
 VALID_CONFIGURE_RESOURCES_REQUEST ='{"dish": {"receiverBand": "5a"}, "pointing": {"target": \
 {"dec": 0.05235987755982989, "ra": 0.017453292519943295, "frame": "icrs", "name": "NGC123"}}}'
@@ -136,20 +139,44 @@ def test_marshall_configure_subarray_request():
 
     assert json_is_equal(request_json, VALID_CONFIGURE_RESOURCES_REQUEST)
 
-def test_codec_loads():
+def test_marshall_start_scan_request():
     """
-    Verify that the codec unmarshalls objects correctly.
+    Verify that StartScan is marshalled to JSON correctly.
     """
-    unmarshalled = MarshmallowCodec().loads(AssignResourcesRequest, VALID_ASSIGN_RESOURCES_REQUEST)
-    expected = AssignResourcesRequest(1, DishAllocation(receptor_ids=['0001', '0002']))
-    assert expected == unmarshalled
+
+    first_date = '2019-01-01 08:00:00.000000'
+    first_date_obj = datetime.datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S.%f')
+
+    second_date = '2019-01-01 08:00:10.000000'
+    second_date_obj = datetime.datetime.strptime(second_date, '%Y-%m-%d %H:%M:%S.%f')
+
+    t = second_date_obj - first_date_obj
+
+    scan_request = ScanRequest(t)
+    ScanJson = ScanDurationSchema()
+
+    result = ScanJson.dumps(scan_request)
+
+    # TODO check why json_is_equal doesn't work properly with this JSON
+    assert json_is_equal(result,VALID_ASSIGN_STARTSCAN_REQUEST)
+    #assert result == VALID_ASSIGN_STARTSCAN_REQUEST1
+
+def test_unmarshall_start_scan_request():
+    """
+    Verify that JSON can be unmarshalled back to a ScanDurationSchema
+    object when ScanDuration is set.
+    """
+
+    first_date = '2019-01-01 08:00:00.000000'
+    first_date_obj = datetime.datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S.%f')
+
+    second_date = '2019-01-01 08:00:10.000000'
+    second_date_obj = datetime.datetime.strptime(second_date, '%Y-%m-%d %H:%M:%S.%f')
+
+    t = second_date_obj - first_date_obj
+
+    request = ScanDurationSchema().loads(VALID_ASSIGN_STARTSCAN_REQUEST)
 
 
-def test_codec_dumps():
-    """
-    Verify that the codec marshalls objects to JSON.
-    """
-    expected = VALID_ASSIGN_RESOURCES_REQUEST
-    obj = AssignResourcesRequest(1, DishAllocation(receptor_ids=['0001', '0002']))
-    marshalled = MarshmallowCodec().dumps(obj)
-    assert expected == marshalled
+    expected = ScanRequest(t)
+    assert request == expected

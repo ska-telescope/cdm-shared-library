@@ -4,13 +4,14 @@ and data model classes to/from a JSON representation.
 """
 from marshmallow import Schema, fields, post_load, post_dump, pre_dump
 from astropy.coordinates import SkyCoord
+from datetime import timedelta
 
 from .messages.central_node import AssignResourcesRequest, AssignResourcesResponse, \
     DishAllocation, ReleaseResourcesRequest
-from .messages.subarray_node import ConfigureRequest, DishConfiguration, PointingConfigurationl, ScanRequest
+from .messages.subarray_node import ConfigureRequest, DishConfiguration, PointingConfiguration, ScanRequest
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
-           'ReleaseResourcesRequestSchema', 'MarshmallowCodec']
+           'ReleaseResourcesRequestSchema', 'MarshmallowCodec', 'ScanDurationSchema', 'ScanRequestSchema']
 
 
 class DishAllocationSchema(Schema):
@@ -220,22 +221,21 @@ class ConfigureRequestSchema(Schema):
 
 class ScanDurationSchema(Schema):
     """
-    not sure how to add astropy.time, fields.Time is not astropy library
+    Create the Schema for ScanDuration using timedelta
     """
-    scan_duration = fields.Time(attribute='scan.scan_duration')
+    scan_duration = fields.Float()
 
     @pre_dump
     def convert_to_scan(self, data, **_):
-        """
-        not sure how to add astropy.time in this trasformation
-        """
-        converted = data.transform_to('time')
-        return converted
+        duration = data.scan_duration
+        in_secs = duration.total_seconds()
+        data.scan_duration = in_secs
+        return data
 
     @post_load
-    def create_scan_request(self, data):
-        scan_duration = data['scan_duration']
-        scan_request = ScanRequest(scan_duration=scan_duration)
+    def create_scan_request(self, data, **_):
+        t = timedelta(seconds=data['scan_duration'])
+        scan_request = ScanRequest(t)
         return scan_request
 
 
