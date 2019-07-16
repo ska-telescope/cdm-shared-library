@@ -2,7 +2,6 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC SubArrayNode.Configure command.
 """
-from typing import Optional, List
 from astropy.coordinates import SkyCoord
 from astropy.table import Column
 
