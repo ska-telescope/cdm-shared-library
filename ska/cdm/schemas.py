@@ -7,7 +7,7 @@ from astropy.coordinates import SkyCoord
 
 from .messages.central_node import AssignResourcesRequest, AssignResourcesResponse, \
     DishAllocation, ReleaseResourcesRequest
-from .messages.subarray_node import ConfigureRequest, DishConfiguration, PointingConfiguration
+from .messages.subarray_node import ConfigureRequest, DishConfiguration, PointingConfigurationl, ScanRequest
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
            'ReleaseResourcesRequestSchema', 'MarshmallowCodec']
@@ -216,6 +216,38 @@ class ConfigureRequestSchema(Schema):
         pointing = data['pointing']
         dish_configuration = data['dish']
         return ConfigureRequest(pointing, dish_configuration)
+
+
+class ScanDurationSchema(Schema):
+    """
+    not sure how to add astropy.time, fields.Time is not astropy library
+    """
+    scan_duration = fields.Time(attribute='scan.scan_duration')
+
+    @pre_dump
+    def convert_to_scan(self, data, **_):
+        """
+        not sure how to add astropy.time in this trasformation
+        """
+        converted = data.transform_to('time')
+        return converted
+
+    @post_load
+    def create_scan_request(self, data):
+        scan_duration = data['scan_duration']
+        scan_request = ScanRequest(scan_duration=scan_duration)
+        return scan_request
+
+
+class ScanRequestSchema(Schema):
+    scan_duration = fields.Nested(ScanDurationSchema)
+
+    @post_load
+    def create_scan(self, data, **_):
+        scan_duration = data['scan_duration']
+        return ScanRequest(scan_duration)
+
+
 
 class MarshmallowCodec:
     """
