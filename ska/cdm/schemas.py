@@ -11,7 +11,8 @@ from .messages import central_node as cn
 from .messages import subarray_node as sn
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
-           'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'ScanRequestSchema', 'MarshmallowCodec']
+           'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'ScanRequestSchema',
+           'MarshmallowCodec']
 
 
 class DishAllocationSchema(Schema):
@@ -305,7 +306,6 @@ class ConfigureRequestSchema(Schema):
         return sn.ConfigureRequest(pointing, dish_configuration)
 
 
-
 class ScanRequestSchema(Schema):
     """
     Create the Schema for ScanDuration using timedelta
@@ -313,16 +313,29 @@ class ScanRequestSchema(Schema):
     scan_duration = fields.Float()
 
     @pre_dump
-    def convert_to_scan(self, data, **_):
+    def convert_to_scan(self, data, **_): # pylint: disable=no-self-use
+        """
+        Process scan_duration and converted it
+        in a float using total_seconds method
+        :param data: the scan_duration timedelta
+        :param _: kwargs passed by Marshallow
+        :return: float converted
+        """
         duration = data.scan_duration
         in_secs = duration.total_seconds()
         data.scan_duration = in_secs
         return data
 
     @post_load
-    def create_scan_request(self, data, **_):
-        t = timedelta(seconds=data['scan_duration'])
-        scan_request = sn.ScanRequest(t)
+    def create_scan_request(self, data, **_): # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ScanRequest
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: ScanRequest instance populated to match JSON
+        """
+        t_to_scan = timedelta(seconds=data['scan_duration'])
+        scan_request = sn.ScanRequest(t_to_scan)
         return scan_request
 
 

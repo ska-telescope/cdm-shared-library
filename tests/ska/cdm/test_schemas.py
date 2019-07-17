@@ -284,13 +284,13 @@ def test_marshall_start_scan_request():
     second_date = '2019-01-01 08:00:10.000000'
     second_date_obj = datetime.strptime(second_date, '%Y-%m-%d %H:%M:%S.%f')
 
-    t = second_date_obj - first_date_obj
+    t_to_scan = second_date_obj - first_date_obj
 
-    scan_request = sn.ScanRequest(t)
-    ScanJson = schemas.ScanRequestSchema()
+    scan_request = sn.ScanRequest(t_to_scan)
+    scan_json = schemas.ScanRequestSchema()
 
-    result = ScanJson.dumps(scan_request)
-    assert json_is_equal(result,VALID_ASSIGN_STARTSCAN_REQUEST)
+    result = scan_json.dumps(scan_request)
+    assert json_is_equal(result, VALID_ASSIGN_STARTSCAN_REQUEST)
 
 def test_unmarshall_start_scan_request():
     """
@@ -304,10 +304,10 @@ def test_unmarshall_start_scan_request():
     second_date = '2019-01-01 08:00:10.000000'
     second_date_obj = datetime.strptime(second_date, '%Y-%m-%d %H:%M:%S.%f')
 
-    t = second_date_obj - first_date_obj
+    t_to_scan = second_date_obj - first_date_obj
 
     request = schemas.ScanRequestSchema().loads(VALID_ASSIGN_STARTSCAN_REQUEST)
 
 
-    expected = sn.ScanRequest(t)
+    expected = sn.ScanRequest(t_to_scan)
     assert request == expected

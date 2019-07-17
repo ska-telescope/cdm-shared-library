@@ -7,7 +7,11 @@ from datetime import timedelta
 __all__ = ['ScanRequest']
 
 
-class ScanRequest:
+class ScanRequest: # pylint: disable=too-few-public-methods
+    """
+    Scan defines the scan_duration
+
+    """
     def __init__(self, scan_duration: timedelta):
         self.scan_duration = scan_duration
 
