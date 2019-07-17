@@ -7,7 +7,6 @@ from datetime import timedelta
 __all__ = ['ScanRequest']
 
 
-# TODO write code for scan request
 class ScanRequest:
     def __init__(self, scan_duration: timedelta):
         self.scan_duration = scan_duration

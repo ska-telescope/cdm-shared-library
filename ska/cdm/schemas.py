@@ -11,7 +11,7 @@ from .messages.central_node import AssignResourcesRequest, AssignResourcesRespon
 from .messages.subarray_node import ConfigureRequest, DishConfiguration, PointingConfiguration, ScanRequest
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
-           'ReleaseResourcesRequestSchema', 'MarshmallowCodec', 'ScanDurationSchema', 'ScanRequestSchema']
+           'ReleaseResourcesRequestSchema', 'MarshmallowCodec', 'ScanRequestSchema']
 
 
 class DishAllocationSchema(Schema):
@@ -219,7 +219,7 @@ class ConfigureRequestSchema(Schema):
         return ConfigureRequest(pointing, dish_configuration)
 
 
-class ScanDurationSchema(Schema):
+class ScanRequestSchema(Schema):
     """
     Create the Schema for ScanDuration using timedelta
     """
@@ -237,16 +237,6 @@ class ScanDurationSchema(Schema):
         t = timedelta(seconds=data['scan_duration'])
         scan_request = ScanRequest(t)
         return scan_request
-
-
-class ScanRequestSchema(Schema):
-    scan_duration = fields.Nested(ScanDurationSchema)
-
-    @post_load
-    def create_scan(self, data, **_):
-        scan_duration = data['scan_duration']
-        return ScanRequest(scan_duration)
-
 
 
 class MarshmallowCodec:

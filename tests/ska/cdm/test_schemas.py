@@ -7,7 +7,7 @@ from ska.cdm.messages.central_node import AssignResourcesRequest, AssignResource
     DishAllocation, ReleaseResourcesRequest
 from ska.cdm.messages.subarray_node import PointingConfiguration, DishConfiguration,ConfigureRequest, ScanRequest
 from ska.cdm.schemas import AssignResourcesRequestSchema, AssignResourcesResponseSchema, \
-    ReleaseResourcesRequestSchema, ConfigureRequestSchema, MarshmallowCodec, ScanRequestSchema, ScanDurationSchema
+    ReleaseResourcesRequestSchema, ConfigureRequestSchema, MarshmallowCodec, ScanRequestSchema
 from astropy.coordinates import SkyCoord
 import datetime
 from datetime import timedelta
@@ -153,13 +153,10 @@ def test_marshall_start_scan_request():
     t = second_date_obj - first_date_obj
 
     scan_request = ScanRequest(t)
-    ScanJson = ScanDurationSchema()
+    ScanJson = ScanRequestSchema()
 
     result = ScanJson.dumps(scan_request)
-
-    # TODO check why json_is_equal doesn't work properly with this JSON
     assert json_is_equal(result,VALID_ASSIGN_STARTSCAN_REQUEST)
-    #assert result == VALID_ASSIGN_STARTSCAN_REQUEST1
 
 def test_unmarshall_start_scan_request():
     """
@@ -175,7 +172,7 @@ def test_unmarshall_start_scan_request():
 
     t = second_date_obj - first_date_obj
 
-    request = ScanDurationSchema().loads(VALID_ASSIGN_STARTSCAN_REQUEST)
+    request = ScanRequestSchema().loads(VALID_ASSIGN_STARTSCAN_REQUEST)
 
 
     expected = ScanRequest(t)
