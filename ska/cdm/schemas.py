@@ -3,14 +3,13 @@ The schemas module defines Marshmallow schemas that map CDM message classes
 and data model classes to/from a JSON representation.
 """
 from marshmallow import Schema, fields, post_load, post_dump, pre_dump
-from astropy.coordinates import SkyCoord
+from marshmallow.validate import OneOf
 
-from .messages.central_node import AssignResourcesRequest, AssignResourcesResponse, \
-    DishAllocation, ReleaseResourcesRequest
-from .messages.subarray_node import ConfigureRequest, DishConfiguration, PointingConfiguration
+from .messages import central_node as cn
+from .messages import subarray_node as sn
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
-           'ReleaseResourcesRequestSchema', 'MarshmallowCodec']
+           'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'MarshmallowCodec']
 
 
 class DishAllocationSchema(Schema):
@@ -30,7 +29,7 @@ class DishAllocationSchema(Schema):
         :return: DishAllocation object populated from data
         """
         receptor_ids = data['receptor_ids']
-        return DishAllocation(receptor_ids=receptor_ids)
+        return cn.DishAllocation(receptor_ids=receptor_ids)
 
 
 class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -58,7 +57,7 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         """
         subarray_id = data['subarray_id']
         dish_allocation = data['dish']
-        return AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation)
+        return cn.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation)
 
 
 class DishAllocationResponseSchema(Schema):
@@ -83,7 +82,7 @@ class DishAllocationResponseSchema(Schema):
         :return: DishAllocation object populated from data
         """
         receptor_ids = data['receptor_ids']
-        return DishAllocation(receptor_ids=receptor_ids)
+        return cn.DishAllocation(receptor_ids=receptor_ids)
 
 
 class AssignResourcesResponseSchema(Schema):
@@ -110,7 +109,7 @@ class AssignResourcesResponseSchema(Schema):
         :return: AssignResourcesResponse object populated from data
         """
         dish_allocation = data['dish']
-        return AssignResourcesResponse(dish_allocation=dish_allocation)
+        return cn.AssignResourcesResponse(dish_allocation=dish_allocation)
 
 
 class ReleaseResourcesRequestSchema(Schema):
@@ -158,64 +157,151 @@ class ReleaseResourcesRequestSchema(Schema):
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
-        :return: ReleasResourcesRequest object populated from data
+        :return: ReleaseResourcesRequest object populated from data
         """
         subarray_id = data['subarray_id']
         release_all = data.get('release_all', False)
         dish_allocation = data.get('dish', None)
-        return ReleaseResourcesRequest(subarray_id, release_all=release_all,
-                                       dish_allocation=dish_allocation)
+        return cn.ReleaseResourcesRequest(subarray_id, release_all=release_all,
+                                          dish_allocation=dish_allocation)
 
-class SkyCoordSchema(Schema):
-    ra = fields.Float(attribute='ra.rad')
-    dec = fields.Float(attribute='dec.rad')
-    frame = fields.String(attribute='frame.name')
-    name = fields.String(attribute='info.name')
+
+class UpperCasedField(fields.Field):
+    """
+    Field that serializes to an upper-case string and deserializes
+    to a lower-case string.
+    """
+
+    def _serialize(self, value, attr, obj, **kwargs):
+        if value is None:
+            return ""
+        return value.upper()
+
+    def _deserialize(self, value, attr, data, **kwargs):
+        return value.lower()
+
+
+class TargetSchema(Schema):
+    """
+    Marshmallow schema for the subarray_node.Target class
+    """
+
+    ra = fields.Float(attribute='coord.ra.rad', data_key='RA')
+    dec = fields.Float(attribute='coord.dec.rad')
+    frame = UpperCasedField(attribute='coord.frame.name', data_key='system')
+    name = fields.String()
 
     @pre_dump
-    def convert_to_icrs(self, data, **_):
-        converted = data.transform_to('icrs')
-        converted.info.name = data.info.name
-        return converted
+    def convert_to_icrs(self, target: sn.Target, **_):  # pylint: disable=no-self-use
+        """
+        Process Target co-ordinates by converting them to ICRS frame before
+        the JSON marshalling process begins.
+
+        :param target: Target instance to process
+        :param _: kwargs passed by Marshallow
+        :return: Target with co-ordinates expressed in ICRS.
+        """
+        # All pointing coordinates are in ICRS
+        target.coord = target.coord.transform_to('icrs')
+        return target
 
     @post_load
-    def create_skycoord(self, data):
-        ra = data['ra']
-        dec = data['dec']
-        frame = data['frame']
+    def create_target(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a Target object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: Target instance populated to match JSON
+        """
         name = data['name']
-        sky_coord = SkyCoord(ra=ra, dec=dec, frame=frame)
-        sky_coord.info.name = name
-        return sky_coord
+        coord = data['coord']
+        ra_rad = coord['ra']['rad']
+        dec_rad = coord['dec']['rad']
+        frame = coord['frame']['name']
+        target = sn.Target(ra_rad, dec_rad, frame=frame, name=name, unit='rad')
+        return target
 
 
 class PointingSchema(Schema):
-    target = fields.Nested(SkyCoordSchema)
+    """
+    Marshmallow schema for the subarray_node.Pointing class.
+    """
+
+    target = fields.Nested(TargetSchema)
 
     @post_load
-    def create(self, data, **_):
+    def create(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a subarray_node.Pointing object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: Pointing instance populated to match JSON
+        """
         target = data['target']
-        return PointingConfiguration(target)
+        return sn.PointingConfiguration(target)
 
 
 class DishConfigurationSchema(Schema):
-    receiver_band = fields.String(data_key='receiverBand', required=True)
+    """
+    Marshmallow schema for the subarray_node.DishConfiguration class.
+    """
+
+    receiver_band = fields.String(data_key='receiverBand', required=True,
+                                  validate=OneOf(['1', '2', '5a', '5b']))
+
+    @pre_dump
+    def convert(self, dish_configuration: sn.DishConfiguration, **_):  # pylint: disable=no-self-use
+        """
+        Process DishConfiguration instance so that it is ready for conversion
+        to JSON.
+
+        :param dish_configuration:
+        :param _: kwargs passed by Marshmallow
+        :return: DishConfiguration instance populated to match JSON
+        """
+        # Convert Python Enum to its string value
+        dish_configuration.receiver_band = dish_configuration.receiver_band.value
+        return dish_configuration
 
     @post_load
-    def create_dish_configuration(self, data, **_):
+    def create_dish_configuration(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Converted parsed JSON back into a subarray_node.DishConfiguration
+        object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: DishConfiguration instance populated to match JSON
+        """
         receiver_band = data['receiver_band']
-        return DishConfiguration(receiver_band)
+        enum_obj = sn.ReceiverBand(receiver_band)
+        return sn.DishConfiguration(enum_obj)
 
 
 class ConfigureRequestSchema(Schema):
+    """
+    Marshmallow schema for the subarray_node.ConfigureRequest class.
+    """
+
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
 
     @post_load
-    def create_configuration(self, data, **_):
+    def create_configuration(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Converted parsed JSON backn into a subarray_node.ConfigureRequest
+        object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: ConfigurationRequest instance populated to match JSON
+        """
         pointing = data['pointing']
         dish_configuration = data['dish']
-        return ConfigureRequest(pointing, dish_configuration)
+        return sn.ConfigureRequest(pointing, dish_configuration)
+
 
 class MarshmallowCodec:
     """
@@ -226,10 +312,11 @@ class MarshmallowCodec:
 
     def __init__(self):
         self.schema = {
-            AssignResourcesRequest: AssignResourcesRequestSchema,
-            AssignResourcesResponse: AssignResourcesResponseSchema,
-            ReleaseResourcesRequest: ReleaseResourcesRequestSchema,
-            DishAllocation: DishAllocationSchema
+            cn.AssignResourcesRequest: AssignResourcesRequestSchema,
+            cn.AssignResourcesResponse: AssignResourcesResponseSchema,
+            cn.ReleaseResourcesRequest: ReleaseResourcesRequestSchema,
+            cn.DishAllocation: DishAllocationSchema,
+            sn.ConfigureRequest: ConfigureRequestSchema
         }
 
     def load_from_file(self, cls, path):
