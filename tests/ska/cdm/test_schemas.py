@@ -2,7 +2,7 @@
 Unit tests for ska.cdm.schemas module.
 """
 import json
-from datetime import datetime
+import datetime
 
 import ska.cdm.messages.central_node as cn
 import ska.cdm.messages.subarray_node as sn
@@ -31,7 +31,7 @@ VALID_CONFIGURE_REQUEST = """
   }
 }
 """
-VALID_ASSIGN_STARTSCAN_REQUEST = '{"scan_duration": 10.0}'
+VALID_SCAN_REQUEST = '{"scan_duration": 10.0}'
 
 
 def json_is_equal(json_a, json_b):
@@ -271,43 +271,24 @@ def test_codec_dumps():
 
 def test_marshall_start_scan_request():
     """
-    Verify that StartScan is marshalled to JSON correctly.
+    Verify that ScanRequest is marshalled to JSON correctly.
     """
-    codec = schemas.MarshmallowCodec()
-    unmarshalled = codec.loads(cn.AssignResourcesRequest, VALID_ASSIGN_RESOURCES_REQUEST)
-    expected = cn.AssignResourcesRequest(1, cn.DishAllocation(receptor_ids=['0001', '0002']))
-    assert expected == unmarshalled
+    duration = datetime.timedelta(seconds=10.0)
+    scan_request = sn.ScanRequest(duration)
+    schema = schemas.ScanRequestSchema()
+    result = schema.dumps(scan_request)
 
-    first_date = '2019-01-01 08:00:00.000000'
-    first_date_obj = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S.%f')
+    assert json_is_equal(result, VALID_SCAN_REQUEST)
 
-    second_date = '2019-01-01 08:00:10.000000'
-    second_date_obj = datetime.strptime(second_date, '%Y-%m-%d %H:%M:%S.%f')
-
-    t_to_scan = second_date_obj - first_date_obj
-
-    scan_request = sn.ScanRequest(t_to_scan)
-    scan_json = schemas.ScanRequestSchema()
-
-    result = scan_json.dumps(scan_request)
-    assert json_is_equal(result, VALID_ASSIGN_STARTSCAN_REQUEST)
 
 def test_unmarshall_start_scan_request():
     """
-    Verify that JSON can be unmarshalled back to a ScanDurationSchema
-    object when ScanDuration is set.
+    Verify that JSON can be unmarshalled back to a ScanRequest
     """
+    codec = schemas.MarshmallowCodec()
+    unmarshalled = codec.loads(sn.ScanRequest, VALID_SCAN_REQUEST)
 
-    first_date = '2019-01-01 08:00:00.000000'
-    first_date_obj = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S.%f')
+    duration = datetime.timedelta(seconds=10.0)
+    expected = sn.ScanRequest(duration)
 
-    second_date = '2019-01-01 08:00:10.000000'
-    second_date_obj = datetime.strptime(second_date, '%Y-%m-%d %H:%M:%S.%f')
-
-    t_to_scan = second_date_obj - first_date_obj
-
-    request = schemas.ScanRequestSchema().loads(VALID_ASSIGN_STARTSCAN_REQUEST)
-
-
-    expected = sn.ScanRequest(t_to_scan)
-    assert request == expected
+    assert unmarshalled == expected

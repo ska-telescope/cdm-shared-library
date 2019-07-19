@@ -352,7 +352,8 @@ class MarshmallowCodec:
             cn.AssignResourcesResponse: AssignResourcesResponseSchema,
             cn.ReleaseResourcesRequest: ReleaseResourcesRequestSchema,
             cn.DishAllocation: DishAllocationSchema,
-            sn.ConfigureRequest: ConfigureRequestSchema
+            sn.ConfigureRequest: ConfigureRequestSchema,
+            sn.ScanRequest: ScanRequestSchema
         }
 
     def load_from_file(self, cls, path):
