@@ -222,6 +222,10 @@ class TargetSchema(Schema):
         target = sn.Target(ra_rad, dec_rad, frame=frame, name=name, unit='rad')
         return target
 
+class CSPConfiguration(Schema):
+    """
+    Marshmallow schema for the subarray_node.CSPConfiguration class
+        """
 
 class PointingSchema(Schema):
     """
@@ -287,7 +291,7 @@ class ConfigureRequestSchema(Schema):
 
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
-
+    csp = fields.Nested(CSPConfigurationSchema)
     @post_load
     def create_configuration(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -300,7 +304,8 @@ class ConfigureRequestSchema(Schema):
         """
         pointing = data['pointing']
         dish_configuration = data['dish']
-        return sn.ConfigureRequest(pointing, dish_configuration)
+        csp_configuration = data['csp']
+        return sn.ConfigureRequest(pointing, dish_configuration, csp_configuration)
 
 
 class MarshmallowCodec:
