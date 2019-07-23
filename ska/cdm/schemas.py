@@ -298,6 +298,12 @@ class SDPTargetSchema(Schema):  # pylint: disable=too-few-public-methods
         return target
 
 
+class CSPConfiguration(Schema):
+    """
+    Marshmallow schema for the subarray_node.CSPConfiguration class
+        """
+
+
 class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the subarray_node.Pointing class.
@@ -548,6 +554,7 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
     sdp = fields.Nested(SDPConfigurationSchema)
+    csp = fields.Nested(CSPConfigurationSchema)
 
     @post_load
     def create_configuration(self, data, **_):  # pylint: disable=no-self-use
@@ -563,7 +570,8 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         pointing = data['pointing']
         dish_configuration = data['dish']
         sdp_configure = data['sdp']
-        return sn.ConfigureRequest(scan_id, pointing, dish_configuration, sdp_configure)
+        csp_configuration = data['csp']
+        return sn.ConfigureRequest(scan_id, pointing, dish_configuration, sdp_configure, csp_configuration)
 
 
 class MarshmallowCodec:  # pylint: disable=too-few-public-methods
