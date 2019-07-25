@@ -97,16 +97,17 @@ def test_dish_configuration_is_not_equal_to_other_objects():
 def test_configure_request_eq():
     """
     Verify that ConfigurationRequest objects are considered equal when:
+      - they have the same scan ID
       - they point to the same target
       - they set the same receiver band
     """
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
-    request_1 = configure.ConfigureRequest(pointing_config, dish_config)
+    request_1 = configure.ConfigureRequest(123, pointing_config, dish_config)
 
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
-    request_2 = configure.ConfigureRequest(pointing_config, dish_config)
+    request_2 = configure.ConfigureRequest(123, pointing_config, dish_config)
 
     assert request_1 == request_2
 
@@ -117,5 +118,5 @@ def test_configure_request_is_not_equal_to_other_objects():
     """
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
-    request = configure.ConfigureRequest(pointing_config, dish_config)
+    request = configure.ConfigureRequest(123, pointing_config, dish_config)
     assert request != object

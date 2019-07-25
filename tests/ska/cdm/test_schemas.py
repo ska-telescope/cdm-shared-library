@@ -18,6 +18,7 @@ VALID_DISH_CONFIGURATION_JSON = '{"receiverBand": "5a"}'
 VALID_TARGET_JSON = '{"RA": 0.5, "dec": 1.0, "system": "ICRS", "name": "NGC123"}'
 VALID_CONFIGURE_REQUEST = """
 {
+  "scanID": 123,
   "pointing": {
     "target": {
       "system": "ICRS",
@@ -229,7 +230,7 @@ def test_marshall_configure_request():
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
 
-    request = sn.ConfigureRequest(pointing_config, dish_config)
+    request = sn.ConfigureRequest(123, pointing_config, dish_config)
     request_json = schemas.ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
@@ -242,7 +243,7 @@ def test_unmarshall_configure_request_from_json():
     target = sn.Target(ra=1, dec=0.5, name='NGC6251', frame='icrs')
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
-    expected = sn.ConfigureRequest(pointing_config, dish_config)
+    expected = sn.ConfigureRequest(123, pointing_config, dish_config)
 
     unmarshalled = schemas.ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
 

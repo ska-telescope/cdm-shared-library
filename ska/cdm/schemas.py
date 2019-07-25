@@ -288,6 +288,7 @@ class ConfigureRequestSchema(Schema):
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """
 
+    scan_id = fields.Integer(required=True, data_key='scanID')
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
 
@@ -301,9 +302,10 @@ class ConfigureRequestSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: ConfigurationRequest instance populated to match JSON
         """
+        scan_id = data['scan_id']
         pointing = data['pointing']
         dish_configuration = data['dish']
-        return sn.ConfigureRequest(pointing, dish_configuration)
+        return sn.ConfigureRequest(scan_id, pointing, dish_configuration)
 
 
 class ScanRequestSchema(Schema):
@@ -313,7 +315,7 @@ class ScanRequestSchema(Schema):
     scan_duration = fields.Float()
 
     @pre_dump
-    def convert_to_scan(self, data, **_): # pylint: disable=no-self-use
+    def convert_to_scan(self, data, **_):  # pylint: disable=no-self-use
         """
         Process scan_duration and converted it
         in a float using total_seconds method
@@ -327,7 +329,7 @@ class ScanRequestSchema(Schema):
         return data
 
     @post_load
-    def create_scan_request(self, data, **_): # pylint: disable=no-self-use
+    def create_scan_request(self, data, **_):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ScanRequest
         :param data: dict containing parsed JSON values

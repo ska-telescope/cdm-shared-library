@@ -91,11 +91,12 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     SubArrayNode.Configure() command.
     """
 
-    def __init__(self, pointing: PointingConfiguration, dish: DishConfiguration):
+    def __init__(self, scan_id: int, pointing: PointingConfiguration, dish: DishConfiguration):
+        self.scan_id = scan_id
         self.pointing = pointing
         self.dish = dish
 
     def __eq__(self, other):
         if not isinstance(other, ConfigureRequest):
             return False
-        return self.pointing == other.pointing and self.dish == other.dish
+        return self.pointing == other.pointing and self.dish == other.dish and self.scan_id == other.scan_id
