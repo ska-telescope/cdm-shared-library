@@ -2,6 +2,8 @@
 The schemas module defines Marshmallow schemas that map CDM message classes
 and data model classes to/from a JSON representation.
 """
+from datetime import timedelta
+
 from marshmallow import Schema, fields, post_load, post_dump, pre_dump
 from marshmallow.validate import OneOf
 
@@ -9,7 +11,8 @@ from .messages import central_node as cn
 from .messages import subarray_node as sn
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
-           'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'MarshmallowCodec']
+           'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'ScanRequestSchema','CSPConfigurationSchema',
+           'FSPConfigurationSchema', 'MarshmallowCodec']
 
 
 class DishAllocationSchema(Schema):
@@ -222,10 +225,63 @@ class TargetSchema(Schema):
         target = sn.Target(ra_rad, dec_rad, frame=frame, name=name, unit='rad')
         return target
 
-class CSPConfiguration(Schema):
+
+class FSPConfigurationSchema(Schema):
+    """
+    Marshmallow schema for the subarray_node.FSPConfiguration class
+    """
+
+    fsp_ID = fields.String(data_key="fspID")
+    function_mode = fields.String(data_key="functionMode")
+    frequency_slice_ID = fields.String(data_key="frequencySliceID")
+    integration_time = fields.Float(data_key="integrationTime")
+    corr_bandwidth = fields.String(data_key="corrBandwidth")
+    channel_averaging_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)), data_key='channelAveragingMap')
+
+    @pre_dump
+    def convert(self, fsp_configuration: sn.FSPConfiguration, **_):  # pylint: disable=no-self-use
+        """
+        Process FSPConfiguration instance so that it is ready for conversion
+        to JSON.
+
+        :param fsp_configuration:
+        :param _: kwargs passed by Marshmallow
+        :return: FspConfiguration instance populated to match JSON
+        """
+        # Convert Python List to its string value
+        fsp_configuration.fsp_ID = fsp_configuration.fsp_ID
+        fsp_configuration.function_mode = fsp_configuration.function_mode
+        fsp_configuration.frequency_slice_ID = fsp_configuration.frequency_slice_ID
+        fsp_configuration.integration_time = fsp_configuration.integration_time
+        fsp_configuration.corr_bandwidth = fsp_configuration.corr_bandwidth
+        fsp_configuration.channel_averaging_map = fsp_configuration.channel_averaging_map
+        return fsp_configuration
+
+    @post_load
+    def create(self, data, **_):  # pylint: disable=no-self-use
+        fsp_ID = data['fsp_id']
+        function_mode = data['function_mode']
+        frequency_slice_ID = data['frequency_slice_ID']
+        integration_time = data['integration_time']
+        corr_bandwidth = data['corr_bandwidth']
+        channel_averaging_map = data['channel_averaging_map']
+        return sn.FSPConfiguration(fsp_ID, function_mode, frequency_slice_ID, integration_time, corr_bandwidth, channel_averaging_map)
+
+class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
+    """
+    frequency_band = fields.String()
+    fsp = fields.Nested(FSPConfigurationSchema)
+
+    @post_load
+    def create(self, data, **_):  # pylint: disable=no-self-use
         """
+
+        """
+        csp = data['csp']
+        return sn.CSPConfiguration(csp)
+
 
 class PointingSchema(Schema):
     """
@@ -289,6 +345,7 @@ class ConfigureRequestSchema(Schema):
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """
 
+    scan_id = fields.Integer(required=True, data_key='scanID')
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
     csp = fields.Nested(CSPConfigurationSchema)
@@ -302,10 +359,44 @@ class ConfigureRequestSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: ConfigurationRequest instance populated to match JSON
         """
+        scan_id = data['scan_id']
         pointing = data['pointing']
         dish_configuration = data['dish']
         csp_configuration = data['csp']
-        return sn.ConfigureRequest(pointing, dish_configuration, csp_configuration)
+        return sn.ConfigureRequest(scan_id, pointing, dish_configuration, csp_configuration)
+
+
+class ScanRequestSchema(Schema):
+    """
+    Create the Schema for ScanDuration using timedelta
+    """
+    scan_duration = fields.Float()
+
+    @pre_dump
+    def convert_to_scan(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Process scan_duration and converted it
+        in a float using total_seconds method
+        :param data: the scan_duration timedelta
+        :param _: kwargs passed by Marshallow
+        :return: float converted
+        """
+        duration = data.scan_duration
+        in_secs = duration.total_seconds()
+        data.scan_duration = in_secs
+        return data
+
+    @post_load
+    def create_scan_request(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ScanRequest
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: ScanRequest instance populated to match JSON
+        """
+        t_to_scan = timedelta(seconds=data['scan_duration'])
+        scan_request = sn.ScanRequest(t_to_scan)
+        return scan_request
 
 
 class MarshmallowCodec:
@@ -321,7 +412,8 @@ class MarshmallowCodec:
             cn.AssignResourcesResponse: AssignResourcesResponseSchema,
             cn.ReleaseResourcesRequest: ReleaseResourcesRequestSchema,
             cn.DishAllocation: DishAllocationSchema,
-            sn.ConfigureRequest: ConfigureRequestSchema
+            sn.ConfigureRequest: ConfigureRequestSchema,
+            sn.ScanRequest: ScanRequestSchema
         }
 
     def load_from_file(self, cls, path):

@@ -7,7 +7,7 @@ from enum import Enum
 from astropy.coordinates import SkyCoord
 
 __all__ = ['ConfigureRequest', 'DishConfiguration', 'PointingConfiguration', 'Target',
-           'ReceiverBand']
+           'ReceiverBand', 'CSPConfiguration', 'FSPConfiguration']
 
 
 class Target:
@@ -106,20 +106,20 @@ class FSPConfiguration:
           (5209,0), (5953,0), (6697,0), (7441,0), (8185,0), (8929,0), (9673,0),
           (10417,0), (11161,0), (11905,0), (12649,0), (13393,0), (14137,0)
     """
-    def __init(self,fspID: str, functionMode:str, frequencySliceID, intergrationTime, corrBandwidth, channelAveragingMap):
-        self.fspID =  fspID
-        self.functionMode = functionMode
-        self.frequencySliceID = frequencySliceID
-        self.integrationTime = intergrationTime,
-        self.corrBandwidth = corrBandwidth
-        self.channelAveragingMap = channelAveragingMap
+    def __init__(self,fspID: str, function_mode:str, frequency_slice_ID, integration_time, corr_bandwidth, channel_averaging_map):
+        self.fsp_ID =  fspID
+        self.function_mode = function_mode
+        self.frequency_slice_ID = frequency_slice_ID
+        self.integration_time = integration_time,
+        self.corr_bandwidth = corr_bandwidth
+        self.channel_averaging_map = channel_averaging_map
 
 
 class CSPConfiguration:
     """
     Encapsulating class to hold CSP configuration
     """
-    def __init(self, frequency_band: str, fsp:FSPConfiguration):
+    def __init__(self, frequency_band: str, fsp:FSPConfiguration):
         self.frequency_band = frequency_band
         self.fsp = fsp
 
@@ -130,7 +130,8 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     SubArrayNode.Configure() command.
     """
 
-    def __init__(self, pointing: PointingConfiguration, dish: DishConfiguration, csp: CSPConfiguration):
+    def __init__(self, scan_id: int, pointing: PointingConfiguration, dish: DishConfiguration, csp: CSPConfiguration):
+        self.scan_id = scan_id
         self.pointing = pointing
         self.dish = dish
         self.csp = csp
@@ -138,4 +139,4 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     def __eq__(self, other):
         if not isinstance(other, ConfigureRequest):
             return False
-        return self.pointing == other.pointing and self.dish == other.dish and self.csp == other.csp
+        return self.pointing == other.pointing and self.dish == other.dish and self.scan_id == other.scan_id and self.csp == other.csp

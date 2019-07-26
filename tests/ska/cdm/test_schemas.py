@@ -2,6 +2,7 @@
 Unit tests for ska.cdm.schemas module.
 """
 import json
+import datetime
 
 import ska.cdm.messages.central_node as cn
 import ska.cdm.messages.subarray_node as sn
@@ -17,6 +18,7 @@ VALID_DISH_CONFIGURATION_JSON = '{"receiverBand": "5a"}'
 VALID_TARGET_JSON = '{"RA": 0.5, "dec": 1.0, "system": "ICRS", "name": "NGC123"}'
 VALID_CONFIGURE_REQUEST = """
 {
+  "scanID": 123,
   "pointing": {
     "target": {
       "system": "ICRS",
@@ -27,9 +29,25 @@ VALID_CONFIGURE_REQUEST = """
   },
   "dish": {
     "receiverBand": "1"
-  }
+  },
+  "csp":{
+  "fsp": [
+      {
+        "fspID": "1",
+        "functionMode": "CORR",  // Set FSP to correlation mode
+        "frequencySliceID": 1,   // Tell FSP to process frequency slice #1
+        "integrationTime": 1400  // Set FSP to 1400ms integration time.
+        "corrBandwidth": 0       // Correlate the entire frequency slice
+        "channelAveragingMap": [
+          [1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
+          [5209,0], [5953,0], [6697,0], [7441,0], [8185,0], [8929,0], [9673,0],
+          [10417,0], [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]]
+      }
+      ]
+    }
 }
 """
+VALID_SCAN_REQUEST = '{"scan_duration": 10.0}'
 
 
 def json_is_equal(json_a, json_b):
@@ -226,8 +244,14 @@ def test_marshall_configure_request():
     target = sn.Target(ra=1, dec=0.5, name='NGC6251', frame='icrs')
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
+    channel_avg_map = [[1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
+                       [5209,0], [5953,0], [6697,0], [7441,0], [8185,0], [8929,0],[9673,0],[10417,0],
+                       [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]]
+    fsp_config = sn.FSPConfiguration("1", "CORR", 1,
+                                     1400, 0, channel_avg_map)
+    csp_config = sn.CSPConfiguration("1", fsp_config)
 
-    request = sn.ConfigureRequest(pointing_config, dish_config)
+    request = sn.ConfigureRequest(123, pointing_config, dish_config,csp_config)
     request_json = schemas.ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
@@ -240,7 +264,13 @@ def test_unmarshall_configure_request_from_json():
     target = sn.Target(ra=1, dec=0.5, name='NGC6251', frame='icrs')
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
-    expected = sn.ConfigureRequest(pointing_config, dish_config)
+    channel_avg_map = [[1, 2], [745, 0], [1489, 0], [2233, 0], [2977, 0], [3721, 0], [4465, 0],
+                       [5209, 0], [5953, 0], [6697, 0], [7441, 0], [8185, 0], [8929, 0], [9673, 0], [10417, 0],
+                       [11161, 0], [11905, 0], [12649, 0], [13393, 0], [14137, 0]]
+    fsp_config = sn.FSPConfiguration("1", "CORR", 1,
+                                     1400, 0, channel_avg_map)
+    csp_config = sn.CSPConfiguration("1", fsp_config)
+    expected = sn.ConfigureRequest(123, pointing_config, dish_config, csp_config)
 
     unmarshalled = schemas.ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
 
@@ -265,3 +295,28 @@ def test_codec_dumps():
     obj = cn.AssignResourcesRequest(1, cn.DishAllocation(receptor_ids=['0001', '0002']))
     marshalled = schemas.MarshmallowCodec().dumps(obj)
     assert expected == marshalled
+
+
+def test_marshall_start_scan_request():
+    """
+    Verify that ScanRequest is marshalled to JSON correctly.
+    """
+    duration = datetime.timedelta(seconds=10.0)
+    scan_request = sn.ScanRequest(duration)
+    schema = schemas.ScanRequestSchema()
+    result = schema.dumps(scan_request)
+
+    assert json_is_equal(result, VALID_SCAN_REQUEST)
+
+
+def test_unmarshall_start_scan_request():
+    """
+    Verify that JSON can be unmarshalled back to a ScanRequest
+    """
+    codec = schemas.MarshmallowCodec()
+    unmarshalled = codec.loads(sn.ScanRequest, VALID_SCAN_REQUEST)
+
+    duration = datetime.timedelta(seconds=10.0)
+    expected = sn.ScanRequest(duration)
+
+    assert unmarshalled == expected
