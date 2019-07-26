@@ -151,20 +151,29 @@ def test_configure_request_eq():
       - they have the same scan ID
       - they point to the same target
       - they set the same receiver band
+      - their SDP configuration is the same
+      - their CSP configuration is the same
     """
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
     sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
-    channel_avg_map = [[1, 2], [745, 0], [1489, 0], [2233, 0], [2977, 0], [3721, 0], [4465, 0],
-                       [5209, 0], [5953, 0], [6697, 0], [7441, 0], [8185, 0], [8929, 0], [9673, 0], [10417, 0],
-                       [11161, 0], [11905, 0], [12649, 0], [13393, 0], [14137, 0]]
-    fsp_config = configure.FSPConfiguration("1","CORR", 1, 1400, 0, channel_avg_map)
-    csp_config = configure.CSPConfiguration("1" ,fsp_config)
+    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
+                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
+                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
+    scan_id = 123
+    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+    csp_config = configure.CSPConfiguration(scan_id, configure.ReceiverBand.BAND_1, [fsp_config])
     request_1 = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config, csp_config)
 
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
     sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
+    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
+                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
+                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
+    scan_id = 123
+    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+    csp_config = configure.CSPConfiguration(scan_id, configure.ReceiverBand.BAND_1, [fsp_config])
     request_2 = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config, csp_config)
 
     assert request_1 == request_2
@@ -177,13 +186,14 @@ def test_configure_request_is_not_equal_to_other_objects():
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
     sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
-    channel_avg_map = [[1, 2], [745, 0], [1489, 0], [2233, 0], [2977, 0], [3721, 0], [4465, 0],
-                       [5209, 0], [5953, 0], [6697, 0], [7441, 0], [8185, 0], [8929, 0], [9673, 0], [10417, 0],
-                       [11161, 0], [11905, 0], [12649, 0], [13393, 0], [14137, 0]]
-    fsp_config = configure.FSPConfiguration("1", "CORR", 1,
-                                     1400, 0, channel_avg_map)
-    csp_config = configure.CSPConfiguration("1", fsp_config)
+    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
+                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
+                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
+    scan_id = 123
+    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+    csp_config = configure.CSPConfiguration(scan_id, configure.ReceiverBand.BAND_1, [fsp_config])
     request = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config, csp_config)
+
     assert request != object
 
 

@@ -303,12 +303,18 @@ class FSPConfigurationSchema(Schema):
     Marshmallow schema for the subarray_node.FSPConfiguration class
     """
 
-    fsp_ID = fields.String(data_key="fspID")
-    function_mode = fields.String(data_key="functionMode")
-    frequency_slice_ID = fields.String(data_key="frequencySliceID")
-    integration_time = fields.Float(data_key="integrationTime")
-    corr_bandwidth = fields.String(data_key="corrBandwidth")
-    channel_averaging_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)), data_key='channelAveragingMap')
+    fsp_id = fields.Integer(data_key='fspID', required=True)
+    function_mode = fields.String(data_key='functionMode',
+                                  validate=OneOf(['CORR', 'PSS-BF', 'PST-BF', 'VLBI']),
+                                  required=True)
+    frequency_slice_id = fields.Integer(data_key='frequencySliceID',
+                                        required=True)
+    corr_bandwidth = fields.Integer(data_key='corrBandwidth',
+                                    required=True)
+    integration_time = fields.Integer(data_key='integrationTime',
+                                      required=True)
+    channel_averaging_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
+                                        data_key='channelAveragingMap')
 
     @pre_dump
     def convert(self, fsp_configuration: sn.FSPConfiguration, **_):  # pylint: disable=no-self-use
@@ -316,43 +322,60 @@ class FSPConfigurationSchema(Schema):
         Process FSPConfiguration instance so that it is ready for conversion
         to JSON.
 
-        :param fsp_configuration:
+        :param fsp_configuration: FSP configuration to process
         :param _: kwargs passed by Marshmallow
         :return: FspConfiguration instance populated to match JSON
         """
-        # Convert Python List to its string value
-        fsp_configuration.fsp_ID = fsp_configuration.fsp_ID
-        fsp_configuration.function_mode = fsp_configuration.function_mode
-        fsp_configuration.frequency_slice_ID = fsp_configuration.frequency_slice_ID
-        fsp_configuration.integration_time = fsp_configuration.integration_time
-        fsp_configuration.corr_bandwidth = fsp_configuration.corr_bandwidth
-        fsp_configuration.channel_averaging_map = fsp_configuration.channel_averaging_map
+        # Convert Python Enum to its string value
+        fsp_configuration.function_mode = fsp_configuration.function_mode.value
         return fsp_configuration
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
-        fsp_ID = data['fsp_id']
+        fsp_id = data['fsp_id']
         function_mode = data['function_mode']
-        frequency_slice_ID = data['frequency_slice_ID']
-        integration_time = data['integration_time']
+        function_mode_enum = sn.FSPFunctionMode(function_mode)
+        frequency_slice_id = int(data['frequency_slice_id'])
         corr_bandwidth = data['corr_bandwidth']
-        channel_averaging_map = data['channel_averaging_map']
-        return sn.FSPConfiguration(fsp_ID, function_mode, frequency_slice_ID, integration_time, corr_bandwidth, channel_averaging_map)
+        integration_time = data['integration_time']
+
+        # optional arguments
+        channel_averaging_map = data.get('channel_averaging_map', None)
+
+        return sn.FSPConfiguration(fsp_id, function_mode_enum, frequency_slice_id, integration_time,
+                                   corr_bandwidth, channel_averaging_map=channel_averaging_map)
+
 
 class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
-    frequency_band = fields.String()
-    fsp = fields.Nested(FSPConfigurationSchema)
+    scan_id = fields.Integer(data_key='scanID', required=True)
+    frequency_band = fields.String(data_key='frequencyBand', required=True)
+    fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key='fsp')
+
+    @pre_dump
+    def convert(self, csp_configuration: sn.CSPConfiguration, **_):  # pylint: disable=no-self-use
+        """
+        Process CSPConfiguration instance so that it is ready for conversion
+        to JSON.
+
+        :param csp_configuration: CSP configuration to process
+        :param _: kwargs passed by Marshmallow
+        :return: CSPConfiguration instance populated to match JSON
+        """
+        # Convert Python Enum to its string value
+        csp_configuration.frequency_band = csp_configuration.frequency_band.value
+        return csp_configuration
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
-        """
+        scan_id = data['scan_id']
+        frequency_band = data['frequency_band']
+        frequency_band_enum = sn.ReceiverBand(frequency_band)
+        fsp_configs = data['fsp_configs']
 
-        """
-        csp = data['csp']
-        return sn.CSPConfiguration(csp)
+        return sn.CSPConfiguration(scan_id, frequency_band_enum, fsp_configs)
 
 
 
@@ -411,6 +434,33 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         receiver_band = data['receiver_band']
         enum_obj = sn.ReceiverBand(receiver_band)
         return sn.DishConfiguration(enum_obj)
+
+
+class ConfigureRequestSchema(Schema):
+    """
+    Marshmallow schema for the subarray_node.ConfigureRequest class.
+    """
+
+    scan_id = fields.Integer(required=True, data_key='scanID')
+    pointing = fields.Nested(PointingSchema)
+    dish = fields.Nested(DishConfigurationSchema)
+    csp = fields.Nested(CSPConfigurationSchema)
+
+    @post_load
+    def create_configuration(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Converted parsed JSON backn into a subarray_node.ConfigureRequest
+        object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: ConfigurationRequest instance populated to match JSON
+        """
+        scan_id = data['scan_id']
+        pointing = data['pointing']
+        dish_configuration = data['dish']
+        csp_configuration = data['csp']
+        return sn.ConfigureRequest(scan_id, pointing, dish_configuration, csp_configuration)
 
 
 class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
