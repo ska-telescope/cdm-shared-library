@@ -2,6 +2,7 @@
 The schemas module defines Marshmallow schemas that map CDM message classes
 and data model classes to/from a JSON representation.
 """
+import collections
 from datetime import timedelta
 
 from marshmallow import Schema, fields, post_load, post_dump, pre_dump
@@ -13,6 +14,8 @@ from .messages import subarray_node as sn
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
            'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'ScanRequestSchema',
            'MarshmallowCodec']
+
+SexagesimalTarget = collections.namedtuple('SexagesimalTarget', 'ra dec frame name')
 
 
 class DishAllocationSchema(Schema):
@@ -189,9 +192,9 @@ class TargetSchema(Schema):
     Marshmallow schema for the subarray_node.Target class
     """
 
-    ra = fields.Float(attribute='coord.ra.rad', data_key='RA')
-    dec = fields.Float(attribute='coord.dec.rad')
-    frame = UpperCasedField(attribute='coord.frame.name', data_key='system')
+    ra = fields.String(data_key='RA')
+    dec = fields.String()
+    frame = UpperCasedField(data_key='system')
     name = fields.String()
 
     @pre_dump
@@ -202,11 +205,16 @@ class TargetSchema(Schema):
 
         :param target: Target instance to process
         :param _: kwargs passed by Marshallow
-        :return: Target with co-ordinates expressed in ICRS.
+        :return: SexagesimalTarget with ICRS ra/dec expressed in hms/dms
         """
         # All pointing coordinates are in ICRS
-        target.coord = target.coord.transform_to('icrs')
-        return target
+        icrs_coord = target.coord.transform_to('icrs')
+        hms, dms = icrs_coord.to_string('hmsdms', sep=':').split(' ')
+        sexagesimal = SexagesimalTarget(
+            ra=hms, dec=dms, frame=icrs_coord.frame.name, name=target.name
+        )
+
+        return sexagesimal
 
     @post_load
     def create_target(self, data, **_):  # pylint: disable=no-self-use
@@ -218,11 +226,10 @@ class TargetSchema(Schema):
         :return: Target instance populated to match JSON
         """
         name = data['name']
-        coord = data['coord']
-        ra_rad = coord['ra']['rad']
-        dec_rad = coord['dec']['rad']
-        frame = coord['frame']['name']
-        target = sn.Target(ra_rad, dec_rad, frame=frame, name=name, unit='rad')
+        hms = data['ra']
+        dms = data['dec']
+        frame = data['frame']
+        target = sn.Target(hms, dms, frame=frame, name=name, unit=('hourangle', 'deg'))
         return target
 
 
