@@ -15,14 +15,7 @@ VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": t
 
 # These examples are taken verbatim from the SP-142 ICD
 VALID_DISH_CONFIGURATION_JSON = '{"receiverBand": "5a"}'
-VALID_TARGET_JSON = """
-{
-  "RA": "12:34:56.78", 
-  "dec": "+12:34:56.78", 
-  "system": "ICRS", 
-  "name": "NGC123"
-}
-"""
+VALID_TARGET_JSON = '{"RA": "12:34:56.78", "dec": "+12:34:56.78", "system": "ICRS", "name": "NGC123"}'
 VALID_CONFIGURE_REQUEST = """
 {
   "scanID": 123,
@@ -38,17 +31,20 @@ VALID_CONFIGURE_REQUEST = """
     "receiverBand": "1"
   },
   "csp":{
+    "scanID": 123,
+    "frequencyBand": "1",
   "fsp": [
       {
-        "fspID": "1",
-        "functionMode": "CORR",  // Set FSP to correlation mode
-        "frequencySliceID": 1,   // Tell FSP to process frequency slice #1
-        "integrationTime": 1400  // Set FSP to 1400ms integration time.
-        "corrBandwidth": 0       // Correlate the entire frequency slice
+        "fspID": 1,
+        "functionMode": "CORR",
+        "frequencySliceID": 1,
+        "integrationTime": 1400,
+        "corrBandwidth": 0,
         "channelAveragingMap": [
           [1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
           [5209,0], [5953,0], [6697,0], [7441,0], [8185,0], [8929,0], [9673,0],
-          [10417,0], [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]]
+          [10417,0], [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]
+        ]
       }
       ]
     }
@@ -251,14 +247,14 @@ def test_marshall_configure_request():
     target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs')
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
-    channel_avg_map = [[1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
-                       [5209,0], [5953,0], [6697,0], [7441,0], [8185,0], [8929,0],[9673,0],[10417,0],
-                       [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]]
-    fsp_config = sn.FSPConfiguration("1", "CORR", 1,
-                                     1400, 0, channel_avg_map)
-    csp_config = sn.CSPConfiguration("1", fsp_config)
+    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
+                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
+                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
+    scan_id = 123
+    fsp_config = sn.FSPConfiguration(1, sn.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+    csp_config = sn.CSPConfiguration(scan_id, sn.ReceiverBand.BAND_1, [fsp_config])
 
-    request = sn.ConfigureRequest(123, pointing_config, dish_config)
+    request = sn.ConfigureRequest(scan_id, pointing_config, dish_config, csp_config)
     request_json = schemas.ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
@@ -271,15 +267,14 @@ def test_unmarshall_configure_request_from_json():
     target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs')
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
-    expected = sn.ConfigureRequest(123, pointing_config, dish_config)
-    channel_avg_map = [[1, 2], [745, 0], [1489, 0], [2233, 0], [2977, 0], [3721, 0], [4465, 0],
-                       [5209, 0], [5953, 0], [6697, 0], [7441, 0], [8185, 0], [8929, 0], [9673, 0], [10417, 0],
-                       [11161, 0], [11905, 0], [12649, 0], [13393, 0], [14137, 0]]
-    fsp_config = sn.FSPConfiguration("1", "CORR", 1,
-                                     1400, 0, channel_avg_map)
-    csp_config = sn.CSPConfiguration("1", fsp_config)
-    expected = sn.ConfigureRequest(123, pointing_config, dish_config, csp_config)
+    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
+                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
+                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
+    scan_id = 123
+    fsp_config = sn.FSPConfiguration(1, sn.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+    csp_config = sn.CSPConfiguration(scan_id, sn.ReceiverBand.BAND_1, [fsp_config])
 
+    expected = sn.ConfigureRequest(scan_id, pointing_config, dish_config, csp_config)
     unmarshalled = schemas.ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
 
     assert unmarshalled == expected
