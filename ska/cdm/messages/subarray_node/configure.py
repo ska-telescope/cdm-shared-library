@@ -18,7 +18,7 @@ class Target:
     non-ra/dec frames such as galactic are not supported.
     """
 
-    def __init__(self, ra, dec, name='', frame='icrs', unit='rad'):
+    def __init__(self, ra, dec, name='', frame='icrs', unit=('hourangle', 'deg')):
         self.coord = SkyCoord(ra, dec, unit=unit, frame=frame)
         self.name = name
 
@@ -32,16 +32,21 @@ class Target:
                     self.coord.dec == other.coord.dec,
                     self.coord.frame.name == other.coord.frame.name])
 
-    def __str__(self):
-        units = self.coord.ra.unit.name
+    def __repr__(self):
+        raw_ra = self.coord.ra.value
+        raw_dec = self.coord.dec.value
+        units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
         frame = self.coord.frame.name
         name = self.name
-        # named ra_val rather than ra to satisfy static analysis
-        ra_val = self.coord.ra.value
-        dec_val = self.coord.dec.value
-        return '<Target(ra={}, dec={}, name={!r}, frame={!r}, unit={!r})>'.format(
-            ra_val, dec_val, name, frame, units
+        return '<Target(ra={!r}, dec={!r}, name={!r}, frame={!r}, unit={!r})>'.format(
+            raw_ra, raw_dec, name, frame, units
         )
+
+    def __str__(self):
+        frame = self.coord.frame.name
+        name = self.name
+        hmsdms = self.coord.to_string(style='hmsdms')
+        return '<Target: {!r} ({} {})>'.format(name, hmsdms, frame)
 
 
 class PointingConfiguration:  # pylint: disable=too-few-public-methods
@@ -139,4 +144,7 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     def __eq__(self, other):
         if not isinstance(other, ConfigureRequest):
             return False
-        return self.pointing == other.pointing and self.dish == other.dish and self.scan_id == other.scan_id and self.csp == other.csp
+        return self.scan_id == other.scan_id \
+               and self.pointing == other.pointing \
+               and self.dish == other.dish \
+               and self.csp == other.csp

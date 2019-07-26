@@ -9,7 +9,7 @@ def test_target_defaults():
     Verify Target default arguments.
     """
     target_1 = configure.Target(ra=1, dec=0.5)
-    target_2 = configure.Target(ra=1, dec=0.5, name='', frame='icrs', unit='rad')
+    target_2 = configure.Target(ra=1, dec=0.5, name='', frame='icrs', unit=('hourangle', 'deg'))
     assert target_1 == target_2
 
 
@@ -37,12 +37,21 @@ def test_target_is_not_equal_to_other_objects():
     assert target != object
 
 
+def test_target_repr():
+    """
+    Verify the repr representation of a Target.
+    """
+    target = configure.Target(ra=30, dec=-3600, name='name', frame='icrs', unit=('deg', 'arcsec'))
+    expected = "<Target(ra=30.0, dec=-1.0, name='name', frame='icrs', unit=('deg', 'deg'))>"
+    assert expected == repr(target)
+
+
 def test_target_str():
     """
     Verify the string representation of a Target.
     """
-    target = configure.Target(ra=1, dec=2, name='name', frame='icrs', unit='deg')
-    expected = "<Target(ra=1.0, dec=2.0, name='name', frame='icrs', unit='deg')>"
+    target = configure.Target(ra=30, dec='0', name='name', frame='icrs', unit=('deg', 'rad'))
+    expected = "<Target: 'name' (02h00m00s +00d00m00s icrs)>"
     assert expected == str(target)
 
 

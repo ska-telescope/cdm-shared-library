@@ -15,16 +15,23 @@ VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": t
 
 # These examples are taken verbatim from the SP-142 ICD
 VALID_DISH_CONFIGURATION_JSON = '{"receiverBand": "5a"}'
-VALID_TARGET_JSON = '{"RA": 0.5, "dec": 1.0, "system": "ICRS", "name": "NGC123"}'
+VALID_TARGET_JSON = """
+{
+  "RA": "12:34:56.78", 
+  "dec": "+12:34:56.78", 
+  "system": "ICRS", 
+  "name": "NGC123"
+}
+"""
 VALID_CONFIGURE_REQUEST = """
 {
   "scanID": 123,
   "pointing": {
     "target": {
       "system": "ICRS",
-      "name": "NGC6251",
-      "RA": 1.0,       
-      "dec": 0.5      
+      "name": "M51",
+      "RA": "13:29:52.698",       
+      "dec": "+47:11:42.93"      
     }
   },
   "dish": {
@@ -204,7 +211,7 @@ def test_marshall_target_to_json():
     """
     Verify that PointingConfiguration Target is marshalled to JSON correctly.
     """
-    target = sn.Target(0.5, 1, name='NGC123')
+    target = sn.Target(ra='12h34m56.78s', dec='+12d34m56.78s', name='NGC123')
     expected = VALID_TARGET_JSON
     json_str = schemas.TargetSchema().dumps(target)
     assert json_is_equal(json_str, expected)
@@ -214,7 +221,7 @@ def test_unmarshall_target_from_json():
     """
     Verify that a Target is unmarshalled correctly from JSON.
     """
-    expected = sn.Target(0.5, 1.0, name='NGC123')
+    expected = sn.Target(ra='12h34m56.78s', dec='+12d34m56.78s', name='NGC123')
     unmarshalled = schemas.TargetSchema().loads(VALID_TARGET_JSON)
     assert unmarshalled == expected
 
@@ -241,7 +248,7 @@ def test_marshall_configure_request():
     """
     Verify that ConfigureRequest is marshalled to JSON correctly.
     """
-    target = sn.Target(ra=1, dec=0.5, name='NGC6251', frame='icrs')
+    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs')
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
     channel_avg_map = [[1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
@@ -251,7 +258,7 @@ def test_marshall_configure_request():
                                      1400, 0, channel_avg_map)
     csp_config = sn.CSPConfiguration("1", fsp_config)
 
-    request = sn.ConfigureRequest(123, pointing_config, dish_config,csp_config)
+    request = sn.ConfigureRequest(123, pointing_config, dish_config)
     request_json = schemas.ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
@@ -259,11 +266,12 @@ def test_marshall_configure_request():
 
 def test_unmarshall_configure_request_from_json():
     """
-    Verify that a COnfigureRequest can be unmarshalled from JSON.
+    Verify that a ConfigureRequest can be unmarshalled from JSON.
     """
-    target = sn.Target(ra=1, dec=0.5, name='NGC6251', frame='icrs')
+    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs')
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
+    expected = sn.ConfigureRequest(123, pointing_config, dish_config)
     channel_avg_map = [[1, 2], [745, 0], [1489, 0], [2233, 0], [2977, 0], [3721, 0], [4465, 0],
                        [5209, 0], [5953, 0], [6697, 0], [7441, 0], [8185, 0], [8929, 0], [9673, 0], [10417, 0],
                        [11161, 0], [11905, 0], [12649, 0], [13393, 0], [14137, 0]]
