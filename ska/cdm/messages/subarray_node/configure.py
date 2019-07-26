@@ -9,7 +9,8 @@ from astropy.coordinates import SkyCoord
 
 __all__ = ['ConfigureRequest', 'DishConfiguration', 'PointingConfiguration', 'Target',
            'ReceiverBand', 'ProcessingBlockConfiguration', 'SDPParameters',
-           'SDPScan', 'SDPScanParameters', 'SDPWorkflow', 'SDPConfiguration']
+           'SDPScan', 'SDPScanParameters', 'SDPWorkflow', 'SDPConfiguration',
+           'CSPConfiguration', 'FSPConfiguration']
 
 
 class Target:
@@ -265,14 +266,13 @@ class FSPConfiguration:
           (10417,0), (11161,0), (11905,0), (12649,0), (13393,0), (14137,0)
     """
 
-    def __init(self, fspID: str, functionMode: str, frequencySliceID, intergrationTime, corrBandwidth,
-               channelAveragingMap):
-        self.fspID = fspID
-        self.functionMode = functionMode
-        self.frequencySliceID = frequencySliceID
-        self.integrationTime = intergrationTime,
-        self.corrBandwidth = corrBandwidth
-        self.channelAveragingMap = channelAveragingMap
+    def __init__(self,fspID: str, function_mode:str, frequency_slice_ID, integration_time, corr_bandwidth, channel_averaging_map):
+        self.fsp_ID =  fspID
+        self.function_mode = function_mode
+        self.frequency_slice_ID = frequency_slice_ID
+        self.integration_time = integration_time,
+        self.corr_bandwidth = corr_bandwidth
+        self.channel_averaging_map = channel_averaging_map
 
 
 class CSPConfiguration:
@@ -280,7 +280,7 @@ class CSPConfiguration:
     Encapsulating class to hold CSP configuration
     """
 
-    def __init(self, frequency_band: str, fsp: FSPConfiguration):
+    def __init__(self, frequency_band: str, fsp:FSPConfiguration):
         self.frequency_band = frequency_band
         self.fsp = fsp
 

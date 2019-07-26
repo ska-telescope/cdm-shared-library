@@ -13,8 +13,8 @@ from .messages import subarray_node as sn
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
            'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'ScanRequestSchema',
-           'MarshmallowCodec', 'SDPParametersSchema', 'SDPScanSchema', 'SDPScanParametersSchema']
-
+           'MarshmallowCodec', 'SDPParametersSchema', 'SDPScanSchema', 'SDPScanParametersSchema',
+           'CSPConfigurationSchema', 'FSPConfigurationSchema']
 
 class OrderedSchema(Schema):  # pylint: disable=too-few-public-methods
     """
@@ -298,10 +298,62 @@ class SDPTargetSchema(Schema):  # pylint: disable=too-few-public-methods
         return target
 
 
-class CSPConfiguration(Schema):
+class FSPConfigurationSchema(Schema):
+    """
+    Marshmallow schema for the subarray_node.FSPConfiguration class
+    """
+
+    fsp_ID = fields.String(data_key="fspID")
+    function_mode = fields.String(data_key="functionMode")
+    frequency_slice_ID = fields.String(data_key="frequencySliceID")
+    integration_time = fields.Float(data_key="integrationTime")
+    corr_bandwidth = fields.String(data_key="corrBandwidth")
+    channel_averaging_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)), data_key='channelAveragingMap')
+
+    @pre_dump
+    def convert(self, fsp_configuration: sn.FSPConfiguration, **_):  # pylint: disable=no-self-use
+        """
+        Process FSPConfiguration instance so that it is ready for conversion
+        to JSON.
+
+        :param fsp_configuration:
+        :param _: kwargs passed by Marshmallow
+        :return: FspConfiguration instance populated to match JSON
+        """
+        # Convert Python List to its string value
+        fsp_configuration.fsp_ID = fsp_configuration.fsp_ID
+        fsp_configuration.function_mode = fsp_configuration.function_mode
+        fsp_configuration.frequency_slice_ID = fsp_configuration.frequency_slice_ID
+        fsp_configuration.integration_time = fsp_configuration.integration_time
+        fsp_configuration.corr_bandwidth = fsp_configuration.corr_bandwidth
+        fsp_configuration.channel_averaging_map = fsp_configuration.channel_averaging_map
+        return fsp_configuration
+
+    @post_load
+    def create(self, data, **_):  # pylint: disable=no-self-use
+        fsp_ID = data['fsp_id']
+        function_mode = data['function_mode']
+        frequency_slice_ID = data['frequency_slice_ID']
+        integration_time = data['integration_time']
+        corr_bandwidth = data['corr_bandwidth']
+        channel_averaging_map = data['channel_averaging_map']
+        return sn.FSPConfiguration(fsp_ID, function_mode, frequency_slice_ID, integration_time, corr_bandwidth, channel_averaging_map)
+
+class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
+    """
+    frequency_band = fields.String()
+    fsp = fields.Nested(FSPConfigurationSchema)
+
+    @post_load
+    def create(self, data, **_):  # pylint: disable=no-self-use
         """
+
+        """
+        csp = data['csp']
+        return sn.CSPConfiguration(csp)
+
 
 
 class PointingSchema(Schema):  # pylint: disable=too-few-public-methods

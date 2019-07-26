@@ -4,5 +4,5 @@ Subarray Node requests and responses to and from Python.
 """
 from .configure import PointingConfiguration, DishConfiguration, ConfigureRequest, Target, \
     ReceiverBand, ProcessingBlockConfiguration, SDPParameters, SDPScan, SDPScanParameters, \
-    SDPWorkflow, SDPConfiguration
+    SDPWorkflow, SDPConfiguration, CSPConfiguration, FSPConfiguration
 from .scan import ScanRequest

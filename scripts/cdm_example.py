@@ -1,4 +1,8 @@
-"""Example of using the cdm methods directly based on the AssignResourcesRequest request """
+"""
+
+ Example of using the cdm methods directly based on the AssignResourcesRequest request
+
+"""
 
 from ska.cdm import CODEC
 import ska.cdm.messages.central_node as cn
