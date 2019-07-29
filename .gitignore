@@ -3,6 +3,7 @@
 *.eggs
 .ipynb_checkpoints
 *.DS_Store
+setup.py-e
 
 build
 dist
