@@ -1,8 +1,8 @@
 """
 Unit tests for ska.cdm.schemas module.
 """
-import json
 import datetime
+import json
 
 import ska.cdm.messages.central_node as cn
 import ska.cdm.messages.subarray_node as sn
@@ -36,6 +36,32 @@ VALID_CONFIGURE_REQUEST = """
   },
   "dish": {
     "receiverBand": "1"
+  },
+  "sdp": {
+    "configure": [
+      {
+        "id": "realtime-20190627-0001",
+        "sbiId": "20190627-0001",
+        "workflow": {
+          "id": "vis_ingest",
+          "type": "realtime",
+          "version": "0.1.0"
+        },
+        "parameters": {
+          "numStations": 4,
+          "numChanels": 372,
+          "numPolarisations": 4,
+          "freqStartHz": 0.35e9,
+          "freqEndHz": 1.05e9,
+          "fields": {
+            "0": { "system": "ICRS", "name": "M51", "ra": 3.5337607188635975, "dec": 0.8237126492459581 }
+          }
+        },
+        "scanParameters": {
+          "12345": { "fieldId": 0, "intervalMs": 1400 }
+        }
+      }
+    ]
   }
 }
 """
@@ -272,29 +298,47 @@ def test_marshall_configure_request():
     """
     Verify that ConfigureRequest is marshalled to JSON correctly.
     """
-    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs')
+    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs', unit=('hourangle', 'deg'))
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
+    sdp_configure = sdp_configure_for_test(target)
 
-    request = sn.ConfigureRequest(123, pointing_config, dish_config)
+    request = sn.ConfigureRequest(123, pointing_config, dish_config, sdp_configure)
     request_json = schemas.ConfigureRequestSchema().dumps(request)
-
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
+
+
+def sdp_configure_for_test(target):
+    target_list = {"0": target}
+    workflow = sn.SDPWorkflow(wf_id="vis_ingest", wf_type="realtime", version="0.1.0")
+    parameters = sn.SDPParameters(num_stations=4, num_chanels=372,
+                                  num_polarisations=4, freq_start_hz=0.35e9,
+                                  freq_end_hz=1.05e9, target_fields=target_list)
+    scan = sn.SDPScan(field_id=0, interval_ms=1400)
+    scan_list = {"12345": scan}
+    sdp_config_block = sn.SDPConfigurationBlock(sb_id='realtime-20190627-0001',
+                                                sbi_id='20190627-0001',
+                                                workflow=workflow,
+                                                parameters=parameters,
+                                                scan_parameters=scan_list)
+    sdp_configure = sn.SDPConfigure([sdp_config_block])
+    return sdp_configure
 
 
 def test_unmarshall_configure_request_from_json():
     """
     Verify that a ConfigureRequest can be unmarshalled from JSON.
     """
-    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs')
+    #target = sn.Target(ra=3.5337607188635975, dec=0.8237126492459581, name='M51', frame='icrs', unit='rad')
+    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs', unit=('hourangle', 'deg'))
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
-    expected = sn.ConfigureRequest(123, pointing_config, dish_config)
+    sdp_configure = sdp_configure_for_test(target)
+    expected = sn.ConfigureRequest(123, pointing_config, dish_config, sdp_configure)
 
     unmarshalled = schemas.ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
 
     assert unmarshalled == expected
-
 
 def test_codec_loads():
     """
@@ -349,6 +393,15 @@ def test_marshal_sdp_configure_scan():
     assert json_is_equal(result, VALID_SDP_CONFIGURE_SCAN)
 
 
+def test_unmarshall_sdp_configure_scan():
+    """
+    Verify that JSON can be unmarshalled back to a ScanRequest
+    """
+    codec = schemas.MarshmallowCodec()
+    unmarshalled = codec.loads(sn.SDPConfigureScan, VALID_SDP_CONFIGURE_SCAN)
+
+
+
 def test_marshal_sdp_configure_request():
     """
     Verify that JSON can be marshalled to JSON correctly
@@ -356,7 +409,7 @@ def test_marshal_sdp_configure_request():
     sb_id = 'realtime-20190627-0001'
     sbi_id = '20190627-0001'
     target = sn.Target(ra=1.0, dec=1.0, name="NGC6251", unit="rad")
-    target_list = {0: target}
+    target_list = {"0": target}
 
     workflow = sn.SDPWorkflow(wf_id="vis_ingest", wf_type="realtime", version="0.1.0")
 
@@ -376,5 +429,11 @@ def test_marshal_sdp_configure_request():
     schema = schemas.SDPConfigureSchema()
 
     result = schema.dumps(sdp_configure)
-    print(result)
     assert json_is_equal(result, VALID_SDP_CONFIGURE)
+
+def test_unmarshall_sdp_configure_request():
+    """
+    Verify that JSON can be unmarshalled back to a ScanRequest
+    """
+    codec = schemas.MarshmallowCodec()
+    unmarshalled = codec.loads(sn.SDPConfigure, VALID_SDP_CONFIGURE)
