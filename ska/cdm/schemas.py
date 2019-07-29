@@ -13,7 +13,19 @@ from .messages import subarray_node as sn
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
            'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'ScanRequestSchema',
-           'MarshmallowCodec']
+           'MarshmallowCodec',
+           'SDPConfigurationBlockSchema', 'SDPConfigureSchema', 'SDPConfigureScanSchema', 'SDPParametersSchema',
+           'SDPScanSchema',
+           'SDPScanParametersSchema']
+
+
+class OrderedSchema(Schema):
+    class Meta:  # pylint: disable=too-few-public-methods
+        """
+        marshmallow directive to respect order of JSON properties  in message.
+        """
+        ordered = True
+
 
 SexagesimalTarget = collections.namedtuple('SexagesimalTarget', 'ra dec frame name')
 
@@ -187,7 +199,7 @@ class UpperCasedField(fields.Field):
         return value.lower()
 
 
-class TargetSchema(Schema):
+class TargetSchema(OrderedSchema):
     """
     Marshmallow schema for the subarray_node.Target class
     """
@@ -230,6 +242,61 @@ class TargetSchema(Schema):
         dms = data['dec']
         frame = data['frame']
         target = sn.Target(hms, dms, frame=frame, name=name, unit=('hourangle', 'deg'))
+        return target
+
+
+# Added for clarity that SDP is currently assumed to require RA and Dec as radians
+# unlike the TMC need for a sexagesimal target
+RadianTarget = collections.namedtuple('RadianTarget', 'ra dec frame name')
+
+
+class SDPTargetSchema(OrderedSchema):
+    """
+    Marshmallow schema for the subarray_node.Target class when used for the 
+    SDP Target. This is similar to the Pointing Target but uses lower case for the
+    name for the ra parameter and seems to assume radians rather than sexagesimal 
+    format for RA and Dec - if these differences are resolved this schema will become
+    redundant.
+    """
+    frame = UpperCasedField(data_key='system')
+    name = fields.String()
+    ra = fields.Float(data_key='ra')
+    dec = fields.Float()
+
+    @pre_dump
+    def convert_to_icrs(self, target: sn.Target, **_):  # pylint: disable=no-self-use
+        """
+        Process Target co-ordinates by converting them to ICRS frame before
+        the JSON marshalling process begins.
+
+        :param target: Target instance to process
+        :param _: kwargs passed by Marshmallow
+        :return: Basic target with ra/dec expressed in radians
+        """
+        # All pointing coordinates are in ICRS
+        target.coord = target.coord.transform_to('icrs')
+        ra = target.coord.ra.rad
+        dec = target.coord.dec.rad
+        target_radians = RadianTarget(
+            frame=target.coord.frame.name, name=target.name, ra=ra, dec=dec
+        )
+        return target_radians
+
+    @post_load
+    def create_target(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a Target object. We are assuming that on the
+        SDPRequest the target is expressed in radians.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: Target instance populated to match JSON
+        """
+        name = data['name']
+        ra_rad = data['ra']['rad']
+        dec_rad = data['dec']['rad']
+        frame = data['frame']
+        target = sn.Target(ra=ra_rad, dec=dec_rad, frame=frame, name=name, unit='rad')
         return target
 
 
@@ -348,6 +415,74 @@ class ScanRequestSchema(Schema):
         return scan_request
 
 
+class SDPWorkflowSchema(OrderedSchema):
+    wf_id = fields.String(data_key='id', required=True)
+    wf_type = fields.String(data_key='type', required=True)
+    version = fields.String(data_key='version', required=True)
+    sdp_workflow = sn.SDPWorkflow
+
+
+class SDPParametersSchema(OrderedSchema):
+    num_stations = fields.Int(data_key='numStations', required=True)
+    num_chanels = fields.Int(data_key='numChanels', required=True)
+    num_polarisations = fields.Int(data_key='numPolarisations', required=True)
+    freq_start_hz = fields.Float(data_key='freqStartHz', required=True)
+    freq_end_hz = fields.Float(data_key='freqEndHz', required=True)
+    target_fields = fields.Dict(data_key='fields', keys=fields.String(), values=fields.Nested(SDPTargetSchema),
+                                required=True)
+
+
+class SDPScanSchema(OrderedSchema):
+    field_id = fields.Int(data_key='fieldId', required=True)
+    interval_ms = fields.Int(data_key='intervalMs', required=True)
+
+    @post_load
+    def create_sdp_scan(self, data, **_):  # pylint: disable=no-self-use
+        field_id = data['fieldId']
+        interval_ms = data['intervalMs']
+        return sn.SDPScan(field_id, interval_ms)
+
+
+class SDPScanParametersSchema(OrderedSchema):
+    scan_parameters = fields.Dict(data_key='scanParameters', keys=fields.String(), values=fields.Nested(SDPScanSchema))
+
+
+class SDPConfigureScanSchema(OrderedSchema):
+    configure_scan = fields.Nested(SDPScanParametersSchema, data_key="configureScan", required=True)
+
+    @post_load
+    def create_sdp_configure_scan(self, data, **_):  # pylint: disable=no-self-use
+        configure_scan = data['configureScan']
+        return sn.SDPConfigureScan(configure_scan=configure_scan)
+
+
+class SDPConfigurationBlockSchema(OrderedSchema):
+    sb_id = fields.String(data_key='id', required=True)
+    sbi_id = fields.String(data_key='sbiId', required=True)
+    workflow = fields.Nested(SDPWorkflowSchema)
+    parameters = fields.Nested(SDPParametersSchema)
+    scan_parameters = fields.Dict(data_key='scanParameters', keys=fields.String(), values=fields.Nested(SDPScanSchema))
+
+    @post_load
+    def create_sdp_configure_block(self, data, **_):  # pylint: disable=no-self-use
+        sb_id = data['id']
+        sbi_id = data['sbi_id]']
+        workflow = data['workflow']
+        parameters = data['parameters']
+        scan_parameters = data['scanParameters']
+        return sn.SDPConfigurationBlock(sb_id=sb_id, sbi_id=sbi_id, workflow=workflow,
+                                        parameters=parameters, scan_parameters=scan_parameters)
+
+
+class SDPConfigureSchema(OrderedSchema):
+    configure = fields.List(fields.Nested(SDPConfigurationBlockSchema, required=True))
+
+    @post_load
+    def create_sdp_configure(self, data, **_):  # pylint: disable=no-self-use
+        configure = data['configure']
+        return sn.SDPConfigure(configure)
+
+
 class MarshmallowCodec:
     """
     MarshmallowCodec marshalls and unmarshalls CDM classes.
@@ -362,7 +497,10 @@ class MarshmallowCodec:
             cn.ReleaseResourcesRequest: ReleaseResourcesRequestSchema,
             cn.DishAllocation: DishAllocationSchema,
             sn.ConfigureRequest: ConfigureRequestSchema,
-            sn.ScanRequest: ScanRequestSchema
+            sn.ScanRequest: ScanRequestSchema,
+            sn.SDPConfigurationBlock: SDPConfigurationBlockSchema,
+            sn.SDPConfigure: SDPConfigureSchema,
+            sn.SDPConfigureScan: SDPConfigureScanSchema
         }
 
     def load_from_file(self, cls, path):

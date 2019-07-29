@@ -41,6 +41,45 @@ VALID_CONFIGURE_REQUEST = """
 """
 VALID_SCAN_REQUEST = '{"scan_duration": 10.0}'
 
+VALID_SDP_CONFIGURE = """
+{
+    "configure": [
+      {
+        "id": "realtime-20190627-0001",
+        "sbiId": "20190627-0001",
+        "workflow": {
+          "id": "vis_ingest",
+          "type": "realtime",
+          "version": "0.1.0"
+        },
+        "parameters": {
+          "numStations": 4,
+          "numChanels": 372,
+          "numPolarisations": 4,
+          "freqStartHz": 0.35e9,
+          "freqEndHz": 1.05e9,
+          "fields": {
+            "0": { "system": "ICRS", "name": "NGC6251", "ra": 1.0, "dec": 1.0 }
+          }
+        },
+        "scanParameters": {
+          "12345": { "fieldId": 0, "intervalMs": 1400 }
+        }
+      }
+    ]
+}
+"""
+
+VALID_SDP_CONFIGURE_SCAN = """
+{
+    "configureScan": {
+      "scanParameters": {
+        "12346": { "fieldId": 0, "intervalMs": 2800 }
+      }
+    }
+}
+"""
+
 
 def json_is_equal(json_a, json_b):
     """
@@ -296,7 +335,46 @@ def test_unmarshall_start_scan_request():
     codec = schemas.MarshmallowCodec()
     unmarshalled = codec.loads(sn.ScanRequest, VALID_SCAN_REQUEST)
 
-    duration = datetime.timedelta(seconds=10.0)
-    expected = sn.ScanRequest(duration)
 
-    assert unmarshalled == expected
+def test_marshal_sdp_configure_scan():
+    """
+    Verify that ConfigureScan can be marshalled to JSON correctly
+    """
+    scan = sn.SDPScan(field_id=0, interval_ms=2800)
+    scan_list = {"12346": scan}
+    scan_parameters = sn.SDPScanParameters(scan_list)
+    request = sn.SDPConfigureScan(scan_parameters)
+    schema = schemas.SDPConfigureScanSchema()
+    result = schema.dumps(request)
+    assert json_is_equal(result, VALID_SDP_CONFIGURE_SCAN)
+
+
+def test_marshal_sdp_configure_request():
+    """
+    Verify that JSON can be marshalled to JSON correctly
+    """
+    sb_id = 'realtime-20190627-0001'
+    sbi_id = '20190627-0001'
+    target = sn.Target(ra=1.0, dec=1.0, name="NGC6251", unit="rad")
+    target_list = {0: target}
+
+    workflow = sn.SDPWorkflow(wf_id="vis_ingest", wf_type="realtime", version="0.1.0")
+
+    parameters = sn.SDPParameters(num_stations=4, num_chanels=372,
+                                  num_polarisations=4, freq_start_hz=0.35e9,
+                                  freq_end_hz=1.05e9, target_fields=target_list)
+    scan = sn.SDPScan(field_id=0, interval_ms=1400)
+    scan_list = {"12345": scan}
+
+    sdp_config_block = sn.SDPConfigurationBlock(sb_id=sb_id,
+                                                sbi_id=sbi_id,
+                                                workflow=workflow,
+                                                parameters=parameters,
+                                                scan_parameters=scan_list)
+
+    sdp_configure = sn.SDPConfigure([sdp_config_block])
+    schema = schemas.SDPConfigureSchema()
+
+    result = schema.dumps(sdp_configure)
+    print(result)
+    assert json_is_equal(result, VALID_SDP_CONFIGURE)

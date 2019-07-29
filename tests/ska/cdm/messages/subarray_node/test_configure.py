@@ -129,3 +129,6 @@ def test_configure_request_is_not_equal_to_other_objects():
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
     request = configure.ConfigureRequest(123, pointing_config, dish_config)
     assert request != object
+
+
+
