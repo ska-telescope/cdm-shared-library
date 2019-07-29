@@ -293,8 +293,8 @@ class SDPTargetSchema(OrderedSchema):
         :return: Target instance populated to match JSON
         """
         name = data['name']
-        ra_rad = data['ra']['rad']
-        dec_rad = data['dec']['rad']
+        ra_rad = data['ra']
+        dec_rad = data['dec']
         frame = data['frame']
         target = sn.Target(ra=ra_rad, dec=dec_rad, frame=frame, name=name, unit='rad')
         return target
@@ -357,32 +357,10 @@ class DishConfigurationSchema(Schema):
         return sn.DishConfiguration(enum_obj)
 
 
-class ConfigureRequestSchema(Schema):
-    """
-    Marshmallow schema for the subarray_node.ConfigureRequest class.
-    """
-
-    scan_id = fields.Integer(required=True, data_key='scanID')
-    pointing = fields.Nested(PointingSchema)
-    dish = fields.Nested(DishConfigurationSchema)
-
-    @post_load
-    def create_configuration(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Converted parsed JSON backn into a subarray_node.ConfigureRequest
-        object.
-
-        :param data: dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-        :return: ConfigurationRequest instance populated to match JSON
-        """
-        scan_id = data['scan_id']
-        pointing = data['pointing']
-        dish_configuration = data['dish']
-        return sn.ConfigureRequest(scan_id, pointing, dish_configuration)
 
 
-class ScanRequestSchema(Schema):
+
+class ScanRequestSchema(OrderedSchema):
     """
     Create the Schema for ScanDuration using timedelta
     """
@@ -419,7 +397,13 @@ class SDPWorkflowSchema(OrderedSchema):
     wf_id = fields.String(data_key='id', required=True)
     wf_type = fields.String(data_key='type', required=True)
     version = fields.String(data_key='version', required=True)
-    sdp_workflow = sn.SDPWorkflow
+
+    @post_load
+    def create_sdp_workflow(self, data, **_):  # pylint: disable=no-self-use
+        wf_id = data['wf_id']
+        wf_type = data['wf_type']
+        version = data['version']
+        return sn.SDPWorkflow(wf_id, wf_type, version)
 
 
 class SDPParametersSchema(OrderedSchema):
@@ -431,6 +415,15 @@ class SDPParametersSchema(OrderedSchema):
     target_fields = fields.Dict(data_key='fields', keys=fields.String(), values=fields.Nested(SDPTargetSchema),
                                 required=True)
 
+    @post_load
+    def create_sdp_workflow(self, data, **_):  # pylint: disable=no-self-use
+        num_stations = data['num_stations']
+        num_chanels = data['num_chanels']
+        num_polarisations = data['num_polarisations']
+        freq_start_hz = data['freq_start_hz']
+        freq_end_hz = data['freq_end_hz']
+        target_fields = data['target_fields']
+        return sn.SDPParameters(num_stations, num_chanels, num_polarisations, freq_start_hz, freq_end_hz, target_fields)
 
 class SDPScanSchema(OrderedSchema):
     field_id = fields.Int(data_key='fieldId', required=True)
@@ -438,8 +431,8 @@ class SDPScanSchema(OrderedSchema):
 
     @post_load
     def create_sdp_scan(self, data, **_):  # pylint: disable=no-self-use
-        field_id = data['fieldId']
-        interval_ms = data['intervalMs']
+        field_id = data['field_id']
+        interval_ms = data['interval_ms']
         return sn.SDPScan(field_id, interval_ms)
 
 
@@ -452,7 +445,7 @@ class SDPConfigureScanSchema(OrderedSchema):
 
     @post_load
     def create_sdp_configure_scan(self, data, **_):  # pylint: disable=no-self-use
-        configure_scan = data['configureScan']
+        configure_scan = data['configure_scan']
         return sn.SDPConfigureScan(configure_scan=configure_scan)
 
 
@@ -465,11 +458,11 @@ class SDPConfigurationBlockSchema(OrderedSchema):
 
     @post_load
     def create_sdp_configure_block(self, data, **_):  # pylint: disable=no-self-use
-        sb_id = data['id']
-        sbi_id = data['sbi_id]']
+        sb_id = data['sb_id']
+        sbi_id = data['sbi_id']
         workflow = data['workflow']
         parameters = data['parameters']
-        scan_parameters = data['scanParameters']
+        scan_parameters = data['scan_parameters']
         return sn.SDPConfigurationBlock(sb_id=sb_id, sbi_id=sbi_id, workflow=workflow,
                                         parameters=parameters, scan_parameters=scan_parameters)
 
@@ -481,6 +474,33 @@ class SDPConfigureSchema(OrderedSchema):
     def create_sdp_configure(self, data, **_):  # pylint: disable=no-self-use
         configure = data['configure']
         return sn.SDPConfigure(configure)
+
+
+class ConfigureRequestSchema(OrderedSchema):
+    """
+    Marshmallow schema for the subarray_node.ConfigureRequest class.
+    """
+
+    scan_id = fields.Integer(required=True, data_key='scanID')
+    pointing = fields.Nested(PointingSchema)
+    dish = fields.Nested(DishConfigurationSchema)
+    sdp = fields.Nested(SDPConfigureSchema)
+
+    @post_load
+    def create_configuration(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Converted parsed JSON backn into a subarray_node.ConfigureRequest
+        object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: ConfigurationRequest instance populated to match JSON
+        """
+        scan_id = data['scan_id']
+        pointing = data['pointing']
+        dish_configuration = data['dish']
+        sdp_configure = data['sdp']
+        return sn.ConfigureRequest(scan_id, pointing, dish_configuration, sdp_configure)
 
 
 class MarshmallowCodec:

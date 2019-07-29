@@ -11,6 +11,7 @@ __all__ = ['ConfigureRequest', 'DishConfiguration', 'PointingConfiguration', 'Ta
            'ReceiverBand', 'SDPConfigurationBlock', 'SDPConfigureScan', 'SDPParameters',
            'SDPScan', 'SDPConfigure', 'SDPWorkflow']
 
+
 class Target:
     """
     Target encapsulates source coordinates and source metadata.
@@ -18,6 +19,8 @@ class Target:
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
+    OFFSET_MARGIN_IN_RAD =  6e-17 #Arbitrary small number
+
     def __init__(self, ra, dec, name='', frame='icrs', unit=('hourangle', 'deg')):
         self.coord = SkyCoord(ra, dec, unit=unit, frame=frame)
         self.name = name
@@ -25,12 +28,17 @@ class Target:
     def __eq__(self, other):
         if not isinstance(other, Target):
             return False
-        # As the target frame is ra/dec, we can rely on .ra and .dec
-        # properties to be present
-        return all([self.name == other.name,
-                    self.coord.ra == other.coord.ra,
-                    self.coord.dec == other.coord.dec,
-                    self.coord.frame.name == other.coord.frame.name])
+
+        # Please replace this with a  more elegant way of dealing with differences
+        # due to floating point arithmetic when comparing targets
+        # defined in different ways.
+        sep =  self.coord.separation(other.coord)
+        same_position = (sep.radian < self.OFFSET_MARGIN_IN_RAD)
+
+        result= [self.name == other.name,
+                 same_position,
+                 self.coord.frame.name == other.coord.frame.name]
+        return all(result)
 
     def __repr__(self):
         raw_ra = self.coord.ra.value
@@ -90,25 +98,6 @@ class DishConfiguration:  # pylint: disable=too-few-public-methods
         return self.receiver_band == other.receiver_band
 
 
-class ConfigureRequest:  # pylint: disable=too-few-public-methods
-    """
-    ConfigureRequest encapsulates the arguments required for the TMC
-    SubArrayNode.Configure() command.
-    """
-
-    def __init__(self, scan_id: int, pointing: PointingConfiguration, dish: DishConfiguration):
-        self.scan_id = scan_id
-        self.pointing = pointing
-        self.dish = dish
-
-    def __eq__(self, other):
-        if not isinstance(other, ConfigureRequest):
-            return False
-        return self.pointing == other.pointing \
-               and self.dish == other.dish \
-               and self.scan_id == other.scan_id
-
-
 class SDPWorkflow:
 
     def __init__(self, wf_id: str, wf_type: str, version: str):
@@ -119,15 +108,16 @@ class SDPWorkflow:
     def __eq__(self, other):
         if not isinstance(other, SDPWorkflow):
             return False
-        return all([self.wf_id == other.wf_id,
-                    self.wf_type == other.wf_type,
-                    self.version == other.version])
+        results = [self.wf_id == other.wf_id,
+                   self.wf_type == other.wf_type,
+                   self.version == other.version]
+        return all(results)
 
 
 class SDPParameters:
 
     def __init__(self, num_stations: int, num_chanels: int, num_polarisations: int, freq_start_hz: float,
-                 freq_end_hz: float, target_fields: Dict[int, Target]):
+                 freq_end_hz: float, target_fields: Dict[str, Target]):
         self.num_stations = num_stations
         self.num_chanels = num_chanels
         self.num_polarisations = num_polarisations
@@ -138,12 +128,13 @@ class SDPParameters:
     def __eq__(self, other):
         if not isinstance(other, SDPParameters):
             return False
-        return all([self.num_stations == other.num_stations,
-                    self.num_chanels == other.num_chanels,
-                    self.num_polarisations == other.num_polarisations,
-                    self.freq_start_hz == other.freq_start_hz,
-                    self.freq_end_hz == other.freq_end_hz,
-                    self.target_fields == other.target_fields])
+        results = [self.num_stations == other.num_stations,
+                   self.num_chanels == other.num_chanels,
+                   self.num_polarisations == other.num_polarisations,
+                   self.freq_start_hz == other.freq_start_hz,
+                   self.freq_end_hz == other.freq_end_hz,
+                   self.target_fields == other.target_fields]
+        return all(results)
 
 
 class SDPScan:
@@ -186,11 +177,13 @@ class SDPConfigurationBlock:
     def __eq__(self, other):
         if not isinstance(other, SDPConfigurationBlock):
             return False
-        return all([self.sb_id == other.sb_id,
-                    self.sbi_id == other.sbi_id,
-                    self.workflow == other.workflow,
-                    self.parameters == other.parameters,
-                    self.scan_parameters == other.scan_parameters])
+        results = [self.sb_id == other.sb_id,
+                   self.sbi_id == other.sbi_id,
+                   self.workflow == other.workflow,
+                   self.parameters == other.parameters,
+                   self.scan_parameters == other.scan_parameters]
+
+        return all(results)
 
 
 class SDPConfigure:
@@ -214,3 +207,27 @@ class SDPConfigureScan:
             return False
         return self.configure_scan == other.configure_scan
 
+
+class ConfigureRequest:  # pylint: disable=too-few-public-methods
+    """
+    ConfigureRequest encapsulates the arguments required for the TMC
+    SubArrayNode.Configure() command.
+    """
+
+    def __init__(self, scan_id: int, pointing: PointingConfiguration, dish: DishConfiguration, sdp: SDPConfigure):
+        self.scan_id = scan_id
+        self.pointing = pointing
+        self.dish = dish
+        self.sdp = sdp
+
+    def __eq__(self, other):
+        if not isinstance(other, ConfigureRequest):
+            return False
+        result = [
+            self.pointing == other.pointing,
+            self.dish == other.dish,
+            self.scan_id == other.scan_id,
+            self.sdp == other.sdp
+        ]
+
+        return all(result)
