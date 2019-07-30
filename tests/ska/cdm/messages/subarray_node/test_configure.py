@@ -3,22 +3,52 @@ Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
 import ska.cdm.messages.subarray_node.configure as configure
 
-
 def sdp_configure_for_test(target):
+    """
+    Quick method for setting up an SDP Configure that can be used for testing
+    For completeness of testing it also does the tests to ensure that if classes
+    are of different types they are considered unequal
+    """
     target_list = {"0": target}
     workflow = configure.SDPWorkflow(wf_id="vis_ingest", wf_type="realtime", version="0.1.0")
+    assert workflow != object
+
     parameters = configure.SDPParameters(num_stations=4, num_chanels=372,
                                   num_polarisations=4, freq_start_hz=0.35e9,
                                   freq_end_hz=1.05e9, target_fields=target_list)
+    assert parameters != object
+
     scan = configure.SDPScan(field_id=0, interval_ms=1400)
+    assert scan != object
+
     scan_list = {"12345": scan}
     sdp_config_block = configure.SDPConfigurationBlock(sb_id='realtime-20190627-0001',
                                                 sbi_id='20190627-0001',
                                                 workflow=workflow,
                                                 parameters=parameters,
                                                 scan_parameters=scan_list)
+    assert sdp_config_block != object
+
     sdp_configure = configure.SDPConfigure([sdp_config_block])
+    assert sdp_configure != object
+
     return sdp_configure
+
+def test_sdp_configure_scan_comparisons():
+    """
+    Basic check for the SDP message objects not tested above that if classes
+    are of different types they cannot have the same value
+    """
+    scan = configure.SDPScan(field_id=0, interval_ms=2800)
+
+    scan_parameters = configure.SDPScanParameters({"12345": scan})
+    assert scan_parameters != object
+
+    configure_scan = configure.SDPConfigureScan(scan_parameters)
+    assert  configure_scan != object
+
+
+
 
 
 def test_target_defaults():
@@ -149,3 +179,7 @@ def test_configure_request_is_not_equal_to_other_objects():
     sdp_config = sdp_configure_for_test(configure.Target(1, 1))
     request = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config)
     assert request != object
+
+
+
+
