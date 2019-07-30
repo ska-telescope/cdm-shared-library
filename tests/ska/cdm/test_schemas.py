@@ -7,6 +7,7 @@ import json
 import ska.cdm.messages.central_node as cn
 import ska.cdm.messages.subarray_node as sn
 import ska.cdm.schemas as schemas
+from ska.cdm.messages.subarray_node import SDPConfigurationBlock
 
 VALID_ASSIGN_RESOURCES_REQUEST = '{"subarrayID": 1, "dish": {"receptorIDList": ["0001", "0002"]}}'
 VALID_ASSIGN_RESOURCES_RESPONSE = '{"dish": {"receptorIDList_success": ["0001", "0002"]}}'
@@ -54,7 +55,12 @@ VALID_CONFIGURE_REQUEST = """
           "freqStartHz": 0.35e9,
           "freqEndHz": 1.05e9,
           "fields": {
-            "0": { "system": "ICRS", "name": "M51", "ra": 3.5337607188635975, "dec": 0.8237126492459581 }
+            "0": { 
+            "system": "ICRS",
+             "name": "M51", 
+             "ra": 3.5337607188635975, 
+             "dec": 0.8237126492459581 
+             }
           }
         },
         "scanParameters": {
@@ -65,6 +71,31 @@ VALID_CONFIGURE_REQUEST = """
   }
 }
 """
+
+VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST = """
+{
+  "scanID": 123,
+  "pointing": {
+    "target": {
+      "system": "ICRS",
+      "name": "M51",
+      "RA": "13:29:52.698",
+      "dec": "+47:11:42.93"
+    }
+  },
+  "dish": {
+    "receiverBand": "1"
+  },
+  "sdp": {
+    "configureScan": {
+      "scanParameters": {
+        "12346": { "fieldId": 0, "intervalMs": 2800 }
+      }
+    }
+  }
+}
+"""
+
 VALID_SCAN_REQUEST = '{"scan_duration": 10.0}'
 
 VALID_SDP_CONFIGURE = """
@@ -98,6 +129,40 @@ VALID_SDP_CONFIGURE = """
 
 VALID_SDP_CONFIGURE_SCAN = """
 {
+    "configureScan": {
+      "scanParameters": {
+        "12346": { "fieldId": 0, "intervalMs": 2800 }
+      }
+    }
+}
+"""
+
+VALID_SDP_CONFIGURE_AND_CONFIGURE_SCAN = """
+{
+    "configure": [
+      {
+        "id": "realtime-20190627-0001",
+        "sbiId": "20190627-0001",
+        "workflow": {
+          "id": "vis_ingest",
+          "type": "realtime",
+          "version": "0.1.0"
+        },
+        "parameters": {
+          "numStations": 4,
+          "numChanels": 372,
+          "numPolarisations": 4,
+          "freqStartHz": 0.35e9,
+          "freqEndHz": 1.05e9,
+          "fields": {
+            "0": { "system": "ICRS", "name": "NGC6251", "ra": 1.0, "dec": 1.0 }
+          }
+        },
+        "scanParameters": {
+          "12345": { "fieldId": 0, "intervalMs": 1400 }
+        }
+      }
+    ],
     "configureScan": {
       "scanParameters": {
         "12346": { "fieldId": 0, "intervalMs": 2800 }
@@ -298,17 +363,20 @@ def test_marshall_configure_request():
     """
     Verify that ConfigureRequest is marshalled to JSON correctly.
     """
-    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs', unit=('hourangle', 'deg'))
+    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs',
+                       unit=('hourangle', 'deg'))
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
     sdp_configure = sdp_configure_for_test(target)
 
     request = sn.ConfigureRequest(123, pointing_config, dish_config, sdp_configure)
     request_json = schemas.ConfigureRequestSchema().dumps(request)
+
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
 
 
 def sdp_configure_for_test(target):
+    """Utility method to create an SDPConfigure request for use in tests"""
     target_list = {"0": target}
     workflow = sn.SDPWorkflow(wf_id="vis_ingest", wf_type="realtime", version="0.1.0")
     parameters = sn.SDPParameters(num_stations=4, num_chanels=372,
@@ -325,12 +393,22 @@ def sdp_configure_for_test(target):
     return sdp_configure
 
 
+def sdp_configure_scan_for_test():
+    """Utility method to create an SDPConfigureScan request for use in tests"""
+    scan = sn.SDPScan(field_id=0, interval_ms=2800)
+    scan_list = {"12346": scan}
+
+    scan_parameters = sn.SDPScanParameters(scan_list)
+    configure_scan = sn.SDPConfigureScan(scan_parameters)
+    return configure_scan
+
+
 def test_unmarshall_configure_request_from_json():
     """
     Verify that a ConfigureRequest can be unmarshalled from JSON.
     """
-    #target = sn.Target(ra=3.5337607188635975, dec=0.8237126492459581, name='M51', frame='icrs', unit='rad')
-    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs', unit=('hourangle', 'deg'))
+    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs',
+                       unit=('hourangle', 'deg'))
     pointing_config = sn.PointingConfiguration(target)
     dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
     sdp_configure = sdp_configure_for_test(target)
@@ -339,6 +417,23 @@ def test_unmarshall_configure_request_from_json():
     unmarshalled = schemas.ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
 
     assert unmarshalled == expected
+
+
+def test_unmarshall_configure_for_later_request_from_json():
+    """
+    Verify that a ConfigureRequest can be unmarshalled from JSON.
+    """
+    target = sn.Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs',
+                       unit=('hourangle', 'deg'))
+    pointing_config = sn.PointingConfiguration(target)
+    dish_config = sn.DishConfiguration(receiver_band=sn.ReceiverBand.BAND_1)
+    sdp_configure_scan = sdp_configure_scan_for_test()
+    expected = sn.ConfigureRequest(123, pointing_config, dish_config, sdp_configure_scan)
+
+    unmarshalled = schemas.ConfigureRequestSchema().loads(VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST)
+
+    assert unmarshalled == expected
+
 
 def test_codec_loads():
     """
@@ -377,17 +472,15 @@ def test_unmarshall_start_scan_request():
     Verify that JSON can be unmarshalled back to a ScanRequest
     """
     codec = schemas.MarshmallowCodec()
-    unmarshalled = codec.loads(sn.ScanRequest, VALID_SCAN_REQUEST)
+    result = codec.loads(sn.ScanRequest, VALID_SCAN_REQUEST)
+    assert result
 
 
 def test_marshal_sdp_configure_scan():
     """
     Verify that ConfigureScan can be marshalled to JSON correctly
     """
-    scan = sn.SDPScan(field_id=0, interval_ms=2800)
-    scan_list = {"12346": scan}
-    scan_parameters = sn.SDPScanParameters(scan_list)
-    request = sn.SDPConfigureScan(scan_parameters)
+    request = sdp_configure_scan_for_test()
     schema = schemas.SDPConfigureScanSchema()
     result = schema.dumps(request)
     assert json_is_equal(result, VALID_SDP_CONFIGURE_SCAN)
@@ -395,11 +488,12 @@ def test_marshal_sdp_configure_scan():
 
 def test_unmarshall_sdp_configure_scan():
     """
-    Verify that JSON can be unmarshalled back to a ScanRequest
+    Verify that JSON can be unmarshalled back to a ConfigureScan
     """
     codec = schemas.MarshmallowCodec()
-    unmarshalled = codec.loads(sn.SDPConfigureScan, VALID_SDP_CONFIGURE_SCAN)
-
+    result = codec.loads(sn.SDPConfigureScan, VALID_SDP_CONFIGURE_SCAN)
+    config_block = result.configure[0]
+    assert isinstance(config_block, SDPConfigurationBlock)
 
 
 def test_marshal_sdp_configure_request():
@@ -429,11 +523,68 @@ def test_marshal_sdp_configure_request():
     schema = schemas.SDPConfigureSchema()
 
     result = schema.dumps(sdp_configure)
+    print("Result is ", result)
     assert json_is_equal(result, VALID_SDP_CONFIGURE)
+
+
+def test_marshal_sdp_configure_scan_request():
+    """
+    Verify that JSON can be marshalled to JSON correctly
+    """
+    configure_scan = sdp_configure_scan_for_test()
+    schema = schemas.SDPConfigureScanSchema()
+    result = schema.dumps(configure_scan)
+    assert json_is_equal(result, VALID_SDP_CONFIGURE_SCAN)
+
 
 def test_unmarshall_sdp_configure_request():
     """
     Verify that JSON can be unmarshalled back to a ScanRequest
     """
     codec = schemas.MarshmallowCodec()
-    unmarshalled = codec.loads(sn.SDPConfigure, VALID_SDP_CONFIGURE)
+    result = codec.loads(sn.SDPConfigure, VALID_SDP_CONFIGURE)
+    config_block = result.configure[0]
+    assert isinstance(config_block, SDPConfigurationBlock)
+
+
+def test_unmarshall_sdp_configure_scan_request():
+    """
+    Verify that JSON can be unmarshalled back to a ScanRequest
+    """
+    codec = schemas.MarshmallowCodec()
+    result = codec.loads(sn.SDPConfigureScan, VALID_SDP_CONFIGURE_SCAN)
+    scan_parameters = result.configure_scan.scan_parameters
+    assert '12346' in scan_parameters.keys()
+
+
+def test_unmarshall_both_sdp_configure_and_configure_scan_request():
+    """
+    Nominal test for documentation - if both configure and confgureScan are
+    provided currently the configure will be read into an object but not the
+    configureScan as this is considered redundant
+    """
+    codec = schemas.MarshmallowCodec()
+    result = codec.loads(sn.SDPConfigure, VALID_SDP_CONFIGURE_AND_CONFIGURE_SCAN)
+    config_block = result.configure[0]
+    assert isinstance(config_block, SDPConfigurationBlock)
+
+
+
+
+def test_unmarshall_empty_sdp_configure_request():
+    """
+    Nominal test  - more for documentation - since both configure and confgureScan are optional
+    it is technically possible to have an sdp configuration that is empty.
+    Placeholder for a test if we close this down.
+    """
+    codec = schemas.MarshmallowCodec()
+    result = codec.loads(sn.SDPConfigure, "{}")
+    config_block = result.configure[0]
+    assert isinstance(config_block, SDPConfigurationBlock)
+
+
+def test_read_a_file_from_disk():
+    """Test for loading a configure request from a JSON file"""
+    codec = schemas.MarshmallowCodec()
+    result = codec.load_from_file(sn.ConfigureRequest, "./tests/testfile_sample_configure.json")
+    assert result.scan_id == 123
