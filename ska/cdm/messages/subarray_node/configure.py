@@ -21,6 +21,7 @@ class Target:
     """
     OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
 
+    #  pylint: disable=too-many-arguments
     def __init__(self, ra, dec, name='', frame='icrs', unit=('hourangle', 'deg')):
         self.coord = SkyCoord(ra, dec, unit=unit, frame=frame)
         self.name = name

@@ -281,5 +281,9 @@ def test_sdp_scan_parameters_not_equal_to_other_objects():
 
 
 def test_processing_block_configuration_not_equal_to_other_objects():
+    """
+    Verify that ProcessingBlockConfiguration objects are not considered equal
+    to objects of other types.
+    """
     config = configure.ProcessingBlockConfiguration(None, None, None, None, None)
     assert config != 1
