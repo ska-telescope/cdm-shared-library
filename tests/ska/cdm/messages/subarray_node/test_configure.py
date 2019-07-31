@@ -14,8 +14,8 @@ def sdp_configure_for_test(target):
     assert workflow != object
 
     parameters = configure.SDPParameters(num_stations=4, num_chanels=372,
-                                  num_polarisations=4, freq_start_hz=0.35e9,
-                                  freq_end_hz=1.05e9, target_fields=target_list)
+                                         num_polarisations=4, freq_start_hz=0.35e9,
+                                         freq_end_hz=1.05e9, target_fields=target_list)
     assert parameters != object
 
     scan = configure.SDPScan(field_id=0, interval_ms=1400)
@@ -23,10 +23,10 @@ def sdp_configure_for_test(target):
 
     scan_list = {"12345": scan}
     sdp_config_block = configure.SDPConfigurationBlock(sb_id='realtime-20190627-0001',
-                                                sbi_id='20190627-0001',
-                                                workflow=workflow,
-                                                parameters=parameters,
-                                                scan_parameters=scan_list)
+                                                       sbi_id='20190627-0001',
+                                                       workflow=workflow,
+                                                       parameters=parameters,
+                                                       scan_parameters=scan_list)
     assert sdp_config_block != object
 
     sdp_configure = configure.SDPConfigure([sdp_config_block])
@@ -179,7 +179,3 @@ def test_configure_request_is_not_equal_to_other_objects():
     sdp_config = sdp_configure_for_test(configure.Target(1, 1))
     request = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config)
     assert request != object
-
-
-
-

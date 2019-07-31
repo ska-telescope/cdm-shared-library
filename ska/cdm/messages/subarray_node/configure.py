@@ -9,7 +9,7 @@ from astropy.coordinates import SkyCoord
 
 __all__ = ['ConfigureRequest', 'DishConfiguration', 'PointingConfiguration', 'Target',
            'ReceiverBand', 'SDPConfigurationBlock', 'SDPConfigureScan', 'SDPParameters',
-           'SDPScan', 'SDPConfigure', 'SDPWorkflow']
+           'SDPScan', 'SDPScanParameters', 'SDPConfigure', 'SDPWorkflow']
 
 
 class Target:  # pylint: disable=too-few-public-methods
@@ -193,9 +193,6 @@ class SDPConfigurationBlock:  # pylint: disable=too-few-public-methods
     :param parameters: SDP configuration parameters for this particular configuration
     :param scan_parameters: Dictionary of the parameters for particular scans keyed by the scan ID
     """
-
-    workflow: SDPWorkflow
-
     def __init__(self, sb_id: str, sbi_id: str, workflow: SDPWorkflow,
                  parameters: SDPParameters, scan_parameters: Dict[str, SDPScan]):
         """
