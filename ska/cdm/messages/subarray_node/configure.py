@@ -12,7 +12,7 @@ __all__ = ['ConfigureRequest', 'DishConfiguration', 'PointingConfiguration', 'Ta
            'SDPScan', 'SDPScanParameters', 'SDPConfigure', 'SDPWorkflow']
 
 
-class Target:  # pylint: disable=too-few-public-methods
+class Target:  # pylint: disable=too-few-public-methods  # pylint: disable=too-many-arguments
     """
     Target encapsulates source coordinates and source metadata.
 
@@ -117,8 +117,9 @@ class SDPWorkflow:  # pylint: disable=too-few-public-methods
                    self.version == other.version]
         return all(results)
 
-
-class SDPParameters:  # pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods
+# pylint: disable=too-many-arguments
+class SDPParameters:
     """
     Defines the key parameters for the SDPConfiguration
     """
@@ -193,6 +194,8 @@ class SDPConfigurationBlock:  # pylint: disable=too-few-public-methods
     :param parameters: SDP configuration parameters for this particular configuration
     :param scan_parameters: Dictionary of the parameters for particular scans keyed by the scan ID
     """
+
+    # pylint: disable=too-many-arguments
     def __init__(self, sb_id: str, sbi_id: str, workflow: SDPWorkflow,
                  parameters: SDPParameters, scan_parameters: Dict[str, SDPScan]):
         """
