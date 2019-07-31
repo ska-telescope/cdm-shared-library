@@ -103,23 +103,18 @@ class FSPFunctionMode(Enum):
 
 class FSPConfiguration:
     """
-    FSPConfiguration class holds the fsp details for CSP configuration
-    fspID": "1",
-        "functionMode": "CORR",  // Set FSP to correlation mode
-        // Since receptors are not given, FSP uses all receptors assigned to the
-        // subarray
-        "frequencySliceID": 1,   // Tell FSP to process frequency slice #1
-        "integrationTime": 1400  // Set FSP to 1400ms integration time.
-        "corrBandwidth": 0       // Correlate the entire frequency slice
-        //
-        // Send the minimum possible number of channels to SDP by averaging
-        // the first 744 fine channels down to 372 channels (=744/2). Do not
-        // send any other fine channel groups to SDP (=<chan ID>,0).
-        //
-        "channelAveragingMap": [
+    FSPConfiguration class holds the fsp details for CSP configuration in below format
+    "fspID": "1",
+    "functionMode": "CORR",  // Set FSP to correlation mode
+    "frequencySliceID": 1,   // Tell FSP to process frequency slice #1
+    "integrationTime": 1400  // Set FSP to 1400ms integration time.
+    "corrBandwidth": 0       // Correlate the entire frequency slice
+    "channelAveragingMap": [
           (1,2), (745,0), (1489,0), (2233,0), (2977,0), (3721,0), (4465,0),
           (5209,0), (5953,0), (6697,0), (7441,0), (8185,0), (8929,0), (9673,0),
           (10417,0), (11161,0), (11905,0), (12649,0), (13393,0), (14137,0)
+    //Table 20 x 2 integers. Each of 20 entries contains:Channel ID, Averaging factor. Each FSP produces 14880
+
     """
 
     def __init__(self, fsp_id: int, function_mode: FSPFunctionMode, frequency_slice_id: int,
@@ -133,7 +128,7 @@ class FSPConfiguration:
         :param integration_time: integration time in ms
         :param channel_averaging_map: Optional channel averaging map
         """
-        # TODO all these argument validators should have unit tests
+
         if not 1 <= fsp_id <= 27:
             raise ValueError('FSP ID must be in range 1..27. Got {}'.format(fsp_id))
         self.fsp_id = fsp_id
@@ -154,7 +149,8 @@ class FSPConfiguration:
             raise ValueError('Integration time must in range 1..10 * 140. Got {}'.format(integration_time))
         self.integration_time = integration_time
 
-        # TODO add test to verify there are 20 tuples in channel_averaging_map
+        if len(channel_averaging_map) < 20  or len(channel_averaging_map) >20 :
+            raise ValueError('Number of tuples in chanel averaging map must be 20. Got {}'.format(len(channel_averaging_map)))
         self.channel_averaging_map = channel_averaging_map
 
     def __eq__(self, other):
