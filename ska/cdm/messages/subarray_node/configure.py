@@ -19,6 +19,7 @@ class Target:
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
+    OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
 
     def __init__(self, ra, dec, name='', frame='icrs', unit=('hourangle', 'deg')):
         self.coord = SkyCoord(ra, dec, unit=unit, frame=frame)
@@ -27,12 +28,15 @@ class Target:
     def __eq__(self, other):
         if not isinstance(other, Target):
             return False
-        # As the target frame is ra/dec, we can rely on .ra and .dec
-        # properties to be present
-        return all([self.name == other.name,
-                    self.coord.ra == other.coord.ra,
-                    self.coord.dec == other.coord.dec,
-                    self.coord.frame.name == other.coord.frame.name])
+
+        # Please replace this with a  more elegant way of dealing with differences
+        # due to floating point arithmetic when comparing targets
+        # defined in different ways.
+        sep = self.coord.separation(other.coord)
+
+        return self.name == other.name \
+               and self.coord.frame.name == other.coord.frame.name \
+               and sep.radian < self.OFFSET_MARGIN_IN_RAD
 
     def __repr__(self):
         raw_ra = self.coord.ra.value
