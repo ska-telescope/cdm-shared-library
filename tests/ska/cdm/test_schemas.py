@@ -492,8 +492,8 @@ def test_unmarshall_sdp_configure_scan():
     """
     codec = schemas.MarshmallowCodec()
     result = codec.loads(sn.SDPConfigureScan, VALID_SDP_CONFIGURE_SCAN)
-    config_block = result.configure[0]
-    assert isinstance(config_block, SDPConfigurationBlock)
+    scan_parameters = result.configure_scan.scan_parameters
+    assert '12346' in scan_parameters.keys()
 
 
 def test_marshal_sdp_configure_request():
@@ -579,8 +579,8 @@ def test_unmarshall_empty_sdp_configure_request():
     """
     codec = schemas.MarshmallowCodec()
     result = codec.loads(sn.SDPConfigure, "{}")
-    config_block = result.configure[0]
-    assert isinstance(config_block, SDPConfigurationBlock)
+    assert result == {}
+
 
 
 def test_read_a_file_from_disk():
