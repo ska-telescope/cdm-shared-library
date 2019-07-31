@@ -12,14 +12,13 @@ __all__ = ['ConfigureRequest', 'DishConfiguration', 'PointingConfiguration', 'Ta
            'SDPScan', 'SDPScanParameters', 'SDPWorkflow', 'SDPConfiguration']
 
 
-class Target:  # pylint: disable=too-few-public-methods  # pylint: disable=too-many-arguments
+class Target:
     """
     Target encapsulates source coordinates and source metadata.
 
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
-    OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
 
     def __init__(self, ra, dec, name='', frame='icrs', unit=('hourangle', 'deg')):
         self.coord = SkyCoord(ra, dec, unit=unit, frame=frame)
@@ -28,17 +27,12 @@ class Target:  # pylint: disable=too-few-public-methods  # pylint: disable=too-m
     def __eq__(self, other):
         if not isinstance(other, Target):
             return False
-
-        # Please replace this with a  more elegant way of dealing with differences
-        # due to floating point arithmetic when comparing targets
-        # defined in different ways.
-        sep = self.coord.separation(other.coord)
-        same_position = (sep.radian < self.OFFSET_MARGIN_IN_RAD)
-
-        result = [self.name == other.name,
-                  same_position,
-                  self.coord.frame.name == other.coord.frame.name]
-        return all(result)
+        # As the target frame is ra/dec, we can rely on .ra and .dec
+        # properties to be present
+        return all([self.name == other.name,
+                    self.coord.ra == other.coord.ra,
+                    self.coord.dec == other.coord.dec,
+                    self.coord.frame.name == other.coord.frame.name])
 
     def __repr__(self):
         raw_ra = self.coord.ra.value
@@ -72,7 +66,7 @@ class PointingConfiguration:  # pylint: disable=too-few-public-methods
         return self.target == other.target
 
 
-class ReceiverBand(Enum):  # pylint: disable=too-few-public-methods
+class ReceiverBand(Enum):
     """
     ReceiverBand is an enumeration of SKA MID receiver bands.
     """

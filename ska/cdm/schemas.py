@@ -612,7 +612,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         """
         Return a string JSON representation of a class.
 
-        :param obj: the instance to marshal to JSON
+        :param obj: the instance to marshall to JSON
         :return: a JSON string
         """
         schema_cls = self.schema[obj.__class__]
