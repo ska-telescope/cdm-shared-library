@@ -13,14 +13,12 @@ from .messages import subarray_node as sn
 
 __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'DishAllocationSchema',
            'ReleaseResourcesRequestSchema', 'ConfigureRequestSchema', 'ScanRequestSchema',
-           'MarshmallowCodec',
-           'SDPConfigurationBlockSchema', 'SDPConfigureSchema', 'SDPConfigureScanSchema',
-           'SDPParametersSchema', 'SDPScanSchema', 'SDPScanParametersSchema']
+           'MarshmallowCodec', 'SDPParametersSchema', 'SDPScanSchema', 'SDPScanParametersSchema']
 
 
 class OrderedSchema(Schema):  # pylint: disable=too-few-public-methods
     """
-    Subclass of Schema, anything inheriting from OrderedSchema  has the
+    Subclass of Schema, anything inheriting from Schema  has the
     order of its JSON properties respected in the message. Saves adding
     a Meta class to everything individually
     """
@@ -32,7 +30,7 @@ class OrderedSchema(Schema):  # pylint: disable=too-few-public-methods
         ordered = True
 
 
-SexagesimalTarget = collections.namedtuple('SexagesimalTarget', 'ra dec frame name')
+JsonTarget = collections.namedtuple('JsonTarget', 'ra dec frame name')
 
 
 class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -195,16 +193,16 @@ class UpperCasedField(fields.Field):  # pylint: disable=too-few-public-methods
     to a lower-case string.
     """
 
-    def _serialize(self, value, attr, obj, **kwargs): # pylint: disable=no-self-use
+    def _serialize(self, value, attr, obj, **kwargs):  # pylint: disable=no-self-use
         if value is None:
             return ""
         return value.upper()
 
-    def _deserialize(self, value, attr, data, **kwargs): # pylint: disable=no-self-use
+    def _deserialize(self, value, attr, data, **kwargs):  # pylint: disable=no-self-use
         return value.lower()
 
 
-class TargetSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the subarray_node.Target class
     """
@@ -227,7 +225,7 @@ class TargetSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
         # All pointing coordinates are in ICRS
         icrs_coord = target.coord.transform_to('icrs')
         hms, dms = icrs_coord.to_string('hmsdms', sep=':').split(' ')
-        sexagesimal = SexagesimalTarget(
+        sexagesimal = JsonTarget(
             ra=hms, dec=dms, frame=icrs_coord.frame.name, name=target.name
         )
 
@@ -250,12 +248,7 @@ class TargetSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
         return target
 
 
-# Added for clarity that SDP is currently assumed to require RA and Dec as radians
-# unlike the TMC need for a sexagesimal target
-RadianTarget = collections.namedtuple('RadianTarget', 'ra dec frame name')
-
-
-class SDPTargetSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class SDPTargetSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the subarray_node.Target class when used for the
     SDP Target. This is similar to the Pointing Target but uses lower case for the
@@ -282,7 +275,7 @@ class SDPTargetSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
         target.coord = target.coord.transform_to('icrs')
         ra_rad = target.coord.ra.rad
         dec_rad = target.coord.dec.rad
-        target_radians = RadianTarget(
+        target_radians = JsonTarget(
             frame=target.coord.frame.name, name=target.name, ra=ra_rad, dec=dec_rad
         )
         return target_radians
@@ -362,7 +355,7 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         return sn.DishConfiguration(enum_obj)
 
 
-class ScanRequestSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Create the Schema for ScanDuration using timedelta
     """
@@ -371,8 +364,8 @@ class ScanRequestSchema(OrderedSchema):  # pylint: disable=too-few-public-method
     @pre_dump
     def convert_to_scan(self, data, **_):  # pylint: disable=no-self-use
         """
-        Process scan_duration and converted it
-        in a float using total_seconds method
+        Process scan_duration and converted it to a float
+
         :param data: the scan_duration timedelta
         :param _: kwargs passed by Marshallow
         :return: float converted
@@ -386,6 +379,7 @@ class ScanRequestSchema(OrderedSchema):  # pylint: disable=too-few-public-method
     def create_scan_request(self, data, **_):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ScanRequest
+
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: ScanRequest instance populated to match JSON
@@ -395,12 +389,12 @@ class ScanRequestSchema(OrderedSchema):  # pylint: disable=too-few-public-method
         return scan_request
 
 
-class SDPWorkflowSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     """Represents the type of workflow being configured on the SDP eventually this will tie
        into some kind of lookup/enumeration
     """
-    wf_id = fields.String(data_key='id', required=True)
-    wf_type = fields.String(data_key='type', required=True)
+    id = fields.String(data_key='id', required=True)
+    type = fields.String(data_key='type', required=True)
     version = fields.String(data_key='version', required=True)
     sdp_workflow = sn.SDPWorkflow
 
@@ -412,21 +406,23 @@ class SDPWorkflowSchema(OrderedSchema):  # pylint: disable=too-few-public-method
         :param _: kwargs passed by Marshmallow
         :return: SDPWorkflow instance populated to match JSON
         """
-        wf_id = data['wf_id']
-        wf_type = data['wf_type']
+        wf_id = data['id']
+        wf_type = data['type']
         version = data['version']
         return sn.SDPWorkflow(wf_id, wf_type, version)
 
 
-class SDPParametersSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
-    """Represents the main SDP configuration parameters """
-    num_stations = fields.Int(data_key='numStations', required=True)
-    num_chanels = fields.Int(data_key='numChanels', required=True)
-    num_polarisations = fields.Int(data_key='numPolarisations', required=True)
-    freq_start_hz = fields.Float(data_key='freqStartHz', required=True)
-    freq_end_hz = fields.Float(data_key='freqEndHz', required=True)
+class SDPParametersSchema(Schema):  # pylint: disable=too-few-public-methods
+    """
+    Represents the main SDP configuration parameters
+    """
+    num_stations = fields.Int(data_key='numStations')
+    num_channels = fields.Int(data_key='numChannels')
+    num_polarisations = fields.Int(data_key='numPolarisations')
+    freq_start_hz = fields.Float(data_key='freqStartHz')
+    freq_end_hz = fields.Float(data_key='freqEndHz')
     target_fields = fields.Dict(data_key='fields', keys=fields.String(),
-                                values=fields.Nested(SDPTargetSchema), required=True)
+                                values=fields.Nested(SDPTargetSchema))
 
     @post_load
     def create_sdp_parameters(self, data, **_):  # pylint: disable=no-self-use
@@ -437,16 +433,16 @@ class SDPParametersSchema(OrderedSchema):  # pylint: disable=too-few-public-meth
         :return: SDPParameters instance populated to match JSON
         """
         num_stations = data['num_stations']
-        num_chanels = data['num_chanels']
+        num_channels = data['num_channels']
         num_polarisations = data['num_polarisations']
         freq_start_hz = data['freq_start_hz']
         freq_end_hz = data['freq_end_hz']
         target_fields = data['target_fields']
-        return sn.SDPParameters(num_stations, num_chanels, num_polarisations,
+        return sn.SDPParameters(num_stations, num_channels, num_polarisations,
                                 freq_start_hz, freq_end_hz, target_fields)
 
 
-class SDPScanSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class SDPScanSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     The field id should match one of the previously defined fields in the targets dictionary.
     The interval is the integer number of millisecs for the scan.
@@ -467,7 +463,7 @@ class SDPScanSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
         return sn.SDPScan(field_id, interval_ms)
 
 
-class SDPScanParametersSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class SDPScanParametersSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Scans are indexed by ScanID. It is not yet clear if we expect to send multiple scans within the
     same configuration - all the examples so far are for a single scan.
@@ -488,28 +484,9 @@ class SDPScanParametersSchema(OrderedSchema):  # pylint: disable=too-few-public-
         return sn.SDPScanParameters(scan_parameters)
 
 
-class SDPConfigureScanSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class ProcessingBlockConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
-    Marshmallow class for the SDPConfigureScan class
-    SDPConfigureScan is used for configuration requests for every scan after the first one
-    """
-    configure_scan = fields.Nested(SDPScanParametersSchema, data_key="configureScan", required=True)
-
-    @post_load
-    def create_sdp_configure_scan(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Convert parsed JSON back into a set containing all the scans
-        :param data: dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-        :return: SDPConfigureScan instance populated to match JSON
-        """
-        configure_scan = data['configure_scan']
-        return sn.SDPConfigureScan(configure_scan=configure_scan)
-
-
-class SDPConfigurationBlockSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
-    """
-    Marshmallow class for the SDPConfigurationBlock class
+    Marshmallow class for the ProcessingBlockConfiguration class
     On the initial configure scan a list of these blocks are provided to configure SDP
     """
     sb_id = fields.String(data_key='id', required=True)
@@ -520,31 +497,36 @@ class SDPConfigurationBlockSchema(OrderedSchema):  # pylint: disable=too-few-pub
                                   values=fields.Nested(SDPScanSchema))
 
     @post_load
-    def create_sdp_configure_block(self, data, **_):  # pylint: disable=no-self-use
+    def unmarshall(self, data, **_):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a set containing all the scans
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
-        :return: SDPConfigurationBlock instance populated to match JSON
+        :return: ProcessingBlockConfiguration instance populated to match JSON
         """
-        sb_id = data['sb_id']
-        sbi_id = data['sbi_id']
-        workflow = data['workflow']
-        parameters = data['parameters']
-        scan_parameters = data['scan_parameters']
-        return sn.SDPConfigurationBlock(sb_id=sb_id, sbi_id=sbi_id, workflow=workflow,
-                                        parameters=parameters, scan_parameters=scan_parameters)
+        return sn.ProcessingBlockConfiguration(**data)
 
 
-class SDPConfigureSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow class for the SDPConfigure class
     This is the top level schema for the SDP part of the configure scan request.
     It is going to consist of either a 'configure' request (first scan) or a
     'configureScan' (each subsequent request)
     """
-    configure = fields.List(fields.Nested(SDPConfigurationBlockSchema), data_key='configure')
+    configure = fields.Nested(ProcessingBlockConfigurationSchema, many=True)
     configure_scan = fields.Nested(SDPScanParametersSchema, data_key='configureScan')
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SDP configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
 
     @post_load
     def create_sdp_configuration(self, data, **_):  # pylint: disable=no-self-use
@@ -554,16 +536,10 @@ class SDPConfigureSchema(OrderedSchema):  # pylint: disable=too-few-public-metho
         :param _: kwargs passed by Marshmallow
         :return: SDPConfigureScan instance populated to match JSON
         """
-        if 'configure' in data.keys():
-            configure = data['configure']
-            return sn.SDPConfigure(configure)
-        if 'configure_scan' in data.keys():
-            configure_scan = data['configure_scan']
-            return sn.SDPConfigureScan(configure_scan)
-        return {}
+        return sn.SDPConfiguration(**data)
 
 
-class ConfigureRequestSchema(OrderedSchema):  # pylint: disable=too-few-public-methods
+class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """
@@ -571,7 +547,7 @@ class ConfigureRequestSchema(OrderedSchema):  # pylint: disable=too-few-public-m
     scan_id = fields.Integer(required=True, data_key='scanID')
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
-    sdp = fields.Nested(SDPConfigureSchema)
+    sdp = fields.Nested(SDPConfigurationSchema)
 
     @post_load
     def create_configuration(self, data, **_):  # pylint: disable=no-self-use
@@ -605,9 +581,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
             cn.DishAllocation: DishAllocationSchema,
             sn.ConfigureRequest: ConfigureRequestSchema,
             sn.ScanRequest: ScanRequestSchema,
-            sn.SDPConfigurationBlock: SDPConfigurationBlockSchema,
-            sn.SDPConfigure: SDPConfigureSchema,
-            sn.SDPConfigureScan: SDPConfigureScanSchema
+            sn.SDPConfiguration: SDPConfigurationSchema
         }
 
     def load_from_file(self, cls, path):
@@ -638,7 +612,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         """
         Return a string JSON representation of a class.
 
-        :param obj: the instance to marshall to JSON
+        :param obj: the instance to marshal to JSON
         :return: a JSON string
         """
         schema_cls = self.schema[obj.__class__]

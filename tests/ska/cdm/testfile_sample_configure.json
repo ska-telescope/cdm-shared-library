@@ -23,7 +23,7 @@
         },
         "parameters": {
           "numStations": 4,
-          "numChanels": 372,
+          "numChannels": 372,
           "numPolarisations": 4,
           "freqStartHz": 0.35e9,
           "freqEndHz": 1.05e9,

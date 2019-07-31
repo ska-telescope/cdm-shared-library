@@ -3,36 +3,35 @@ Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
 import ska.cdm.messages.subarray_node.configure as configure
 
-def sdp_configure_for_test(target):
+
+def get_sdp_configuration_for_test(target):
     """
     Quick method for setting up an SDP Configure that can be used for testing
     For completeness of testing it also does the tests to ensure that if classes
     are of different types they are considered unequal
     """
-    target_list = {"0": target}
-    workflow = configure.SDPWorkflow(wf_id="vis_ingest", wf_type="realtime", version="0.1.0")
-    assert workflow != object
+    target_list = {'0': target}
+    workflow = configure.SDPWorkflow(workflow_id='vis_ingest',
+                                     workflow_type='realtime',
+                                     version='0.1.0')
 
-    parameters = configure.SDPParameters(num_stations=4, num_chanels=372,
+    parameters = configure.SDPParameters(num_stations=4, num_channels=372,
                                          num_polarisations=4, freq_start_hz=0.35e9,
                                          freq_end_hz=1.05e9, target_fields=target_list)
-    assert parameters != object
 
     scan = configure.SDPScan(field_id=0, interval_ms=1400)
-    assert scan != object
 
-    scan_list = {"12345": scan}
-    sdp_config_block = configure.SDPConfigurationBlock(sb_id='realtime-20190627-0001',
+    scan_list = {'12345': scan}
+    pb_config = configure.ProcessingBlockConfiguration(sb_id='realtime-20190627-0001',
                                                        sbi_id='20190627-0001',
                                                        workflow=workflow,
                                                        parameters=parameters,
                                                        scan_parameters=scan_list)
-    assert sdp_config_block != object
 
-    sdp_configure = configure.SDPConfigure([sdp_config_block])
-    assert sdp_configure != object
+    sdp_config = configure.SDPConfiguration(configure=[pb_config])
 
-    return sdp_configure
+    return sdp_config
+
 
 def test_sdp_configure_scan_comparisons():
     """
@@ -42,13 +41,9 @@ def test_sdp_configure_scan_comparisons():
     scan = configure.SDPScan(field_id=0, interval_ms=2800)
 
     scan_parameters = configure.SDPScanParameters({"12345": scan})
-    assert scan_parameters != object
 
-    configure_scan = configure.SDPConfigureScan(scan_parameters)
-    assert  configure_scan != object
-
-
-
+    configure_scan = configure.SDPConfiguration(configure_scan=scan_parameters)
+    assert configure_scan != object
 
 
 def test_target_defaults():
@@ -159,12 +154,12 @@ def test_configure_request_eq():
     """
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
-    sdp_config = sdp_configure_for_test(configure.Target(1, 1))
+    sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
     request_1 = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config)
 
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
-    sdp_config = sdp_configure_for_test(configure.Target(1, 1))
+    sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
     request_2 = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config)
 
     assert request_1 == request_2
@@ -176,6 +171,115 @@ def test_configure_request_is_not_equal_to_other_objects():
     """
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
-    sdp_config = sdp_configure_for_test(configure.Target(1, 1))
+    sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
     request = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config)
     assert request != object
+
+
+def test_workflow_equals():
+    """
+    Verify that SDP Workflow objects are considered equal when they have:
+     - the same ID
+     - the same type
+     - the same version
+    """
+    workflow1 = configure.SDPWorkflow('id', 'type', 'version')
+    workflow2 = configure.SDPWorkflow('id', 'type', 'version')
+    assert workflow1 == workflow2
+
+    assert workflow1 != configure.SDPWorkflow('', 'type', 'version')
+    assert workflow1 != configure.SDPWorkflow('id', '', 'version')
+    assert workflow1 != configure.SDPWorkflow('id', 'type', '')
+
+
+def test_workflow_not_equal_to_other_objects():
+    """
+    Verify that SDP Workflow objects are not considered equal to objects of
+    other types.
+    """
+    workflow1 = configure.SDPWorkflow('id', 'type', 'version')
+    assert workflow1 != 1
+
+
+def test_sdp_parameters_equals():
+    """
+    Verify that SDP parameters are considered equal when all attributes
+    are the same.
+    """
+    param1 = configure.SDPParameters(num_stations=1, num_channels=2, num_polarisations=4,
+                                     freq_start_hz=10, freq_end_hz=20, target_fields={})
+    param2 = configure.SDPParameters(num_stations=1, num_channels=2, num_polarisations=4,
+                                     freq_start_hz=10, freq_end_hz=20, target_fields={})
+    assert param1 == param2
+
+    assert param1 != configure.SDPParameters(num_stations=2, num_channels=2, num_polarisations=4,
+                                             freq_start_hz=10, freq_end_hz=20, target_fields={})
+    assert param1 != configure.SDPParameters(num_stations=1, num_channels=1, num_polarisations=4,
+                                             freq_start_hz=10, freq_end_hz=20, target_fields={})
+    assert param1 != configure.SDPParameters(num_stations=1, num_channels=2, num_polarisations=2,
+                                             freq_start_hz=10, freq_end_hz=20, target_fields={})
+    assert param1 != configure.SDPParameters(num_stations=1, num_channels=2, num_polarisations=4,
+                                             freq_start_hz=20, freq_end_hz=20, target_fields={})
+    assert param1 != configure.SDPParameters(num_stations=1, num_channels=2, num_polarisations=4,
+                                             freq_start_hz=10, freq_end_hz=30, target_fields={})
+    assert param1 != configure.SDPParameters(num_stations=1, num_channels=2, num_polarisations=4,
+                                             freq_start_hz=10, freq_end_hz=20,
+                                             target_fields={'a': 0})
+
+
+def test_sdp_parameters_not_equal_to_other_objects():
+    """
+    Verify that SDPParameters objects are not considered equal to objects of
+    other types.
+    """
+    param = configure.SDPParameters(num_stations=1, num_channels=2, num_polarisations=4,
+                                    freq_start_hz=10, freq_end_hz=20, target_fields={})
+    assert param != 1
+
+
+def test_sdp_scan_equals():
+    """
+    Verify that SDPScan are considered equal when all attributes are equal.
+    """
+    scan1 = configure.SDPScan(1, 2)
+    scan2 = configure.SDPScan(1, 2)
+    assert scan1 == scan2
+
+    assert scan1 != configure.SDPScan(2, 2)
+    assert scan1 != configure.SDPScan(2, 1)
+
+
+def test_sdp_scan_not_equal_to_other_objects():
+    """
+    Verify that SDPScan objects are not considered equal to objects of other
+    types.
+    """
+    scan = configure.SDPScan(1, 2)
+    assert scan != 1
+
+
+def test_sdp_scan_parameters_equals():
+    """
+    Verify that SDPScanParameters are considered equal when all attributes are
+    equal.
+    """
+    param1 = configure.SDPScanParameters({'0': configure.SDPScan(1, 2)})
+    param2 = configure.SDPScanParameters({'0': configure.SDPScan(1, 2)})
+    assert param1 == param2
+
+    assert param1 != configure.SDPScanParameters({'1': configure.SDPScan(1, 2)})
+    assert param1 != configure.SDPScanParameters({})
+
+
+def test_sdp_scan_parameters_not_equal_to_other_objects():
+    """
+    Verify that SDPScanParameters objects are not considered equal to objects
+    of other types.
+    """
+    param = configure.SDPScanParameters({'0': configure.SDPScan(1, 2)})
+    assert param != 1
+
+
+def test_processing_block_configuration_not_equal_to_other_objects():
+    config = configure.ProcessingBlockConfiguration(None, None, None, None, None)
+    assert config != 1
