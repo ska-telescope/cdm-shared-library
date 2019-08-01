@@ -267,6 +267,13 @@ class FSPConfigurationSchema(Schema):
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
+        """
+         Convert parsed JSON back into a FSPConfiguration object.
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: FSPConfiguration instance populated to match JSON
+
+        """
         fsp_id = data['fsp_id']
         function_mode = data['function_mode']
         function_mode_enum = sn.FSPFunctionMode(function_mode)
@@ -305,6 +312,13 @@ class CSPConfigurationSchema(Schema):
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
+        """
+         Convert parsed JSON back into a CSPConfiguration object.
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: CSPConfiguration instance populated to match JSON
+
+        """
         scan_id = data['scan_id']
         frequency_band = data['frequency_band']
         frequency_band_enum = sn.ReceiverBand(frequency_band)
