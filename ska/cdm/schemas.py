@@ -16,6 +16,7 @@ __all__ = ['AssignResourcesRequestSchema', 'AssignResourcesResponseSchema', 'Dis
            'MarshmallowCodec', 'SDPParametersSchema', 'SDPScanSchema', 'SDPScanParametersSchema',
            'CSPConfigurationSchema', 'FSPConfigurationSchema']
 
+
 class OrderedSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Subclass of Schema, anything inheriting from Schema  has the
@@ -392,7 +393,6 @@ class CSPConfigurationSchema(Schema):
         return sn.CSPConfiguration(scan_id, frequency_band_enum, fsp_configs)
 
 
-
 class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the subarray_node.Pointing class.
@@ -448,33 +448,6 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         receiver_band = data['receiver_band']
         enum_obj = sn.ReceiverBand(receiver_band)
         return sn.DishConfiguration(enum_obj)
-
-
-class ConfigureRequestSchema(Schema):
-    """
-    Marshmallow schema for the subarray_node.ConfigureRequest class.
-    """
-
-    scan_id = fields.Integer(required=True, data_key='scanID')
-    pointing = fields.Nested(PointingSchema)
-    dish = fields.Nested(DishConfigurationSchema)
-    csp = fields.Nested(CSPConfigurationSchema)
-
-    @post_load
-    def create_configuration(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Converted parsed JSON backn into a subarray_node.ConfigureRequest
-        object.
-
-        :param data: dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-        :return: ConfigurationRequest instance populated to match JSON
-        """
-        scan_id = data['scan_id']
-        pointing = data['pointing']
-        dish_configuration = data['dish']
-        csp_configuration = data['csp']
-        return sn.ConfigureRequest(scan_id, pointing, dish_configuration, csp_configuration)
 
 
 class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -682,12 +655,7 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: ConfigurationRequest instance populated to match JSON
         """
-        scan_id = data['scan_id']
-        pointing = data['pointing']
-        dish_configuration = data['dish']
-        sdp_configure = data['sdp']
-        csp_configuration = data['csp']
-        return sn.ConfigureRequest(scan_id, pointing, dish_configuration, sdp_configure, csp_configuration)
+        return sn.ConfigureRequest(**data)
 
 
 class MarshmallowCodec:  # pylint: disable=too-few-public-methods

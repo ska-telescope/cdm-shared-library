@@ -1,6 +1,8 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
+import itertools
+import functools
 import pytest
 
 import ska.cdm.messages.subarray_node.configure as configure
@@ -156,27 +158,27 @@ def test_configure_request_eq():
       - their SDP configuration is the same
       - their CSP configuration is the same
     """
-    pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
-    dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
-    sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
-    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
-                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
-                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
     scan_id = 123
-    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = configure.CSPConfiguration(scan_id, configure.ReceiverBand.BAND_1, [fsp_config])
-    request_1 = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config, csp_config)
 
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
     sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
-    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
-                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
-                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
-    scan_id = 123
-    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
+    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 140, 0,
+                                            channel_avg_map)
     csp_config = configure.CSPConfiguration(scan_id, configure.ReceiverBand.BAND_1, [fsp_config])
-    request_2 = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config, csp_config)
+    request_1 = configure.ConfigureRequest(scan_id, pointing_config, dish_config, sdp_config,
+                                           csp_config)
+
+    pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
+    dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
+    sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
+    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
+    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 140, 0,
+                                            channel_avg_map)
+    csp_config = configure.CSPConfiguration(scan_id, configure.ReceiverBand.BAND_1, [fsp_config])
+    request_2 = configure.ConfigureRequest(scan_id, pointing_config, dish_config, sdp_config,
+                                           csp_config)
 
     assert request_1 == request_2
 
@@ -185,16 +187,16 @@ def test_configure_request_is_not_equal_to_other_objects():
     """
     Verify that ConfigureRequest is not equal to other objects.
     """
+    scan_id = 123
     pointing_config = configure.PointingConfiguration(configure.Target(1, 1))
     dish_config = configure.DishConfiguration(receiver_band=configure.ReceiverBand.BAND_1)
     sdp_config = get_sdp_configuration_for_test(configure.Target(1, 1))
-    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
-                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
-                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
-    scan_id = 123
-    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
+    fsp_config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 140, 0,
+                                            channel_avg_map)
     csp_config = configure.CSPConfiguration(scan_id, configure.ReceiverBand.BAND_1, [fsp_config])
-    request = configure.ConfigureRequest(123, pointing_config, dish_config, sdp_config, csp_config)
+    request = configure.ConfigureRequest(scan_id, pointing_config, dish_config, sdp_config,
+                                         csp_config)
 
     assert request != object
 
@@ -314,73 +316,152 @@ def test_processing_block_configuration_not_equal_to_other_objects():
 
 def test_fsp_id_range():
     """
-    verify that fsp id is in the range of 1 to 27
-    :return:
+    Verify that fsp id is in the range of 1 to 27
     """
-    fsp_id = 29
+    fsp_id = 0
     with pytest.raises(ValueError):
-        _ = configure.FSPConfiguration(fsp_id, configure.FSPFunctionMode.CORR, 1, 1400, 0)
-    fsp_id = -1
+        _ = configure.FSPConfiguration(fsp_id, configure.FSPFunctionMode.CORR, 1, 140, 0)
+    fsp_id = 28
     with pytest.raises(ValueError):
-        _ = configure.FSPConfiguration(fsp_id, configure.FSPFunctionMode.CORR, 1, 1400, 0)
+        _ = configure.FSPConfiguration(fsp_id, configure.FSPFunctionMode.CORR, 1, 140, 0)
 
 
 def test_fsp_slice_id_range():
     """
-    verify that fsp slice id is in the range of 1 to 26
-    :return:
+    Verify that fsp slice id is in the range of 1 to 26
     """
-
-    fsp_slice_id = 36
+    fsp_slice_id = 0
     with pytest.raises(ValueError):
-        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, fsp_slice_id, 1400, 0)
+        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, fsp_slice_id, 140, 0)
+    fsp_slice_id = 27
+    with pytest.raises(ValueError):
+        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, fsp_slice_id, 140, 0)
 
 
 def test_corr_bandwidth_range():
     """
-    verify that crr_bandwidth is in the range of 0 to 6
-    :return:
+    Verify that corr_bandwidth is in the range of 0 to 6
     """
+    corr_bandwidth = -1
+    with pytest.raises(ValueError):
+        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 140, corr_bandwidth)
     corr_bandwidth = 7
     with pytest.raises(ValueError):
-        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, corr_bandwidth)
+        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 140, corr_bandwidth)
 
 
-def test_corr_bandwidth_range():
-    """
-    verify that crr_bandwidth is in the range of 0 to 6
-    :return:
-    """
-    corr_bandwidth = 7
-    with pytest.raises(ValueError):
-        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, corr_bandwidth)
-
-
-def test_corr_bandwidth_range():
+def test_integration_time_must_be_multiple_of_140():
     """
     Verify that integration time is multiple of 140
     """
-    integration_time = 1401
+    _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 140, 0)
     with pytest.raises(ValueError):
-        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, integration_time, 0)
+        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 139, 0)
+    with pytest.raises(ValueError):
+        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 141, 0)
+
+
+def test_integration_time_is_within_limits():
+    """
+    Verify that integration time is no greater than 1400
+    """
+    _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0)
+    with pytest.raises(ValueError):
+        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 0, 0)
+    with pytest.raises(ValueError):
+        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1540, 0)
 
 
 def test_number_of_channel_avg_mapping_tuples():
     """
-    Verify that FSPConfiguration fails if there  < or > 20 tuples in chan avg mapping
-    :return:
+    Verify that FSPConfiguration fails if there are an invalid number of
+    entries in the channel average mapping argument.
     """
-    # test for 18 tuples
-    channel_avg_map = [(745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
-                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8929, 0), (9673, 0), (10417, 0),
-                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0)]
+    # create a partially applied FSPConfiguration constructor to save having
+    # to type the arguments each time
+    fsp_constructor = functools.partial(
+        configure.FSPConfiguration, 1, configure.FSPFunctionMode.CORR, 1, 140, 0
+    )
 
+    # test for 19 tuples
+    channel_avg_map = list(zip(itertools.count(1, 744), 19 * [0]))
     with pytest.raises(ValueError):
-        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+        _ = fsp_constructor(channel_avg_map)
 
-    # test for 22 tuples
-    channel_avg_map = [(1, 2), (745, 0), (1489, 0), (2233, 0), (2977, 0), (3721, 0), (4465, 0),
-                       (5209, 0), (5953, 0), (6697, 0), (7441, 0), (8185, 0), (8929, 0), (9673, 0), (10417, 0),
-                       (11161, 0), (11905, 0), (12649, 0), (13393, 0), (14137, 0), (14137, 1), (2, 3)]
+    # test for 21 tuples
+    channel_avg_map = list(zip(itertools.count(1, 744), 21 * [0]))
     with pytest.raises(ValueError):
-        _ = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
+        _ = fsp_constructor(channel_avg_map)
+
+
+def test_fsp_configuration_equals():
+    """
+    Verify that FSPConfigurations are considered equal when all attributes are
+    equal.
+    """
+    fsp_id = 1
+    mode = configure.FSPFunctionMode.CORR
+    slice_id = 1
+    bandwidth = 0
+    channel_avg_map = list(zip(itertools.count(1, 744), 20 * [0]))
+    integration_time = 140
+
+    config1 = configure.FSPConfiguration(fsp_id, mode, slice_id, integration_time, bandwidth,
+                                         channel_avg_map)
+    config2 = configure.FSPConfiguration(fsp_id, mode, slice_id, integration_time, bandwidth,
+                                         channel_avg_map)
+    assert config1 == config2
+
+    assert config1 != configure.FSPConfiguration(2, mode, slice_id, integration_time, bandwidth,
+                                                 channel_avg_map)
+    assert config1 != configure.FSPConfiguration(fsp_id, configure.FSPFunctionMode.PSS_BF,
+                                                 slice_id, integration_time, bandwidth,
+                                                 channel_avg_map)
+    assert config1 != configure.FSPConfiguration(fsp_id, mode, 2, integration_time, bandwidth,
+                                                 channel_avg_map)
+    assert config1 != configure.FSPConfiguration(fsp_id, mode, slice_id, 280, bandwidth,
+                                                 channel_avg_map)
+    assert config1 != configure.FSPConfiguration(fsp_id, mode, slice_id, integration_time, 1,
+                                                 channel_avg_map)
+    assert config1 != configure.FSPConfiguration(fsp_id, mode, slice_id, integration_time,
+                                                 bandwidth,
+                                                 list(zip(itertools.count(1, 744), 20 * [1])))
+
+
+def test_fsp_configuration_not_equal_to_other_objects():
+    """
+    Verify that FSPConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    config = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0)
+    assert config != 1
+
+
+def test_csp_configuration_equals():
+    """
+    Verify that CSPConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    scan_id = 123
+    frequency_band = configure.ReceiverBand.BAND_1
+    fsp = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0)
+
+    config1 = configure.CSPConfiguration(scan_id, frequency_band, [fsp])
+    config2 = configure.CSPConfiguration(scan_id, frequency_band, [fsp])
+    assert config1 == config2
+
+    assert config1 != configure.CSPConfiguration(1, frequency_band, [fsp])
+    assert config1 != configure.CSPConfiguration(scan_id, configure.ReceiverBand.BAND_2, [fsp])
+    assert config1 != configure.CSPConfiguration(scan_id, frequency_band, [fsp, fsp])
+
+
+def test_csp_configuration_not_equal_to_other_objects():
+    """
+    Verify that CSPConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    scan_id = 123
+    frequency_band = configure.ReceiverBand.BAND_1
+    fsp = configure.FSPConfiguration(1, configure.FSPFunctionMode.CORR, 1, 1400, 0)
+    config = configure.CSPConfiguration(scan_id, frequency_band, [fsp])
+    assert config != 1
