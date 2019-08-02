@@ -4,7 +4,7 @@ Unit tests for the SubarrayNode.Configure request/response mapper module.
 import itertools
 
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest
-from ska.cdm.messages.subarray_node.configure.common import PointingConfiguration, \
+from ska.cdm.messages.subarray_node.configure.core import PointingConfiguration, \
     DishConfiguration, Target, ReceiverBand
 from ska.cdm.messages.subarray_node.configure.csp import FSPConfiguration, FSPFunctionMode, \
     CSPConfiguration

@@ -6,7 +6,7 @@ from marshmallow import Schema, fields, post_load
 
 from ska.cdm.messages import subarray_node as sn
 from ska.cdm.schemas.codec import CODEC
-from ska.cdm.schemas.subarray_node.configure.common import *
+from ska.cdm.schemas.subarray_node.configure.core import *
 from ska.cdm.schemas.subarray_node.configure.csp import *
 from ska.cdm.schemas.subarray_node.configure.sdp import *
 

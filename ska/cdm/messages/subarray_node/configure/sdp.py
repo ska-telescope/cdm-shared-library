@@ -5,7 +5,7 @@ command.
 """
 from typing import Dict, List
 
-from .common import Target
+from .core import Target
 
 __all__ = ['ProcessingBlockConfiguration', 'SDPParameters', 'SDPScan', 'SDPScanParameters',
            'SDPWorkflow', 'SDPConfiguration']

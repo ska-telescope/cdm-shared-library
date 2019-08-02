@@ -1,7 +1,7 @@
 """
 Unit tests for the ska.cdm.messages.subarray_node.configure.common module.
 """
-import ska.cdm.messages.subarray_node.configure.common as common
+import ska.cdm.messages.subarray_node.configure.core as common
 
 
 def test_target_defaults():

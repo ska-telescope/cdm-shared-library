@@ -6,7 +6,7 @@ command.
 import enum
 from typing import List, Tuple
 
-from .common import ReceiverBand
+from .core import ReceiverBand
 
 __all__ = ['CSPConfiguration', 'FSPConfiguration', 'FSPFunctionMode']
 

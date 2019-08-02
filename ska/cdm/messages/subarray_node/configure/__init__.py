@@ -2,7 +2,7 @@
 The configure package contains modules that define Python classes for all of
 the permissible arguments for a SubArrayNode.configure() call.
 """
-from .common import *
+from .core import *
 from .csp import *
 from .sdp import *
 
