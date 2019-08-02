@@ -1,8 +1,7 @@
 """
-The ska.cdm.messages.subarray_node package holds modules that translate TMC
-Subarray Node requests and responses to and from Python.
+The ska.cdm.messages.subarray_node package holds modules containing classes
+that represent arguments, requests, and responses for TMC SubArrayNode
+devices.
 """
-from .configure import PointingConfiguration, DishConfiguration, ConfigureRequest, Target, \
-    ReceiverBand, ProcessingBlockConfiguration, SDPParameters, SDPScan, SDPScanParameters, \
-    SDPWorkflow, SDPConfiguration, CSPConfiguration, FSPConfiguration, FSPFunctionMode
-from .scan import ScanRequest
+from .configure import *
+from .scan import *
