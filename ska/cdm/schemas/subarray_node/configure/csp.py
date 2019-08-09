@@ -67,7 +67,6 @@ class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
-    scan_id = fields.Integer(data_key='scanID', required=True)
     frequency_band = fields.String(data_key='frequencyBand', required=True)
     fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key='fsp')
 
@@ -94,9 +93,8 @@ class CSPConfigurationSchema(Schema):
         :return: CSPConfiguration instance populated to match JSON
 
         """
-        scan_id = data['scan_id']
         frequency_band = data['frequency_band']
         frequency_band_enum = sn.ReceiverBand(frequency_band)
         fsp_configs = data['fsp_configs']
 
-        return sn.CSPConfiguration(scan_id, frequency_band_enum, fsp_configs)
+        return sn.CSPConfiguration(frequency_band_enum, fsp_configs)

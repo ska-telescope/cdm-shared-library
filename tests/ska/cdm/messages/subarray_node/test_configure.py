@@ -52,7 +52,7 @@ def test_configure_request_eq():
     sdp_config = get_sdp_configuration_for_test(Target(1, 1))
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
-    csp_config = CSPConfiguration(scan_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
     request_1 = ConfigureRequest(scan_id, pointing_config, dish_config, sdp_config, csp_config)
 
     pointing_config = PointingConfiguration(Target(1, 1))
@@ -60,7 +60,7 @@ def test_configure_request_eq():
     sdp_config = get_sdp_configuration_for_test(Target(1, 1))
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
-    csp_config = CSPConfiguration(scan_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
     request_2 = ConfigureRequest(scan_id, pointing_config, dish_config, sdp_config, csp_config)
 
     assert request_1 == request_2
@@ -76,7 +76,7 @@ def test_configure_request_is_not_equal_to_other_objects():
     sdp_config = get_sdp_configuration_for_test(Target(1, 1))
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
-    csp_config = CSPConfiguration(scan_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
     request = ConfigureRequest(scan_id, pointing_config, dish_config, sdp_config, csp_config)
 
     assert request != object

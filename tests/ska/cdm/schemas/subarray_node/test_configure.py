@@ -24,7 +24,6 @@ VALID_CONFIGURE_REQUEST = """
     "receiverBand": "1"
   },
   "csp":{
-    "scanID": 123,
     "frequencyBand": "1",
     "fsp": [
       {
@@ -90,7 +89,6 @@ VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST = """
     "receiverBand": "1"
   },
   "csp":{
-    "scanID": 456,
     "frequencyBand": "1",
     "fsp": [
       {
@@ -150,7 +148,7 @@ def test_marshall_configure_request():
     sdp_config = sdp_configure_for_test(target, scan_id)
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = sn.FSPConfiguration(1, sn.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = sn.CSPConfiguration(scan_id, sn.ReceiverBand.BAND_1, [fsp_config])
+    csp_config = sn.CSPConfiguration(sn.ReceiverBand.BAND_1, [fsp_config])
 
     request = sn.ConfigureRequest(scan_id, pointing_config, dish_config, sdp_config, csp_config)
     request_json = schemas.ConfigureRequestSchema().dumps(request)
@@ -170,7 +168,7 @@ def test_unmarshall_configure_request_from_json():
     sdp_configure = sdp_configure_for_test(target, scan_id)
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = sn.FSPConfiguration(1, sn.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = sn.CSPConfiguration(scan_id, sn.ReceiverBand.BAND_1, [fsp_config])
+    csp_config = sn.CSPConfiguration(sn.ReceiverBand.BAND_1, [fsp_config])
 
     expected = sn.ConfigureRequest(scan_id, pointing=pointing_config, dish=dish_config,
                                    sdp=sdp_configure, csp=csp_config)
@@ -193,7 +191,7 @@ def test_unmarshall_configure_for_later_request_from_json():
 
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = sn.FSPConfiguration(1, sn.FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = sn.CSPConfiguration(scan_id, sn.ReceiverBand.BAND_1, [fsp_config])
+    csp_config = sn.CSPConfiguration(sn.ReceiverBand.BAND_1, [fsp_config])
 
     expected = sn.ConfigureRequest(scan_id, pointing=pointing_config, dish=dish_config,
                                    sdp=sdp_configure_scan, csp=csp_config)

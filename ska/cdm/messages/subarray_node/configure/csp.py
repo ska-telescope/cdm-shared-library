@@ -93,22 +93,18 @@ class CSPConfiguration:
     Class to hold all CSP configuration.
     """
 
-    def __init__(self, scan_id: int, frequency_band: ReceiverBand,
-                 fsp_configs: List[FSPConfiguration]):
+    def __init__(self, frequency_band: ReceiverBand, fsp_configs: List[FSPConfiguration]):
         """
         Create a new CSPConfiguration.
 
-        :param scan_id: the scan ID
         :param frequency_band: the frequency band to set
         :param fsp_configs: the FSP configurations to set
         """
-        self.scan_id = scan_id
         self.frequency_band = frequency_band
         self.fsp_configs = fsp_configs
 
     def __eq__(self, other):
         if not isinstance(other, CSPConfiguration):
             return False
-        return self.scan_id == other.scan_id \
-               and self.frequency_band == other.frequency_band \
+        return self.frequency_band == other.frequency_band \
                and self.fsp_configs == other.fsp_configs

@@ -53,17 +53,15 @@ def test_csp_configuration_equals():
     Verify that CSPConfiguration objects are considered equal when all
     attributes are equal.
     """
-    scan_id = 123
     frequency_band = csp.ReceiverBand.BAND_1
     fsp = csp.FSPConfiguration(1, csp.FSPFunctionMode.CORR, 1, 1400, 0)
 
-    config1 = csp.CSPConfiguration(scan_id, frequency_band, [fsp])
-    config2 = csp.CSPConfiguration(scan_id, frequency_band, [fsp])
+    config1 = csp.CSPConfiguration(frequency_band, [fsp])
+    config2 = csp.CSPConfiguration(frequency_band, [fsp])
     assert config1 == config2
 
-    assert config1 != csp.CSPConfiguration(1, frequency_band, [fsp])
-    assert config1 != csp.CSPConfiguration(scan_id, csp.ReceiverBand.BAND_2, [fsp])
-    assert config1 != csp.CSPConfiguration(scan_id, frequency_band, [fsp, fsp])
+    assert config1 != csp.CSPConfiguration(csp.ReceiverBand.BAND_2, [fsp])
+    assert config1 != csp.CSPConfiguration(frequency_band, [fsp, fsp])
 
 
 def test_csp_configuration_not_equal_to_other_objects():
@@ -71,10 +69,9 @@ def test_csp_configuration_not_equal_to_other_objects():
     Verify that CSPConfiguration objects are not considered equal to objects
     of other types.
     """
-    scan_id = 123
     frequency_band = csp.ReceiverBand.BAND_1
     fsp = csp.FSPConfiguration(1, csp.FSPFunctionMode.CORR, 1, 1400, 0)
-    config = csp.CSPConfiguration(scan_id, frequency_band, [fsp])
+    config = csp.CSPConfiguration(frequency_band, [fsp])
     assert config != 1
 
 
