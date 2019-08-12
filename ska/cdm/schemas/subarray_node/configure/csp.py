@@ -5,7 +5,7 @@ SubArrayNode CSP configuration to/from JSON.
 from marshmallow import Schema, fields, post_load, pre_dump
 from marshmallow.validate import OneOf
 
-import ska.cdm.messages.subarray_node as sn
+import ska.cdm.messages.subarray_node.configure as configure_msgs
 
 __all__ = ['CSPConfigurationSchema',
            'FSPConfigurationSchema']
@@ -27,7 +27,8 @@ class FSPConfigurationSchema(Schema):
                                         data_key='channelAveragingMap')
 
     @pre_dump
-    def convert(self, fsp_configuration: sn.FSPConfiguration, **_):  # pylint: disable=no-self-use
+    def convert(self, fsp_configuration: configure_msgs.FSPConfiguration,
+                **_):  # pylint: disable=no-self-use
         """
         Process FSPConfiguration instance so that it is ready for conversion
         to JSON.
@@ -51,7 +52,7 @@ class FSPConfigurationSchema(Schema):
         """
         fsp_id = data['fsp_id']
         function_mode = data['function_mode']
-        function_mode_enum = sn.FSPFunctionMode(function_mode)
+        function_mode_enum = configure_msgs.FSPFunctionMode(function_mode)
         frequency_slice_id = int(data['frequency_slice_id'])
         corr_bandwidth = data['corr_bandwidth']
         integration_time = data['integration_time']
@@ -59,8 +60,9 @@ class FSPConfigurationSchema(Schema):
         # optional arguments
         channel_averaging_map = data.get('channel_averaging_map', None)
 
-        return sn.FSPConfiguration(fsp_id, function_mode_enum, frequency_slice_id, integration_time,
-                                   corr_bandwidth, channel_averaging_map=channel_averaging_map)
+        return configure_msgs.FSPConfiguration(fsp_id, function_mode_enum, frequency_slice_id,
+                                               integration_time, corr_bandwidth,
+                                               channel_averaging_map=channel_averaging_map)
 
 
 class CSPConfigurationSchema(Schema):
@@ -71,7 +73,8 @@ class CSPConfigurationSchema(Schema):
     fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key='fsp')
 
     @pre_dump
-    def convert(self, csp_configuration: sn.CSPConfiguration, **_):  # pylint: disable=no-self-use
+    def convert(self, csp_configuration: configure_msgs.CSPConfiguration,
+                **_):  # pylint: disable=no-self-use
         """
         Process CSPConfiguration instance so that it is ready for conversion
         to JSON.
@@ -94,7 +97,7 @@ class CSPConfigurationSchema(Schema):
 
         """
         frequency_band = data['frequency_band']
-        frequency_band_enum = sn.ReceiverBand(frequency_band)
+        frequency_band_enum = configure_msgs.ReceiverBand(frequency_band)
         fsp_configs = data['fsp_configs']
 
-        return sn.CSPConfiguration(frequency_band_enum, fsp_configs)
+        return configure_msgs.CSPConfiguration(frequency_band_enum, fsp_configs)

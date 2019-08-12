@@ -6,9 +6,11 @@ command.
 import enum
 from typing import List, Tuple
 
-from .core import ReceiverBand
+from . import core
 
-__all__ = ['CSPConfiguration', 'FSPConfiguration', 'FSPFunctionMode']
+__all__ = ['CSPConfiguration',
+           'FSPConfiguration',
+           'FSPFunctionMode']
 
 
 class FSPFunctionMode(enum.Enum):
@@ -93,7 +95,7 @@ class CSPConfiguration:
     Class to hold all CSP configuration.
     """
 
-    def __init__(self, frequency_band: ReceiverBand, fsp_configs: List[FSPConfiguration]):
+    def __init__(self, frequency_band: core.ReceiverBand, fsp_configs: List[FSPConfiguration]):
         """
         Create a new CSPConfiguration.
 

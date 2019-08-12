@@ -6,13 +6,13 @@ from datetime import timedelta
 
 from marshmallow import Schema, fields, post_load, pre_dump
 
-from ska.cdm.messages import subarray_node as sn
-from ska.cdm.schemas.codec import CODEC
+import ska.cdm.messages.subarray_node.scan as scan_msgs
+from ska.cdm.schemas import CODEC
 
 __all__ = ['ScanRequestSchema']
 
 
-@CODEC.register_mapping(sn.ScanRequest)
+@CODEC.register_mapping(scan_msgs.ScanRequest)
 class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Create the Schema for ScanDuration using timedelta
@@ -43,5 +43,5 @@ class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: ScanRequest instance populated to match JSON
         """
         t_to_scan = timedelta(seconds=data['scan_duration'])
-        scan_request = sn.ScanRequest(t_to_scan)
+        scan_request = scan_msgs.ScanRequest(t_to_scan)
         return scan_request

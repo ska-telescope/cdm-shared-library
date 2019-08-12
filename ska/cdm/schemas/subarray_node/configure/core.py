@@ -7,10 +7,13 @@ import collections
 from marshmallow import Schema, fields, post_load, pre_dump
 from marshmallow.validate import OneOf
 
-import ska.cdm.messages.subarray_node as sn
-from ...shared import UpperCasedField
+import ska.cdm.messages.subarray_node.configure as configure_msgs
+import ska.cdm.schemas.shared as shared
+from ska.cdm.schemas import CODEC
+from . import csp, sdp
 
-__all__ = ['DishConfigurationSchema',
+__all__ = ['ConfigureRequestSchema',
+           'DishConfigurationSchema',
            'PointingSchema',
            'TargetSchema']
 
@@ -24,11 +27,11 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
 
     ra = fields.String(data_key='RA')
     dec = fields.String()
-    frame = UpperCasedField(data_key='system')
+    frame = shared.UpperCasedField(data_key='system')
     name = fields.String()
 
     @pre_dump
-    def convert_to_icrs(self, target: sn.Target, **_):  # pylint: disable=no-self-use
+    def convert_to_icrs(self, target: configure_msgs.Target, **_):  # pylint: disable=no-self-use
         """
         Process Target co-ordinates by converting them to ICRS frame before
         the JSON marshalling process begins.
@@ -59,7 +62,7 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         hms = data['ra']
         dms = data['dec']
         frame = data['frame']
-        target = sn.Target(hms, dms, frame=frame, name=name, unit=('hourangle', 'deg'))
+        target = configure_msgs.Target(hms, dms, frame=frame, name=name, unit=('hourangle', 'deg'))
         return target
 
 
@@ -80,7 +83,7 @@ class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: Pointing instance populated to match JSON
         """
         target = data['target']
-        return sn.PointingConfiguration(target)
+        return configure_msgs.PointingConfiguration(target)
 
 
 class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -92,7 +95,7 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
                                   validate=OneOf(['1', '2', '5a', '5b']))
 
     @pre_dump
-    def convert(self, dish_configuration: sn.DishConfiguration, **_):  # pylint: disable=no-self-use
+    def convert(self, dish_configuration: configure_msgs.DishConfiguration, **_):  # pylint: disable=no-self-use
         """
         Process DishConfiguration instance so that it is ready for conversion
         to JSON.
@@ -116,5 +119,30 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: DishConfiguration instance populated to match JSON
         """
         receiver_band = data['receiver_band']
-        enum_obj = sn.ReceiverBand(receiver_band)
-        return sn.DishConfiguration(enum_obj)
+        enum_obj = configure_msgs.ReceiverBand(receiver_band)
+        return configure_msgs.DishConfiguration(enum_obj)
+
+
+@CODEC.register_mapping(configure_msgs.ConfigureRequest)
+class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
+    """
+    Marshmallow schema for the subarray_node.ConfigureRequest class.
+    """
+
+    scan_id = fields.Integer(required=True, data_key='scanID')
+    pointing = fields.Nested(PointingSchema)
+    dish = fields.Nested(DishConfigurationSchema)
+    sdp = fields.Nested(sdp.SDPConfigurationSchema)
+    csp = fields.Nested(csp.CSPConfigurationSchema)
+
+    @post_load
+    def create_configuration(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Converted parsed JSON backn into a subarray_node.ConfigureRequest
+        object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: ConfigurationRequest instance populated to match JSON
+        """
+        return configure_msgs.ConfigureRequest(**data)

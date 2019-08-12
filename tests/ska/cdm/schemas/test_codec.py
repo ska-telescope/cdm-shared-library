@@ -6,7 +6,7 @@ import os.path
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.assign_resources import DishAllocation
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest
-from ska.cdm.schemas.codec import CODEC
+from ska.cdm.schemas import CODEC
 from .test_central_node import VALID_ASSIGN_RESOURCES_REQUEST
 
 

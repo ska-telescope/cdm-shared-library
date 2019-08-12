@@ -3,7 +3,7 @@ The codec module contains classes used by clients to marshall CDM classes to
 and from JSON. This saves the clients having to instantiate and manipulate the
 Marshmallow schema directly.
 """
-__all__ = ['CODEC']
+__all__ = ['MarshmallowCodec']
 
 
 class MarshmallowCodec:  # pylint: disable=too-few-public-methods
@@ -72,6 +72,3 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         schema_cls = self._schema[obj.__class__]
         schema_obj = schema_cls()
         return schema_obj.dumps(obj)
-
-
-CODEC = MarshmallowCodec()

@@ -9,7 +9,10 @@ from enum import Enum
 
 from astropy.coordinates import SkyCoord
 
-__all__ = ['PointingConfiguration', 'Target', 'ReceiverBand', 'DishConfiguration']
+__all__ = ['PointingConfiguration',
+           'Target',
+           'ReceiverBand',
+           'DishConfiguration']
 
 
 class Target:

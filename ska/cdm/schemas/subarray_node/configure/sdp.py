@@ -4,10 +4,10 @@ SDP configuration to and from a JSON representation.
 """
 import collections
 
-from marshmallow import Schema, fields, post_load, post_dump, pre_dump
+from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 
-from ska.cdm.messages import subarray_node as sn
-from ska.cdm.schemas import shared
+import ska.cdm.messages.subarray_node.configure as configure_msgs
+import ska.cdm.schemas.shared as shared
 
 __all__ = ['ProcessingBlockConfigurationSchema',
            'SDPConfigurationSchema',
@@ -34,7 +34,7 @@ class SDPTargetSchema(Schema):  # pylint: disable=too-few-public-methods
     dec = fields.Float()
 
     @pre_dump
-    def convert_to_icrs(self, target: sn.Target, **_):  # pylint: disable=no-self-use
+    def convert_to_icrs(self, target: configure_msgs.Target, **_):  # pylint: disable=no-self-use
         """
         Process Target co-ordinates by converting them to ICRS frame before
         the JSON marshalling process begins.
@@ -66,7 +66,7 @@ class SDPTargetSchema(Schema):  # pylint: disable=too-few-public-methods
         ra_rad = data['ra']
         dec_rad = data['dec']
         frame = data['frame']
-        target = sn.Target(ra=ra_rad, dec=dec_rad, frame=frame, name=name, unit='rad')
+        target = configure_msgs.Target(ra=ra_rad, dec=dec_rad, frame=frame, name=name, unit='rad')
         return target
 
 
@@ -77,7 +77,7 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     id = fields.String(data_key='id', required=True)
     type = fields.String(data_key='type', required=True)
     version = fields.String(data_key='version', required=True)
-    sdp_workflow = sn.SDPWorkflow
+    sdp_workflow = configure_msgs.SDPWorkflow
 
     @post_load
     def create_sdp_workflow(self, data, **_):  # pylint: disable=no-self-use
@@ -90,7 +90,7 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
         wf_id = data['id']
         wf_type = data['type']
         version = data['version']
-        return sn.SDPWorkflow(wf_id, wf_type, version)
+        return configure_msgs.SDPWorkflow(wf_id, wf_type, version)
 
 
 class SDPParametersSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -119,8 +119,8 @@ class SDPParametersSchema(Schema):  # pylint: disable=too-few-public-methods
         freq_start_hz = data['freq_start_hz']
         freq_end_hz = data['freq_end_hz']
         target_fields = data['target_fields']
-        return sn.SDPParameters(num_stations, num_channels, num_polarisations,
-                                freq_start_hz, freq_end_hz, target_fields)
+        return configure_msgs.SDPParameters(num_stations, num_channels, num_polarisations,
+                                            freq_start_hz, freq_end_hz, target_fields)
 
 
 class SDPScanSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -141,7 +141,7 @@ class SDPScanSchema(Schema):  # pylint: disable=too-few-public-methods
         """
         field_id = data['field_id']
         interval_ms = data['interval_ms']
-        return sn.SDPScan(field_id, interval_ms)
+        return configure_msgs.SDPScan(field_id, interval_ms)
 
 
 class SDPScanParametersSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -162,7 +162,7 @@ class SDPScanParametersSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: SDPScanParameters instance populated to match JSON
         """
         scan_parameters = data['scan_parameters']
-        return sn.SDPScanParameters(scan_parameters)
+        return configure_msgs.SDPScanParameters(scan_parameters)
 
 
 class ProcessingBlockConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -185,7 +185,7 @@ class ProcessingBlockConfigurationSchema(Schema):  # pylint: disable=too-few-pub
         :param _: kwargs passed by Marshmallow
         :return: ProcessingBlockConfiguration instance populated to match JSON
         """
-        return sn.ProcessingBlockConfiguration(**data)
+        return configure_msgs.ProcessingBlockConfiguration(**data)
 
 
 class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -217,4 +217,4 @@ class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: SDPConfigureScan instance populated to match JSON
         """
-        return sn.SDPConfiguration(**data)
+        return configure_msgs.SDPConfiguration(**data)

@@ -2,10 +2,11 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
-from marshmallow import Schema, fields, post_load, post_dump
+from marshmallow import Schema, fields, post_dump, post_load
 
-from ska.cdm.messages import central_node as cn
-from ska.cdm.schemas.codec import CODEC
+import ska.cdm.messages.central_node.assign_resources as assign_msgs
+import ska.cdm.messages.central_node.release_resources as release_msgs
+from . import CODEC
 
 __all__ = ['AssignResourcesRequestSchema',
            'AssignResourcesResponseSchema',
@@ -31,10 +32,10 @@ class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: DishAllocation object populated from data
         """
         receptor_ids = data['receptor_ids']
-        return cn.DishAllocation(receptor_ids=receptor_ids)
+        return assign_msgs.DishAllocation(receptor_ids=receptor_ids)
 
 
-@CODEC.register_mapping(cn.DishAllocation)
+@CODEC.register_mapping(assign_msgs.DishAllocation)
 class DishAllocationResponseSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the DishAllocation class when received in the
@@ -57,10 +58,10 @@ class DishAllocationResponseSchema(Schema):  # pylint: disable=too-few-public-me
         :return: DishAllocation object populated from data
         """
         receptor_ids = data['receptor_ids']
-        return cn.DishAllocation(receptor_ids=receptor_ids)
+        return assign_msgs.DishAllocation(receptor_ids=receptor_ids)
 
 
-@CODEC.register_mapping(cn.AssignResourcesRequest)
+@CODEC.register_mapping(assign_msgs.AssignResourcesRequest)
 class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the AssignResourcesRequest class.
@@ -86,10 +87,10 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         """
         subarray_id = data['subarray_id']
         dish_allocation = data['dish']
-        return cn.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation)
+        return assign_msgs.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation)
 
 
-@CODEC.register_mapping(cn.AssignResourcesResponse)
+@CODEC.register_mapping(assign_msgs.AssignResourcesResponse)
 class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the AssignResourcesResponse class.
@@ -114,10 +115,10 @@ class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-m
         :return: AssignResourcesResponse object populated from data
         """
         dish_allocation = data['dish']
-        return cn.AssignResourcesResponse(dish_allocation=dish_allocation)
+        return assign_msgs.AssignResourcesResponse(dish_allocation=dish_allocation)
 
 
-@CODEC.register_mapping(cn.ReleaseResourcesRequest)
+@CODEC.register_mapping(release_msgs.ReleaseResourcesRequest)
 class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the ReleaseResourcesRequest class.
@@ -168,5 +169,5 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
         subarray_id = data['subarray_id']
         release_all = data.get('release_all', False)
         dish_allocation = data.get('dish', None)
-        return cn.ReleaseResourcesRequest(subarray_id, release_all=release_all,
-                                          dish_allocation=dish_allocation)
+        return release_msgs.ReleaseResourcesRequest(subarray_id, release_all=release_all,
+                                                    dish_allocation=dish_allocation)
