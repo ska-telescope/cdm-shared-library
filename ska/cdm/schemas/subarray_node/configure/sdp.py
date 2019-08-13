@@ -7,7 +7,7 @@ import collections
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 
 import ska.cdm.messages.subarray_node.configure as configure_msgs
-import ska.cdm.schemas.shared as shared
+from ... import shared
 
 __all__ = ['ProcessingBlockConfigurationSchema',
            'SDPConfigurationSchema',

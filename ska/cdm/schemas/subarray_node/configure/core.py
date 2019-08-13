@@ -8,9 +8,8 @@ from marshmallow import Schema, fields, post_load, pre_dump
 from marshmallow.validate import OneOf
 
 import ska.cdm.messages.subarray_node.configure as configure_msgs
-import ska.cdm.schemas.shared as shared
-from ska.cdm.schemas import CODEC
 from . import csp, sdp
+from ... import CODEC, shared
 
 __all__ = ['ConfigureRequestSchema',
            'DishConfigurationSchema',
