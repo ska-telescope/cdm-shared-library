@@ -4,7 +4,7 @@ classes for SubArrayNode configuration to/from a JSON representation.
 """
 import collections
 
-from marshmallow import Schema, fields, post_load, pre_dump
+from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
 
 import ska.cdm.messages.subarray_node.configure as configure_msgs
@@ -145,3 +145,14 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: ConfigurationRequest instance populated to match JSON
         """
         return configure_msgs.ConfigureRequest(**data)
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}

@@ -203,3 +203,27 @@ def test_unmarshall_configure_for_later_request_from_json():
     assert expected.sdp == unmarshalled.sdp
 
     assert unmarshalled == expected
+
+
+def test_optional_configurations_are_omitted_when_null():
+    """
+    Verify that 'null' JSON values corresponding to optional undefined
+    ConfigureRequest values (CSP, SDP, DISH, etc.) are stripped.
+    """
+    scan_id = 123
+    request = ConfigureRequest(scan_id)
+    request_json = ConfigureRequestSchema().dumps(request)
+
+    expected = '{"scanID": 123}'
+    assert json_is_equal(request_json, expected)
+
+
+def test_configure_request_can_be_created_when_only_required_args_present():
+    """
+    Verify that a ConfigureRequest object can be unmarshalled from JSON when
+    only the required attributes are present.
+    """
+    serialised = '{"scanID": 123}'
+    expected = ConfigureRequest(123)
+    unmarshalled = ConfigureRequestSchema().loads(serialised)
+    assert expected == unmarshalled
