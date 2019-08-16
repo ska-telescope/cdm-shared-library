@@ -7,7 +7,7 @@ from ska.cdm.messages.subarray_node.scan import ScanRequest
 from ska.cdm.schemas.subarray_node.scan import ScanRequestSchema
 from ..utils import json_is_equal
 
-VALID_SCAN_REQUEST = '{"scan_duration": 10.0}'
+VALID_SCAN_REQUEST = '{"scanDuration": 10.0}'
 
 
 def test_marshall_start_scan_request():

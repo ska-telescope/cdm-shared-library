@@ -17,7 +17,7 @@ class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Create the Schema for ScanDuration using timedelta
     """
-    scan_duration = fields.Float()
+    scan_duration = fields.Float(data_key='scanDuration')
 
     @pre_dump
     def convert_to_scan(self, data, **_):  # pylint: disable=no-self-use
