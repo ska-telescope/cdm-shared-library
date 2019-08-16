@@ -227,3 +227,39 @@ def test_configure_request_can_be_created_when_only_required_args_present():
     expected = ConfigureRequest(123)
     unmarshalled = ConfigureRequestSchema().loads(serialised)
     assert expected == unmarshalled
+
+
+def test_copy_with_scan_id_works_with_sdp_configure():
+    """
+    Verify that ConfigureRequest.copy_with_scan_id works when SDP configure
+    is specified.
+    """
+    request = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
+    new_scan_id = 999
+    assert request.scan_id != new_scan_id
+    for pb_config in request.sdp.configure:
+        for scan_id in pb_config.scan_parameters.keys():
+            assert scan_id != new_scan_id
+
+    updated = request.copy_with_scan_id(new_scan_id)
+    assert updated.scan_id == new_scan_id
+    for pb_config in updated.sdp.configure:
+        for scan_id in pb_config.scan_parameters.keys():
+            assert scan_id == new_scan_id
+
+
+def test_copy_with_scan_id_works_with_sdp_configure_scan():
+    """
+    Verify that ConfigureRequest.copy_with_scan_id works when SDP
+    configureScan is specified.
+    """
+    request = ConfigureRequestSchema().loads(VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST)
+    new_scan_id = 999
+    assert request.scan_id != new_scan_id
+    for scan_id in request.sdp.configure_scan.scan_parameters.keys():
+        assert scan_id != new_scan_id
+
+    updated = request.copy_with_scan_id(new_scan_id)
+    assert updated.scan_id == new_scan_id
+    for scan_id in updated.sdp.configure_scan.scan_parameters.keys():
+        assert scan_id == new_scan_id
