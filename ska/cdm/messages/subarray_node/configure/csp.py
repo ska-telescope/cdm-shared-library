@@ -83,11 +83,11 @@ class FSPConfiguration:
         if not isinstance(other, FSPConfiguration):
             return False
         return self.fsp_id == other.fsp_id \
-               and self.function_mode == other.function_mode \
-               and self.frequency_slice_id == other.frequency_slice_id \
-               and self.corr_bandwidth == other.corr_bandwidth \
-               and self.integration_time == other.integration_time \
-               and self.channel_averaging_map == other.channel_averaging_map
+            and self.function_mode == other.function_mode \
+            and self.frequency_slice_id == other.frequency_slice_id \
+            and self.corr_bandwidth == other.corr_bandwidth \
+            and self.integration_time == other.integration_time \
+            and self.channel_averaging_map == other.channel_averaging_map
 
 
 class CSPConfiguration:
