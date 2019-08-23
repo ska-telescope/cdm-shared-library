@@ -2,7 +2,7 @@
 This module defines Marshmallow schemas that map the CDM classes for
 SubArrayNode CSP configuration to/from JSON.
 """
-from marshmallow import Schema, fields, post_load, pre_dump
+from marshmallow import Schema, fields, post_load, pre_dump, post_dump
 from marshmallow.validate import OneOf
 
 import ska.cdm.messages.subarray_node.configure as configure_msgs
@@ -40,6 +40,18 @@ class FSPConfigurationSchema(Schema):
         # Convert Python Enum to its string value
         fsp_configuration.function_mode = fsp_configuration.function_mode.value
         return fsp_configuration
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SDP configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
@@ -86,6 +98,7 @@ class CSPConfigurationSchema(Schema):
         # Convert Python Enum to its string value
         csp_configuration.frequency_band = csp_configuration.frequency_band.value
         return csp_configuration
+
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use

@@ -4,6 +4,7 @@ Unit tests for the SubarrayNode.Configure request/response mapper module.
 import datetime
 from ska.cdm.messages.subarray_node.scan import ScanRequest
 
+
 def test_scan_request_init():
     """
     Create a ScanRequest instance with a 10s timedelta and verify
@@ -26,5 +27,5 @@ def test_scan_request_init():
     assert scan_request.scan_duration == t_to_scan
     assert scan_request != empty_object
 
-    #equal if the contents are identical
+    # equal if the contents are identical
     assert scan_request == scan_request_2
