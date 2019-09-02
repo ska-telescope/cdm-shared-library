@@ -48,7 +48,7 @@ class FSPConfigurationSchema(Schema):
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
-        :return: dict suitable for SDP configuration
+        :return: dict suitable for FSP configuration
         """
         result = {k: v for k, v in data.items() if v is not None}
         return result

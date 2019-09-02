@@ -118,66 +118,6 @@ VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST = """
 }
 """
 
-VALID_CONFIGURE_REQUEST_NO_CHANNEL_MAP = """
-{
-  "scanID": 123,
-  "pointing": {
-    "target": {
-      "system": "ICRS",
-      "name": "M51",
-      "RA": "13:29:52.698",       
-      "dec": "+47:11:42.93"      
-    }
-  },
-  "dish": {
-    "receiverBand": "1"
-  },
-  "csp":{
-    "frequencyBand": "1",
-    "fsp": [
-      {
-        "fspID": 1,
-        "functionMode": "CORR",
-        "frequencySliceID": 1,
-        "integrationTime": 1400,
-        "corrBandwidth": 0
-      }
-    ]
-  },
-  "sdp": {
-    "configure": [
-      {
-        "id": "realtime-20190627-0001",
-        "sbiId": "20190627-0001",
-        "workflow": {
-          "id": "vis_ingest",
-          "type": "realtime",
-          "version": "0.1.0"
-        },
-        "parameters": {
-          "numStations": 4,
-          "numChannels": 372,
-          "numPolarisations": 4,
-          "freqStartHz": 0.35e9,
-          "freqEndHz": 1.05e9,
-          "fields": {
-            "0": { 
-            "system": "ICRS",
-             "name": "M51", 
-             "ra": 3.5337607188635975, 
-             "dec": 0.8237126492459581 
-             }
-          }
-        },
-        "scanParameters": {
-          "123": { "fieldId": 0, "intervalMs": 1400 }
-        }
-      }
-    ]
-  }
-}
-"""
-
 
 def sdp_configure_for_test(target, scan_id):
     """
@@ -217,27 +157,6 @@ def test_marshall_configure_request():
     request_json = ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
-
-
-def test_marshall_configure_request_no_cam():
-    """
-    Test for defect raised on 23/08/2019
-    Verify that if a ChannelAveraging map is not supplied it doesn't appear
-    in the JSON. Had been appearing as "channelAveragingMap": null
-    """
-    scan_id = 123
-    target = Target(ra='13:29:52.698', dec='+47:11:42.93', name='M51', frame='icrs',
-                    unit=('hourangle', 'deg'))
-    pointing_config = PointingConfiguration(target)
-    dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
-    sdp_config = sdp_configure_for_test(target, scan_id)
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
-    csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
-
-    request = ConfigureRequest(scan_id, pointing_config, dish_config, sdp_config, csp_config)
-    request_json = ConfigureRequestSchema().dumps(request)
-
-    assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST_NO_CHANNEL_MAP)
 
 
 def test_unmarshall_configure_request_from_json():
