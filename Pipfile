@@ -4,15 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-# numpy and pytango versions must match those in the ska-python-builder image,
-# otherwise pytango will be recompiled.
-numpy = "==1.15.4"
-# If you want to debug devices running in containers, add pydevd to the dependencies
-#pydevd = "*"
-
-marshmallow = ">=3.0.0rc7"
+marshmallow = ">=3.0.0"
 astropy = "*"
-
 
 [dev-packages]
 docutils = "*"
@@ -34,6 +27,3 @@ sphinxcontrib-websupport = "*"
 
 [requires]
 python_version = "3"
-
-[pipenv]
-allow_prereleases = true
