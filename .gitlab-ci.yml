@@ -25,42 +25,23 @@ before_script:
 # In this case we have only the test job which produce an artifacts (it must be placed into a directory called "public")
 # It is also specified that only the master branch will be subject of this job.
 
+
 stages:
-  - test
   - build
+  - test
+  - linting
   - publish
+  - pages
+  - pages_on_failure
 
-
-test:
+clean shell runner:
+  stage: .pre
   tags:
     - docker-executor
-  stage: test
   script:
-    - make build
-    - make test
-    - mv build public
-    - make push
-  artifacts:
-    paths:
-      - public
+    # Gitlab CI badges creation
+    - rm -rf build/*
 
-pages:
-  tags:
-    - docker-executor
-  stage: test
-
-  script:
-   - make build
-   - make test
-   - ls -la
-   - mkdir .public
-   - cp build/coverage.xml .public
-   - cp -r build/htmlcov/* .public
-   - mv .public public
-  artifacts:
-    paths:
-      - public
-    expire_in: 30 days
 
 build_wheel_for_publication: # Executed on a tag:
   stage: build
@@ -71,6 +52,18 @@ build_wheel_for_publication: # Executed on a tag:
     - apt-get install -y python3-pip
     - pip3 install setuptools
     - python3 setup.py egg_info -b+dev.$CI_COMMIT_SHORT_SHA sdist bdist_wheel # --universal option to used for pure python packages
+  artifacts:
+    paths:
+      - ./dist/
+
+build wheel for development: # Executed on a commit
+  stage: build
+  tags:
+    - docker-executor
+  script:
+    - python setup.py egg_info -b+dev.$CI_COMMIT_SHORT_SHA sdist bdist_wheel
+  except:
+    - tags
   artifacts:
     paths:
       - ./dist/
@@ -94,3 +87,72 @@ publish_to_nexus:
     variables:
        - $CI_COMMIT_MESSAGE =~ /^.+$/ # Confirm tag message exists
        - $CI_COMMIT_TAG =~ /^((([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)$/ # Confirm semantic versioning of tag
+
+
+unit tests:
+  stage: test
+  image: nexus.engageska-portugal.pt/ska-docker/tango-builder:latest
+  before_script:
+  - docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_HOST
+  tags:
+    - docker-executor
+  script:
+    - apt-get -y update
+    - apt-get install -y python3-pip python3-setuptools python3-wheel --no-install-recommends
+    - echo $(ls -d ./dist/*.whl | grep $CI_COMMIT_SHORT_SHA)
+    - pip3 install -U $(ls -d ./dist/*.whl | grep $CI_COMMIT_SHORT_SHA)
+    - make test
+    - scripts/validate-metadata.sh
+  artifacts:
+    paths:
+      - ./build
+
+linting:
+  stage: linting
+  image: nexus.engageska-portugal.pt/ska-docker/tango-builder:latest
+  before_script:
+  - docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_HOST
+  tags:
+    - docker-executor
+  script:
+    - apt-get -y update
+    - apt-get install -y python3-pip python3-setuptools python3-wheel --no-install-recommends
+    - echo $(ls -d ./dist/*.whl | grep $CI_COMMIT_SHORT_SHA)
+    - pip3 install -U $(ls -d ./dist/*.whl | grep $CI_COMMIT_SHORT_SHA)
+    - make lint
+  artifacts:
+    paths:
+      - ./build
+
+pages:
+  stage: pages
+  image: nexus.engageska-portugal.pt/ska-docker/tango-builder:latest
+  before_script:
+  - docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_HOST
+  tags:
+    - docker-executor
+  script:
+    - cp -R build public
+    - make push
+    - cp build/coverage.xml .public
+    - cp -r build/htmlcov/* .public
+    - mv .public public
+  artifacts:
+    paths:    
+      - public
+
+create ci metrics:
+  stage: .post
+  image: nexus.engageska-portugal.pt/ska-docker/ska-python-buildenv:latest
+  when: always
+  tags:
+    - docker-executor
+  script:
+    # Gitlab CI badges creation: START
+    - apt-get -y update
+    - apt-get install -y curl --no-install-recommends
+    - curl -s https://gitlab.com/ska-telescope/ci-metrics-utilities/raw/master/scripts/ci-badges-func.sh | sh
+    # Gitlab CI badges creation: END
+  artifacts:
+    paths:
+      - ./build
