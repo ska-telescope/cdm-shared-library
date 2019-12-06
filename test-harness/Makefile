@@ -30,8 +30,8 @@ test:
 lint:
 	pip3 install pylint2junit; \
 	mkdir -p /build/reports; \
-	cd /app && pylint --output-format=parseable ska tests| tee /build/code_analysis.stdout; \
-	cd /app && pylint --output-format=pylint2junit.JunitReporter ska tests | tee /build/reports/linting.xml;
-	exit;
+	cd /app && pylint --exit-zero --output-format=parseable ska tests| tee /build/code_analysis.stdout; \
+	cd /app && pylint --exit-zero --output-format=pylint2junit.JunitReporter ska tests | tee /build/reports/linting.xml;
+	exit 0;
 
 .PHONY: all test lint
