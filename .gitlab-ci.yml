@@ -139,6 +139,7 @@ pages:
   script:
     - cp -R build public
     - make push
+    - mkdir .public
     - cp build/coverage.xml .public
     - cp -r build/htmlcov/* .public
     - mv .public public
