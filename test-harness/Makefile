@@ -21,4 +21,17 @@ test:
 		mv /app/coverage.xml /build; \
 	fi;
 
-.PHONY: all test
+# wait for the device to be available before beginning the test
+# A temporary volume is mounted at /build when 'make test' is executing.
+# The following steps copy across useful output to this volume which can
+# then be extracted to form the CI summary for the test procedure.
+# FIXME: Add pylint2junit to the tango-builder:latest image so that we don't need to install it here.
+# FIXME: Missing functionality in pylint2junit prevents converting from parseable to xml. Once it's implemented there is no need to run linting twice.
+lint:
+	pip3 install pylint2junit; \
+	mkdir -p /build/reports; \
+	cd /app && pylint --output-format=parseable ska tests| tee /build/code_analysis.stdout; \
+	cd /app && pylint --output-format=pylint2junit.JunitReporter ska tests | tee /build/reports/linting.xml;
+	exit;
+
+.PHONY: all test lint
