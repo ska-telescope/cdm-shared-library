@@ -140,7 +140,7 @@ pages:
     - cp -R build public
     - make push
     - mkdir .public
-    - cp build/coverage.xml .public
+    - cp build/coverage.xml .public/reports/code-coverage.xml
     - cp -r build/htmlcov/* .public
     - mv .public public
   artifacts:
