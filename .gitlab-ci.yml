@@ -72,8 +72,6 @@ pages:
     - linting
   script:
     - mkdir public
-    - cp build/coverage.xml public
-    - cp -r build/htmlcov/* public
     - cp -R build public
   artifacts:
     paths:
