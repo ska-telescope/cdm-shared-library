@@ -11,18 +11,23 @@ all: test
 # A temporary volume is mounted at /build when 'make test' is executing.
 # The following steps copy across useful output to this volume which can
 # then be extracted to form the CI summary for the test procedure.
-test: lint
+test:
 	cd /app && python3 setup.py test | tee setup_py_test.stdout
 	if [ -d /build ]; then \
+		mkdir -p /build/reports; \
 		mv /app/setup_py_test.stdout /build; \
 		mv /app/htmlcov /build; \
-		mv /app/coverage.xml /build; \
+		mv /app/coverage.xml /build/reports/code-coverage.xml; \
 	fi;
 
 lint:
 	if [ -d /build ]; then \
-		cd /app && pylint --output-format=parseable src/ska | tee /build/code_analysis.stdout; \
-		cd /app && pylint --output-format=parseable tests/ska | tee -a /build/code_analysis.stdout; \
+		python3 -m pip install pylint2junit; \
+		mkdir -p /build/reports; \
+		cd /app && pylint --output-format=parseable src/ska tests/ska | tee /build/code_analysis.stdout; \
+		cd /app && pylint --output-format=pylint2junit.JunitReporter src/ska tests/ska > /build/reports/linting.xml; \
+		sed -i 's/UTF-8" ?>/UTF-8" ?><testsuites>/' /build/reports/linting.xml; \
+		echo "</testsuites>" >> /build/reports/linting.xml; \
 	fi;
 
 .PHONY: all test lint
