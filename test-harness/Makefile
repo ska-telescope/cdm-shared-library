@@ -11,14 +11,18 @@ all: test
 # A temporary volume is mounted at /build when 'make test' is executing.
 # The following steps copy across useful output to this volume which can
 # then be extracted to form the CI summary for the test procedure.
-test:
+test: lint
 	cd /app && python3 setup.py test | tee setup_py_test.stdout
-	-cd /app && ./code-analysis.sh | tee code_analysis.stdout
 	if [ -d /build ]; then \
 		mv /app/setup_py_test.stdout /build; \
-		mv /app/code_analysis.stdout /build; \
 		mv /app/htmlcov /build; \
 		mv /app/coverage.xml /build; \
 	fi;
 
-.PHONY: all test
+lint:
+	if [ -d /build ]; then \
+		cd /app && pylint --output-format=parseable src/ska | tee /build/code_analysis.stdout; \
+		cd /app && pylint --output-format=parseable tests/ska | tee -a /build/code_analysis.stdout; \
+	fi;
+
+.PHONY: all test lint
