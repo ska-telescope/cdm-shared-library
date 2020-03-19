@@ -1,0 +1,81 @@
+@startuml
+!pragma useNewPackage
+hide empty members
+
+package marshmallow {
+	class Schema
+}
+
+package ska.cdm {
+	package messages {
+		package "<<//name of Tango device//>>" as device {
+			package "<<//name of device command//>>" as command.py <<Rectangle>> {
+				class Request
+				note top of Request
+					Object model for
+					JSON passed as an
+					argument to this
+					command
+				end note
+
+				class Response
+				note top of Response
+					Object model for
+					JSON returned by
+					this command
+				end note
+			}
+		}
+	}
+
+	package schemas {
+		package "<<//name of Tango device//>>" as P1 {
+			package "<<//name of device command//>>" as P2 <<Rectangle>> {
+				class RequestSchema
+				note top of RequestSchema
+					Marshmallow schema
+					for converting the
+					Request object to
+					and from JSON
+				end note
+
+				class ResponseSchema
+				note top of ResponseSchema
+					Marshmallow schema
+					for converting the
+					Response object to
+					and from JSON
+				end note
+			}
+		}
+	}
+	note as N2
+		Classes in the ""ska.cdm.schemas""
+		package transform their namesakes
+		in the ""ska.cdm.messages""
+		package to and from JSON.
+	end note
+
+	note as N1
+		One Python package
+		per Tango device.
+	end note
+	P2 .. N1
+	N1 .. device
+
+	note as N3
+		One Python module per
+		Tango command, or a
+		Python package if the
+		object is complex.
+	end note
+	P2 .. N3
+	N3 .. command.py
+
+}
+
+
+ResponseSchema --|> Schema
+RequestSchema --|> Schema
+
+@enduml
