@@ -13,12 +13,21 @@ all: test
 # then be extracted to form the CI summary for the test procedure.
 test:
 	cd /app && python3 setup.py test | tee setup_py_test.stdout
-	-cd /app && ./code-analysis.sh | tee code_analysis.stdout
 	if [ -d /build ]; then \
+		mkdir -p /build/reports; \
 		mv /app/setup_py_test.stdout /build; \
-		mv /app/code_analysis.stdout /build; \
 		mv /app/htmlcov /build; \
-		mv /app/coverage.xml /build; \
+		mv /app/coverage.xml /build/reports/code-coverage.xml; \
 	fi;
 
-.PHONY: all test
+lint:
+	if [ -d /build ]; then \
+		python3 -m pip install pylint2junit; \
+		mkdir -p /build/reports; \
+		cd /app && pylint --output-format=parseable src/ska tests/ska | tee /build/code_analysis.stdout; \
+		cd /app && pylint --output-format=pylint2junit.JunitReporter src/ska tests/ska > /build/reports/linting.xml; \
+		sed -i 's/UTF-8" ?>/UTF-8" ?><testsuites>/' /build/reports/linting.xml; \
+		echo "</testsuites>" >> /build/reports/linting.xml; \
+	fi;
+
+.PHONY: all test lint

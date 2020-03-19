@@ -26,41 +26,57 @@ before_script:
 # It is also specified that only the master branch will be subject of this job.
 
 stages:
-  - test
   - build
+  - test
+  - linting
+  - pages
   - publish
+  - .post
 
+build:
+  tags:
+    - docker-executor
+  stage: build
+  script:
+    - make build
 
 test:
   tags:
     - docker-executor
   stage: test
   script:
-    - make build
     - make test
-    - mv build public
-    - make push
   artifacts:
     paths:
-      - public
+      - build
+    expire_in: 7 days
 
-pages:
+linting:
   tags:
     - docker-executor
-  stage: test
-
+  stage: linting
   script:
-   - make build
-   - make test
-   - ls -la
-   - mkdir .public
-   - cp build/coverage.xml .public
-   - cp -r build/htmlcov/* .public
-   - mv .public public
+    - make lint
+  artifacts:
+    paths:
+      - build
+    expire_in: 7 days
+
+pages:
+  when: always
+  tags:
+    - docker-executor
+  stage: pages
+  dependencies:
+    - test
+    - linting
+  script:
+    - mkdir public
+    - cp -R build public
   artifacts:
     paths:
       - public
-    expire_in: 30 days
+    expire_in: 7 days
 
 build_wheel_for_publication: # Executed on a tag:
   stage: build
@@ -94,3 +110,16 @@ publish_to_nexus:
     variables:
        - $CI_COMMIT_MESSAGE =~ /^.+$/ # Confirm tag message exists
        - $CI_COMMIT_TAG =~ /^((([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)$/ # Confirm semantic versioning of tag
+
+create ci metrics:
+  stage: .post
+  when: always
+  image: nexus.engageska-portugal.pt/ska-docker/tango-builder:latest
+  tags:
+    - docker-executor
+  script:
+    # Gitlab CI badges creation
+    - curl -s https://gitlab.com/ska-telescope/ci-metrics-utilities/raw/master/scripts/ci-badges-func.sh | sh
+  artifacts:
+    paths:
+      - public
