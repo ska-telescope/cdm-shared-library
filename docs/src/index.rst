@@ -12,9 +12,13 @@ cdm-shared-library documentation
   :hidden:
 
   developer/developer
+  developer/centralnode/centralnode
+  developer/subarraynode/subarraynode
   client
 
 - :doc:`developer/developer`
+- :doc:`developer/centralnode/centralnode`
+- :doc:`developer/subarraynode/subarraynode`
 - :doc:`client`
 
 Project description

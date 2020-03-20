@@ -1,0 +1,33 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.subarray_node {
+	package scan.py <<Rectangle>> {
+		class ScanRequest {
+			scan_duration : datetime.timedelta
+	  	}
+		note top of ScanRequest
+			This class is the input argument
+			for ""SubArrayNode.Scan()""
+		end note
+
+		note as N1
+			The response from
+			""SubArrayNode.Scan()""
+			is unstructured, hence
+			there is no Response
+			class defined in this
+			module.
+		end note
+
+	}
+	note top of scan.py
+		The JSON payload for
+		""SubArrayNode.Scan()""
+		is simple and can be
+		contained in a single
+		Python module.
+	end note
+}
+
+@enduml

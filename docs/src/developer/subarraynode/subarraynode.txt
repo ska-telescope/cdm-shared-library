@@ -1,0 +1,53 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.subarray_node {
+	package scan.py <<Rectangle>> {
+		note as N1
+			This models the
+			input for
+			""SubArrayNode.Scan()""
+		end note
+	}
+	note top of scan.py
+		The JSON payload for
+		""SubArrayNode.Scan()""
+		is simple and can be
+		contained in a single
+		Python module.
+	end note
+
+	package configure {
+		package core.py <<Rectangle>> {
+		}
+
+		package csp.py <<Rectangle>> {
+		}
+
+		package sdp.py <<Rectangle>> {
+		}
+
+		package __init__.py <<Rectangle>> {
+		}
+
+		note as N2
+			Together, these model the input
+			for ""SubArrayNode.Configure()""
+		end note
+
+		N2 -- __init__.py
+		N2 -- core.py
+		N2 -- csp.py
+		N2 -- sdp.py
+	}
+	note top of configure
+		The JSON payload for
+		""SubArrayNode.Configure()""
+		is complex so it is coded as
+		a package containing modules
+		split roughly along the
+		system Element boundaries.
+	end note
+}
+
+@enduml

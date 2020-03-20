@@ -84,7 +84,7 @@ package contains Python object models for the JSON command arguments agreed
 in the ICDs. The ``ska.cdm.schemas`` package contains code to transform the
 classes defined in ``ska.cdm.messages`` to and from JSON.
 
-.. figure:: packages.png
+.. figure:: layout.png
    :align: center
    :alt: project layout
 
@@ -102,14 +102,15 @@ The project layout and naming conventions are:
   ``Response`` instances to an from JSON, along with any other content they
   contain.
 
-ska.cdm.messages
-----------------
+Messages
+--------
 
 The Python object model for the JSON defined in the ICD is located in the
 ``ska.cdm.messages`` package. In general, each CDM JSON entity is represented
-as a Python class and each CDM attribute presented as a class property. CDM
-attributes can be typed as plain Python data types (strings, floats, etc.) or,
-where appropriate, represented by rich objects if this provides additional
+as a Python class and each CDM attribute presented as a class property.
+
+CDM attributes can be typed as plain Python data types (strings, floats, etc.)
+or, where appropriate, represented by rich objects if this provides additional
 value to the client. For example, while astronomical coordinates are
 represented by floats and strings in the JSON schema, in the object model they
 are defined as Astropy
@@ -120,123 +121,14 @@ instances of Astropy
 `Quantity <https://docs.astropy.org/en/stable/units/quantity.html>`_ to
 provide additional functionality.
 
+For details on the device messages modelled by this library, see:
 
-TMC CentralNode
-^^^^^^^^^^^^^^^
-
-Sub-array resource allocation and de-allocation is performed via communication
-with a TMC CentralNode device. The diagram below shows how the object model
-used for resource allocation and de-allocation commands.
-
-.. figure:: messages_cn.png
-   :align: center
-   :alt: CentralNode classes
-
-   Object model for communication with TMC CentralNode device.
-
-This model is used to represent a JSON request such as this PI#3 example:
-
-.. code-block:: JSON
-
-  {
-    "subarrayID": 1,
-    "dish": {
-      "receptorIDList": ["0001", "0002"]
-    }
-  }
+- :doc:`centralnode/centralnode`
+- :doc:`subarraynode/subarraynode`
 
 
-TMC SubArrayNode
-^^^^^^^^^^^^^^^^
-
-Sub-array configuration and control is achieved via communication with a TMC
-SubArrayNode device. The diagram below shows how the object model used for
-telescope configuration and control.
-
-.. figure:: messages_san.png
-   :align: center
-   :alt: SubArrayNode classes
-
-   Object model for communication with TMC SubArrayNode device.
-
-This model is used to represent a JSON request such as this example from PI#3:
-
-.. code-block:: JSON
-
-  {
-    "scanID": 12345,
-    "pointing": {
-      "target": {
-        "system":"ICRS",
-        "name": "NGC6251",
-        "RA": 1.0,
-        "dec": 1.0
-      },
-    },
-    "dish": {
-      "receiverBand": "1"
-    },
-    "csp": {
-      "frequencyBand": "1",
-      "fsp": [
-        {
-          "fspID": 1,
-          "functionMode": "CORR",
-          "frequencySliceID": 1,
-          "integrationTime": 1400,
-          "corrBandwidth": 0,
-          "channelAveragingMap": [
-            [1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
-            [5209,0], [5953,0], [6697,0], [7441,0], [8185,0], [8929,0], [9673,0],
-            [10417,0], [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]
-          ],
-        },
-        {
-          "fspID": 2,
-          "functionMode": "CORR",
-          "frequencySliceID": 2,
-          "integrationTime": 1400,
-          "corrBandwidth": 0
-        },
-      ]
-    },
-    "sdp": {
-      "configure": [
-        {
-          "id": "realtime-20190627-0001",
-          "sbiId": "20190627-0001",
-          "workflow": {
-            "id": "vis_ingest",
-            "type": "realtime",
-            "version": "0.1.0"
-          },
-          "parameters": {
-            "numStations": 4,
-            "numChanels": 372,
-            "numPolarisations": 4,
-            "freqStartHz": 0.35e9,
-            "freqEndHz": 1.05e9,
-            "fields": {
-              "0": { "system": "ICRS", "name": "NGC6251", "ra": 1.0, "dec": 1.0 }
-            }
-          },
-          "scanParameters": {
-            "12345": { "fieldId": 0, "intervalMs": 1400 }
-          }
-        }
-      ],
-      "configureScan": {
-        "scanParameters": {
-          "12346": { "fieldId": 0, "intervalMs": 2800 }
-        }
-      }
-    },
-    "tmc": {
-    }
-  }
-
-ska.cdm.schemas
----------------
+Schemas
+-------
 
 Classes to marshall the ``ska.cdm.messages`` objects to and from JSON are
 defined in the ``ska.cdm.schemas`` package. The cdm-shared-library project

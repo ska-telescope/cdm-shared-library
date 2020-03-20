@@ -1,0 +1,43 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.subarray_node.configure {
+	package core.py <<Rectangle>> {
+		class PointingConfiguration
+		class DishConfiguration
+	}
+
+	package csp.py <<Rectangle>> {
+		class CSPConfiguration
+	}
+
+	package sdp.py <<Rectangle>> {
+		class SDPConfiguration
+	}
+
+	package ~__init__.py <<Rectangle>> {
+		class ConfigureRequest {
+			scan_id : int
+		}
+		ConfigureRequest *-- PointingConfiguration
+		ConfigureRequest *-- DishConfiguration
+		ConfigureRequest *-- CSPConfiguration
+		ConfigureRequest *-- SDPConfiguration
+
+		note top of ConfigureRequest
+			This ""Request"" class forms the
+			input argument for
+			""SubArrayNode.Configure()"".
+		end note
+	}
+
+	note as N1
+		The response from
+		""SubArrayNode.Configure()""
+		is unstructured, hence there
+		is no Response class in this
+		package.
+	end note
+}
+
+@enduml

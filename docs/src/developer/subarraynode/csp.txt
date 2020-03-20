@@ -1,0 +1,31 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.subarray_node.configure {
+	package csp.py <<Rectangle>> {
+
+		enum FSPFunctionMode {
+			CORR
+			PSS-BF
+			PST-BF
+			VLBI
+		}
+
+		class FSPConfiguration {
+			fsp_id : int
+			function_mode : FSPFunctionMode
+			frequency_slice_id : int
+			integration_time : int
+			corr_bandwidth : int
+			channel_average_map : List[Tuple]
+		}
+
+		class CSPConfiguration {
+			receiver_band : core.ReceiverBand
+		}
+		CSPConfiguration *-- "*" FSPConfiguration
+
+	}
+}
+
+@enduml
