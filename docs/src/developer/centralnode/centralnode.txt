@@ -1,0 +1,22 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.central_node {
+	package assign_resources.py <<Rectangle>> {
+		note as N1
+			This module models the
+			input and response for
+			""CentralNode.AssignResources()""
+		end note
+	}
+
+	package release_resources.py <<Rectangle>> {
+		note as N2
+			This module models the
+			input for
+			""CentralNode.ReleaseResources()""
+		end note
+	}
+}
+
+@enduml

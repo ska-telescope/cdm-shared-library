@@ -1,5 +1,4 @@
 @startuml
-!pragma useNewPackage
 hide empty members
 
 package marshmallow {

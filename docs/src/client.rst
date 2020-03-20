@@ -12,7 +12,7 @@ The Python snippet below is an example of constructing a JSON argument for a
 ``CentralNode.ReleaseResources()`` command. The resulting JSON can be sent to
 the device using a ``DeviceProxy``.
 
-::
+.. code-block:: python
 
   # import the classes for ReleaseResources commands and CODEC for serialisation
   from ska.cdm.messages import ReleaseResourcesRequest
@@ -27,7 +27,7 @@ Below is an example of converting the JSON response from a
 ``CentralNode.AssignResources()`` command to Python objects. The example
 assumes you have the string response from the command call at hand.
 
-::
+.. code-block:: python
 
   # import the classes for ReleaseResources commands and CODEC for serialisation
   from ska.cdm.messages import AssignResourcesResponse

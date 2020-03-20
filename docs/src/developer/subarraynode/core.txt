@@ -1,0 +1,31 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.subarray_node.configure {
+
+	package core.py <<Rectangle>> {
+
+		class Target {
+			coord : astropy.SkyCoord
+			name : str
+		}
+
+		class PointingConfiguration
+		PointingConfiguration *-- Target
+
+		class DishConfiguration {
+			receiver_band : ReceiverBand
+		}
+
+		enum ReceiverBand {
+			BAND_1
+			BAND_2
+			BAND_5A
+			BAND_5B
+		}
+
+	}
+
+}
+
+@enduml
