@@ -46,7 +46,7 @@ illustrated in the diagram above.
 In the context of a full JSON example object, __init__.py defines the a basic
 container object, while the sub-modules define the details.
 
-.. code-block::
+.. code::
 
   # JSON modelled specifically by __init__.py
   {
@@ -70,7 +70,7 @@ The ``core.py`` module models receptor pointing and receiver band JSON
 elements. In the context of a full CDM JSON object, the elements this maps to
 are:
 
-.. code-block::
+.. code::
 
   # JSON modelled specifically by core.py
   {
@@ -103,7 +103,7 @@ csp.py
 The ``csp.py`` module models CSP configuration JSON elements. In the context
 of a full CDM JSON object, the elements this maps to are:
 
-.. code-block::
+.. code::
 
   # JSON modelled specifically by csp.py
   {
@@ -141,7 +141,7 @@ sdp.py
 The ``sdp.py`` module models SDHP configuration JSON elements. In the context
 of a full CDM JSON object, the elements this maps to are:
 
-.. code-block::
+.. code::
 
   # JSON modelled specifically by sdp.py
   {
