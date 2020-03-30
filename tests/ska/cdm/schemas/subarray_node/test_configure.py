@@ -199,12 +199,12 @@ def test_marshall_configure_request():
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
 
 
-@pytest.mark.xfail
 def test_unmarshall_configure_request_from_json():
     """
     Verify that a ConfigureRequest can be unmarshalled from JSON.
     """
     scan_id = 123
+    scan_duration = timedelta(seconds=10)
     target = Target(
         ra="13:29:52.698",
         dec="+47:11:42.93",
@@ -218,6 +218,7 @@ def test_unmarshall_configure_request_from_json():
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
     csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
+    tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
         scan_id,
@@ -225,6 +226,7 @@ def test_unmarshall_configure_request_from_json():
         dish=dish_config,
         sdp=sdp_configure,
         csp=csp_config,
+        tmc=tmc_config
     )
     unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
 

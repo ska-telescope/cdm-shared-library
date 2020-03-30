@@ -32,3 +32,16 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         in_secs = duration.total_seconds()
         data.scan_duration = in_secs
         return data
+
+    @post_load
+    def convert_scan_duration_number_to_timedelta(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a TMConfiguration
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: TMCConfiguration instance populated to match JSON
+        """
+        t_to_scan = timedelta(seconds=data.get("scan_duration"))
+        tmc_config = TMCConfiguration(t_to_scan)
+        return tmc_config

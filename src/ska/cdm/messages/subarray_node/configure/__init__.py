@@ -35,7 +35,8 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
                and self.pointing == other.pointing \
                and self.dish == other.dish \
                and self.sdp == other.sdp \
-               and self.csp == other.csp
+               and self.csp == other.csp \
+               and self.tmc == other.tmc
 
     # Until Python 3.7 the return type has to be specified as a string
     def copy_with_scan_id(self, new_scan_id: int) -> 'ConfigureRequest':
