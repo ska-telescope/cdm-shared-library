@@ -29,5 +29,5 @@ class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: ScanRequest instance populated to match JSON
         """
-        scan_request = scan_msgs.ScanRequest(data.scan_id)
+        scan_request = scan_msgs.ScanRequest(data.get("scan_id"))
         return scan_request

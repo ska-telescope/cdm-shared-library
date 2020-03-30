@@ -23,13 +23,13 @@ def test_marshall_start_scan_request():
     assert json_is_equal(result, VALID_SCAN_REQUEST)
 
 
-@pytest.mark.xfail  # mark other tests as expected to fail
 def test_unmarshall_start_scan_request():
     """
     Verify that JSON can be unmarshalled back to a ScanRequest
     """
     schema = ScanRequestSchema()
     result = schema.loads(VALID_SCAN_REQUEST)
-    duration = datetime.timedelta(seconds=10.0)
-    expected = ScanRequest(duration)
+    expected = ScanRequest(1)
+
+    assert result.scan_id is not None
     assert result == expected
