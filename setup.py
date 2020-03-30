@@ -23,6 +23,7 @@ setuptools.setup(
     url='https://gitlab.com/ska-telescope/cdm-shared-library',
     packages=setuptools.find_namespace_packages(where='src', include=['ska.*']),
     package_dir={'': 'src'},
+    namespace_packages=["ska"],
     include_package_data=True,
     license="BSD license",
     zip_safe=False,
