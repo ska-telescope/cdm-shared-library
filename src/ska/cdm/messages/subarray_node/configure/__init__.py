@@ -7,6 +7,7 @@ import copy
 from .core import *
 from .csp import *
 from .sdp import *
+from .tmc import *
 
 
 class ConfigureRequest:  # pylint: disable=too-few-public-methods
@@ -18,12 +19,14 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     # pylint: disable=too-many-arguments
     def __init__(self, scan_id: int, pointing: PointingConfiguration = None,
                  dish: DishConfiguration = None, sdp: SDPConfiguration = None,
-                 csp: CSPConfiguration = None):
+                 csp: CSPConfiguration = None,
+                 tmc: TMCConfiguration = None):
         self.scan_id = scan_id
         self.pointing = pointing
         self.dish = dish
         self.sdp = sdp
         self.csp = csp
+        self.tmc = tmc
 
     def __eq__(self, other):
         if not isinstance(other, ConfigureRequest):
