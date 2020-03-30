@@ -196,7 +196,7 @@ Below is an example JSON command argument that this code can model.
 .. code-block:: JSON
 
   {
-    "scanDuration": 10.0
+    "id": 2
   }
 
 
