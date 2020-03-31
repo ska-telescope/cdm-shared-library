@@ -128,7 +128,6 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """
 
-    scan_id = fields.Integer(required=True, data_key='scanID')
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
     sdp = fields.Nested(sdp.SDPConfigurationSchema)

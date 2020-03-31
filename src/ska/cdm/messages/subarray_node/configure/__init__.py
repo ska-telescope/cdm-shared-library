@@ -17,11 +17,10 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     """
 
     # pylint: disable=too-many-arguments
-    def __init__(self, scan_id: int, pointing: PointingConfiguration = None,
+    def __init__(self, pointing: PointingConfiguration = None,
                  dish: DishConfiguration = None, sdp: SDPConfiguration = None,
                  csp: CSPConfiguration = None,
                  tmc: TMCConfiguration = None):
-        self.scan_id = scan_id
         self.pointing = pointing
         self.dish = dish
         self.sdp = sdp
@@ -31,13 +30,13 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     def __eq__(self, other):
         if not isinstance(other, ConfigureRequest):
             return False
-        return self.scan_id == other.scan_id \
-               and self.pointing == other.pointing \
+        return self.pointing == other.pointing \
                and self.dish == other.dish \
                and self.sdp == other.sdp \
                and self.csp == other.csp \
                and self.tmc == other.tmc
 
+    # TODO deprecate copy_with_scan_id
     # Until Python 3.7 the return type has to be specified as a string
     def copy_with_scan_id(self, new_scan_id: int) -> 'ConfigureRequest':
         """
@@ -48,7 +47,6 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         :return: updated ConfigureRequest
         """
         updated = copy.deepcopy(self)
-        updated.scan_id = new_scan_id
 
         # update SDP scan parameters ID too
         if updated.sdp.configure:

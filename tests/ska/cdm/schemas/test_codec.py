@@ -5,7 +5,7 @@ import os.path
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.assign_resources import DishAllocation
-from ska.cdm.messages.subarray_node.configure import ConfigureRequest
+from ska.cdm.messages.subarray_node.configure import ConfigureRequest, DishConfiguration, ReceiverBand
 from ska.cdm.schemas import CODEC
 from .test_central_node import VALID_ASSIGN_RESOURCES_REQUEST
 
@@ -36,4 +36,6 @@ def test_read_a_file_from_disk():
     cwd, _ = os.path.split(__file__)
     test_data = os.path.join(cwd, 'testfile_sample_configure.json')
     result = CODEC.load_from_file(ConfigureRequest, test_data)
-    assert result.scan_id == 123
+    want = DishConfiguration(ReceiverBand.BAND_1)
+
+    assert result.dish == want
