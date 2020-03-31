@@ -140,7 +140,7 @@ VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST = """
 """
 
 
-def sdp_configure_for_test(target, scan_id=1):
+def sdp_configure_for_test(target, scan_id=123):
     # TODO remove scan_id
     """
     Utility method to create an SDPConfiguration for use in unit test
@@ -170,7 +170,6 @@ def sdp_configure_for_test(target, scan_id=1):
     return sdp_configure
 
 
-@pytest.mark.xfail
 def test_marshall_configure_request():
     """
     Verify that ConfigureRequest is marshalled to JSON correctly.
@@ -287,18 +286,19 @@ def test_optional_configurations_are_omitted_when_null():
     assert json_is_equal(request_json, expected)
 
 
-@pytest.mark.xfail
 def test_configure_request_can_be_created_when_only_required_args_present():
     """
     Verify that a ConfigureRequest object can be unmarshalled from JSON when
     only the required attributes are present.
     """
-    serialised = '{"scanID": 123}'
-    expected = ConfigureRequest(123)
+    serialised = '{"dish": {"receiverBand": "1"} }'
+    expected = ConfigureRequest(
+      dish=DishConfiguration(ReceiverBand.BAND_1)
+    )
     unmarshalled = ConfigureRequestSchema().loads(serialised)
     assert expected == unmarshalled
 
-@pytest.mark.xfail
+@pytest.mark.xfail # TODO deprecate copy_with_scan_id
 def test_copy_with_scan_id_works_with_sdp_configure():
     """
     Verify that ConfigureRequest.copy_with_scan_id works when SDP configure
@@ -317,7 +317,7 @@ def test_copy_with_scan_id_works_with_sdp_configure():
         for scan_id in pb_config.scan_parameters.keys():
             assert scan_id == new_scan_id
 
-@pytest.mark.xfail
+@pytest.mark.xfail # TODO deprecate copy_with_scan_id
 def test_copy_with_scan_id_works_with_sdp_configure_scan():
     """
     Verify that ConfigureRequest.copy_with_scan_id works when SDP
