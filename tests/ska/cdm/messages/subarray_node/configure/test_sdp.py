@@ -114,7 +114,7 @@ def test_processing_block_configuration_not_equal_to_other_objects():
     Verify that ProcessingBlockConfiguration objects are not considered equal
     to objects of other types.
     """
-    config = sdp.ProcessingBlockConfiguration(None, None, None, None, None)
+    config = sdp.ProcessingBlockConfiguration(None, None, None, None)
     assert config != 1
 
 

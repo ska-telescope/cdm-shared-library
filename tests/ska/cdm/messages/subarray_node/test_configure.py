@@ -24,14 +24,10 @@ def get_sdp_configuration_for_test(target):
     parameters = SDPParameters(num_stations=4, num_channels=372, num_polarisations=4,
                                freq_start_hz=0.35e9, freq_end_hz=1.05e9, target_fields=target_list)
 
-    scan = SDPScan(field_id=0, interval_ms=1400)
-
-    scan_list = {'12345': scan}
     pb_config = ProcessingBlockConfiguration(sb_id='realtime-20190627-0001', sbi_id='20190627-0001',
-                                             workflow=workflow, parameters=parameters,
-                                             scan_parameters=scan_list)
+                                             workflow=workflow, parameters=parameters)
 
-    sdp_config = SDPConfiguration(configure=[pb_config])
+    sdp_config = SDPConfiguration(configure_sb=[pb_config])
 
     return sdp_config
 

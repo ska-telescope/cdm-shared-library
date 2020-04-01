@@ -8,7 +8,7 @@ from tests.ska.cdm.schemas.utils import json_is_equal
 
 VALID_SDP_CONFIGURE_SB = """
 {
-  "configure": [
+  "configureSB": [
     {
       "id": "realtime-20190627-0001",
       "sbiId": "20190627-0001",
@@ -26,9 +26,6 @@ VALID_SDP_CONFIGURE_SB = """
         "fields": {
           "0": { "system": "ICRS", "name": "NGC6251", "ra": 1.0, "dec": 1.0 }
         }
-      },
-      "scanParameters": {
-        "12345": { "fieldId": 0, "intervalMs": 1400 }
       }
     }
   ]
@@ -45,9 +42,9 @@ VALID_SDP_CONFIGURE_SCAN = """
 }
 """
 
-VALID_SDP_CONFIGURE_AND_CONFIGURE_SCAN = """
+VALID_SDP_CONFIGURE_SB_AND_CONFIGURE_SCAN = """
 {
-  "configure": [
+  "configureSB": [
     {
       "id": "realtime-20190627-0001",
       "sbiId": "20190627-0001",
@@ -65,9 +62,6 @@ VALID_SDP_CONFIGURE_AND_CONFIGURE_SCAN = """
         "fields": {
           "0": { "system": "ICRS", "name": "NGC6251", "ra": 1.0, "dec": 1.0 }
         }
-      },
-      "scanParameters": {
-        "12345": { "fieldId": 0, "intervalMs": 1400 }
       }
     }
   ],
@@ -108,7 +102,7 @@ def test_unmarshall_sdp_configure_scan():
     assert '12346' in result.configure_scan.scan_parameters
 
 
-def test_marshal_sdp_configure_request():
+def test_marshal_sdp_configure_sb_request():
     """
     Verify that JSON can be marshalled to JSON correctly
     """
@@ -122,14 +116,11 @@ def test_marshal_sdp_configure_request():
     parameters = SDPParameters(num_stations=4, num_channels=372,
                                num_polarisations=4, freq_start_hz=0.35e9,
                                freq_end_hz=1.05e9, target_fields=target_list)
-    scan = SDPScan(field_id=0, interval_ms=1400)
-    scan_list = {'12345': scan}
 
     pb_config = ProcessingBlockConfiguration(sb_id=sb_id,
                                              sbi_id=sbi_id,
                                              workflow=workflow,
-                                             parameters=parameters,
-                                             scan_parameters=scan_list)
+                                             parameters=parameters)
 
     sdp_configure = SDPConfiguration([pb_config])
     schema = SDPConfigurationSchema()
@@ -148,13 +139,13 @@ def test_marshal_sdp_configure_scan_request():
     assert json_is_equal(result, VALID_SDP_CONFIGURE_SCAN)
 
 
-def test_unmarshall_sdp_configure_request():
+def test_unmarshall_sdp_configure_sb_request():
     """
     Verify that JSON can be unmarshalled back to an SDP SB configuration
     """
     schema = SDPConfigurationSchema()
     result = schema.loads(VALID_SDP_CONFIGURE_SB)
-    config_block = result.configure[0]
+    config_block = result.configure_sb[0]
     assert isinstance(config_block, ProcessingBlockConfiguration)
 
 
@@ -167,20 +158,20 @@ def test_unmarshall_sdp_configure_scan_request():
     assert '12346' in result.configure_scan.scan_parameters
 
 
-def test_unmarshall_both_sdp_configure_and_configure_scan_request():
+def test_unmarshall_both_sdp_configure_sb_and_configure_scan_request():
     """
     Verify that SB- and scan-level configurations can be unmarshalled and
     co-exist in the same SDPConfiguration.
     """
     schema = SDPConfigurationSchema()
-    result = schema.loads(VALID_SDP_CONFIGURE_AND_CONFIGURE_SCAN)
-    assert isinstance(result.configure, list)
+    result = schema.loads(VALID_SDP_CONFIGURE_SB_AND_CONFIGURE_SCAN)
+    assert isinstance(result.configure_sb, list)
     assert isinstance(result.configure_scan, SDPScanParameters)
 
 
-def test_unmarshall_empty_sdp_configure_request():
+def test_unmarshall_empty_sdp_configure_sb_request():
     """
-    Nominal test  - more for documentation - since both configure and confgureScan are optional
+    Nominal test  - more for documentation - since both configureSB and confgureScan are optional
     it is technically possible to have an sdp configuration that is empty.
     Placeholder for a test if we close this down.
     """

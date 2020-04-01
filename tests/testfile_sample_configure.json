@@ -12,7 +12,7 @@
     "receiverBand": "1"
   },
   "sdp": {
-    "configure": [
+    "configureSB": [
       {
         "id": "realtime-20190627-0001",
         "sbiId": "20190627-0001",
@@ -30,9 +30,6 @@
           "fields": {
             "0": { "system": "ICRS", "name": "M51", "ra": 3.5337607188635975, "dec": 0.8237126492459581 }
           }
-        },
-        "scanParameters": {
-          "12345": { "fieldId": 0, "intervalMs": 1400 }
         }
       }
     ]
