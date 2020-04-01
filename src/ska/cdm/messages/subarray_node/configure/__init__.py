@@ -48,13 +48,6 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         """
         updated = copy.deepcopy(self)
 
-        # update SDP scan parameters ID too
-        if updated.sdp.configure:
-            for pb_config in updated.sdp.configure:
-                new_scan_parameters = {new_scan_id: v
-                                       for _, v in pb_config.scan_parameters.items()}
-                pb_config.scan_parameters = new_scan_parameters
-
         if updated.sdp.configure_scan:
             new_scan_parameters = {new_scan_id: v
                                    for _, v in updated.sdp.configure_scan.scan_parameters.items()}
