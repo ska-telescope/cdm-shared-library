@@ -94,7 +94,6 @@ VALID_CONFIGURE_REQUEST = """
 
 VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST = """
 {
-  "scanID": 456,
   "pointing": {
     "target": {
       "system": "ICRS",
@@ -223,7 +222,6 @@ def test_unmarshall_configure_request_from_json():
     assert unmarshalled == expected
 
 
-@pytest.mark.xfail
 def test_unmarshall_configure_for_later_request_from_json():
     """
     Verify that a ConfigureRequest can be unmarshalled from JSON.
@@ -248,7 +246,6 @@ def test_unmarshall_configure_for_later_request_from_json():
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
-        scan_id,
         pointing=pointing_config,
         dish=dish_config,
         sdp=sdp_configure_scan,
@@ -264,17 +261,15 @@ def test_unmarshall_configure_for_later_request_from_json():
     assert unmarshalled == expected
 
 
-@pytest.mark.xfail
 def test_optional_configurations_are_omitted_when_null():
     """
     Verify that 'null' JSON values corresponding to optional undefined
     ConfigureRequest values (CSP, SDP, DISH, etc.) are stripped.
     """
-    scan_id = 123
-    request = ConfigureRequest(scan_id)
+    request = ConfigureRequest()
     request_json = ConfigureRequestSchema().dumps(request)
 
-    expected = '{"scanID": 123}'
+    expected = '{}'
     assert json_is_equal(request_json, expected)
 
 
@@ -290,24 +285,6 @@ def test_configure_request_can_be_created_when_only_required_args_present():
     unmarshalled = ConfigureRequestSchema().loads(serialised)
     assert expected == unmarshalled
 
-@pytest.mark.xfail # TODO deprecate copy_with_scan_id
-def test_copy_with_scan_id_works_with_sdp_configure():
-    """
-    Verify that ConfigureRequest.copy_with_scan_id works when SDP configure
-    is specified.
-    """
-    request = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
-    new_scan_id = 999
-    assert request.scan_id != new_scan_id
-    for pb_config in request.sdp.configure:
-        for scan_id in pb_config.scan_parameters.keys():
-            assert scan_id != new_scan_id
-
-    updated = request.copy_with_scan_id(new_scan_id)
-    assert updated.scan_id == new_scan_id
-    for pb_config in updated.sdp.configure:
-        for scan_id in pb_config.scan_parameters.keys():
-            assert scan_id == new_scan_id
 
 @pytest.mark.xfail # TODO deprecate copy_with_scan_id
 def test_copy_with_scan_id_works_with_sdp_configure_scan():
