@@ -206,7 +206,6 @@ Example configuration JSON
 .. code-block:: JSON
 
   {
-    "scanID": 12345,
     "pointing": {
       "target": {
         "system":"ICRS",
@@ -274,6 +273,7 @@ Example configuration JSON
       }
     },
     "tmc": {
+      "scanDuration": 10.0,
     }
   }
 
