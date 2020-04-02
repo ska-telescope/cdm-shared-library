@@ -15,7 +15,7 @@ with open('README.md') as readme_file:
 
 setuptools.setup(
     name='cdm-shared-library',
-    version="0.1.34",
+    version="1.0.0",
     description="Configuration data model library",
     long_description=readme + '\n\n',
     author="Hélder Ribeiro",
@@ -39,7 +39,7 @@ setuptools.setup(
     ],
     test_suite='tests',
     install_requires=[
-        'astropy',
+        'astropy==4.0.1',
         'marshmallow>=3.0.0rc7',
     ],
     setup_requires=[] + pytest_runner,
@@ -52,5 +52,10 @@ setuptools.setup(
     ],
     extras_require={
         'dev':  ['prospector[with_pyroma]', 'yapf', 'isort']
-    }
+
+    },
+    dependency_links = [
+        "https://pypy.org./project/astropy/4.0.1/"
+    ]
+
 )
