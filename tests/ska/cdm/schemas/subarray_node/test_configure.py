@@ -42,6 +42,7 @@ VALID_CONFIGURE_REQUEST = """
     "receiverBand": "1"
   },
   "csp":{
+    "id": "sbi-mvp01-20200325-00001-science_A",
     "frequencyBand": "1",
     "fsp": [
       {
@@ -109,6 +110,7 @@ VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST = """
     "receiverBand": "1"
   },
   "csp":{
+    "id": "sbi-mvp01-20200325-00001-science_A",
     "frequencyBand": "1",
     "fsp": [
       {
@@ -185,8 +187,9 @@ def test_marshall_configure_request():
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = sdp_configure_for_test(target)
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
@@ -214,8 +217,9 @@ def test_unmarshall_configure_request_from_json():
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_configure = sdp_configure_for_test(target, scan_id)
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -248,9 +252,10 @@ def test_unmarshall_configure_for_later_request_from_json():
 
     sdp_configure_scan = get_sdp_scan_configuration_for_test(scan_id)
 
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
