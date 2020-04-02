@@ -39,7 +39,7 @@ setuptools.setup(
     ],
     test_suite='tests',
     install_requires=[
-        'astropy==4.0.1',
+        'astropy',
         'marshmallow>=3.0.0rc7',
     ],
     setup_requires=[] + pytest_runner,
@@ -55,7 +55,7 @@ setuptools.setup(
 
     },
     dependency_links = [
-        "https://pypy.org./project/astropy/4.0.1/"
+        "https://pypy.org./project/astropy/"
     ]
 
 )
