@@ -138,6 +138,23 @@ class ProcessingBlockConfiguration:  # pylint: disable=too-few-public-methods
                and self.scan_parameters == other.scan_parameters
 
 
+class NewProcessingBlockConfiguration(ProcessingBlockConfiguration):
+    def __init__(self, sb_id: str, parameters: List = [],
+                 workflow: List[SDPWorkflow] = [], dependencies: List[Dict] = []):
+        self.sb_id = sb_id
+        self.workflow = workflow
+        self.dependencies = dependencies
+        self.parameters = parameters
+
+    def __eq__(self, other):
+        if not isinstance(other, NewProcessingBlockConfiguration):
+            return False
+        return self.sb_id == other.sb_id \
+               and self.workflow == other.workflow \
+               and self.dependencies == other.dependencies \
+               and self.parameters == other.parameters
+
+
 class SDPConfiguration:
     """
     SDPConfiguration is the envelope for the SDP processing block
@@ -155,3 +172,13 @@ class SDPConfiguration:
             return False
         return self.configure == other.configure \
                and self.configure_scan == other.configure_scan
+
+
+class NewSDPConfiguration(SDPConfiguration):
+    def __init__(self, processing_blocks: List[NewProcessingBlockConfiguration] = []):
+        self.processing_blocks = processing_blocks
+
+    def __eq__(self, other):
+        if not isinstance(other, SDPConfiguration):
+            return False
+        return self.processing_blocks == other.processing_blocks
