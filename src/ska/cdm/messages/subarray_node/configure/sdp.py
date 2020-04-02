@@ -108,11 +108,13 @@ class ProcessingBlockConfiguration:  # pylint: disable=too-few-public-methods
     :param workflow: Structure representing the type of SDP workflow
     :param parameters: SDP configuration parameters for this particular
         configuration
+    :param scan_parameters: Dictionary of the parameters for particular scans
+        keyed by the scan ID
     """
 
     # pylint: disable=too-many-arguments
     def __init__(self, sb_id: str, sbi_id: str, workflow: SDPWorkflow,
-                 parameters: SDPParameters):
+                 parameters: SDPParameters, scan_parameters: Dict[str, SDPScan]):
         """
         :type sb_id: str
         :type sbi_id: str
@@ -124,6 +126,7 @@ class ProcessingBlockConfiguration:  # pylint: disable=too-few-public-methods
         self.sbi_id = sbi_id
         self.workflow = workflow
         self.parameters = parameters
+        self.scan_parameters = scan_parameters
 
     def __eq__(self, other):
         if not isinstance(other, ProcessingBlockConfiguration):
@@ -131,23 +134,24 @@ class ProcessingBlockConfiguration:  # pylint: disable=too-few-public-methods
         return self.sb_id == other.sb_id \
                and self.sbi_id == other.sbi_id \
                and self.workflow == other.workflow \
-               and self.parameters == other.parameters
+               and self.parameters == other.parameters \
+               and self.scan_parameters == other.scan_parameters
 
 
 class SDPConfiguration:
     """
     SDPConfiguration is the envelope for the SDP processing block
-    configuration, persists for the entire SB and specified once per
-    SB, and the SDP per-scan configuration, which configures all scans.
+    configuration, specified once per SB, and the SDP per-scan configuration,
+    which is specified from the second scan onwards.
     """
 
-    def __init__(self, configure_sb: List[ProcessingBlockConfiguration] = None,
+    def __init__(self, configure: List[ProcessingBlockConfiguration] = None,
                  configure_scan: SDPScanParameters = None):
-        self.configure_sb = configure_sb
+        self.configure = configure
         self.configure_scan = configure_scan
 
     def __eq__(self, other):
         if not isinstance(other, SDPConfiguration):
             return False
-        return self.configure_sb == other.configure_sb \
+        return self.configure == other.configure \
                and self.configure_scan == other.configure_scan

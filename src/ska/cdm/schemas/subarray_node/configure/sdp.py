@@ -174,6 +174,8 @@ class ProcessingBlockConfigurationSchema(Schema):  # pylint: disable=too-few-pub
     sbi_id = fields.String(data_key='sbiId', required=True)
     workflow = fields.Nested(SDPWorkflowSchema)
     parameters = fields.Nested(SDPParametersSchema)
+    scan_parameters = fields.Dict(data_key='scanParameters', keys=fields.String(),
+                                  values=fields.Nested(SDPScanSchema))
 
     @post_load
     def unmarshall(self, data, **_):  # pylint: disable=no-self-use
@@ -190,11 +192,10 @@ class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow class for the SDPConfigure class
     This is the top level schema for the SDP part of the configure scan request.
-    It is going to consist of either a 'configureSB' request or a
+    It is going to consist of either a 'configure' request (first scan) or a
     'configureScan' (each subsequent request)
     """
-    configure_sb = fields.Nested(ProcessingBlockConfigurationSchema,
-                                 data_key='configureSB', many=True)
+    configure = fields.Nested(ProcessingBlockConfigurationSchema, many=True)
     configure_scan = fields.Nested(SDPScanParametersSchema, data_key='configureScan')
 
     @post_dump

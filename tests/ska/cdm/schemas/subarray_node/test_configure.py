@@ -59,7 +59,7 @@ VALID_CONFIGURE_REQUEST = """
     ]
   },
   "sdp": {
-    "configureSB": [
+    "configure": [
       {
         "id": "realtime-20190627-0001",
         "sbiId": "20190627-0001",
@@ -139,7 +139,8 @@ VALID_CONFIGURE_FOR_A_LATER_SCAN_REQUEST = """
 """
 
 
-def sdp_configure_sb_for_test(target):
+def sdp_configure_for_test(target, scan_id=123):
+    # TODO remove scan_id
     """
     Utility method to create an SDPConfiguration for use in unit test
     """
@@ -155,13 +156,16 @@ def sdp_configure_sb_for_test(target):
         freq_end_hz=1.05e9,
         target_fields=target_list,
     )
+    scan = SDPScan(field_id=0, interval_ms=1400)
+    scan_list = {str(scan_id): scan}
     pb_config = ProcessingBlockConfiguration(
         sb_id="realtime-20190627-0001",
         sbi_id="20190627-0001",
         workflow=workflow,
         parameters=parameters,
+        scan_parameters=scan_list,
     )
-    sdp_configure = SDPConfiguration(configure_sb=[pb_config])
+    sdp_configure = SDPConfiguration(configure=[pb_config])
     return sdp_configure
 
 
@@ -179,7 +183,7 @@ def test_marshall_configure_request():
     )
     pointing_config = PointingConfiguration(target)
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
-    sdp_config = sdp_configure_sb_for_test(target)
+    sdp_config = sdp_configure_for_test(target)
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
     csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
@@ -197,6 +201,7 @@ def test_unmarshall_configure_request_from_json():
     """
     Verify that a ConfigureRequest can be unmarshalled from JSON.
     """
+    scan_id = 123
     scan_duration = timedelta(seconds=10)
     target = Target(
         ra="13:29:52.698",
@@ -207,7 +212,7 @@ def test_unmarshall_configure_request_from_json():
     )
     pointing_config = PointingConfiguration(target)
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
-    sdp_configure = sdp_configure_sb_for_test(target)
+    sdp_configure = sdp_configure_for_test(target, scan_id)
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
     csp_config = CSPConfiguration(ReceiverBand.BAND_1, [fsp_config])
