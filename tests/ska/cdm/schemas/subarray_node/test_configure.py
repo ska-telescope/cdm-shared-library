@@ -82,6 +82,9 @@ VALID_CONFIGURE_REQUEST = """
              "dec": 0.8237126492459581 
              }
           }
+        },
+        "scanParameters": {
+          "123": { "fieldId": 0, "intervalMs": 1400 }
         }
       }
     ]
@@ -280,7 +283,7 @@ def test_configure_request_can_be_created_when_only_required_args_present():
     """
     serialised = '{"dish": {"receiverBand": "1"} }'
     expected = ConfigureRequest(
-        dish=DishConfiguration(ReceiverBand.BAND_1)
+      dish=DishConfiguration(ReceiverBand.BAND_1)
     )
     unmarshalled = ConfigureRequestSchema().loads(serialised)
     assert expected == unmarshalled
