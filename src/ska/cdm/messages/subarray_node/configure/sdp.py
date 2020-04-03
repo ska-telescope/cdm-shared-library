@@ -84,9 +84,26 @@ class SDPScan:  # pylint: disable=too-few-public-methods
                and self.interval_ms == other.interval_ms
 
 
+class SubBand:
+
+    def __init__(self, freq_min: float, freq_max: float, nchan: int, input_link_map: List):
+        self.freq_min = freq_min
+        self.freq_max = freq_max
+        self.nchan = nchan
+        self.input_link_map = input_link_map
+    
+    def __eq__(self, other):
+        if not isinstance(other, SubBand):
+            return False
+        return self.freq_min == other.freq_min \
+               and self.freq_max == other.freq_max \
+               and self.nchan == other.nchan \
+               and self.input_link_map == other.input_link_map
+
+
 class ScanType:
 
-    def __init__(self, id, coordinate_system: str = "", ra: str = "", dec: str = "", sub_bands: List = []):
+    def __init__(self, id, coordinate_system: str = "", ra: str = "", dec: str = "", sub_bands: List[SubBand] = []):
         self.id = id
         self.coordinate_system = coordinate_system
         self.ra = ra
