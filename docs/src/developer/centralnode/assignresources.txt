@@ -7,10 +7,32 @@ package ska.cdm.messages.central_node {
 			receptor_ids : List[str]
 		}
 
+        class ScanType {
+            scan_type_id : int
+            ra : str
+            dec : str
+            coordinate_system : str
+        }
+
+        class ProcessingBlockConfiguration {
+            sb_id : str
+            parameters : List[str]
+            dependencies: List[Dict]
+        }
+        ProcessingBlockConfiguration *-- "*" SDPWorkflow
+
+        class SDPConfiguration {
+            sdp_id : str
+            max_length : float
+		}
+        SDPConfiguration *-- "*" ScanType
+        SDPConfiguration *-- "*" ProcessingBlockConfiguration
+
 		class AssignResourcesRequest {
 			subarray_id : int
 		}
 		AssignResourcesRequest *-- DishAllocation
+        AssignResourcesRequest *-- SDPConfiguration
 
 		class AssignResourcesResponse
 		AssignResourcesResponse *-- DishAllocation
