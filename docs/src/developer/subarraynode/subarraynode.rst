@@ -37,6 +37,7 @@ modules. The ``configure`` package contains four modules:
 
 * __init__.py
 * `core.py`_
+* `tmc.py`_
 * `csp.py`_
 * `sdp.py`_
 
@@ -91,6 +92,28 @@ are:
   }
 
 
+tmc.py
+------
+
+.. figure:: tmc.png
+   :align: center
+   :alt: tmc.py object model
+
+   tmc.py object model
+
+The ``tmc.py`` module models TMC configuration JSON elements. Below is an
+example JSON command argument that this code can model.
+
+.. code::
+
+  # JSON modelled specifically by tmc.py
+  {
+    "tmc": {
+      "scanDuration": 10.0,
+    }
+  }
+
+
 csp.py
 ------
 
@@ -109,6 +132,7 @@ of a full CDM JSON object, the elements this maps to are:
   {
     ...
     "csp": {
+      "cspID": "sbi-mvp01-20200325-00001-science_A",
       "frequencyBand": "1",
       "fsp": [
         {
