@@ -1,6 +1,7 @@
 """
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
+import pytest
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest, \
     AssignResourcesResponse, DishAllocation
 
@@ -18,20 +19,22 @@ def test_assign_resources_request_eq():
     pb_a = NewProcessingBlockConfiguration("pb-mvp01-20200325-00001", workflow=sdp_workflow, dependencies=[], parameters=[])
     sdp_config = NewSDPConfiguration("sbi-mvp01-20200325-00001", 100.0, scan_types = [], processing_blocks=[pb_a])
     dish_allocation = DishAllocation(receptor_ids=['ac', 'b', 'aab'])
-    request = AssignResourcesRequest(1, dish_allocation=dish_allocation)
+    request = AssignResourcesRequest(1, dish_allocation=dish_allocation, sdp_config= sdp_config)
 
-    assert request == AssignResourcesRequest(1, dish_allocation=dish_allocation)
-    assert request != AssignResourcesRequest(1, dish_allocation=DishAllocation())
-    assert request != AssignResourcesRequest(2, dish_allocation=dish_allocation)
+    assert request == AssignResourcesRequest(1, dish_allocation=dish_allocation, sdp_config=sdp_config)
+    assert request != AssignResourcesRequest(1, dish_allocation=dish_allocation, sdp_config=None)
+    assert request != AssignResourcesRequest(1, dish_allocation=None, sdp_config=None)
+    assert request != AssignResourcesRequest(2, dish_allocation=dish_allocation, sdp_config=sdp_config)
 
 
+@pytest.mark.xfail
 def test_assign_resources_request_eq_with_other_objects():
     """
     Verify that an AssignResources request object is not considered equal to
     objects of other types.
     """
     dish_allocation = DishAllocation(receptor_ids=['ac', 'b', 'aab'])
-    request = AssignResourcesRequest(1, dish_allocation=dish_allocation)
+    request = AssignResourcesRequest(1, dish_allocation=dish_allocation, sdp_config=None)
     assert request != 1
     assert request != object()
 
