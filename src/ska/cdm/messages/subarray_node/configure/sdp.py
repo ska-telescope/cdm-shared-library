@@ -84,6 +84,25 @@ class SDPScan:  # pylint: disable=too-few-public-methods
                and self.interval_ms == other.interval_ms
 
 
+class ScanType:
+
+    def __init__(self, id, coordinate_system: str = "", ra: str = "", dec: str = "", sub_bands: List = []):
+        self.id = id
+        self.coordinate_system = coordinate_system
+        self.ra = ra
+        self.dec = dec
+        self.sub_bands = sub_bands
+
+    def __eq__(self, other):
+        if not isinstance(other, ScanType):
+            return False
+        return self.id == other.id \
+               and self.coordinate_system == other.coordinate_system \
+               and self.ra == other.ra \
+               and self.dec == other.dec \
+               and self.sub_bands == other.sub_bands
+               
+
 class SDPScanParameters:  # pylint: disable=too-few-public-methods
     """
     SDPScans are indexed by a unique ID
@@ -175,10 +194,13 @@ class SDPConfiguration:
 
 
 class NewSDPConfiguration(SDPConfiguration):
-    def __init__(self, processing_blocks: List[NewProcessingBlockConfiguration] = []):
+
+    def __init__(self, scan_types: List =[], processing_blocks: List[NewProcessingBlockConfiguration] = []):
+        self.scan_types = scan_types
         self.processing_blocks = processing_blocks
 
     def __eq__(self, other):
         if not isinstance(other, SDPConfiguration):
             return False
-        return self.processing_blocks == other.processing_blocks
+        return self.scan_types == other.scan_types \
+               and self.processing_blocks == other.processing_blocks
