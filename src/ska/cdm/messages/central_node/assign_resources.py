@@ -4,6 +4,8 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import List, Optional
 
+from ska.cdm.messages.subarray_node.configure.sdp import NewSDPConfiguration
+
 __all__ = ['AssignResourcesRequest', 'AssignResourcesResponse', 'DishAllocation']
 
 
@@ -39,7 +41,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
     argument for a TMC CentralNode.AssignResourcesRequest request.
     """
 
-    def __init__(self, subarray_id: int, dish_allocation: DishAllocation):
+    def __init__(self, subarray_id: int, dish_allocation: DishAllocation, sdp_config = NewSDPConfiguration):
         """
         Create a new AssignResourcesRequest object.
 
@@ -49,11 +51,14 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         """
         self.subarray_id = subarray_id
         self.dish = dish_allocation
+        self.sdp_config = sdp_config
 
     def __eq__(self, other):
         if not isinstance(other, AssignResourcesRequest):
             return False
-        return self.subarray_id == other.subarray_id and self.dish == other.dish
+        return self.subarray_id == other.subarray_id \
+               and self.dish == other.dish \
+               and self.sdp_config == other.sdp_config
 
 
 class AssignResourcesResponse:  # pylint: disable=too-few-public-methods

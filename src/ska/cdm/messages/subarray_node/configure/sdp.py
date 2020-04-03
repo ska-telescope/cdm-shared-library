@@ -84,6 +84,42 @@ class SDPScan:  # pylint: disable=too-few-public-methods
                and self.interval_ms == other.interval_ms
 
 
+class SubBand:
+
+    def __init__(self, freq_min: float, freq_max: float, nchan: int, input_link_map: List):
+        self.freq_min = freq_min
+        self.freq_max = freq_max
+        self.nchan = nchan
+        self.input_link_map = input_link_map
+    
+    def __eq__(self, other):
+        if not isinstance(other, SubBand):
+            return False
+        return self.freq_min == other.freq_min \
+               and self.freq_max == other.freq_max \
+               and self.nchan == other.nchan \
+               and self.input_link_map == other.input_link_map
+
+
+class ScanType:
+
+    def __init__(self, id, coordinate_system: str = "", ra: str = "", dec: str = "", sub_bands: List[SubBand] = []):
+        self.id = id
+        self.coordinate_system = coordinate_system
+        self.ra = ra
+        self.dec = dec
+        self.sub_bands = sub_bands
+
+    def __eq__(self, other):
+        if not isinstance(other, ScanType):
+            return False
+        return self.id == other.id \
+               and self.coordinate_system == other.coordinate_system \
+               and self.ra == other.ra \
+               and self.dec == other.dec \
+               and self.sub_bands == other.sub_bands
+               
+
 class SDPScanParameters:  # pylint: disable=too-few-public-methods
     """
     SDPScans are indexed by a unique ID
@@ -175,10 +211,17 @@ class SDPConfiguration:
 
 
 class NewSDPConfiguration(SDPConfiguration):
-    def __init__(self, processing_blocks: List[NewProcessingBlockConfiguration] = []):
+
+    def __init__(self, id: str, max_length: float, scan_types: List =[], processing_blocks: List[NewProcessingBlockConfiguration] = []):
+        self.id = id
+        self.max_length = max_length
+        self.scan_types = scan_types
         self.processing_blocks = processing_blocks
 
     def __eq__(self, other):
         if not isinstance(other, SDPConfiguration):
             return False
-        return self.processing_blocks == other.processing_blocks
+        return self.id == other.id \
+               and self.max_length == other.max_length \
+               and self.scan_types == other.scan_types \
+               and self.processing_blocks == other.processing_blocks
