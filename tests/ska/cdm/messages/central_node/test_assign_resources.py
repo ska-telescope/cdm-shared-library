@@ -16,7 +16,7 @@ def test_assign_resources_request_eq():
     scan_type_a = ScanType('science_A', coordinate_system= "ICRS", ra= "02:42:40.771", dec= "-00:00:47.84", sub_bands= [sub_bands])
     sdp_workflow = SDPWorkflow("vis_receive", "realtime", "0.1.0")
     pb_a = NewProcessingBlockConfiguration("pb-mvp01-20200325-00001", workflow=sdp_workflow, dependencies=[], parameters=[])
-    sdp_config = NewSDPConfiguration(scan_types = [], processing_blocks=[pb_a])
+    sdp_config = NewSDPConfiguration("sbi-mvp01-20200325-00001", 100.0, scan_types = [], processing_blocks=[pb_a])
     dish_allocation = DishAllocation(receptor_ids=['ac', 'b', 'aab'])
     request = AssignResourcesRequest(1, dish_allocation=dish_allocation)
 

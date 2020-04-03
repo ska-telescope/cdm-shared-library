@@ -212,12 +212,16 @@ class SDPConfiguration:
 
 class NewSDPConfiguration(SDPConfiguration):
 
-    def __init__(self, scan_types: List =[], processing_blocks: List[NewProcessingBlockConfiguration] = []):
+    def __init__(self, id: str, max_length: float, scan_types: List =[], processing_blocks: List[NewProcessingBlockConfiguration] = []):
+        self.id = id
+        self.max_length = max_length
         self.scan_types = scan_types
         self.processing_blocks = processing_blocks
 
     def __eq__(self, other):
         if not isinstance(other, SDPConfiguration):
             return False
-        return self.scan_types == other.scan_types \
+        return self.id == other.id \
+               and self.max_length == other.max_length \
+               and self.scan_types == other.scan_types \
                and self.processing_blocks == other.processing_blocks
