@@ -74,8 +74,8 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     """Represents the type of workflow being configured on the SDP eventually this will tie
        into some kind of lookup/enumeration
     """
-    id = fields.String(data_key='id', required=True)
-    type = fields.String(data_key='type', required=True)
+    workflow_id = fields.String(data_key='id', required=True)
+    workflow_type = fields.String(data_key='type', required=True)
     version = fields.String(data_key='version', required=True)
     sdp_workflow = configure_msgs.SDPWorkflow
 
@@ -87,8 +87,8 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: SDPWorkflow instance populated to match JSON
         """
-        wf_id = data['id']
-        wf_type = data['type']
+        wf_id = data['workflow_id']
+        wf_type = data['workflow_type']
         version = data['version']
         return configure_msgs.SDPWorkflow(wf_id, wf_type, version)
 
@@ -218,3 +218,68 @@ class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: SDPConfigureScan instance populated to match JSON
         """
         return configure_msgs.SDPConfiguration(**data)
+
+
+class NewSubBandSchema(Schema):
+    """
+    Represents ...
+    """
+    freq_min = fields.Float(data_key='freq_min', required=True) 
+    freq_max = fields.Float(data_key='freq_max', required=True) 
+    nchan = fields.Int(data_key='nchan', required=True)
+    input_link_map = fields.List(fields.List(fields.Int), data_key='input_link_map', required=True)
+
+
+class NewScanTypeSchema(Schema):
+    """
+    Represents ...
+    """
+    st_id = fields.String(data_key='id', required=True)
+    coordinate_system = fields.String(data_key='coordinate_system', required=True)
+    ra = fields.String(data_key='ra', required=True)
+    dec = fields.String(data_key='dec', required=True)
+    sub_bands = fields.Nested(NewSubBandSchema, data_key='subbands', many=True)
+
+
+class NewSDPParametersSchema(Schema):  # pylint: disable=too-few-public-methods
+    """
+    Represents the main SDP configuration parameters
+    """
+    pass
+
+
+class NewSDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
+    """Represents the type of workflow being configured on the SDP eventually this will tie
+       into some kind of lookup/enumeration
+    """
+    workflow_id = fields.String(data_key='id', required=True)
+    workflow_type = fields.String(data_key='type', required=True)
+    version = fields.String(data_key='version', required=True)
+
+class NewDependencySchema(Schema):  # pylint: disable=too-few-public-methods
+    """
+    Represents ...
+    """
+    pb_id = fields.String(data_key='pb_id', required=True)
+    pb_type = fields.List(fields.String, data_key='type')
+
+
+class NewProcessingBlockSchema(Schema):
+    """
+    Represents ...
+    """
+    pb_id = fields.String(data_key='id', required=True)
+    workflow = fields.Nested(NewSDPWorkflowSchema)
+    parameters = fields.Nested(NewSDPParametersSchema)
+    dependencies = fields.Nested(NewDependencySchema, many=True)
+
+
+
+class NewSdpConfigurationSchema(Schema):
+    """
+    Marsmallow class for the NewSDPConfiguration class
+    """
+    sdp_id = fields.String(data_key='id', required=True)
+    max_length = fields.Float(data_key="max_length", required=True)
+    scan_types = fields.Nested(NewScanTypeSchema, many=True)
+    processing_blocks = fields.Nested(NewProcessingBlockSchema, many=True)

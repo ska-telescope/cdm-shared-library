@@ -6,6 +6,7 @@ from marshmallow import Schema, fields, post_dump, post_load
 
 import ska.cdm.messages.central_node.assign_resources as assign_msgs
 import ska.cdm.messages.central_node.release_resources as release_msgs
+from ska.cdm.schemas.subarray_node.configure.sdp import NewSdpConfigurationSchema
 from . import CODEC
 
 __all__ = ['AssignResourcesRequestSchema',
@@ -69,6 +70,7 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
 
     subarray_id = fields.Integer(data_key='subarrayID', required=True)
     dish = fields.Nested(DishAllocationSchema, data_key='dish', required=True)
+    sdp_config = fields.Nested(NewSdpConfigurationSchema, data_key='sdp', required=True)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -87,7 +89,8 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         """
         subarray_id = data['subarray_id']
         dish_allocation = data['dish']
-        return assign_msgs.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation)
+        sdp_config = data['sdp_confg']
+        return assign_msgs.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation, sdp_config=sdp_config)
 
 
 @CODEC.register_mapping(assign_msgs.AssignResourcesResponse)

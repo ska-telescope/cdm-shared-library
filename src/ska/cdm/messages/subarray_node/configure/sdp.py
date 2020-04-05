@@ -18,15 +18,15 @@ class SDPWorkflow:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(self, workflow_id: str, workflow_type: str, version: str):
-        self.id = workflow_id  # pylint: disable=invalid-name
-        self.type = workflow_type
+        self.workflow_id = workflow_id
+        self.workflow_type = workflow_type
         self.version = version
 
     def __eq__(self, other):
         if not isinstance(other, SDPWorkflow):
             return False
-        return self.id == other.id \
-               and self.type == other.type \
+        return self.workflow_id == other.workflow_id \
+               and self.workflow_type == other.workflow_type \
                and self.version == other.version
 
 
@@ -85,8 +85,10 @@ class SDPScan:  # pylint: disable=too-few-public-methods
 
 
 class SubBand:
-
-    def __init__(self, freq_min: float, freq_max: float, nchan: int, input_link_map: List):
+    """
+    Represents ...
+    """
+    def __init__(self, freq_min: float, freq_max: float, nchan: int, input_link_map: List[List]):
         self.freq_min = freq_min
         self.freq_max = freq_max
         self.nchan = nchan
@@ -102,9 +104,11 @@ class SubBand:
 
 
 class ScanType:
-
-    def __init__(self, id, coordinate_system: str = "", ra: str = "", dec: str = "", sub_bands: List[SubBand] = []):
-        self.id = id
+    """
+    Represents ...
+    """
+    def __init__(self, st_id, coordinate_system: str, ra: str, dec: str, sub_bands: List[SubBand]):
+        self.st_id = st_id
         self.coordinate_system = coordinate_system
         self.ra = ra
         self.dec = dec
@@ -113,7 +117,7 @@ class ScanType:
     def __eq__(self, other):
         if not isinstance(other, ScanType):
             return False
-        return self.id == other.id \
+        return self.st_id == other.st_id \
                and self.coordinate_system == other.coordinate_system \
                and self.ra == other.ra \
                and self.dec == other.dec \
@@ -132,6 +136,29 @@ class SDPScanParameters:  # pylint: disable=too-few-public-methods
         if not isinstance(other, SDPScanParameters):
             return False
         return self.scan_parameters == other.scan_parameters
+
+
+class NewSDPParameters:
+    """
+    Represents ...
+    """
+    pass
+
+
+class PbDependency:
+    """
+    Represents ...
+    """
+
+    def __init__(self, pb_id: str, pb_type: List[str]):
+        self.pb_id = pb_id
+        self.pb_type = pb_type
+
+    def __eq__(self, other):
+        if not isinstance(other, PbDependency):
+            return False
+        return self.pb_id == other.pb_id \
+               and self.pb_type == other.pb_type
 
 
 class ProcessingBlockConfiguration:  # pylint: disable=too-few-public-methods
@@ -175,20 +202,23 @@ class ProcessingBlockConfiguration:  # pylint: disable=too-few-public-methods
 
 
 class NewProcessingBlockConfiguration(ProcessingBlockConfiguration):
-    def __init__(self, sb_id: str, parameters: List = [],
-                 workflow: List[SDPWorkflow] = [], dependencies: List[Dict] = []):
-        self.sb_id = sb_id
+    """
+    Represents ...
+    """
+    def __init__(self, pb_id: str, workflow: SDPWorkflow, parameters: NewSDPParameters,
+                 dependencies: List[PbDependency] = None):
+        self.pb_id = pb_id
         self.workflow = workflow
-        self.dependencies = dependencies
         self.parameters = parameters
+        self.dependencies = dependencies
 
     def __eq__(self, other):
         if not isinstance(other, NewProcessingBlockConfiguration):
             return False
-        return self.sb_id == other.sb_id \
+        return self.pb_id == other.pb_id \
                and self.workflow == other.workflow \
-               and self.dependencies == other.dependencies \
-               and self.parameters == other.parameters
+               and self.parameters == other.parameters \
+               and self.dependencies == other.dependencies
 
 
 class SDPConfiguration:
@@ -211,9 +241,11 @@ class SDPConfiguration:
 
 
 class NewSDPConfiguration(SDPConfiguration):
-
-    def __init__(self, id: str, max_length: float, scan_types: List =[], processing_blocks: List[NewProcessingBlockConfiguration] = []):
-        self.id = id
+    """
+    Represents ...
+    """
+    def __init__(self, sdp_id: str, max_length: float, scan_types: List[ScanType], processing_blocks: List[NewProcessingBlockConfiguration]):
+        self.sdp_id = sdp_id
         self.max_length = max_length
         self.scan_types = scan_types
         self.processing_blocks = processing_blocks
@@ -221,7 +253,7 @@ class NewSDPConfiguration(SDPConfiguration):
     def __eq__(self, other):
         if not isinstance(other, SDPConfiguration):
             return False
-        return self.id == other.id \
+        return self.sdp_id == other.sdp_id \
                and self.max_length == other.max_length \
                and self.scan_types == other.scan_types \
                and self.processing_blocks == other.processing_blocks

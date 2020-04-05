@@ -41,7 +41,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
     argument for a TMC CentralNode.AssignResourcesRequest request.
     """
 
-    def __init__(self, subarray_id: int, dish_allocation: DishAllocation, sdp_config = NewSDPConfiguration):
+    def __init__(self, subarray_id: int, dish_allocation: DishAllocation, sdp_config: NewSDPConfiguration):
         """
         Create a new AssignResourcesRequest object.
 
