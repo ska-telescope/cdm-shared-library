@@ -55,7 +55,7 @@ setuptools.setup(
 
     },
     dependency_links = [
-        "https://pypy.org./project/astropy/4.0.1/"
+        "https://pypy.org./project/astropy/"
     ]
 
 )
