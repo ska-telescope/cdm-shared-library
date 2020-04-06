@@ -15,6 +15,10 @@ package ska.cdm.messages.subarray_node.configure {
 		class SDPConfiguration
 	}
 
+	package tmc.py <<Rectangle>> {
+		class TMCConfiguration
+	}
+
 	package ~__init__.py <<Rectangle>> {
 		class ConfigureRequest {
 			scan_id : int
@@ -23,6 +27,7 @@ package ska.cdm.messages.subarray_node.configure {
 		ConfigureRequest *-- DishConfiguration
 		ConfigureRequest *-- CSPConfiguration
 		ConfigureRequest *-- SDPConfiguration
+        ConfigureRequest *-- TMCConfiguration
 
 		note top of ConfigureRequest
 			This ""Request"" class forms the
