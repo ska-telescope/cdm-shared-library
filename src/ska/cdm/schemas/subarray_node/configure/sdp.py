@@ -229,6 +229,21 @@ class NewSubBandSchema(Schema):
     nchan = fields.Int(data_key='nchan', required=True)
     input_link_map = fields.List(fields.List(fields.Int), data_key='input_link_map', required=True)
 
+    @post_load
+    def create_sub_band(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a SubBand object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SubBand object populated from data
+        """
+        freq_min = data['freq_min']
+        freq_max = data['freq_max']
+        nchan = data['nchan']
+        input_link_map = data['input_link_map']
+        return configure_msgs.SubBand(freq_min, freq_max, nchan, input_link_map)
+
 
 class NewScanTypeSchema(Schema):
     """
@@ -240,12 +255,39 @@ class NewScanTypeSchema(Schema):
     dec = fields.String(data_key='dec', required=True)
     sub_bands = fields.Nested(NewSubBandSchema, data_key='subbands', many=True)
 
+    @post_load
+    def create_scan_type(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ScanType object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: ScanTypew object populated from data
+        """
+        st_id = data['st_id']
+        coordinate_system = data['coordinate_system']
+        ra = data['ra']
+        dec = data['dec']
+        sub_bands = data['sub_bands']
+        return configure_msgs.ScanType(st_id, coordinate_system, ra, dec, sub_bands)
+
 
 class NewSDPParametersSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Represents the main SDP configuration parameters
     """
-    pass
+
+    @post_load
+    def create_sdp_parameters(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a SDPParameters object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPParameter object populated from data
+        """
+        # import pdb; pdb.set_trace()
+        return configure_msgs.NewSDPParameters()
 
 
 class NewSDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -256,12 +298,40 @@ class NewSDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     workflow_type = fields.String(data_key='type', required=True)
     version = fields.String(data_key='version', required=True)
 
+    @post_load
+    def create_sdp_wf(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a SDP Workflow object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDP Workflow object populated from data
+        """
+        wf_id = data['workflow_id']
+        wf_type = data['workflow_type']
+        version = data['version']
+        return configure_msgs.SDPWorkflow(wf_id, wf_type, version)
+
+
 class NewDependencySchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Represents ...
     """
-    pb_id = fields.String(data_key='pb_id', required=True)
+    pb_id = fields.String(data_key='pb_id')
     pb_type = fields.List(fields.String, data_key='type')
+
+    @post_load
+    def create_pb_dependency(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a PbDependency object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: PbDependency object populated from data
+        """
+        pb_id = data['pb_id']
+        pb_type = data['pb_type']
+        return configure_msgs.PbDependency(pb_id, pb_type)
 
 
 class NewProcessingBlockSchema(Schema):
@@ -271,8 +341,29 @@ class NewProcessingBlockSchema(Schema):
     pb_id = fields.String(data_key='id', required=True)
     workflow = fields.Nested(NewSDPWorkflowSchema)
     parameters = fields.Nested(NewSDPParametersSchema)
-    dependencies = fields.Nested(NewDependencySchema, many=True)
+    dependencies = fields.Nested(NewDependencySchema, many=True, missing=None)
 
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_processing_block_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a PB object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: PB object populated from data
+        """
+        return configure_msgs.NewProcessingBlockConfiguration(**data)
 
 
 class NewSdpConfigurationSchema(Schema):
@@ -283,3 +374,14 @@ class NewSdpConfigurationSchema(Schema):
     max_length = fields.Float(data_key="max_length", required=True)
     scan_types = fields.Nested(NewScanTypeSchema, many=True)
     processing_blocks = fields.Nested(NewProcessingBlockSchema, many=True)
+
+    @post_load
+    def create_sdp_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a NewSDPConfiguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: NewSDPConfiguration object populated from data
+        """
+        return configure_msgs.NewSDPConfiguration(**data)

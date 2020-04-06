@@ -9,7 +9,8 @@ from ska.cdm.messages.central_node.assign_resources import AssignResourcesReques
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.schemas.central_node import AssignResourcesRequestSchema, \
     AssignResourcesResponseSchema, ReleaseResourcesRequestSchema
-from ska.cdm.messages.subarray_node.configure.sdp import NewSDPConfiguration, ScanType, SubBand, NewProcessingBlockConfiguration, SDPWorkflow, PbDependency, NewSDPParameters
+from ska.cdm.messages.subarray_node.configure.sdp import NewSDPConfiguration, ScanType, SubBand, \
+     NewProcessingBlockConfiguration, SDPWorkflow, PbDependency, NewSDPParameters
 from .utils import json_is_equal
 
 
@@ -44,14 +45,12 @@ VALID_ASSIGN_RESOURCES_REQUEST = """
     {
       "id": "pb-mvp01-20200325-00001",
       "workflow": {"type": "realtime", "id": "vis_receive", "version": "0.1.0"},
-      "parameters": {},
-      "dependencies": null
+      "parameters": {}
     },
     {
       "id": "pb-mvp01-20200325-00002",
       "workflow": {"type": "realtime", "id": "test_realtime", "version": "0.1.0"},
-      "parameters": {},
-      "dependencies": null
+      "parameters": {}
     },
     {
       "id": "pb-mvp01-20200325-00003",
@@ -78,11 +77,9 @@ VALID_RELEASE_RESOURCES_REQUEST = '{"subarrayID": 1, "dish": {"receptorIDList": 
 VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": true}'
 
 
-def test_marshall_assign_resources_request():
-    """
-    Verify that AssignResourcesRequest is marshalled to JSON correctly.
-    """
-    # SDP scan_type
+@pytest.fixture(scope="function")
+def sdp_config_parameters():
+  # SDP scan_type
     sub_band_a = SubBand(freq_min=0.35e9, freq_max=1.05e9, nchan=372, input_link_map=[[1, 0], [101, 1]])
     sub_band_b = SubBand(freq_min=0.35e9, freq_max=1.05e9, nchan=372, input_link_map=[[1, 0], [101, 1]])
     scan_type_a = ScanType("science_A", coordinate_system="ICRS", ra="02:42:40.771", dec="-00:00:47.84", sub_bands=[sub_band_a])
@@ -111,8 +108,17 @@ def test_marshall_assign_resources_request():
 
     processing_blocks = [pb_a, pb_b, pb_c, pb_d]
 
+    return "sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks
+  
+
+def test_marshall_assign_resources_request(sdp_config_parameters):
+    """
+    Verify that AssignResourcesRequest is marshalled to JSON correctly.
+    """
+    sdp_id, max_length, scan_types, processing_blocks = sdp_config_parameters
+
     # SDP config
-    sdp_config = NewSDPConfiguration("sbi-mvp01-20200325-00001", 100.0, scan_types = scan_types, processing_blocks = processing_blocks)
+    sdp_config = NewSDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
     # Dish allocation
     dish_allocation = DishAllocation(receptor_ids=['0001', '0002'])
 
@@ -121,15 +127,17 @@ def test_marshall_assign_resources_request():
     assert json_is_equal(json_str, VALID_ASSIGN_RESOURCES_REQUEST)
 
 
-@pytest.mark.xfail
-def test_unmarshall_assign_resources_request():
+def test_unmarshall_assign_resources_request(sdp_config_parameters):
     """
     Verify that JSON can be unmarshalled back to an AssignResourcesRequest
     object.
     """
+    sdp_id, max_length, scan_types, processing_blocks = sdp_config_parameters
+    sdp_config = NewSDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
+
     request = AssignResourcesRequestSchema().loads(VALID_ASSIGN_RESOURCES_REQUEST)
     expected = AssignResourcesRequest(1, DishAllocation(
-        receptor_ids=['0001', '0002']))
+        receptor_ids=['0001', '0002']), sdp_config=sdp_config)
     assert request == expected
 
 

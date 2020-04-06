@@ -8,7 +8,8 @@ from typing import Dict, List
 from .core import Target
 
 __all__ = ['ProcessingBlockConfiguration', 'SDPParameters', 'SDPScan', 'SDPScanParameters',
-           'SDPWorkflow', 'SDPConfiguration']
+           'SDPWorkflow', 'SDPConfiguration', 'NewSDPConfiguration', 'NewProcessingBlockConfiguration',
+           'PbDependency', 'NewSDPParameters', 'ScanType', 'SubBand']
 
 
 class SDPWorkflow:  # pylint: disable=too-few-public-methods
@@ -142,7 +143,10 @@ class NewSDPParameters:
     """
     Represents ...
     """
-    pass
+    def __eq__(self, other):
+        if not isinstance(other, NewSDPParameters):
+            return False
+        return True
 
 
 class PbDependency:

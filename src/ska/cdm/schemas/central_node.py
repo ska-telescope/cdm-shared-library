@@ -89,7 +89,7 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         """
         subarray_id = data['subarray_id']
         dish_allocation = data['dish']
-        sdp_config = data['sdp_confg']
+        sdp_config = data['sdp_config']
         return assign_msgs.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation, sdp_config=sdp_config)
 
 

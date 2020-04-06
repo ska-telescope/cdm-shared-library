@@ -28,7 +28,6 @@ def test_assign_resources_request_eq():
     assert request != AssignResourcesRequest(2, dish_allocation=dish_allocation, sdp_config=sdp_config)
 
 
-@pytest.mark.xfail
 def test_assign_resources_request_eq_with_other_objects():
     """
     Verify that an AssignResources request object is not considered equal to
