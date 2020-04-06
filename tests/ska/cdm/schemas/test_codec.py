@@ -11,7 +11,7 @@ from ska.cdm.messages.subarray_node.configure import ConfigureRequest, DishConfi
 from ska.cdm.schemas import CODEC
 from ska.cdm.messages.subarray_node.configure.sdp import NewSDPConfiguration
 from .test_central_node import VALID_ASSIGN_RESOURCES_REQUEST, sdp_config_parameters
-
+from .utils import json_is_equal
 
 
 def test_codec_loads(sdp_config_parameters):
@@ -27,7 +27,6 @@ def test_codec_loads(sdp_config_parameters):
     assert expected == unmarshalled
 
 
-@pytest.mark.xfail
 def test_codec_dumps(sdp_config_parameters):
     """
     Verify that the codec marshalls objects to JSON.
@@ -39,7 +38,8 @@ def test_codec_dumps(sdp_config_parameters):
     obj = AssignResourcesRequest(1, DishAllocation(receptor_ids=['0001', '0002']),
                                  sdp_config=sdp_config)
     marshalled = CODEC.dumps(obj)
-    assert expected == marshalled
+
+    assert json_is_equal(marshalled, expected)
 
 
 def test_read_a_file_from_disk():
