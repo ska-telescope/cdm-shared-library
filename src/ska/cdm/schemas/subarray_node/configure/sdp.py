@@ -286,7 +286,6 @@ class NewSDPParametersSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: SDPParameter object populated from data
         """
-        # import pdb; pdb.set_trace()
         return configure_msgs.NewSDPParameters()
 
 
