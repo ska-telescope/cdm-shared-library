@@ -4,7 +4,7 @@ Unit tests for the CentralNode.AssignResources request/response mapper module.
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest, \
     AssignResourcesResponse, DishAllocation, ProcessingBlockConfiguration, SDPWorkflow, \
-    SDPConfiguration, ScanType, SubBand, SDPParameters
+    SDPConfiguration, ScanType, SubBand
 
 
 
@@ -33,15 +33,6 @@ def test_workflow_not_equal_to_other_objects():
     assert workflow1 != 1
 
 
-def test_sdp_parameters_not_equal_to_other_objects():
-    """
-    Verify that SDPParameters objects are not considered equal to objects of
-    other types.
-    """
-    param = SDPParameters()
-    assert param != 1
-
-
 def test_assign_resources_request_eq():
     """
     Verify that two AssignResource request objects for the same sub-array and
@@ -50,8 +41,7 @@ def test_assign_resources_request_eq():
     sub_band = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
     scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band])
     sdp_workflow = SDPWorkflow(workflow_id="vis_receive", workflow_type="realtime", version="0.1.0")
-    parameters = SDPParameters()
-    pb_config = ProcessingBlockConfiguration("pb-mvp01-20200325-00001", sdp_workflow, parameters)
+    pb_config = ProcessingBlockConfiguration("pb-mvp01-20200325-00001", sdp_workflow, {})
     sdp_config = SDPConfiguration("sbi-mvp01-20200325-00001", 100.0, [scan_type], [pb_config])
     dish_allocation = DishAllocation(receptor_ids=['ac', 'b', 'aab'])
     request = AssignResourcesRequest(1, dish_allocation=dish_allocation, sdp_config=sdp_config)

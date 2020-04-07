@@ -6,7 +6,7 @@ import pytest
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest, \
     AssignResourcesResponse, DishAllocation, SDPConfiguration, ScanType, SubBand, \
-    ProcessingBlockConfiguration, SDPWorkflow, PbDependency, SDPParameters
+    ProcessingBlockConfiguration, SDPWorkflow, PbDependency
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.schemas.central_node import AssignResourcesRequestSchema, \
     AssignResourcesResponseSchema, ReleaseResourcesRequestSchema
@@ -92,18 +92,15 @@ def sdp_config_parameters():
     sdp_wf_c = SDPWorkflow("ical", "batch", "0.1.0")
     sdp_wf_d = SDPWorkflow("dpreb", "batch", "0.1.0")
 
-    # PB parameters
-    parameters = SDPParameters()
-
     # PB Dependencies
     dep_a = PbDependency("pb-mvp01-20200325-00001", ["visibilities"])
     dep_b = PbDependency("pb-mvp01-20200325-00003", ["calibration"])
 
     # SDP Processing blocks
-    pb_a = ProcessingBlockConfiguration("pb-mvp01-20200325-00001", sdp_wf_a, parameters)
-    pb_b = ProcessingBlockConfiguration("pb-mvp01-20200325-00002", sdp_wf_b, parameters)
-    pb_c = ProcessingBlockConfiguration("pb-mvp01-20200325-00003", sdp_wf_c, parameters, [dep_a])
-    pb_d = ProcessingBlockConfiguration("pb-mvp01-20200325-00004", sdp_wf_d, parameters, [dep_b])
+    pb_a = ProcessingBlockConfiguration("pb-mvp01-20200325-00001", sdp_wf_a, {})
+    pb_b = ProcessingBlockConfiguration("pb-mvp01-20200325-00002", sdp_wf_b, {})
+    pb_c = ProcessingBlockConfiguration("pb-mvp01-20200325-00003", sdp_wf_c, {}, [dep_a])
+    pb_d = ProcessingBlockConfiguration("pb-mvp01-20200325-00004", sdp_wf_d, {}, [dep_b])
 
     processing_blocks = [pb_a, pb_b, pb_c, pb_d]
 

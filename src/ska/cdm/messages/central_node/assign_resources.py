@@ -2,11 +2,11 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 __all__ = ['AssignResourcesRequest', 'AssignResourcesResponse', 'DishAllocation', 'SDPWorkflow', \
-           'NewSDPConfiguration', 'NewProcessingBlockConfiguration', 'PbDependency', \
-           'NewSDPParameters', 'ScanType', 'SubBand']
+           'SDPConfiguration', 'ProcessingBlockConfiguration', 'PbDependency', \
+           'ScanType', 'SubBand']
 
 
 class DishAllocation:
@@ -56,7 +56,7 @@ class SDPWorkflow:  # pylint: disable=too-few-public-methods
 
 class SubBand:
     """
-    Represents ...
+    Defines the SubBand
     """
     def __init__(self, freq_min: float, freq_max: float, nchan: int, input_link_map: List[List]):
         self.freq_min = freq_min
@@ -75,7 +75,7 @@ class SubBand:
 
 class ScanType:
     """
-    Represents ...
+    Defines the ScanType
     """
     def __init__(self, st_id, coordinate_system: str, ra: str, dec: str, sub_bands: List[SubBand]):
         self.st_id = st_id
@@ -94,19 +94,9 @@ class ScanType:
                and self.sub_bands == other.sub_bands
 
 
-class SDPParameters:
-    """
-    Represents ...
-    """
-    def __eq__(self, other):
-        if not isinstance(other, SDPParameters):
-            return False
-        return True
-
-
 class PbDependency:
     """
-    Represents ...
+    Defines the PB Dependencies
     """
 
     def __init__(self, pb_id: str, pb_type: List[str]):
@@ -122,9 +112,9 @@ class PbDependency:
 
 class ProcessingBlockConfiguration:
     """
-    Represents ...
+    Defines the SDP processing block configuration
     """
-    def __init__(self, pb_id: str, workflow: SDPWorkflow, parameters: SDPParameters,
+    def __init__(self, pb_id: str, workflow: SDPWorkflow, parameters: Dict,
                  dependencies: List[PbDependency] = None):
         self.pb_id = pb_id
         self.workflow = workflow
@@ -142,7 +132,7 @@ class ProcessingBlockConfiguration:
 
 class SDPConfiguration:
     """
-    Represents ...
+    Defines the SDP configuration
     """
     def __init__(self, sdp_id: str, max_length: float, scan_types: List[ScanType], processing_blocks: List[ProcessingBlockConfiguration]):
         self.sdp_id = sdp_id
