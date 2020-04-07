@@ -20,12 +20,11 @@ package ska.cdm.messages.subarray_node {
 		}
 
 		package sdp.py <<Rectangle>> {
-			class SDPWorkflow
-			class SDPParameters
-			class SDPScan
-			class SDPScanParameters
-			class ProcessingBlockConfiguration
 			class SDPConfiguration
+		}
+
+		package tmc.py <<Rectangle>> {
+			class TMCConfiguration
 		}
 
 		package ~__init__.py {
@@ -60,19 +59,11 @@ package ska.cdm.schemas.subarray_node {
 		}
 
 		package sdp.py as P5 {
-			class SDPTargetSchema
-			class SDPWorkflowSchema
-			class SDPParametersSchema
-			class SDPScanSchema
-			class SDPScanParametersSchema
-			class ProcessingBlockConfigurationSchema
 			class SDPConfigurationSchema
+		}
 
-			note left of SDPTargetSchema
-				This maps a ""Target""
-				used in the context of
-				an SDP configuration
-			end note
+		package tmc.py as P6 {
+			class TMCConfigurationSchema
 		}
 	}
 }
@@ -87,13 +78,9 @@ ConfigureRequestSchema --- ConfigureRequest
 FSPConfigurationSchema --- FSPConfiguration
 CSPConfigurationSchema --- CSPConfiguration
 
-SDPTargetSchema --- Target
-SDPWorkflowSchema --- SDPWorkflow
-SDPParametersSchema --- SDPParameters
-SDPScanSchema --- SDPScan
-SDPScanParametersSchema --- SDPScanParameters
-ProcessingBlockConfigurationSchema --- ProcessingBlockConfiguration
 SDPConfigurationSchema --- SDPConfiguration
+
+TMCConfigurationSchema --- TMCConfiguration
 
 note as N1
 	These classes map the same Python
@@ -101,5 +88,4 @@ note as N1
 	as required by the target systems
 end note
 N1 ------ TargetSchema
-N1 ------ SDPTargetSchema
 @enduml
