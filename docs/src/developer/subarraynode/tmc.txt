@@ -5,7 +5,7 @@ package ska.cdm.messages.subarray_node.configure {
     package tmc.py <<Rectangle>> {
 
         class TMCConfiguration {
-            scan_duration : timedelta
+            scan_duration : datetime.timedelta
         }
 
     }
