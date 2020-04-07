@@ -181,8 +181,6 @@ def test_configure_request_can_be_created_when_only_required_args_present():
     only the required attributes are present.
     """
     serialised = '{"dish": {"receiverBand": "1"} }'
-    expected = ConfigureRequest(
-      dish=DishConfiguration(ReceiverBand.BAND_1)
-    )
+    expected = ConfigureRequest(dish=DishConfiguration(ReceiverBand.BAND_1))
     unmarshalled = ConfigureRequestSchema().loads(serialised)
     assert expected == unmarshalled

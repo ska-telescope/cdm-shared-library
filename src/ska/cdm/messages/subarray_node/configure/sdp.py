@@ -9,7 +9,7 @@ __all__ = ['SDPConfiguration']
 
 class SDPConfiguration:
     """
-    Defines the SDP configuration
+    Class to hold SDP configuration
     """
     def __init__(self, scan_type: str):
         self.scan_type = scan_type

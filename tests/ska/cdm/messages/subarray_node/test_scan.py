@@ -1,8 +1,7 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
-import datetime
-import pytest
+
 from ska.cdm.messages.subarray_node.scan import ScanRequest
 
 

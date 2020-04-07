@@ -2,9 +2,8 @@
 The schemas module defines Marshmallow schemas that map CDM message classes
 and data model classes to/from a JSON representation.
 """
-from datetime import timedelta
 
-from marshmallow import Schema, fields, post_load, pre_dump
+from marshmallow import Schema, fields, post_load
 
 import ska.cdm.messages.subarray_node.scan as scan_msgs
 from ska.cdm.schemas import CODEC
@@ -29,5 +28,5 @@ class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: ScanRequest instance populated to match JSON
         """
-        scan_request = scan_msgs.ScanRequest(data.get("scan_id"))
-        return scan_request
+        scan_id = data["scan_id"]
+        return scan_msgs.ScanRequest(scan_id)

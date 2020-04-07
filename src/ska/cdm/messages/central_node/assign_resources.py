@@ -37,8 +37,7 @@ class DishAllocation:
 
 class SDPWorkflow:  # pylint: disable=too-few-public-methods
     """
-    Defines the SDP Workflow at the present we supply the parameters directly but
-    once we understand more workflows this could be replaced with a lookup
+    Class to hold SDPWorkflows for ProcessingBlock
     """
 
     def __init__(self, workflow_id: str, workflow_type: str, version: str):
@@ -56,14 +55,14 @@ class SDPWorkflow:  # pylint: disable=too-few-public-methods
 
 class SubBand:
     """
-    Defines the SubBand
+    Class to hold SubBands for ScanType
     """
     def __init__(self, freq_min: float, freq_max: float, nchan: int, input_link_map: List[List]):
         self.freq_min = freq_min
         self.freq_max = freq_max
         self.nchan = nchan
         self.input_link_map = input_link_map
-    
+   
     def __eq__(self, other):
         if not isinstance(other, SubBand):
             return False
@@ -75,12 +74,13 @@ class SubBand:
 
 class ScanType:
     """
-    Defines the ScanType
+    Class to hold ScanType configuration
     """
+    # pylint: disable=too-many-arguments
     def __init__(self, st_id, coordinate_system: str, ra: str, dec: str, sub_bands: List[SubBand]):
         self.st_id = st_id
         self.coordinate_system = coordinate_system
-        self.ra = ra
+        self.ra = ra  # pylint: disable=invalid-name
         self.dec = dec
         self.sub_bands = sub_bands
 
@@ -96,7 +96,7 @@ class ScanType:
 
 class PbDependency:
     """
-    Defines the PB Dependencies
+    Class to hold Dependencies for ProcessingBlock
     """
 
     def __init__(self, pb_id: str, pb_type: List[str]):
@@ -112,7 +112,7 @@ class PbDependency:
 
 class ProcessingBlockConfiguration:
     """
-    Defines the SDP processing block configuration
+    Class to hold ProcessingBlock configuration
     """
     def __init__(self, pb_id: str, workflow: SDPWorkflow, parameters: Dict,
                  dependencies: List[PbDependency] = None):
@@ -132,9 +132,10 @@ class ProcessingBlockConfiguration:
 
 class SDPConfiguration:
     """
-    Defines the SDP configuration
+    Class to hold SDPConfiguration
     """
-    def __init__(self, sdp_id: str, max_length: float, scan_types: List[ScanType], processing_blocks: List[ProcessingBlockConfiguration]):
+    def __init__(self, sdp_id: str, max_length: float, scan_types: List[ScanType],
+                 processing_blocks: List[ProcessingBlockConfiguration]):
         self.sdp_id = sdp_id
         self.max_length = max_length
         self.scan_types = scan_types
@@ -155,7 +156,8 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
     argument for a TMC CentralNode.AssignResourcesRequest request.
     """
 
-    def __init__(self, subarray_id: int, dish_allocation: DishAllocation, sdp_config: SDPConfiguration):
+    def __init__(self, subarray_id: int, dish_allocation: DishAllocation,
+                 sdp_config: SDPConfiguration):
         """
         Create a new AssignResourcesRequest object.
 

@@ -128,9 +128,11 @@ VALID_RELEASE_RESOURCES_REQUEST = '{"subarrayID": 1, "dish": {"receptorIDList": 
 VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": true}'
 
 
-@pytest.fixture(scope="function")
-def sdp_config_for_test():
-  # scan_type
+def sdp_config_for_test():  # pylint: disable=too-many-locals
+    """
+    Fixture which returns an SDPConfiguration object
+    """
+    # scan_type
     sub_band_a = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
     sub_band_b = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
     scan_type_a = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band_a])
@@ -157,33 +159,34 @@ def sdp_config_for_test():
     processing_blocks = [pb_a, pb_b, pb_c, pb_d]
 
     return SDPConfiguration("sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks)
-  
 
-def test_marshal_sdp_configuration(sdp_config_for_test):
+
+def test_marshal_sdp_configuration():
+
     """
     Verify that SDPConfigurationSchema is marshalled to JSON correctly.
     """
-    request = sdp_config_for_test
+    request = sdp_config_for_test()
     json_str = SDPConfigurationSchema().dumps(request)
     assert json_is_equal(json_str, VALID_SDP_CONFIG)
 
 
-def test_unmarshall_assign_sdp_configuration(sdp_config_for_test):
+def test_unmarshall_assign_sdp_configuration():
     """
     Verify that JSON can be unmarshalled back to an SDPConfiguration
     object.
     """
-    expected = sdp_config_for_test
+    expected = sdp_config_for_test()
     request = SDPConfigurationSchema().loads(VALID_SDP_CONFIG)
     assert request == expected
 
 
-def test_marshal_assign_resources_request(sdp_config_for_test):
+def test_marshal_assign_resources_request():
     """
     Verify that AssignResourcesRequest is marshalled to JSON correctly.
     """
     # SDP config
-    sdp_config = sdp_config_for_test
+    sdp_config = sdp_config_for_test()
     # Dish allocation
     dish_allocation = DishAllocation(receptor_ids=['0001', '0002'])
 
@@ -192,12 +195,12 @@ def test_marshal_assign_resources_request(sdp_config_for_test):
     assert json_is_equal(json_str, VALID_ASSIGN_RESOURCES_REQUEST)
 
 
-def test_unmarshall_assign_resources_request(sdp_config_for_test):
+def test_unmarshall_assign_resources_request():
     """
     Verify that JSON can be unmarshalled back to an AssignResourcesRequest
     object.
     """
-    sdp_config = sdp_config_for_test
+    sdp_config = sdp_config_for_test()
 
     request = AssignResourcesRequestSchema().loads(VALID_ASSIGN_RESOURCES_REQUEST)
     expected = AssignResourcesRequest(1, DishAllocation(

@@ -45,6 +45,7 @@ class FSPConfiguration:
         :param corr_bandwidth: correlator bandwidth [0..6]
         :param integration_time: integration time in ms
         :param channel_averaging_map: Optional channel averaging map
+        :param output_link_map: Optional output_link_map
         """
 
         if not 1 <= fsp_id <= 27:
@@ -99,7 +100,8 @@ class CSPConfiguration:
     Class to hold all CSP configuration.
     """
 
-    def __init__(self, csp_id: str, frequency_band: core.ReceiverBand, fsp_configs: List[FSPConfiguration]):
+    def __init__(self, csp_id: str, frequency_band: core.ReceiverBand,
+                 fsp_configs: List[FSPConfiguration]):
         """
         Create a new CSPConfiguration.
 

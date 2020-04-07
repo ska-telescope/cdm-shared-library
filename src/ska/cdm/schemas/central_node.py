@@ -106,15 +106,15 @@ class ScanTypeSchema(Schema):
         """
         st_id = data['st_id']
         coordinate_system = data['coordinate_system']
-        ra = data['ra']
+        ra = data['ra']  # pylint: disable=invalid-name
         dec = data['dec']
         sub_bands = data['sub_bands']
         return assign_msgs.ScanType(st_id, coordinate_system, ra, dec, sub_bands)
 
 
 class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
-    """Represents the type of workflow being configured on the SDP eventually this will tie
-       into some kind of lookup/enumeration
+    """
+    Represents the type of workflow being configured on the SDP
     """
     workflow_id = fields.String(data_key='id', required=True)
     workflow_type = fields.String(data_key='type', required=True)

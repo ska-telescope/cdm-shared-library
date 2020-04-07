@@ -1,8 +1,6 @@
 """
 Unit tests for the ska.cdm.schemas.subarray_node.scan module
 """
-import datetime
-import pytest
 
 from ska.cdm.messages.subarray_node.scan import ScanRequest
 from ska.cdm.schemas.subarray_node.scan import ScanRequestSchema
