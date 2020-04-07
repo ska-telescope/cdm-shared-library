@@ -16,24 +16,15 @@ package ska.cdm.messages.central_node {
 
         class ScanType {
             st_id : str
+            coordinate_system : str
             ra : str
             dec : str
-            coordinate_system : str
         }
         ScanType *-- "*" SubBand
 
-        class SDPParameters {
-        num_stations: integer
-        num_channels: integer
-        num_polarisations: integer
-        freq_start_hz: float
-        freq_end_hz: float
-        target_fields: Dict[str, Target]
-        }
-
-        class Dependency {
+        class PbDependency {
             pb_id : str
-            pb_type : str
+            pb_type : List[str]
         }
 
         class SDPWorkflow {
@@ -42,28 +33,28 @@ package ska.cdm.messages.central_node {
             version : str
         }
 
-        class SDPProcessingBlock {
+        class ProcessingBlockConfiguration {
             pb_id : str
+            parameters : Dict
         }
-        SDPProcessingBlock *-- "1" SDPWorkflow
-        SDPProcessingBlock *-- "1" SDPParameters
-        SDPProcessingBlock *-- "*" Dependency
+        ProcessingBlockConfiguration  *-- "1" SDPWorkflow
+        ProcessingBlockConfiguration  *-- "*" PbDependency
 
         class SDPConfiguration {
             sdp_id : str
             max_length : float
 		}
         SDPConfiguration *-- "*" ScanType
-        SDPConfiguration *-- "*" SDPProcessingBlock
+        SDPConfiguration *-- "*" ProcessingBlockConfiguration
 
 		class AssignResourcesRequest {
 			subarray_id : int
 		}
-		AssignResourcesRequest *-- DishAllocation
-        AssignResourcesRequest *-- SDPConfiguration
+		AssignResourcesRequest *-- "1" DishAllocation
+        AssignResourcesRequest *-- "1" SDPConfiguration
 
 		class AssignResourcesResponse
-		AssignResourcesResponse *-- DishAllocation
+		AssignResourcesResponse *-- "1" DishAllocation
 	}
 }
 
