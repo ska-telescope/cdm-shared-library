@@ -9,9 +9,9 @@ import ska.cdm.messages.central_node.release_resources as release_msgs
 from . import CODEC
 
 __all__ = ['DishAllocationSchema', 'DishAllocationResponseSchema', 'AssignResourcesRequestSchema', \
-           'SubBandSchema', 'ScanTypeSchema', 'SDPParametersSchema', 'SDPWorkflowSchema', \
-           'PbDependencySchema', 'ProcessingBlockSchema', 'SdpConfigurationSchema', \
-           'AssignResourcesResponseSchema', 'ReleaseResourcesRequestSchema']
+           'SubBandSchema', 'ScanTypeSchema', 'SDPWorkflowSchema', 'PbDependencySchema', \
+           'ProcessingBlockSchema', 'SdpConfigurationSchema', 'AssignResourcesResponseSchema', \
+           'ReleaseResourcesRequestSchema']
 
 
 class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -112,23 +112,6 @@ class ScanTypeSchema(Schema):
         return assign_msgs.ScanType(st_id, coordinate_system, ra, dec, sub_bands)
 
 
-class SDPParametersSchema(Schema):  # pylint: disable=too-few-public-methods
-    """
-    Marshmallow schema for the SDPParameter class.
-    """
-
-    @post_load
-    def create_sdp_parameters(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Convert parsed JSON back into a SDPParameter object.
-
-        :param data: Marshmallow-provided dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-        :return: SDPParameter object populated from data
-        """
-        return assign_msgs.SDPParameters()
-
-
 class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     """Represents the type of workflow being configured on the SDP eventually this will tie
        into some kind of lookup/enumeration
@@ -179,7 +162,7 @@ class ProcessingBlockSchema(Schema):
     """
     pb_id = fields.String(data_key='id', required=True)
     workflow = fields.Nested(SDPWorkflowSchema)
-    parameters = fields.Nested(SDPParametersSchema)
+    parameters = fields.Dict()
     dependencies = fields.Nested(PbDependencySchema, many=True, missing=None)
 
     @post_dump
@@ -254,7 +237,8 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         subarray_id = data['subarray_id']
         dish_allocation = data['dish']
         sdp_config = data['sdp_config']
-        return assign_msgs.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation, sdp_config=sdp_config)
+        return assign_msgs.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation,
+                                                  sdp_config=sdp_config)
 
 
 @CODEC.register_mapping(assign_msgs.AssignResourcesResponse)
