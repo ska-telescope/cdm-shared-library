@@ -74,6 +74,7 @@ class FSPConfiguration:
             raise ValueError(msg)
         self.integration_time = integration_time
 
+        # TODO: update enforcements for channel_averaging_map and output_link_map
         # if channel_averaging_map and len(channel_averaging_map) != 20:
         #     msg = ('Number of tuples in channel averaging map must be 20. Got {}'
         #            .format(len(channel_averaging_map)))

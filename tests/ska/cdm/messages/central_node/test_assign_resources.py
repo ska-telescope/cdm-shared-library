@@ -2,6 +2,8 @@
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 
+import pytest
+
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest, \
     AssignResourcesResponse, DishAllocation, ProcessingBlockConfiguration, SDPWorkflow, \
     SDPConfiguration, ScanType, SubBand
@@ -115,3 +117,69 @@ def test_dish_allocation_eq_with_other_objects():
     dish_allocation = DishAllocation(receptor_ids=['ac', 'b', 'aab'])
     assert dish_allocation != 1
     assert dish_allocation != object()
+
+
+@pytest.mark.xfail
+def test_marshal_sdp_configure_request():
+    """
+    Verify that JSON can be marshalled to JSON correctly
+    """
+    sb_id = 'realtime-20190627-0001'
+    sbi_id = '20190627-0001'
+    target = Target(ra=1.0, dec=1.0, name='NGC6251', unit='rad')
+    target_list = {'0': target}
+
+    workflow = SDPWorkflow(workflow_id='vis_ingest', workflow_type='realtime', version='0.1.0')
+
+    parameters = SDPParameters(num_stations=4, num_channels=372,
+                               num_polarisations=4, freq_start_hz=0.35e9,
+                               freq_end_hz=1.05e9, target_fields=target_list)
+    scan = SDPScan(field_id=0, interval_ms=1400)
+    scan_list = {'12345': scan}
+
+    pb_config = ProcessingBlockConfiguration(sb_id=sb_id,
+                                             sbi_id=sbi_id,
+                                             workflow=workflow,
+                                             parameters=parameters,
+                                             scan_parameters=scan_list)
+
+    sdp_configure = SDPConfiguration([pb_config])
+    schema = SDPConfigurationSchema()
+    result = schema.dumps(sdp_configure)
+
+    assert json_is_equal(result, VALID_SDP_CONFIGURE_SB)
+
+
+@pytest.mark.xfail
+def test_unmarshall_sdp_configure_request():
+    """
+    Verify that JSON can be unmarshalled back to an SDP SB configuration
+    """
+    schema = SDPConfigurationSchema()
+    result = schema.loads(VALID_SDP_CONFIGURE_SB)
+    config_block = result.configure[0]
+    assert isinstance(config_block, ProcessingBlockConfiguration)
+
+
+@pytest.mark.xfail
+def test_unmarshall_both_sdp_configure_and_configure_scan_request():
+    """
+    Verify that SB- and scan-level configurations can be unmarshalled and
+    co-exist in the same SDPConfiguration.
+    """
+    schema = SDPConfigurationSchema()
+    result = schema.loads(VALID_SDP_CONFIGURE_AND_CONFIGURE_SCAN)
+    assert isinstance(result.configure, list)
+    assert isinstance(result.configure_scan, SDPScanParameters)
+
+
+@pytest.mark.xfail
+def test_unmarshall_empty_sdp_configure_request():
+    """
+    Nominal test  - more for documentation - since both configure and confgureScan are optional
+    it is technically possible to have an sdp configuration that is empty.
+    Placeholder for a test if we close this down.
+    """
+    schema = SDPConfigurationSchema()
+    result = schema.loads('{}')
+    assert result == SDPConfiguration()
