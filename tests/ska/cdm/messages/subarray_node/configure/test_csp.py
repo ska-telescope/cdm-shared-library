@@ -136,6 +136,7 @@ def test_integration_time_is_within_limits():
         _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1540, 0)
 
 
+@pytest.mark.xfail
 def test_number_of_channel_avg_mapping_tuples():
     """
     Verify that FSPConfiguration fails if there are an invalid number of

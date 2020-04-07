@@ -5,11 +5,10 @@ import os.path
 
 import pytest
 
-from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
+from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest, SDPConfiguration
 from ska.cdm.messages.central_node.assign_resources import DishAllocation
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest, DishConfiguration, ReceiverBand
 from ska.cdm.schemas import CODEC
-from ska.cdm.messages.subarray_node.configure.sdp import NewSDPConfiguration
 from .test_central_node import VALID_ASSIGN_RESOURCES_REQUEST, sdp_config_parameters
 from .utils import json_is_equal
 
@@ -19,7 +18,7 @@ def test_codec_loads(sdp_config_parameters):
     Verify that the codec unmarshalls objects correctly.
     """
     sdp_id, max_length, scan_types, processing_blocks = sdp_config_parameters
-    sdp_config = NewSDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
+    sdp_config = SDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
 
     unmarshalled = CODEC.loads(AssignResourcesRequest, VALID_ASSIGN_RESOURCES_REQUEST)
     expected = AssignResourcesRequest(1, DishAllocation(receptor_ids=['0001', '0002']),
@@ -32,7 +31,7 @@ def test_codec_dumps(sdp_config_parameters):
     Verify that the codec marshalls objects to JSON.
     """
     sdp_id, max_length, scan_types, processing_blocks = sdp_config_parameters
-    sdp_config = NewSDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
+    sdp_config = SDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
 
     expected = VALID_ASSIGN_RESOURCES_REQUEST
     obj = AssignResourcesRequest(1, DishAllocation(receptor_ids=['0001', '0002']),

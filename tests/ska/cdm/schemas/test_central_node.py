@@ -5,12 +5,11 @@ Unit tests for ska.cdm.schemas module.
 import pytest
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest, \
-    AssignResourcesResponse, DishAllocation
+    AssignResourcesResponse, DishAllocation, SDPConfiguration, ScanType, SubBand, \
+    ProcessingBlockConfiguration, SDPWorkflow, PbDependency, SDPParameters
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.schemas.central_node import AssignResourcesRequestSchema, \
     AssignResourcesResponseSchema, ReleaseResourcesRequestSchema
-from ska.cdm.messages.subarray_node.configure.sdp import NewSDPConfiguration, ScanType, SubBand, \
-     NewProcessingBlockConfiguration, SDPWorkflow, PbDependency, NewSDPParameters
 from .utils import json_is_equal
 
 
@@ -80,31 +79,31 @@ VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": t
 @pytest.fixture(scope="function")
 def sdp_config_parameters():
   # SDP scan_type
-    sub_band_a = SubBand(freq_min=0.35e9, freq_max=1.05e9, nchan=372, input_link_map=[[1, 0], [101, 1]])
-    sub_band_b = SubBand(freq_min=0.35e9, freq_max=1.05e9, nchan=372, input_link_map=[[1, 0], [101, 1]])
-    scan_type_a = ScanType("science_A", coordinate_system="ICRS", ra="02:42:40.771", dec="-00:00:47.84", sub_bands=[sub_band_a])
-    scan_type_b = ScanType("calibration_B", coordinate_system="ICRS", ra="12:29:06.699", dec="02:03:08.598", sub_bands=[sub_band_b])
+    sub_band_a = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
+    sub_band_b = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
+    scan_type_a = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band_a])
+    scan_type_b = ScanType("calibration_B", "ICRS", "12:29:06.699", "02:03:08.598", [sub_band_b])
 
     scan_types = [scan_type_a, scan_type_b]
 
     # PB workflow
-    sdp_wf_a = SDPWorkflow(workflow_id="vis_receive", workflow_type="realtime", version="0.1.0")
-    sdp_wf_b = SDPWorkflow(workflow_id="test_realtime", workflow_type="realtime", version="0.1.0")
-    sdp_wf_c = SDPWorkflow(workflow_id="ical", workflow_type="batch", version="0.1.0")
-    sdp_wf_d = SDPWorkflow(workflow_id="dpreb", workflow_type="batch", version="0.1.0")
+    sdp_wf_a = SDPWorkflow("vis_receive", "realtime", "0.1.0")
+    sdp_wf_b = SDPWorkflow("test_realtime", "realtime", "0.1.0")
+    sdp_wf_c = SDPWorkflow("ical", "batch", "0.1.0")
+    sdp_wf_d = SDPWorkflow("dpreb", "batch", "0.1.0")
 
     # PB parameters
-    parameters = NewSDPParameters()
+    parameters = SDPParameters()
 
     # PB Dependencies
-    dep_a = PbDependency(pb_id="pb-mvp01-20200325-00001", pb_type=["visibilities"])
-    dep_b = PbDependency(pb_id="pb-mvp01-20200325-00003", pb_type=["calibration"])
+    dep_a = PbDependency("pb-mvp01-20200325-00001", ["visibilities"])
+    dep_b = PbDependency("pb-mvp01-20200325-00003", ["calibration"])
 
     # SDP Processing blocks
-    pb_a = NewProcessingBlockConfiguration("pb-mvp01-20200325-00001", workflow=sdp_wf_a, parameters=parameters)
-    pb_b = NewProcessingBlockConfiguration("pb-mvp01-20200325-00002", workflow=sdp_wf_b, parameters=parameters)
-    pb_c = NewProcessingBlockConfiguration("pb-mvp01-20200325-00003", workflow=sdp_wf_c, parameters=parameters, dependencies=[dep_a])
-    pb_d = NewProcessingBlockConfiguration("pb-mvp01-20200325-00004", workflow=sdp_wf_d, parameters=parameters, dependencies=[dep_b])
+    pb_a = ProcessingBlockConfiguration("pb-mvp01-20200325-00001", sdp_wf_a, parameters)
+    pb_b = ProcessingBlockConfiguration("pb-mvp01-20200325-00002", sdp_wf_b, parameters)
+    pb_c = ProcessingBlockConfiguration("pb-mvp01-20200325-00003", sdp_wf_c, parameters, [dep_a])
+    pb_d = ProcessingBlockConfiguration("pb-mvp01-20200325-00004", sdp_wf_d, parameters, [dep_b])
 
     processing_blocks = [pb_a, pb_b, pb_c, pb_d]
 
@@ -118,7 +117,7 @@ def test_marshall_assign_resources_request(sdp_config_parameters):
     sdp_id, max_length, scan_types, processing_blocks = sdp_config_parameters
 
     # SDP config
-    sdp_config = NewSDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
+    sdp_config = SDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
     # Dish allocation
     dish_allocation = DishAllocation(receptor_ids=['0001', '0002'])
 
@@ -133,7 +132,7 @@ def test_unmarshall_assign_resources_request(sdp_config_parameters):
     object.
     """
     sdp_id, max_length, scan_types, processing_blocks = sdp_config_parameters
-    sdp_config = NewSDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
+    sdp_config = SDPConfiguration(sdp_id, max_length, scan_types, processing_blocks)
 
     request = AssignResourcesRequestSchema().loads(VALID_ASSIGN_RESOURCES_REQUEST)
     expected = AssignResourcesRequest(1, DishAllocation(

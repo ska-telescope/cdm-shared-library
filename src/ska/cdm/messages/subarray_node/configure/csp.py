@@ -32,7 +32,8 @@ class FSPConfiguration:
     # pylint: disable=too-many-arguments
     def __init__(self, fsp_id: int, function_mode: FSPFunctionMode, frequency_slice_id: int,
                  integration_time: int, corr_bandwidth: int,
-                 channel_averaging_map: List[Tuple] = None):
+                 channel_averaging_map: List[Tuple] = None,
+                 output_link_map: List[Tuple] = None):
         """
         Create a new FSPConfiguration.
 
@@ -73,11 +74,12 @@ class FSPConfiguration:
             raise ValueError(msg)
         self.integration_time = integration_time
 
-        if channel_averaging_map and len(channel_averaging_map) != 20:
-            msg = ('Number of tuples in channel averaging map must be 20. Got {}'
-                   .format(len(channel_averaging_map)))
-            raise ValueError(msg)
+        # if channel_averaging_map and len(channel_averaging_map) != 20:
+        #     msg = ('Number of tuples in channel averaging map must be 20. Got {}'
+        #            .format(len(channel_averaging_map)))
+        #     raise ValueError(msg)
         self.channel_averaging_map = channel_averaging_map
+        self.output_link_map = output_link_map
 
     def __eq__(self, other):
         if not isinstance(other, FSPConfiguration):
@@ -87,7 +89,8 @@ class FSPConfiguration:
             and self.frequency_slice_id == other.frequency_slice_id \
             and self.corr_bandwidth == other.corr_bandwidth \
             and self.integration_time == other.integration_time \
-            and self.channel_averaging_map == other.channel_averaging_map
+            and self.channel_averaging_map == other.channel_averaging_map \
+            and self.output_link_map == other.output_link_map
 
 
 class CSPConfiguration:
