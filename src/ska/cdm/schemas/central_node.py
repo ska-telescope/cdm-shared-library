@@ -10,7 +10,7 @@ from . import CODEC
 
 __all__ = ['DishAllocationSchema', 'DishAllocationResponseSchema', 'AssignResourcesRequestSchema', \
            'SubBandSchema', 'ScanTypeSchema', 'SDPWorkflowSchema', 'PbDependencySchema', \
-           'ProcessingBlockSchema', 'SdpConfigurationSchema', 'AssignResourcesResponseSchema', \
+           'ProcessingBlockSchema', 'SDPConfigurationSchema', 'AssignResourcesResponseSchema', \
            'ReleaseResourcesRequestSchema']
 
 
@@ -188,7 +188,7 @@ class ProcessingBlockSchema(Schema):
         return assign_msgs.ProcessingBlockConfiguration(**data)
 
 
-class SdpConfigurationSchema(Schema):
+class SDPConfigurationSchema(Schema):
     """
     Marsmallow class for the SDPConfiguration class
     """
@@ -217,7 +217,7 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
 
     subarray_id = fields.Integer(data_key='subarrayID', required=True)
     dish = fields.Nested(DishAllocationSchema, data_key='dish', required=True)
-    sdp_config = fields.Nested(SdpConfigurationSchema, data_key='sdp', required=True)
+    sdp_config = fields.Nested(SDPConfigurationSchema, data_key='sdp', required=True)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """

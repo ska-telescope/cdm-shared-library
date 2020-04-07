@@ -8,7 +8,7 @@ from ska.cdm.messages.central_node.assign_resources import AssignResourcesReques
     AssignResourcesResponse, DishAllocation, SDPConfiguration, ScanType, SubBand, \
     ProcessingBlockConfiguration, SDPWorkflow, PbDependency
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
-from ska.cdm.schemas.central_node import AssignResourcesRequestSchema, \
+from ska.cdm.schemas.central_node import SDPConfigurationSchema, AssignResourcesRequestSchema, \
     AssignResourcesResponseSchema, ReleaseResourcesRequestSchema
 from .utils import json_is_equal
 
@@ -71,6 +71,58 @@ VALID_ASSIGN_RESOURCES_REQUEST = """
 }
 }"""
 
+VALID_SDP_CONFIG = """
+{
+  "id": "sbi-mvp01-20200325-00001",
+  "max_length": 100.0,
+  "scan_types": [
+    {
+      "id": "science_A",
+      "coordinate_system": "ICRS", "ra": "02:42:40.771", "dec": "-00:00:47.84",
+      "subbands": [{
+         "freq_min": 0.35e9, "freq_max": 1.05e9, "nchan": 372,
+         "input_link_map": [[1,0], [101,1]]
+      }]
+    },
+    {
+      "id": "calibration_B",
+      "coordinate_system": "ICRS", "ra": "12:29:06.699", "dec": "02:03:08.598",
+      "subbands": [{
+        "freq_min": 0.35e9, "freq_max": 1.05e9, "nchan": 372,
+        "input_link_map": [[1,0], [101,1]]
+      }]
+    }
+  ],
+  "processing_blocks": [
+    {
+      "id": "pb-mvp01-20200325-00001",
+      "workflow": {"type": "realtime", "id": "vis_receive", "version": "0.1.0"},
+      "parameters": {}
+    },
+    {
+      "id": "pb-mvp01-20200325-00002",
+      "workflow": {"type": "realtime", "id": "test_realtime", "version": "0.1.0"},
+      "parameters": {}
+    },
+    {
+      "id": "pb-mvp01-20200325-00003",
+      "workflow": {"type": "batch", "id": "ical", "version": "0.1.0"},
+      "parameters": {},
+      "dependencies": [
+        {"pb_id": "pb-mvp01-20200325-00001", "type": ["visibilities"]}
+      ]
+    },
+    {
+      "id": "pb-mvp01-20200325-00004",
+      "workflow": {"type": "batch", "id": "dpreb", "version": "0.1.0"},
+      "parameters": {},
+      "dependencies": [
+        {"pb_id": "pb-mvp01-20200325-00003", "type": ["calibration"]}
+      ]
+    }
+  ]
+}"""
+
 VALID_ASSIGN_RESOURCES_RESPONSE = '{"dish": {"receptorIDList_success": ["0001", "0002"]}}'
 VALID_RELEASE_RESOURCES_REQUEST = '{"subarrayID": 1, "dish": {"receptorIDList": ["0001", "0002"]}}'
 VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": true}'
@@ -107,7 +159,26 @@ def sdp_config_for_test():
     return SDPConfiguration("sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks)
   
 
-def test_marshall_assign_resources_request(sdp_config_for_test):
+def test_marshal_sdp_configuration(sdp_config_for_test):
+    """
+    Verify that SDPConfigurationSchema is marshalled to JSON correctly.
+    """
+    request = sdp_config_for_test
+    json_str = SDPConfigurationSchema().dumps(request)
+    assert json_is_equal(json_str, VALID_SDP_CONFIG)
+
+
+def test_unmarshall_assign_sdp_configuration(sdp_config_for_test):
+    """
+    Verify that JSON can be unmarshalled back to an SDPConfiguration
+    object.
+    """
+    expected = sdp_config_for_test
+    request = SDPConfigurationSchema().loads(VALID_SDP_CONFIG)
+    assert request == expected
+
+
+def test_marshal_assign_resources_request(sdp_config_for_test):
     """
     Verify that AssignResourcesRequest is marshalled to JSON correctly.
     """
@@ -208,69 +279,3 @@ def test_unmarshall_release_resources_with_release_all_set():
     request = schema.loads(VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
     expected = ReleaseResourcesRequest(1, release_all=True)
     assert request == expected
-
-
-@pytest.mark.xfail
-def test_marshal_sdp_configure_request():
-    """
-    Verify that JSON can be marshalled to JSON correctly
-    """
-    sb_id = 'realtime-20190627-0001'
-    sbi_id = '20190627-0001'
-    target = Target(ra=1.0, dec=1.0, name='NGC6251', unit='rad')
-    target_list = {'0': target}
-
-    workflow = SDPWorkflow(workflow_id='vis_ingest', workflow_type='realtime', version='0.1.0')
-
-    parameters = SDPParameters(num_stations=4, num_channels=372,
-                               num_polarisations=4, freq_start_hz=0.35e9,
-                               freq_end_hz=1.05e9, target_fields=target_list)
-    scan = SDPScan(field_id=0, interval_ms=1400)
-    scan_list = {'12345': scan}
-
-    pb_config = ProcessingBlockConfiguration(sb_id=sb_id,
-                                             sbi_id=sbi_id,
-                                             workflow=workflow,
-                                             parameters=parameters,
-                                             scan_parameters=scan_list)
-
-    sdp_configure = SDPConfiguration([pb_config])
-    schema = SDPConfigurationSchema()
-    result = schema.dumps(sdp_configure)
-
-    assert json_is_equal(result, VALID_SDP_CONFIGURE_SB)
-
-
-@pytest.mark.xfail
-def test_unmarshall_sdp_configure_request():
-    """
-    Verify that JSON can be unmarshalled back to an SDP SB configuration
-    """
-    schema = SDPConfigurationSchema()
-    result = schema.loads(VALID_SDP_CONFIGURE_SB)
-    config_block = result.configure[0]
-    assert isinstance(config_block, ProcessingBlockConfiguration)
-
-
-@pytest.mark.xfail
-def test_unmarshall_both_sdp_configure_and_configure_scan_request():
-    """
-    Verify that SB- and scan-level configurations can be unmarshalled and
-    co-exist in the same SDPConfiguration.
-    """
-    schema = SDPConfigurationSchema()
-    result = schema.loads(VALID_SDP_CONFIGURE_AND_CONFIGURE_SCAN)
-    assert isinstance(result.configure, list)
-    assert isinstance(result.configure_scan, SDPScanParameters)
-
-
-@pytest.mark.xfail
-def test_unmarshall_empty_sdp_configure_request():
-    """
-    Nominal test  - more for documentation - since both configure and confgureScan are optional
-    it is technically possible to have an sdp configuration that is empty.
-    Placeholder for a test if we close this down.
-    """
-    schema = SDPConfigurationSchema()
-    result = schema.loads('{}')
-    assert result == SDPConfiguration()
