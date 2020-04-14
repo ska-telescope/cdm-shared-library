@@ -11,10 +11,10 @@ package ska.cdm.messages.subarray_node.configure {
 		}
 
 		class PointingConfiguration
-		PointingConfiguration *-- Target
+		PointingConfiguration *-- "1" Target
 
 		class DishConfiguration {
-			receiver_band : ReceiverBand
+            receiver_band : ReceiverBand
 		}
 
 		enum ReceiverBand {

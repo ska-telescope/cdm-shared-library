@@ -27,6 +27,9 @@ package ska.cdm.messages.subarray_node {
 		package sdp.py <<Rectangle>> {
 		}
 
+		package tmc.py <<Rectangle>> {
+		}
+
 		package __init__.py <<Rectangle>> {
 		}
 
@@ -39,6 +42,7 @@ package ska.cdm.messages.subarray_node {
 		N2 -- core.py
 		N2 -- csp.py
 		N2 -- sdp.py
+		N2 -- tmc.py
 	}
 	note top of configure
 		The JSON payload for

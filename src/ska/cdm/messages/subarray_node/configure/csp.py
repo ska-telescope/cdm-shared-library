@@ -32,7 +32,8 @@ class FSPConfiguration:
     # pylint: disable=too-many-arguments
     def __init__(self, fsp_id: int, function_mode: FSPFunctionMode, frequency_slice_id: int,
                  integration_time: int, corr_bandwidth: int,
-                 channel_averaging_map: List[Tuple] = None):
+                 channel_averaging_map: List[Tuple] = None,
+                 output_link_map: List[Tuple] = None):
         """
         Create a new FSPConfiguration.
 
@@ -44,6 +45,7 @@ class FSPConfiguration:
         :param corr_bandwidth: correlator bandwidth [0..6]
         :param integration_time: integration time in ms
         :param channel_averaging_map: Optional channel averaging map
+        :param output_link_map: Optional output_link_map
         """
 
         if not 1 <= fsp_id <= 27:
@@ -73,11 +75,13 @@ class FSPConfiguration:
             raise ValueError(msg)
         self.integration_time = integration_time
 
-        if channel_averaging_map and len(channel_averaging_map) != 20:
-            msg = ('Number of tuples in channel averaging map must be 20. Got {}'
-                   .format(len(channel_averaging_map)))
-            raise ValueError(msg)
+        # TODO: update enforcements for channel_averaging_map and output_link_map
+        # if channel_averaging_map and len(channel_averaging_map) != 20:
+        #     msg = ('Number of tuples in channel averaging map must be 20. Got {}'
+        #            .format(len(channel_averaging_map)))
+        #     raise ValueError(msg)
         self.channel_averaging_map = channel_averaging_map
+        self.output_link_map = output_link_map
 
     def __eq__(self, other):
         if not isinstance(other, FSPConfiguration):
@@ -87,7 +91,8 @@ class FSPConfiguration:
             and self.frequency_slice_id == other.frequency_slice_id \
             and self.corr_bandwidth == other.corr_bandwidth \
             and self.integration_time == other.integration_time \
-            and self.channel_averaging_map == other.channel_averaging_map
+            and self.channel_averaging_map == other.channel_averaging_map \
+            and self.output_link_map == other.output_link_map
 
 
 class CSPConfiguration:
@@ -95,18 +100,22 @@ class CSPConfiguration:
     Class to hold all CSP configuration.
     """
 
-    def __init__(self, frequency_band: core.ReceiverBand, fsp_configs: List[FSPConfiguration]):
+    def __init__(self, csp_id: str, frequency_band: core.ReceiverBand,
+                 fsp_configs: List[FSPConfiguration]):
         """
         Create a new CSPConfiguration.
 
+        :param csp_id: an ID for CSP configuration
         :param frequency_band: the frequency band to set
         :param fsp_configs: the FSP configurations to set
         """
+        self.csp_id = csp_id
         self.frequency_band = frequency_band
         self.fsp_configs = fsp_configs
 
     def __eq__(self, other):
         if not isinstance(other, CSPConfiguration):
             return False
-        return self.frequency_band == other.frequency_band \
+        return self.csp_id == other.csp_id \
+               and self.frequency_band == other.frequency_band \
                and self.fsp_configs == other.fsp_configs

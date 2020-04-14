@@ -25,6 +25,8 @@ class FSPConfigurationSchema(Schema):
     integration_time = fields.Integer(data_key='integrationTime', required=True)
     channel_averaging_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
                                         data_key='channelAveragingMap')
+    output_link_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
+                                  data_key='outputLinkMap')
 
     @pre_dump
     def convert(self, fsp_configuration: configure_msgs.FSPConfiguration,
@@ -71,16 +73,19 @@ class FSPConfigurationSchema(Schema):
 
         # optional arguments
         channel_averaging_map = data.get('channel_averaging_map', None)
+        output_link_map = data.get('output_link_map', None)
 
         return configure_msgs.FSPConfiguration(fsp_id, function_mode_enum, frequency_slice_id,
                                                integration_time, corr_bandwidth,
-                                               channel_averaging_map=channel_averaging_map)
+                                               channel_averaging_map=channel_averaging_map,
+                                               output_link_map=output_link_map)
 
 
 class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
+    csp_id = fields.String(data_key='id', required=True)
     frequency_band = fields.String(data_key='frequencyBand', required=True)
     fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key='fsp')
 
@@ -109,8 +114,9 @@ class CSPConfigurationSchema(Schema):
         :return: CSPConfiguration instance populated to match JSON
 
         """
+        csp_id = data['csp_id']
         frequency_band = data['frequency_band']
         frequency_band_enum = configure_msgs.ReceiverBand(frequency_band)
         fsp_configs = data['fsp_configs']
 
-        return configure_msgs.CSPConfiguration(frequency_band_enum, fsp_configs)
+        return configure_msgs.CSPConfiguration(csp_id, frequency_band_enum, fsp_configs)

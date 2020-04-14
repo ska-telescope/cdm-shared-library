@@ -37,6 +37,7 @@ modules. The ``configure`` package contains four modules:
 
 * __init__.py
 * `core.py`_
+* `tmc.py`_
 * `csp.py`_
 * `sdp.py`_
 
@@ -91,6 +92,28 @@ are:
   }
 
 
+tmc.py
+------
+
+.. figure:: tmc.png
+   :align: center
+   :alt: tmc.py object model
+
+   tmc.py object model
+
+The ``tmc.py`` module models TMC configuration JSON elements. Below is an
+example JSON command argument that this code can model.
+
+.. code::
+
+  # JSON modelled specifically by tmc.py
+  {
+    "tmc": {
+      "scanDuration": 10.0,
+    }
+  }
+
+
 csp.py
 ------
 
@@ -109,6 +132,7 @@ of a full CDM JSON object, the elements this maps to are:
   {
     ...
     "csp": {
+      "id": "sbi-mvp01-20200325-00001-science_A",
       "frequencyBand": "1",
       "fsp": [
         {
@@ -118,11 +142,19 @@ of a full CDM JSON object, the elements this maps to are:
           "integrationTime": 1400,
           "corrBandwidth": 0,
           "channelAveragingMap": [
-            [1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
-            [5209,0], [5953,0], [6697,0], [7441,0], [8185,0], [8929,0], [9673,0],
-            [10417,0], [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]
+            [1,2], [745,0]
           ],
-        }
+          "outputLinkMap": [
+            [1,0], [201,1]
+          ]
+        },
+        {
+          "fspID": 2,
+          "functionMode": "CORR",
+          "frequencySliceID": 2,
+          "integrationTime": 1400,
+          "corrBandwidth": 0
+        },
       ]
     },
     ...
@@ -147,35 +179,7 @@ of a full CDM JSON object, the elements this maps to are:
   {
     ...
     "sdp": {
-      "configure": [
-        {
-          "id": "realtime-20190627-0001",
-          "sbiId": "20190627-0001",
-          "workflow": {
-            "id": "vis_ingest",
-            "type": "realtime",
-            "version": "0.1.0"
-          },
-          "parameters": {
-            "numStations": 4,
-            "numChanels": 372,
-            "numPolarisations": 4,
-            "freqStartHz": 0.35e9,
-            "freqEndHz": 1.05e9,
-            "fields": {
-              "0": { "system": "ICRS", "name": "NGC6251", "ra": 1.0, "dec": 1.0 }
-            }
-          },
-          "scanParameters": {
-            "12345": { "fieldId": 0, "intervalMs": 1400 }
-          }
-        }
-      ],
-      "configureScan": {
-        "scanParameters": {
-          "12346": { "fieldId": 0, "intervalMs": 2800 }
-        }
-      }
+      "scan_type": "science_A"
     },
     ...
   }
@@ -196,7 +200,7 @@ Below is an example JSON command argument that this code can model.
 .. code-block:: JSON
 
   {
-    "scanDuration": 10.0
+    "id": 2
   }
 
 
@@ -206,19 +210,19 @@ Example configuration JSON
 .. code-block:: JSON
 
   {
-    "scanID": 12345,
     "pointing": {
       "target": {
         "system":"ICRS",
-        "name": "NGC6251",
-        "RA": 1.0,
-        "dec": 1.0
+        "name": "NGC1068",
+        "RA": 0.70984,
+        "dec": 0.000233
       },
     },
     "dish": {
       "receiverBand": "1"
     },
     "csp": {
+      "id": "sbi-mvp01-20200325-00001-science_A",
       "frequencyBand": "1",
       "fsp": [
         {
@@ -228,10 +232,11 @@ Example configuration JSON
           "integrationTime": 1400,
           "corrBandwidth": 0,
           "channelAveragingMap": [
-            [1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
-            [5209,0], [5953,0], [6697,0], [7441,0], [8185,0], [8929,0], [9673,0],
-            [10417,0], [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]
+            [1,2], [745,0]
           ],
+          "outputLinkMap": [
+            [1,0], [201,1]
+          ]
         },
         {
           "fspID": 2,
@@ -243,37 +248,10 @@ Example configuration JSON
       ]
     },
     "sdp": {
-      "configure": [
-        {
-          "id": "realtime-20190627-0001",
-          "sbiId": "20190627-0001",
-          "workflow": {
-            "id": "vis_ingest",
-            "type": "realtime",
-            "version": "0.1.0"
-          },
-          "parameters": {
-            "numStations": 4,
-            "numChanels": 372,
-            "numPolarisations": 4,
-            "freqStartHz": 0.35e9,
-            "freqEndHz": 1.05e9,
-            "fields": {
-              "0": { "system": "ICRS", "name": "NGC6251", "ra": 1.0, "dec": 1.0 }
-            }
-          },
-          "scanParameters": {
-            "12345": { "fieldId": 0, "intervalMs": 1400 }
-          }
-        }
-      ],
-      "configureScan": {
-        "scanParameters": {
-          "12346": { "fieldId": 0, "intervalMs": 2800 }
-        }
-      }
+      "scan_type": "science_A"
     },
     "tmc": {
+      "scanDuration": 10.0,
     }
   }
 
