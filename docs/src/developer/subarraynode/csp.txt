@@ -18,9 +18,11 @@ package ska.cdm.messages.subarray_node.configure {
 			integration_time : int
 			corr_bandwidth : int
 			channel_average_map : List[Tuple]
+			output_link_map : List[Tuple]
 		}
 
 		class CSPConfiguration {
+            csp_id : str
 			receiver_band : core.ReceiverBand
 		}
 		CSPConfiguration *-- "*" FSPConfiguration

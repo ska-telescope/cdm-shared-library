@@ -4,7 +4,7 @@ request for a TMC SubArrayNode.Scan command.
 """
 from datetime import timedelta
 
-__all__ = ['ScanRequest']
+__all__ = ["ScanRequest"]
 
 
 class ScanRequest:  # pylint: disable=too-few-public-methods
@@ -12,10 +12,10 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
     ScanRequest represents the request argument for SubArrayNode.scan call.
     """
 
-    def __init__(self, scan_duration: timedelta):
-        self.scan_duration = scan_duration
+    def __init__(self, scan_id: int):
+        self.scan_id = scan_id
 
     def __eq__(self, other):
         if not isinstance(other, ScanRequest):
             return False
-        return self.scan_duration == other.scan_duration
+        return self.scan_id == other.scan_id

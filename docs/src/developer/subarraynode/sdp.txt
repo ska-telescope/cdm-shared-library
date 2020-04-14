@@ -3,54 +3,11 @@
 hide empty members
 
 package ska.cdm.messages.subarray_node.configure {
-	package core.py <<Rectangle>> {
-		class Target {
-			coord : astropy.SkyCoord
-			name : str
-		}
-	}
-
 	package sdp.py <<Rectangle>> {
 
-		class SDPWorkflow {
-			id : str
-			type : str
-			version : str
-		}
-
-		class SDPParameters {
-			num_stations : int
-			num_channels : num_channels
-			num_polarisation : int
-			freq_start_hz : float
-			freq_end_hz : float
-		}
-		SDPParameters --- "*" Target
-
-		class SDPScan {
-			field_id : int
-			interval_ms : int
-		}
-
-		class SDPScanParameters
-		SDPScanParameters *-- SDPScan
-
-		class ProcessingBlockConfiguration {
-			sb_id : int
-			sbi_id : int
-		}
-		ProcessingBlockConfiguration *-- SDPParameters
-		ProcessingBlockConfiguration *-- SDPWorkflow
-		note left of ProcessingBlockConfiguration
-			bug: ""sb_id"" should be
-			renamed ""pb_id"" as it's
-			meant to refer to the
-			Processing Block ID
-		end note
-
-		class SDPConfiguration
-		SDPConfiguration *-- "*" ProcessingBlockConfiguration
-		SDPConfiguration *-- SDPScanParameters
+		class SDPConfiguration {
+            scan_type : str
+        }
 	}
 }
 

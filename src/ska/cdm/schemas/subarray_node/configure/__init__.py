@@ -5,3 +5,4 @@ and data model classes to/from a JSON representation.
 from .core import *
 from .csp import *
 from .sdp import *
+from .tmc import *

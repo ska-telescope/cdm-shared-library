@@ -5,9 +5,13 @@ hide empty members
 
 package ska.cdm.schemas {
 	package central_node.py <<Rectangle>> {
+		class ReleaseResourcesRequestSchema
 		class AssignResourcesRequestSchema
 		class AssignResourcesResponseSchema
-		class ReleaseResourcesRequestSchema
+        class SDPWorkflowSchema
+        class PbDependencySchema
+        class ProcessingBlockSchema
+        class SdpConfigurationSchema
 
 		class DishAllocationSchema
 		note top of DishAllocationSchema
@@ -21,14 +25,21 @@ package ska.cdm.schemas {
 			objects returned as part of a
 			resource assignment request
 		end note
+
+        class ScanTypeSchema
 	}
 }
 
 package ska.cdm.messages.central_node {
 	package assign_resources.py <<Rectangle>> {
-		class DishAllocation
 		class AssignResourcesRequest
 		class AssignResourcesResponse
+		class DishAllocation
+        class ScanType
+        class SDPWorkflow
+        class PbDependency
+        class ProcessingBlockConfiguration
+        class SDPConfiguration
 	}
 
 	package release_resources.py <<Rectangle>> {
@@ -40,5 +51,12 @@ DishAllocationResponseSchema --- DishAllocation
 AssignResourcesRequestSchema --- AssignResourcesRequest
 AssignResourcesResponseSchema --- AssignResourcesResponse
 ReleaseResourcesRequestSchema --- ReleaseResourcesRequest
+ScanTypeSchema --- ScanType
+SDPWorkflowSchema --- SDPWorkflow
+PbDependencySchema --- PbDependency
+ProcessingBlockSchema --- ProcessingBlockConfiguration
+SdpConfigurationSchema --- SDPConfiguration
+
+
 
 @enduml
