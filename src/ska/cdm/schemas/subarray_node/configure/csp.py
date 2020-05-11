@@ -2,6 +2,8 @@
 This module defines Marshmallow schemas that map the CDM classes for
 SubArrayNode CSP configuration to/from JSON.
 """
+import copy
+
 from marshmallow import Schema, fields, post_load, pre_dump, post_dump
 from marshmallow.validate import OneOf
 
@@ -101,8 +103,9 @@ class CSPConfigurationSchema(Schema):
         :return: CSPConfiguration instance populated to match JSON
         """
         # Convert Python Enum to its string value
-        csp_configuration.frequency_band = csp_configuration.frequency_band.value
-        return csp_configuration
+        copied = copy.deepcopy(csp_configuration)
+        copied.frequency_band = csp_configuration.frequency_band.value
+        return copied
 
 
     @post_load

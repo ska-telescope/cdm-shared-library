@@ -1,6 +1,8 @@
 """
 Unit tests for the ska.cdm.subarray_node.configure.common module.
 """
+import copy
+
 from ska.cdm.messages.subarray_node.configure import DishConfiguration, ReceiverBand, Target
 from ska.cdm.schemas.subarray_node.configure import DishConfigurationSchema, TargetSchema
 from ...utils import json_is_equal
@@ -52,3 +54,13 @@ def test_unmarshall_dish_configuration_from_json():
     expected = DishConfiguration(receiver_band=ReceiverBand.BAND_5A)
     unmarshalled = DishConfigurationSchema().loads(VALID_DISH_CONFIGURATION_JSON)
     assert unmarshalled == expected
+
+
+def test_marshall_dish_configuration_does_not_modify_original():
+    """
+    Verify that serialising a DishConfiguration does not change the object.
+    """
+    config = DishConfiguration(receiver_band=ReceiverBand.BAND_5A)
+    original_config = copy.deepcopy(config)
+    DishConfigurationSchema().dumps(config)
+    assert config == original_config

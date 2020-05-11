@@ -3,6 +3,7 @@ The schemas module defines Marshmallow schemas that map shared CDM message
 classes for SubArrayNode configuration to/from a JSON representation.
 """
 import collections
+import copy
 
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
@@ -104,8 +105,9 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: DishConfiguration instance populated to match JSON
         """
         # Convert Python Enum to its string value
-        dish_configuration.receiver_band = dish_configuration.receiver_band.value
-        return dish_configuration
+        copied = copy.deepcopy(dish_configuration)
+        copied.receiver_band = dish_configuration.receiver_band.value
+        return copied
 
     @post_load
     def create_dish_configuration(self, data, **_):  # pylint: disable=no-self-use
