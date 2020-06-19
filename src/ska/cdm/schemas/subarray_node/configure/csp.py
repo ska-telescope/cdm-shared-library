@@ -29,6 +29,7 @@ class FSPConfigurationSchema(Schema):
                                         data_key='channelAveragingMap')
     output_link_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
                                   data_key='outputLinkMap')
+    fsp_channel_offset = fields.Integer(data_key='fspChannelOffset')
 
     @pre_dump
     def convert(self, fsp_configuration: configure_msgs.FSPConfiguration,
@@ -76,11 +77,13 @@ class FSPConfigurationSchema(Schema):
         # optional arguments
         channel_averaging_map = data.get('channel_averaging_map', None)
         output_link_map = data.get('output_link_map', None)
+        fsp_channel_offset = data.get('fspChannelOffset', None)
 
         return configure_msgs.FSPConfiguration(fsp_id, function_mode_enum, frequency_slice_id,
                                                integration_time, corr_bandwidth,
                                                channel_averaging_map=channel_averaging_map,
-                                               output_link_map=output_link_map)
+                                               output_link_map=output_link_map,
+                                               fsp_channel_offset=fsp_channel_offset)
 
 
 class CSPConfigurationSchema(Schema):

@@ -33,7 +33,8 @@ class FSPConfiguration:
     def __init__(self, fsp_id: int, function_mode: FSPFunctionMode, frequency_slice_id: int,
                  integration_time: int, corr_bandwidth: int,
                  channel_averaging_map: List[Tuple] = None,
-                 output_link_map: List[Tuple] = None):
+                 output_link_map: List[Tuple] = None,
+                 fsp_channel_offset: int = None):
         """
         Create a new FSPConfiguration.
 
@@ -46,6 +47,7 @@ class FSPConfiguration:
         :param integration_time: integration time in ms
         :param channel_averaging_map: Optional channel averaging map
         :param output_link_map: Optional output_link_map
+        :param fsp_channel_offset: Optional fsp_channel_offset
         """
 
         if not 1 <= fsp_id <= 27:
@@ -82,6 +84,7 @@ class FSPConfiguration:
         #     raise ValueError(msg)
         self.channel_averaging_map = channel_averaging_map
         self.output_link_map = output_link_map
+        self.fsp_channel_offset = fsp_channel_offset
 
     def __eq__(self, other):
         if not isinstance(other, FSPConfiguration):
