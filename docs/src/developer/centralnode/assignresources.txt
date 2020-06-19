@@ -7,11 +7,13 @@ package ska.cdm.messages.central_node {
 			receptor_ids : List[str]
 		}
 
-        class SubBand {
-            frq_min : float
-            frq_max : float
-            nchan : int
-            input_link_map : List[List[int]]
+        class Channel {
+            count: int
+            start: int
+            stride: int
+            freq_min : float
+            freq_max : float
+            link_map : List[List[int]]
         }
 
         class ScanType {
@@ -20,7 +22,7 @@ package ska.cdm.messages.central_node {
             ra : str
             dec : str
         }
-        ScanType *-- "*" SubBand
+        ScanType *-- "*" Channel
 
         class PbDependency {
             pb_id : str

@@ -106,7 +106,7 @@ class ScanTypeSchema(Schema):
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
-        :return: ScanTypew object populated from data
+        :return: ScanType object populated from data
         """
         st_id = data['st_id']
         coordinate_system = data['coordinate_system']
