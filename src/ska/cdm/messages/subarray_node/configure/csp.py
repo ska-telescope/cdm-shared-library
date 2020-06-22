@@ -79,9 +79,11 @@ class FSPConfiguration:
 
         # TODO: update enforcements for channel_averaging_map and output_link_map
         # if channel_averaging_map and len(channel_averaging_map) != 20:
+        if channel_averaging_map and len(channel_averaging_map) > 20:
         #     msg = ('Number of tuples in channel averaging map must be 20. Got {}'
-        #            .format(len(channel_averaging_map)))
-        #     raise ValueError(msg)
+            msg = ('Number of tuples in channel averaging map must be 20 oe fewer. Got {}'
+                   .format(len(channel_averaging_map)))
+            raise ValueError(msg)
         self.channel_averaging_map = channel_averaging_map
         self.output_link_map = output_link_map
         self.fsp_channel_offset = fsp_channel_offset
