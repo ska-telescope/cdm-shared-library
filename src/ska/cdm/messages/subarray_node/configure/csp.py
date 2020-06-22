@@ -33,7 +33,9 @@ class FSPConfiguration:
     def __init__(self, fsp_id: int, function_mode: FSPFunctionMode, frequency_slice_id: int,
                  integration_time: int, corr_bandwidth: int,
                  channel_averaging_map: List[Tuple] = None,
-                 output_link_map: List[Tuple] = None):
+                 output_link_map: List[Tuple] = None,
+                 fsp_channel_offset: int = None,
+                 zoom_window_tuning: int = None):
         """
         Create a new FSPConfiguration.
 
@@ -46,6 +48,8 @@ class FSPConfiguration:
         :param integration_time: integration time in ms
         :param channel_averaging_map: Optional channel averaging map
         :param output_link_map: Optional output_link_map
+        :param fsp_channel_offset: Optional fsp_channel_offset
+        :param zoom_window_tuning: Optional zoom_window_tuning
         """
 
         if not 1 <= fsp_id <= 27:
@@ -75,13 +79,16 @@ class FSPConfiguration:
             raise ValueError(msg)
         self.integration_time = integration_time
 
-        # TODO: update enforcements for channel_averaging_map and output_link_map
-        # if channel_averaging_map and len(channel_averaging_map) != 20:
-        #     msg = ('Number of tuples in channel averaging map must be 20. Got {}'
-        #            .format(len(channel_averaging_map)))
-        #     raise ValueError(msg)
+        if channel_averaging_map and len(channel_averaging_map) > 20:
+            msg = ('Number of tuples in channel averaging map must be 20 or fewer. Got {}'
+                   .format(len(channel_averaging_map)))
+            raise ValueError(msg)
         self.channel_averaging_map = channel_averaging_map
+
+        # TODO: update enforcements for output_link_map
         self.output_link_map = output_link_map
+        self.fsp_channel_offset = fsp_channel_offset
+        self.zoom_window_tuning = zoom_window_tuning
 
     def __eq__(self, other):
         if not isinstance(other, FSPConfiguration):
@@ -92,7 +99,9 @@ class FSPConfiguration:
             and self.corr_bandwidth == other.corr_bandwidth \
             and self.integration_time == other.integration_time \
             and self.channel_averaging_map == other.channel_averaging_map \
-            and self.output_link_map == other.output_link_map
+            and self.output_link_map == other.output_link_map \
+            and self.fsp_channel_offset == other.fsp_channel_offset \
+            and self.zoom_window_tuning == other.zoom_window_tuning
 
 
 class CSPConfiguration:

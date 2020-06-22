@@ -136,22 +136,17 @@ def test_integration_time_is_within_limits():
         _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1540, 0)
 
 
-# TODO remove xfail marker when enforcement is added to fsp definition
-@pytest.mark.xfail
+
 def test_number_of_channel_avg_mapping_tuples():
     """
     Verify that FSPConfiguration fails if there are an invalid number of
     entries in the channel average mapping argument.
+    Since this test was originally written we allow fewer than 20 entries
     """
     # create a partially applied sn.FSPConfiguration constructor to save having
     # to type the arguments each time
     fsp_constructor = functools.partial(FSPConfiguration, 1, FSPFunctionMode.CORR, 1, 140,
                                         0)
-
-    # test for 19 tuples
-    channel_avg_map = list(zip(itertools.count(1, 744), 19 * [0]))
-    with pytest.raises(ValueError):
-        _ = fsp_constructor(channel_avg_map)
 
     # test for 21 tuples
     channel_avg_map = list(zip(itertools.count(1, 744), 21 * [0]))
