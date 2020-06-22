@@ -544,6 +544,109 @@ def test_unmarshall_configure_request_from_json_oco():
 
     assert unmarshalled == expected
 
+VALID_CONFIGURE_REQUEST_ZOOM = """
+{
+  "pointing": {
+    "target": {
+      "system": "ICRS",
+      "name": "M51",
+      "RA": "13:29:52.698",       
+      "dec": "+47:11:42.93"      
+    }
+  },
+  "dish": {
+    "receiverBand": "1"
+  },
+  "csp":{
+    "id": "sbi-mvp01-20200325-00001-science_A",
+    "frequencyBand": "1",
+    "fsp": [
+      {
+        "fspID": 1,
+        "functionMode": "CORR",
+        "frequencySliceID": 1,
+        "integrationTime": 1400,
+        "corrBandwidth": 0,
+        "zoomWindowTuning": 4700000
+      }
+    ]
+  },
+  "sdp": {
+    "scan_type": "science_A"
+  },
+  "tmc": {
+    "scanDuration": 10.0
+  }
+}
+"""
+
+
+def test_marshall_configure_request_zoom():
+    """
+    Verify that ConfigureRequest is marshalled to JSON correctly.
+    """
+    scan_duration = timedelta(seconds=10)
+    target = Target(
+        ra="13:29:52.698",
+        dec="+47:11:42.93",
+        name="M51",
+        frame="icrs",
+        unit=("hourangle", "deg"),
+    )
+    pointing_config = PointingConfiguration(target)
+    dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
+    sdp_config = SDPConfiguration("science_A")
+    channel_avg_map = None
+    zoom_window_tuning = 4700000
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
+    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
+                                               zoom_window_tuning=zoom_window_tuning)
+    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    tmc_config = TMCConfiguration(scan_duration)
+
+    request = ConfigureRequest(
+        pointing_config, dish_config, sdp_config, csp_config, tmc_config
+    )
+    request_json = ConfigureRequestSchema().dumps(request)
+
+    assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST_ZOOM)
+
+
+
+def test_unmarshall_configure_request_from_json_zoom():
+    """
+    Verify that a ConfigureRequest can be unmarshalled from JSON.
+    """
+    scan_duration = timedelta(seconds=10)
+    target = Target(
+        ra="13:29:52.698",
+        dec="+47:11:42.93",
+        name="M51",
+        frame="icrs",
+        unit=("hourangle", "deg"),
+    )
+    pointing_config = PointingConfiguration(target)
+    dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
+    sdp_config = SDPConfiguration("science_A")
+    channel_avg_map = None
+    zoom_window_tuning = 4700000
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
+    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
+                                               zoom_window_tuning=zoom_window_tuning)
+    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    tmc_config = TMCConfiguration(scan_duration)
+
+    expected = ConfigureRequest(
+        pointing=pointing_config,
+        dish=dish_config,
+        sdp=sdp_config,
+        csp=csp_config,
+        tmc=tmc_config
+    )
+    unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST_ZOOM)
+
+    assert unmarshalled == expected
+
 
 def test_optional_configurations_are_omitted_when_null():
     """
