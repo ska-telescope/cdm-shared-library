@@ -8,9 +8,9 @@ import ska.cdm.messages.central_node.assign_resources as assign_msgs
 import ska.cdm.messages.central_node.release_resources as release_msgs
 from . import CODEC
 
-__all__ = ['DishAllocationSchema', 'DishAllocationResponseSchema', 'AssignResourcesRequestSchema', \
-           'ScanTypeSchema', 'SDPWorkflowSchema', 'PbDependencySchema', \
-           'ProcessingBlockSchema', 'SDPConfigurationSchema', 'AssignResourcesResponseSchema', \
+__all__ = ['DishAllocationSchema', 'DishAllocationResponseSchema', 'AssignResourcesRequestSchema',
+           'ScanTypeSchema', 'SDPWorkflowSchema', 'PbDependencySchema', 'ChannelSchema',
+           'ProcessingBlockSchema', 'SDPConfigurationSchema', 'AssignResourcesResponseSchema',
            'ReleaseResourcesRequestSchema']
 
 

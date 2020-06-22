@@ -4,9 +4,9 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import List, Optional, Dict
 
-__all__ = ['AssignResourcesRequest', 'AssignResourcesResponse', 'DishAllocation', 'SDPWorkflow', \
-           'SDPConfiguration', 'ProcessingBlockConfiguration', 'PbDependency', \
-           'ScanType']
+__all__ = ['AssignResourcesRequest', 'AssignResourcesResponse', 'DishAllocation', 'SDPWorkflow',
+           'SDPConfiguration', 'ProcessingBlockConfiguration', 'PbDependency',
+           'ScanType', 'Channel']
 
 
 class DishAllocation:

@@ -216,7 +216,6 @@ def test_marshal_sdp_configuration():
     """
     request = sdp_config_for_test()
     json_str = SDPConfigurationSchema().dumps(request)
-    print(json_str)
     assert json_is_equal(json_str, VALID_SDP_CONFIG)
 
 
