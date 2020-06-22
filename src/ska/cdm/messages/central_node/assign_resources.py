@@ -4,9 +4,9 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import List, Optional, Dict
 
-__all__ = ['AssignResourcesRequest', 'AssignResourcesResponse', 'DishAllocation', 'SDPWorkflow', \
-           'SDPConfiguration', 'ProcessingBlockConfiguration', 'PbDependency', \
-           'ScanType', 'SubBand']
+__all__ = ['AssignResourcesRequest', 'AssignResourcesResponse', 'DishAllocation', 'SDPWorkflow',
+           'SDPConfiguration', 'ProcessingBlockConfiguration', 'PbDependency',
+           'ScanType', 'Channel']
 
 
 class DishAllocation:
@@ -53,23 +53,27 @@ class SDPWorkflow:  # pylint: disable=too-few-public-methods
                and self.version == other.version
 
 
-class SubBand:
+class Channel:
     """
-    Class to hold SubBands for ScanType
+    Class to hold Channels for ScanType
     """
-    def __init__(self, freq_min: float, freq_max: float, nchan: int, input_link_map: List[List]):
+    def __init__(self, count: int, start: int, stride: int, freq_min: float, freq_max: float, link_map: List[List]):
+        self.count = count
+        self.start = start
+        self.stride = stride
         self.freq_min = freq_min
         self.freq_max = freq_max
-        self.nchan = nchan
-        self.input_link_map = input_link_map
-   
+        self.link_map = link_map
+
     def __eq__(self, other):
-        if not isinstance(other, SubBand):
+        if not isinstance(other, Channel):
             return False
-        return self.freq_min == other.freq_min \
+        return self.count == other.count \
+               and self.start == other.start \
+               and self.stride == other.stride \
+               and self.freq_min == other.freq_min \
                and self.freq_max == other.freq_max \
-               and self.nchan == other.nchan \
-               and self.input_link_map == other.input_link_map
+               and self.link_map == other.link_map
 
 
 class ScanType:
@@ -77,12 +81,12 @@ class ScanType:
     Class to hold ScanType configuration
     """
     # pylint: disable=too-many-arguments
-    def __init__(self, st_id, coordinate_system: str, ra: str, dec: str, sub_bands: List[SubBand]):
+    def __init__(self, st_id, coordinate_system: str, ra: str, dec: str, channels: List[Channel]):
         self.st_id = st_id
         self.coordinate_system = coordinate_system
         self.ra = ra  # pylint: disable=invalid-name
         self.dec = dec
-        self.sub_bands = sub_bands
+        self.channels = channels
 
     def __eq__(self, other):
         if not isinstance(other, ScanType):
@@ -91,7 +95,7 @@ class ScanType:
                and self.coordinate_system == other.coordinate_system \
                and self.ra == other.ra \
                and self.dec == other.dec \
-               and self.sub_bands == other.sub_bands
+               and self.channels == other.channels
 
 
 class PbDependency:

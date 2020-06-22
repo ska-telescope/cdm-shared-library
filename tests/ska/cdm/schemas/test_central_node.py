@@ -5,7 +5,7 @@ Unit tests for ska.cdm.schemas module.
 import pytest
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest, \
-    AssignResourcesResponse, DishAllocation, SDPConfiguration, ScanType, SubBand, \
+    AssignResourcesResponse, DishAllocation, SDPConfiguration, ScanType, Channel, \
     ProcessingBlockConfiguration, SDPWorkflow, PbDependency
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.schemas.central_node import SDPConfigurationSchema, AssignResourcesRequestSchema, \
@@ -26,17 +26,41 @@ VALID_ASSIGN_RESOURCES_REQUEST = """
     {
       "id": "science_A",
       "coordinate_system": "ICRS", "ra": "02:42:40.771", "dec": "-00:00:47.84",
-      "subbands": [{
-         "freq_min": 0.35e9, "freq_max": 1.05e9, "nchan": 372,
-         "input_link_map": [[1,0], [101,1]]
-      }]
+      "channels": [{
+         "count": 744,
+         "start": 0,
+         "stride": 2,
+         "freq_min": 0.35e9,
+         "freq_max": 0.368e9,
+         "link_map": [[0, 0], [200, 1], [744, 2], [944, 3]]
+       },
+       {
+         "count": 744,
+         "start": 2000,
+         "stride": 1,
+         "freq_min": 0.36e9,
+         "freq_max": 0.368e9,
+         "link_map": [[2000, 4], [2200, 5]]
+       }]
     },
     {
       "id": "calibration_B",
       "coordinate_system": "ICRS", "ra": "12:29:06.699", "dec": "02:03:08.598",
-      "subbands": [{
-        "freq_min": 0.35e9, "freq_max": 1.05e9, "nchan": 372,
-        "input_link_map": [[1,0], [101,1]]
+      "channels": [{
+        "count": 744,
+        "start": 0,
+        "stride": 2,
+        "freq_min": 0.35e9,
+        "freq_max": 0.368e9,
+        "link_map": [[0, 0], [200, 1], [744, 2], [944, 3]]
+      },
+      {
+        "count": 744,
+        "start": 2000,
+        "stride": 1,
+        "freq_min": 0.36e9,
+        "freq_max": 0.368e9,
+        "link_map": [[2000, 4], [2200, 5]]
       }]
     }
   ],
@@ -79,17 +103,41 @@ VALID_SDP_CONFIG = """
     {
       "id": "science_A",
       "coordinate_system": "ICRS", "ra": "02:42:40.771", "dec": "-00:00:47.84",
-      "subbands": [{
-         "freq_min": 0.35e9, "freq_max": 1.05e9, "nchan": 372,
-         "input_link_map": [[1,0], [101,1]]
-      }]
+      "channels": [{
+         "count": 744,
+         "start": 0,
+         "stride": 2,
+         "freq_min": 0.35e9,
+         "freq_max": 0.368e9,
+         "link_map": [[0, 0], [200, 1], [744, 2], [944, 3]]
+       },
+       {
+         "count": 744,
+         "start": 2000,
+         "stride": 1,
+         "freq_min": 0.36e9,
+         "freq_max": 0.368e9,
+         "link_map": [[2000, 4], [2200, 5]]
+       }]
     },
     {
       "id": "calibration_B",
       "coordinate_system": "ICRS", "ra": "12:29:06.699", "dec": "02:03:08.598",
-      "subbands": [{
-        "freq_min": 0.35e9, "freq_max": 1.05e9, "nchan": 372,
-        "input_link_map": [[1,0], [101,1]]
+      "channels": [{
+        "count": 744,
+        "start": 0,
+        "stride": 2,
+        "freq_min": 0.35e9,
+        "freq_max": 0.368e9,
+        "link_map": [[0, 0], [200, 1], [744, 2], [944, 3]]
+      },
+      {
+        "count": 744,
+        "start": 2000,
+        "stride": 1,
+        "freq_min": 0.36e9,
+        "freq_max": 0.368e9,
+        "link_map": [[2000, 4], [2200, 5]]
       }]
     }
   ],
@@ -133,10 +181,10 @@ def sdp_config_for_test():  # pylint: disable=too-many-locals
     Fixture which returns an SDPConfiguration object
     """
     # scan_type
-    sub_band_a = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    sub_band_b = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    scan_type_a = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band_a])
-    scan_type_b = ScanType("calibration_B", "ICRS", "12:29:06.699", "02:03:08.598", [sub_band_b])
+    channel_1 = Channel(744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    channel_2 = Channel(744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]])
+    scan_type_a = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2])
+    scan_type_b = ScanType("calibration_B", "ICRS", "12:29:06.699", "02:03:08.598", [channel_1, channel_2])
 
     scan_types = [scan_type_a, scan_type_b]
 

@@ -8,9 +8,9 @@ import ska.cdm.messages.central_node.assign_resources as assign_msgs
 import ska.cdm.messages.central_node.release_resources as release_msgs
 from . import CODEC
 
-__all__ = ['DishAllocationSchema', 'DishAllocationResponseSchema', 'AssignResourcesRequestSchema', \
-           'SubBandSchema', 'ScanTypeSchema', 'SDPWorkflowSchema', 'PbDependencySchema', \
-           'ProcessingBlockSchema', 'SDPConfigurationSchema', 'AssignResourcesResponseSchema', \
+__all__ = ['DishAllocationSchema', 'DishAllocationResponseSchema', 'AssignResourcesRequestSchema',
+           'ScanTypeSchema', 'SDPWorkflowSchema', 'PbDependencySchema', 'ChannelSchema',
+           'ProcessingBlockSchema', 'SDPConfigurationSchema', 'AssignResourcesResponseSchema',
            'ReleaseResourcesRequestSchema']
 
 
@@ -60,29 +60,33 @@ class DishAllocationResponseSchema(Schema):  # pylint: disable=too-few-public-me
         return assign_msgs.DishAllocation(receptor_ids=receptor_ids)
 
 
-class SubBandSchema(Schema):
+class ChannelSchema(Schema):
     """
     Marshmallow schema for the SubBand class.
     """
-    freq_min = fields.Float(data_key='freq_min', required=True) 
-    freq_max = fields.Float(data_key='freq_max', required=True) 
-    nchan = fields.Int(data_key='nchan', required=True)
-    input_link_map = fields.List(fields.List(fields.Int), data_key='input_link_map', required=True)
+    count = fields.Integer(data_key='count', required=True)
+    start = fields.Integer(data_key='start', required=True)
+    stride = fields.Integer(data_key='stride', required=True)
+    freq_min = fields.Float(data_key='freq_min', required=True)
+    freq_max = fields.Float(data_key='freq_max', required=True)
+    link_map = fields.List(fields.List(fields.Int), data_key='link_map', required=True)
 
     @post_load
-    def create_sub_band(self, data, **_):  # pylint: disable=no-self-use
+    def create_channel(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a SubBand object.
+        Convert parsed JSON back into a Channel object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: SubBand object populated from data
         """
+        count = data['count']
+        start = data['start']
+        stride = data['stride']
         freq_min = data['freq_min']
         freq_max = data['freq_max']
-        nchan = data['nchan']
-        input_link_map = data['input_link_map']
-        return assign_msgs.SubBand(freq_min, freq_max, nchan, input_link_map)
+        link_map = data['link_map']
+        return assign_msgs.Channel(count, start, stride, freq_min, freq_max, link_map)
 
 
 class ScanTypeSchema(Schema):
@@ -93,7 +97,7 @@ class ScanTypeSchema(Schema):
     coordinate_system = fields.String(data_key='coordinate_system', required=True)
     ra = fields.String(data_key='ra', required=True)
     dec = fields.String(data_key='dec', required=True)
-    sub_bands = fields.Nested(SubBandSchema, data_key='subbands', many=True)
+    channels = fields.Nested(ChannelSchema, data_key='channels', many=True)
 
     @post_load
     def create_scan_type(self, data, **_):  # pylint: disable=no-self-use
@@ -102,14 +106,14 @@ class ScanTypeSchema(Schema):
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
-        :return: ScanTypew object populated from data
+        :return: ScanType object populated from data
         """
         st_id = data['st_id']
         coordinate_system = data['coordinate_system']
         ra = data['ra']  # pylint: disable=invalid-name
         dec = data['dec']
-        sub_bands = data['sub_bands']
-        return assign_msgs.ScanType(st_id, coordinate_system, ra, dec, sub_bands)
+        channels = data['channels']
+        return assign_msgs.ScanType(st_id, coordinate_system, ra, dec, channels)
 
 
 class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods

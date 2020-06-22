@@ -4,48 +4,53 @@ Unit tests for the CentralNode.AssignResources request/response mapper module.
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest, \
     AssignResourcesResponse, DishAllocation, ProcessingBlockConfiguration, PbDependency, \
-    SDPWorkflow, SDPConfiguration, ScanType, SubBand
+    SDPWorkflow, SDPConfiguration, ScanType, Channel
 
 
-def test_sub_band_equals():
+def test_channel_equals():
     """
-    Verify that SubBand subbdand objects are considered equal when they have the same:
+    Verify that Channel objects are considered equal when they have the same:
+     - count
+     - start
+     - stride
      - freq_min
      - freq_max
-     - nchan
-     - input_link_map
+     - link_map
     """
-    sub_band1 = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    sub_band2 = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    assert sub_band1 == sub_band2
+    channel1 = Channel(744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    channel2 = Channel(744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    assert channel1 == channel2
 
-    assert sub_band1 != SubBand(0.35e9, 1.05e9, 362, [[1, 0], [101, 1]])
-    assert sub_band1 != SubBand(0.35e9, 1.05e9, 372, [[1, 1], [101, 1]])
-    assert sub_band1 != SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 2]])
+    assert channel1 != Channel(744, 2000, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    assert channel1 != Channel(744, 0, 1, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    assert channel1 != Channel(744, 0, 2, 0.36e9, 1.04e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    assert channel1 != Channel(744, 0, 2, 0.35e9, 1.05e9, [[2000, 4], [2200, 5]])
 
 
-def test_sub_band_not_equal_to_other_objects():
+def test_channel_not_equal_to_other_objects():
     """
-    Verify that SubBand objects are not considered equal to objects of
+    Verify that Channel objects are not considered equal to objects of
     other types.
     """
-    sub_band = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    assert sub_band != 1
+    channel = Channel(744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    assert channel != 1
 
 
 def test_scan_type_equals():
     """
     Verify that ScanType objects are considered equal for the same passed parameter list
     """
-    sub_band = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    scan_type1 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band])
-    scan_type2 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band])
+    channel_1 = Channel(744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    channel_2 = Channel(744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]])
+    scan_type1 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2])
+    scan_type2 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2])
 
     assert scan_type1 == scan_type2
 
-    assert scan_type1 != ScanType("calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", None)
-    assert scan_type1 != ScanType("calibration_B", "ICRS", "12:29:06.699", "02:03:08.598", None)
-    assert scan_type1 != ScanType("science_A", "ICRS", "12:29:06.699", "02:03:08.598", [sub_band])
+    assert scan_type1 != ScanType("calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2])
+    assert scan_type1 != ScanType("science_A", "ICRS", "12:29:06.699", "-00:00:47.84", [channel_1, channel_2])
+    assert scan_type1 != ScanType("science_A", "ICRS", "02:42:40.771", "02:03:08.598", [channel_1, channel_2])
+    assert scan_type1 != ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1])
 
 
 def test_scan_type_not_equal_to_other_objects():
@@ -53,8 +58,8 @@ def test_scan_type_not_equal_to_other_objects():
     Verify that ScanType objects are not considered equal to objects of
     other types.
     """
-    sub_band = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band])
+    channel = Channel(744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
     assert scan_type != 1
 
 
@@ -137,9 +142,9 @@ def test_sdp_configuration_block_equals():
     """
     Verify that SDPConfiguration objects are considered equal
     """
-    sub_band = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    scan_type1 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band])
-    scan_type2 = ScanType("calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band])
+    channel = Channel(744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    scan_type1 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
+    scan_type2 = ScanType("calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
 
     scan_types = [scan_type1, scan_type2]
 
@@ -174,7 +179,7 @@ def test_sdp_configuration_not_equal_to_other_objects():
     Verify that SDPConfiguration objects are not considered equal to objects of
     other types.
     """
-    sdp = SDPConfiguration(None ,None, None, None)
+    sdp = SDPConfiguration(None, None, None, None)
     assert sdp != 1
 
 
@@ -183,8 +188,8 @@ def test_assign_resources_request_eq():
     Verify that two AssignResource request objects for the same sub-array and
     dish allocation are considered equal.
     """
-    sub_band = SubBand(0.35e9, 1.05e9, 372, [[1, 0], [101, 1]])
-    scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [sub_band])
+    channel = Channel(744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
     sdp_workflow = SDPWorkflow(workflow_id="vis_receive", workflow_type="realtime", version="0.1.0")
     pb_config = ProcessingBlockConfiguration("pb-mvp01-20200325-00001", sdp_workflow, {})
     sdp_config = SDPConfiguration("sbi-mvp01-20200325-00001", 100.0, [scan_type], [pb_config])
