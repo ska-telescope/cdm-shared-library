@@ -8,15 +8,19 @@ from ska.cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska.cdm.schemas.subarray_node.configure import CSPConfigurationSchema, FSPConfigurationSchema
 
 
-def test_marshall_fsp_configuration_with_null_channel_averaging_map():
+def test_marshall_fsp_configuration_with_null_optional_parameters():
     """
-    Verify that the ChannelAveragingMap FSPConfiguration directive is
-    removed when not set.
+    Verify that optional FSPConfiguration parameters are removed when null or
+    not set.
     """
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
     schema = FSPConfigurationSchema()
     marshalled = schema.dumps(fsp_config)
-    assert 'channelAveragingMap' not in marshalled
+
+    optional_fields = [field.data_key for name, field in schema.fields.items()
+                       if field.required == False]
+    for field in optional_fields:
+        assert field not in marshalled
 
 
 def test_marshall_cspconfiguration_does_not_modify_original():

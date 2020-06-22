@@ -2,7 +2,6 @@
 Unit tests for the ska.cdm.schemas.subarray_node.configure module.
 """
 import itertools
-
 from datetime import timedelta
 
 from ska.cdm.messages.subarray_node.configure import (
@@ -43,11 +42,20 @@ VALID_CONFIGURE_REQUEST = """
         "frequencySliceID": 1,
         "integrationTime": 1400,
         "corrBandwidth": 0,
-        "channelAveragingMap": [
-          [1,2], [745,0], [1489,0], [2233,0], [2977,0], [3721,0], [4465,0],
-          [5209,0], [5953,0], [6697,0], [7441,0], [8185,0], [8929,0], [9673,0],
-          [10417,0], [11161,0], [11905,0], [12649,0], [13393,0], [14137,0]
-        ]
+        "channelAveragingMap": [[0,2], [744,0]],
+        "fspChannelOffset": 0,
+        "outputLinkMap": [[0,0], [200,1]]
+      },
+      {
+        "fspID": 2,
+        "functionMode": "CORR",
+        "frequencySliceID": 2,
+        "integrationTime": 1400,
+        "corrBandwidth": 1,
+        "channelAveragingMap": [[0,2], [744,0]],
+        "fspChannelOffset": 744,
+        "outputLinkMap": [[0,4], [200,5]],
+        "zoomWindowTuning": 4700000
       }
     ]
   },
@@ -76,10 +84,20 @@ def test_marshall_configure_request():
     pointing_config = PointingConfiguration(target)
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration("science_A")
-    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    # TODO refactor this as a builder, consolidate duplicate code
+    fsp_config_1 = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0,
+                                    channel_averaging_map=[(0, 2), (744, 0)],
+                                    fsp_channel_offset=0,
+                                    output_link_map=[(0, 0), (200, 1)],
+                                    )
+    fsp_config_2 = FSPConfiguration(2, FSPFunctionMode.CORR, 2, 1400, 1,
+                                    channel_averaging_map=[(0, 2), (744, 0)],
+                                    fsp_channel_offset=744,
+                                    output_link_map=[(0, 4), (200, 5)],
+                                    zoom_window_tuning=4700000
+                                    )
+    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2])
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
@@ -106,10 +124,19 @@ def test_unmarshall_configure_request_from_json():
     pointing_config = PointingConfiguration(target)
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration("science_A")
-    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    fsp_config_1 = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0,
+                                    channel_averaging_map=[(0, 2), (744, 0)],
+                                    fsp_channel_offset=0,
+                                    output_link_map=[(0, 0), (200, 1)],
+                                    )
+    fsp_config_2 = FSPConfiguration(2, FSPFunctionMode.CORR, 2, 1400, 1,
+                                    channel_averaging_map=[(0, 2), (744, 0)],
+                                    fsp_channel_offset=744,
+                                    output_link_map=[(0, 4), (200, 5)],
+                                    zoom_window_tuning=4700000
+                                    )
+    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2])
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -142,9 +169,18 @@ def test_unmarshall_configure_for_later_request_from_json():
     sdp_config = SDPConfiguration("science_A")
 
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    fsp_config_1 = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0,
+                                    channel_averaging_map=[(0, 2), (744, 0)],
+                                    fsp_channel_offset=0,
+                                    output_link_map=[(0, 0), (200, 1)],
+                                    )
+    fsp_config_2 = FSPConfiguration(2, FSPFunctionMode.CORR, 2, 1400, 1,
+                                    channel_averaging_map=[(0, 2), (744, 0)],
+                                    fsp_channel_offset=744,
+                                    output_link_map=[(0, 4), (200, 5)],
+                                    zoom_window_tuning=4700000
+                                    )
+    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2])
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
