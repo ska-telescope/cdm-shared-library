@@ -30,4 +30,6 @@ lint:
 		echo "</testsuites>" >> /build/reports/linting.xml; \
 	fi;
 
-.PHONY: all test lint
+test-all: test lint
+
+.PHONY: all test lint test-lint
