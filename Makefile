@@ -138,9 +138,9 @@ lint: build up ## lint the application (static code analysis)
 	  exit 0
 
 test-all: DOCKER_RUN_ARGS = --volumes-from=$(BUILD)
-test-all: build up ## test-all the application
+test-all: build up ## test and lint the application
 	$(INIT_CACHE)
-	$(call make,test-all); \
+	$(call make,all); \
 	  status=$$?; \
 	  rm -fr build; \
 	  docker cp $(BUILD):/build .; \

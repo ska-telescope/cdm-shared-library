@@ -5,7 +5,7 @@
 SHELL = /bin/bash
 .SHELLFLAGS = -o pipefail -c
 
-all: test
+all: test lint
 
 # wait for the device to be available before beginning the test
 # A temporary volume is mounted at /build when 'make test' is executing.
@@ -30,6 +30,4 @@ lint:
 		echo "</testsuites>" >> /build/reports/linting.xml; \
 	fi;
 
-test-all: test lint
-
-.PHONY: all test lint test-lint
+.PHONY: all test lint
