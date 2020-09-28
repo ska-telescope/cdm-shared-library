@@ -17,7 +17,6 @@ class FSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.FSPConfiguration class
     """
-
     fsp_id = fields.Integer(data_key='fspID', required=True)
     function_mode = fields.String(data_key='functionMode',
                                   validate=OneOf(['CORR', 'PSS-BF', 'PST-BF', 'VLBI']),
@@ -63,10 +62,10 @@ class FSPConfigurationSchema(Schema):
     def create(self, data, **_):  # pylint: disable=no-self-use
         """
          Convert parsed JSON back into a FSPConfiguration object.
+
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: FSPConfiguration instance populated to match JSON
-
         """
         fsp_id = data['fsp_id']
         function_mode = data['function_mode']
@@ -118,10 +117,10 @@ class CSPConfigurationSchema(Schema):
     def create(self, data, **_):  # pylint: disable=no-self-use
         """
          Convert parsed JSON back into a CSPConfiguration object.
+
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: CSPConfiguration instance populated to match JSON
-
         """
         csp_id = data['csp_id']
         frequency_band = data['frequency_band']

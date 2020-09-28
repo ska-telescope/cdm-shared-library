@@ -1,8 +1,10 @@
-================================
-cdm-shared-library documentation
-================================
+.. skeleton documentation master file, created by
+   sphinx-quickstart on Thu May 17 15:17:35 2018.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
-.. COMMUNITY SECTION ==================================================
+
+.. HOME SECTION ==================================================
 
 .. Hidden toctree to manage the sidebar navigation.
 
@@ -15,11 +17,12 @@ cdm-shared-library documentation
   developer/centralnode/centralnode
   developer/subarraynode/subarraynode
   client
+  package/api
 
-- :doc:`developer/developer`
-- :doc:`developer/centralnode/centralnode`
-- :doc:`developer/subarraynode/subarraynode`
-- :doc:`client`
+
+================================
+cdm-shared-library documentation
+================================
 
 Project description
 ===================
