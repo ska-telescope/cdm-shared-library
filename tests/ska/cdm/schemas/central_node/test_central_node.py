@@ -18,9 +18,9 @@ from ska.cdm.messages.central_node.sdp import (
     SDPWorkflow,
     PbDependency,
 )
+from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.schemas.central_node.assign_resources import (
-    SDPConfigurationSchema,
     AssignResourcesRequestSchema,
     AssignResourcesResponseSchema,
     ReleaseResourcesRequestSchema,
