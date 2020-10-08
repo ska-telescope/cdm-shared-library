@@ -5,7 +5,7 @@ import copy
 
 from ska.cdm.messages.subarray_node.configure import DishConfiguration, ReceiverBand, Target
 from ska.cdm.schemas.subarray_node.configure import DishConfigurationSchema, TargetSchema
-from ...utils import json_is_equal
+from ska.cdm.utils import json_is_equal
 
 VALID_TARGET_JSON = """
 {

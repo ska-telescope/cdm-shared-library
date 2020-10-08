@@ -4,7 +4,7 @@ Unit tests for the ska.cdm.schemas.subarray_node.configure.sdp module.
 
 from ska.cdm.messages.subarray_node.configure import SDPConfiguration
 from ska.cdm.schemas.subarray_node.configure.sdp import SDPConfigurationSchema
-from tests.ska.cdm.schemas.utils import json_is_equal
+from ska.cdm.utils import json_is_equal
 
 VALID_SDP_SCAN_TYPE = '{"scan_type": "science_A"}'
 

@@ -17,7 +17,7 @@ from ska.cdm.messages.subarray_node.configure import (
     Target,
 )
 from ska.cdm.schemas.subarray_node.configure import ConfigureRequestSchema
-from tests.ska.cdm.schemas.utils import json_is_equal
+from ska.cdm.utils import json_is_equal
 
 VALID_CONFIGURE_REQUEST = """
 {

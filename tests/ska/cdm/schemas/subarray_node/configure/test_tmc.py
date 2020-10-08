@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from ska.cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska.cdm.schemas.subarray_node.configure.tmc import TMCConfigurationSchema
-from ...utils import json_is_equal
+from ska.cdm.utils import json_is_equal
 
 VALID_TMCCONFIGURATION_JSON = """
 {
