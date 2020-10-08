@@ -9,7 +9,7 @@ from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
 
 import ska.cdm.messages.subarray_node.configure as configure_msgs
-from . import csp, sdp, tmc
+from . import csp, sdp, tmc, mccs
 from ... import CODEC, shared
 
 __all__ = ['ConfigureRequestSchema',
@@ -135,6 +135,7 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     sdp = fields.Nested(sdp.SDPConfigurationSchema)
     csp = fields.Nested(csp.CSPConfigurationSchema)
     tmc = fields.Nested(tmc.TMCConfigurationSchema)
+    mccs = fields.Nested(mccs.MCCSConfigurationSchema)
 
     @post_load
     def create_configuration(self, data, **_):  # pylint: disable=no-self-use
