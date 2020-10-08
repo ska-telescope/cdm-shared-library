@@ -4,9 +4,9 @@ structured request and response for a TMC CentralNode.ReleaseResources call.
 """
 from typing import Optional
 
-from .assign_resources import DishAllocation
+from .csp import DishAllocation
 
-__all__ = ['ReleaseResourcesRequest', 'DishAllocation']
+__all__ = ['ReleaseResourcesRequest']
 
 
 class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods

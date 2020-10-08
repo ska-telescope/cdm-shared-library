@@ -4,9 +4,22 @@ Central Node message classes to/from a JSON representation.
 """
 from marshmallow import Schema, fields, post_dump, post_load
 
+from ska.cdm.messages.central_node.assign_resources import AssignResourcesResponse
+from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
+from ska.cdm.messages.central_node.sdp import (
+    SDPConfiguration,
+    ScanType,
+    Channel,
+    ProcessingBlockConfiguration,
+    SDPWorkflow,
+    PbDependency,
+)
 import ska.cdm.messages.central_node.assign_resources as assign_msgs
 import ska.cdm.messages.central_node.release_resources as release_msgs
-from . import CODEC
+from ska.cdm.messages.central_node.csp import DishAllocation
+from ska.cdm.messages.central_node.mccs import MCCSAllocate
+from ska.cdm.schemas.central_node.mccs import MCCSAllocateSchema
+from ska.cdm.schemas import CODEC
 
 __all__ = ['DishAllocationSchema', 'DishAllocationResponseSchema', 'AssignResourcesRequestSchema',
            'ScanTypeSchema', 'SDPWorkflowSchema', 'PbDependencySchema', 'ChannelSchema',
@@ -31,10 +44,10 @@ class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: DishAllocation object populated from data
         """
         receptor_ids = data['receptor_ids']
-        return assign_msgs.DishAllocation(receptor_ids=receptor_ids)
+        return DishAllocation(receptor_ids=receptor_ids)
 
 
-@CODEC.register_mapping(assign_msgs.DishAllocation)
+@CODEC.register_mapping(DishAllocation)
 class DishAllocationResponseSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the DishAllocation class when received in the
@@ -57,7 +70,7 @@ class DishAllocationResponseSchema(Schema):  # pylint: disable=too-few-public-me
         :return: DishAllocation object populated from data
         """
         receptor_ids = data['receptor_ids']
-        return assign_msgs.DishAllocation(receptor_ids=receptor_ids)
+        return DishAllocation(receptor_ids=receptor_ids)
 
 
 class ChannelSchema(Schema):
@@ -86,7 +99,7 @@ class ChannelSchema(Schema):
         freq_min = data['freq_min']
         freq_max = data['freq_max']
         link_map = data['link_map']
-        return assign_msgs.Channel(count, start, stride, freq_min, freq_max, link_map)
+        return Channel(count, start, stride, freq_min, freq_max, link_map)
 
 
 class ScanTypeSchema(Schema):
@@ -113,7 +126,7 @@ class ScanTypeSchema(Schema):
         ra = data['ra']  # pylint: disable=invalid-name
         dec = data['dec']
         channels = data['channels']
-        return assign_msgs.ScanType(st_id, coordinate_system, ra, dec, channels)
+        return ScanType(st_id, coordinate_system, ra, dec, channels)
 
 
 class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -136,7 +149,7 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
         wf_id = data['workflow_id']
         wf_type = data['workflow_type']
         version = data['version']
-        return assign_msgs.SDPWorkflow(wf_id, wf_type, version)
+        return SDPWorkflow(wf_id, wf_type, version)
 
 
 class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
@@ -157,7 +170,7 @@ class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
         """
         pb_id = data['pb_id']
         pb_type = data['pb_type']
-        return assign_msgs.PbDependency(pb_id, pb_type)
+        return PbDependency(pb_id, pb_type)
 
 
 class ProcessingBlockSchema(Schema):
@@ -189,7 +202,7 @@ class ProcessingBlockSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: PB object populated from data
         """
-        return assign_msgs.ProcessingBlockConfiguration(**data)
+        return ProcessingBlockConfiguration(**data)
 
 
 class SDPConfigurationSchema(Schema):
@@ -210,7 +223,7 @@ class SDPConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
-        return assign_msgs.SDPConfiguration(**data)
+        return SDPConfiguration(**data)
 
 
 @CODEC.register_mapping(assign_msgs.AssignResourcesRequest)
@@ -222,6 +235,7 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
     subarray_id = fields.Integer(data_key='subarrayID', required=True)
     dish = fields.Nested(DishAllocationSchema, data_key='dish', required=True)
     sdp_config = fields.Nested(SDPConfigurationSchema, data_key='sdp', required=True)
+    mccs = fields.Nested(MCCSAllocateSchema, data_key='mccs')
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -239,13 +253,15 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         :return: AssignResources object populated from data
         """
         subarray_id = data['subarray_id']
-        dish_allocation = data['dish']
-        sdp_config = data['sdp_config']
-        return assign_msgs.AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation,
-                                                  sdp_config=sdp_config)
+        # Optional: not required in every case
+        dish_allocation = data.get('dish', None)
+        sdp_config = data.get('sdp_config', None)
+        mccs = data.get('mccs', None)
+        return AssignResourcesRequest(subarray_id, dish_allocation=dish_allocation,
+            sdp_config=sdp_config, mccs_allocate=mccs)
 
 
-@CODEC.register_mapping(assign_msgs.AssignResourcesResponse)
+@CODEC.register_mapping(AssignResourcesResponse)
 class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the AssignResourcesResponse class.
@@ -270,7 +286,7 @@ class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-m
         :return: AssignResourcesResponse object populated from data
         """
         dish_allocation = data['dish']
-        return assign_msgs.AssignResourcesResponse(dish_allocation=dish_allocation)
+        return AssignResourcesResponse(dish_allocation=dish_allocation)
 
 
 @CODEC.register_mapping(release_msgs.ReleaseResourcesRequest)
