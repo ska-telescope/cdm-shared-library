@@ -3,7 +3,7 @@ Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 
 from ska.cdm.messages.central_node.sdp import ProcessingBlockConfiguration
-from ska.cdm.messages.central_node.sdp import PbDependency,ScanType, Channel
+from ska.cdm.messages.central_node.sdp import PbDependency, ScanType, Channel
 from ska.cdm.messages.central_node.sdp import SDPWorkflow, SDPConfiguration
 
 
@@ -17,13 +17,23 @@ def test_channel_equals():
      - freq_max
      - link_map
     """
-    channel1 = Channel(744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
-    channel2 = Channel(744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    channel1 = Channel(
+        744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
+    channel2 = Channel(
+        744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
     assert channel1 == channel2
 
-    assert channel1 != Channel(744, 2000, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
-    assert channel1 != Channel(744, 0, 1, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
-    assert channel1 != Channel(744, 0, 2, 0.36e9, 1.04e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    assert channel1 != Channel(
+        744, 2000, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
+    assert channel1 != Channel(
+        744, 0, 1, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
+    assert channel1 != Channel(
+        744, 0, 2, 0.36e9, 1.04e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
     assert channel1 != Channel(744, 0, 2, 0.35e9, 1.05e9, [[2000, 4], [2200, 5]])
 
 
@@ -40,17 +50,31 @@ def test_scan_type_equals():
     """
     Verify that ScanType objects are considered equal for the same passed parameter list
     """
-    channel_1 = Channel(744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    channel_1 = Channel(
+        744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
     channel_2 = Channel(744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]])
-    scan_type1 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2])
-    scan_type2 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2])
+    scan_type1 = ScanType(
+        "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2]
+    )
+    scan_type2 = ScanType(
+        "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2]
+    )
 
     assert scan_type1 == scan_type2
 
-    assert scan_type1 != ScanType("calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2])
-    assert scan_type1 != ScanType("science_A", "ICRS", "12:29:06.699", "-00:00:47.84", [channel_1, channel_2])
-    assert scan_type1 != ScanType("science_A", "ICRS", "02:42:40.771", "02:03:08.598", [channel_1, channel_2])
-    assert scan_type1 != ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1])
+    assert scan_type1 != ScanType(
+        "calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2]
+    )
+    assert scan_type1 != ScanType(
+        "science_A", "ICRS", "12:29:06.699", "-00:00:47.84", [channel_1, channel_2]
+    )
+    assert scan_type1 != ScanType(
+        "science_A", "ICRS", "02:42:40.771", "02:03:08.598", [channel_1, channel_2]
+    )
+    assert scan_type1 != ScanType(
+        "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1]
+    )
 
 
 def test_scan_type_not_equal_to_other_objects():
@@ -58,7 +82,9 @@ def test_scan_type_not_equal_to_other_objects():
     Verify that ScanType objects are not considered equal to objects of
     other types.
     """
-    channel = Channel(744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    channel = Channel(
+        744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
     scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
     assert scan_type != 1
 
@@ -70,13 +96,13 @@ def test_workflow_equals():
      - the same type
      - the same version
     """
-    workflow1 = SDPWorkflow('id', 'type', 'version')
-    workflow2 = SDPWorkflow('id', 'type', 'version')
+    workflow1 = SDPWorkflow("id", "type", "version")
+    workflow2 = SDPWorkflow("id", "type", "version")
     assert workflow1 == workflow2
 
-    assert workflow1 != SDPWorkflow('', 'type', 'version')
-    assert workflow1 != SDPWorkflow('id', '', 'version')
-    assert workflow1 != SDPWorkflow('id', 'type', '')
+    assert workflow1 != SDPWorkflow("", "type", "version")
+    assert workflow1 != SDPWorkflow("id", "", "version")
+    assert workflow1 != SDPWorkflow("id", "type", "")
 
 
 def test_workflow_not_equal_to_other_objects():
@@ -84,7 +110,7 @@ def test_workflow_not_equal_to_other_objects():
     Verify that SDPWorkflow objects are not considered equal to objects of
     other types.
     """
-    workflow = SDPWorkflow('id', 'type', 'version')
+    workflow = SDPWorkflow("id", "type", "version")
     assert workflow != 1
 
 
@@ -123,9 +149,15 @@ def test_processing_block_equals():
 
     assert pb1 == pb2
 
-    assert pb1 != ProcessingBlockConfiguration("pb-mvp01-20200325-00001", w_flow, {}, [dep])
-    assert pb1 != ProcessingBlockConfiguration("pb-mvp01-20200325-00001", None, {}, [dep])
-    assert pb1 != ProcessingBlockConfiguration("pb-mvp01-20200325-00003", w_flow, None, [dep])
+    assert pb1 != ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00001", w_flow, {}, [dep]
+    )
+    assert pb1 != ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00001", None, {}, [dep]
+    )
+    assert pb1 != ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00003", w_flow, None, [dep]
+    )
     assert pb1 != ProcessingBlockConfiguration("pb-mvp01-20200325-00003", w_flow, {})
 
 
@@ -142,9 +174,15 @@ def test_sdp_configuration_block_equals():
     """
     Verify that SDPConfiguration objects are considered equal
     """
-    channel = Channel(744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
-    scan_type1 = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
-    scan_type2 = ScanType("calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
+    channel = Channel(
+        744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
+    scan_type1 = ScanType(
+        "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel]
+    )
+    scan_type2 = ScanType(
+        "calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [channel]
+    )
 
     scan_types = [scan_type1, scan_type2]
 
@@ -163,13 +201,21 @@ def test_sdp_configuration_block_equals():
 
     processing_blocks = [pb1, pb2, pb3, pb4]
 
-    sdp1 = SDPConfiguration("sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks)
-    sdp2 = SDPConfiguration("sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks)
+    sdp1 = SDPConfiguration(
+        "sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks
+    )
+    sdp2 = SDPConfiguration(
+        "sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks
+    )
 
     assert sdp1 == sdp2
 
-    assert sdp1 != SDPConfiguration("sbi-mvp01-20200325-00001", 0.0, scan_types, processing_blocks)
-    assert sdp1 != SDPConfiguration("sbi-mvp01-20200325-00001", 100.0, None, processing_blocks)
+    assert sdp1 != SDPConfiguration(
+        "sbi-mvp01-20200325-00001", 0.0, scan_types, processing_blocks
+    )
+    assert sdp1 != SDPConfiguration(
+        "sbi-mvp01-20200325-00001", 100.0, None, processing_blocks
+    )
     assert sdp1 != SDPConfiguration("sbi-mvp01-20200325-00002", 100.0, scan_types, None)
     assert sdp1 != SDPConfiguration(None, None, None, None)
 
