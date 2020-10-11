@@ -2,7 +2,6 @@
 The scan module defines simple Python representations of the structured
 request for a TMC SubArrayNode.Scan command.
 """
-from datetime import timedelta
 
 __all__ = ["ScanRequest"]
 

@@ -7,13 +7,14 @@ from marshmallow import Schema, fields, post_load
 
 import ska.cdm.messages.subarray_node.configure as configure_msgs
 
-__all__ = ['SDPConfigurationSchema']
+__all__ = ["SDPConfigurationSchema"]
 
 
 class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow class for the SDPConfiguration class
     """
+
     scan_type = fields.String(data_key="scan_type")
 
     @post_load

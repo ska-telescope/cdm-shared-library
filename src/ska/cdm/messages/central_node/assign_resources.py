@@ -2,7 +2,7 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from typing import List, Optional, Dict
+
 from .mccs import MCCSAllocate
 from .sdp import SDPConfiguration
 from .csp import DishAllocation

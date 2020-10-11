@@ -2,11 +2,9 @@
 Unit tests for ska.cdm.schemas module.
 """
 
-import pytest
-
 from ska.cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
-    AssignResourcesResponse
+    AssignResourcesResponse,
 )
 from ska.cdm.messages.central_node.csp import DishAllocation
 from ska.cdm.messages.central_node.mccs import MCCSAllocate
@@ -231,6 +229,8 @@ VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": t
 def sdp_config_for_test():  # pylint: disable=too-many-locals
     """
     Fixture which returns an SDPConfiguration object
+
+    :return: SDPConfiguration
     """
     # scan_type
     channel_1 = Channel(
@@ -300,7 +300,10 @@ def test_marshal_assign_resources_request():
     # MCCS subarray allocation
     mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
     request = AssignResourcesRequest(
-        1, dish_allocation=dish_allocation, sdp_config=sdp_config, mccs_allocate=mccs_allocate
+        1,
+        dish_allocation=dish_allocation,
+        sdp_config=sdp_config,
+        mccs_allocate=mccs_allocate,
     )
     json_str = AssignResourcesRequestSchema().dumps(request)
     assert json_is_equal(json_str, VALID_ASSIGN_RESOURCES_REQUEST)
@@ -313,10 +316,13 @@ def test_unmarshall_assign_resources_request():
     """
     sdp_config = sdp_config_for_test()
     mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
- 
+
     request = AssignResourcesRequestSchema().loads(VALID_ASSIGN_RESOURCES_REQUEST)
     expected = AssignResourcesRequest(
-        1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config, mccs_allocate=mccs_allocate
+        1,
+        DishAllocation(receptor_ids=["0001", "0002"]),
+        sdp_config=sdp_config,
+        mccs_allocate=mccs_allocate,
     )
     assert request == expected
 

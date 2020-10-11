@@ -54,7 +54,7 @@ setuptools.setup(
         'dev':  ['prospector[with_pyroma]', 'yapf', 'isort']
 
     },
-    dependency_links = [
+    dependency_links=[
         "https://pypy.org./project/astropy/"
     ]
 

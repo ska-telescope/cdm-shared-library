@@ -5,8 +5,12 @@ import functools
 import itertools
 import pytest
 
-from ska.cdm.messages.subarray_node.configure import CSPConfiguration, FSPConfiguration, \
-    FSPFunctionMode, ReceiverBand
+from ska.cdm.messages.subarray_node.configure.core import ReceiverBand
+from ska.cdm.messages.subarray_node.configure.csp import (
+    CSPConfiguration,
+    FSPConfiguration,
+    FSPFunctionMode,
+)
 
 
 def test_fsp_configuration_equals():
@@ -21,23 +25,42 @@ def test_fsp_configuration_equals():
     channel_avg_map = list(zip(itertools.count(1, 744), 20 * [0]))
     integration_time = 140
 
-    config1 = FSPConfiguration(fsp_id, mode, slice_id, integration_time, bandwidth,
-                               channel_avg_map)
-    config2 = FSPConfiguration(fsp_id, mode, slice_id, integration_time, bandwidth,
-                               channel_avg_map)
+    config1 = FSPConfiguration(
+        fsp_id, mode, slice_id, integration_time, bandwidth, channel_avg_map
+    )
+    config2 = FSPConfiguration(
+        fsp_id, mode, slice_id, integration_time, bandwidth, channel_avg_map
+    )
     assert config1 == config2
 
-    assert config1 != FSPConfiguration(2, mode, slice_id, integration_time, bandwidth,
-                                       channel_avg_map)
-    assert config1 != FSPConfiguration(fsp_id, FSPFunctionMode.PSS_BF, slice_id,
-                                       integration_time, bandwidth, channel_avg_map)
-    assert config1 != FSPConfiguration(fsp_id, mode, 2, integration_time, bandwidth,
-                                       channel_avg_map)
-    assert config1 != FSPConfiguration(fsp_id, mode, slice_id, 280, bandwidth, channel_avg_map)
-    assert config1 != FSPConfiguration(fsp_id, mode, slice_id, integration_time, 1,
-                                       channel_avg_map)
-    assert config1 != FSPConfiguration(fsp_id, mode, slice_id, integration_time, bandwidth,
-                                       list(zip(itertools.count(1, 744), 20 * [1])))
+    assert config1 != FSPConfiguration(
+        2, mode, slice_id, integration_time, bandwidth, channel_avg_map
+    )
+    assert config1 != FSPConfiguration(
+        fsp_id,
+        FSPFunctionMode.PSS_BF,
+        slice_id,
+        integration_time,
+        bandwidth,
+        channel_avg_map,
+    )
+    assert config1 != FSPConfiguration(
+        fsp_id, mode, 2, integration_time, bandwidth, channel_avg_map
+    )
+    assert config1 != FSPConfiguration(
+        fsp_id, mode, slice_id, 280, bandwidth, channel_avg_map
+    )
+    assert config1 != FSPConfiguration(
+        fsp_id, mode, slice_id, integration_time, 1, channel_avg_map
+    )
+    assert config1 != FSPConfiguration(
+        fsp_id,
+        mode,
+        slice_id,
+        integration_time,
+        bandwidth,
+        list(zip(itertools.count(1, 744), 20 * [1])),
+    )
 
 
 def test_fsp_configuration_not_equal_to_other_objects():
@@ -136,7 +159,6 @@ def test_integration_time_is_within_limits():
         _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1540, 0)
 
 
-
 def test_number_of_channel_avg_mapping_tuples():
     """
     Verify that FSPConfiguration fails if there are an invalid number of
@@ -145,8 +167,9 @@ def test_number_of_channel_avg_mapping_tuples():
     """
     # create a partially applied sn.FSPConfiguration constructor to save having
     # to type the arguments each time
-    fsp_constructor = functools.partial(FSPConfiguration, 1, FSPFunctionMode.CORR, 1, 140,
-                                        0)
+    fsp_constructor = functools.partial(
+        FSPConfiguration, 1, FSPFunctionMode.CORR, 1, 140, 0
+    )
 
     # test for 21 tuples
     channel_avg_map = list(zip(itertools.count(1, 744), 21 * [0]))

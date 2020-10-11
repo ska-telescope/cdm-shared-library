@@ -2,10 +2,9 @@
 The configure package contains modules that define Python classes for all of
 the permissible arguments for a SubArrayNode.configure() call.
 """
-import copy
 
-from .core import PointingConfiguration, Target, ReceiverBand, DishConfiguration
-from .csp import CSPConfiguration, FSPConfiguration, FSPFunctionMode
+from .core import PointingConfiguration, DishConfiguration
+from .csp import CSPConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 from .mccs import MCCSConfiguration

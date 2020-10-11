@@ -10,7 +10,7 @@ from ska.cdm.utils import json_is_equal
 
 VALID_TMCCONFIGURATION_JSON = """
 {
-  "scanDuration": 123.45 
+  "scanDuration": 123.45
 }
 """
 

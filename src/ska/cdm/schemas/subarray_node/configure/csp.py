@@ -7,33 +7,43 @@ import copy
 from marshmallow import Schema, fields, post_load, pre_dump, post_dump
 from marshmallow.validate import OneOf
 
-import ska.cdm.messages.subarray_node.configure as configure_msgs
+from ska.cdm.messages.subarray_node.configure.csp import (
+    FSPFunctionMode,
+    FSPConfiguration,
+    CSPConfiguration,
+)
+from ska.cdm.messages.subarray_node.configure.core import ReceiverBand
 
-__all__ = ['CSPConfigurationSchema',
-           'FSPConfigurationSchema']
+__all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema"]
 
 
 class FSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.FSPConfiguration class
     """
-    fsp_id = fields.Integer(data_key='fspID', required=True)
-    function_mode = fields.String(data_key='functionMode',
-                                  validate=OneOf(['CORR', 'PSS-BF', 'PST-BF', 'VLBI']),
-                                  required=True)
-    frequency_slice_id = fields.Integer(data_key='frequencySliceID', required=True)
-    corr_bandwidth = fields.Integer(data_key='corrBandwidth', required=True)
-    integration_time = fields.Integer(data_key='integrationTime', required=True)
-    channel_averaging_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
-                                        data_key='channelAveragingMap')
-    output_link_map = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
-                                  data_key='outputLinkMap')
-    fsp_channel_offset = fields.Integer(data_key='fspChannelOffset')
-    zoom_window_tuning = fields.Integer(data_key='zoomWindowTuning')
+
+    fsp_id = fields.Integer(data_key="fspID", required=True)
+    function_mode = fields.String(
+        data_key="functionMode",
+        validate=OneOf(["CORR", "PSS-BF", "PST-BF", "VLBI"]),
+        required=True,
+    )
+    frequency_slice_id = fields.Integer(data_key="frequencySliceID", required=True)
+    corr_bandwidth = fields.Integer(data_key="corrBandwidth", required=True)
+    integration_time = fields.Integer(data_key="integrationTime", required=True)
+    channel_averaging_map = fields.List(
+        fields.Tuple((fields.Integer, fields.Integer)), data_key="channelAveragingMap"
+    )
+    output_link_map = fields.List(
+        fields.Tuple((fields.Integer, fields.Integer)), data_key="outputLinkMap"
+    )
+    fsp_channel_offset = fields.Integer(data_key="fspChannelOffset")
+    zoom_window_tuning = fields.Integer(data_key="zoomWindowTuning")
 
     @pre_dump
-    def convert(self, fsp_configuration: configure_msgs.FSPConfiguration,
-                **_):  # pylint: disable=no-self-use
+    def convert(
+        self, fsp_configuration: FSPConfiguration, **_
+    ):  # pylint: disable=no-self-use
         """
         Process FSPConfiguration instance so that it is ready for conversion
         to JSON.
@@ -67,38 +77,45 @@ class FSPConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: FSPConfiguration instance populated to match JSON
         """
-        fsp_id = data['fsp_id']
-        function_mode = data['function_mode']
-        function_mode_enum = configure_msgs.FSPFunctionMode(function_mode)
-        frequency_slice_id = int(data['frequency_slice_id'])
-        corr_bandwidth = data['corr_bandwidth']
-        integration_time = data['integration_time']
+        fsp_id = data["fsp_id"]
+        function_mode = data["function_mode"]
+        function_mode_enum = FSPFunctionMode(function_mode)
+        frequency_slice_id = int(data["frequency_slice_id"])
+        corr_bandwidth = data["corr_bandwidth"]
+        integration_time = data["integration_time"]
 
         # optional arguments
-        channel_averaging_map = data.get('channel_averaging_map', None)
-        output_link_map = data.get('output_link_map', None)
-        fsp_channel_offset = data.get('fsp_channel_offset', None)
-        zoom_window_tuning = data.get('zoom_window_tuning', None)
+        channel_averaging_map = data.get("channel_averaging_map", None)
+        output_link_map = data.get("output_link_map", None)
+        fsp_channel_offset = data.get("fsp_channel_offset", None)
+        zoom_window_tuning = data.get("zoom_window_tuning", None)
 
-        return configure_msgs.FSPConfiguration(fsp_id, function_mode_enum, frequency_slice_id,
-                                               integration_time, corr_bandwidth,
-                                               channel_averaging_map=channel_averaging_map,
-                                               output_link_map=output_link_map,
-                                               fsp_channel_offset=fsp_channel_offset,
-                                               zoom_window_tuning=zoom_window_tuning)
+        return FSPConfiguration(
+            fsp_id,
+            function_mode_enum,
+            frequency_slice_id,
+            integration_time,
+            corr_bandwidth,
+            channel_averaging_map=channel_averaging_map,
+            output_link_map=output_link_map,
+            fsp_channel_offset=fsp_channel_offset,
+            zoom_window_tuning=zoom_window_tuning,
+        )
 
 
 class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
-    csp_id = fields.String(data_key='id', required=True)
-    frequency_band = fields.String(data_key='frequencyBand', required=True)
-    fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key='fsp')
+
+    csp_id = fields.String(data_key="id", required=True)
+    frequency_band = fields.String(data_key="frequencyBand", required=True)
+    fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key="fsp")
 
     @pre_dump
-    def convert(self, csp_configuration: configure_msgs.CSPConfiguration,
-                **_):  # pylint: disable=no-self-use
+    def convert(
+        self, csp_configuration: CSPConfiguration, **_
+    ):  # pylint: disable=no-self-use
         """
         Process CSPConfiguration instance so that it is ready for conversion
         to JSON.
@@ -112,7 +129,6 @@ class CSPConfigurationSchema(Schema):
         copied.frequency_band = csp_configuration.frequency_band.value
         return copied
 
-
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -122,9 +138,9 @@ class CSPConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: CSPConfiguration instance populated to match JSON
         """
-        csp_id = data['csp_id']
-        frequency_band = data['frequency_band']
-        frequency_band_enum = configure_msgs.ReceiverBand(frequency_band)
-        fsp_configs = data['fsp_configs']
+        csp_id = data["csp_id"]
+        frequency_band = data["frequency_band"]
+        frequency_band_enum = ReceiverBand(frequency_band)
+        fsp_configs = data["fsp_configs"]
 
-        return configure_msgs.CSPConfiguration(csp_id, frequency_band_enum, fsp_configs)
+        return CSPConfiguration(csp_id, frequency_band_enum, fsp_configs)
