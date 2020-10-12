@@ -48,11 +48,10 @@ def test_codec_loads_mccs_only():
       }
     }"""
     mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
-    unmarshalled = CODEC.loads(AssignResourcesRequest, VALID_MCCS_ASSIGN_RESOURCES_REQUEST)
-    expected = AssignResourcesRequest(
-        1,
-        mccs_allocate=mccs_allocate,
+    unmarshalled = CODEC.loads(
+        AssignResourcesRequest, VALID_MCCS_ASSIGN_RESOURCES_REQUEST
     )
+    expected = AssignResourcesRequest(1, mccs_allocate=mccs_allocate,)
     assert expected == unmarshalled
 
 
