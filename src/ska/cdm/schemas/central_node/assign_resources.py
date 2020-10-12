@@ -29,8 +29,8 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
     """
 
     subarray_id = fields.Integer(data_key="subarrayID", required=True)
-    dish = fields.Nested(DishAllocationSchema, data_key="dish", required=True)
-    sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp", required=True)
+    dish = fields.Nested(DishAllocationSchema, data_key="dish")
+    sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
     mccs = fields.Nested(MCCSAllocateSchema, data_key="mccs")
 
     class Meta:  # pylint: disable=too-few-public-methods
