@@ -10,6 +10,7 @@ from ska.cdm.schemas import CODEC
 __all__ = ["DishAllocationSchema", "DishAllocationResponseSchema"]
 
 
+@CODEC.register_mapping(DishAllocation)
 class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the DishAllocation class.

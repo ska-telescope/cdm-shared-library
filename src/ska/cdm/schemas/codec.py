@@ -21,6 +21,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         Marshmallow schema and the CDM class it serialises.
 
         :param cdm_class: the CDM class this schema maps to
+        :return: the decorator
         """
 
         def decorator(class_definition):

@@ -3,6 +3,8 @@ The configure package contains modules that define Python classes for all of
 the permissible arguments for a SubArrayNode.configure() call.
 """
 
+__all__ = ["ConfigureRequest"]
+
 from .core import PointingConfiguration, DishConfiguration
 from .csp import CSPConfiguration
 from .sdp import SDPConfiguration

@@ -8,6 +8,7 @@ from marshmallow import Schema, fields, post_load
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnBeamConfiguration
+from ska.cdm.schemas import CODEC
 
 __all__ = [
     "MCCSConfigurationSchema",
@@ -64,6 +65,7 @@ class StnBeamConfigurationSchema(Schema):
         )
 
 
+@CODEC.register_mapping(MCCSConfiguration)
 class MCCSConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.MCCSConfiguration class

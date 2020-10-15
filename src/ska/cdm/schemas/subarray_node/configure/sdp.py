@@ -5,11 +5,13 @@ SDP configuration to and from a JSON representation.
 
 from marshmallow import Schema, fields, post_load
 
-import ska.cdm.messages.subarray_node.configure as configure_msgs
+from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
+from ska.cdm.schemas import CODEC
 
 __all__ = ["SDPConfigurationSchema"]
 
 
+@CODEC.register_mapping(SDPConfiguration)
 class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow class for the SDPConfiguration class
@@ -25,4 +27,4 @@ class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration instance populated to match JSON
         """
-        return configure_msgs.SDPConfiguration(**data)
+        return SDPConfiguration(**data)

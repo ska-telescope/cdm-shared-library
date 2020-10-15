@@ -13,10 +13,12 @@ from ska.cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
 )
 from ska.cdm.messages.subarray_node.configure.core import ReceiverBand
+from ska.cdm.schemas import CODEC
 
 __all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema"]
 
 
+@CODEC.register_mapping(FSPConfiguration)
 class FSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.FSPConfiguration class
@@ -103,6 +105,7 @@ class FSPConfigurationSchema(Schema):
         )
 
 
+@CODEC.register_mapping(CSPConfiguration)
 class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class

@@ -12,6 +12,7 @@ from ska.cdm.messages.central_node.sdp import (
     SDPWorkflow,
     PbDependency,
 )
+from ska.cdm.schemas import CODEC
 
 __all__ = [
     "ScanTypeSchema",
@@ -160,6 +161,7 @@ class ProcessingBlockSchema(Schema):
         return ProcessingBlockConfiguration(**data)
 
 
+@CODEC.register_mapping(SDPConfiguration)
 class SDPConfigurationSchema(Schema):
     """
     Marsmallow class for the SDPConfiguration class
