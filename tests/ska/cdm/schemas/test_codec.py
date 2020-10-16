@@ -24,7 +24,9 @@ def test_codec_loads():
     Verify that the codec unmarshalls objects correctly.
     """
     sdp_config = sdp_config_for_test()
-    mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
     unmarshalled = CODEC.loads(AssignResourcesRequest, VALID_ASSIGN_RESOURCES_REQUEST)
     expected = AssignResourcesRequest(
         1,
@@ -44,10 +46,13 @@ def test_codec_loads_mccs_only():
       "mccs": {
         "subarray_id": 1,
         "station_ids": [1, 2, 3, 4],
+        "channels": [1, 2, 3, 4, 5],
         "station_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
       }
     }"""
-    mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
     unmarshalled = CODEC.loads(
         AssignResourcesRequest, VALID_MCCS_ASSIGN_RESOURCES_REQUEST
     )
@@ -60,7 +65,9 @@ def test_codec_dumps():
     Verify that the codec marshalls objects to JSON.
     """
     sdp_config = sdp_config_for_test()
-    mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
     expected = VALID_ASSIGN_RESOURCES_REQUEST
     obj = AssignResourcesRequest(
         1,

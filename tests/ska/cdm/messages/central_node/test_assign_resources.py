@@ -50,18 +50,32 @@ def test_assign_resources_request_eq():
         1, dish_allocation=None, sdp_config=sdp_config
     )
 
-    mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
     request = AssignResourcesRequest(1, mccs_allocate=mccs_allocate)
     assert request == AssignResourcesRequest(1, mccs_allocate=mccs_allocate)
     assert request != AssignResourcesRequest(2, mccs_allocate=mccs_allocate)
     assert request != AssignResourcesRequest(
-        1, mccs_allocate=MCCSAllocate(2, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+        1,
+        mccs_allocate=MCCSAllocate(
+            2, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        ),
     )
     assert request != AssignResourcesRequest(
-        1, mccs_allocate=MCCSAllocate(1, [3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+        1,
+        mccs_allocate=MCCSAllocate(
+            1, [3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        ),
     )
     assert request != AssignResourcesRequest(
-        1, mccs_allocate=MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6])
+        1, mccs_allocate=MCCSAllocate(1, [1, 2, 3, 4], [3, 4, 5], [1, 2, 3, 4, 5, 6])
+    )
+    assert request != AssignResourcesRequest(
+        1,
+        mccs_allocate=MCCSAllocate(
+            1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]
+        ),
     )
 
 
@@ -77,7 +91,9 @@ def test_assign_resources_request_eq_with_other_objects():
     assert request != 1
     assert request != object()
 
-    mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
     request = AssignResourcesRequest(1, mccs_allocate=mccs_allocate)
     assert request != 1
     assert request != object()

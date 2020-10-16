@@ -18,6 +18,7 @@ class MCCSAllocateSchema(Schema):
 
     subarray_id = fields.Integer(data_key="subarray_id", required=True)
     station_ids = fields.List(fields.Integer, data_key="station_ids")
+    channels = fields.List(fields.Integer, data_key="channels")
     station_beam_ids = fields.List(fields.Integer, data_key="station_beam_ids")
 
     @post_load
@@ -32,5 +33,6 @@ class MCCSAllocateSchema(Schema):
         """
         subarray_id = data["subarray_id"]
         station_ids = data["station_ids"]
+        channels = data["channels"]
         station_beam_ids = data["station_beam_ids"]
-        return MCCSAllocate(subarray_id, station_ids, station_beam_ids)
+        return MCCSAllocate(subarray_id, station_ids, channels, station_beam_ids)

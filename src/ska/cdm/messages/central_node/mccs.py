@@ -19,7 +19,11 @@ class MCCSAllocate:
     """
 
     def __init__(
-        self, subarray_id: int, station_ids: List[int], station_beam_ids: List[int],
+        self,
+        subarray_id: int,
+        station_ids: List[int],
+        channels: List[int],
+        station_beam_ids: List[int],
     ):
         """
         Create a new Subarray object.
@@ -28,11 +32,14 @@ class MCCSAllocate:
         :type subarray_id: int
         :param station_ids: stations id's to allocate
         :type station_ids: List[int]
+        :param channels: channels
+        :type channels: List[int]
         :param station_beam_ids: station beam id's to allocate
         :type station_beam_ids: List[int]
         """
         self.subarray_id = subarray_id
         self.station_ids = list(station_ids)
+        self.channels = list(channels)
         self.station_beam_ids = list(station_beam_ids)
 
     def __eq__(self, other):
@@ -50,5 +57,6 @@ class MCCSAllocate:
         return (
             self.subarray_id == other.subarray_id
             and self.station_ids == other.station_ids
+            and self.channels == other.channels
             and self.station_beam_ids == other.station_beam_ids
         )

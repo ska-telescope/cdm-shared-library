@@ -122,6 +122,7 @@ VALID_ASSIGN_RESOURCES_REQUEST = """{
   "mccs": {
     "subarray_id": 1,
     "station_ids": [1, 2, 3, 4],
+    "channels": [1, 2, 3, 4, 5],
     "station_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
   }
 }"""
@@ -298,7 +299,9 @@ def test_marshal_assign_resources_request():
     # Dish allocation
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
     # MCCS subarray allocation
-    mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
     request = AssignResourcesRequest(
         1,
         dish_allocation=dish_allocation,
@@ -315,7 +318,9 @@ def test_unmarshall_assign_resources_request():
     object.
     """
     sdp_config = sdp_config_for_test()
-    mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
 
     request = AssignResourcesRequestSchema().loads(VALID_ASSIGN_RESOURCES_REQUEST)
     expected = AssignResourcesRequest(
