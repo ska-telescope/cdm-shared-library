@@ -5,7 +5,7 @@ request and response for the TMC CentralNode.AssignResources command.
 
 from .mccs import MCCSAllocate
 from .sdp import SDPConfiguration
-from .csp import DishAllocation
+from .common import DishAllocation
 
 __all__ = ["AssignResourcesRequest", "AssignResourcesResponse"]
 

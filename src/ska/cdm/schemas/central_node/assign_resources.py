@@ -8,7 +8,7 @@ from ska.cdm.messages.central_node.assign_resources import AssignResourcesRespon
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
-from ska.cdm.schemas.central_node.csp import (
+from ska.cdm.schemas.central_node.common import (
     DishAllocationSchema,
     DishAllocationResponseSchema,
 )

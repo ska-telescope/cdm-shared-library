@@ -18,6 +18,6 @@ from .assign_resources import (
     ReleaseResourcesRequestSchema,
 )
 
-from .csp import DishAllocationSchema, DishAllocationResponseSchema
+from .common import DishAllocationSchema, DishAllocationResponseSchema
 from .sdp import SDPConfigurationSchema
 from .mccs import MCCSAllocateSchema

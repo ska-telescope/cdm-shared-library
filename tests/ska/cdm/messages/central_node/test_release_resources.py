@@ -4,10 +4,8 @@ module.
 """
 import pytest
 
-from ska.cdm.messages.central_node.release_resources import (
-    DishAllocation,
-    ReleaseResourcesRequest,
-)
+from ska.cdm.messages.central_node.common import DishAllocation
+from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 
 
 def test_release_resources_request_eq():

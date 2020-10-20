@@ -4,7 +4,7 @@ Unit tests for the CentralNode.AssignResources request/response mapper module.
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesResponse
-from ska.cdm.messages.central_node.csp import DishAllocation
+from ska.cdm.messages.central_node.common import DishAllocation
 from ska.cdm.messages.central_node.sdp import (
     SDPWorkflow,
     SDPConfiguration,

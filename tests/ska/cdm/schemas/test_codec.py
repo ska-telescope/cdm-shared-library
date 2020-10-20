@@ -4,7 +4,7 @@ Unit tests for the ska.cdm.schemas.codec module.
 import os.path
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
-from ska.cdm.messages.central_node.csp import DishAllocation
+from ska.cdm.messages.central_node.common import DishAllocation
 from ska.cdm.messages.central_node.mccs import MCCSAllocate
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 from ska.cdm.messages.subarray_node.configure.core import (

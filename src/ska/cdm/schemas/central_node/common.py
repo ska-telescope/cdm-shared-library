@@ -4,7 +4,7 @@ Central Node message classes to/from a JSON representation.
 """
 from marshmallow import Schema, fields, post_load
 
-from ska.cdm.messages.central_node.csp import DishAllocation
+from ska.cdm.messages.central_node.common import DishAllocation
 from ska.cdm.schemas import CODEC
 
 __all__ = ["DishAllocationSchema", "DishAllocationResponseSchema"]
