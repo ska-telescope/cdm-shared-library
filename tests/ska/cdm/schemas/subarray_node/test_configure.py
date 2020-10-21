@@ -1,23 +1,25 @@
 """
 Unit tests for the ska.cdm.schemas.subarray_node.configure module.
 """
-import itertools
+
 from datetime import timedelta
 
-from ska.cdm.messages.subarray_node.configure import (
-    ConfigureRequest,
+from ska.cdm.messages.subarray_node.configure import ConfigureRequest
+from ska.cdm.messages.subarray_node.configure.tmc import TMCConfiguration
+from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
+from ska.cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
-    DishConfiguration,
     FSPConfiguration,
-    FSPFunctionMode,
-    PointingConfiguration,
+    FSPFunctionMode
+)
+from ska.cdm.messages.subarray_node.configure.core import (
+    DishConfiguration,
     ReceiverBand,
-    SDPConfiguration,
-    TMCConfiguration,
+    PointingConfiguration,
     Target,
 )
 from ska.cdm.schemas.subarray_node.configure import ConfigureRequestSchema
-from tests.ska.cdm.schemas.utils import json_is_equal
+from ska.cdm.utils import json_is_equal
 
 VALID_CONFIGURE_REQUEST = """
 {
@@ -25,8 +27,8 @@ VALID_CONFIGURE_REQUEST = """
     "target": {
       "system": "ICRS",
       "name": "M51",
-      "RA": "13:29:52.698",       
-      "dec": "+47:11:42.93"      
+      "RA": "13:29:52.698",
+      "dec": "+47:11:42.93"
     }
   },
   "dish": {
@@ -86,18 +88,30 @@ def test_marshall_configure_request():
     sdp_config = SDPConfiguration("science_A")
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     # TODO refactor this as a builder, consolidate duplicate code
-    fsp_config_1 = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0,
-                                    channel_averaging_map=[(0, 2), (744, 0)],
-                                    fsp_channel_offset=0,
-                                    output_link_map=[(0, 0), (200, 1)],
-                                    )
-    fsp_config_2 = FSPConfiguration(2, FSPFunctionMode.CORR, 2, 1400, 1,
-                                    channel_averaging_map=[(0, 2), (744, 0)],
-                                    fsp_channel_offset=744,
-                                    output_link_map=[(0, 4), (200, 5)],
-                                    zoom_window_tuning=4700000
-                                    )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2])
+    fsp_config_1 = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_averaging_map=[(0, 2), (744, 0)],
+        fsp_channel_offset=0,
+        output_link_map=[(0, 0), (200, 1)],
+    )
+    fsp_config_2 = FSPConfiguration(
+        2,
+        FSPFunctionMode.CORR,
+        2,
+        1400,
+        1,
+        channel_averaging_map=[(0, 2), (744, 0)],
+        fsp_channel_offset=744,
+        output_link_map=[(0, 4), (200, 5)],
+        zoom_window_tuning=4700000,
+    )
+    csp_config = CSPConfiguration(
+        csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
@@ -106,7 +120,6 @@ def test_marshall_configure_request():
     request_json = ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST)
-
 
 
 def test_unmarshall_configure_request_from_json():
@@ -125,18 +138,30 @@ def test_unmarshall_configure_request_from_json():
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration("science_A")
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config_1 = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0,
-                                    channel_averaging_map=[(0, 2), (744, 0)],
-                                    fsp_channel_offset=0,
-                                    output_link_map=[(0, 0), (200, 1)],
-                                    )
-    fsp_config_2 = FSPConfiguration(2, FSPFunctionMode.CORR, 2, 1400, 1,
-                                    channel_averaging_map=[(0, 2), (744, 0)],
-                                    fsp_channel_offset=744,
-                                    output_link_map=[(0, 4), (200, 5)],
-                                    zoom_window_tuning=4700000
-                                    )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2])
+    fsp_config_1 = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_averaging_map=[(0, 2), (744, 0)],
+        fsp_channel_offset=0,
+        output_link_map=[(0, 0), (200, 1)],
+    )
+    fsp_config_2 = FSPConfiguration(
+        2,
+        FSPFunctionMode.CORR,
+        2,
+        1400,
+        1,
+        channel_averaging_map=[(0, 2), (744, 0)],
+        fsp_channel_offset=744,
+        output_link_map=[(0, 4), (200, 5)],
+        zoom_window_tuning=4700000,
+    )
+    csp_config = CSPConfiguration(
+        csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -144,7 +169,7 @@ def test_unmarshall_configure_request_from_json():
         dish=dish_config,
         sdp=sdp_config,
         csp=csp_config,
-        tmc=tmc_config
+        tmc=tmc_config,
     )
     unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
 
@@ -169,18 +194,30 @@ def test_unmarshall_configure_for_later_request_from_json():
     sdp_config = SDPConfiguration("science_A")
 
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config_1 = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0,
-                                    channel_averaging_map=[(0, 2), (744, 0)],
-                                    fsp_channel_offset=0,
-                                    output_link_map=[(0, 0), (200, 1)],
-                                    )
-    fsp_config_2 = FSPConfiguration(2, FSPFunctionMode.CORR, 2, 1400, 1,
-                                    channel_averaging_map=[(0, 2), (744, 0)],
-                                    fsp_channel_offset=744,
-                                    output_link_map=[(0, 4), (200, 5)],
-                                    zoom_window_tuning=4700000
-                                    )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2])
+    fsp_config_1 = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_averaging_map=[(0, 2), (744, 0)],
+        fsp_channel_offset=0,
+        output_link_map=[(0, 0), (200, 1)],
+    )
+    fsp_config_2 = FSPConfiguration(
+        2,
+        FSPFunctionMode.CORR,
+        2,
+        1400,
+        1,
+        channel_averaging_map=[(0, 2), (744, 0)],
+        fsp_channel_offset=744,
+        output_link_map=[(0, 4), (200, 5)],
+        zoom_window_tuning=4700000,
+    )
+    csp_config = CSPConfiguration(
+        csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -188,15 +225,14 @@ def test_unmarshall_configure_for_later_request_from_json():
         dish=dish_config,
         sdp=sdp_config,
         csp=csp_config,
-        tmc=tmc_config
+        tmc=tmc_config,
     )
-    unmarshalled = ConfigureRequestSchema().loads(
-        VALID_CONFIGURE_REQUEST
-    )
+    unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST)
 
     assert expected.sdp == unmarshalled.sdp
 
     assert unmarshalled == expected
+
 
 VALID_CONFIGURE_REQUEST_NO_CAM = """
 {
@@ -204,8 +240,8 @@ VALID_CONFIGURE_REQUEST_NO_CAM = """
     "target": {
       "system": "ICRS",
       "name": "M51",
-      "RA": "13:29:52.698",       
-      "dec": "+47:11:42.93"      
+      "RA": "13:29:52.698",
+      "dec": "+47:11:42.93"
     }
   },
   "dish": {
@@ -263,7 +299,6 @@ def test_marshall_configure_request_no_cam():
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST_NO_CAM)
 
 
-
 def test_unmarshall_configure_request_from_json_no_cam():
     """
     Verify that a ConfigureRequest can be unmarshalled from JSON.
@@ -290,7 +325,7 @@ def test_unmarshall_configure_request_from_json_no_cam():
         dish=dish_config,
         sdp=sdp_config,
         csp=csp_config,
-        tmc=tmc_config
+        tmc=tmc_config,
     )
     unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST_NO_CAM)
 
@@ -325,15 +360,14 @@ def test_unmarshall_configure_for_later_request_from_json_no_cam():
         dish=dish_config,
         sdp=sdp_config,
         csp=csp_config,
-        tmc=tmc_config
+        tmc=tmc_config,
     )
-    unmarshalled = ConfigureRequestSchema().loads(
-        VALID_CONFIGURE_REQUEST_NO_CAM
-    )
+    unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST_NO_CAM)
 
     assert expected.sdp == unmarshalled.sdp
 
     assert unmarshalled == expected
+
 
 VALID_CONFIGURE_REQUEST_OLM = """
 {
@@ -341,8 +375,8 @@ VALID_CONFIGURE_REQUEST_OLM = """
     "target": {
       "system": "ICRS",
       "name": "M51",
-      "RA": "13:29:52.698",       
-      "dec": "+47:11:42.93"      
+      "RA": "13:29:52.698",
+      "dec": "+47:11:42.93"
     }
   },
   "dish": {
@@ -388,10 +422,17 @@ def test_marshall_configure_request_olm():
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration("science_A")
     channel_avg_map = None
-    output_link_map = [(1,0), (201,1)]
+    output_link_map = [(1, 0), (201, 1)]
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
-                                               output_link_map=output_link_map)
+    fsp_config = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_avg_map,
+        output_link_map=output_link_map,
+    )
     csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -401,7 +442,6 @@ def test_marshall_configure_request_olm():
     request_json = ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST_OLM)
-
 
 
 def test_unmarshall_configure_request_from_json_olm():
@@ -420,10 +460,17 @@ def test_unmarshall_configure_request_from_json_olm():
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration("science_A")
     channel_avg_map = None
-    output_link_map = [(1,0), (201,1)]
+    output_link_map = [(1, 0), (201, 1)]
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
-                                               output_link_map=output_link_map)
+    fsp_config = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_avg_map,
+        output_link_map=output_link_map,
+    )
     csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -432,7 +479,7 @@ def test_unmarshall_configure_request_from_json_olm():
         dish=dish_config,
         sdp=sdp_config,
         csp=csp_config,
-        tmc=tmc_config
+        tmc=tmc_config,
     )
     unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST_OLM)
 
@@ -458,9 +505,16 @@ def test_unmarshall_configure_for_later_request_from_json_olm():
 
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     channel_avg_map = None
-    output_link_map = [(1,0), (201,1)]
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
-                                               output_link_map=output_link_map)
+    output_link_map = [(1, 0), (201, 1)]
+    fsp_config = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_avg_map,
+        output_link_map=output_link_map,
+    )
     csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -469,7 +523,7 @@ def test_unmarshall_configure_for_later_request_from_json_olm():
         dish=dish_config,
         sdp=sdp_config,
         csp=csp_config,
-        tmc=tmc_config
+        tmc=tmc_config,
     )
     unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST_OLM)
 
@@ -477,14 +531,15 @@ def test_unmarshall_configure_for_later_request_from_json_olm():
 
     assert unmarshalled == expected
 
+
 VALID_CONFIGURE_REQUEST_OCO = """
 {
   "pointing": {
     "target": {
       "system": "ICRS",
       "name": "M51",
-      "RA": "13:29:52.698",       
-      "dec": "+47:11:42.93"      
+      "RA": "13:29:52.698",
+      "dec": "+47:11:42.93"
     }
   },
   "dish": {
@@ -532,8 +587,15 @@ def test_marshall_configure_request_oco():
     channel_avg_map = None
     fsp_channel_offset = 12
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
-                                               fsp_channel_offset=fsp_channel_offset)
+    fsp_config = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_avg_map,
+        fsp_channel_offset=fsp_channel_offset,
+    )
     csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -543,7 +605,6 @@ def test_marshall_configure_request_oco():
     request_json = ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST_OCO)
-
 
 
 def test_unmarshall_configure_request_from_json_oco():
@@ -564,8 +625,15 @@ def test_unmarshall_configure_request_from_json_oco():
     channel_avg_map = None
     fsp_channel_offset = 12
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
-                                               fsp_channel_offset=fsp_channel_offset)
+    fsp_config = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_avg_map,
+        fsp_channel_offset=fsp_channel_offset,
+    )
     csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -574,11 +642,12 @@ def test_unmarshall_configure_request_from_json_oco():
         dish=dish_config,
         sdp=sdp_config,
         csp=csp_config,
-        tmc=tmc_config
+        tmc=tmc_config,
     )
     unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST_OCO)
 
     assert unmarshalled == expected
+
 
 VALID_CONFIGURE_REQUEST_ZOOM = """
 {
@@ -586,8 +655,8 @@ VALID_CONFIGURE_REQUEST_ZOOM = """
     "target": {
       "system": "ICRS",
       "name": "M51",
-      "RA": "13:29:52.698",       
-      "dec": "+47:11:42.93"      
+      "RA": "13:29:52.698",
+      "dec": "+47:11:42.93"
     }
   },
   "dish": {
@@ -635,8 +704,15 @@ def test_marshall_configure_request_zoom():
     channel_avg_map = None
     zoom_window_tuning = 4700000
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
-                                               zoom_window_tuning=zoom_window_tuning)
+    fsp_config = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_avg_map,
+        zoom_window_tuning=zoom_window_tuning,
+    )
     csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -646,7 +722,6 @@ def test_marshall_configure_request_zoom():
     request_json = ConfigureRequestSchema().dumps(request)
 
     assert json_is_equal(request_json, VALID_CONFIGURE_REQUEST_ZOOM)
-
 
 
 def test_unmarshall_configure_request_from_json_zoom():
@@ -667,8 +742,15 @@ def test_unmarshall_configure_request_from_json_zoom():
     channel_avg_map = None
     zoom_window_tuning = 4700000
     csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map, \
-                                               zoom_window_tuning=zoom_window_tuning)
+    fsp_config = FSPConfiguration(
+        1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
+        channel_avg_map,
+        zoom_window_tuning=zoom_window_tuning,
+    )
     csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -677,7 +759,7 @@ def test_unmarshall_configure_request_from_json_zoom():
         dish=dish_config,
         sdp=sdp_config,
         csp=csp_config,
-        tmc=tmc_config
+        tmc=tmc_config,
     )
     unmarshalled = ConfigureRequestSchema().loads(VALID_CONFIGURE_REQUEST_ZOOM)
 
@@ -692,7 +774,7 @@ def test_optional_configurations_are_omitted_when_null():
     request = ConfigureRequest()
     request_json = ConfigureRequestSchema().dumps(request)
 
-    expected = '{}'
+    expected = "{}"
     assert json_is_equal(request_json, expected)
 
 

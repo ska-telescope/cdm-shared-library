@@ -9,10 +9,7 @@ from enum import Enum
 
 from astropy.coordinates import SkyCoord
 
-__all__ = ['PointingConfiguration',
-           'Target',
-           'ReceiverBand',
-           'DishConfiguration']
+__all__ = ["PointingConfiguration", "Target", "ReceiverBand", "DishConfiguration"]
 
 
 class Target:
@@ -22,10 +19,11 @@ class Target:
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
+
     OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
 
     #  pylint: disable=too-many-arguments
-    def __init__(self, ra, dec, name='', frame='icrs', unit=('hourangle', 'deg')):
+    def __init__(self, ra, dec, name="", frame="icrs", unit=("hourangle", "deg")):
         self.coord = SkyCoord(ra, dec, unit=unit, frame=frame)
         self.name = name
 
@@ -38,9 +36,11 @@ class Target:
         # defined in different ways.
         sep = self.coord.separation(other.coord)
 
-        return self.name == other.name \
-               and self.coord.frame.name == other.coord.frame.name \
-               and sep.radian < self.OFFSET_MARGIN_IN_RAD
+        return (
+            self.name == other.name
+            and self.coord.frame.name == other.coord.frame.name
+            and sep.radian < self.OFFSET_MARGIN_IN_RAD
+        )
 
     def __repr__(self):
         raw_ra = self.coord.ra.value
@@ -48,15 +48,15 @@ class Target:
         units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
         frame = self.coord.frame.name
         name = self.name
-        return '<Target(ra={!r}, dec={!r}, name={!r}, frame={!r}, unit={!r})>'.format(
+        return "<Target(ra={!r}, dec={!r}, name={!r}, frame={!r}, unit={!r})>".format(
             raw_ra, raw_dec, name, frame, units
         )
 
     def __str__(self):
         frame = self.coord.frame.name
         name = self.name
-        hmsdms = self.coord.to_string(style='hmsdms')
-        return '<Target: {!r} ({} {})>'.format(name, hmsdms, frame)
+        hmsdms = self.coord.to_string(style="hmsdms")
+        return "<Target: {!r} ({} {})>".format(name, hmsdms, frame)
 
 
 class PointingConfiguration:  # pylint: disable=too-few-public-methods
@@ -79,10 +79,10 @@ class ReceiverBand(Enum):
     ReceiverBand is an enumeration of SKA MID receiver bands.
     """
 
-    BAND_1 = '1'
-    BAND_2 = '2'
-    BAND_5A = '5a'
-    BAND_5B = '5b'
+    BAND_1 = "1"
+    BAND_2 = "2"
+    BAND_5A = "5a"
+    BAND_5B = "5b"
 
 
 class DishConfiguration:  # pylint: disable=too-few-public-methods

@@ -2,7 +2,24 @@
 The schemas module defines Marshmallow schemas that map CDM message classes
 and data model classes to/from a JSON representation.
 """
-from .core import *
-from .csp import *
-from .sdp import *
-from .tmc import *
+
+__all__ = [
+    "ConfigureRequestSchema",
+    "DishConfigurationSchema",
+    "PointingSchema",
+    "TargetSchema",
+    "CSPConfigurationSchema",
+    "FSPConfigurationSchema",
+    "SDPConfigurationSchema",
+    "MCCSConfigurationSchema",
+]
+
+from .core import (
+    ConfigureRequestSchema,
+    DishConfigurationSchema,
+    PointingSchema,
+    TargetSchema,
+)
+from .csp import CSPConfigurationSchema, FSPConfigurationSchema
+from .sdp import SDPConfigurationSchema
+from .mccs import MCCSConfigurationSchema

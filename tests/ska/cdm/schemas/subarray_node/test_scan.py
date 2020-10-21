@@ -4,7 +4,7 @@ Unit tests for the ska.cdm.schemas.subarray_node.scan module
 
 from ska.cdm.messages.subarray_node.scan import ScanRequest
 from ska.cdm.schemas.subarray_node.scan import ScanRequestSchema
-from ..utils import json_is_equal
+from ska.cdm.utils import json_is_equal
 
 VALID_SCAN_REQUEST = '{"id": 1}'
 

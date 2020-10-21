@@ -3,15 +3,22 @@ Unit tests for the ska.cdm.subarray_node.configure.common module.
 """
 import copy
 
-from ska.cdm.messages.subarray_node.configure import DishConfiguration, ReceiverBand, Target
-from ska.cdm.schemas.subarray_node.configure import DishConfigurationSchema, TargetSchema
-from ...utils import json_is_equal
+from ska.cdm.messages.subarray_node.configure.core import (
+    DishConfiguration,
+    ReceiverBand,
+    Target,
+)
+from ska.cdm.schemas.subarray_node.configure import (
+    DishConfigurationSchema,
+    TargetSchema,
+)
+from ska.cdm.utils import json_is_equal
 
 VALID_TARGET_JSON = """
 {
-  "RA": "12:34:56.78", 
-  "dec": "+12:34:56.78", 
-  "system": "ICRS", 
+  "RA": "12:34:56.78",
+  "dec": "+12:34:56.78",
+  "system": "ICRS",
   "name": "NGC123"
 }
 """
@@ -23,7 +30,7 @@ def test_marshall_target_to_json():
     """
     Verify that PointingConfiguration Target is marshalled to JSON correctly.
     """
-    target = Target(ra='12h34m56.78s', dec='+12d34m56.78s', name='NGC123')
+    target = Target(ra="12h34m56.78s", dec="+12d34m56.78s", name="NGC123")
     expected = VALID_TARGET_JSON
     json_str = TargetSchema().dumps(target)
     assert json_is_equal(json_str, expected)
@@ -33,7 +40,7 @@ def test_unmarshall_target_from_json():
     """
     Verify that a Target is unmarshalled correctly from JSON.
     """
-    expected = Target(ra='12h34m56.78s', dec='+12d34m56.78s', name='NGC123')
+    expected = Target(ra="12h34m56.78s", dec="+12d34m56.78s", name="NGC123")
     unmarshalled = TargetSchema().loads(VALID_TARGET_JSON)
     assert unmarshalled == expected
 

@@ -8,19 +8,18 @@ from typing import List, Tuple
 
 from . import core
 
-__all__ = ['CSPConfiguration',
-           'FSPConfiguration',
-           'FSPFunctionMode']
+__all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode"]
 
 
 class FSPFunctionMode(enum.Enum):
     """
     FSPFunctionMode is an enumeration of the available FSP modes.
     """
-    CORR = 'CORR'
-    PSS_BF = 'PSS-BF'
-    PST_BF = 'PST-BF'
-    VLBI = 'VLBI'
+
+    CORR = "CORR"
+    PSS_BF = "PSS-BF"
+    PST_BF = "PST-BF"
+    VLBI = "VLBI"
 
 
 class FSPConfiguration:
@@ -30,12 +29,18 @@ class FSPConfiguration:
     """
 
     # pylint: disable=too-many-arguments
-    def __init__(self, fsp_id: int, function_mode: FSPFunctionMode, frequency_slice_id: int,
-                 integration_time: int, corr_bandwidth: int,
-                 channel_averaging_map: List[Tuple] = None,
-                 output_link_map: List[Tuple] = None,
-                 fsp_channel_offset: int = None,
-                 zoom_window_tuning: int = None):
+    def __init__(
+        self,
+        fsp_id: int,
+        function_mode: FSPFunctionMode,
+        frequency_slice_id: int,
+        integration_time: int,
+        corr_bandwidth: int,
+        channel_averaging_map: List[Tuple] = None,
+        output_link_map: List[Tuple] = None,
+        fsp_channel_offset: int = None,
+        zoom_window_tuning: int = None
+    ):
         """
         Create a new FSPConfiguration.
 
@@ -50,38 +55,48 @@ class FSPConfiguration:
         :param output_link_map: Optional output_link_map
         :param fsp_channel_offset: Optional fsp_channel_offset
         :param zoom_window_tuning: Optional zoom_window_tuning
+
+        :raises ValueError: Invalid parameter values entered
         """
 
         if not 1 <= fsp_id <= 27:
-            raise ValueError('FSP ID must be in range 1..27. Got {}'.format(fsp_id))
+            raise ValueError("FSP ID must be in range 1..27. Got {}".format(fsp_id))
         self.fsp_id = fsp_id
 
         self.function_mode = function_mode
 
         if not 1 <= frequency_slice_id <= 26:
-            msg = ('Frequency slice ID must be in range 1..26. Got {}'
-                   ''.format(frequency_slice_id))
+            msg = "Frequency slice ID must be in range 1..26. Got {}" "".format(
+                frequency_slice_id
+            )
             raise ValueError(msg)
         self.frequency_slice_id = frequency_slice_id
 
         if not 0 <= corr_bandwidth <= 6:
-            msg = ('Correlator bandwidth must be in range 0..6. Got {}'.format(corr_bandwidth))
+            msg = "Correlator bandwidth must be in range 0..6. Got {}".format(
+                corr_bandwidth
+            )
             raise ValueError(msg)
         self.corr_bandwidth = corr_bandwidth
 
         if integration_time % 140:
-            msg = ('Integration time must be a multiple of 140. Got {}'
-                   .format(integration_time))
+            msg = "Integration time must be a multiple of 140. Got {}".format(
+                integration_time
+            )
             raise ValueError(msg)
         if not 1 <= (integration_time / 140) <= 10:
-            msg = ('Integration time must in range 1..10 * 140. Got {}'
-                   ''.format(integration_time))
+            msg = "Integration time must in range 1..10 * 140. Got {}" "".format(
+                integration_time
+            )
             raise ValueError(msg)
         self.integration_time = integration_time
 
         if channel_averaging_map and len(channel_averaging_map) > 20:
-            msg = ('Number of tuples in channel averaging map must be 20 or fewer. Got {}'
-                   .format(len(channel_averaging_map)))
+            msg = (
+                "Number of tuples in channel averaging map must be 20 or fewer."
+                f"Got {len(channel_averaging_map)}"
+            )
+
             raise ValueError(msg)
         self.channel_averaging_map = channel_averaging_map
 
@@ -93,15 +108,17 @@ class FSPConfiguration:
     def __eq__(self, other):
         if not isinstance(other, FSPConfiguration):
             return False
-        return self.fsp_id == other.fsp_id \
-            and self.function_mode == other.function_mode \
-            and self.frequency_slice_id == other.frequency_slice_id \
-            and self.corr_bandwidth == other.corr_bandwidth \
-            and self.integration_time == other.integration_time \
-            and self.channel_averaging_map == other.channel_averaging_map \
-            and self.output_link_map == other.output_link_map \
-            and self.fsp_channel_offset == other.fsp_channel_offset \
+        return (
+            self.fsp_id == other.fsp_id
+            and self.function_mode == other.function_mode
+            and self.frequency_slice_id == other.frequency_slice_id
+            and self.corr_bandwidth == other.corr_bandwidth
+            and self.integration_time == other.integration_time
+            and self.channel_averaging_map == other.channel_averaging_map
+            and self.output_link_map == other.output_link_map
+            and self.fsp_channel_offset == other.fsp_channel_offset
             and self.zoom_window_tuning == other.zoom_window_tuning
+        )
 
 
 class CSPConfiguration:
@@ -109,8 +126,12 @@ class CSPConfiguration:
     Class to hold all CSP configuration.
     """
 
-    def __init__(self, csp_id: str, frequency_band: core.ReceiverBand,
-                 fsp_configs: List[FSPConfiguration]):
+    def __init__(
+        self,
+        csp_id: str,
+        frequency_band: core.ReceiverBand,
+        fsp_configs: List[FSPConfiguration],
+    ):
         """
         Create a new CSPConfiguration.
 
@@ -125,6 +146,8 @@ class CSPConfiguration:
     def __eq__(self, other):
         if not isinstance(other, CSPConfiguration):
             return False
-        return self.csp_id == other.csp_id \
-               and self.frequency_band == other.frequency_band \
-               and self.fsp_configs == other.fsp_configs
+        return (
+            self.csp_id == other.csp_id
+            and self.frequency_band == other.frequency_band
+            and self.fsp_configs == other.fsp_configs
+        )

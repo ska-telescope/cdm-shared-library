@@ -14,6 +14,7 @@ htmlcov
 .coverage
 coverage.xml
 .pytest_cache
+.tox
 
 docs/_build
 docs/apidocs
@@ -22,3 +23,8 @@ docs/apidocs
 .idea
 .eclipse
 .vscode
+
+**/.project
+**/.pydevproject
+**/.settings
+

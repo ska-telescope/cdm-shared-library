@@ -18,10 +18,13 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Create the Schema for ScanDuration using timedelta
     """
-    scan_duration = fields.Float(data_key='scanDuration')
+
+    scan_duration = fields.Float(data_key="scanDuration")
 
     @pre_dump
-    def convert_scan_duration_timedelta_to_float(self, data: TMCConfiguration, **_):  # pylint: disable=no-self-use
+    def convert_scan_duration_timedelta_to_float(
+        self, data: TMCConfiguration, **_
+    ):  # pylint: disable=no-self-use
         """
         Process scan_duration and convert it to a float
 
@@ -35,7 +38,9 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         return copied
 
     @post_load
-    def convert_scan_duration_number_to_timedelta(self, data, **_):  # pylint: disable=no-self-use
+    def convert_scan_duration_number_to_timedelta(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a TMConfiguration
 
@@ -43,6 +48,6 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: TMCConfiguration instance populated to match JSON
         """
-        t_to_scan = timedelta(seconds=data.get('scan_duration'))
+        t_to_scan = timedelta(seconds=data.get("scan_duration"))
         tmc_config = TMCConfiguration(t_to_scan)
         return tmc_config
