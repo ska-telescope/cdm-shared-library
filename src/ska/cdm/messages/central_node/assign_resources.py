@@ -18,7 +18,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
 
     def __init__(
         self,
-        subarray_id: int,
+        subarray_id: int = None,
         dish_allocation: DishAllocation = None,
         sdp_config: SDPConfiguration = None,
         mccs_allocate: MCCSAllocate = None,
@@ -31,11 +31,55 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             for this request.
         :param sdp_config: sdp configuration
         :param mccs_allocate: MCCS subarray allocation
+
+        :raises ValueError: if mccs is allocated with dish and sdp_config
         """
         self.subarray_id = subarray_id
         self.dish = dish_allocation
         self.sdp_config = sdp_config
         self.mccs = mccs_allocate
+        if self.mccs is not None and (
+            self.subarray_id is not None
+            or self.dish is not None
+            or self.sdp_config is not None
+        ):
+            raise ValueError("Can't allocate dish and sdp in the same call as mccs")
+
+    @classmethod
+    def from_dish(
+        cls,
+        subarray_id: int,
+        dish_allocation: DishAllocation,
+        sdp_config: SDPConfiguration = None,
+    ):
+        """
+        Create a new AssignResourcesRequest object.
+
+        :param subarray_id: the numeric SubArray ID (1..16)
+        :param dish_allocation: object holding the DISH resource allocation
+            for this request.
+        :param sdp_config: sdp configuration
+
+        :return: AssignResourcesRequest object
+        """
+        obj = cls.__new__(cls)
+        obj.__init__(
+            subarray_id, dish_allocation=dish_allocation, sdp_config=sdp_config
+        )
+        return obj
+
+    @classmethod
+    def from_mccs(cls, mccs_allocate: MCCSAllocate):
+        """
+        Create a new AssignResourcesRequest object.
+
+        :param mccs_allocate: MCCS subarray allocation
+
+        :return: AssignResourcesRequest object
+        """
+        obj = cls.__new__(cls)
+        obj.__init__(mccs_allocate=mccs_allocate)
+        return obj
 
     def __eq__(self, other):
         if not isinstance(other, AssignResourcesRequest):
