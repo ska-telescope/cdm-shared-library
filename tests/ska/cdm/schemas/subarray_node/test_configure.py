@@ -7,10 +7,13 @@ from datetime import timedelta
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 from ska.cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
+from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
+from ska.cdm.messages.subarray_node.configure.mccs import StnBeamConfiguration
+from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
     FSPConfiguration,
-    FSPFunctionMode
+    FSPFunctionMode,
 )
 from ska.cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
@@ -115,7 +118,11 @@ def test_marshall_configure_request():
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
-        pointing_config, dish_config, sdp_config, csp_config, tmc_config
+        pointing=pointing_config,
+        dish=dish_config,
+        sdp=sdp_config,
+        csp=csp_config,
+        tmc=tmc_config,
     )
     request_json = ConfigureRequestSchema().dumps(request)
 
@@ -292,7 +299,11 @@ def test_marshall_configure_request_no_cam():
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
-        pointing_config, dish_config, sdp_config, csp_config, tmc_config
+        pointing=pointing_config,
+        dish=dish_config,
+        sdp=sdp_config,
+        csp=csp_config,
+        tmc=tmc_config,
     )
     request_json = ConfigureRequestSchema().dumps(request)
 
@@ -437,7 +448,11 @@ def test_marshall_configure_request_olm():
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
-        pointing_config, dish_config, sdp_config, csp_config, tmc_config
+        pointing=pointing_config,
+        dish=dish_config,
+        sdp=sdp_config,
+        csp=csp_config,
+        tmc=tmc_config,
     )
     request_json = ConfigureRequestSchema().dumps(request)
 
@@ -600,7 +615,11 @@ def test_marshall_configure_request_oco():
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
-        pointing_config, dish_config, sdp_config, csp_config, tmc_config
+        pointing=pointing_config,
+        dish=dish_config,
+        sdp=sdp_config,
+        csp=csp_config,
+        tmc=tmc_config,
     )
     request_json = ConfigureRequestSchema().dumps(request)
 
@@ -717,7 +736,11 @@ def test_marshall_configure_request_zoom():
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
-        pointing_config, dish_config, sdp_config, csp_config, tmc_config
+        pointing=pointing_config,
+        dish=dish_config,
+        sdp=sdp_config,
+        csp=csp_config,
+        tmc=tmc_config,
     )
     request_json = ConfigureRequestSchema().dumps(request)
 
@@ -785,5 +808,38 @@ def test_configure_request_can_be_created_when_only_required_args_present():
     """
     serialised = '{"dish": {"receiverBand": "1"} }'
     expected = ConfigureRequest(dish=DishConfiguration(ReceiverBand.BAND_1))
+    unmarshalled = ConfigureRequestSchema().loads(serialised)
+    assert expected == unmarshalled
+
+
+def test_configure_request_can_be_created_when_only_mccs_present():
+    """
+    Verify that a ConfigureRequest object can be unmarshalled from JSON when
+    only the required attributes are present.
+    """
+    serialised = """{
+      "mccs": {
+        "stations":[
+          {
+            "station_id": 1
+          }
+        ],
+        "station_beams": [
+          {
+            "station_beam_id":1,
+            "station_ids": [1,2],
+            "channels": [1,2,3,4],
+            "update_rate": 1.0,
+            "sky_coordinates": [0.1, 182.0, 0.5, 45.0, 1.6]
+          }
+        ]
+      }
+    }"""
+    station_config = StnConfiguration(1)
+    station_beam_config = StnBeamConfiguration(
+        1, [1, 2], [1, 2, 3, 4], 1.0, [0.1, 182.0, 0.5, 45.0, 1.6]
+    )
+    mccs_config = MCCSConfiguration([station_config], [station_beam_config])
+    expected = ConfigureRequest(mccs=mccs_config)
     unmarshalled = ConfigureRequestSchema().loads(serialised)
     assert expected == unmarshalled

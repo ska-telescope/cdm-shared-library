@@ -24,6 +24,7 @@ def test_stn_configuration_not_equal_to_other_objects():
     of other types.
     """
     config = StnConfiguration(1)
+    assert config is not None
     assert config != 1
     assert config != object()
 
@@ -73,6 +74,7 @@ def test_stnbeam_configuration_not_equal_to_other_objects():
     config = StnBeamConfiguration(
         1, [1, 2], [1, 2, 3, 4, 5, 6], 1.0, [0.1, 182.0, 0.5, 45.0, 1.6]
     )
+    assert config is not None
     assert config != 1
     assert config != object()
 
@@ -111,5 +113,6 @@ def test_mccs_config_not_equal_to_other_objects():
     )
 
     config = MCCSConfiguration([station_config], [station_beam_config])
+    assert config is not None
     assert config != 1
     assert config != object()

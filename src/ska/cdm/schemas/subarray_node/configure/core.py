@@ -157,7 +157,15 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: ConfigurationRequest instance populated to match JSON
         """
-        return ConfigureRequest(**data)
+        pointing = data.get("pointing", None)
+        dish = data.get("dish", None)
+        sdp = data.get("sdp", None)
+        csp = data.get("csp", None)
+        tmc = data.get("tmc", None)
+        mccs = data.get("mccs", None)
+        return ConfigureRequest(
+            pointing=pointing, dish=dish, sdp=sdp, csp=csp, mccs=mccs, tmc=tmc,
+        )
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use

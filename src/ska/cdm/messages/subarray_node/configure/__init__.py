@@ -25,8 +25,8 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         dish: DishConfiguration = None,
         sdp: SDPConfiguration = None,
         csp: CSPConfiguration = None,
-        tmc: TMCConfiguration = None,
         mccs: MCCSConfiguration = None,
+        tmc: TMCConfiguration = None,
     ):
         self.pointing = pointing
         self.dish = dish
@@ -34,6 +34,12 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         self.csp = csp
         self.tmc = tmc
         self.mccs = mccs
+        if self.mccs is not None and (
+            self.dish is not None or self.sdp is not None or self.csp is not None
+        ):
+            raise ValueError(
+                "Can't allocate dish, csp and sdp in the same call as mccs"
+            )
 
     def __eq__(self, other):
         if not isinstance(other, ConfigureRequest):

@@ -12,6 +12,8 @@ __all__ = [
     "FSPConfigurationSchema",
     "SDPConfigurationSchema",
     "MCCSConfigurationSchema",
+    "StnConfigurationSchema",
+    "StnBeamConfigurationSchema",
 ]
 
 from .core import (
@@ -22,4 +24,8 @@ from .core import (
 )
 from .csp import CSPConfigurationSchema, FSPConfigurationSchema
 from .sdp import SDPConfigurationSchema
-from .mccs import MCCSConfigurationSchema
+from .mccs import (
+    MCCSConfigurationSchema,
+    StnConfigurationSchema,
+    StnBeamConfigurationSchema,
+)
