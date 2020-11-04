@@ -28,7 +28,7 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
     Marshmallow schema for the AssignResourcesRequest class.
     """
 
-    subarray_id = fields.Integer(data_key="subarrayID", required=True)
+    subarray_id = fields.Integer(data_key="subarrayID")
     dish = fields.Nested(DishAllocationSchema, data_key="dish")
     sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
     mccs = fields.Nested(MCCSAllocateSchema, data_key="mccs")
@@ -49,8 +49,7 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         :param _: kwargs passed by Marshmallow
         :return: AssignResources object populated from data
         """
-        subarray_id = data["subarray_id"]
-        # Optional: not required in every case
+        subarray_id = data.get("subarray_id", None)
         dish_allocation = data.get("dish", None)
         sdp_config = data.get("sdp_config", None)
         mccs = data.get("mccs", None)
@@ -60,6 +59,17 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
             sdp_config=sdp_config,
             mccs_allocate=mccs,
         )
+
+    @post_dump
+    def filter_nulls(self, data, **_):
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
 
 
 @CODEC.register_mapping(AssignResourcesResponse)

@@ -16,6 +16,7 @@ from ska.cdm.messages.central_node.sdp import (
     SDPWorkflow,
     PbDependency,
 )
+# from ska.cdm.schemas.central_node.mccs import MCCSAllocateSchema
 from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.schemas.central_node.assign_resources import (
@@ -118,7 +119,10 @@ VALID_ASSIGN_RESOURCES_REQUEST = """{
         ]
       }
     ]
-  },
+  }
+}"""
+
+VALID_MCCS_ALLOCATE_RESOURCES_REQUEST = """{
   "mccs": {
     "subarray_id": 1,
     "station_ids": [1, 2, 3, 4],
@@ -290,7 +294,36 @@ def test_unmarshall_assign_sdp_configuration():
     assert request == expected
 
 
-def test_marshal_assign_resources_request():
+def test_marshal_assign_resources_request_mccs():
+
+    """
+    Verify that MCCSAllocateSchema is marshalled to JSON correctly.
+    """
+    # MCCS subarray allocation
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)
+    json_str = AssignResourcesRequestSchema().dumps(request)
+    assert json_is_equal(json_str, VALID_MCCS_ALLOCATE_RESOURCES_REQUEST)
+
+
+def test_unmarshall_assign_resources_request_mccs():
+    """
+    Verify that JSON can be unmarshalled back to an AssignResourcesRequest
+    object.
+    """
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = AssignResourcesRequestSchema().loads(
+        VALID_MCCS_ALLOCATE_RESOURCES_REQUEST
+    )
+    expected = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)
+    assert request == expected
+
+
+def test_marshal_assign_resources_request_dish():
     """
     Verify that AssignResourcesRequest is marshalled to JSON correctly.
     """
@@ -298,36 +331,23 @@ def test_marshal_assign_resources_request():
     sdp_config = sdp_config_for_test()
     # Dish allocation
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
-    # MCCS subarray allocation
-    mccs_allocate = MCCSAllocate(
-        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    request = AssignResourcesRequest(
-        1,
-        dish_allocation=dish_allocation,
-        sdp_config=sdp_config,
-        mccs_allocate=mccs_allocate,
+    request = AssignResourcesRequest.from_dish(
+        1, dish_allocation=dish_allocation, sdp_config=sdp_config,
     )
     json_str = AssignResourcesRequestSchema().dumps(request)
     assert json_is_equal(json_str, VALID_ASSIGN_RESOURCES_REQUEST)
 
 
-def test_unmarshall_assign_resources_request():
+def test_unmarshall_assign_resources_request_dish():
     """
     Verify that JSON can be unmarshalled back to an AssignResourcesRequest
     object.
     """
     sdp_config = sdp_config_for_test()
-    mccs_allocate = MCCSAllocate(
-        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
 
     request = AssignResourcesRequestSchema().loads(VALID_ASSIGN_RESOURCES_REQUEST)
-    expected = AssignResourcesRequest(
-        1,
-        DishAllocation(receptor_ids=["0001", "0002"]),
-        sdp_config=sdp_config,
-        mccs_allocate=mccs_allocate,
+    expected = AssignResourcesRequest.from_dish(
+        1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config,
     )
     assert request == expected
 

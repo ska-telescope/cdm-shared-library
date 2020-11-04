@@ -1,6 +1,7 @@
 """
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
+import pytest
 
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesResponse
@@ -50,33 +51,77 @@ def test_assign_resources_request_eq():
         1, dish_allocation=None, sdp_config=sdp_config
     )
 
+
+def test_assign_resources_request_mccs_eq():
+    """
+    Verify that two AssignResource request objects for the same sub-array and
+    mccs allocation are considered equal.
+    """
     mccs_allocate = MCCSAllocate(
         1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    request = AssignResourcesRequest(1, mccs_allocate=mccs_allocate)
-    assert request == AssignResourcesRequest(1, mccs_allocate=mccs_allocate)
-    assert request != AssignResourcesRequest(2, mccs_allocate=mccs_allocate)
+    request = AssignResourcesRequest(mccs_allocate=mccs_allocate)
+    assert request == AssignResourcesRequest(mccs_allocate=mccs_allocate)
     assert request != AssignResourcesRequest(
-        1,
         mccs_allocate=MCCSAllocate(
             2, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
         ),
     )
     assert request != AssignResourcesRequest(
-        1,
         mccs_allocate=MCCSAllocate(
             1, [3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
         ),
     )
     assert request != AssignResourcesRequest(
-        1, mccs_allocate=MCCSAllocate(1, [1, 2, 3, 4], [3, 4, 5], [1, 2, 3, 4, 5, 6])
+        mccs_allocate=MCCSAllocate(1, [1, 2, 3, 4], [3, 4, 5], [1, 2, 3, 4, 5, 6])
     )
     assert request != AssignResourcesRequest(
-        1,
         mccs_allocate=MCCSAllocate(
             1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]
         ),
     )
+
+
+def test_assign_resources_request_from_mccs():
+    """
+    Verify that two AssignResource request objects for the same sub-array and
+    mccs allocation are considered equal.
+    """
+    mccs_allocate = MCCSAllocate(1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6])
+    request = AssignResourcesRequest.from_mccs(mccs_allocate)
+    assert request == AssignResourcesRequest(
+        mccs_allocate=MCCSAllocate(
+            1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]
+        ),
+    )
+
+
+def test_assign_resources_request_from_dish():
+    """
+    Verify that two AssignResource request objects for the same sub-array and
+    dish allocation are considered equal.
+    """
+    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+    request = AssignResourcesRequest.from_dish(1, dish_allocation=dish_allocation)
+    assert request == AssignResourcesRequest(1, dish_allocation=dish_allocation)
+
+
+def test_assign_resources_request_dish_and_mccs_fail():
+    """
+    Verify that mccs & dish cannot be allocated together
+    """
+    mccs_allocate = MCCSAllocate(
+        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    with pytest.raises(ValueError):
+        subarray_id = 1
+        AssignResourcesRequest(subarray_id, mccs_allocate=mccs_allocate)
+
+    with pytest.raises(ValueError):
+        dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+        AssignResourcesRequest(
+            dish_allocation=dish_allocation, mccs_allocate=mccs_allocate
+        )
 
 
 def test_assign_resources_request_eq_with_other_objects():
@@ -91,10 +136,16 @@ def test_assign_resources_request_eq_with_other_objects():
     assert request != 1
     assert request != object()
 
+
+def test_assign_resources_request_eq_mccs_with_other_objects():
+    """
+    Verify that an AssignResources request object is not considered equal to
+    objects of other types.
+    """
     mccs_allocate = MCCSAllocate(
         1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    request = AssignResourcesRequest(1, mccs_allocate=mccs_allocate)
+    request = AssignResourcesRequest(mccs_allocate=mccs_allocate)
     assert request != 1
     assert request != object()
 

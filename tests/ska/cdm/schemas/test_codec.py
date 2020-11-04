@@ -14,6 +14,7 @@ from ska.cdm.messages.subarray_node.configure.core import (
 from ska.cdm.schemas import CODEC
 from .central_node.test_central_node import (
     VALID_ASSIGN_RESOURCES_REQUEST,
+    VALID_MCCS_ALLOCATE_RESOURCES_REQUEST,
     sdp_config_for_test,
 )
 from ska.cdm.utils import json_is_equal
@@ -24,15 +25,9 @@ def test_codec_loads():
     Verify that the codec unmarshalls objects correctly.
     """
     sdp_config = sdp_config_for_test()
-    mccs_allocate = MCCSAllocate(
-        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
     unmarshalled = CODEC.loads(AssignResourcesRequest, VALID_ASSIGN_RESOURCES_REQUEST)
-    expected = AssignResourcesRequest(
-        1,
-        DishAllocation(receptor_ids=["0001", "0002"]),
-        sdp_config=sdp_config,
-        mccs_allocate=mccs_allocate,
+    expected = AssignResourcesRequest.from_dish(
+        1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config,
     )
     assert expected == unmarshalled
 
@@ -41,40 +36,39 @@ def test_codec_loads_mccs_only():
     """
     Verify that the codec unmarshalls objects correctly.
     """
-    VALID_MCCS_ASSIGN_RESOURCES_REQUEST = """{
-      "subarrayID": 1,
-      "mccs": {
-        "subarray_id": 1,
-        "station_ids": [1, 2, 3, 4],
-        "channels": [1, 2, 3, 4, 5],
-        "station_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
-      }
-    }"""
     mccs_allocate = MCCSAllocate(
         1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     unmarshalled = CODEC.loads(
-        AssignResourcesRequest, VALID_MCCS_ASSIGN_RESOURCES_REQUEST
+        AssignResourcesRequest, VALID_MCCS_ALLOCATE_RESOURCES_REQUEST
     )
-    expected = AssignResourcesRequest(1, mccs_allocate=mccs_allocate,)
+    expected = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)
     assert expected == unmarshalled
 
 
 def test_codec_dumps():
     """
-    Verify that the codec marshalls objects to JSON.
+    Verify that the codec marshalls dish & sdp objects to JSON.
     """
     sdp_config = sdp_config_for_test()
+    expected = VALID_ASSIGN_RESOURCES_REQUEST
+    obj = AssignResourcesRequest(
+        1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config
+    )
+
+    marshalled = CODEC.dumps(obj)
+    assert json_is_equal(marshalled, expected)
+
+
+def test_codec_dumps_mccs():
+    """
+    Verify that the codec marshalls mccs objects to JSON.
+    """
     mccs_allocate = MCCSAllocate(
         1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    expected = VALID_ASSIGN_RESOURCES_REQUEST
-    obj = AssignResourcesRequest(
-        1,
-        DishAllocation(receptor_ids=["0001", "0002"]),
-        sdp_config=sdp_config,
-        mccs_allocate=mccs_allocate,
-    )
+    expected = VALID_MCCS_ALLOCATE_RESOURCES_REQUEST
+    obj = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)
 
     marshalled = CODEC.dumps(obj)
     assert json_is_equal(marshalled, expected)
