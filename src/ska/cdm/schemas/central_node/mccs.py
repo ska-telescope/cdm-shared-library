@@ -17,9 +17,11 @@ class MCCSAllocateSchema(Schema):
     """
 
     subarray_id = fields.Integer(data_key="subarray_id", required=True)
-    station_ids = fields.List(fields.Integer, data_key="station_ids")
-    channels = fields.List(fields.Integer, data_key="channels")
-    station_beam_ids = fields.List(fields.Integer, data_key="station_beam_ids")
+    station_ids = fields.List(fields.Integer, data_key="station_ids", required=True)
+    channels = fields.List(fields.Integer, data_key="channels", required=True)
+    station_beam_ids = fields.List(
+        fields.Integer, data_key="station_beam_ids", required=True
+    )
 
     @post_load
     def create_mccs_allocate(self, data, **_):
