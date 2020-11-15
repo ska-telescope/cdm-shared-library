@@ -34,7 +34,7 @@ assign_resources.py
 The ``assign_resources.py`` module models the the JSON input and response
 for a ``CentralNode.AssignResources()`` command.
 
-Example JSON input modelled by ``AssignResourcesRequest``:
+Example JSON input modelled by ``AssignResourcesRequest`` for MID:
 
 .. code-block:: JSON
 
@@ -95,13 +95,27 @@ Example JSON input modelled by ``AssignResourcesRequest``:
       }
   }
 
-Example JSON response modelled by ``AssignResourcesResponse``:
+Example JSON response modelled by ``AssignResourcesResponse`` for MID:
 
 .. code-block:: JSON
 
   {
     "dish": {
       "receptorIDList_success": ["0001", "0002"]
+    }
+  }
+
+
+Example JSON input modelled by ``AssignResourcesRequest`` for LOW:
+
+.. code-block:: JSON
+
+  {
+    "mccs":{
+        "subarray_id": 1,
+        "station_ids": [1,2],
+        "channels": [1,2,3,4,5,6,7,8],
+        "station_beam_ids": [1],
     }
   }
 

@@ -1,4 +1,5 @@
 @startuml
+scale 2000 width
 !pragma useNewPackage
 hide empty members
 
@@ -12,6 +13,11 @@ package ska.cdm.schemas {
         class PbDependencySchema
         class ProcessingBlockSchema
         class SdpConfigurationSchema
+        class MCCSAllocateSchema
+        note top of MCCSAllocateSchema
+            This is a general mapping for
+            MCCSAllocate objects
+        end note
 
 		class DishAllocationSchema
 		note top of DishAllocationSchema
@@ -40,6 +46,7 @@ package ska.cdm.messages.central_node {
         class PbDependency
         class ProcessingBlockConfiguration
         class SDPConfiguration
+        class MCCSAllocate
 	}
 
 	package release_resources.py <<Rectangle>> {
@@ -56,7 +63,7 @@ SDPWorkflowSchema --- SDPWorkflow
 PbDependencySchema --- PbDependency
 ProcessingBlockSchema --- ProcessingBlockConfiguration
 SdpConfigurationSchema --- SDPConfiguration
-
+MCCSAllocateSchema --- MCCSAllocate
 
 
 @enduml

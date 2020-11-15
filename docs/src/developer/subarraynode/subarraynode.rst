@@ -33,13 +33,14 @@ configure
    High-level overview of the configure package
 
 The configuration JSON is complex, the module is split between several
-modules. The ``configure`` package contains four modules:
+modules. The ``configure`` package contains five modules:
 
 * __init__.py
 * `core.py`_
 * `tmc.py`_
 * `csp.py`_
 * `sdp.py`_
+* `mccs.py`_
 
 ``__init__.py`` references sub-modules in the main ConfigureRequest object, as
 illustrated in the diagram above.
@@ -185,6 +186,41 @@ of a full CDM JSON object, the elements this maps to are:
   }
 
 
+mccs.py
+-------
+
+.. figure:: mccs.png
+   :align: center
+   :alt: mccs.py object model
+
+   mccs.py object model
+
+The ``mccs.py`` module models MCCS configuration JSON elements. In the context
+of a full CDM JSON object, the elements this maps to are:
+
+.. code::
+
+  # JSON modelled specifically by mccs.py
+  {
+    "mccs": {
+        "stations": [
+            {
+                "station_id": 1
+            }
+        ],
+        "station_beams": [
+            {
+                "station_beam_id": 1,
+                "station_ids": [2,3],
+                "channels": [1, 2, 3, 4, 5, 6, 7, 8],
+                "update_rate": 0.0,
+                "sky_coordinates": [0.0, 180.0, 0.0, 45.0, 0.0]
+            }
+        ]
+    },
+  }
+
+
 scan.py
 =======
 
@@ -204,8 +240,8 @@ Below is an example JSON command argument that this code can model.
   }
 
 
-Example configuration JSON
-==========================
+Example configuration JSON for MID
+==================================
 
 .. code-block:: JSON
 
@@ -255,5 +291,27 @@ Example configuration JSON
     }
   }
 
+Example configuration JSON for LOW
+==================================
 
+.. code-block:: JSON
+
+  {
+    "mccs": {
+        "stations": [
+            {
+                "station_id": 1
+            }
+        ],
+        "station_beams": [
+            {
+                "station_beam_id": 1,
+                "station_ids": [2,3],
+                "channels": [1, 2, 3, 4, 5, 6, 7, 8],
+                "update_rate": 0.0,
+                "sky_coordinates": [0.0, 180.0, 0.0, 45.0, 0.0]
+            }
+        ]
+    }
+  }
 

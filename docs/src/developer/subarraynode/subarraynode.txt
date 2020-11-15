@@ -27,6 +27,9 @@ package ska.cdm.messages.subarray_node {
 		package sdp.py <<Rectangle>> {
 		}
 
+        package mccs.py <<Rectangle>> {
+        }
+
 		package tmc.py <<Rectangle>> {
 		}
 
@@ -34,14 +37,15 @@ package ska.cdm.messages.subarray_node {
 		}
 
 		note as N2
-			Together, these model the input
-			for ""SubArrayNode.Configure()""
+			Individually or combined, these model the
+			input for ""SubArrayNode.Configure()""
 		end note
 
 		N2 -- __init__.py
 		N2 -- core.py
 		N2 -- csp.py
 		N2 -- sdp.py
+		N2 -- mccs.py
 		N2 -- tmc.py
 	}
 	note top of configure

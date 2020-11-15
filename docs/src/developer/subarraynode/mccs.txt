@@ -1,0 +1,29 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.subarray_node.configure {
+    package mccs.py <<Rectangle>> {
+
+        class StnConfiguration {
+            station_id: int
+        }
+
+        class StnBeamConfiguration {
+            station_beam_id: int
+            station_ids: List[int]
+            channels: List[int]
+            update_rate: float
+            sky_coordinates: List[float]
+        }
+
+        class MCCSConfiguration {
+            station_configs: List[StnConfiguration],
+            station_beam_configs: List[StnBeamConfiguration],
+        }
+        MCCSConfiguration *-- "*" StnConfiguration
+        MCCSConfiguration *-- "*" StnBeamConfiguration
+
+    }
+}
+
+@enduml
