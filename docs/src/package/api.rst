@@ -33,6 +33,27 @@ ska.cdm.messages.central_node.release_resources
 .. automodule:: ska.cdm.messages.central_node.release_resources
    :members:
 
+....................................
+ska.cdm.messages.central_node.common
+....................................
+
+.. automodule:: ska.cdm.messages.central_node.common
+   :members:
+
+.................................
+ska.cdm.messages.central_node.sdp
+.................................
+
+.. automodule:: ska.cdm.messages.central_node.sdp
+   :members:
+
+..................................
+ska.cdm.messages.central_node.mccs
+..................................
+
+.. automodule:: ska.cdm.messages.central_node.mccs
+   :members:
+
 ..............................
 ska.cdm.messages.subarray_node
 ..............................
@@ -68,6 +89,13 @@ ska.cdm.messages.subarray_node.configure.sdp
 .. automodule:: ska.cdm.messages.subarray_node.configure.sdp
    :members:
 
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+ska.cdm.messages.subarray_node.configure.mccs
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+.. automodule:: ska.cdm.messages.subarray_node.configure.mccs
+   :members:
+
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 ska.cdm.messages.subarray_node.configure.tmc
 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
@@ -95,6 +123,34 @@ ska.cdm.schemas.central_node
 ............................
 
 .. automodule:: ska.cdm.schemas.central_node
+   :members:
+
+.............................................
+ska.cdm.schemas.central_node.assign_resources
+.............................................
+
+.. automodule:: ska.cdm.schemas.central_node.assign_resources
+   :members:
+
+...................................
+ska.cdm.schemas.central_node.common
+...................................
+
+.. automodule:: ska.cdm.schemas.central_node.common
+   :members:
+
+................................
+ska.cdm.schemas.central_node.sdp
+................................
+
+.. automodule:: ska.cdm.schemas.central_node.sdp
+   :members:
+
+.................................
+ska.cdm.schemas.central_node.mccs
+.................................
+
+.. automodule:: ska.cdm.schemas.central_node.mccs
    :members:
 
 ......................
@@ -137,6 +193,13 @@ ska.cdm.schemas.subarray_node.configure.sdp
 ...........................................
 
 .. automodule:: ska.cdm.schemas.subarray_node.configure.sdp
+   :members:
+
+............................................
+ska.cdm.schemas.subarray_node.configure.mccs
+............................................
+
+.. automodule:: ska.cdm.schemas.subarray_node.configure.mccs
    :members:
 
 ...........................................

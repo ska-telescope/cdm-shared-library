@@ -1,12 +1,9 @@
 @startuml
+scale 2000 width
 !pragma useNewPackage
 hide empty members
 
 package ska.cdm.messages.subarray_node {
-	package scan.py <<Rectangle>> {
-		class ScanRequest
-	}
-
 	package configure {
 		package core.py <<Rectangle>> {
 			class Target
@@ -23,6 +20,12 @@ package ska.cdm.messages.subarray_node {
 			class SDPConfiguration
 		}
 
+        package mccs.py <<Rectangle>> {
+            class StnConfiguration
+            class StnBeamConfiguration
+            class MCCSConfiguration
+        }
+
 		package tmc.py <<Rectangle>> {
 			class TMCConfiguration
 		}
@@ -31,6 +34,10 @@ package ska.cdm.messages.subarray_node {
 			class ConfigureRequest
 		}
 	}
+
+    package scan.py <<Rectangle>> {
+        class ScanRequest
+    }
 }
 
 package ska.cdm.schemas.subarray_node {
@@ -45,7 +52,7 @@ package ska.cdm.schemas.subarray_node {
 			class DishConfigurationSchema
 			class ConfigureRequestSchema
 
-			note left of TargetSchema
+			note top of TargetSchema
 				This maps a ""Target""
 				used in the context of
 				a dish pointing
@@ -65,6 +72,12 @@ package ska.cdm.schemas.subarray_node {
 		package tmc.py as P6 {
 			class TMCConfigurationSchema
 		}
+
+        package mccs.py as P7 {
+            class StnConfigurationSchema
+            class StnBeamConfigurationSchema
+            class MCCSConfigurationSchema
+        }
 	}
 }
 
@@ -81,6 +94,10 @@ CSPConfigurationSchema --- CSPConfiguration
 SDPConfigurationSchema --- SDPConfiguration
 
 TMCConfigurationSchema --- TMCConfiguration
+
+StnConfigurationSchema --- StnConfiguration
+StnBeamConfigurationSchema --- StnBeamConfiguration
+MCCSConfigurationSchema --- MCCSConfiguration
 
 note as N1
 	These classes map the same Python
