@@ -1,8 +1,40 @@
 @startuml
 hide empty members
 
+' Remove the following lines when VLBI, PSS and PST
+' are added to CDM
+hide VLBIConfiguration
+hide PSTConfiguration
+hide PSSConfiguration
+
 package ska.cdm.messages.subarray_node.configure {
 	package csp.py <<Rectangle>> {
+
+	    class Subarray {
+	        subarray_name: str
+	    }
+
+	    class Common {
+	        id: str
+            subarray_id: int
+            frequency_band: core.ReceiverBand
+	    }
+
+	    class CBFConfiguration {
+
+	    }
+
+	    class PSTConfiguration {
+
+	    }
+
+        class PSSConfiguration {
+
+        }
+
+        class VLBIConfiguration {
+
+        }
 
 		enum FSPFunctionMode {
 			CORR
@@ -24,11 +56,18 @@ package ska.cdm.messages.subarray_node.configure {
 
 		class CSPConfiguration {
             csp_id : str
-			receiver_band : core.ReceiverBand
+			frequency_band : core.ReceiverBand
 		}
-		CSPConfiguration *-- "*" FSPConfiguration
+		CBFConfiguration *-- "*" FSPConfiguration
+		CBFConfiguration *-- "1" VLBIConfiguration
+		CSPConfiguration *-- "1" Common
+		CSPConfiguration *-- "1" Subarray
+		CSPConfiguration *-- "1" CBFConfiguration
+		CSPConfiguration *-- "1" PSTConfiguration
+		CSPConfiguration *-- "1" PSSConfiguration
 
 	}
 }
+
 
 @enduml
