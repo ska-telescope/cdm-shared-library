@@ -8,7 +8,8 @@ from typing import List, Tuple
 
 from . import core
 
-__all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode"]
+__all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode","CBFConfiguration",
+           "Subarray", "CommonElementConfiguration"]
 
 
 class FSPFunctionMode(enum.Enum):
@@ -30,16 +31,16 @@ class FSPConfiguration:
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self,
-        fsp_id: int,
-        function_mode: FSPFunctionMode,
-        frequency_slice_id: int,
-        integration_time: int,
-        corr_bandwidth: int,
-        channel_averaging_map: List[Tuple] = None,
-        output_link_map: List[Tuple] = None,
-        fsp_channel_offset: int = None,
-        zoom_window_tuning: int = None
+            self,
+            fsp_id: int,
+            function_mode: FSPFunctionMode,
+            frequency_slice_id: int,
+            integration_time: int,
+            corr_bandwidth: int,
+            channel_averaging_map: List[Tuple] = None,
+            output_link_map: List[Tuple] = None,
+            fsp_channel_offset: int = None,
+            zoom_window_tuning: int = None
     ):
         """
         Create a new FSPConfiguration.
@@ -109,16 +110,107 @@ class FSPConfiguration:
         if not isinstance(other, FSPConfiguration):
             return False
         return (
-            self.fsp_id == other.fsp_id
-            and self.function_mode == other.function_mode
-            and self.frequency_slice_id == other.frequency_slice_id
-            and self.corr_bandwidth == other.corr_bandwidth
-            and self.integration_time == other.integration_time
-            and self.channel_averaging_map == other.channel_averaging_map
-            and self.output_link_map == other.output_link_map
-            and self.fsp_channel_offset == other.fsp_channel_offset
-            and self.zoom_window_tuning == other.zoom_window_tuning
+                self.fsp_id == other.fsp_id
+                and self.function_mode == other.function_mode
+                and self.frequency_slice_id == other.frequency_slice_id
+                and self.corr_bandwidth == other.corr_bandwidth
+                and self.integration_time == other.integration_time
+                and self.channel_averaging_map == other.channel_averaging_map
+                and self.output_link_map == other.output_link_map
+                and self.fsp_channel_offset == other.fsp_channel_offset
+                and self.zoom_window_tuning == other.zoom_window_tuning
         )
+
+
+class Subarray:
+    """
+     Class to hold the parameters relevant only for the current sub-array device.
+    """
+
+    def __init__(self, subarray_name: str):
+        """
+        Create  sub-array device configuration.
+        :param sub-array_name: Name of the sub-array
+        """
+        self.subarray_name = subarray_name
+
+    def __eq__(self, other):
+        if not isinstance(other, Subarray):
+            return False
+        return (
+                self.subarray_name == other.subarray_name
+        )
+
+
+class CommonElementConfiguration:
+    """
+     Class to hold the CSP sub-elements.
+    """
+
+    def __init__(
+            self,
+            csp_id: str,
+            frequency_band: core.ReceiverBand,
+            subarray_id: int = None,
+    ):
+        """
+        Create a new CSPConfiguration.
+
+        :param csp_id: an ID for CSP configuration
+        :param frequency_band: the frequency band to set
+        :param subarray_id: an ID of sub-array device
+        """
+        self.csp_id = csp_id
+        self.frequency_band = frequency_band
+        self.subarray_id = subarray_id
+
+    def __eq__(self, other):
+        if not isinstance(other, CommonElementConfiguration):
+            return False
+        return (
+                self.csp_id == other.csp_id
+                and self.frequency_band == other.frequency_band
+                and self.subarray_id == other.subarray_id
+        )
+
+
+class VLBIConfiguration:
+    pass
+
+
+class CBFConfiguration:
+    """
+      Class to hold all FSP and VLBI configurations.
+    """
+
+    def __init__(
+            self,
+            fsp_configs: List[FSPConfiguration],
+            vlbi_config: VLBIConfiguration = None,
+    ):
+        """
+        Create a new CBFConfiguration.
+        :param fsp_configs: the FSP configurations to set
+        :param vlbi_config: the VLBI configurations to set, it is optional
+        """
+        self.fsp_configs = fsp_configs
+        self.vlbi_config = vlbi_config
+
+    def __eq__(self, other):
+        if not isinstance(other, CBFConfiguration):
+            return False
+        return (
+                self.fsp_configs == other.fsp_configs
+                and self.vlbi_config == other.vlbi_config
+        )
+
+
+class PSTConfiguration:
+    pass
+
+
+class PSSConfiguration:
+    pass
 
 
 class CSPConfiguration:
@@ -127,27 +219,27 @@ class CSPConfiguration:
     """
 
     def __init__(
-        self,
-        csp_id: str,
-        frequency_band: core.ReceiverBand,
-        fsp_configs: List[FSPConfiguration],
+            self,
+            subarray_config: Subarray,
+            common_element_config: CommonElementConfiguration,
+            cbf_config: CBFConfiguration,
     ):
         """
         Create a new CSPConfiguration.
 
-        :param csp_id: an ID for CSP configuration
-        :param frequency_band: the frequency band to set
-        :param fsp_configs: the FSP configurations to set
+        :param subarray_config: Sub-array configuration to set
+        :param common_element_config: the common CSP elemenets to set
+        :param cbf_config: the CBF configurations to set
         """
-        self.csp_id = csp_id
-        self.frequency_band = frequency_band
-        self.fsp_configs = fsp_configs
+        self.subarray_config = subarray_config
+        self.common_element_config = common_element_config
+        self.cbf_config = cbf_config
 
     def __eq__(self, other):
         if not isinstance(other, CSPConfiguration):
             return False
         return (
-            self.csp_id == other.csp_id
-            and self.frequency_band == other.frequency_band
-            and self.fsp_configs == other.fsp_configs
+                self.subarray_config == other.subarray_config
+                and self.common_element_config == other.common_element_config
+                and self.cbf_config == other.cbf_config
         )
