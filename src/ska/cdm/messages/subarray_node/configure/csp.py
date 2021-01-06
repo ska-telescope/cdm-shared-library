@@ -9,7 +9,7 @@ from typing import List, Tuple
 from . import core
 
 __all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode","CBFConfiguration",
-           "Subarray", "CommonElementConfiguration"]
+           "SubarrayConfiguration", "CommonConfiguration"]
 
 
 class FSPFunctionMode(enum.Enum):
@@ -122,7 +122,7 @@ class FSPConfiguration:
         )
 
 
-class Subarray:
+class SubarrayConfiguration:
     """
      Class to hold the parameters relevant only for the current sub-array device.
     """
@@ -135,14 +135,14 @@ class Subarray:
         self.subarray_name = subarray_name
 
     def __eq__(self, other):
-        if not isinstance(other, Subarray):
+        if not isinstance(other, SubarrayConfiguration):
             return False
         return (
                 self.subarray_name == other.subarray_name
         )
 
 
-class CommonElementConfiguration:
+class CommonConfiguration:
     """
      Class to hold the CSP sub-elements.
     """
@@ -165,7 +165,7 @@ class CommonElementConfiguration:
         self.subarray_id = subarray_id
 
     def __eq__(self, other):
-        if not isinstance(other, CommonElementConfiguration):
+        if not isinstance(other, CommonConfiguration):
             return False
         return (
                 self.csp_id == other.csp_id
@@ -220,26 +220,55 @@ class CSPConfiguration:
 
     def __init__(
             self,
-            subarray_config: Subarray,
-            common_element_config: CommonElementConfiguration,
-            cbf_config: CBFConfiguration,
+            csp_id: str = None,
+            frequency_band: core.ReceiverBand = None,
+            fsp_configs: List[FSPConfiguration] = None,
+            subarray_config: SubarrayConfiguration = None,
+            common_element_config: CommonConfiguration = None,
+            cbf_config: CBFConfiguration = None,
+            pst_config: PSTConfiguration = None,
+            pss_config: PSSConfiguration = None
+
     ):
         """
-        Create a new CSPConfiguration.
+        Create a new CSPConfiguration, In order to support backward compatibility, We have
+        kept old attributes as it is and added support of new attributes as per ADR-18
 
+        :param csp_id: an ID for CSP configuration
+        :param frequency_band: the frequency band to set
+        :param fsp_configs: the FSP configurations to set
         :param subarray_config: Sub-array configuration to set
         :param common_element_config: the common CSP elemenets to set
         :param cbf_config: the CBF configurations to set
+        :param pst_config: the PST configurations to set
+        :param pss_config: the PSS configurations to set
         """
+        self.csp_id = csp_id
+        self.frequency_band = frequency_band
+        self.fsp_configs = fsp_configs
         self.subarray_config = subarray_config
         self.common_element_config = common_element_config
         self.cbf_config = cbf_config
+        self.pst_config = pst_config
+        self.pss_config = pss_config
+
+        if self.common_element_config is not None and (
+            self.csp_id is not None or self.frequency_band is not None or self.fsp_configs is not None
+        ):
+            raise ValueError(
+                "Can't configure old CSP and ADR-18 supported CSP attiributes in the same call"
+            )
 
     def __eq__(self, other):
         if not isinstance(other, CSPConfiguration):
             return False
         return (
-                self.subarray_config == other.subarray_config
+                self.csp_id == other.csp_id
+                and self.frequency_band == other.frequency_band
+                and self.fsp_configs == other.fsp_configs
+                and self.subarray_config == other.subarray_config
                 and self.common_element_config == other.common_element_config
                 and self.cbf_config == other.cbf_config
+                and self.pst_config == other.pst_config
+                and self.pss_config == other.pss_config
         )
