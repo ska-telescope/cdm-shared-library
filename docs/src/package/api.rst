@@ -68,37 +68,37 @@ ska.cdm.messages.subarray_node.configure
 .. automodule:: ska.cdm.messages.subarray_node.configure
    :members:
 
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+.............................................
 ska.cdm.messages.subarray_node.configure.core
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+.............................................
 
 .. automodule:: ska.cdm.messages.subarray_node.configure.core
    :members:
 
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+............................................
 ska.cdm.messages.subarray_node.configure.csp
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+............................................
 
 .. automodule:: ska.cdm.messages.subarray_node.configure.csp
    :members:
 
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+............................................
 ska.cdm.messages.subarray_node.configure.sdp
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+............................................
 
 .. automodule:: ska.cdm.messages.subarray_node.configure.sdp
    :members:
 
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+.............................................
 ska.cdm.messages.subarray_node.configure.mccs
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+.............................................
 
 .. automodule:: ska.cdm.messages.subarray_node.configure.mccs
    :members:
 
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+............................................
 ska.cdm.messages.subarray_node.configure.tmc
-,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+............................................
 
 .. automodule:: ska.cdm.messages.subarray_node.configure.tmc
    :members:

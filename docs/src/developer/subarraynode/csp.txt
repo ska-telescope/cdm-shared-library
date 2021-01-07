@@ -10,14 +10,14 @@ hide PSSConfiguration
 package ska.cdm.messages.subarray_node.configure {
 	package csp.py <<Rectangle>> {
 
-	    class Subarray {
+	    class SubarrayConfiguration {
 	        subarray_name: str
 	    }
 
-	    class Common {
-	        id: str
-            subarray_id: int
+	    class CommonConfiguration {
+	        csp_id: str
             frequency_band: core.ReceiverBand
+            subarray_id: int
 	    }
 
 	    class CBFConfiguration {
@@ -55,19 +55,17 @@ package ska.cdm.messages.subarray_node.configure {
 		}
 
 		class CSPConfiguration {
-            csp_id : str
-			frequency_band : core.ReceiverBand
+
 		}
 		CBFConfiguration *-- "*" FSPConfiguration
 		CBFConfiguration *-- "1" VLBIConfiguration
-		CSPConfiguration *-- "1" Common
-		CSPConfiguration *-- "1" Subarray
+		CSPConfiguration *-- "1" CommonConfiguration
+		CSPConfiguration *-- "1" SubarrayConfiguration
 		CSPConfiguration *-- "1" CBFConfiguration
 		CSPConfiguration *-- "1" PSTConfiguration
 		CSPConfiguration *-- "1" PSSConfiguration
 
 	}
 }
-
 
 @enduml
