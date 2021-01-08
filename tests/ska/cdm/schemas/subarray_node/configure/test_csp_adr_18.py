@@ -1,5 +1,7 @@
 """
 Unit tests for the ska.cdm.schemas.subarray_node.configure.csp module.
+
+This is an equivalent set of tests to test_csp.py but with the ADR-18 changes.
 """
 import copy
 import inspect
@@ -43,8 +45,7 @@ VALID_FSPCONFIGURATION_JSON = """
 
 def test_marshall_fsp_configuration():
     """
-    Verify that optional FSPConfiguration parameters are removed when they are
-    left unset.
+    Verify that FSPConfiguration is marshalled to JSON correctly.
     """
     fsp_config = FSPConfiguration(
         2,
@@ -65,8 +66,7 @@ def test_marshall_fsp_configuration():
 
 def test_unmarshall_fsp_configuration():
     """
-    Verify that FSPConfiguration is unmarshalled correctly when optional
-    parameters are not present in JSON.
+    Verify that FSPConfiguration is marshalled to JSON correctly.
     """
     fsp_config = FSPConfiguration(
         2,
@@ -213,7 +213,7 @@ def test_marshall_fsp_configuration_with_zoom():
 def test_unmarshall_fsp_configuration_with_zoom():
     """
     Verify that FSPConfiguration is unmarshalled from JSON correctly
-    when only FSP Channel Offset is present out of optional parameters.
+    when only Zoom Window Tuning is present out of optional parameters.
     """
     fsp_config = FSPConfiguration(
         1,
@@ -306,8 +306,7 @@ VALID_SUBARRAYCONFIGURATION_JSON = """
 
 def test_marshall_subarray_configuration():
     """
-    Verify that optional FSPConfiguration parameters are removed when they are
-    left unset.
+    Verify that SubarrayConfiguration is marshalled to JSON correctly.
     """
     subarray_config = SubarrayConfiguration("Test Subarray")
     schema = SubarrayConfigurationSchema()
@@ -317,8 +316,7 @@ def test_marshall_subarray_configuration():
 
 def test_unmarshall_subarray_configuration():
     """
-    Verify that optional FSPConfiguration parameters are removed when None is
-    passed in as their constructor value.
+    Verify that SubarrayConfiguration is unmarshalled from JSON correctly.
     """
     subarray_config = SubarrayConfiguration("Test Subarray")
     schema = SubarrayConfigurationSchema()
@@ -342,8 +340,7 @@ VALID_COMMONCONFIGURATION_JSON = """
 
 def test_marshall_common_configuration():
     """
-    Verify that optional FSPConfiguration parameters are removed when they are
-    left unset.
+    Verify that CommonConfiguration is marshalled to JSON correctly.
     """
     common_config = CommonConfiguration("123", ReceiverBand.BAND_1, 1)
     schema = CommonConfigurationSchema()
@@ -353,8 +350,7 @@ def test_marshall_common_configuration():
 
 def test_unmarshall_common_configuration():
     """
-    Verify that optional FSPConfiguration parameters are removed when None is
-    passed in as their constructor value.
+    Verify that CommonConfiguration is unmarshalled from JSON correctly.
     """
     common_config = CommonConfiguration("123", ReceiverBand.BAND_1, 1)
     schema = CommonConfigurationSchema()
@@ -387,8 +383,7 @@ VALID_CBFCONFIGURATION_JSON = """
 
 def test_marshall_cbf_configuration():
     """
-    Verify that optional FSPConfiguration parameters are removed when they are
-    left unset.
+    Verify that CBFConfiguration is marshalled to JSON correctly.
     """
     fsp_config = FSPConfiguration(
         1,
@@ -408,8 +403,7 @@ def test_marshall_cbf_configuration():
 
 def test_unmarshall_cbf_configuration():
     """
-    Verify that optional FSPConfiguration parameters are removed when None is
-    passed in as their constructor value.
+    Verify that CBFConfiguration is unmarshalled from JSON correctly.
     """
     fsp_config = FSPConfiguration(
         1,
@@ -474,7 +468,7 @@ VALID_CSPCONFIGURATION_JSON = """
 
 def test_marshall_cspconfiguration():
     """
-
+    Verify that CSPConfiguration is marshalled to JSON correctly.
     """
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config_1 = FSPConfiguration(
@@ -514,7 +508,7 @@ def test_marshall_cspconfiguration():
 
 def test_unmarshall_cspconfiguration():
     """
-
+    Verify that CSPConfiguration is unmarshalled from JSON correctly.
     """
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config_1 = FSPConfiguration(
