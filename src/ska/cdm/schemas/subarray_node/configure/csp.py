@@ -10,12 +10,76 @@ from marshmallow.validate import OneOf
 from ska.cdm.messages.subarray_node.configure.csp import (
     FSPFunctionMode,
     FSPConfiguration,
-    CSPConfiguration,
+    SubarrayConfiguration,
+    CommonConfiguration,
+    CBFConfiguration,
+    CSPConfiguration
 )
 from ska.cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska.cdm.schemas import CODEC
 
-__all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema"]
+__all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema", "SubarrayConfigurationSchema",
+           "CommonConfigurationSchema", "CBFConfigurationSchema"]
+
+
+@CODEC.register_mapping(SubarrayConfiguration)
+class SubarrayConfigurationSchema(Schema):
+    subarray_name = fields.String(data_key="subarrayName", required=True)
+
+    @post_load
+    def create(self, data, **_):
+        """
+         Convert parsed JSON back into a SubarrayConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+
+        :return: SubarrayConfiguration instance populated to match JSON
+        :rtype: SubarrayConfiguration
+        """
+        subarray_name = data["subarray_name"]
+        return SubarrayConfiguration(subarray_name)
+
+
+@CODEC.register_mapping(CommonConfiguration)
+class CommonConfigurationSchema(Schema):
+    csp_id = fields.String(data_key="id", required=True)
+    frequency_band = fields.String(data_key="frequencyBand", required=True)
+    subarray_id = fields.Integer(data_key="subarrayID", required=True)
+
+    @pre_dump
+    def convert(
+            self, common_configuration: CommonConfiguration, **_
+    ):  # pylint: disable=no-self-use
+        """
+        Process CommonConfiguration instance so that it is ready for conversion
+        to JSON.
+
+        :param CommonConfiguration: Common configuration to process
+        :param _: kwargs passed by Marshmallow
+        :return: CommonConfiguration instance populated to match JSON
+        """
+        # Convert Python Enum to its string value
+        copied = copy.deepcopy(common_configuration)
+        if hasattr(copied, 'frequency_band'):
+            copied.frequency_band = common_configuration.frequency_band.value
+        return copied
+
+    @post_load
+    def create(self, data, **_):  # pylint: disable=no-self-use
+        """
+         Convert parsed JSON back into a CSPConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: CommonConfiguration instance populated to match JSON
+        """
+        csp_id = data["csp_id"]
+        frequency_band = data["frequency_band"]
+        frequency_band_enum = ReceiverBand(frequency_band)
+        subarray_id = data["subarray_id"]
+
+        return CommonConfiguration(csp_id, frequency_band_enum, subarray_id)
 
 
 @CODEC.register_mapping(FSPConfiguration)
@@ -44,7 +108,7 @@ class FSPConfigurationSchema(Schema):
 
     @pre_dump
     def convert(
-        self, fsp_configuration: FSPConfiguration, **_
+            self, fsp_configuration: FSPConfiguration, **_
     ):  # pylint: disable=no-self-use
         """
         Process FSPConfiguration instance so that it is ready for conversion
@@ -104,6 +168,24 @@ class FSPConfigurationSchema(Schema):
             zoom_window_tuning=zoom_window_tuning,
         )
 
+@CODEC.register_mapping(CBFConfiguration)
+class CBFConfigurationSchema(Schema):
+    fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key="fsp")
+
+    @post_load
+    def create(self, data, **_):
+        """
+         Convert parsed JSON back into a CBFConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+
+        :return: CBFConfiguration instance populated to match JSON
+        :rtype: CBFConfiguration
+        """
+        fsp_configs = data["fsp_configs"]
+        return CBFConfiguration(fsp_configs)
+
 
 @CODEC.register_mapping(CSPConfiguration)
 class CSPConfigurationSchema(Schema):
@@ -111,25 +193,30 @@ class CSPConfigurationSchema(Schema):
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
 
-    csp_id = fields.String(data_key="id", required=True)
-    frequency_band = fields.String(data_key="frequencyBand", required=True)
+    csp_id = fields.String(data_key="id")
+    frequency_band = fields.String(data_key="frequencyBand")
     fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key="fsp")
+    interface = fields.String(data_key="interface")
+    subarray_configs = fields.Nested(SubarrayConfigurationSchema, data_key="subarray")
+    common_configs = fields.Nested(CommonConfigurationSchema, data_key="common")
+    cbf_configs = fields.Nested(CBFConfigurationSchema, data_key="cbf")
 
     @pre_dump
     def convert(
-        self, csp_configuration: CSPConfiguration, **_
+            self, csp_configuration: CSPConfiguration, **_
     ):  # pylint: disable=no-self-use
         """
         Process CSPConfiguration instance so that it is ready for conversion
         to JSON.
 
-        :param csp_configuration: CSP configuration to process
+        :param CSPConfiguration: CSP configuration to process
         :param _: kwargs passed by Marshmallow
         :return: CSPConfiguration instance populated to match JSON
         """
         # Convert Python Enum to its string value
         copied = copy.deepcopy(csp_configuration)
-        copied.frequency_band = csp_configuration.frequency_band.value
+        if hasattr(copied, 'frequency_band'):
+            copied.frequency_band = csp_configuration.frequency_band.value
         return copied
 
     @post_load
@@ -141,9 +228,26 @@ class CSPConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: CSPConfiguration instance populated to match JSON
         """
-        csp_id = data["csp_id"]
-        frequency_band = data["frequency_band"]
-        frequency_band_enum = ReceiverBand(frequency_band)
-        fsp_configs = data["fsp_configs"]
+        csp_id = data.get("csp_id", None)
+        frequency_band = data.get("frequency_band", None)
+        if frequency_band is not None:
+            frequency_band = ReceiverBand(frequency_band)
+        fsp_configs = data.get("fsp_configs", None)
+        interface = data.get("interface", None)
+        subarray_configs = data.get("subarray_configs", None)
+        common_configs = data.get("common_configs", None)
+        cbf_configs = data.get("cbf_configs", None)
 
-        return CSPConfiguration(csp_id, frequency_band_enum, fsp_configs)
+        return CSPConfiguration(csp_id, frequency_band, fsp_configs, interface, subarray_configs, common_configs,
+                                cbf_configs)
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
