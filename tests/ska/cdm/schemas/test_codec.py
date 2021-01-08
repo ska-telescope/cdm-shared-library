@@ -82,5 +82,10 @@ def test_read_a_file_from_disk():
     test_data = os.path.join(cwd, "testfile_sample_configure.json")
     result = CODEC.load_from_file(ConfigureRequest, test_data)
     dish_config = DishConfiguration(ReceiverBand.BAND_1)
-
     assert result.dish == dish_config
+
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
+    dish_config = DishConfiguration(ReceiverBand.BAND_1)
+    assert result_data.dish == dish_config
+
