@@ -3,6 +3,15 @@ scale 2000 width
 !pragma useNewPackage
 hide empty members
 
+' Remove the following lines when VLBI, PSS and PST
+' are added to CDM
+remove VLBIConfiguration
+remove PSTConfiguration
+remove PSSConfiguration
+remove VLBIConfigurationSchema
+remove PSTConfigurationSchema
+remove PSSConfigurationSchema
+
 package ska.cdm.messages.subarray_node {
 	package configure {
 		package core.py <<Rectangle>> {
@@ -13,7 +22,13 @@ package ska.cdm.messages.subarray_node {
 
 		package csp.py <<Rectangle>> {
 			class FSPConfiguration
+			class CBFConfiguration
+			class CommonConfiguration
+			class SubarrayConfiguration
 			class CSPConfiguration
+			class PSSConfiguration
+			class PSTConfiguration
+			class VLBIConfiguration
 		}
 
 		package sdp.py <<Rectangle>> {
@@ -41,10 +56,6 @@ package ska.cdm.messages.subarray_node {
 }
 
 package ska.cdm.schemas.subarray_node {
-	package scan.py as P1 <<Rectangle>> {
-		class ScanRequestSchema
-	}
-
 	package configure as P2 {
 		package core.py as P3 {
 			class TargetSchema
@@ -62,7 +73,13 @@ package ska.cdm.schemas.subarray_node {
 
 		package csp.py as P4 {
 			class FSPConfigurationSchema
+			class CBFConfigurationSchema
+			class CommonConfigurationSchema
+			class SubarrayConfigurationSchema
 			class CSPConfigurationSchema
+			class PSSConfigurationSchema
+			class PSTConfigurationSchema
+			class VLBIConfigurationSchema
 		}
 
 		package sdp.py as P5 {
@@ -79,6 +96,10 @@ package ska.cdm.schemas.subarray_node {
             class MCCSConfigurationSchema
         }
 	}
+
+	package scan.py as P1 {
+		class ScanRequestSchema
+	}
 }
 
 ScanRequestSchema --- ScanRequest
@@ -89,6 +110,12 @@ DishConfigurationSchema --- DishConfiguration
 ConfigureRequestSchema --- ConfigureRequest
 
 FSPConfigurationSchema --- FSPConfiguration
+CBFConfigurationSchema --- CBFConfiguration
+PSSConfigurationSchema --- PSSConfiguration
+PSTConfigurationSchema --- PSTConfiguration
+VLBIConfigurationSchema --- VLBIConfiguration
+CommonConfigurationSchema --- CommonConfiguration
+SubarrayConfigurationSchema --- SubarrayConfiguration
 CSPConfigurationSchema --- CSPConfiguration
 
 SDPConfigurationSchema --- SDPConfiguration
