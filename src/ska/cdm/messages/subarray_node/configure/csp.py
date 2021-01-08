@@ -8,8 +8,9 @@ from typing import List, Tuple
 
 from . import core
 
-__all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode", "CBFConfiguration",
-           "SubarrayConfiguration", "CommonConfiguration"]
+__all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode",
+           "CBFConfiguration", "SubarrayConfiguration",
+           "CommonConfiguration"]
 
 
 class FSPFunctionMode(enum.Enum):
