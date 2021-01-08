@@ -9,6 +9,9 @@ __all__ = [
     "PointingSchema",
     "TargetSchema",
     "CSPConfigurationSchema",
+    "SubarrayConfigurationSchema",
+    "CommonConfigurationSchema",
+    "CBFConfigurationSchema",
     "FSPConfigurationSchema",
     "SDPConfigurationSchema",
     "MCCSConfigurationSchema",
@@ -22,7 +25,13 @@ from .core import (
     PointingSchema,
     TargetSchema,
 )
-from .csp import CSPConfigurationSchema, FSPConfigurationSchema
+from .csp import (
+    CSPConfigurationSchema,
+    FSPConfigurationSchema,
+    SubarrayConfigurationSchema,
+    CommonConfigurationSchema,
+    CBFConfigurationSchema
+)
 from .sdp import SDPConfigurationSchema
 from .mccs import (
     MCCSConfigurationSchema,

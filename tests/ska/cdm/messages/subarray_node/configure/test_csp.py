@@ -10,7 +10,87 @@ from ska.cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
+    SubarrayConfiguration,
+    CommonConfiguration,
+    CBFConfiguration
 )
+
+
+def test_common_configuration_equals():
+    """
+    Verify that CommonConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
+    frequency_band = ReceiverBand.BAND_1
+    subarray_id = 1
+
+    config1 = CommonConfiguration(csp_id, frequency_band, subarray_id)
+    config2 = CommonConfiguration(csp_id, frequency_band, subarray_id)
+    assert config1 == config2
+
+    assert config1 != CommonConfiguration(csp_id, ReceiverBand.BAND_2, subarray_id)
+    assert config1 != CommonConfiguration(csp_id, frequency_band, subarray_id)
+
+
+def test_common_configuration_not_equal_to_other_objects():
+    """
+    Verify that CommonConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
+    frequency_band = ReceiverBand.BAND_1
+    subarray_id = 1
+    config = CommonConfiguration(csp_id, frequency_band, subarray_id)
+    assert config != 1
+
+
+def test_subarray_configuration_equals():
+    """
+    Verify that SubarrayConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    subarray_name = "Test Subarray"
+
+    config1 = SubarrayConfiguration(subarray_name)
+    config2 = SubarrayConfiguration(subarray_name)
+    assert config1 == config2
+
+    assert config1 != SubarrayConfiguration("Test Subarray2")
+
+
+def test_subarray_configuration_not_equal_to_other_objects():
+    """
+    Verify that SubarrayConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    subarray_name = "Test Subarray"
+    config = SubarrayConfiguration(subarray_name)
+    assert config != 1
+
+
+def test_cbf_configuration_equals():
+    """
+    Verify that CBFConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
+
+    config1 = CBFConfiguration([fsp])
+    config2 = CBFConfiguration([fsp])
+    assert config1 == config2
+
+    assert config1 != CBFConfiguration([fsp, fsp])
+
+
+def test_cbf_configuration_not_equal_to_other_objects():
+    """
+    Verify that CBFConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
+    config = CBFConfiguration([fsp])
+    assert config != 1
 
 
 def test_fsp_configuration_equals():
@@ -87,6 +167,63 @@ def test_csp_configuration_equals():
 
     assert config1 != CSPConfiguration(csp_id, ReceiverBand.BAND_2, [fsp])
     assert config1 != CSPConfiguration(csp_id, frequency_band, [fsp, fsp])
+
+
+def test_csp_configuration_equals_with_all_parameters():
+    """
+    Verify that CSPConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
+    frequency_band = ReceiverBand.BAND_1
+    fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
+    subarray_id = 1
+    subarray_name = "Test Subarray"
+
+    interface_url = "https://schema.skatelescope.org/ska-csp-configure/1.0"
+    subarray_config = SubarrayConfiguration(subarray_name)
+    common_element_config = CommonConfiguration(csp_id, frequency_band, subarray_id)
+    cbf_config = CBFConfiguration([fsp])
+    pst_config = None
+    pss_config = None
+
+    config1 = CSPConfiguration(csp_id, frequency_band, [fsp])
+    config2 = CSPConfiguration(csp_id, frequency_band, [fsp])
+
+    config3 = CSPConfiguration(interface_url, subarray_config, common_element_config, cbf_config, pst_config,
+                               pss_config)
+    config4 = CSPConfiguration(interface_url, subarray_config, common_element_config, cbf_config, pst_config,
+                               pss_config)
+
+    assert config1 == config2
+    assert config3 == config4
+
+    assert config1 != CSPConfiguration(csp_id, ReceiverBand.BAND_2, [fsp])
+    assert config3 != CSPConfiguration(subarray_config, common_element_config, cbf_config, pst_config, pss_config)
+
+
+def test_csp_configuration_support_only_new_or_old_request_in_same_call():
+    """
+    Verify that CSPConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    csp_id = "sbi-mvp01-20200325-00001-science_A"
+    frequency_band = ReceiverBand.BAND_1
+    fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
+    subarray_id = 1
+    subarray_name = "Test Subarray"
+    interface_url = "https://schema.skatelescope.org/ska-csp-configure/1.0"
+
+    subarray_config = SubarrayConfiguration(subarray_name)
+    common_element_config = CommonConfiguration(csp_id, frequency_band, subarray_id)
+    cbf_config = CBFConfiguration([fsp])
+    pst_config = None
+    pss_config = None
+
+    with pytest.raises(ValueError):
+        _ = CSPConfiguration(csp_id, frequency_band, interface_url, subarray_config, common_element_config, cbf_config,
+                             pst_config,
+                             pss_config)
 
 
 def test_csp_configuration_not_equal_to_other_objects():
