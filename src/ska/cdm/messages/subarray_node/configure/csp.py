@@ -232,8 +232,9 @@ class CSPConfiguration:
 
     ):
         """
-        Create a new CSPConfiguration, In order to support backward compatibility, We have
-        kept old attributes as it is and added support of new attributes as per ADR-18
+        Create a new CSPConfiguration, In order to support backward
+        compatibility, We have kept old attributes as it is and added
+        support of new attributes as per ADR-18
 
         :param interface_url: url string to determine JsonSchema version
         :param csp_id: an ID for CSP configuration
@@ -255,11 +256,16 @@ class CSPConfiguration:
         self.pst_config = pst_config
         self.pss_config = pss_config
 
-        if (self.interface_url is not None or self.subarray_config is not None or self.cbf_config is not None) and (
-            self.csp_id is not None or self.frequency_band is not None or self.fsp_configs is not None
+        if (self.interface_url is not None
+            or self.subarray_config is not None
+            or self.cbf_config is not None) and (
+            self.csp_id is not None
+            or self.frequency_band is not None
+            or self.fsp_configs is not None
         ):
             raise ValueError(
-                "Can't configure old CSP and ADR-18 supported CSP attiributes in the same call"
+                "Can't configure old CSP and ADR-18 supported CSP attributes "
+                "in the same call"
             )
 
     def __eq__(self, other):

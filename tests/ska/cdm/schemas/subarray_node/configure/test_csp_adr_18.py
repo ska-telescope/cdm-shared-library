@@ -557,7 +557,9 @@ def test_marshall_cspconfiguration_does_not_modify_original():
     """
     Verify that serialising a CspConfiguration does not change the object.
     """
-    cbf_config = CBFConfiguration([FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)])
+    cbf_config = CBFConfiguration(
+        [FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)]
+    )
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration('123', ReceiverBand.BAND_1, 1)
     config = CSPConfiguration(

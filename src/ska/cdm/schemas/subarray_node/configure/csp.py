@@ -18,8 +18,9 @@ from ska.cdm.messages.subarray_node.configure.csp import (
 from ska.cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska.cdm.schemas import CODEC
 
-__all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema", "SubarrayConfigurationSchema",
-           "CommonConfigurationSchema", "CBFConfigurationSchema"]
+__all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema",
+           "SubarrayConfigurationSchema", "CommonConfigurationSchema",
+           "CBFConfigurationSchema"]
 
 
 @CODEC.register_mapping(SubarrayConfiguration)
@@ -167,6 +168,7 @@ class FSPConfigurationSchema(Schema):
             fsp_channel_offset=fsp_channel_offset,
             zoom_window_tuning=zoom_window_tuning,
         )
+
 
 @CODEC.register_mapping(CBFConfiguration)
 class CBFConfigurationSchema(Schema):

@@ -88,4 +88,3 @@ def test_read_a_file_from_disk():
     result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
     dish_config = DishConfiguration(ReceiverBand.BAND_1)
     assert result_data.dish == dish_config
-
