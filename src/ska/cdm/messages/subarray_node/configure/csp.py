@@ -8,7 +8,7 @@ from typing import List, Tuple
 
 from . import core
 
-__all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode","CBFConfiguration",
+__all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode", "CBFConfiguration",
            "SubarrayConfiguration", "CommonConfiguration"]
 
 
@@ -220,10 +220,10 @@ class CSPConfiguration:
 
     def __init__(
             self,
-            interface_url: str = None,
             csp_id: str = None,
             frequency_band: core.ReceiverBand = None,
             fsp_configs: List[FSPConfiguration] = None,
+            interface_url: str = None,
             subarray_config: SubarrayConfiguration = None,
             common_element_config: CommonConfiguration = None,
             cbf_config: CBFConfiguration = None,

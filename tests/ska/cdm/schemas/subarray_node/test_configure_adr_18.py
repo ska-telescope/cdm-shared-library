@@ -133,7 +133,10 @@ def test_marshall_configure_request():
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration(csp_id, ReceiverBand.BAND_1, 1)
     csp_config = CSPConfiguration(
-        subarray_config=csp_subarray_config, common_element_config=csp_common_config, cbf_config=cbf_config
+        interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
+        subarray_config=csp_subarray_config,
+        common_element_config=csp_common_config,
+        cbf_config=cbf_config
     )
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -190,7 +193,10 @@ def test_unmarshall_configure_request_from_json():
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration(csp_id, ReceiverBand.BAND_1, 1)
     csp_config = CSPConfiguration(
-        subarray_config=csp_subarray_config, common_element_config=csp_common_config, cbf_config=cbf_config
+        interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
+        subarray_config=csp_subarray_config,
+        common_element_config=csp_common_config,
+        cbf_config=cbf_config
     )
     tmc_config = TMCConfiguration(scan_duration)
 

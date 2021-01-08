@@ -30,8 +30,7 @@
                     "outputLinkMap": [[0,0], [200,1]],
                     "corrBandwidth": 0,
                     "channelAveragingMap": [[0,2], [744,0]],
-                    "fspChannelOffset": 0,
-                    "outputLinkMap": [[0,0], [200,1]]
+                    "fspChannelOffset": 0
                 },
                 {
                     "fspID": 2,
@@ -42,14 +41,10 @@
                     "outputLinkMap": [[0,4], [200,5]],
                     "channelAveragingMap": [[0,2], [744,0]],
                     "fspChannelOffset": 744,
-                    "outputLinkMap": [[0,4], [200,5]],
                     "zoomWindowTuning": 4700000
                 }
-            ],
-            "vlbi": {}
-        },
-        "pst": {},
-        "pss": {}
+            ]
+        }
     },
   "sdp": {
      "scan_type": "science_A"

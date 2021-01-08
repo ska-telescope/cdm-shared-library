@@ -391,11 +391,11 @@ def test_marshall_cbf_configuration():
     left unset.
     """
     fsp_config = FSPConfiguration(
-        2,
-        FSPFunctionMode.CORR,
-        2,
-        1400,
         1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
         channel_averaging_map=[(0, 2), (744, 0)],
         fsp_channel_offset=0,
         output_link_map=[(0, 0), (200, 1)]
@@ -412,11 +412,11 @@ def test_unmarshall_cbf_configuration():
     passed in as their constructor value.
     """
     fsp_config = FSPConfiguration(
-        2,
-        FSPFunctionMode.CORR,
-        2,
-        1400,
         1,
+        FSPFunctionMode.CORR,
+        1,
+        1400,
+        0,
         channel_averaging_map=[(0, 2), (744, 0)],
         fsp_channel_offset=0,
         output_link_map=[(0, 0), (200, 1)]
@@ -502,10 +502,13 @@ def test_marshall_cspconfiguration():
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration(csp_id, ReceiverBand.BAND_1, 1)
     csp_config = CSPConfiguration(
-        subarray_config=csp_subarray_config, common_element_config=csp_common_config, cbf_config=cbf_config
+        interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
+        subarray_config=csp_subarray_config,
+        common_element_config=csp_common_config,
+        cbf_config=cbf_config
     )
     schema = CSPConfigurationSchema()
-    marshalled = schema.dumps(cbf_config)
+    marshalled = schema.dumps(csp_config)
     assert json_is_equal(marshalled, VALID_CSPCONFIGURATION_JSON)
 
 
@@ -539,7 +542,10 @@ def test_unmarshall_cspconfiguration():
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration(csp_id, ReceiverBand.BAND_1, 1)
     csp_config = CSPConfiguration(
-        subarray_config=csp_subarray_config, common_element_config=csp_common_config, cbf_config=cbf_config
+        interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
+        subarray_config=csp_subarray_config,
+        common_element_config=csp_common_config,
+        cbf_config=cbf_config
     )
     schema = CSPConfigurationSchema()
     unmarshalled = schema.loads(VALID_CSPCONFIGURATION_JSON)
@@ -553,9 +559,11 @@ def test_marshall_cspconfiguration_does_not_modify_original():
     """
     cbf_config = CBFConfiguration([FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)])
     csp_subarray_config = SubarrayConfiguration('science period 23')
-    csp_common_config = CommonConfiguration(csp_id, ReceiverBand.BAND_1, 1)
+    csp_common_config = CommonConfiguration('123', ReceiverBand.BAND_1, 1)
     config = CSPConfiguration(
-        subarray_config=csp_subarray_config, common_element_config=csp_common_config, cbf_config=cbf_config
+        subarray_config=csp_subarray_config,
+        common_element_config=csp_common_config,
+        cbf_config=cbf_config
     )
     original_config = copy.deepcopy(config)
     CSPConfigurationSchema().dumps(config)

@@ -30,7 +30,7 @@ def test_common_configuration_equals():
     assert config1 == config2
 
     assert config1 != CommonConfiguration(csp_id, ReceiverBand.BAND_2, subarray_id)
-    assert config1 != CommonConfiguration(csp_id, frequency_band, subarray_id)
+    assert config1 != CommonConfiguration(csp_id, frequency_band, 2)
 
 
 def test_common_configuration_not_equal_to_other_objects():
@@ -190,16 +190,31 @@ def test_csp_configuration_equals_with_all_parameters():
     config1 = CSPConfiguration(csp_id, frequency_band, [fsp])
     config2 = CSPConfiguration(csp_id, frequency_band, [fsp])
 
-    config3 = CSPConfiguration(interface_url, subarray_config, common_element_config, cbf_config, pst_config,
-                               pss_config)
-    config4 = CSPConfiguration(interface_url, subarray_config, common_element_config, cbf_config, pst_config,
-                               pss_config)
+    config3 = CSPConfiguration(
+        interface_url=interface_url,
+        subarray_config=subarray_config,
+        common_element_config=common_element_config,
+        cbf_config=cbf_config,
+        pst_config=pst_config,
+        pss_config=pss_config)
+    config4 = CSPConfiguration(
+        interface_url=interface_url,
+        subarray_config=subarray_config,
+        common_element_config=common_element_config,
+        cbf_config=cbf_config,
+        pst_config=pst_config,
+        pss_config=pss_config)
 
     assert config1 == config2
     assert config3 == config4
 
     assert config1 != CSPConfiguration(csp_id, ReceiverBand.BAND_2, [fsp])
-    assert config3 != CSPConfiguration(subarray_config, common_element_config, cbf_config, pst_config, pss_config)
+    assert config3 != CSPConfiguration(
+        subarray_config=subarray_config,
+        common_element_config=common_element_config,
+        cbf_config=cbf_config,
+        pst_config=pst_config,
+        pss_config=pss_config)
 
 
 def test_csp_configuration_support_only_new_or_old_request_in_same_call():
@@ -221,9 +236,9 @@ def test_csp_configuration_support_only_new_or_old_request_in_same_call():
     pss_config = None
 
     with pytest.raises(ValueError):
-        _ = CSPConfiguration(csp_id, frequency_band, interface_url, subarray_config, common_element_config, cbf_config,
-                             pst_config,
-                             pss_config)
+        _ = CSPConfiguration(csp_id, frequency_band, [], interface_url,
+                             subarray_config, common_element_config,
+                             cbf_config, pst_config, pss_config)
 
 
 def test_csp_configuration_not_equal_to_other_objects():

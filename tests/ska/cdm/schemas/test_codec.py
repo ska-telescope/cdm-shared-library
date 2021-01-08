@@ -12,12 +12,12 @@ from ska.cdm.messages.subarray_node.configure.core import (
     ReceiverBand,
 )
 from ska.cdm.schemas import CODEC
+from ska.cdm.utils import json_is_equal
 from .central_node.test_central_node import (
     VALID_ASSIGN_RESOURCES_REQUEST,
     VALID_MCCS_ALLOCATE_RESOURCES_REQUEST,
     sdp_config_for_test,
 )
-from ska.cdm.utils import json_is_equal
 
 
 def test_codec_loads():

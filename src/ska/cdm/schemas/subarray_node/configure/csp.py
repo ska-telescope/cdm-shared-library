@@ -238,7 +238,8 @@ class CSPConfigurationSchema(Schema):
         common_configs = data.get("common_configs", None)
         cbf_configs = data.get("cbf_configs", None)
 
-        return CSPConfiguration(csp_id, frequency_band, fsp_configs, interface, subarray_configs, common_configs,
+        return CSPConfiguration(csp_id, frequency_band, fsp_configs,
+                                interface, subarray_configs, common_configs,
                                 cbf_configs)
 
     @post_dump
