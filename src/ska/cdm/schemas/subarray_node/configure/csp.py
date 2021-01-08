@@ -211,14 +211,15 @@ class CSPConfigurationSchema(Schema):
         Process CSPConfiguration instance so that it is ready for conversion
         to JSON.
 
-        :param CSPConfiguration: CSP configuration to process
+        :param csp_configuration: CSP configuration to process
         :param _: kwargs passed by Marshmallow
         :return: CSPConfiguration instance populated to match JSON
         """
         # Convert Python Enum to its string value
         copied = copy.deepcopy(csp_configuration)
-        if hasattr(copied, 'frequency_band'):
+        if hasattr(copied, 'frequency_band') and copied.frequency_band:
             copied.frequency_band = csp_configuration.frequency_band.value
+        print(f'PreDump Finisihing, copied: {copied.__dict__}')
         return copied
 
     @post_load
@@ -253,4 +254,5 @@ class CSPConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
+        print(f'PostDump Starting {data}')
         return {k: v for k, v in data.items() if v is not None}
