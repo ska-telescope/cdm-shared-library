@@ -133,6 +133,7 @@ of a full CDM JSON object, the elements this maps to are:
   {
     ...
     "csp": {
+      "interface_url": "https://schema.skatelescope.org/ska-csp-configure/1.0",
       "subarray": {
         "subarrayName": "science period 23"
       },
@@ -267,6 +268,7 @@ Example configuration JSON for MID
       "receiverBand": "1"
     },
     "csp": {
+      "interface_url": "https://schema.skatelescope.org/ska-csp-configure/1.0",
       "subarray": {
         "subarrayName": "science period 23"
       },
