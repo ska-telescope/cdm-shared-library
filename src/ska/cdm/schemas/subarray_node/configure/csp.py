@@ -219,7 +219,6 @@ class CSPConfigurationSchema(Schema):
         copied = copy.deepcopy(csp_configuration)
         if hasattr(copied, 'frequency_band') and copied.frequency_band:
             copied.frequency_band = csp_configuration.frequency_band.value
-        print(f'PreDump Finisihing, copied: {copied.__dict__}')
         return copied
 
     @post_load
@@ -254,5 +253,4 @@ class CSPConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
-        print(f'PostDump Starting {data}')
         return {k: v for k, v in data.items() if v is not None}
