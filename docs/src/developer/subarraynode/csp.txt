@@ -3,9 +3,9 @@ hide empty members
 
 ' Remove the following lines when VLBI, PSS and PST
 ' are added to CDM
-hide VLBIConfiguration
-hide PSTConfiguration
-hide PSSConfiguration
+remove VLBIConfiguration
+remove PSTConfiguration
+remove PSSConfiguration
 
 package ska.cdm.messages.subarray_node.configure {
 	package csp.py <<Rectangle>> {
