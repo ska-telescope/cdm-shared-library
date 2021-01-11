@@ -198,10 +198,10 @@ class CSPConfigurationSchema(Schema):
     csp_id = fields.String(data_key="id")
     frequency_band = fields.String(data_key="frequencyBand")
     fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key="fsp")
-    interface = fields.String(data_key="interface")
-    subarray_configs = fields.Nested(SubarrayConfigurationSchema, data_key="subarray")
-    common_configs = fields.Nested(CommonConfigurationSchema, data_key="common")
-    cbf_configs = fields.Nested(CBFConfigurationSchema, data_key="cbf")
+    interface_url = fields.String(data_key="interface")
+    subarray_config = fields.Nested(SubarrayConfigurationSchema, data_key="subarray")
+    common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
+    cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
 
     @pre_dump
     def convert(
@@ -236,14 +236,14 @@ class CSPConfigurationSchema(Schema):
         if frequency_band is not None:
             frequency_band = ReceiverBand(frequency_band)
         fsp_configs = data.get("fsp_configs", None)
-        interface = data.get("interface", None)
-        subarray_configs = data.get("subarray_configs", None)
-        common_configs = data.get("common_configs", None)
-        cbf_configs = data.get("cbf_configs", None)
+        interface = data.get("interface_url", None)
+        subarray_config = data.get("subarray_config", None)
+        common_config = data.get("common_config", None)
+        cbf_config = data.get("cbf_config", None)
 
         return CSPConfiguration(csp_id, frequency_band, fsp_configs,
-                                interface, subarray_configs, common_configs,
-                                cbf_configs)
+                                interface, subarray_config, common_config,
+                                cbf_config)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use

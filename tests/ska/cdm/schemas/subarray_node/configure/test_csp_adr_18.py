@@ -498,7 +498,7 @@ def test_marshall_cspconfiguration():
     csp_config = CSPConfiguration(
         interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
         subarray_config=csp_subarray_config,
-        common_element_config=csp_common_config,
+        common_config=csp_common_config,
         cbf_config=cbf_config
     )
     schema = CSPConfigurationSchema()
@@ -538,7 +538,7 @@ def test_unmarshall_cspconfiguration():
     csp_config = CSPConfiguration(
         interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
         subarray_config=csp_subarray_config,
-        common_element_config=csp_common_config,
+        common_config=csp_common_config,
         cbf_config=cbf_config
     )
     schema = CSPConfigurationSchema()
@@ -558,7 +558,7 @@ def test_marshall_cspconfiguration_does_not_modify_original():
     csp_common_config = CommonConfiguration('123', ReceiverBand.BAND_1, 1)
     config = CSPConfiguration(
         subarray_config=csp_subarray_config,
-        common_element_config=csp_common_config,
+        common_config=csp_common_config,
         cbf_config=cbf_config
     )
     original_config = copy.deepcopy(config)

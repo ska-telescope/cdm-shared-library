@@ -226,7 +226,7 @@ class CSPConfiguration:
             fsp_configs: List[FSPConfiguration] = None,
             interface_url: str = None,
             subarray_config: SubarrayConfiguration = None,
-            common_element_config: CommonConfiguration = None,
+            common_config: CommonConfiguration = None,
             cbf_config: CBFConfiguration = None,
             pst_config: PSTConfiguration = None,
             pss_config: PSSConfiguration = None
@@ -242,7 +242,7 @@ class CSPConfiguration:
         :param frequency_band: the frequency band to set
         :param fsp_configs: the FSP configurations to set
         :param subarray_config: Sub-array configuration to set
-        :param common_element_config: the common CSP elemenets to set
+        :param common_config: the common CSP elemenets to set
         :param cbf_config: the CBF configurations to set
         :param pst_config: the PST configurations to set
         :param pss_config: the PSS configurations to set
@@ -252,7 +252,7 @@ class CSPConfiguration:
         self.frequency_band = frequency_band
         self.fsp_configs = fsp_configs
         self.subarray_config = subarray_config
-        self.common_element_config = common_element_config
+        self.common_config = common_config
         self.cbf_config = cbf_config
         self.pst_config = pst_config
         self.pss_config = pss_config
@@ -278,7 +278,7 @@ class CSPConfiguration:
                 and self.frequency_band == other.frequency_band
                 and self.fsp_configs == other.fsp_configs
                 and self.subarray_config == other.subarray_config
-                and self.common_element_config == other.common_element_config
+                and self.common_config == other.common_config
                 and self.cbf_config == other.cbf_config
                 and self.pst_config == other.pst_config
                 and self.pss_config == other.pss_config

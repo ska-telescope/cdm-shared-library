@@ -135,7 +135,7 @@ def test_marshall_configure_request():
     csp_config = CSPConfiguration(
         interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
         subarray_config=csp_subarray_config,
-        common_element_config=csp_common_config,
+        common_config=csp_common_config,
         cbf_config=cbf_config
     )
     tmc_config = TMCConfiguration(scan_duration)
@@ -195,7 +195,7 @@ def test_unmarshall_configure_request_from_json():
     csp_config = CSPConfiguration(
         interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
         subarray_config=csp_subarray_config,
-        common_element_config=csp_common_config,
+        common_config=csp_common_config,
         cbf_config=cbf_config
     )
     tmc_config = TMCConfiguration(scan_duration)

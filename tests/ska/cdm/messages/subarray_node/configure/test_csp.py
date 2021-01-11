@@ -182,7 +182,7 @@ def test_csp_configuration_equals_with_all_parameters():
 
     interface_url = "https://schema.skatelescope.org/ska-csp-configure/1.0"
     subarray_config = SubarrayConfiguration(subarray_name)
-    common_element_config = CommonConfiguration(csp_id, frequency_band, subarray_id)
+    common_config = CommonConfiguration(csp_id, frequency_band, subarray_id)
     cbf_config = CBFConfiguration([fsp])
     pst_config = None
     pss_config = None
@@ -193,14 +193,14 @@ def test_csp_configuration_equals_with_all_parameters():
     config3 = CSPConfiguration(
         interface_url=interface_url,
         subarray_config=subarray_config,
-        common_element_config=common_element_config,
+        common_config=common_config,
         cbf_config=cbf_config,
         pst_config=pst_config,
         pss_config=pss_config)
     config4 = CSPConfiguration(
         interface_url=interface_url,
         subarray_config=subarray_config,
-        common_element_config=common_element_config,
+        common_config=common_config,
         cbf_config=cbf_config,
         pst_config=pst_config,
         pss_config=pss_config)
@@ -211,7 +211,7 @@ def test_csp_configuration_equals_with_all_parameters():
     assert config1 != CSPConfiguration(csp_id, ReceiverBand.BAND_2, [fsp])
     assert config3 != CSPConfiguration(
         subarray_config=subarray_config,
-        common_element_config=common_element_config,
+        common_config=common_config,
         cbf_config=cbf_config,
         pst_config=pst_config,
         pss_config=pss_config)
@@ -230,14 +230,14 @@ def test_csp_configuration_support_only_new_or_old_request_in_same_call():
     interface_url = "https://schema.skatelescope.org/ska-csp-configure/1.0"
 
     subarray_config = SubarrayConfiguration(subarray_name)
-    common_element_config = CommonConfiguration(csp_id, frequency_band, subarray_id)
+    common_config = CommonConfiguration(csp_id, frequency_band, subarray_id)
     cbf_config = CBFConfiguration([fsp])
     pst_config = None
     pss_config = None
 
     with pytest.raises(ValueError):
         _ = CSPConfiguration(csp_id, frequency_band, [], interface_url,
-                             subarray_config, common_element_config,
+                             subarray_config, common_config,
                              cbf_config, pst_config, pss_config)
 
 
