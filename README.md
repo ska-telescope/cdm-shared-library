@@ -12,7 +12,7 @@ scripting UI for the SKA.
 This project is structured to use Docker containers for development and
 testing so that the build environment, test environment and test results are
 all completely reproducible and are independent of host environment. It uses
-``make`` to provide a consistent UI (see `Makefile targets`_).
+``make`` to provide a consistent UI.
 
 Build a new Docker image for the OET with:
 
