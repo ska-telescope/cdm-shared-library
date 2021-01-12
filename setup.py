@@ -15,7 +15,7 @@ with open('README.md') as readme_file:
 
 setuptools.setup(
     name='cdm-shared-library',
-    version="2.1.0",
+    version="2.1.1",
     description="Configuration data model library",
     long_description=readme + '\n\n',
     author="Hélder Ribeiro",
