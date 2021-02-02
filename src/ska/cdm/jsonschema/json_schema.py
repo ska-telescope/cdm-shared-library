@@ -1,19 +1,22 @@
 """
-The JSON Schema module contains methods for fetching version-specific JSON schemas from the remote server.
-It stores remote JSON schemas in the cache memory and uses it for marshmallow schema validation.
+The JSON Schema module contains methods for fetching version-specific JSON schemas
+from the remote server.It stores remote JSON schemas in the cache memory and uses it
+for marshmallow schema validation.
 """
-
-import requests
-import json
 from functools import lru_cache, wraps
 from datetime import datetime, timedelta
+import json
+import requests
 
 __all__ = ['JsonSchema']
 
 
 def timed_lru_cache(seconds: int, maxsize: int = 128):
     """
-     @timed_lru_cache decorator use to set the cache expiry on both time and space
+     @timed_lru_cache decorator use to set the data into cache memory
+      :param seconds: cache expires after a specific time (in seconds)
+      :param maxsize: specify the size of the cache, default set to 128
+      :return:
     """
     def wrapper_cache(func):
         func = lru_cache(maxsize=maxsize)(func)
@@ -48,7 +51,6 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :return: JsonSchema
         """
         try:
-            # print("fetching from server")
             response = requests.get(url)
             return json.loads(response.text)
         except Exception as err:
@@ -64,6 +66,12 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         """
         return self.get_schema_from_server(url)
 
-    def validate_schema(self, schema, json):
-        pass
+    def validate_schema(self, instance, schema):
+        """
+        Validate an instance under the given schema.
 
+        :param instance: The instance to validate
+        :param schema:  The schema to validate with
+        :return:
+        """
+        pass
