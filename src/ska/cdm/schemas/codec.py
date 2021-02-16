@@ -5,7 +5,6 @@ Marshmallow schema directly.
 """
 import json
 from ska.cdm.jsonschema.json_schema import JsonSchema
-from ska.cdm.exceptions import JsonValidationError
 
 __all__ = ['MarshmallowCodec']
 
@@ -92,7 +91,15 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def call_to_validate(json_data:str):
+        """
+        Use for CSP schema validation
+
+        :param json_data: the instance to marshall to JSON
+        :return:
+         """
         json_dict = json.loads(json_data)
         if ('csp' in json_dict and json_dict['csp']) and \
                 ('interface' in json_dict['csp'] and json_dict['csp']['interface']):
-            JsonSchema.validate_schema(json_dict['csp']['interface'], json_dict)
+            JsonSchema.validate_schema(json_dict['csp']['interface'], json_dict['csp'])
+        elif 'interface' in json_dict and json_dict['interface']:
+            JsonSchema.validate_schema(json_dict['interface'], json_dict)
