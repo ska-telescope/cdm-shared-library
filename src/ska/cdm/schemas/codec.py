@@ -95,8 +95,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         Use for CSP schema validation
 
         :param json_data: the instance to marshall to JSON
-        :return:
-         """
+        """
         json_dict = json.loads(json_data)
         if ('csp' in json_dict and json_dict['csp']) and \
                 ('interface' in json_dict['csp'] and json_dict['csp']['interface']):
