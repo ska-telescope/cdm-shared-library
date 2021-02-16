@@ -90,7 +90,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         return schema_obj.dumps(obj)
 
     @staticmethod
-    def call_to_validate(json_data:str):
+    def call_to_validate(json_data: str):
         """
         Use for CSP schema validation
 
