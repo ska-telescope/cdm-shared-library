@@ -40,6 +40,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         :param schema_class: Marshmallow schema to map
         :param cdm_class: CDM class the schema maps to
         """
+        
         self._schema[cdm_class] = schema_class
 
     def load_from_file(self, cls, path, validation_required: bool = True):
@@ -52,6 +53,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         validation
         :return: an instance of cls
         """
+
         with open(path, 'r') as json_file:
             json_data = json_file.read()
             if validation_required:
@@ -68,6 +70,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         validation
         :return: an instance of cls
         """
+
         schema_cls = self._schema[cdm_class]
         schema_obj = schema_cls()
         if validation_required:
@@ -83,6 +86,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         validation
         :return: a JSON string
         """
+
         schema_cls = self._schema[obj.__class__]
         schema_obj = schema_cls()
         if validation_required:
@@ -96,6 +100,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         :param json_data: the instance to marshall to JSON
         """
+
         json_dict = json.loads(json_data)
         if ('csp' in json_dict and json_dict['csp']) and \
                 ('interface' in json_dict['csp'] and json_dict['csp']['interface']):
