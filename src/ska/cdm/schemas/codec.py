@@ -86,7 +86,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
                validation
         :return: a JSON string
         """
-        
+
         schema_cls = self._schema[obj.__class__]
         schema_obj = schema_cls()
         if validation_required:
