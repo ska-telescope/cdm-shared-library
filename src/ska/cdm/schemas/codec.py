@@ -56,8 +56,8 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         with open(path, 'r') as json_file:
             json_data = json_file.read()
-            if validation_required:
-                MarshmallowCodec.call_to_validate(json_data)
+            if not validation_required:
+                return self.loads(cls, json_data, False)
             return self.loads(cls, json_data)
 
     def loads(self, cdm_class, json_data, validation_required: bool = True):

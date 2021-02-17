@@ -3,6 +3,7 @@ Unit tests for the ska.cdm.schemas.codec module.
 """
 import os.path
 import unittest.mock as mock
+import pytest
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.common import DishAllocation
 from ska.cdm.messages.central_node.mccs import MCCSAllocate
@@ -23,6 +24,7 @@ import ska.cdm.schemas.codec as codec
 import ska.cdm.jsonschema.json_schema as json_schema
 from ska.cdm.schemas import CODEC
 from ska.cdm.utils import json_is_equal
+from ska.cdm.exceptions import JsonValidationError
 from .central_node.test_central_node import (
     VALID_ASSIGN_RESOURCES_REQUEST,
     VALID_MCCS_ALLOCATE_RESOURCES_REQUEST,
@@ -138,6 +140,19 @@ VALID_CSP_SCHEMA = """{
   }
    """
 
+INVALID_CSP_SCHEMA = """{
+    "interface": "https://schema.skatelescope.org/ska-csp-configure/3.0",
+    "subarray": {
+      "subarrayName": "science period 23"
+    },
+    "common": {
+      "id": "sbi-mvp01-20200325-00001-science_A",
+      "frequencyBand": "1",
+      "subarrayID": 1
+    }
+  }
+"""
+
 
 def csp_config_for_test():
     """
@@ -194,6 +209,38 @@ def test_codec_dumps_with_schema_validation_for_csp(mock_fn):
 
 
 @mock.patch.object(codec.MarshmallowCodec, 'call_to_validate')
+def test_codec_dumps_without_schema_validation(mock_fn):
+    """
+    Verify that the codec marshalls csp objects to JSON without
+    schema validation.
+    """
+    expected = VALID_CSP_SCHEMA
+    csp_config = csp_config_for_test()
+    marshalled = CODEC.dumps(csp_config, False)
+    assert json_is_equal(marshalled, expected)
+    assert mock_fn.call_count == 0
+    mock_fn.assert_not_called()
+
+
+def test_codec_loads_raises_exception_on_invalid_schema():
+    """
+     Verify that codec loads() with invalid schema raise exception
+    """
+    with pytest.raises(JsonValidationError):
+        CODEC.loads(CSPConfiguration, INVALID_CSP_SCHEMA)
+
+
+def test_codec_dumps_raises_exception_on_invalid_schema():
+    """
+     Verify that codec dumps() with invalid schema raise exception
+    """
+    csp_config = csp_config_for_test()
+    csp_config.interface_url = 'http://schema.skatelescope.org/ska-csp-configure/3.0'
+    with pytest.raises(JsonValidationError):
+        CODEC.dumps(csp_config)
+
+
+@mock.patch.object(codec.MarshmallowCodec, 'call_to_validate')
 def test_codec_loads_with_schema_validation_for_csp(mock_fn):
     """
     Verify that the codec unmarshalls objects correctly with schema
@@ -205,12 +252,83 @@ def test_codec_loads_with_schema_validation_for_csp(mock_fn):
     mock_fn.assert_called_once()
 
 
-@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
-def test_call_to_validate_called_validate_method_for_csp_schema(mock_fn):
+@mock.patch.object(codec.MarshmallowCodec, 'call_to_validate')
+def test_codec_loads_without_schema_validation(mock_fn):
     """
-     Verify that validate_schema method gets called when
+    Verify that the codec unmarshalls objects correctly without schema
+    validation.
+    """
+    csp_config = csp_config_for_test()
+    unmarshalled = CODEC.loads(CSPConfiguration, VALID_CSP_SCHEMA, False)
+    assert csp_config == unmarshalled
+    assert mock_fn.call_count == 0
+    mock_fn.assert_not_called()
+
+
+@mock.patch.object(codec.MarshmallowCodec, 'call_to_validate')
+def test_codec_loads_from_file_with_schema_validation_for_csp(mock_fn):
+    """
+    Verify that the codec unmarshalls objects correctly with schema
+    validation.
+    """
+    csp_config = csp_config_for_test()
+    cwd, _ = os.path.split(__file__)
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
+    assert result_data.csp == csp_config
+    mock_fn.assert_called_once()
+
+
+@mock.patch.object(codec.MarshmallowCodec, 'call_to_validate')
+def test_codec_loads_from_file_without_validation(mock_fn):
+    """
+     Verify that the codec unmarshalls objects correctly without schema
+     validation.
+    """
+    csp_config = csp_config_for_test()
+    cwd, _ = os.path.split(__file__)
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
+    assert result_data.csp == csp_config
+    assert mock_fn.call_count == 0
+    mock_fn.assert_not_called()
+
+
+@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+def test_call_to_validate_called_validate_method(mock_fn):
+    """
+     Verify that validate_schema method gets called when only
      csp schema provided.
     """
     codec_obj = codec.MarshmallowCodec()
     codec_obj.call_to_validate(VALID_CSP_SCHEMA)
+    mock_fn.assert_called_once()
+    assert mock_fn.call_count == 1
+
+
+@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+def test_call_to_validate_with_non_csp_schema(mock_fn):
+    """
+     Verify that the validate_schema method does not get called when
+     CSP schema is not provided.
+    """
+    codec_obj = codec.MarshmallowCodec()
+    codec_obj.call_to_validate(VALID_ASSIGN_RESOURCES_REQUEST)
+    assert mock_fn.call_count == 0
+    mock_fn.assert_not_called()
+
+
+@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+def test_call_to_validate_with_full_json_schema(mock_fn):
+    """
+     Verify that the validate_schema method gets called when
+     ADR-18 compliant full Json schema is provided.
+    """
+    cwd, _ = os.path.split(__file__)
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
+    with open(test_new_json_data, 'r') as json_file:
+        json_data = json_file.read()
+    codec_obj = codec.MarshmallowCodec()
+    codec_obj.call_to_validate(json_data)
+    assert mock_fn.call_count == 1
     mock_fn.assert_called_once()
