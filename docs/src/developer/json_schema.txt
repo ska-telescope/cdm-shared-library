@@ -1,0 +1,16 @@
+@startuml
+hide empty members
+
+package ska.cdm.jsonschema {
+    package json_schema.py <<Rectangle>> {
+
+        class JsonSchema {
+
+        }
+
+      note right: This Class is used for Json schema validation
+    }
+}
+
+@enduml
+

@@ -62,6 +62,8 @@ structured data to and from JSON. This project defines:
    devices and the structured responses received in return;
 #. serialisation schema to convert the Python object model instances to and
    from JSON.
+#. validation of the JSON strings sent between devices are compliant with
+   the agreed interfaces.
 
 The primary users of this shared library are the OET, SubArrayNode, and
 CentralNode. The OET uses this library to construct object representations of
@@ -78,11 +80,12 @@ appropriate subset of the JSON.
 Project layout
 ==============
 
-The CDM project contains two top-level packages, ``ska.cdm.messages`` and
-``ska.cdm.schemas`` as shown in the figure below. The ``ska.cdm.messages``
+The CDM project contains three top-level packages, ``ska.cdm.messages``,
+``ska.cdm.schemas`` and ``ska.cdm.jsonschema`` as shown in the figure below. The ``ska.cdm.messages``
 package contains Python object models for the JSON command arguments agreed
 in the ICDs. The ``ska.cdm.schemas`` package contains code to transform the
-classes defined in ``ska.cdm.messages`` to and from JSON.
+classes defined in ``ska.cdm.messages`` to and from JSON. The ``ska.cdm.jsonschema`` package contains
+code to verify that the JSON strings sent between devices are compliant with the agreed interfaces.
 
 .. figure:: layout.png
    :align: center
@@ -147,6 +150,23 @@ Marshmallow during JSON conversion.
    :alt: SubArrayNode schema
 
    Schema mapping for objects used to communicate with TMC SubArrayNode device.
+
+
+JsonSchema
+----------
+
+The JSON Schema module contains methods for fetching version-specific JSON schemas
+using interface uri and validating the structure of JSON against these schemas. The
+cdm-shared-library project uses `SKA Telescope Model <https://developer.skatelescope.org/projects/telescope-model/en/latest/README.html>`_
+for schema validation.
+
+Json Schema validation functionality is enabled by default with the parameter ``validation_required=True`` when converting a JSON string to CDM using
+``ska.cdm.schemas.CODEC.loads()``  and when converting CDM to a JSON string using ``ska.cdm.schemas.CODEC.dumps()``.
+
+
+.. figure:: json_schema.png
+   :align: center
+   :alt: JSON schema Validation
 
 
 Extending the CDM
