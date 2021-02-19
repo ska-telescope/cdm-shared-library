@@ -291,7 +291,6 @@ def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn
     validation and Test it with loading a invalid ADR18-configure request
     from a JSON file
     """
-    csp_config = csp_config_for_test()
     cwd, _ = os.path.split(__file__)
     test_new_json_data = os.path.join(cwd, "testfile_invalid_configure_ADR_18.json")
     result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
@@ -308,7 +307,7 @@ def test_codec_loads_from_file_with_schema_validation_for_old_json(mock_fn):
     """
     cwd, _ = os.path.split(__file__)
     test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
-    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
+    CODEC.load_from_file(ConfigureRequest, test_new_json_data)
     assert mock_fn.call_count == 0
     mock_fn.assert_not_called()
 
@@ -321,6 +320,6 @@ def test_codec_loads_from_file_without_schema_validation_for_old_json(mock_fn):
     """
     cwd, _ = os.path.split(__file__)
     test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
-    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
+    CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
     assert mock_fn.call_count == 0
     mock_fn.assert_not_called()
