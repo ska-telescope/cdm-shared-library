@@ -267,21 +267,16 @@ def test_codec_loads_from_file_without_schema_validation(mock_fn):
     mock_fn.assert_not_called()
 
 
-# @mock.patch.object(json_schema.JsonSchema, 'validate_schema')
-# def test_loads_from_file_with_invalid_schema_and_validation_set_to_true(mock_fn):
-#     """
-#     Verify that the codec unmarshalls objects correctly with schema
-#     validation and Test it with loading a invalid ADR18-configure request
-#     from a JSON file
-#     """
-#
-#     csp_config = csp_config_for_test()
-#     cwd, _ = os.path.split(__file__)
-#     test_new_json_data = os.path.join(cwd, "testfile_invalid_configure_ADR_18.json")
-#     with pytest.raises(JsonValidationError):
-#         CODEC.load_from_file(ConfigureRequest, test_new_json_data)
-#     assert mock_fn.call_count == 1
-#     mock_fn.assert_called_once()
+def test_loads_from_file_with_invalid_schema_and_validation_set_to_true():
+    """
+    Verify that the codec unmarshalls objects correctly with schema
+    validation and Test it with loading a invalid ADR18-configure request
+    from a JSON file
+    """
+    cwd, _ = os.path.split(__file__)
+    test_new_json_data = os.path.join(cwd, "testfile_invalid_configure_ADR_18.json")
+    with pytest.raises(JsonValidationError):
+        CODEC.load_from_file(ConfigureRequest, test_new_json_data)
 
 
 @mock.patch.object(json_schema.JsonSchema, 'validate_schema')
