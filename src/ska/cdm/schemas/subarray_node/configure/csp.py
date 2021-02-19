@@ -260,7 +260,8 @@ class CSPConfigurationSchema(Schema):
                                 cbf_config)
 
     @post_dump
-    def filter_nulls_and_validate_schema(self, data, **_):  # pylint: disable=no-self-use
+    def filter_nulls_and_validate_schema(
+            self, data, **_):  # pylint: disable=no-self-use
         """
         validating the structure of JSON against schemas and
         Filter out null values from JSON.
