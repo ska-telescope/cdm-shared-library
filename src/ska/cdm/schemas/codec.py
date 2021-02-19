@@ -3,9 +3,6 @@ The codec module contains classes used by clients to marshall CDM classes to
 and from JSON. This saves the clients having to instantiate and manipulate the
 Marshmallow schema directly.
 """
-import json
-from ska.cdm.jsonschema.json_schema import JsonSchema
-
 __all__ = ['MarshmallowCodec']
 
 
@@ -43,67 +40,48 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         self._schema[cdm_class] = schema_class
 
-    def load_from_file(self, cls, path, validation_required: bool = True):
+    def load_from_file(self, cls, path, validate: bool = True):
         """
         Load an instance of a CDM class from disk.
 
         :param cls: the class to create from the file
         :param path: the path to the file
-        :param validation_required: default value set to true for schema
+        :param validate: default value set to true for schema
                validation
         :return: an instance of cls
         """
 
         with open(path, 'r') as json_file:
             json_data = json_file.read()
-            if not validation_required:
-                return self.loads(cls, json_data, False)
-            return self.loads(cls, json_data)
+            return self.loads(cls, json_data, validate)
 
-    def loads(self, cdm_class, json_data, validation_required: bool = True):
+    def loads(self, cdm_class, json_data, validate: bool = True):
         """
         Create an instance of a CDM class from a JSON string.
 
         :param cdm_class: the class to create from the JSON
         :param json_data: the JSON to unmarshall
-        :param validation_required: default value set to true for schema
+        :param validate: default value set to true for schema
                validation
         :return: an instance of cls
         """
 
         schema_cls = self._schema[cdm_class]
         schema_obj = schema_cls()
-        if validation_required:
-            MarshmallowCodec.call_to_validate(json_data)
+        # schema_obj.context["custom_validate"] = validate
         return schema_obj.loads(json_data=json_data)
 
-    def dumps(self, obj, validation_required: bool = True):
+    def dumps(self, obj, validate: bool = True):
         """
         Return a string JSON representation of a CDM instance.
 
         :param obj: the instance to marshall to JSON
-        :param validation_required: default value set to true for schema
+        :param validate: default value set to true for schema
                validation
         :return: a JSON string
         """
 
         schema_cls = self._schema[obj.__class__]
         schema_obj = schema_cls()
-        if validation_required:
-            MarshmallowCodec.call_to_validate(schema_obj.dumps(obj))
+        # schema_obj.context["custom_validate"] = validate
         return schema_obj.dumps(obj)
-
-    @staticmethod
-    def call_to_validate(json_data: str):
-        """
-        Use for CSP schema validation
-
-        :param json_data: The instance to validate
-        """
-
-        json_dict = json.loads(json_data)
-        if ('csp' in json_dict and json_dict['csp']) and \
-                ('interface' in json_dict['csp'] and json_dict['csp']['interface']):
-            JsonSchema.validate_schema(json_dict['csp']['interface'], json_dict['csp'])
-        elif 'interface' in json_dict and json_dict['interface']:
-            JsonSchema.validate_schema(json_dict['interface'], json_dict)

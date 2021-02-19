@@ -3,10 +3,10 @@ This module defines Marshmallow schemas that map the CDM classes for
 SubArrayNode CSP configuration to/from JSON.
 """
 import copy
-
-from marshmallow import Schema, fields, post_load, pre_dump, post_dump
+import json
+from marshmallow import Schema, fields, post_load, pre_dump, post_dump, pre_load
 from marshmallow.validate import OneOf
-
+from ska.cdm.jsonschema.json_schema import JsonSchema
 from ska.cdm.messages.subarray_node.configure.csp import (
     FSPFunctionMode,
     FSPConfiguration,
@@ -203,6 +203,21 @@ class CSPConfigurationSchema(Schema):
     common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
 
+    @pre_load
+    def validate_schema(self, data, **_): # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CSP configuration
+        """
+        # if self.context['custom_validate']:
+        interface = data.get("interface", None)
+        if interface:
+            JsonSchema.validate_schema(interface, data)
+        return data
+
     @pre_dump
     def convert(
             self, csp_configuration: CSPConfiguration, **_
@@ -247,10 +262,16 @@ class CSPConfigurationSchema(Schema):
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
         """
+        validating the structure of JSON against schemas and
         Filter out null values from JSON.
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
-        return {k: v for k, v in data.items() if v is not None}
+        data = {k: v for k, v in data.items() if v is not None}
+        # if self.context['custom_validate']:
+        interface = data.get("interface", None)
+        if interface:
+            JsonSchema.validate_schema(interface, json.loads(json.dumps(data)))
+        return data
