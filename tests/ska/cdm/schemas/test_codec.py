@@ -232,7 +232,7 @@ def test_codec_loads_with_schema_validation_for_csp():
     assert csp_config == unmarshalled
 
 
-def test_codec_loads_from_file_with_schema_validation_for_csp():
+def test_codec_loads_from_file_with_schema_validation():
     """
     Verify that the codec unmarshalls objects correctly with schema
     validation.

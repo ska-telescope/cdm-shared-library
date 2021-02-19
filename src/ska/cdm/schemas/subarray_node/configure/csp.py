@@ -212,10 +212,10 @@ class CSPConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for CSP configuration
         """
-        # if self.context['custom_validate']:
-        interface = data.get("interface", None)
-        if interface:
-            JsonSchema.validate_schema(interface, data)
+        if 'custom_validate' in self.context and self.context['custom_validate']:
+            interface = data.get("interface", None)
+            if interface:
+                JsonSchema.validate_schema(interface, data)
         return data
 
     @pre_dump
@@ -270,8 +270,8 @@ class CSPConfigurationSchema(Schema):
         :return: dict suitable for SubArrayNode configuration
         """
         data = {k: v for k, v in data.items() if v is not None}
-        # if self.context['custom_validate']:
-        interface = data.get("interface", None)
-        if interface:
-            JsonSchema.validate_schema(interface, json.loads(json.dumps(data)))
+        if 'custom_validate' in self.context and self.context['custom_validate']:
+            interface = data.get("interface", None)
+            if interface:
+                JsonSchema.validate_schema(interface, json.loads(json.dumps(data)))
         return data

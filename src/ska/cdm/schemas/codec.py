@@ -68,7 +68,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         schema_cls = self._schema[cdm_class]
         schema_obj = schema_cls()
-        # schema_obj.context["custom_validate"] = validate
+        schema_obj.context["custom_validate"] = validate
         return schema_obj.loads(json_data=json_data)
 
     def dumps(self, obj, validate: bool = True):
@@ -83,5 +83,5 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         schema_cls = self._schema[obj.__class__]
         schema_obj = schema_cls()
-        # schema_obj.context["custom_validate"] = validate
+        schema_obj.context["custom_validate"] = validate
         return schema_obj.dumps(obj)
