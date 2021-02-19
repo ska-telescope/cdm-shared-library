@@ -440,6 +440,7 @@ def test_configure_request_raises_exception_on_invalid_csp_object():
      Verify that codec dumps() with invalid schema raise exception
     """
     configure_request = CODEC.loads(ConfigureRequest, VALID_CONFIGURE_REQUEST)
-    configure_request.csp.interface_url = 'http://schema.skatelescope.org/ska-csp-configure/3.0'
+    configure_request.csp.interface_url = \
+        'http://schema.skatelescope.org/ska-csp-configure/3.0'
     with pytest.raises(JsonValidationError):
         CODEC.dumps(configure_request)
