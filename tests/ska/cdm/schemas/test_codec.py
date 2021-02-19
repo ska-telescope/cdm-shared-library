@@ -87,7 +87,6 @@ VALID_CONFIGURE_REQUEST = """
   }
 }
 """
-
 INVALID_CONFIGURE_REQUEST = """
 {
   "pointing": {
@@ -137,7 +136,6 @@ INVALID_CONFIGURE_REQUEST = """
   }
 }
 """
-
 VALID_CSP_SCHEMA = """{
     "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
     "subarray": {
@@ -174,8 +172,7 @@ VALID_CSP_SCHEMA = """{
       ]
     }
   }
-   """
-
+"""
 INVALID_CSP_SCHEMA = """{
     "interface": "https://schema.skatelescope.org/ska-csp-configure/3.0",
     "subarray": {
