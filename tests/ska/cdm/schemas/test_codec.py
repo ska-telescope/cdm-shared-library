@@ -2,6 +2,7 @@
 Unit tests for the ska.cdm.schemas.codec module.
 """
 import os.path
+import unittest.mock as mock
 import pytest
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.common import DishAllocation
@@ -19,7 +20,7 @@ from ska.cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     ReceiverBand,
 )
-
+import ska.cdm.jsonschema.json_schema as json_schema
 from ska.cdm.schemas import CODEC
 from ska.cdm.utils import json_is_equal
 from ska.cdm.exceptions import JsonValidationError
@@ -158,6 +159,7 @@ def csp_config_for_test():
 
     :return: CSPConfiguration
     """
+
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     # TODO refactor this as a builder, consolidate duplicate code
     fsp_config_1 = FSPConfiguration(
@@ -181,6 +183,7 @@ def csp_config_for_test():
         output_link_map=[(0, 4), (200, 5)],
         zoom_window_tuning=4700000,
     )
+
     cbf_config = CBFConfiguration([fsp_config_1, fsp_config_2])
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration(csp_id, ReceiverBand.BAND_1, 1)
@@ -232,13 +235,92 @@ def test_codec_loads_with_schema_validation_for_csp():
     assert csp_config == unmarshalled
 
 
-def test_codec_loads_from_file_with_schema_validation():
+@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+def test_codec_loads_from_file_with_schema_validation(mock_fn):
     """
     Verify that the codec unmarshalls objects correctly with schema
-    validation.
+    validation and Test it with loading a valid ADR18-configure request
+    from a JSON file
     """
     csp_config = csp_config_for_test()
     cwd, _ = os.path.split(__file__)
     test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
     result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
     assert result_data.csp == csp_config
+    assert mock_fn.call_count == 1
+    mock_fn.assert_called_once()
+
+
+@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+def test_codec_loads_from_file_without_schema_validation(mock_fn):
+    """
+    Verify that the codec unmarshalls objects correctly without schema
+    validation and Test it with loading a valid ADR18-configure request
+    from a JSON file
+    """
+    csp_config = csp_config_for_test()
+    cwd, _ = os.path.split(__file__)
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
+    assert result_data.csp == csp_config
+    assert mock_fn.call_count == 0
+    mock_fn.assert_not_called()
+
+
+# @mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+# def test_loads_from_file_with_invalid_schema_and_validation_set_to_true(mock_fn):
+#     """
+#     Verify that the codec unmarshalls objects correctly with schema
+#     validation and Test it with loading a invalid ADR18-configure request
+#     from a JSON file
+#     """
+#
+#     csp_config = csp_config_for_test()
+#     cwd, _ = os.path.split(__file__)
+#     test_new_json_data = os.path.join(cwd, "testfile_invalid_configure_ADR_18.json")
+#     with pytest.raises(JsonValidationError):
+#         CODEC.load_from_file(ConfigureRequest, test_new_json_data)
+#     assert mock_fn.call_count == 1
+#     mock_fn.assert_called_once()
+
+
+@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn):
+    """
+    Verify that the codec unmarshalls objects correctly without schema
+    validation and Test it with loading a invalid ADR18-configure request
+    from a JSON file
+    """
+    csp_config = csp_config_for_test()
+    cwd, _ = os.path.split(__file__)
+    test_new_json_data = os.path.join(cwd, "testfile_invalid_configure_ADR_18.json")
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
+    assert result_data.csp.subarray_config is None
+    assert mock_fn.call_count == 0
+    mock_fn.assert_not_called()
+
+
+@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+def test_codec_loads_from_file_with_schema_validation_for_old_json(mock_fn):
+    """
+    Verify that the schema validation does not apply even it is set to true
+    for pre ADR-18 JSON schema
+    """
+    cwd, _ = os.path.split(__file__)
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
+    assert mock_fn.call_count == 0
+    mock_fn.assert_not_called()
+
+
+@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+def test_codec_loads_from_file_without_schema_validation_for_old_json(mock_fn):
+    """
+    Verify that the schema validation does not apply when it is set to false
+    for pre ADR-18 JSON schema
+    """
+    cwd, _ = os.path.split(__file__)
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
+    assert mock_fn.call_count == 0
+    mock_fn.assert_not_called()
