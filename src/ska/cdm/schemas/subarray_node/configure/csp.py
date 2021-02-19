@@ -204,7 +204,7 @@ class CSPConfigurationSchema(Schema):
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
 
     @pre_load
-    def validate_schema(self, data, **_): # pylint: disable=no-self-use
+    def validate_schema(self, data, **_):  # pylint: disable=no-self-use
         """
         validating the structure of JSON against schemas
 
