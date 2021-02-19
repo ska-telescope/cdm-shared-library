@@ -30,6 +30,165 @@ from .central_node.test_central_node import (
     sdp_config_for_test,
 )
 
+VALID_CONFIGURE_REQUEST = """
+{
+  "pointing": {
+    "target": {
+      "system": "ICRS",
+      "name": "M51",
+      "RA": "13:29:52.698",
+      "dec": "+47:11:42.93"
+    }
+  },
+  "dish": {
+    "receiverBand": "1"
+  },
+  "csp": {
+    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+    "subarray": {
+      "subarrayName": "science period 23"
+    },
+    "common": {
+      "id": "sbi-mvp01-20200325-00001-science_A",
+      "frequencyBand": "1",
+      "subarrayID": 1
+    },
+    "cbf": {
+      "fsp": [
+        {
+          "fspID": 1,
+          "functionMode": "CORR",
+          "frequencySliceID": 1,
+          "integrationTime": 1400,
+          "outputLinkMap": [[0,0], [200,1]],
+          "corrBandwidth": 0,
+          "channelAveragingMap": [[0, 2], [744, 0]],
+          "fspChannelOffset": 0
+        },
+        {
+          "fspID": 2,
+          "functionMode": "CORR",
+          "frequencySliceID": 2,
+          "integrationTime": 1400,
+          "corrBandwidth": 1,
+          "outputLinkMap": [[0,4], [200,5]],
+          "channelAveragingMap": [[0, 2], [744, 0]],
+          "fspChannelOffset": 744,
+          "zoomWindowTuning": 4700000
+        }
+      ]
+    }
+  },
+  "sdp": {
+    "scan_type": "science_A"
+  },
+  "tmc": {
+    "scanDuration": 10.0
+  }
+}
+"""
+
+INVALID_CONFIGURE_REQUEST = """
+{
+  "pointing": {
+    "target": {
+      "system": "ICRS",
+      "name": "M51",
+      "RA": "13:29:52.698",
+      "dec": "+47:11:42.93"
+    }
+  },
+  "dish": {
+    "receiverBand": "1"
+  },
+  "csp": {
+    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",    
+    "cbf": {
+      "fsp": [
+        {
+          "fspID": 1,
+          "functionMode": "CORR",
+          "frequencySliceID": 1,
+          "integrationTime": 1400,
+          "outputLinkMap": [[0,0], [200,1]],
+          "corrBandwidth": 0,
+          "channelAveragingMap": [[0, 2], [744, 0]],
+          "fspChannelOffset": 0
+        },
+        {
+          "fspID": 2,
+          "functionMode": "CORR",
+          "frequencySliceID": 2,
+          "integrationTime": 1400,
+          "corrBandwidth": 1,
+          "outputLinkMap": [[0,4], [200,5]],
+          "channelAveragingMap": [[0, 2], [744, 0]],
+          "fspChannelOffset": 744,
+          "zoomWindowTuning": 4700000
+        }
+      ]
+    }
+  },
+  "sdp": {
+    "scan_type": "science_A"
+  },
+  "tmc": {
+    "scanDuration": 10.0
+  }
+}
+"""
+
+VALID_CSP_SCHEMA = """{
+    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+    "subarray": {
+      "subarrayName": "science period 23"
+    },
+    "common": {
+      "id": "sbi-mvp01-20200325-00001-science_A",
+      "frequencyBand": "1",
+      "subarrayID": 1
+    },
+    "cbf": {
+      "fsp": [
+        {
+          "fspID": 1,
+          "functionMode": "CORR",
+          "frequencySliceID": 1,
+          "integrationTime": 1400,
+          "outputLinkMap": [[0,0], [200,1]],
+          "corrBandwidth": 0,
+          "channelAveragingMap": [[0, 2], [744, 0]],
+          "fspChannelOffset": 0
+        },
+        {
+          "fspID": 2,
+          "functionMode": "CORR",
+          "frequencySliceID": 2,
+          "integrationTime": 1400,
+          "corrBandwidth": 1,
+          "outputLinkMap": [[0,4], [200,5]],
+          "channelAveragingMap": [[0, 2], [744, 0]],
+          "fspChannelOffset": 744,
+          "zoomWindowTuning": 4700000
+        }
+      ]
+    }
+  }
+   """
+
+INVALID_CSP_SCHEMA = """{
+    "interface": "https://schema.skatelescope.org/ska-csp-configure/3.0",
+    "subarray": {
+      "subarrayName": "science period 23"
+    },
+    "common": {
+      "id": "sbi-mvp01-20200325-00001-science_A",
+      "frequencyBand": "1",
+      "subarrayID": 1
+    }
+  }
+"""
+
 
 def test_codec_loads():
     """
@@ -99,58 +258,6 @@ def test_read_a_file_from_disk():
     result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
     dish_config = DishConfiguration(ReceiverBand.BAND_1)
     assert result_data.dish == dish_config
-
-
-VALID_CSP_SCHEMA = """{
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
-    "subarray": {
-      "subarrayName": "science period 23"
-    },
-    "common": {
-      "id": "sbi-mvp01-20200325-00001-science_A",
-      "frequencyBand": "1",
-      "subarrayID": 1
-    },
-    "cbf": {
-      "fsp": [
-        {
-          "fspID": 1,
-          "functionMode": "CORR",
-          "frequencySliceID": 1,
-          "integrationTime": 1400,
-          "outputLinkMap": [[0,0], [200,1]],
-          "corrBandwidth": 0,
-          "channelAveragingMap": [[0, 2], [744, 0]],
-          "fspChannelOffset": 0
-        },
-        {
-          "fspID": 2,
-          "functionMode": "CORR",
-          "frequencySliceID": 2,
-          "integrationTime": 1400,
-          "corrBandwidth": 1,
-          "outputLinkMap": [[0,4], [200,5]],
-          "channelAveragingMap": [[0, 2], [744, 0]],
-          "fspChannelOffset": 744,
-          "zoomWindowTuning": 4700000
-        }
-      ]
-    }
-  }
-   """
-
-INVALID_CSP_SCHEMA = """{
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/3.0",
-    "subarray": {
-      "subarrayName": "science period 23"
-    },
-    "common": {
-      "id": "sbi-mvp01-20200325-00001-science_A",
-      "frequencyBand": "1",
-      "subarrayID": 1
-    }
-  }
-"""
 
 
 def csp_config_for_test():
@@ -318,3 +425,21 @@ def test_codec_loads_from_file_without_schema_validation_for_old_json(mock_fn):
     CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
     assert mock_fn.call_count == 0
     mock_fn.assert_not_called()
+
+
+def test_configure_request_raises_exception_when_loads_invalid_csp_schema():
+    """
+     Verify that codec loads() with invalid schema raise exception
+    """
+    with pytest.raises(JsonValidationError):
+        CODEC.loads(ConfigureRequest, INVALID_CONFIGURE_REQUEST)
+
+
+def test_configure_request_raises_exception_on_invalid_csp_object():
+    """
+     Verify that codec dumps() with invalid schema raise exception
+    """
+    configure_request = CODEC.loads(ConfigureRequest, VALID_CONFIGURE_REQUEST)
+    configure_request.csp.interface_url = 'http://schema.skatelescope.org/ska-csp-configure/3.0'
+    with pytest.raises(JsonValidationError):
+        CODEC.dumps(configure_request)
