@@ -163,7 +163,7 @@ The entry points for code handling JSON schema validation is located in
 the ``ska.cdm.jsonschema`` module. This module contains methods for fetching
 version-specific JSON schemas using interface URI and validating the structure
 of JSON against these schemas. Json Schema validation functionality is enabled
-by default with the parameter ``validation_required=True`` when converting a
+by default with the parameter ``validate=True`` when converting a
 JSON string to CDM using ``ska.cdm.schemas.CODEC.loads()`` and when converting
 CDM to a JSON string using ``ska.cdm.schemas.CODEC.dumps()``.
 
