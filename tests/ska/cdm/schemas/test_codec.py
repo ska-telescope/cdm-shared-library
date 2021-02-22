@@ -101,7 +101,7 @@ INVALID_CONFIGURE_REQUEST = """
     "receiverBand": "1"
   },
   "csp": {
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",    
+    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
     "cbf": {
       "fsp": [
         {
