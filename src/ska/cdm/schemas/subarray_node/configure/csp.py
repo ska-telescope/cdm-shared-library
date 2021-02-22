@@ -23,6 +23,14 @@ __all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema",
            "CBFConfigurationSchema"]
 
 
+def _convert_tuples_to_lists(data):
+    """
+    method to match telescope model library data pattern for channelAveragingMap
+    and OutputLinkMap i.e. list of list instead of list of tuples
+    """
+    return json.loads(json.dumps(data))
+
+
 @CODEC.register_mapping(SubarrayConfiguration)
 class SubarrayConfigurationSchema(Schema):
     subarray_name = fields.String(data_key="subarrayName", required=True)
@@ -212,10 +220,7 @@ class CSPConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for CSP configuration
         """
-        if 'custom_validate' in self.context and self.context['custom_validate']:
-            interface = data.get("interface", None)
-            if interface:
-                JsonSchema.validate_schema(interface, data)
+        self.validate_json(data)
         return data
 
     @pre_dump
@@ -271,8 +276,22 @@ class CSPConfigurationSchema(Schema):
         :return: dict suitable for SubArrayNode configuration
         """
         data = {k: v for k, v in data.items() if v is not None}
-        if 'custom_validate' in self.context and self.context['custom_validate']:
-            interface = data.get("interface", None)
-            if interface:
-                JsonSchema.validate_schema(interface, json.loads(json.dumps(data)))
+
+        self.validate_json(data, lambda x: _convert_tuples_to_lists(x))
         return data
+
+    def validate_json(self, data, process_fn=lambda x: x):
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param lambda function: use for converting list of tuples to list of list
+        :return:
+        """
+        # return early unless custom_validate is defined and True
+        if not self.context.get('custom_validate', False):
+            return
+
+        interface = data.get('interface', None)
+        if interface:
+            JsonSchema.validate_schema(interface, process_fn(data))
