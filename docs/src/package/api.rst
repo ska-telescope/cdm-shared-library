@@ -5,6 +5,20 @@
 API
 ***
 
+==================
+ska.cdm.jsonschema
+==================
+
+.. automodule:: ska.cdm.jsonschema
+   :members:
+
+..............................
+ska.cdm.jsonschema.json_schema
+..............................
+
+.. automodule:: ska.cdm.jsonschema.json_schema
+   :members:
+
 ================
 ska.cdm.messages
 ================
@@ -151,6 +165,13 @@ ska.cdm.schemas.central_node.mccs
 .................................
 
 .. automodule:: ska.cdm.schemas.central_node.mccs
+   :members:
+
+.....................
+ska.cdm.schemas.codec
+.....................
+
+.. automodule:: ska.cdm.schemas.codec
    :members:
 
 ......................

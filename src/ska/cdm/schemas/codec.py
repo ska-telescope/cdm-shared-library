@@ -37,39 +37,51 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         :param schema_class: Marshmallow schema to map
         :param cdm_class: CDM class the schema maps to
         """
+
         self._schema[cdm_class] = schema_class
 
-    def load_from_file(self, cls, path):
+    def load_from_file(self, cls, path, validate: bool = True):
         """
         Load an instance of a CDM class from disk.
 
         :param cls: the class to create from the file
         :param path: the path to the file
+        :param validate: default value set to true for schema
+               validation
         :return: an instance of cls
         """
+
         with open(path, 'r') as json_file:
             json_data = json_file.read()
-            return self.loads(cls, json_data)
+            return self.loads(cls, json_data, validate)
 
-    def loads(self, cdm_class, json_data):
+    def loads(self, cdm_class, json_data, validate: bool = True):
         """
         Create an instance of a CDM class from a JSON string.
 
         :param cdm_class: the class to create from the JSON
         :param json_data: the JSON to unmarshall
+        :param validate: default value set to true for schema
+               validation
         :return: an instance of cls
         """
+
         schema_cls = self._schema[cdm_class]
         schema_obj = schema_cls()
+        schema_obj.context["custom_validate"] = validate
         return schema_obj.loads(json_data=json_data)
 
-    def dumps(self, obj):
+    def dumps(self, obj, validate: bool = True):
         """
         Return a string JSON representation of a CDM instance.
 
         :param obj: the instance to marshall to JSON
+        :param validate: default value set to true for schema
+               validation
         :return: a JSON string
         """
+
         schema_cls = self._schema[obj.__class__]
         schema_obj = schema_cls()
+        schema_obj.context["custom_validate"] = validate
         return schema_obj.dumps(obj)

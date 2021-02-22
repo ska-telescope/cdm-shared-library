@@ -26,7 +26,17 @@ package ska.cdm {
 			}
 		}
 	}
+  package jsonschema {
+        package json_schema.py <<Rectangle>> {
+            class JsonSchema {
 
+                }
+            note top of JsonSchema
+               This Class is used
+               for Json schema validation
+            end note
+        }
+    }
 	package schemas {
 		package "<<//name of Tango device//>>" as P1 {
 			package "<<//name of device command//>>" as P2 <<Rectangle>> {
@@ -70,6 +80,8 @@ package ska.cdm {
 	end note
 	P2 .. N3
 	N3 .. command.py
+
+
 
 }
 
