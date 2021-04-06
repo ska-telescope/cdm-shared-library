@@ -114,6 +114,7 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
     subarray_id = fields.Integer(data_key="subarrayID", required=True)
     dish = fields.Nested(DishAllocationSchema, data_key="dish")
     release_all = fields.Boolean(data_key="releaseALL")
+    interface_url = fields.String(data_key="interface")
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -157,6 +158,9 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
         subarray_id = data["subarray_id"]
         release_all = data.get("release_all", False)
         dish_allocation = data.get("dish", None)
+        interface = data.get("interface_url", None)
         return ReleaseResourcesRequest(
-            subarray_id, release_all=release_all, dish_allocation=dish_allocation
+            subarray_id, release_all=release_all,
+            dish_allocation=dish_allocation,
+            interface_url=interface
         )

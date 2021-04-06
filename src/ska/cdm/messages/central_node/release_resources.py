@@ -16,7 +16,8 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(self, subarray_id: int, release_all: bool = False,
-                 dish_allocation: Optional[DishAllocation] = None):
+                 dish_allocation: Optional[DishAllocation] = None,
+                 interface_url: str = None):
         """
         Create a new ReleaseResourcesRequest object.
 
@@ -25,6 +26,7 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             release just those resources specified as other arguments
         :param dish_allocation: object holding the DISH resource allocation
             to release for this request.
+        :param interface_url: url string to determine JsonSchema version
         """
         if not isinstance(release_all, bool):
             raise ValueError('release_all must be a boolean')
@@ -36,10 +38,12 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
         self.subarray_id = subarray_id
         self.dish = dish_allocation
         self.release_all = release_all
+        self.interface_url = interface_url
 
     def __eq__(self, other):
         if not isinstance(other, ReleaseResourcesRequest):
             return False
         return all([self.subarray_id == other.subarray_id,
                     self.dish == other.dish,
-                    self.release_all == other.release_all])
+                    self.release_all == other.release_all,
+                    self.interface_url == other.interface_url])
