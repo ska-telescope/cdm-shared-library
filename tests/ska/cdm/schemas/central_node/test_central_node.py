@@ -222,13 +222,27 @@ VALID_SDP_CONFIG = """{
   ]
 }"""
 
-VALID_ASSIGN_RESOURCES_RESPONSE = (
-    '{"dish": {"receptorIDList_success": ["0001", "0002"]}}'
-)
-VALID_RELEASE_RESOURCES_REQUEST = (
-    '{"subarrayID": 1, "dish": {"receptorIDList": ["0001", "0002"]}}'
-)
-VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = '{"subarrayID": 1, "releaseALL": true}'
+VALID_ASSIGN_RESOURCES_RESPONSE = """
+{
+    "dish": {"receptorIDList_success": ["0001", "0002"]}
+}
+"""
+
+VALID_RELEASE_RESOURCES_REQUEST = """
+{
+     "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+     "subarrayID": 1,
+     "dish": {"receptorIDList": ["0001", "0002"]}
+}
+"""
+
+VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = """
+{
+    "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+    "subarrayID": 1,
+    "releaseALL": true
+}
+"""
 
 
 def sdp_config_for_test():  # pylint: disable=too-many-locals
@@ -380,7 +394,10 @@ def test_marshall_release_resources():
     Verify that ReleaseResourcesRequest is marshalled to JSON correctly.
     """
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
-    request = ReleaseResourcesRequest(1, dish_allocation=dish_allocation)
+    request = ReleaseResourcesRequest(1, dish_allocation=dish_allocation,
+                                      interface_url="https://schema.skatelescope.org/"
+                                                    "ska-low-tmc-releaseresources/1.0"
+                                      )
     json_str = ReleaseResourcesRequestSchema().dumps(request)
     assert json_is_equal(json_str, VALID_RELEASE_RESOURCES_REQUEST)
 
@@ -390,7 +407,9 @@ def test_marshall_release_resources_release_all():
     Verify that ReleaseResourcesRequest with release_all set is marshalled to
     JSON correctly.
     """
-    request = ReleaseResourcesRequest(1, release_all=True)
+    request = ReleaseResourcesRequest(1, release_all=True,
+                                      interface_url="https://schema.skatelescope.org/"
+                                                    "ska-low-tmc-releaseresources/1.0")
     json_str = ReleaseResourcesRequestSchema().dumps(request)
     assert json_is_equal(json_str, VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
 
@@ -402,7 +421,8 @@ def test_release_resources_ignores_resources_when_release_all_is_specified():
     """
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
     request = ReleaseResourcesRequest(
-        1, release_all=True, dish_allocation=dish_allocation
+        1, release_all=True, dish_allocation=dish_allocation,
+        interface_url="https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0"
     )
     json_str = ReleaseResourcesRequestSchema().dumps(request)
     assert json_is_equal(json_str, VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
@@ -416,7 +436,9 @@ def test_unmarshall_release_resources():
     schema = ReleaseResourcesRequestSchema()
     request = schema.loads(VALID_RELEASE_RESOURCES_REQUEST)
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
-    expected = ReleaseResourcesRequest(1, dish_allocation=dish_allocation)
+    expected = ReleaseResourcesRequest(1, dish_allocation=dish_allocation,
+                                       interface_url="https://schema.skatelescope.org/"
+                                                     "ska-low-tmc-releaseresources/1.0")
     assert request == expected
 
 
@@ -427,5 +449,7 @@ def test_unmarshall_release_resources_with_release_all_set():
     """
     schema = ReleaseResourcesRequestSchema()
     request = schema.loads(VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
-    expected = ReleaseResourcesRequest(1, release_all=True)
+    expected = ReleaseResourcesRequest(1, release_all=True,
+                                       interface_url="https://schema.skatelescope.org/"
+                                                     "ska-low-tmc-releaseresources/1.0")
     assert request == expected
