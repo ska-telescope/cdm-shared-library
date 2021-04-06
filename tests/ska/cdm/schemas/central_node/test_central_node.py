@@ -1,6 +1,7 @@
 """
 Unit tests for ska.cdm.schemas module.
 """
+import itertools
 
 from ska.cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
@@ -123,10 +124,9 @@ VALID_ASSIGN_RESOURCES_REQUEST = """{
 }"""
 
 VALID_MCCS_ALLOCATE_RESOURCES_REQUEST = """{
-  "mccs": {
-    "subarray_id": 1,
-    "station_ids": [1, 2, 3, 4],
-    "channels": [1, 2, 3, 4, 5],
+  "mccs": {    
+    "station_ids": [[1, 2]],
+    "channel_blocks": [1, 2, 3, 4, 5],
     "station_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
   }
 }"""
@@ -301,7 +301,7 @@ def test_marshal_assign_resources_request_mccs():
     """
     # MCCS subarray allocation
     mccs_allocate = MCCSAllocate(
-        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     request = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)
     json_str = AssignResourcesRequestSchema().dumps(request)
@@ -314,7 +314,7 @@ def test_unmarshall_assign_resources_request_mccs():
     object.
     """
     mccs_allocate = MCCSAllocate(
-        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     request = AssignResourcesRequestSchema().loads(
         VALID_MCCS_ALLOCATE_RESOURCES_REQUEST

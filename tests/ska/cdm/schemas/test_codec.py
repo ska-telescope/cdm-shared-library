@@ -1,6 +1,7 @@
 """
 Unit tests for the ska.cdm.schemas.codec module.
 """
+import itertools
 import os.path
 import unittest.mock as mock
 import pytest
@@ -204,7 +205,7 @@ def test_codec_loads_mccs_only():
     Verify that the codec unmarshalls objects correctly.
     """
     mccs_allocate = MCCSAllocate(
-        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     unmarshalled = CODEC.loads(
         AssignResourcesRequest, VALID_MCCS_ALLOCATE_RESOURCES_REQUEST
@@ -232,7 +233,7 @@ def test_codec_dumps_mccs():
     Verify that the codec marshalls mccs objects to JSON.
     """
     mccs_allocate = MCCSAllocate(
-        1, [1, 2, 3, 4], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     expected = VALID_MCCS_ALLOCATE_RESOURCES_REQUEST
     obj = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)

@@ -32,6 +32,7 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
     dish = fields.Nested(DishAllocationSchema, data_key="dish")
     sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
     mccs = fields.Nested(MCCSAllocateSchema, data_key="mccs")
+    interface_url = fields.String(data_key="interface")
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -53,11 +54,14 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         dish_allocation = data.get("dish", None)
         sdp_config = data.get("sdp_config", None)
         mccs = data.get("mccs", None)
+        interface = data.get("interface_url", None)
+
         return AssignResourcesRequest(
             subarray_id,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
             mccs_allocate=mccs,
+            interface_url=interface
         )
 
     @post_dump
