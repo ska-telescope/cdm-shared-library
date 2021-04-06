@@ -18,6 +18,7 @@ class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     scan_id = fields.Integer(data_key="id")
+    interface_url = fields.String(data_key="interface")
 
     @post_load
     def create_scan_request(self, data, **_):  # pylint: disable=no-self-use
@@ -29,4 +30,5 @@ class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: ScanRequest instance populated to match JSON
         """
         scan_id = data["scan_id"]
-        return scan_msgs.ScanRequest(scan_id)
+        interface = data.get("interface_url", None)
+        return scan_msgs.ScanRequest(scan_id, interface)

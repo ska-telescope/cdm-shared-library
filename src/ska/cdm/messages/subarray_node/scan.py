@@ -11,10 +11,14 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
     ScanRequest represents the request argument for SubArrayNode.scan call.
     """
 
-    def __init__(self, scan_id: int):
+    def __init__(self, scan_id: int, interface_url: str = None):
         self.scan_id = scan_id
+        self.interface_url = interface_url
 
     def __eq__(self, other):
         if not isinstance(other, ScanRequest):
             return False
-        return self.scan_id == other.scan_id
+        return (
+                self.scan_id == other.scan_id
+                and self.interface_url == other.interface_url
+        )
