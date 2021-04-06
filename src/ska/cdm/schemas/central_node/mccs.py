@@ -16,8 +16,10 @@ class MCCSAllocateSchema(Schema):
     Marshmallow schema for the MCCSAllocate class.
     """
 
-    station_ids = fields.List(fields.Tuple((fields.Integer, fields.Integer)), data_key="station_ids", required=True)
-    channel_blocks = fields.List(fields.Integer, data_key="channel_blocks", required=True)
+    station_ids = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
+                              data_key="station_ids", required=True)
+    channel_blocks = fields.List(fields.Integer, data_key="channel_blocks",
+                                 required=True)
     station_beam_ids = fields.List(
         fields.Integer, data_key="station_beam_ids", required=True
     )

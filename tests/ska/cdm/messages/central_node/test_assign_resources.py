@@ -58,21 +58,25 @@ def test_assign_resources_request_mccs_eq():
     mccs allocation are considered equal.
     """
     mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        list(zip(itertools.count(1, 1), 1 * [2])),
+        [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     request = AssignResourcesRequest(mccs_allocate=mccs_allocate)
     assert request == AssignResourcesRequest(mccs_allocate=mccs_allocate)
     assert request != AssignResourcesRequest(
         mccs_allocate=MCCSAllocate(
-            list(zip(itertools.count(1, 1), 1 * [1])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            list(zip(itertools.count(1, 1), 1 * [1])), [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5, 6, 7, 8, 9]
         ),
     )
     assert request != AssignResourcesRequest(
-        mccs_allocate=MCCSAllocate(list(zip(itertools.count(1, 1),1*[2])), [3, 4, 5], [1, 2, 3, 4, 5, 6])
+        mccs_allocate=MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5],
+                                   [1, 2, 3, 4, 5, 6])
     )
     assert request != AssignResourcesRequest(
         mccs_allocate=MCCSAllocate(
-            list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]
+            list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5, 6]
         ),
     )
 
@@ -82,11 +86,13 @@ def test_assign_resources_request_from_mccs():
     Verify that two AssignResource request objects for the same sub-array and
     mccs allocation are considered equal.
     """
-    mccs_allocate = MCCSAllocate(list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6])
+    mccs_allocate = MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])),
+                                 [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6])
     request = AssignResourcesRequest.from_mccs(mccs_allocate)
     assert request == AssignResourcesRequest(
         mccs_allocate=MCCSAllocate(
-            list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6]
+            list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5, 6]
         ),
     )
 
@@ -106,7 +112,8 @@ def test_assign_resources_request_dish_and_mccs_fail():
     Verify that mccs & dish cannot be allocated together
     """
     mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
 
     with pytest.raises(ValueError):
@@ -135,7 +142,8 @@ def test_assign_resources_request_eq_mccs_with_other_objects():
     objects of other types.
     """
     mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1),1*[2])), [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     request = AssignResourcesRequest(mccs_allocate=mccs_allocate)
     assert request != 1
