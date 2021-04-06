@@ -22,6 +22,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         dish_allocation: DishAllocation = None,
         sdp_config: SDPConfiguration = None,
         mccs_allocate: MCCSAllocate = None,
+        interface_url: str = None
     ):
         """
         Create a new AssignResourcesRequest object.
@@ -31,6 +32,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             for this request.
         :param sdp_config: sdp configuration
         :param mccs_allocate: MCCS subarray allocation
+        :param interface_url: url string to determine JsonSchema version
 
         :raises ValueError: if mccs is allocated with dish and sdp_config
         """
@@ -38,12 +40,9 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         self.dish = dish_allocation
         self.sdp_config = sdp_config
         self.mccs = mccs_allocate
-        if self.mccs is not None and (
-            self.subarray_id is not None
-            or self.dish is not None
-            or self.sdp_config is not None
-        ):
-            raise ValueError("Can't allocate dish and sdp in the same call as mccs")
+        self.interface_url = interface_url
+        if self.mccs is not None and self.dish is not None:
+            raise ValueError("Can't allocate dish in the same call as mccs")
 
     @classmethod
     def from_dish(
@@ -89,6 +88,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             and self.dish == other.dish
             and self.sdp_config == other.sdp_config
             and self.mccs == other.mccs
+            and self.interface_url == other.interface_url
         )
 
 
