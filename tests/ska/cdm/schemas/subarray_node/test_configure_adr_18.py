@@ -12,7 +12,7 @@ from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 from ska.cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
-from ska.cdm.messages.subarray_node.configure.mccs import StnBeamConfiguration
+from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
@@ -249,7 +249,7 @@ def test_configure_request_can_be_created_when_only_mccs_present():
         ],
         "station_beams": [
           {
-            "station_beam_id":1,
+            "subarray_beam_id":1,
             "station_ids": [1,2],
             "channels": [1,2,3,4],
             "update_rate": 1.0,
@@ -259,7 +259,7 @@ def test_configure_request_can_be_created_when_only_mccs_present():
       }
     }"""
     station_config = StnConfiguration(1)
-    station_beam_config = StnBeamConfiguration(
+    station_beam_config = SubarrayBeamConfiguration(
         1, [1, 2], [1, 2, 3, 4], 1.0, [0.1, 182.0, 0.5, 45.0, 1.6]
     )
     mccs_config = MCCSConfiguration([station_config], [station_beam_config])

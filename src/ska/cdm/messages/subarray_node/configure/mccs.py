@@ -6,7 +6,7 @@ command.
 
 from typing import List
 
-__all__ = ["MCCSConfiguration", "StnConfiguration", "StnBeamConfiguration"]
+__all__ = ["MCCSConfiguration", "StnConfiguration", "SubarrayBeamConfiguration"]
 
 
 class StnConfiguration:
@@ -36,12 +36,12 @@ class StnConfiguration:
         return self.station_id == other.station_id
 
 
-class StnBeamConfiguration:
-    """A class to hold station_beam configuration attributes"""
+class SubarrayBeamConfiguration:
+    """A class to hold subarray_beam configuration attributes"""
 
     def __init__(
         self,
-        station_beam_id: int,
+        subarray_beam_id: int,
         station_ids: List[int],
         channels: List[int],
         update_rate: float,
@@ -50,8 +50,8 @@ class StnBeamConfiguration:
         """
         Initialise the station beam configuration.
 
-        :param station_beam_id: stationbeam's id
-        :type station_beam_id: int
+        :param subarray_beam_id: stationbeam's id
+        :type subarray_beam_id: int
         :param station_ids: station id's
         :type station_ids: List[int]
         :param channels: channels to form station beam
@@ -61,7 +61,7 @@ class StnBeamConfiguration:
         :param sky_coordinates: Az/El specification with rates
         :type sky_coordinates: List[float]
         """
-        self.station_beam_id = station_beam_id
+        self.subarray_beam_id = subarray_beam_id
         self.station_ids = station_ids
         self.channels = channels
         self.update_rate = update_rate
@@ -77,10 +77,10 @@ class StnBeamConfiguration:
         :return: returns True if the objects are the same, else False
         :rtype: boolean
         """
-        if not isinstance(other, StnBeamConfiguration):
+        if not isinstance(other, SubarrayBeamConfiguration):
             return False
         return (
-            self.station_beam_id == other.station_beam_id
+            self.subarray_beam_id == other.subarray_beam_id
             and self.station_ids == other.station_ids
             and self.channels == other.channels
             and self.update_rate == other.update_rate
@@ -96,7 +96,7 @@ class MCCSConfiguration:
     def __init__(
         self,
         station_configs: List[StnConfiguration],
-        station_beam_configs: List[StnBeamConfiguration],
+        station_beam_configs: List[SubarrayBeamConfiguration],
     ):
         """
         Create a new MCCSConfiguration.
@@ -104,7 +104,7 @@ class MCCSConfiguration:
         :param station_configs: a list of station configurations
         :type station_configs: List[StnConfiguration]
         :param station_beam_configs: a list of station beam configurations
-        :type station_beam_configs: List[StnBeamConfiguration]
+        :type station_beam_configs: List[SubarrayBeamConfiguration]
         """
         self.station_configs = station_configs
         self.station_beam_configs = station_beam_configs

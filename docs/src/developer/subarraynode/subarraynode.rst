@@ -220,7 +220,7 @@ of a full CDM JSON object, the elements this maps to are:
         ],
         "station_beams": [
             {
-                "station_beam_id": 1,
+                "subarray_beam_id": 1,
                 "station_ids": [2,3],
                 "channels": [1, 2, 3, 4, 5, 6, 7, 8],
                 "update_rate": 0.0,
@@ -325,7 +325,7 @@ Example configuration JSON for LOW
         ],
         "station_beams": [
             {
-                "station_beam_id": 1,
+                "subarray_beam_id": 1,
                 "station_ids": [2,3],
                 "channels": [1, 2, 3, 4, 5, 6, 7, 8],
                 "update_rate": 0.0,

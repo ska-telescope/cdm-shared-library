@@ -22,7 +22,7 @@ class MCCSAllocate:
         self,
         station_ids: List[Tuple],
         channel_blocks: List[int],
-        station_beam_ids: List[int],
+        subarray_beam_ids: List[int],
     ):
         """
         Create a new Subarray object.
@@ -31,12 +31,12 @@ class MCCSAllocate:
         :type station_ids: List[Tuple]
         :param channel_blocks: number of channel groups to assign
         :type channel_blocks: List[int]
-        :param station_beam_ids: station beam id's to allocate
-        :type station_beam_ids: List[int]
+        :param subarray_beam_ids: station beam id's to allocate
+        :type subarray_beam_ids: List[int]
         """
         self.station_ids = station_ids
         self.channel_blocks = list(channel_blocks)
-        self.station_beam_ids = list(station_beam_ids)
+        self.subarray_beam_ids = list(subarray_beam_ids)
 
     def __eq__(self, other):
         """
@@ -53,5 +53,5 @@ class MCCSAllocate:
         return (
             self.station_ids == other.station_ids
             and self.channel_blocks == other.channel_blocks
-            and self.station_beam_ids == other.station_beam_ids
+            and self.subarray_beam_ids == other.subarray_beam_ids
         )

@@ -20,7 +20,7 @@ from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
     StnConfiguration,
-    StnBeamConfiguration,
+    SubarrayBeamConfiguration,
 )
 
 
@@ -57,7 +57,7 @@ def test_mccs_configure_request_eq():
     """
     station_config = StnConfiguration(1)
     print(station_config)
-    station_beam_config = StnBeamConfiguration(
+    station_beam_config = SubarrayBeamConfiguration(
         1, [1, 2], [1, 2, 3, 4, 5, 6], 1.0, [0.1, 182.0, 0.5, 45.0, 1.6]
     )
     mccs_config = MCCSConfiguration([station_config], [station_beam_config])
@@ -88,7 +88,7 @@ def test_mccs_configure_request_is_not_equal_to_other_objects():
     Verify that an MCCS ConfigureRequest is not equal to other objects.
     """
     station_config = StnConfiguration(1)
-    station_beam_config = StnBeamConfiguration(
+    station_beam_config = SubarrayBeamConfiguration(
         1, [1, 2], [1, 2, 3, 4, 5, 6], 1.0, [0.1, 182.0, 0.5, 45.0, 1.6]
     )
     mccs_config = MCCSConfiguration([station_config], [station_beam_config])
@@ -102,7 +102,7 @@ def test_configure_request_mccs_independence():
     Verify that an Mid & Low ConfigureRequests are independent.
     """
     station_config = StnConfiguration(1)
-    station_beam_config = StnBeamConfiguration(
+    station_beam_config = SubarrayBeamConfiguration(
         1, [1, 2], [1, 2, 3, 4, 5, 6], 1.0, [0.1, 182.0, 0.5, 45.0, 1.6]
     )
     mccs_config = MCCSConfiguration([station_config], [station_beam_config])

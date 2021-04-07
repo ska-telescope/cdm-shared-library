@@ -16,7 +16,7 @@ __all__ = [
     "SDPConfigurationSchema",
     "MCCSConfigurationSchema",
     "StnConfigurationSchema",
-    "StnBeamConfigurationSchema",
+    "SubarrayBeamConfigurationSchema",
 ]
 
 from .core import (
@@ -36,5 +36,5 @@ from .sdp import SDPConfigurationSchema
 from .mccs import (
     MCCSConfigurationSchema,
     StnConfigurationSchema,
-    StnBeamConfigurationSchema,
+    SubarrayBeamConfigurationSchema,
 )

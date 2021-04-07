@@ -115,7 +115,7 @@ Example JSON input modelled by ``AssignResourcesRequest`` for LOW:
         "subarray_id": 1,
         "station_ids": [1,2],
         "channels": [1,2,3,4,5,6,7,8],
-        "station_beam_ids": [1],
+        "subarray_beam_ids": [1],
     }
   }
 

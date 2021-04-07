@@ -11,7 +11,7 @@ package ska.cdm.messages.central_node {
             subarray_id: int,
             station_ids: List[int],
             channels: List[int],
-            station_beam_ids: List[int]
+            subarray_beam_ids: List[int]
         }
 
         class Channel {

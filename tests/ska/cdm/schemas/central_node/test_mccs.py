@@ -11,7 +11,7 @@ VALID_MCCS_ALLOCATE_REQUEST = """
 {
     "station_ids": [[1, 2]],
     "channel_blocks": [1, 2, 3, 4, 5],
-    "station_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    "subarray_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
 }
 """
 

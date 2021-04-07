@@ -7,13 +7,13 @@ from marshmallow import Schema, fields, post_load
 
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
-from ska.cdm.messages.subarray_node.configure.mccs import StnBeamConfiguration
+from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
 from ska.cdm.schemas import CODEC
 
 __all__ = [
     "MCCSConfigurationSchema",
     "StnConfigurationSchema",
-    "StnBeamConfigurationSchema",
+    "SubarrayBeamConfigurationSchema",
 ]
 
 
@@ -36,9 +36,9 @@ class StnConfigurationSchema(Schema):
         return StnConfiguration(station_id)
 
 
-class StnBeamConfigurationSchema(Schema):
+class SubarrayBeamConfigurationSchema(Schema):
 
-    station_beam_id = fields.Integer(data_key="station_beam_id", required=True)
+    subarray_beam_id = fields.Integer(data_key="subarray_beam_id", required=True)
     station_ids = fields.List(fields.Integer(data_key="station_ids", required=True))
     channels = fields.List(fields.Integer(data_key="channels"))
     update_rate = fields.Float(data_key="update_rate")
@@ -47,21 +47,21 @@ class StnBeamConfigurationSchema(Schema):
     @post_load
     def create(self, data, **_):
         """
-         Convert parsed JSON back into a StnBeamConfiguration object.
+         Convert parsed JSON back into a SubarrayBeamConfiguration object.
 
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
 
-        :return: StnBeamConfiguration instance populated to match JSON
-        :rtype: StnBeamConfiguration
+        :return: SubarrayBeamConfiguration instance populated to match JSON
+        :rtype: SubarrayBeamConfiguration
         """
-        station_beam_id = data["station_beam_id"]
+        subarray_beam_id = data["subarray_beam_id"]
         station_ids = data["station_ids"]
         channels = data["channels"]
         update_rate = data["update_rate"]
         sky_coords = data["sky_coordinates"]
-        return StnBeamConfiguration(
-            station_beam_id, station_ids, channels, update_rate, sky_coords
+        return SubarrayBeamConfiguration(
+            subarray_beam_id, station_ids, channels, update_rate, sky_coords
         )
 
 
@@ -75,7 +75,7 @@ class MCCSConfigurationSchema(Schema):
         StnConfigurationSchema, many=True, data_key="stations"
     )
     station_beam_configs = fields.Nested(
-        StnBeamConfigurationSchema, many=True, data_key="station_beams"
+        SubarrayBeamConfigurationSchema, many=True, data_key="station_beams"
     )
 
     @post_load
