@@ -13,6 +13,7 @@ from ska.cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
+from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
@@ -247,20 +248,29 @@ def test_configure_request_can_be_created_when_only_mccs_present():
             "station_id": 1
           }
         ],
-        "station_beams": [
+        "subarray_beams": [
           {
             "subarray_beam_id":1,
             "station_ids": [1,2],
-            "channels": [1,2,3,4],
+            "channels": [[1,2]],
             "update_rate": 1.0,
-            "sky_coordinates": [0.1, 182.0, 0.5, 45.0, 1.6]
+            "target": {
+                  "system": "horizon",
+                  "name": "DriftScan",
+                  "az": 180.0,
+                  "el": 45.0
+            },
+            "antenna_weights": [1.0, 1.0, 1.0],
+            "phase_centre": [0.0, 0.0]
           }
         ]
       }
     }"""
     station_config = StnConfiguration(1)
+    target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "horizon")
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [1, 2, 3, 4], 1.0, [0.1, 182.0, 0.5, 45.0, 1.6]
+        1, [1, 2], [(1, 2)], 1.0, target,
+        [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     mccs_config = MCCSConfiguration([station_config], [station_beam_config])
     expected = ConfigureRequest(mccs=mccs_config)
