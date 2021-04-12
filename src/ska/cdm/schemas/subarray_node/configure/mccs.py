@@ -9,7 +9,7 @@ from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
-from ska.cdm.schemas import CODEC, shared
+from ska.cdm.schemas import CODEC
 
 __all__ = [
     "MCCSConfigurationSchema",
@@ -19,15 +19,16 @@ __all__ = [
 ]
 
 
+@CODEC.register_mapping(SubarrayBeamTarget)
 class SubarrayBeamTargetSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the subarray_node.Target class
     """
 
-    az = fields.Float(data_key="az")
-    el = fields.Float(data_key="el")
-    system = shared.UpperCasedField(data_key="system")
-    name = fields.String(data_key="name")
+    az = fields.Float(data_key="az", required=True)
+    el = fields.Float(data_key="el", required=True)
+    name = fields.String(data_key="name", required=True)
+    system = fields.String(data_key="system", required=True)
 
     @post_load
     def create_target(self, data, **_):  # pylint: disable=no-self-use
@@ -42,12 +43,15 @@ class SubarrayBeamTargetSchema(Schema):  # pylint: disable=too-few-public-method
         el = data["el"]
         name = data["name"]
         system = data["system"]
-        target = SubarrayBeamTarget(
-            az=az, el=el, name=name, system=system
+        return SubarrayBeamTarget(
+            az=az,
+            el=el,
+            name=name,
+            system=system
         )
-        return target
 
 
+@CODEC.register_mapping(StnConfiguration)
 class StnConfigurationSchema(Schema):
     station_id = fields.Integer(data_key="station_id", required=True)
 
@@ -66,6 +70,7 @@ class StnConfigurationSchema(Schema):
         return StnConfiguration(station_id)
 
 
+@CODEC.register_mapping(SubarrayBeamConfiguration)
 class SubarrayBeamConfigurationSchema(Schema):
     subarray_beam_id = fields.Integer(data_key="subarray_beam_id", required=True)
     station_ids = fields.List(fields.Integer(data_key="station_ids", required=True))

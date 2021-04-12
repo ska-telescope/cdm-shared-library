@@ -8,6 +8,21 @@ from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfigurat
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 
 
+def test_subarray_beam_target_equals():
+    """
+    Verify that SubarrayBeamConfiguration are considered equal when all attributes are
+    equal.
+    """
+    az = 180.0
+    el = 45.0
+    name = 'DriftScan'
+    system = 'horizon'
+
+    config = SubarrayBeamTarget(az, el, name, system)
+    assert config == SubarrayBeamTarget(az, el, name, system)
+    assert config != SubarrayBeamTarget(az, el, 'name', 'system')
+
+
 def test_stn_configuration_equals():
     """
     Verify that StnConfigurations are considered equal when all attributes are
@@ -46,7 +61,6 @@ def test_stnbeam_configuration_equals():
         subarray_beam_id, station_ids, channels, update_rate,
         target, antenna_weights, phase_centre
     )
-
     config = station_beam_config
     config1 = station_beam_config
     assert config == config1
