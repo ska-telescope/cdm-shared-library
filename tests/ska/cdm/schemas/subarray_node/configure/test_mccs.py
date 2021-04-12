@@ -5,10 +5,12 @@ from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
+from ska.cdm.messages.subarray_node.configure.mccs import MCCSAllocate
 from ska.cdm.schemas.subarray_node.configure.mccs import MCCSConfigurationSchema
 from ska.cdm.schemas.subarray_node.configure.mccs import StnConfigurationSchema
 from ska.cdm.schemas.subarray_node.configure.mccs import SubarrayBeamConfigurationSchema
 from ska.cdm.schemas.subarray_node.configure.mccs import SubarrayBeamTargetSchema
+from ska.cdm.schemas.subarray_node.configure.mccs import MCCSAllocateSchema
 from ska.cdm.utils import json_is_equal
 
 
@@ -206,3 +208,35 @@ def test_unmarshall_mccsconfiguration_from_json():
     }"""
     unmarshalled = MCCSConfigurationSchema().loads(valid_json)
     assert unmarshalled == expected
+
+
+VALID_MCCS_ALLOCATE_REQUEST = """
+{
+    "subarray_beam_ids": [ 1, 2, 3, 4 ],
+    "station_ids": [ [  1,  2, 3, 4, 5 ] ],
+    "channel_blocks": [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+}
+"""
+
+
+def test_marshal_mccs_allocate_resources():
+    """
+    Verify that MCCSAllocate is marshalled to JSON correctly.
+    """
+    request = MCCSAllocate(
+        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    json_str = MCCSAllocateSchema().dumps(request)
+    assert json_is_equal(json_str, VALID_MCCS_ALLOCATE_REQUEST)
+
+
+def test_unmarshall_mccs_allocate_resources():
+    """
+    Verify that JSON can be unmarshalled back to an MCCSAllocate
+    object.
+    """
+    expected = MCCSAllocate(
+        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = MCCSAllocateSchema().loads(VALID_MCCS_ALLOCATE_REQUEST)
+    assert request == expected
