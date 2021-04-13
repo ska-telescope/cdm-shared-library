@@ -160,7 +160,7 @@ def test_mccs_allocate_is_empty():
     Verify that we can detect an empty MCCSAllocate
     """
     mccs_allocate = MCCSAllocate([],[],[])
-    
+
     assert mccs_allocate.is_empty()
 
 def test_mccs_allocate_is_not_empty():
@@ -170,6 +170,6 @@ def test_mccs_allocate_is_not_empty():
     mccs_allocate = MCCSAllocate(
         [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    
+
     assert not mccs_allocate.is_empty()
     
