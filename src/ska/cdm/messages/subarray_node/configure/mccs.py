@@ -6,9 +6,12 @@ command.
 
 from typing import List
 
-__all__ = ["MCCSConfiguration", "StnConfiguration", "SubarrayBeamConfiguration",
-           "SubarrayBeamTarget", "MCCSAllocate"]
-
+__all__ = ["MCCSConfiguration",
+           "StnConfiguration",
+           "SubarrayBeamConfiguration",
+           "SubarrayBeamTarget",
+           "MCCSAllocate"
+          ]
 
 class SubarrayBeamTarget:
     """
