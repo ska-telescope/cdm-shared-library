@@ -33,6 +33,12 @@ package ska.cdm.messages.subarray_node.configure {
         MCCSConfiguration *-- "*" StnConfiguration
         MCCSConfiguration *-- "*" SubarrayBeamConfiguration
 
+        class MCCSAllocate {
+            subarray_beam_ids: List[int]
+            station_ids: List[List[int]]
+            channel_blocks: List[int]
+        }
+
     }
 }
 
