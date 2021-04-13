@@ -11,14 +11,24 @@ package ska.cdm.messages.subarray_node.configure {
         class SubarrayBeamConfiguration {
             subarray_beam_id: int
             station_ids: List[int]
-            channels: List[int]
+            channels: List[List[int]]
             update_rate: float
-            sky_coordinates: List[float]
+            antenna_weights: List[int]
+            phase_centre: List[int]
+            target: SubarrayBeamTarget
         }
 
+        class SubarrayBeamTarget {
+             az: float
+             el: float
+             name: str
+             system: str
+          }
+        SubarrayBeamConfiguration *-- "1" SubarrayBeamTarget
+
         class MCCSConfiguration {
-            station_configs: List[StnConfiguration],
-            station_beam_configs: List[SubarrayBeamConfiguration],
+            stations: List[StnConfiguration],
+            subarray_beams: List[SubarrayBeamConfiguration],
         }
         MCCSConfiguration *-- "*" StnConfiguration
         MCCSConfiguration *-- "*" SubarrayBeamConfiguration
