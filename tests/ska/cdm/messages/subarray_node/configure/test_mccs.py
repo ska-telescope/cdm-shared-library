@@ -52,7 +52,7 @@ def test_stnbeam_configuration_equals():
     """
     subarray_beam_id = 4
     station_ids = [2, 3]
-    channels = [(5, 6, 7, 8, 9)]
+    channels = [[5, 6, 7, 8, 9]]
     update_rate = 1.5
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     antenna_weights = [1.0, 1.0, 1.0]
@@ -74,7 +74,7 @@ def test_stnbeam_configuration_equals():
         antenna_weights, phase_centre
     )
     assert config != SubarrayBeamConfiguration(
-        subarray_beam_id, station_ids, [(1, 2, 3, 4, 5, 6)], update_rate, target,
+        subarray_beam_id, station_ids, [[1, 2, 3, 4, 5, 6]], update_rate, target,
         antenna_weights, phase_centre
     )
     assert config != SubarrayBeamConfiguration(
@@ -105,7 +105,7 @@ def test_stnbeam_configuration_not_equal_to_other_objects():
     """
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     config = SubarrayBeamConfiguration(
-        1, [1, 2], [(1, 2, 3, 4, 5, 6)], 1.0, target,
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     assert config is not None
@@ -121,7 +121,7 @@ def test_mccs_configuration_equals():
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_config = StnConfiguration(1)
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [(1, 2, 3, 4, 5, 6)], 1.0, target,
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     config = MCCSConfiguration([station_config], [station_beam_config])
@@ -131,7 +131,7 @@ def test_mccs_configuration_equals():
         [station_config],
         [
             SubarrayBeamConfiguration(
-                4, [1, 2], [(1, 2, 3, 4, 5, 6)], 1.0, target,
+                4, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
                 [1.0, 1.0, 1.0], [0.0, 0.0]
             )
         ],
@@ -146,7 +146,7 @@ def test_mccs_config_not_equal_to_other_objects():
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_config = StnConfiguration(1)
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [(1, 2, 3, 4, 5, 6)], 1.0, target,
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
 

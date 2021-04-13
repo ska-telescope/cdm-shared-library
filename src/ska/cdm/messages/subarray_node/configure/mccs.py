@@ -4,7 +4,7 @@ aspects of MCCS configuration that may be specified in a SubArray.configure
 command.
 """
 
-from typing import List, Tuple
+from typing import List
 
 __all__ = ["MCCSConfiguration", "StnConfiguration", "SubarrayBeamConfiguration",
            "SubarrayBeamTarget"]
@@ -18,7 +18,7 @@ class SubarrayBeamTarget:
     """
 
     #  pylint: disable=too-many-arguments
-    def __init__(self, az, el, name: str, system: str):
+    def __init__(self, az: float, el: float, name: str, system: str):
         """
         Initialise the station configuration.
 
@@ -89,7 +89,7 @@ class SubarrayBeamConfiguration:
             self,
             subarray_beam_id: int,
             station_ids: List[int],
-            channels: List[Tuple],
+            channels: List[List[int]],
             update_rate: float,
             target: SubarrayBeamTarget,
             antenna_weights: List[float],

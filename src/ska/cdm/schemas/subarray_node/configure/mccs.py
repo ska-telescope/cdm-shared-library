@@ -74,7 +74,7 @@ class StnConfigurationSchema(Schema):
 class SubarrayBeamConfigurationSchema(Schema):
     subarray_beam_id = fields.Integer(data_key="subarray_beam_id", required=True)
     station_ids = fields.List(fields.Integer(data_key="station_ids", required=True))
-    channels = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
+    channels = fields.List(fields.List(fields.Integer),
                            data_key="channels")
     update_rate = fields.Float(data_key="update_rate")
     target = fields.Nested(SubarrayBeamTargetSchema, data_key="target")
@@ -101,13 +101,13 @@ class SubarrayBeamConfigurationSchema(Schema):
         phase_centre = data["phase_centre"]
 
         return SubarrayBeamConfiguration(
-            subarray_beam_id,
-            station_ids,
-            channels,
-            update_rate,
-            target,
-            antenna_weights,
-            phase_centre
+            subarray_beam_id=subarray_beam_id,
+            station_ids=station_ids,
+            channels=channels,
+            update_rate=update_rate,
+            target=target,
+            antenna_weights=antenna_weights,
+            phase_centre=phase_centre
         )
 
 

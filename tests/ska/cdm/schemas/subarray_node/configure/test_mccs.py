@@ -54,7 +54,7 @@ def test_marshall_stn_beam_configuration():
     }"""
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     stn_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [(1, 2)], 0.0, target,
+        1, [1, 2], [[1, 2]], 0.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
 
@@ -93,7 +93,7 @@ def test_marshall_mccsconfiguration():
     stn_config = StnConfiguration(1)
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     stn_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [(1, 2)], 0.0, target,
+        1, [1, 2], [[1, 2]], 0.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     config = MCCSConfiguration([stn_config], [stn_beam_config])
@@ -142,7 +142,7 @@ def test_unmarshall_SubarrayBeamConfiguration_from_json():
     target = SubarrayBeamTarget(az, el, name, system)
     subarray_beam_id = 1
     station_ids = [2, 3]
-    channels = [(1, 2)]
+    channels = [[1, 2]]
     update_rate = 0.0
     antenna_weights = [1.0, 1.0, 1.0]
     phase_centre = [0.0, 0.0]
@@ -154,7 +154,7 @@ def test_unmarshall_SubarrayBeamConfiguration_from_json():
     valid_json = """
     {
         "subarray_beam_id": 1,
-        "station_ids": [2,3],
+        "station_ids": [2, 3],
         "channels": [[1, 2]],
         "update_rate": 0.0,
         "target": {
@@ -165,7 +165,8 @@ def test_unmarshall_SubarrayBeamConfiguration_from_json():
         },
         "antenna_weights": [1.0, 1.0, 1.0],
         "phase_centre": [0.0, 0.0]
-    }"""
+    }
+    """
 
     unmarshalled = SubarrayBeamConfigurationSchema().loads(valid_json)
     assert unmarshalled == expected
@@ -179,7 +180,7 @@ def test_unmarshall_mccsconfiguration_from_json():
     stn_config = StnConfiguration(1)
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     subarray_beam_config = SubarrayBeamConfiguration(
-        1, [2, 3], [(1, 2)], 0.0, target,
+        1, [2, 3], [[1, 2]], 0.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     expected = MCCSConfiguration([stn_config], [subarray_beam_config])
