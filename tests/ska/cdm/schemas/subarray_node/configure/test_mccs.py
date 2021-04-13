@@ -1,8 +1,6 @@
 """
 Unit tests for the ska.cdm.schemas.subarray_node.configure.mccs module.
 """
-import pytest as pytest
-
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
@@ -130,7 +128,6 @@ def test_unmarshall_stnconfiguration_from_json():
     assert unmarshalled == expected
 
 
-@pytest.mark.skip('TBC: Need to check unmarshall')
 def test_unmarshall_SubarrayBeamConfiguration_from_json():
     """
     Verify that SubarrayBeamConfiguration is unmarshalled correctly from JSON.
@@ -172,7 +169,6 @@ def test_unmarshall_SubarrayBeamConfiguration_from_json():
     assert unmarshalled == expected
 
 
-@pytest.mark.skip('TBC: Need to check unmarshall')
 def test_unmarshall_mccsconfiguration_from_json():
     """
     Verify that MCCSConfiguration is unmarshalled correctly from JSON.

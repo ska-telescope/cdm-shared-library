@@ -121,28 +121,27 @@ class SubarrayBeamConfiguration:
         self.antenna_weights = antenna_weights
         self.phase_centre = phase_centre
 
-
-def __eq__(self, other):
-    """
-        Check for equality between two station beam configuration objects
-
-        :param other: the object to check against this object
-        :type other: station beam configuration object
-
-        :return: returns True if the objects are the same, else False
-        :rtype: boolean
+    def __eq__(self, other):
         """
-    if not isinstance(other, SubarrayBeamConfiguration):
-        return False
-    return (
-            self.subarray_beam_id == other.subarray_beam_id
-            and self.station_ids == other.station_ids
-            and self.channels == other.channels
-            and self.update_rate == other.update_rate
-            and self.target == other.target
-            and self.antenna_weights == other.antenna_weights
-            and self.phase_centre == other.phase_centre
-    )
+            Check for equality between two station beam configuration objects
+
+            :param other: the object to check against this object
+            :type other: station beam configuration object
+
+            :return: returns True if the objects are the same, else False
+            :rtype: boolean
+            """
+        if not isinstance(other, SubarrayBeamConfiguration):
+            return False
+        return (
+                self.subarray_beam_id == other.subarray_beam_id
+                and self.station_ids == other.station_ids
+                and self.channels == other.channels
+                and self.update_rate == other.update_rate
+                and self.target == other.target
+                and self.antenna_weights == other.antenna_weights
+                and self.phase_centre == other.phase_centre
+        )
 
 
 class MCCSConfiguration:

@@ -4,8 +4,6 @@ Unit tests for the ska.cdm.schemas.subarray_node.configure module.
 
 from datetime import timedelta
 
-import pytest as pytest
-
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 from ska.cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
@@ -815,7 +813,6 @@ def test_configure_request_can_be_created_when_only_required_args_present():
     assert expected == unmarshalled
 
 
-@pytest.mark.skip('TBC: Need to check unmarshall')
 def test_configure_request_can_be_created_when_only_mccs_present():
     """
     Verify that a ConfigureRequest object can be unmarshalled from JSON when
