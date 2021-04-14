@@ -61,24 +61,29 @@ def test_assign_resources_request_mccs_eq():
         list(zip(itertools.count(1, 1), 1 * [2])),
         [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    request = AssignResourcesRequest(mccs_allocate=mccs_allocate)
-    assert request == AssignResourcesRequest(mccs_allocate=mccs_allocate)
+    request = AssignResourcesRequest(subarray_id_low=1, mccs_allocate=mccs_allocate)
+    assert request == AssignResourcesRequest(subarray_id_low=1, mccs_allocate=mccs_allocate)
     assert request != AssignResourcesRequest(
+        subarray_id_low=1,
         mccs_allocate=MCCSAllocate(
             list(zip(itertools.count(1, 1), 1 * [1])), [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5, 6, 7, 8, 9]
         ),
     )
     assert request != AssignResourcesRequest(
+        subarray_id_low=1,
         mccs_allocate=MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5],
                                    [1, 2, 3, 4, 5, 6])
     )
     assert request != AssignResourcesRequest(
+        subarray_id_low=1,
         mccs_allocate=MCCSAllocate(
             list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5, 6]
         ),
     )
+    assert request != AssignResourcesRequest(subarray_id_low=2, mccs_allocate=mccs_allocate)
+    assert request != AssignResourcesRequest(mccs_allocate=mccs_allocate)
 
 
 def test_assign_resources_request_from_mccs():
@@ -88,13 +93,16 @@ def test_assign_resources_request_from_mccs():
     """
     mccs_allocate = MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])),
                                  [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6])
-    request = AssignResourcesRequest.from_mccs(mccs_allocate)
-    assert request == AssignResourcesRequest(
+    request = AssignResourcesRequest.from_mccs(subarray_id_low=1, mccs_allocate=mccs_allocate)
+
+    expected = AssignResourcesRequest(
+        subarray_id_low=1,
         mccs_allocate=MCCSAllocate(
             list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5, 6]
         ),
     )
+    assert request == expected
 
 
 def test_assign_resources_request_from_dish():

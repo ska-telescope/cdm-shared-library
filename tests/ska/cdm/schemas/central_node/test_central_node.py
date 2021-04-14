@@ -27,7 +27,7 @@ from ska.cdm.schemas.central_node.assign_resources import (
 )
 from ska.cdm.utils import json_is_equal
 
-VALID_ASSIGN_RESOURCES_REQUEST = """{
+VALID_MID_ASSIGN_RESOURCES_REQUEST = """{
   "subarrayID": 1,
   "dish": {"receptorIDList": ["0001", "0002"]},
   "sdp": {
@@ -322,39 +322,10 @@ def test_unmarshall_assign_sdp_configuration():
     assert request == expected
 
 
-def test_marshal_assign_resources_request_mccs():
+def test_marshal_assign_resources_request_mid():
     """
-    Verify that MCCSAllocateSchema is marshalled to JSON correctly.
-    """
-    # MCCS subarray allocation
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    request = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)
-    json_str = AssignResourcesRequestSchema().dumps(request)
-    assert json_is_equal(json_str, VALID_MCCS_ALLOCATE_RESOURCES_REQUEST)
-
-
-def test_unmarshall_assign_resources_request_mccs():
-    """
-    Verify that JSON can be unmarshalled back to an AssignResourcesRequest
-    object.
-    """
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    request = AssignResourcesRequestSchema().loads(
-        VALID_MCCS_ALLOCATE_RESOURCES_REQUEST
-    )
-    expected = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)
-    assert request == expected
-
-
-def test_marshal_assign_resources_request_dish():
-    """
-    Verify that AssignResourcesRequest is marshalled to JSON correctly.
+    Verify that assign resource request for mid is marshalled
+    to JSON correctly.
     """
     # SDP config
     sdp_config = sdp_config_for_test()
@@ -364,20 +335,59 @@ def test_marshal_assign_resources_request_dish():
         1, dish_allocation=dish_allocation, sdp_config=sdp_config,
     )
     json_str = AssignResourcesRequestSchema().dumps(request)
-    assert json_is_equal(json_str, VALID_ASSIGN_RESOURCES_REQUEST)
+    assert json_is_equal(json_str, VALID_MID_ASSIGN_RESOURCES_REQUEST)
 
 
-def test_unmarshall_assign_resources_request_dish():
+def test_unmarshall_assign_resources_request_mid():
     """
     Verify that JSON can be unmarshalled back to an AssignResourcesRequest
-    object.
+    object for mid.
     """
+    # SDP config
     sdp_config = sdp_config_for_test()
-
-    request = AssignResourcesRequestSchema().loads(VALID_ASSIGN_RESOURCES_REQUEST)
-    expected = AssignResourcesRequest.from_dish(
-        1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config,
+    request = AssignResourcesRequestSchema().loads(
+        VALID_MID_ASSIGN_RESOURCES_REQUEST
     )
+    expected = AssignResourcesRequest(subarray_id_mid=1,
+                                      dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+                                      sdp_config=sdp_config)
+    assert request == expected
+
+
+def test_marshal_assign_resources_request_low():
+    """
+    Verify that assign resource request for low is marshalled
+    to JSON correctly.
+    """
+    # MCCS subarray allocation
+    mccs_allocate = MCCSAllocate(
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = AssignResourcesRequest(interface_url='https://schema.skatelescope.org/'
+                                                   'ska-low-tmc-assignresources/1.0',
+                                     subarray_id_low=1,
+                                     mccs_allocate=mccs_allocate)
+    json_str = AssignResourcesRequestSchema().dumps(request)
+    assert json_is_equal(json_str, VALID_LOW_ALLOCATE_RESOURCES_REQUEST)
+
+
+def test_unmarshall_assign_resources_request_low():
+    """
+    Verify that JSON can be unmarshalled back to an AssignResourcesRequest
+    object for low.
+    """
+    mccs_allocate = MCCSAllocate(
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = AssignResourcesRequestSchema().loads(
+        VALID_LOW_ALLOCATE_RESOURCES_REQUEST
+    )
+    expected = AssignResourcesRequest(subarray_id_low=1,
+                                      mccs_allocate=mccs_allocate,
+                                      interface_url='https://schema.skatelescope.org/'
+                                                    'ska-low-tmc-assignresources/1.0')
     assert request == expected
 
 
@@ -482,39 +492,3 @@ def test_unmarshall_release_resources_with_release_all_set_for_low():
                                        )
     assert request == expected
 
-
-def test_marshal_assign_resources_request_for_low():
-    """
-    Verify that assign resource request for low is marshalled
-    to JSON correctly.
-    """
-    # MCCS subarray allocation
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    request = AssignResourcesRequest(interface_url='https://schema.skatelescope.org/'
-                                                   'ska-low-tmc-assignresources/1.0',
-                                     subarray_id_low=1,
-                                     mccs_allocate=mccs_allocate)
-    json_str = AssignResourcesRequestSchema().dumps(request)
-    assert json_is_equal(json_str, VALID_LOW_ALLOCATE_RESOURCES_REQUEST)
-
-
-def test_unmarshall_assign_resources_request_for_low():
-    """
-    Verify that JSON can be unmarshalled back to an AssignResourcesRequest
-    object for low.
-    """
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    request = AssignResourcesRequestSchema().loads(
-        VALID_LOW_ALLOCATE_RESOURCES_REQUEST
-    )
-    expected = AssignResourcesRequest(subarray_id_low=1,
-                                      mccs_allocate=mccs_allocate,
-                                      interface_url='https://schema.skatelescope.org/'
-                                                    'ska-low-tmc-assignresources/1.0')
-    assert request == expected

@@ -72,16 +72,21 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         return obj
 
     @classmethod
-    def from_mccs(cls, mccs_allocate: MCCSAllocate):
+    def from_mccs(cls,
+                  subarray_id_low: int,
+                  mccs_allocate: MCCSAllocate,
+                  sdp_config: SDPConfiguration = None):
         """
         Create a new AssignResourcesRequest object.
 
+        :param subarray_id_low: the numeric SubArray ID (1..16)
         :param mccs_allocate: MCCS subarray allocation
+        :param sdp_config: SDP configuration
 
         :return: AssignResourcesRequest object
         """
         obj = cls.__new__(cls)
-        obj.__init__(mccs_allocate=mccs_allocate)
+        obj.__init__(subarray_id_low=subarray_id_low, mccs_allocate=mccs_allocate, sdp_config=sdp_config)
         return obj
 
     def __eq__(self, other):
