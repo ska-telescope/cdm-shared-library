@@ -28,10 +28,12 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
     Marshmallow schema for the AssignResourcesRequest class.
     """
 
-    subarray_id = fields.Integer(data_key="subarrayID")
+    subarray_id_mid = fields.Integer(data_key="subarrayID")
     dish = fields.Nested(DishAllocationSchema, data_key="dish")
     sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
     mccs = fields.Nested(MCCSAllocateSchema, data_key="mccs")
+    interface_url = fields.String(data_key="interface")
+    subarray_id_low = fields.Integer(data_key="subarray_id")
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -49,15 +51,20 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         :param _: kwargs passed by Marshmallow
         :return: AssignResources object populated from data
         """
-        subarray_id = data.get("subarray_id", None)
+        subarray_id_mid = data.get("subarray_id_mid", None)
         dish_allocation = data.get("dish", None)
         sdp_config = data.get("sdp_config", None)
         mccs = data.get("mccs", None)
+        interface = data.get("interface_url", None)
+        subarray_id_low = data.get("subarray_id_low", None)
+
         return AssignResourcesRequest(
-            subarray_id,
+            subarray_id_mid,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
             mccs_allocate=mccs,
+            interface_url=interface,
+            subarray_id_low=subarray_id_low
         )
 
     @post_dump
@@ -107,9 +114,12 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
     Marshmallow schema for the ReleaseResourcesRequest class.
     """
 
-    subarray_id = fields.Integer(data_key="subarrayID", required=True)
+    subarray_id_mid = fields.Integer(data_key="subarrayID")
     dish = fields.Nested(DishAllocationSchema, data_key="dish")
-    release_all = fields.Boolean(data_key="releaseALL")
+    release_all_mid = fields.Boolean(data_key="releaseALL")
+    interface_url = fields.String(data_key="interface")
+    subarray_id_low = fields.Integer(data_key="subarray_id")
+    release_all_low = fields.Boolean(data_key="release_all")
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -121,23 +131,36 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
     @post_dump
     def filter_args(self, data, **_):  # pylint: disable=no-self-use
         """
-        Filter Marshmallow's JSON based on the value of release_all.
+        Filter Marshmallow's JSON based on the value of release_all_mid.
 
-        If release_all is True, other resource definitions should be stripped
-        from the request. If release_all if False, the 'release_all' key
+        If release_all_mid is True, other resource definitions should be stripped
+        from the request.
+        If release_all_mid for MID set to False, the 'release_all_mid' key
+        itself should be stripped.
+        If release_all_low for LOW set to False, the 'release_all_low' key
         itself should be stripped.
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for request submission
         """
-        # If release_all is True, other resources should be stripped - and
+        # If release_all_mid is True, other resources should be stripped - and
         # vice versa
-        release_all = data["releaseALL"]
-        if release_all:
+
+        # checking key for MID
+        if "releaseALL" in data:
+            release_all_mid = data["releaseALL"]
+        if release_all_mid:
             del data["dish"]
         else:
             del data["releaseALL"]
+
+        # checking key for LOW
+        if "release_all" in data and not data["release_all"]:
+            del data["release_all"]
+
+        # Filter out  null values from JSON.
+        data = {k: v for k, v in data.items() if v is not None}
         return data
 
     @post_load
@@ -150,9 +173,18 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
         :param _: kwargs passed by Marshmallow
         :return: ReleaseResourcesRequest object populated from data
         """
-        subarray_id = data["subarray_id"]
-        release_all = data.get("release_all", False)
+        subarray_id_mid = data.get("subarray_id_mid", None)
+        release_all_mid = data.get("release_all_mid", False)
         dish_allocation = data.get("dish", None)
+        interface = data.get("interface_url", None)
+        subarray_id_low = data.get("subarray_id_low", None)
+        release_all_low = data.get("release_all_low", False)
+
         return ReleaseResourcesRequest(
-            subarray_id, release_all=release_all, dish_allocation=dish_allocation
+            subarray_id_mid=subarray_id_mid,
+            release_all_mid=release_all_mid,
+            dish_allocation=dish_allocation,
+            interface_url=interface,
+            subarray_id_low=subarray_id_low,
+            release_all_low=release_all_low
         )

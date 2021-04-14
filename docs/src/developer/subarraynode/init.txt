@@ -29,6 +29,7 @@ package ska.cdm.messages.subarray_node.configure {
 
 	package ~__init__.py <<Rectangle>> {
 		class ConfigureRequest {
+      interface: str
 			scan_id : int
 		}
 		ConfigureRequest *-- PointingConfiguration

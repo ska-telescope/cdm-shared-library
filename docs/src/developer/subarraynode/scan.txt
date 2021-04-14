@@ -4,7 +4,8 @@ hide empty members
 package ska.cdm.messages.subarray_node {
 	package scan.py <<Rectangle>> {
 		class ScanRequest {
-			scan_id : int
+			interface : str
+      scan_id : int
 	  	}
 		note top of ScanRequest
 			This class is the input argument

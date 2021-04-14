@@ -8,10 +8,9 @@ package ska.cdm.messages.central_node {
         }
 
         class MCCSAllocate {
-            subarray_id: int,
-            station_ids: List[int],
-            channels: List[int],
-            station_beam_ids: List[int]
+            station_ids: List[List[int]],
+            channel_blocks: List[int],
+            subarray_beam_ids: List[int]
         }
 
         class Channel {
@@ -57,9 +56,10 @@ package ska.cdm.messages.central_node {
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
 
         class AssignResourcesRequest {
+            interface : str
             subarray_id : int
         }
-        note right: subarray_id is optional and \n not required for MCCSAllocate
+
         AssignResourcesRequest *-- "1" DishAllocation
         AssignResourcesRequest *-- "1" MCCSAllocate
         AssignResourcesRequest *-- "1" SDPConfiguration
