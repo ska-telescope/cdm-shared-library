@@ -122,14 +122,6 @@ VALID_MID_ASSIGN_RESOURCES_REQUEST = """{
   }
 }"""
 
-VALID_MCCS_ALLOCATE_RESOURCES_REQUEST = """{
-  "mccs": {
-    "station_ids": [[1, 2]],
-    "channel_blocks": [1, 2, 3, 4, 5],
-    "subarray_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
-  }
-}"""
-
 VALID_LOW_ALLOCATE_RESOURCES_REQUEST = """{
   "interface": "https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
   "subarray_id": 1,
