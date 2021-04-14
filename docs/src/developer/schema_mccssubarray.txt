@@ -1,0 +1,45 @@
+@startuml
+scale 2000 width
+!pragma useNewPackage
+hide empty members
+
+package ska.cdm.messages.mccssubarray {
+    package configure.py <<Rectangle>> {
+        class ConfigureRequest
+        class StationConfiguration
+        class SubarrayBeamConfiguration
+    }
+
+    package scan.py <<Rectangle>> {
+        class ScanRequest
+    }
+
+    package assigned_resources.py <<Rectangle>> {
+        class AssignedResources
+    }
+}
+
+package ska.cdm.schemas.mccssubarray {
+	package configure.py <<Rectangle>> {
+        class ConfigureRequestSchema
+        class StationConfigurationSchema
+        class SubarrayBeamConfigurationSchema
+	}
+
+	package scan.py <<Rectangle>> {
+		class ScanRequestSchema
+	}
+
+	package assigned_resources.py <<Rectangle>> {
+		class AssignedResourcesSchema
+	}
+}
+
+ScanRequestSchema --- ScanRequest
+
+StationConfigurationSchema --- StationConfiguration
+SubarrayBeamConfigurationSchema --- SubarrayBeamConfiguration
+ConfigureRequestSchema --- ConfigureRequest
+AssignedResourcesSchema --- AssignedResources
+
+@enduml

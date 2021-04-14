@@ -1,0 +1,15 @@
+@startuml
+hide empty members
+left to right direction
+
+package ska.cdm.messages.mccscontroller {
+	package releaseresources.py <<Rectangle>> {
+		class ReleaseResourcesRequest {
+			interface: str
+			subarray_id : int
+			release_all : bool
+		}
+	}
+}
+
+@enduml

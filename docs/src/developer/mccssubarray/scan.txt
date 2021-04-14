@@ -1,0 +1,27 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.mccssubarray {
+	package scan.py <<Rectangle>> {
+		class ScanRequest {
+			interface: str
+			scan_id : int
+			start_time: float
+	  	}
+		note top of ScanRequest
+			This class is the input argument
+			for ""MCCSSubarray.Scan()""
+		end note
+
+		note as N1
+			The response from
+			""SubArrayNode.Scan()""
+			is unstructured, hence
+			there is no Response
+			class defined in this
+			module.
+		end note
+	}
+}
+
+@enduml

@@ -14,10 +14,9 @@ all: test lint
 test:
 	cd /app && python3 setup.py test | tee setup_py_test.stdout
 	if [ -d /build ]; then \
-		mkdir -p /build/reports; \
 		mv /app/setup_py_test.stdout /build; \
-		mv /app/htmlcov /build; \
-		mv /app/coverage.xml /build/reports/code-coverage.xml; \
+		mv /app/build/htmlcov /build; \
+		mv /app/build/reports /build; \
 	fi;
 
 lint:
