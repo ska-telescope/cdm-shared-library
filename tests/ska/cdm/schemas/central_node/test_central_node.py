@@ -404,10 +404,10 @@ def test_marshall_release_resources():
 
 def test_marshall_release_resources_release_all():
     """
-    Verify that ReleaseResourcesRequest with release_all set is marshalled to
+    Verify that ReleaseResourcesRequest with release_all_mid set is marshalled to
     JSON correctly.
     """
-    request = ReleaseResourcesRequest(1, release_all=True,
+    request = ReleaseResourcesRequest(1, release_all_mid=True,
                                       interface_url="https://schema.skatelescope.org/"
                                                     "ska-low-tmc-releaseresources/1.0")
     json_str = ReleaseResourcesRequestSchema().dumps(request)
@@ -416,12 +416,12 @@ def test_marshall_release_resources_release_all():
 
 def test_release_resources_ignores_resources_when_release_all_is_specified():
     """
-    Verify that other resource statements are excluded when release_all is set
+    Verify that other resource statements are excluded when release_all_mid is set
     to True.
     """
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
     request = ReleaseResourcesRequest(
-        1, release_all=True, dish_allocation=dish_allocation,
+        1, release_all_mid=True, dish_allocation=dish_allocation,
         interface_url="https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0"
     )
     json_str = ReleaseResourcesRequestSchema().dumps(request)
@@ -445,11 +445,11 @@ def test_unmarshall_release_resources():
 def test_unmarshall_release_resources_with_release_all_set():
     """
     Verify that JSON can be unmarshalled back to a ReleaseResourcesRequest
-    object when release_all is set.
+    object when release_all_mid is set.
     """
     schema = ReleaseResourcesRequestSchema()
     request = schema.loads(VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
-    expected = ReleaseResourcesRequest(1, release_all=True,
+    expected = ReleaseResourcesRequest(1, release_all_mid=True,
                                        interface_url="https://schema.skatelescope.org/"
                                                      "ska-low-tmc-releaseresources/1.0")
     assert request == expected
