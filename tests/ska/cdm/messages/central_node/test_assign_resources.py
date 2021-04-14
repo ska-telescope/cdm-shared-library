@@ -62,7 +62,8 @@ def test_assign_resources_request_mccs_eq():
         [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     request = AssignResourcesRequest(subarray_id_low=1, mccs_allocate=mccs_allocate)
-    assert request == AssignResourcesRequest(subarray_id_low=1, mccs_allocate=mccs_allocate)
+    assert request == AssignResourcesRequest(subarray_id_low=1,
+                                             mccs_allocate=mccs_allocate)
     assert request != AssignResourcesRequest(
         subarray_id_low=1,
         mccs_allocate=MCCSAllocate(
@@ -82,8 +83,8 @@ def test_assign_resources_request_mccs_eq():
             [1, 2, 3, 4, 5, 6]
         ),
     )
-    assert request != AssignResourcesRequest(subarray_id_low=2, mccs_allocate=mccs_allocate)
-    assert request != AssignResourcesRequest(mccs_allocate=mccs_allocate)
+    assert request != AssignResourcesRequest(subarray_id_low=2,
+                                             mccs_allocate=mccs_allocate)
 
 
 def test_assign_resources_request_from_mccs():
@@ -93,7 +94,8 @@ def test_assign_resources_request_from_mccs():
     """
     mccs_allocate = MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])),
                                  [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6])
-    request = AssignResourcesRequest.from_mccs(subarray_id_low=1, mccs_allocate=mccs_allocate)
+    request = AssignResourcesRequest.from_mccs(subarray_id_low=1,
+                                               mccs_allocate=mccs_allocate)
 
     expected = AssignResourcesRequest(
         subarray_id_low=1,
@@ -153,7 +155,7 @@ def test_assign_resources_request_eq_mccs_with_other_objects():
         list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
         [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    request = AssignResourcesRequest(mccs_allocate=mccs_allocate)
+    request = AssignResourcesRequest(subarray_id_low=1, mccs_allocate=mccs_allocate)
     assert request != 1
     assert request != object()
 
@@ -215,3 +217,20 @@ def test_assign_resources_request_for_low_eq():
         subarray_id_low=2,
         interface_url='https://schema.skatelescope.org/ska-low-tmc-assignresources/2.0',
     )
+
+
+def test_assign_resources_if_no_subarray_id_argument():
+    """
+    Verify that the boolean release_all_mid argument is required.
+    """
+    mccs_allocate = MCCSAllocate(
+        list(zip(itertools.count(1, 1), 1 * [2])),
+        [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+
+    with pytest.raises(ValueError):
+        _ = AssignResourcesRequest(mccs_allocate=mccs_allocate)
+
+    with pytest.raises(ValueError):
+        _ = AssignResourcesRequest(dish_allocation=dish_allocation)

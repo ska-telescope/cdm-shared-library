@@ -45,6 +45,13 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         self.mccs = mccs_allocate
         self.interface_url = interface_url
         self.subarray_id_low = subarray_id_low
+
+        if self.mccs is not None and self.subarray_id_low is None:
+            raise ValueError('subarray_id must be '
+                             'defined for LOW request')
+        if self.dish is not None and self.subarray_id_mid is None:
+            raise ValueError('subarray_id must be '
+                             'defined for MID request')
         if self.mccs is not None and self.dish is not None:
             raise ValueError("Can't allocate dish in the same call as mccs")
 
@@ -75,18 +82,21 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
     def from_mccs(cls,
                   subarray_id_low: int,
                   mccs_allocate: MCCSAllocate,
-                  sdp_config: SDPConfiguration = None):
+                  sdp_config: SDPConfiguration = None,
+                  interface_url: str = None):
         """
         Create a new AssignResourcesRequest object.
 
         :param subarray_id_low: the numeric SubArray ID (1..16)
         :param mccs_allocate: MCCS subarray allocation
         :param sdp_config: SDP configuration
+        :param interface_url: url string to determine JsonSchema version
 
         :return: AssignResourcesRequest object
         """
         obj = cls.__new__(cls)
-        obj.__init__(subarray_id_low=subarray_id_low, mccs_allocate=mccs_allocate, sdp_config=sdp_config)
+        obj.__init__(subarray_id_low=subarray_id_low, mccs_allocate=mccs_allocate,
+                     sdp_config=sdp_config, interface_url=interface_url)
         return obj
 
     def __eq__(self, other):

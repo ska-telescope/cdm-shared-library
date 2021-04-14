@@ -337,11 +337,12 @@ def test_unmarshall_assign_resources_request_mid():
     """
     # SDP config
     sdp_config = sdp_config_for_test()
+    dish = DishAllocation(receptor_ids=["0001", "0002"])
     request = AssignResourcesRequestSchema().loads(
         VALID_MID_ASSIGN_RESOURCES_REQUEST
     )
     expected = AssignResourcesRequest(subarray_id_mid=1,
-                                      dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+                                      dish_allocation=dish,
                                       sdp_config=sdp_config)
     assert request == expected
 
@@ -483,4 +484,3 @@ def test_unmarshall_release_resources_with_release_all_set_for_low():
                                                      "ska-low-tmc-releaseresources/1.0"
                                        )
     assert request == expected
-
