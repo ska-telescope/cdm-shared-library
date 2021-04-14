@@ -27,7 +27,6 @@ from ska.cdm.schemas.central_node.assign_resources import (
 )
 from ska.cdm.utils import json_is_equal
 
-
 VALID_ASSIGN_RESOURCES_REQUEST = """{
   "subarrayID": 1,
   "dish": {"receptorIDList": ["0001", "0002"]},
@@ -124,6 +123,16 @@ VALID_ASSIGN_RESOURCES_REQUEST = """{
 }"""
 
 VALID_MCCS_ALLOCATE_RESOURCES_REQUEST = """{
+  "mccs": {
+    "station_ids": [[1, 2]],
+    "channel_blocks": [1, 2, 3, 4, 5],
+    "subarray_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  }
+}"""
+
+VALID_LOW_ALLOCATE_RESOURCES_REQUEST = """{
+  "interface": "https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
+  "subarray_id": 1,
   "mccs": {
     "station_ids": [[1, 2]],
     "channel_blocks": [1, 2, 3, 4, 5],
@@ -230,7 +239,6 @@ VALID_ASSIGN_RESOURCES_RESPONSE = """
 
 VALID_RELEASE_RESOURCES_REQUEST = """
 {
-     "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
      "subarrayID": 1,
      "dish": {"receptorIDList": ["0001", "0002"]}
 }
@@ -238,9 +246,16 @@ VALID_RELEASE_RESOURCES_REQUEST = """
 
 VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = """
 {
-    "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
     "subarrayID": 1,
     "releaseALL": true
+}
+"""
+
+VALID_LOW_RELEASE_RESOURCES_RELEASE_ALL_REQUEST = """
+{
+    "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+    "subarray_id": 1,
+    "release_all": true
 }
 """
 
@@ -289,7 +304,6 @@ def sdp_config_for_test():  # pylint: disable=too-many-locals
 
 
 def test_marshal_sdp_configuration():
-
     """
     Verify that SDPConfigurationSchema is marshalled to JSON correctly.
     """
@@ -309,13 +323,12 @@ def test_unmarshall_assign_sdp_configuration():
 
 
 def test_marshal_assign_resources_request_mccs():
-
     """
     Verify that MCCSAllocateSchema is marshalled to JSON correctly.
     """
     # MCCS subarray allocation
     mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1*[2])), [1, 2, 3, 4, 5],
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
         [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     request = AssignResourcesRequest.from_mccs(mccs_allocate=mccs_allocate)
@@ -329,7 +342,7 @@ def test_unmarshall_assign_resources_request_mccs():
     object.
     """
     mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1*[2])), [1, 2, 3, 4, 5],
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
         [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     request = AssignResourcesRequestSchema().loads(
@@ -394,10 +407,7 @@ def test_marshall_release_resources():
     Verify that ReleaseResourcesRequest is marshalled to JSON correctly.
     """
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
-    request = ReleaseResourcesRequest(1, dish_allocation=dish_allocation,
-                                      interface_url="https://schema.skatelescope.org/"
-                                                    "ska-low-tmc-releaseresources/1.0"
-                                      )
+    request = ReleaseResourcesRequest(1, dish_allocation=dish_allocation)
     json_str = ReleaseResourcesRequestSchema().dumps(request)
     assert json_is_equal(json_str, VALID_RELEASE_RESOURCES_REQUEST)
 
@@ -407,11 +417,21 @@ def test_marshall_release_resources_release_all():
     Verify that ReleaseResourcesRequest with release_all_mid set is marshalled to
     JSON correctly.
     """
-    request = ReleaseResourcesRequest(1, release_all_mid=True,
-                                      interface_url="https://schema.skatelescope.org/"
-                                                    "ska-low-tmc-releaseresources/1.0")
+    request = ReleaseResourcesRequest(1, release_all_mid=True)
     json_str = ReleaseResourcesRequestSchema().dumps(request)
     assert json_is_equal(json_str, VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
+
+
+def test_marshall_release_resources_release_all_for_low():
+    """
+    Verify that ReleaseResourcesRequest with release_all_low set is marshalled to
+    JSON correctly.
+    """
+    request = ReleaseResourcesRequest(subarray_id_low=1, release_all_low=True,
+                                      interface_url='https://schema.skatelescope.org/'
+                                                    'ska-low-tmc-releaseresources/1.0')
+    json_str = ReleaseResourcesRequestSchema().dumps(request)
+    assert json_is_equal(json_str, VALID_LOW_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
 
 
 def test_release_resources_ignores_resources_when_release_all_is_specified():
@@ -421,9 +441,7 @@ def test_release_resources_ignores_resources_when_release_all_is_specified():
     """
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
     request = ReleaseResourcesRequest(
-        1, release_all_mid=True, dish_allocation=dish_allocation,
-        interface_url="https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0"
-    )
+        1, release_all_mid=True, dish_allocation=dish_allocation)
     json_str = ReleaseResourcesRequestSchema().dumps(request)
     assert json_is_equal(json_str, VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
 
@@ -436,9 +454,7 @@ def test_unmarshall_release_resources():
     schema = ReleaseResourcesRequestSchema()
     request = schema.loads(VALID_RELEASE_RESOURCES_REQUEST)
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
-    expected = ReleaseResourcesRequest(1, dish_allocation=dish_allocation,
-                                       interface_url="https://schema.skatelescope.org/"
-                                                     "ska-low-tmc-releaseresources/1.0")
+    expected = ReleaseResourcesRequest(1, dish_allocation=dish_allocation)
     assert request == expected
 
 
@@ -449,7 +465,56 @@ def test_unmarshall_release_resources_with_release_all_set():
     """
     schema = ReleaseResourcesRequestSchema()
     request = schema.loads(VALID_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
-    expected = ReleaseResourcesRequest(1, release_all_mid=True,
+    expected = ReleaseResourcesRequest(subarray_id_mid=1, release_all_mid=True)
+    assert request == expected
+
+
+def test_unmarshall_release_resources_with_release_all_set_for_low():
+    """
+    Verify that JSON can be unmarshalled back to a ReleaseResourcesRequest
+    object when release_all_low is set.
+    """
+    schema = ReleaseResourcesRequestSchema()
+    request = schema.loads(VALID_LOW_RELEASE_RESOURCES_RELEASE_ALL_REQUEST)
+    expected = ReleaseResourcesRequest(subarray_id_low=1, release_all_low=True,
                                        interface_url="https://schema.skatelescope.org/"
-                                                     "ska-low-tmc-releaseresources/1.0")
+                                                     "ska-low-tmc-releaseresources/1.0"
+                                       )
+    assert request == expected
+
+
+def test_marshal_assign_resources_request_for_low():
+    """
+    Verify that assign resource request for low is marshalled
+    to JSON correctly.
+    """
+    # MCCS subarray allocation
+    mccs_allocate = MCCSAllocate(
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = AssignResourcesRequest(interface_url='https://schema.skatelescope.org/'
+                                                   'ska-low-tmc-assignresources/1.0',
+                                     subarray_id_low=1,
+                                     mccs_allocate=mccs_allocate)
+    json_str = AssignResourcesRequestSchema().dumps(request)
+    assert json_is_equal(json_str, VALID_LOW_ALLOCATE_RESOURCES_REQUEST)
+
+
+def test_unmarshall_assign_resources_request_for_low():
+    """
+    Verify that JSON can be unmarshalled back to an AssignResourcesRequest
+    object for low.
+    """
+    mccs_allocate = MCCSAllocate(
+        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = AssignResourcesRequestSchema().loads(
+        VALID_LOW_ALLOCATE_RESOURCES_REQUEST
+    )
+    expected = AssignResourcesRequest(subarray_id_low=1,
+                                      mccs_allocate=mccs_allocate,
+                                      interface_url='https://schema.skatelescope.org/'
+                                                    'ska-low-tmc-assignresources/1.0')
     assert request == expected

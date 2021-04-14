@@ -173,3 +173,37 @@ def test_assign_resources_response_eq_with_other_objects():
     response = AssignResourcesResponse(dish_allocation=dish_allocation)
     assert response != 1
     assert response != object()
+
+
+def test_assign_resources_request_for_low_eq():
+    """
+    Verify that two AssignResource request objects for the same sub-array and
+    mccs allocation are considered equal.
+    """
+    mccs_allocate = MCCSAllocate(
+        list(zip(itertools.count(1, 1), 1 * [2])),
+        [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = AssignResourcesRequest(interface_url='https://schema.skatelescope.org/'
+                                                   'ska-low-tmc-assignresources/1.0',
+                                     mccs_allocate=mccs_allocate,
+                                     subarray_id_low=1)
+    assert request == AssignResourcesRequest(
+        interface_url='https://schema.skatelescope.org/'
+                      'ska-low-tmc-assignresources/1.0',
+        mccs_allocate=mccs_allocate,
+        subarray_id_low=1)
+    assert request != AssignResourcesRequest(
+        mccs_allocate=MCCSAllocate(
+            list(zip(itertools.count(1, 1), 1 * [1])), [1, 2, 3, 4, 5],
+            [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        ),
+        interface_url='https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0',
+        subarray_id_low=2
+    )
+    assert request != AssignResourcesRequest(
+        mccs_allocate=MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5],
+                                   [1, 2, 3, 4, 5, 6]),
+        subarray_id_low=2,
+        interface_url='https://schema.skatelescope.org/ska-low-tmc-assignresources/2.0',
+    )

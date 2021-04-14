@@ -26,6 +26,20 @@ def test_release_resources_request_eq():
     )
 
 
+def test_release_resources_request_eq_for_low():
+    """
+    Verify that two ReleaseResource requests for the same sub-array
+    are considered equal.
+    """
+
+    request = ReleaseResourcesRequest(
+        subarray_id_low=1, release_all_low=True
+    )
+
+    assert request == ReleaseResourcesRequest(subarray_id_low=1, release_all_low=True)
+    assert request != ReleaseResourcesRequest(subarray_id_low=2, release_all_low=True)
+
+
 def test_release_resources_request_eq_with_other_objects():
     """
     Verify that a ReleaseResources request object is not considered equal to
@@ -46,6 +60,15 @@ def test_deallocate_resources_must_define_resources_if_not_releasing_all():
         _ = ReleaseResourcesRequest(1, release_all_mid=False)
 
 
+def test_deallocate_resources_if_not_releasing_all_in_low():
+    """
+    Verify that resource argument(s) must be set if the command is not a
+    command to release all sub-array resources.
+    """
+    with pytest.raises(ValueError):
+        _ = ReleaseResourcesRequest(1, release_all_low=False)
+
+
 def test_deallocate_resources_enforces_boolean_release_all_argument():
     """
     Verify that the boolean release_all_mid argument is required.
@@ -57,3 +80,7 @@ def test_deallocate_resources_enforces_boolean_release_all_argument():
     with pytest.raises(ValueError):
         _ = ReleaseResourcesRequest(1, release_all_mid=1,
                                     dish_allocation=dish_allocation)
+
+    # If release_all is not set as boolean for Low
+    with pytest.raises(ValueError):
+        _ = ReleaseResourcesRequest(1, release_all_low=1)

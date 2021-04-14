@@ -34,9 +34,15 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
 
         if not isinstance(release_all_mid, bool):
             raise ValueError('release_all_mid must be a boolean')
-        if release_all_mid is False and dish_allocation is None:
-            raise ValueError('Either release_all_mid or '
-                             'dish_allocation must be defined')
+
+        if not isinstance(release_all_low, bool):
+            raise ValueError('release_all_low must be a boolean')
+
+        if (release_all_mid is False and dish_allocation is None) and\
+                (release_all_low is False):
+            raise ValueError('Either release_all_mid or dish_allocation must be '
+                             'defined for MID or release_all_low must be '
+                             'defined for LOW request')
         if release_all_mid:
             dish_allocation = None
 
