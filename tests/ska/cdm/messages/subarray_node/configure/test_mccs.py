@@ -6,8 +6,6 @@ from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
-from ska.cdm.messages.subarray_node.configure.mccs import MCCSAllocate
-
 
 def test_subarray_beam_target_equals():
     """
@@ -157,57 +155,3 @@ def test_mccs_config_not_equal_to_other_objects():
     assert config != object()
 
 
-def test_mccs_allocate_eq():
-    """
-    Verify that two MCCSAllocate objects with the same allocated elements are
-    considered equal.
-    """
-    mccs_allocate = MCCSAllocate(
-        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    assert mccs_allocate == MCCSAllocate(
-        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    assert mccs_allocate != MCCSAllocate(
-        [2, 3, 4, 5], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    assert mccs_allocate != MCCSAllocate(
-        [2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    assert mccs_allocate != MCCSAllocate(
-        [1, 2, 3, 4], [[3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    assert mccs_allocate != MCCSAllocate(
-        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7]
-    )
-
-
-def test_mccs_allocate_eq_with_other_objects():
-    """
-    Verify that a MCCSAllocate is considered unequal to objects of other
-    types.
-    """
-    mccs_allocate = MCCSAllocate(
-        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    assert mccs_allocate != 1
-    assert mccs_allocate != object()
-
-def test_mccs_allocate_is_empty():
-    """
-    Verify that we can detect an empty MCCSAllocate
-    """
-    mccs_allocate = MCCSAllocate([],[],[])
-
-    assert mccs_allocate.is_empty()
-
-def test_mccs_allocate_is_not_empty():
-    """
-    Verify that we can detect an MCCSAllocate is not empty
-    """
-    mccs_allocate = MCCSAllocate(
-        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-
-    assert not mccs_allocate.is_empty()
-    

@@ -9,15 +9,13 @@ from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
-from ska.cdm.messages.subarray_node.configure.mccs import MCCSAllocate
 from ska.cdm.schemas import CODEC
 
 __all__ = [
     "MCCSConfigurationSchema",
     "StnConfigurationSchema",
     "SubarrayBeamConfigurationSchema",
-    "SubarrayBeamTargetSchema",
-    "MCCSAllocateSchema",
+    "SubarrayBeamTargetSchema"
 ]
 
 
@@ -140,33 +138,4 @@ class MCCSConfigurationSchema(Schema):
         stn_configs = data["station_configs"]
         subarray_beam_configs = data["subarray_beam_configs"]
         return MCCSConfiguration(stn_configs, subarray_beam_configs)
-
-
-@CODEC.register_mapping(MCCSAllocate)
-class MCCSAllocateSchema(Schema):
-    """
-    Marshmallow schema for the MCCSAllocate class.
-    """
-
-    subarray_beam_ids = fields.List(
-        fields.Integer, data_key="subarray_beam_ids", required=True
-    )
-    station_ids = fields.List(fields.List(fields.Integer), data_key="station_ids", required=True)
-    channel_blocks = fields.List(fields.Integer, data_key="channel_blocks", required=True)
-
-
-    @post_load
-    def create_mccs_allocate(self, data, **_):
-        """
-        Convert parsed JSON back into a MCCSAllocate object.
-
-        :param data: Marshmallow-provided dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-
-        :return: MCCSAllocate object populated from data
-        """
-        subarray_beam_ids = data["subarray_beam_ids"]
-        station_ids = data["station_ids"]
-        channel_blocks = data["channel_blocks"]
-        return MCCSAllocate(subarray_beam_ids, station_ids, channel_blocks)
 
