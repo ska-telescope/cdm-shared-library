@@ -65,27 +65,6 @@ class MCCSAllocation:
             or self.channel_blocks
         )
 
-    def has_subarray_beam_ids(self):
-        """
-        Determines whether the subarray_beam_ids attribute
-        is empty
-        """
-        return bool(self.subarray_beam_ids)
-
-    def has_station_ids(self):
-        """
-        Determines whether the subarray_beam_ids attribute
-        is empty
-        """
-        return bool(self.station_ids)
-
-    def has_channel_blocks(self):
-        """
-        Determines whether the subarray_beam_ids attribute
-        is empty
-        """
-        return bool(self.channel_blocks)
-
 
 class AssignedResources:
     def __init__(
