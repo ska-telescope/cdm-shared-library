@@ -2,8 +2,11 @@
 Unit tests for the TMC Assigned Resources
 """
 
-from ska.cdm.messages.subarray_node.assigned_resources import MCCSAllocation
-from ska.cdm.messages.subarray_node.assigned_resources import AssignedResources
+from ska.cdm.messages.subarray_node.assigned_resources import (
+    AssignedResources,
+    MCCSAllocation,
+    SCHEMA
+)
 
 
 def test_mccs_allocation_eq():
@@ -68,8 +71,7 @@ def test_assigned_resources_default_interface():
     invocation
     """
     mccs_allocation = MCCSAllocation([], [], [])
-    expected_string = \
-    "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
+    expected_string = SCHEMA
     assigned_resources = AssignedResources(mccs_allocation)
     assert assigned_resources.interface == expected_string
 

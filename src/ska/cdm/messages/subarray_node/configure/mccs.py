@@ -6,11 +6,13 @@ command.
 
 from typing import List
 
-__all__ = ["MCCSConfiguration",
-           "StnConfiguration",
-           "SubarrayBeamConfiguration",
-           "SubarrayBeamTarget"
-          ]
+__all__ = [
+    "MCCSConfiguration",
+    "StnConfiguration",
+    "SubarrayBeamConfiguration",
+    "SubarrayBeamTarget"
+]
+
 
 class SubarrayBeamTarget:
     """
