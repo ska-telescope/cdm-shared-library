@@ -1,8 +1,8 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
-import pytest
 import itertools
+import pytest
 
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 from ska.cdm.messages.subarray_node.configure.core import (
