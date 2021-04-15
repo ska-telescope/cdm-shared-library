@@ -6,7 +6,7 @@ from ska.cdm.schemas.subarray_node.assigned_resources import MCCSAllocationSchem
 from ska.cdm.utils import json_is_equal
 
 
-VALID_MCCS_ALLOCATION_REQUEST = """
+VALID_MCCSALLOCATION_JSON = """
 {
     "subarray_beam_ids": [ 1, 2, 3, 4 ],
     "station_ids": [ [  1,  2, 3, 4, 5 ] ],
@@ -34,7 +34,7 @@ def test_marshal_mccs_allocation_resources():
         [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     json_str = MCCSAllocationSchema().dumps(request)
-    assert json_is_equal(json_str, VALID_MCCS_ALLOCATION_REQUEST)
+    assert json_is_equal(json_str, VALID_MCCSALLOCATION_JSON)
 
 
 def test_unmarshall_mccs_allocation_resources():
@@ -45,7 +45,7 @@ def test_unmarshall_mccs_allocation_resources():
     expected = MCCSAllocation(
         [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    request = MCCSAllocationSchema().loads(VALID_MCCS_ALLOCATION_REQUEST)
+    request = MCCSAllocationSchema().loads(VALID_MCCSALLOCATION_JSON)
     assert request == expected
 
 
@@ -53,9 +53,12 @@ def test_marshall_assigned_resources():
     """
     Verify that AssignedResources is marshalled to JSON correctly.
     """
-    request = AssignedResources(MCCSAllocation(
-        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    ))
+    mccs = MCCSAllocation(
+        [1, 2, 3, 4],
+        [[1, 2, 3, 4, 5]],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+    request = AssignedResources(mccs=mccs)
     json_str = AssignedResourcesSchema().dumps(request)
     assert json_is_equal(json_str, VALID_ASSIGNED_RESOURCES)
 
@@ -65,9 +68,11 @@ def test_unmarshall_assigned_resources():
     Verify that JSON can be unmarshalled back to an AssignedResources
     object.
     """
-    mccs_allocation = MCCSAllocation(
-        [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    mccs = MCCSAllocation(
+        [1, 2, 3, 4],
+        [[1, 2, 3, 4, 5]],
+        [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    expected = AssignedResources(mccs_allocation)
+    expected = AssignedResources(mccs=mccs)
     request = AssignedResourcesSchema().loads(VALID_ASSIGNED_RESOURCES)
     assert request == expected

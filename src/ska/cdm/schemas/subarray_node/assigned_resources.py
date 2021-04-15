@@ -54,9 +54,11 @@ class MCCSAllocationSchema(Schema):
 @CODEC.register_mapping(AssignedResources)
 class AssignedResourcesSchema(Schema):
     """
+    AssignedResourcesSchema maps the AssignedResources class to/from a JSON
+    representation.
     """
-    mccs = fields.Nested(MCCSAllocationSchema)
-    interface = fields.String(data_key="interface")
+    mccs = fields.Nested(MCCSAllocationSchema, required=True)
+    interface = fields.String(required=True)
 
     @post_load
     def create_assigned_resources(self, data, **_):
@@ -68,6 +70,6 @@ class AssignedResourcesSchema(Schema):
 
         :return: AssignedResources object populated from data
         """
-        mccs = data.get("mccs", None)
-        interface = data.get("interface", None)
-        return AssignedResources(mccs, interface)
+        interface = data["interface"]
+        mccs = data["mccs"]
+        return AssignedResources(interface=interface, mccs=mccs)

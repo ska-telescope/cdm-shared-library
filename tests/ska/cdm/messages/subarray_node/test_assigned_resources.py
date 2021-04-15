@@ -72,7 +72,7 @@ def test_assigned_resources_default_interface():
     """
     mccs_allocation = MCCSAllocation([], [], [])
     expected_string = SCHEMA
-    assigned_resources = AssignedResources(mccs_allocation)
+    assigned_resources = AssignedResources(mccs=mccs_allocation)
     assert assigned_resources.interface == expected_string
 
 
@@ -83,7 +83,10 @@ def test_assigned_resources_offered_interface():
     """
     mccs_allocation = MCCSAllocation([], [], [])
     expected_string = "a_string"
-    assigned_resources = AssignedResources(mccs_allocation, expected_string)
+    assigned_resources = AssignedResources(
+        interface=expected_string,
+        mccs = mccs_allocation
+    )
     assert assigned_resources.interface == expected_string
 
 
@@ -95,8 +98,8 @@ def test_assigned_resources_eq():
     mccs_allocation = MCCSAllocation(
         [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    assigned_resources = AssignedResources(mccs_allocation)
-    assert assigned_resources == AssignedResources(mccs_allocation)
+    assigned_resources = AssignedResources(mccs=mccs_allocation)
+    assert assigned_resources == AssignedResources(mccs=mccs_allocation)
 
 
 def test_assigned_resources_eq_with_other_objects():
@@ -107,7 +110,7 @@ def test_assigned_resources_eq_with_other_objects():
     mccs_allocation = MCCSAllocation(
         [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    assigned_resources = AssignedResources(mccs_allocation)
+    assigned_resources = AssignedResources(mccs=mccs_allocation)
     assert assigned_resources != 1
     assert assigned_resources != object()
 
@@ -117,7 +120,7 @@ def test_assigned_resources_is_empty():
     Verify that we can detect an empty MCCSAllocation
     """
     mccs_allocation = MCCSAllocation([], [], [])
-    assigned_resources = AssignedResources(mccs_allocation)
+    assigned_resources = AssignedResources(mccs=mccs_allocation)
 
     assert assigned_resources.is_empty()
 
@@ -129,6 +132,6 @@ def test_assigned_resources_is_not_empty():
     mccs_allocation = MCCSAllocation(
         [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    assigned_resources = AssignedResources(mccs_allocation)
+    assigned_resources = AssignedResources(mccs=mccs_allocation)
 
     assert not assigned_resources.is_empty()
