@@ -5,6 +5,7 @@ Unit tests for the TMC Assigned Resources
 from ska.cdm.messages.subarray_node.assigned_resources import MCCSAllocation
 from ska.cdm.messages.subarray_node.assigned_resources import AssignedResources
 
+
 def test_mccs_allocation_eq():
     """
     Verify that two MCCSAllocation objects with the same allocationd elements are
@@ -58,8 +59,8 @@ def test_mccs_allocation_is_not_empty():
     mccs_allocation = MCCSAllocation(
         [1, 2, 3, 4], [[1, 2, 3, 4, 5]], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-
     assert not mccs_allocation.is_empty()
+
 
 def test_assigned_resources_default_interface():
     """
@@ -67,9 +68,11 @@ def test_assigned_resources_default_interface():
     invocation
     """
     mccs_allocation = MCCSAllocation([], [], [])
-    expected_string = "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
+    expected_string = \
+      "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
     assigned_resources = AssignedResources(mccs_allocation)
     assert assigned_resources.interface == expected_string
+
 
 def test_assigned_resources_offered_interface():
     """
@@ -81,6 +84,7 @@ def test_assigned_resources_offered_interface():
     assigned_resources = AssignedResources(mccs_allocation, expected_string)
     assert assigned_resources.interface == expected_string
 
+
 def test_assigned_resources_eq():
     """
     Verify that two AssignedResources objects with the same allocationd
@@ -91,6 +95,7 @@ def test_assigned_resources_eq():
     )
     assigned_resources = AssignedResources(mccs_allocation)
     assert assigned_resources == AssignedResources(mccs_allocation)
+
 
 def test_assigned_resources_eq_with_other_objects():
     """
@@ -105,7 +110,7 @@ def test_assigned_resources_eq_with_other_objects():
     assert assigned_resources != object()
 
 
-def test_mccs_allocation_is_empty():
+def test_assigned_resources_is_empty():
     """
     Verify that we can detect an empty MCCSAllocation
     """

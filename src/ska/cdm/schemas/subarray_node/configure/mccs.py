@@ -35,6 +35,7 @@ class StnConfigurationSchema(Schema):
         station_id = data["station_id"]
         return StnConfiguration(station_id)
 
+
 class StnBeamConfigurationSchema(Schema):
 
     station_beam_id = fields.Integer(data_key="station_beam_id", required=True)
