@@ -25,6 +25,7 @@ VALID_ASSIGNED_RESOURCES = """
 }
 """
 
+
 def test_marshal_mccs_allocation_resources():
     """
     Verify that MCCSAllocation is marshalled to JSON correctly.
@@ -47,6 +48,7 @@ def test_unmarshall_mccs_allocation_resources():
     request = MCCSAllocationSchema().loads(VALID_MCCS_ALLOCATION_REQUEST)
     assert request == expected
 
+
 def test_marshall_assigned_resources():
     """
     Verify that AssignedResources is marshalled to JSON correctly.
@@ -56,6 +58,7 @@ def test_marshall_assigned_resources():
     ))
     json_str = AssignedResourcesSchema().dumps(request)
     assert json_is_equal(json_str, VALID_ASSIGNED_RESOURCES)
+
 
 def test_unmarshall_assigned_resources():
     """
