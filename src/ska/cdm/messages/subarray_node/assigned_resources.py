@@ -2,18 +2,21 @@
 TMC Assigned Resources
 """
 
-from typing import List
+
+from typing import List, Optional
 
 __all__ = [
     "MCCSAllocation",
     "AssignedResources"
 ]
 
+SCHEMA = "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
+
 
 class MCCSAllocation:
     """
-    MCCSAllocation is a Python representation of the structured
-    argument for a TMC SubarrayNode.AssignResourcesRequest.
+    MCCSAllocation is a Python representation of the structured JSON
+    representing the resources assigned to an MCCS subarray.
     """
 
     def __init__(
@@ -67,12 +70,22 @@ class MCCSAllocation:
 
 
 class AssignedResources:
+    """
+    AssignedResources models the structured JSON returned when the
+    MCCSSubarray.assigned_resources Tango attribute is read.
+    """
     def __init__(
         self,
-        mccs: MCCSAllocation,
-        interface: str =
-        "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
+        *,  # force kwargs
+        interface: Optional[str] = SCHEMA,
+        mccs: MCCSAllocation
     ):
+        """
+        Create a new AssignedResources instance.
+
+        :param interface: JSON schema this instance conforms to
+        :param mccs: the MCCSAllocation describing the allocated resources
+        """
         self.interface = interface
         self.mccs = mccs
 
@@ -84,7 +97,7 @@ class AssignedResources:
             and self.interface == other.interface
         )
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         """
         Determine that the current MCCSAllocation instance
         is empty (none of the attribute Lists are populated)

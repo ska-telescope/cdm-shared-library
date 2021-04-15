@@ -214,21 +214,61 @@ of a full CDM JSON object, the elements this maps to are:
   {
     "mccs": {
         "stations": [
-            {
-                "station_id": 1
-            }
+          {
+            "station_id": 1
+          },
+          {
+            "station_id": 2
+          }
         ],
-        "station_beams": [
-            {
-                "station_beam_id": 1,
-                "station_ids": [2,3],
-                "channels": [1, 2, 3, 4, 5, 6, 7, 8],
-                "update_rate": 0.0,
-                "sky_coordinates": [0.0, 180.0, 0.0, 45.0, 0.0]
+        "subarray_beams": [
+          {
+            "subarray_beam_id": 1,
+            "station_ids": [
+              1,
+              2
+            ],
+            "update_rate": 0,
+            "channels": [
+              [
+                0,
+                8,
+                1,
+                1
+              ],
+              [
+                8,
+                8,
+                2,
+                1
+              ],
+              [
+                24,
+                16,
+                2,
+                1
+              ]
+            ],
+            "antenna_weights": [
+              1,
+              1,
+              1
+            ],
+            "phase_centre": [
+              0,
+              0
+            ],
+            "target": {
+              "system": "HORIZON",
+              "name": "DriftScan",
+              "az": 180,
+              "el": 45
             }
+          }
         ]
-    },
+     }
   }
+
 
 assigned_resources.py
 =====================
@@ -240,6 +280,7 @@ assigned_resources.py
    assigned_resources.py object model
 
 The ``assigned_resources.py`` module describes which resources have been assigned to the sub-array.
+
 Examples below depict a populated sub-array and an empty one:
 
 .. code:: JSON
@@ -280,6 +321,15 @@ Below is an example JSON command argument that this code can model.
 
   {
     "id": 2
+  }
+
+Example scan JSON for LOW
+
+.. code-block:: JSON
+
+  {
+    "interface": "https://schema.skatelescope.org/ska-low-tmc-scan/1.0",
+    "scan_id": 1
   }
 
 
@@ -349,22 +399,43 @@ Example configuration JSON for LOW
 
 .. code-block:: JSON
 
-  {
-    "mccs": {
-        "stations": [
-            {
-                "station_id": 1
-            }
+    {
+      "interface": "https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+      "mccs": {
+        "stations":[
+          {
+            "station_id": 1
+          },
+          {
+            "station_id":2
+          }
         ],
-        "station_beams": [
-            {
-                "station_beam_id": 1,
-                "station_ids": [2,3],
-                "channels": [1, 2, 3, 4, 5, 6, 7, 8],
-                "update_rate": 0.0,
-                "sky_coordinates": [0.0, 180.0, 0.0, 45.0, 0.0]
+        "subarray_beams": [
+          {
+            "subarray_beam_id": 1,
+            "station_ids": [1, 2],
+            "update_rate": 0.0,
+            "channels": [
+              [0,8,1,1],
+              [8,8,2,1],
+              [24,16,2,1]
+            ],
+            "antenna_weights": [1.0, 1.0, 1.0],
+            "phase_centre": [0.0, 0.0],
+            "target": {
+              "system": "HORIZON",
+              "name": "DriftScan",
+              "az": 180.0,
+              "el": 45.0
             }
+          }
         ]
+      },
+      "sdp": {
+        // TMC can ignore any SDP spec this PI
+      },
+      "tmc": {
+        "scan_duration": 10.0
+      }
     }
-  }
 

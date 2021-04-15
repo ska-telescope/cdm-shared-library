@@ -1,0 +1,16 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.mccscontroller {
+    package allocate.py <<Rectangle>> {
+        class AllocateRequest {
+            interface: str
+            subarray_id: int
+            subarray_beam_ids: List[int]
+            station_ids: List[List[int]]
+            channel_blocks: List[int]
+        }
+	}
+}
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.mccssubarray {
+	package assigned_resources.py <<Rectangle>> {
+		note as N3
+			This models the
+			value returned by
+			reading
+			""MCCSSubarray.assigned_resources""
+		end note
+	}
+
+	package configure.py <<Rectangle>> {
+		note as N2
+			This models the
+			input for
+			""MCCSSubarray.Configure()""
+		end note
+	}
+
+	package scan.py <<Rectangle>> {
+		note as N1
+			This models the
+			input for
+			""MCCSSubarray.Scan()""
+		end note
+	}
+}
+
+@enduml

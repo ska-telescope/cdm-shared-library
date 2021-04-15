@@ -1,0 +1,29 @@
+@startuml
+scale 2000 width
+!pragma useNewPackage
+hide empty members
+
+package ska.cdm.messages.mccscontroller {
+    package allocate.py <<Rectangle>> {
+        class AllocateRequest
+    }
+
+    package releaseresources.py <<Rectangle>> {
+        class ReleaseResourcesRequest
+    }
+}
+
+package ska.cdm.schemas.mccscontroller {
+	package allocate.py <<Rectangle>> {
+        class AllocateRequestSchema
+	}
+
+	package releaseresources.py <<Rectangle>> {
+		class ReleaseResourcesRequestSchema
+	}
+}
+
+AllocateRequestSchema -- AllocateRequest
+ReleaseResourcesRequestSchema --- ReleaseResourcesRequest
+
+@enduml

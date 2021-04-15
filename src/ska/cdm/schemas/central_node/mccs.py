@@ -16,11 +16,12 @@ class MCCSAllocateSchema(Schema):
     Marshmallow schema for the MCCSAllocate class.
     """
 
-    subarray_id = fields.Integer(data_key="subarray_id", required=True)
-    station_ids = fields.List(fields.Integer, data_key="station_ids", required=True)
-    channels = fields.List(fields.Integer, data_key="channels", required=True)
-    station_beam_ids = fields.List(
-        fields.Integer, data_key="station_beam_ids", required=True
+    station_ids = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
+                              data_key="station_ids", required=True)
+    channel_blocks = fields.List(fields.Integer, data_key="channel_blocks",
+                                 required=True)
+    subarray_beam_ids = fields.List(
+        fields.Integer, data_key="subarray_beam_ids", required=True
     )
 
     @post_load
@@ -33,8 +34,7 @@ class MCCSAllocateSchema(Schema):
 
         :return: MCCSAllocate object populated from data
         """
-        subarray_id = data["subarray_id"]
         station_ids = data["station_ids"]
-        channels = data["channels"]
-        station_beam_ids = data["station_beam_ids"]
-        return MCCSAllocate(subarray_id, station_ids, channels, station_beam_ids)
+        channel_blocks = data["channel_blocks"]
+        subarray_beam_ids = data["subarray_beam_ids"]
+        return MCCSAllocate(station_ids, channel_blocks, subarray_beam_ids)

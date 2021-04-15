@@ -12,7 +12,8 @@ from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 from ska.cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
-from ska.cdm.messages.subarray_node.configure.mccs import StnBeamConfiguration
+from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
+from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
@@ -30,7 +31,6 @@ from ska.cdm.messages.subarray_node.configure.core import (
 )
 from ska.cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 from ska.cdm.utils import json_is_equal
-
 
 VALID_CONFIGURE_REQUEST = """
 {
@@ -247,22 +247,76 @@ def test_configure_request_can_be_created_when_only_mccs_present():
             "station_id": 1
           }
         ],
-        "station_beams": [
+        "subarray_beams": [
           {
-            "station_beam_id":1,
+            "subarray_beam_id":1,
             "station_ids": [1,2],
-            "channels": [1,2,3,4],
+            "channels": [[1,2]],
             "update_rate": 1.0,
-            "sky_coordinates": [0.1, 182.0, 0.5, 45.0, 1.6]
+            "target": {
+                  "system": "horizon",
+                  "name": "DriftScan",
+                  "az": 180.0,
+                  "el": 45.0
+            },
+            "antenna_weights": [1.0, 1.0, 1.0],
+            "phase_centre": [0.0, 0.0]
           }
         ]
       }
     }"""
     station_config = StnConfiguration(1)
-    station_beam_config = StnBeamConfiguration(
-        1, [1, 2], [1, 2, 3, 4], 1.0, [0.1, 182.0, 0.5, 45.0, 1.6]
+    target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "horizon")
+    station_beam_config = SubarrayBeamConfiguration(
+        1, [1, 2], [[1, 2]], 1.0, target,
+        [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     mccs_config = MCCSConfiguration([station_config], [station_beam_config])
     expected = ConfigureRequest(mccs=mccs_config)
+    unmarshalled = ConfigureRequestSchema().loads(serialised)
+    assert expected == unmarshalled
+
+
+def test_marshall_configure_request_for_low():
+    """
+    Verify that a ConfigureRequest object can be unmarshalled from JSON when
+    only the required attributes are present.
+    """
+    serialised = """{
+      "interface": "https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+      "mccs": {
+        "stations":[
+          {
+            "station_id": 1
+          }
+        ],
+        "subarray_beams": [
+          {
+            "subarray_beam_id":1,
+            "station_ids": [1,2],
+            "channels": [[1,2]],
+            "update_rate": 1.0,
+            "target": {
+                  "system": "HORIZON",
+                  "name": "DriftScan",
+                  "az": 180.0,
+                  "el": 45.0
+            },
+            "antenna_weights": [1.0, 1.0, 1.0],
+            "phase_centre": [0.0, 0.0]
+          }
+        ]
+      }
+    }"""
+    station_config = StnConfiguration(1)
+    target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
+    station_beam_config = SubarrayBeamConfiguration(
+        1, [1, 2], [[1, 2]], 1.0, target,
+        [1.0, 1.0, 1.0], [0.0, 0.0]
+    )
+    mccs_config = MCCSConfiguration([station_config], [station_beam_config])
+    expected = ConfigureRequest(mccs=mccs_config,
+                                interface_url='https://schema.skatelescope.org/'
+                                              'ska-low-tmc-configure/1.0')
     unmarshalled = ConfigureRequestSchema().loads(serialised)
     assert expected == unmarshalled

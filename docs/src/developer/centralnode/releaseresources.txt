@@ -9,6 +9,7 @@ package ska.cdm.messages.central_node {
 
 	package release_resources.py <<Rectangle>> {
 		class ReleaseResourcesRequest {
+      interface : str
 			subarray_id : int
 			release_all : bool
 		}

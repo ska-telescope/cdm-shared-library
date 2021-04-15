@@ -146,6 +146,7 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     csp = fields.Nested(csp.CSPConfigurationSchema)
     tmc = fields.Nested(tmc.TMCConfigurationSchema)
     mccs = fields.Nested(mccs.MCCSConfigurationSchema)
+    interface_url = fields.String(data_key="interface")
 
     @post_load
     def create_configuration(self, data, **_):  # pylint: disable=no-self-use
@@ -162,9 +163,16 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         sdp = data.get("sdp", None)
         csp = data.get("csp", None)
         tmc = data.get("tmc", None)
+        interface = data.get("interface_url", None)
         mccs = data.get("mccs", None)
         return ConfigureRequest(
-            pointing=pointing, dish=dish, sdp=sdp, csp=csp, mccs=mccs, tmc=tmc,
+            pointing=pointing,
+            dish=dish,
+            sdp=sdp,
+            csp=csp,
+            mccs=mccs,
+            tmc=tmc,
+            interface_url=interface
         )
 
     @post_dump

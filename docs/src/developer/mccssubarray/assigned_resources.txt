@@ -1,0 +1,20 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.mccssubarray {
+    package assigned_resources.py <<Rectangle>> {
+        class AssignedResources {
+            interface: str
+            subarray_beam_ids: List[int]
+            station_ids: List[List[int]]
+            channel_blocks: List[int]
+        }
+		note top of AssignedResources
+			This class models the
+			JSON string returned by
+			""MCCSSubarray.assigned_resources""
+		end note
+	}
+}
+
+@enduml

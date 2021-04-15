@@ -68,6 +68,41 @@ ska.cdm.messages.central_node.mccs
 .. automodule:: ska.cdm.messages.central_node.mccs
    :members:
 
+........................................
+ska.cdm.messages.mccscontroller.allocate
+........................................
+
+.. automodule:: ska.cdm.messages.mccscontroller.allocate
+   :members:
+
+................................................
+ska.cdm.messages.mccscontroller.releaseresources
+................................................
+
+.. automodule:: ska.cdm.messages.mccscontroller.releaseresources
+   :members:
+
+................................................
+ska.cdm.messages.mccssubarray.assigned_resources
+................................................
+
+.. automodule:: ska.cdm.messages.mccssubarray.assigned_resources
+   :members:
+
+.......................................
+ska.cdm.messages.mccssubarray.configure
+.......................................
+
+.. automodule:: ska.cdm.messages.mccssubarray.configure
+   :members:
+
+..................................
+ska.cdm.messages.mccssubarray.scan
+..................................
+
+.. automodule:: ska.cdm.messages.mccssubarray.scan
+   :members:
+
 ..............................
 ska.cdm.messages.subarray_node
 ..............................
@@ -124,7 +159,6 @@ ska.cdm.messages.subarray_node.scan
 .. automodule:: ska.cdm.messages.subarray_node.scan
    :members:
 
-
 ===============
 ska.cdm.schemas
 ===============
@@ -172,6 +206,41 @@ ska.cdm.schemas.codec
 .....................
 
 .. automodule:: ska.cdm.schemas.codec
+   :members:
+
+........................................
+ska.cdm.schemas.mccscontroller.allocate
+........................................
+
+.. automodule:: ska.cdm.schemas.mccscontroller.allocate
+   :members:
+
+................................................
+ska.cdm.schemas.mccscontroller.releaseresources
+................................................
+
+.. automodule:: ska.cdm.schemas.mccscontroller.releaseresources
+   :members:
+
+................................................
+ska.cdm.schemas.mccssubarray.assigned_resources
+................................................
+
+.. automodule:: ska.cdm.schemas.mccssubarray.assigned_resources
+   :members:
+
+.......................................
+ska.cdm.schemas.mccssubarray.configure
+.......................................
+
+.. automodule:: ska.cdm.schemas.mccssubarray.configure
+   :members:
+
+..................................
+ska.cdm.schemas.mccssubarray.scan
+..................................
+
+.. automodule:: ska.cdm.schemas.mccssubarray.scan
    :members:
 
 ......................

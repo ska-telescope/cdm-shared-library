@@ -27,15 +27,17 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         csp: CSPConfiguration = None,
         mccs: MCCSConfiguration = None,
         tmc: TMCConfiguration = None,
+        interface_url: str = None,
     ):
         self.pointing = pointing
         self.dish = dish
         self.sdp = sdp
         self.csp = csp
         self.tmc = tmc
+        self.interface_url = interface_url
         self.mccs = mccs
         if self.mccs is not None and (
-            self.dish is not None or self.sdp is not None or self.csp is not None
+            self.dish is not None
         ):
             raise ValueError(
                 "Can't allocate dish, csp and sdp in the same call as mccs"
@@ -51,4 +53,5 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
             and self.csp == other.csp
             and self.tmc == other.tmc
             and self.mccs == other.mccs
+            and self.interface_url == other.interface_url
         )

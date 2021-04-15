@@ -7,7 +7,7 @@
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
 
-from typing import List
+from typing import List, Tuple
 
 __all__ = ["MCCSAllocate"]
 
@@ -20,27 +20,23 @@ class MCCSAllocate:
 
     def __init__(
         self,
-        subarray_id: int,
-        station_ids: List[int],
-        channels: List[int],
-        station_beam_ids: List[int],
+        station_ids: List[Tuple],
+        channel_blocks: List[int],
+        subarray_beam_ids: List[int],
     ):
         """
         Create a new Subarray object.
 
-        :param subarray_id: the numeric SubArray ID
-        :type subarray_id: int
         :param station_ids: stations id's to allocate
-        :type station_ids: List[int]
-        :param channels: channels
-        :type channels: List[int]
-        :param station_beam_ids: station beam id's to allocate
-        :type station_beam_ids: List[int]
+        :type station_ids: List[Tuple]
+        :param channel_blocks: number of channel groups to assign
+        :type channel_blocks: List[int]
+        :param subarray_beam_ids: station beam id's to allocate
+        :type subarray_beam_ids: List[int]
         """
-        self.subarray_id = subarray_id
-        self.station_ids = list(station_ids)
-        self.channels = list(channels)
-        self.station_beam_ids = list(station_beam_ids)
+        self.station_ids = station_ids
+        self.channel_blocks = list(channel_blocks)
+        self.subarray_beam_ids = list(subarray_beam_ids)
 
     def __eq__(self, other):
         """
@@ -55,8 +51,7 @@ class MCCSAllocate:
         if not isinstance(other, MCCSAllocate):
             return False
         return (
-            self.subarray_id == other.subarray_id
-            and self.station_ids == other.station_ids
-            and self.channels == other.channels
-            and self.station_beam_ids == other.station_beam_ids
+            self.station_ids == other.station_ids
+            and self.channel_blocks == other.channel_blocks
+            and self.subarray_beam_ids == other.subarray_beam_ids
         )

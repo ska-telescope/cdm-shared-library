@@ -111,12 +111,16 @@ Example JSON input modelled by ``AssignResourcesRequest`` for LOW:
 .. code-block:: JSON
 
   {
-    "mccs":{
-        "subarray_id": 1,
-        "station_ids": [1,2],
-        "channels": [1,2,3,4,5,6,7,8],
-        "station_beam_ids": [1],
-    }
+    "interface": "https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
+    "subarray_id": 1,
+    "mccs": {
+        "subarray_beam_ids": [1],
+        "station_ids": [[1,2]],
+        "channel_blocks": [3]
+     },
+    "sdp": {
+        ... # omitted as TMC will ignore SDP this PI
+     }
   }
 
 
@@ -151,4 +155,14 @@ Example JSON that requests all sub-array resources be released:
   {
     "subarrayID": 1,
     "releaseALL": true
+  }
+
+Example JSON that requests all sub-array resources be released for LOW:
+
+.. code-block:: JSON
+
+  {
+    "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+    "subarray_id": 1,
+    "release_all": true
   }
