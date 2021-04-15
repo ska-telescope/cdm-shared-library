@@ -230,7 +230,16 @@ of a full CDM JSON object, the elements this maps to are:
     },
   }
 
-In addition there is a device attribute MCCSAssignedResources that describes which resources have been assigned to the sub-array.
+assigned_resources.py
+=====================
+
+.. figure:: assignedresources.png
+   :align: center
+   :alt: assigned_resources.py object model
+
+   assigned_resources.py object model
+
+The ``assigned_resources.py`` module describes which resources have been assigned to the sub-array.
 Examples below depict a populated sub-array and an empty one:
 
 .. code:: JSON
