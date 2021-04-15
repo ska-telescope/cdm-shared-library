@@ -91,8 +91,8 @@ class AssignedResources:
     def __init__(
         self,
         mccs: MCCSAllocation,
-        interface: str = 
-            "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
+        interface: str =
+        "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
     ):
         self.interface = interface
         self.mccs = mccs
