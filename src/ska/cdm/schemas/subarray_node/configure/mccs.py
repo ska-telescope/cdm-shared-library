@@ -138,4 +138,3 @@ class MCCSConfigurationSchema(Schema):
         stn_configs = data["station_configs"]
         subarray_beam_configs = data["subarray_beam_configs"]
         return MCCSConfiguration(stn_configs, subarray_beam_configs)
-

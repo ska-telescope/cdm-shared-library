@@ -7,6 +7,7 @@ from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 
+
 def test_subarray_beam_target_equals():
     """
     Verify that SubarrayBeamConfiguration are considered equal when all attributes are
@@ -153,5 +154,3 @@ def test_mccs_config_not_equal_to_other_objects():
     assert config is not None
     assert config != 1
     assert config != object()
-
-
