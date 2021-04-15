@@ -128,6 +128,8 @@ For details on the device messages modelled by this library, see:
 
 - :doc:`centralnode/centralnode`
 - :doc:`subarraynode/subarraynode`
+- :doc:`mccscontroller/mccscontroller`
+- :doc:`mccssubarray/mccssubarray`
 
 
 Marshmallow Schemas
@@ -150,6 +152,18 @@ Marshmallow during JSON conversion.
    :alt: SubArrayNode schema
 
    Schema mapping for objects used to communicate with TMC SubArrayNode device.
+
+.. figure:: schema_mccscontroller.png
+   :align: center
+   :alt: MCCSController schema
+
+   Schema mapping for objects used to communicate with MCCSController device.
+
+.. figure:: schema_mccssubarray.png
+   :align: center
+   :alt: MCCSSubArray schema
+
+   Schema mapping for objects used to communicate with MCCSSubarray device.
 
 
 JSON Schemas

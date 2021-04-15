@@ -16,6 +16,8 @@
   developer/developer
   developer/centralnode/centralnode
   developer/subarraynode/subarraynode
+  developer/mccssubarray/mccssubarray
+  developer/mccscontroller/mccscontroller
   client
   package/api
 

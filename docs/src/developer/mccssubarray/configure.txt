@@ -1,0 +1,37 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.mccssubarray {
+    package configure.py <<Rectangle>> {
+
+        class StationConfiguration {
+            station_id: int
+        }
+
+        class SubarrayBeamConfiguration {
+            subarray_beam_id: int
+            station_ids: List[int]
+            channels: List[List[int]]
+            update_rate: float
+            sky_coordinates: List[float]
+            phase_centre: List[float]
+            antenna_weights: List[float]
+        }
+
+        class ConfigureRequest {
+            interface: str
+            stations: List[StationConfiguration],
+            subarray_beams: List[SubarrrayBeamConfiguration],
+        }
+        ConfigureRequest *-- "*" StationConfiguration
+        ConfigureRequest *-- "*" SubarrayBeamConfiguration
+
+		note top of ConfigureRequest
+			This class models the
+			input argument for
+			""MCCSSubarray.Configure()""
+		end note
+    }
+}
+
+@enduml
