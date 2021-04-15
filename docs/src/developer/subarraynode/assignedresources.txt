@@ -1,0 +1,19 @@
+@startuml
+hide empty members
+
+package ska.cdm.messages.subarray_node {
+
+        class MCCSAllocation {
+            subarray_beam_ids: List[int]
+            station_ids: List[List[int]]
+            channel_blocks: List[int]
+        }
+
+        class AssignedResources {
+            mccs: MCCSAllocation
+            interface: str
+        }
+        
+        AssignedResources *-- "1" MCCSAllocation
+}
+@enduml
