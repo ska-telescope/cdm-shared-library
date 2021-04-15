@@ -35,7 +35,6 @@ class MCCSAllocationSchema(Schema):
                     required=True
     )
 
-
     @post_load
     def create_mccs_allocation(self, data, **_):
         """

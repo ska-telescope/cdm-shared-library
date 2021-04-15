@@ -6,6 +6,7 @@ from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnBeamConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 
+
 def test_stn_configuration_equals():
     """
     Verify that StnConfigurations are considered equal when all attributes are
@@ -115,5 +116,3 @@ def test_mccs_config_not_equal_to_other_objects():
     assert config is not None
     assert config != 1
     assert config != object()
-
-

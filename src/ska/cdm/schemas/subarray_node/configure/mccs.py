@@ -35,7 +35,6 @@ class StnConfigurationSchema(Schema):
         station_id = data["station_id"]
         return StnConfiguration(station_id)
 
-
 class StnBeamConfigurationSchema(Schema):
 
     station_beam_id = fields.Integer(data_key="station_beam_id", required=True)
@@ -92,4 +91,3 @@ class MCCSConfigurationSchema(Schema):
         stn_configs = data["station_configs"]
         stn_beam_configs = data["station_beam_configs"]
         return MCCSConfiguration(stn_configs, stn_beam_configs)
-

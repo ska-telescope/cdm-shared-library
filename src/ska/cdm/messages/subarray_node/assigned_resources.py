@@ -54,7 +54,6 @@ class MCCSAllocation:
             and self.channel_blocks == other.channel_blocks
         )
 
-
     def is_empty(self):
         """
         Determine that the current MCCSAllocation instance
@@ -92,11 +91,11 @@ class AssignedResources:
     def __init__(
         self,
         mccs: MCCSAllocation,
-        interface: str = "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
-        ):
-            self.interface = interface
-            self.mccs = mccs
-
+        interface: str = \
+          "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
+    ):
+        self.interface = interface
+        self.mccs = mccs
 
     def __eq__(self, other):
         if not isinstance(other, AssignedResources):
@@ -112,4 +111,3 @@ class AssignedResources:
         is empty (none of the attribute Lists are populated)
         """
         return self.mccs.is_empty()
-
