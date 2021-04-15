@@ -85,7 +85,7 @@ def test_assigned_resources_offered_interface():
     expected_string = "a_string"
     assigned_resources = AssignedResources(
         interface=expected_string,
-        mccs = mccs_allocation
+        mccs=mccs_allocation
     )
     assert assigned_resources.interface == expected_string
 
