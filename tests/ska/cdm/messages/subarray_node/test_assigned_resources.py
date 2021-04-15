@@ -69,7 +69,7 @@ def test_assigned_resources_default_interface():
     """
     mccs_allocation = MCCSAllocation([], [], [])
     expected_string = \
-      "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
+    "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0"
     assigned_resources = AssignedResources(mccs_allocation)
     assert assigned_resources.interface == expected_string
 
