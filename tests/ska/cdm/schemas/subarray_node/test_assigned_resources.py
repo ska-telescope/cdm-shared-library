@@ -26,7 +26,7 @@ VALID_ASSIGNED_RESOURCES = """
 """
 
 
-def test_marshal_mccs_allocation_resources():
+def test_marshal_mccsallocation():
     """
     Verify that MCCSAllocation is marshalled to JSON correctly.
     """
@@ -37,7 +37,7 @@ def test_marshal_mccs_allocation_resources():
     assert json_is_equal(json_str, VALID_MCCSALLOCATION_JSON)
 
 
-def test_unmarshall_mccs_allocation_resources():
+def test_unmarshal_mccsallocation():
     """
     Verify that JSON can be unmarshalled back to an MCCSAllocation
     object.
