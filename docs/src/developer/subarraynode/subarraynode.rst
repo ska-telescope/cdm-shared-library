@@ -270,6 +270,41 @@ of a full CDM JSON object, the elements this maps to are:
   }
 
 
+assigned_resources.py
+=====================
+
+.. figure:: assignedresources.png
+   :align: center
+   :alt: assigned_resources.py object model
+
+   assigned_resources.py object model
+
+The ``assigned_resources.py`` module describes which resources have been assigned to the sub-array.
+
+Examples below depict a populated sub-array and an empty one:
+
+.. code:: JSON
+
+    {
+        "interface": "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+        "mccs": {
+            "subarray_beam_ids": [1],
+            "station_ids": [[1,2]],
+            "channel_blocks": [3]
+        }
+    }
+
+.. code:: JSON
+
+    {
+        "interface": "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+        "mccs": {
+            "subarray_beam_ids": [],
+            "station_ids": [],
+            "channel_blocks": []
+        }
+    }
+
 scan.py
 =======
 

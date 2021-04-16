@@ -2,7 +2,7 @@
 hide empty members
 
 package ska.cdm.messages.subarray_node {
-	package scan.py <<Rectangle>> {
+        package scan.py <<Rectangle>> {
 		note as N1
 			This models the
 			input for
@@ -55,6 +55,21 @@ package ska.cdm.messages.subarray_node {
 		a package containing modules
 		split roughly along the
 		system Element boundaries.
+	end note
+
+	package assigned_resources.py <<Rectangle>> {
+		note as N3
+			This models the
+			input for
+			""SubArrayNode.AssignedResources()""
+		end note
+	}
+	note top of assigned_resources.py
+		The JSON payload for
+		""SubArrayNode.AssignedResources()""
+		is simple and can be
+		contained in a single
+		Python module.
 	end note
 }
 

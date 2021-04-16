@@ -110,6 +110,13 @@ ska.cdm.messages.subarray_node
 .. automodule:: ska.cdm.messages.subarray_node
    :members:
 
+.................................................
+ska.cdm.messages.subarray_node.assigned_resources
+.................................................
+
+.. automodule:: ska.cdm.messages.subarray_node.assigned_resources
+   :members:
+
 ........................................
 ska.cdm.messages.subarray_node.configure
 ........................................
@@ -255,6 +262,13 @@ ska.cdm.schemas.subarray_node
 .............................
 
 .. automodule:: ska.cdm.schemas.subarray_node
+   :members:
+
+................................................
+ska.cdm.schemas.subarray_node.assigned_resources
+................................................
+
+.. automodule:: ska.cdm.schemas.subarray_node.assigned_resources
    :members:
 
 .......................................
