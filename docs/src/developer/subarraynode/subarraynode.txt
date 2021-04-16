@@ -61,12 +61,12 @@ package ska.cdm.messages.subarray_node {
 		note as N3
 			This models the
 			input for
-			""SubArrayNode.AssignedResources()""
+			""SubArrayNode.assigned_resources""
 		end note
 	}
 	note top of assigned_resources.py
 		The JSON payload for
-		""SubArrayNode.AssignedResources()""
+		""SubArrayNode.assigned_resources""
 		is simple and can be
 		contained in a single
 		Python module.
