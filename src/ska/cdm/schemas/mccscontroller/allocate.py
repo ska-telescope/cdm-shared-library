@@ -3,16 +3,20 @@ The schemas.central_node module defines Marshmallow schemas that map
 MCCSController AllocateRequest message classes to/from their JSON
 representation.
 """
-from marshmallow import Schema, fields, post_load
+from marshmallow import (
+    fields,
+    post_load,
+)
 
-from ska.cdm.messages.mccscontroller.allocate import AllocateRequest
-from ska.cdm.schemas import CODEC
+from ..shared import ValidatingSchema
+from ...messages.mccscontroller.allocate import AllocateRequest
+from ...schemas import CODEC
 
 __all__ = ["AllocateRequestSchema"]
 
 
 @CODEC.register_mapping(AllocateRequest)
-class AllocateRequestSchema(Schema):
+class AllocateRequestSchema(ValidatingSchema):
     """
     Marshmallow schema for the MCCSController AllocateRequest class.
     """

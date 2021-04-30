@@ -17,18 +17,11 @@ from ska.cdm.messages.subarray_node.configure.csp import (
 )
 from ska.cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska.cdm.schemas import CODEC
+from ska.cdm.schemas.shared import ValidatingSchema
 
 __all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema",
            "SubarrayConfigurationSchema", "CommonConfigurationSchema",
            "CBFConfigurationSchema"]
-
-
-def _convert_tuples_to_lists(data):
-    """
-    method to match telescope model library data pattern for channelAveragingMap
-    and OutputLinkMap i.e. list of list instead of list of tuples
-    """
-    return json.loads(json.dumps(data))
 
 
 @CODEC.register_mapping(SubarrayConfiguration)
@@ -198,7 +191,7 @@ class CBFConfigurationSchema(Schema):
 
 
 @CODEC.register_mapping(CSPConfiguration)
-class CSPConfigurationSchema(Schema):
+class CSPConfigurationSchema(ValidatingSchema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
@@ -210,18 +203,6 @@ class CSPConfigurationSchema(Schema):
     subarray_config = fields.Nested(SubarrayConfigurationSchema, data_key="subarray")
     common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
-
-    @pre_load
-    def validate_schema(self, data, **_):  # pylint: disable=no-self-use
-        """
-        validating the structure of JSON against schemas
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for CSP configuration
-        """
-        self.validate_json(data)
-        return data
 
     @pre_dump
     def convert(
@@ -265,33 +246,20 @@ class CSPConfigurationSchema(Schema):
                                 cbf_config)
 
     @post_dump
-    def filter_nulls_and_validate_schema(
-            self, data, **_):  # pylint: disable=no-self-use
+    def validate_on_dump(self, data, **_):
         """
-        validating the structure of JSON against schemas and
+        Validating the structure of JSON against schemas and
         Filter out null values from JSON.
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
+        # filter out null values from JSON
         data = {k: v for k, v in data.items() if v is not None}
 
-        self.validate_json(data, lambda x: _convert_tuples_to_lists(x))
+        # convert tuples to lists
+        data = json.loads(json.dumps(data))
+
+        data = super().validate_on_dump(data)
         return data
-
-    def validate_json(self, data, process_fn=lambda x: x):
-        """
-        validating the structure of JSON against schemas
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param lambda function: use for converting list of tuples to list of list
-        :return:
-        """
-        # return early unless custom_validate is defined and True
-        if not self.context.get('custom_validate', False):
-            return
-
-        interface = data.get('interface', None)
-        if interface:
-            JsonSchema.validate_schema(interface, process_fn(data))

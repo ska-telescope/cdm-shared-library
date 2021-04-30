@@ -4,11 +4,18 @@ Unit tests for the ska.cdm.schemas.codec module.
 import itertools
 import os.path
 import unittest.mock as mock
+
 import pytest
+
+from ska.cdm.exceptions import JsonValidationError
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.common import DishAllocation
 from ska.cdm.messages.central_node.mccs import MCCSAllocate
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest
+from ska.cdm.messages.subarray_node.configure.core import (
+    DishConfiguration,
+    ReceiverBand,
+)
 from ska.cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
     FSPConfiguration,
@@ -17,14 +24,8 @@ from ska.cdm.messages.subarray_node.configure.csp import (
     CBFConfiguration,
     CommonConfiguration,
 )
-from ska.cdm.messages.subarray_node.configure.core import (
-    DishConfiguration,
-    ReceiverBand,
-)
-import ska.cdm.jsonschema.json_schema as json_schema
 from ska.cdm.schemas import CODEC
 from ska.cdm.utils import json_is_equal
-from ska.cdm.exceptions import JsonValidationError
 from .central_node.test_central_node import (
     VALID_MID_ASSIGN_RESOURCES_REQUEST,
     VALID_LOW_ALLOCATE_RESOURCES_REQUEST,
@@ -350,7 +351,7 @@ def test_codec_loads_with_schema_validation_for_csp():
     assert csp_config == unmarshalled
 
 
-@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+@mock.patch("ska.cdm.jsonschema.json_schema.schema.validate")
 def test_codec_loads_from_file_with_schema_validation(mock_fn):
     """
     Verify that the codec unmarshalls objects correctly with schema
@@ -366,7 +367,7 @@ def test_codec_loads_from_file_with_schema_validation(mock_fn):
     mock_fn.assert_called_once()
 
 
-@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+@mock.patch("ska.cdm.jsonschema.json_schema.schema.validate")
 def test_codec_loads_from_file_without_schema_validation(mock_fn):
     """
     Verify that the codec unmarshalls objects correctly without schema
@@ -376,7 +377,7 @@ def test_codec_loads_from_file_without_schema_validation(mock_fn):
     csp_config = csp_config_for_test()
     cwd, _ = os.path.split(__file__)
     test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
-    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, validate=False)
     assert result_data.csp == csp_config
     assert mock_fn.call_count == 0
     mock_fn.assert_not_called()
@@ -394,7 +395,7 @@ def test_loads_from_file_with_invalid_schema_and_validation_set_to_true():
         CODEC.load_from_file(ConfigureRequest, test_new_json_data)
 
 
-@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+@mock.patch("ska.cdm.jsonschema.json_schema.schema.validate")
 def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn):
     """
     Verify that the codec unmarshalls objects correctly without schema
@@ -409,7 +410,7 @@ def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn
     mock_fn.assert_not_called()
 
 
-@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+@mock.patch("ska.cdm.jsonschema.json_schema.schema.validate")
 def test_codec_loads_from_file_with_schema_validation_for_old_json(mock_fn):
     """
     Verify that the schema validation does not apply even it is set to true
@@ -422,7 +423,7 @@ def test_codec_loads_from_file_with_schema_validation_for_old_json(mock_fn):
     mock_fn.assert_not_called()
 
 
-@mock.patch.object(json_schema.JsonSchema, 'validate_schema')
+@mock.patch("ska.cdm.jsonschema.json_schema.schema.validate")
 def test_codec_loads_from_file_without_schema_validation_for_old_json(mock_fn):
     """
     Verify that the schema validation does not apply when it is set to false
