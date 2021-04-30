@@ -26,7 +26,7 @@ ifeq ($(strip $(DOCKER_REGISTRY_HOST)),)
 endif
 
 ifeq ($(strip $(DOCKER_REGISTRY_USER)),)
-  DOCKER_REGISTRY_USER = ska-cdm
+  DOCKER_REGISTRY_USER = ska-docker
 endif
 
 IMAGE=$(DOCKER_REGISTRY_HOST)/$(DOCKER_REGISTRY_USER)/$(NAME)
@@ -55,19 +55,7 @@ post-push:
 
 docker-build: .release
 	docker build $(DOCKER_BUILD_ARGS) -t $(IMAGE):$(VERSION) $(DOCKER_BUILD_CONTEXT) -f $(DOCKER_FILE_PATH) --build-arg DOCKER_REGISTRY_HOST=$(DOCKER_REGISTRY_HOST) --build-arg DOCKER_REGISTRY_USER=$(DOCKER_REGISTRY_USER)
-	@DOCKER_MAJOR=$(shell docker -v | sed -e 's/.*version //' -e 's/,.*//' | cut -d\. -f1) ; \
-	DOCKER_MINOR=$(shell docker -v | sed -e 's/.*version //' -e 's/,.*//' | cut -d\. -f2) ; \
-	if [ $$DOCKER_MAJOR -eq 1 ] && [ $$DOCKER_MINOR -lt 10 ] ; then \
-		echo docker tag -f $(IMAGE):$(VERSION) $(IMAGE):latest ;\
-		docker tag -f $(IMAGE):$(VERSION) $(IMAGE):latest ;\
-		echo docker tag -f $(IMAGE):$(VERSION) $(IMAGE):$(RELEASE) ;\
-		docker tag -f $(IMAGE):$(VERSION) $(IMAGE):$(RELEASE) ;\
-	else \
-		echo docker tag $(IMAGE):$(VERSION) $(IMAGE):latest ;\
-		docker tag $(IMAGE):$(VERSION) $(IMAGE):latest ; \
-		echo docker tag $(IMAGE):$(VERSION) $(IMAGE):$(RELEASE) ;\
-		docker tag $(IMAGE):$(VERSION) $(IMAGE):$(RELEASE) ; \
-	fi
+	docker tag $(IMAGE):$(VERSION) $(IMAGE):latest
 
 .release:
 	@echo "release=0.0.0" > .release
@@ -75,36 +63,35 @@ docker-build: .release
 	@echo INFO: .release created
 	@cat .release
 
-release: check-status check-release build push
+release: check-status check-release build
 
 push: pre-push do-push post-push  ## push the image to the Docker registry
 
 do-push:
+	docker push $(IMAGE):$(VERSION)
 	docker push $(IMAGE):latest
-	docker push $(IMAGE):$(RELEASE)
 
 snapshot: build push
 
 showver: .release
 	@. $(RELEASE_SUPPORT); getVersion
 
+bump-patch-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextPatchLevel)
+bump-patch-release: .release tag
 
-tag-patch-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextPatchLevel)
-tag-patch-release: .release tag
+bump-minor-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextMinorLevel)
+bump-minor-release: .release tag
 
-tag-minor-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextMinorLevel)
-tag-minor-release: .release tag
+bump-major-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextMajorLevel)
+bump-major-release: .release tag
 
-tag-major-release: VERSION := $(shell . $(RELEASE_SUPPORT); nextMajorLevel)
-tag-major-release: .release tag
-
-patch-release: tag-patch-release release
+patch-release: bump-patch-release release
 	@echo $(VERSION)
 
-minor-release: tag-minor-release release
+minor-release: bump-minor-release release
 	@echo $(VERSION)
 
-major-release: tag-major-release release
+major-release: bump-major-release release
 	@echo $(VERSION)
 
 tag: TAG=$(shell . $(RELEASE_SUPPORT); getTag $(VERSION))
@@ -115,6 +102,7 @@ tag: check-status
 	git commit -m "bumped to version $(VERSION)" ;
 	git tag $(TAG) ;
 	@ if [ -n "$(shell git remote -v)" ] ; then git push --tags ; else echo 'no remote to push tags to' ; fi
+	@ if [ -n "$(shell git remote -v)" ] ; then git push --follow-tags ; else echo 'no remote to push code to' ; fi
 
 check-status:
 	@. $(RELEASE_SUPPORT) ; ! hasChanges || (echo "ERROR: there are still outstanding changes" >&2 && exit 1) ;

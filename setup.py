@@ -37,9 +37,9 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
-    test_suite='tests',
+    test_suite='tests/unit',
     install_requires=[
-        'astropy==4.0.1',
+        'astropy',
         'marshmallow>=3.0.0rc7',
         'ska-telescope-model>=0.3.0',
     ],

@@ -1,152 +1,91 @@
 # GitLab CI in conjunction with GitLab Runner can use Docker Engine to test and build any application.
 # Docker, when used with GitLab CI, runs each job in a separate and isolated container using the predefined image that is set up in .gitlab-ci.yml.
 # In this case we use the latest python docker image to build and test this project.
-image: nexus.engageska-portugal.pt/ska-docker/ska-python-buildenv:latest
+image: artefact.skatelescope.org/ska-k8s-tools/docker-builder:0.2.8
 
 # cache is used to specify a list of files and directories which should be cached between jobs. You can only use paths that are within the project workspace.
 # If cache is defined outside the scope of jobs, it means it is set globally and all jobs will use that definition
 #cache:
 #  paths:
+#    - build
+
 # before_script is used to define the command that should be run before all jobs, including deploy jobs, but after the restoration of artifacts.
 # This can be an array or a multi-line string.
-before_script:
-  - python3 -m pip install -r requirements-dev.txt
-  - python3 -m pip install pipdeptree
-
-stages:
-  - linting
-  - test
-  - build
-  - pages
-  - publish
-  - release
+#before_script:
+#  - docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_HOST
 
 # The YAML file defines a set of jobs with constraints stating when they should be run.
-# You can specify an unlimited number of jobs which are defined as top-level elements with an arbitrary name and always
-#  have to contain at least the script clause.
-# In this case we have only the test job which produces a coverage report and the unittest output (see setup.cfg), and
-#  the coverage xml report is moved to the reports directory while the html output is persisted for use by the pages
-#  job. TODO: possibly a candidate for refactor / renaming later on.
+# You can specify an unlimited number of jobs which are defined as top-level elements with an arbitrary name and always have to contain at least the script clause.
+# In this case we have only the test job which produce an artifacts (it must be placed into a directory called "public")
+# It is also specified that only the master branch will be subject of this job.
+
+stages:
+  - build
+  - lint
+  - test
+  - pages
+  - publish
+
+build:
+  stage: build
+  tags:
+    - k8srunner
+  before_script:
+    - docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_HOST
+  script:
+    - make build
+  artifacts:
+    when: always
+    paths:
+      - build
+
 test:
   stage: test
+  dependencies:
+    - build
   tags:
-    - docker-executor
+    - k8srunner
   script:
-    - tox -e py37
+    - make test
   artifacts:
+    name: "$CI_PROJECT_NAME-$CI_JOB_ID"
     paths:
-      - ./build
+      - build
+    expire_in: 7 days
 
-list_dependencies:
-  stage: test
-  script:
-    - pipdeptree --json >> pip_deps.json
-    - pipdeptree >> pip_deps.txt
-    - dpkg -l >> system_deps.txt
-    - awk 'FNR>5 {print $2 ", " $3}' system_deps.txt >> system_deps.csv
-    - mkdir .public
-    - cp pip_deps.txt .public/
-    - cp pip_deps.json .public/
-    - cp system_deps.txt .public/
-    - cp system_deps.csv .public/
-    - mv .public public
-  artifacts:
-    paths:
-      - public
-
-linting:
+lint:
+  stage: lint
   tags:
-    - docker-executor
-  stage: linting
+    - k8srunner
   script:
-    - tox -e lint
-  when: always
+    - make lint
   artifacts:
     paths:
-      - ./build
+      - build
 
 pages:
-  when: always
-  tags:
-    - docker-executor
   stage: pages
-  dependencies:
-    - test
-    - linting
+  tags:
+    - k8srunner
   script:
     - mkdir public
     - cp -R build public
+  when: always
+  allow_failure: true
   artifacts:
     paths:
       - public
     expire_in: 7 days
 
-build_wheel_for_publication: # Executed on a tag:
-  stage: build
-  tags:
-    - docker-executor
-  dependencies:
-    - test
-  script:
-    - apt-get update
-    - apt-get install -y python3-pip
-    - pip3 install setuptools
-    - python3 setup.py egg_info -b+dev.$CI_COMMIT_SHORT_SHA sdist bdist_wheel # --universal option to used for pure python packages
-  artifacts:
-    paths:
-      - ./dist/
+# Standardised included jobs
+include:
+# Create Gitlab CI badges from CI metrics
+# https://developer.skatelescope.org/en/latest/tools/continuousintegration.html#automated-collection-of-ci-health-metrics-as-part-of-the-ci-pipeline
+- project: 'ska-telescope/templates-repository'
+  file: 'gitlab-ci/includes/post_step.yml'
 
-publish package to nexus:
-  stage: publish
-  tags:
-    - docker-executor
-  variables:
-    TWINE_USERNAME: $TWINE_USERNAME
-    TWINE_PASSWORD: $TWINE_PASSWORD
-    PACKAGE_TAG: $CI_COMMIT_SHORT_SHA
-  script:
-    # check metadata requirements
-    #- scripts/validate-metadata.sh
-    - python3 -m pip install twine
-    - tox -e package # takes $PACKAGE_TAG as input
-    - twine upload --repository-url $PYPI_REPOSITORY_URL dist/*
-  only:
-    refs:
-      - tags
-    variables:
-      # Confirm tag message exists
-      - $CI_COMMIT_MESSAGE =~ /^.+$/
-      # Confirm semantic versioning of tag
-      - $CI_COMMIT_TAG =~ /^((([0-9]+)\.([0-9]+)\.([0-9]+)(?:-([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)$/
+- project: 'ska-telescope/templates-repository'
+  file: 'gitlab-ci/includes/build_push.yml'
 
-release docker image to nexus:
-  stage: release
-  image: nexus.engageska-portugal.pt/ska-docker/tango-builder:latest
-  before_script:
-    - docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_HOST
-  tags:
-    - docker-executor
-  script:
-    - make build
-    - make push
-  when: manual
-  only:
-    refs:
-      - master
-      - tags
-
-create ci metrics:
-  stage: .post
-  image: nexus.engageska-portugal.pt/ska-docker/ska-python-buildenv:latest
-  when: always
-  tags:
-    - docker-executor
-  script:
-    # Gitlab CI badges creation: START
-    - apt-get -y update
-    - apt-get install -y curl --no-install-recommends
-    - curl -s https://gitlab.com/ska-telescope/ci-metrics-utilities/raw/master/scripts/ci-badges-func.sh | sh
-    # Gitlab CI badges creation: END
-  artifacts:
-    paths:
-      - ./build
+- project: 'ska-telescope/templates-repository'
+  file: 'gitlab-ci/includes/build_wheel.yml'

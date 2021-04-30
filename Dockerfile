@@ -1,6 +1,16 @@
 FROM nexus.engageska-portugal.pt/ska-docker/ska-python-buildenv:9.3.3.1 AS buildenv
 FROM nexus.engageska-portugal.pt/ska-docker/ska-python-runtime:9.3.3.1 AS runtime
 
-RUN python3 -m pip install -e . --extra-index-url https://nexus.engageska-portugal.pt/repository/pypi/simple/ --only-binary astropy
+ENV PATH="/home/tango/.local/bin:${PATH}"
+
+# Exchange the RUN statements to cache pip wheels. Useful for developer environments.
+#RUN --mount=type=cache,target=/home/tango/.cache/pip,uid=1000,gid=1000 \
+RUN \
+    python3 -m pip install \
+    --extra-index-url https://nexus.engageska-portugal.pt/repository/pypi/simple \
+    # Running tests via an IDE required the test dependencies to be installed.
+    # The quickest way to achieve this is by uncommenting the line below
+    # -r tests/requirements.txt \
+    .
 
 CMD ["python3"]
