@@ -2,9 +2,10 @@
 This module defines Marshmallow schemas that map the CDM classes for
 SubArrayNode MCCS configuration to/from JSON.
 """
+import json
+from marshmallow import Schema, fields, post_load, pre_load, post_dump
 
-from marshmallow import Schema, fields, post_load
-
+from ska.cdm.jsonschema.json_schema import JsonSchema
 from ska.cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import StnConfiguration
 from ska.cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
@@ -138,3 +139,48 @@ class MCCSConfigurationSchema(Schema):
         stn_configs = data["station_configs"]
         subarray_beam_configs = data["subarray_beam_configs"]
         return MCCSConfiguration(stn_configs, subarray_beam_configs)
+
+    @pre_load
+    def validate_schema(self, data, **_): # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CSP configuration
+        """
+        self.validate_json(data)
+        return data
+
+    @post_dump
+    def filter_nulls_and_validate_schema(
+            self, data, **_):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas and
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        data = {k: v for k, v in data.items() if v is not None}
+
+        #~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?
+        self.validate_json(data)
+        return data
+
+    def validate_json(self, data, process_fn=lambda x: x):
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param lambda function: use for converting list of tuples to list of list
+        :return:
+        """
+        # return early unless custom_validate is defined and True
+        if not self.context.get('custom_validate', False):
+            return
+
+        interface = data.get('interface', None)
+        if interface:
+            JsonSchema.validate_schema(interface, process_fn(data))
