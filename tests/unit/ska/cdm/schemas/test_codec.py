@@ -26,7 +26,7 @@ from ska.cdm.messages.subarray_node.configure.csp import (
 )
 from ska.cdm.schemas import CODEC
 from ska.cdm.utils import json_is_equal
-from .central_node.test_central_node import (
+from .central_node.test_assign_resources import (
     VALID_MID_ASSIGN_RESOURCES_REQUEST,
     VALID_LOW_ALLOCATE_RESOURCES_REQUEST,
     sdp_config_for_test,
