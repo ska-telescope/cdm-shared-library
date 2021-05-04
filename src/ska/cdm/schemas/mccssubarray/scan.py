@@ -3,16 +3,17 @@ The schemas module defines Marshmallow schemas that map CDM message classes
 and data model classes to/from a JSON representation.
 """
 
-from marshmallow import Schema, fields, post_load
+from marshmallow import fields, post_load
 
 from ska.cdm.messages.mccssubarray.scan import ScanRequest
 from ska.cdm.schemas import CODEC
+from ska.cdm.schemas.shared import ValidatingSchema
 
 __all__ = ["ScanRequestSchema"]
 
 
 @CODEC.register_mapping(ScanRequest)
-class ScanRequestSchema(Schema):  # pylint: disable=too-few-public-methods
+class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
     """
     Create the Schema for ScanRequest
     """
