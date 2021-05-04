@@ -15,9 +15,8 @@ __all__ = [
 from .assign_resources import (
     AssignResourcesRequestSchema,
     AssignResourcesResponseSchema,
-    ReleaseResourcesRequestSchema,
 )
-
 from .common import DishAllocationSchema, DishAllocationResponseSchema
-from .sdp import SDPConfigurationSchema
 from .mccs import MCCSAllocateSchema
+from .release_resources import ReleaseResourcesRequestSchema
+from .sdp import SDPConfigurationSchema

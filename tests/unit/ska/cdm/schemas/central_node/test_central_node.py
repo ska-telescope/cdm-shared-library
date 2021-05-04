@@ -9,6 +9,7 @@ from ska.cdm.messages.central_node.assign_resources import (
 )
 from ska.cdm.messages.central_node.common import DishAllocation
 from ska.cdm.messages.central_node.mccs import MCCSAllocate
+from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.messages.central_node.sdp import (
     SDPConfiguration,
     ScanType,
@@ -17,14 +18,12 @@ from ska.cdm.messages.central_node.sdp import (
     SDPWorkflow,
     PbDependency,
 )
-# from ska.cdm.schemas.central_node.mccs import MCCSAllocateSchema
-from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
-from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska.cdm.schemas.central_node.assign_resources import (
     AssignResourcesRequestSchema,
     AssignResourcesResponseSchema,
-    ReleaseResourcesRequestSchema,
 )
+from ska.cdm.schemas.central_node.release_resources import ReleaseResourcesRequestSchema
+from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
 from ska.cdm.utils import json_is_equal
 
 VALID_MID_ASSIGN_RESOURCES_REQUEST = """{
