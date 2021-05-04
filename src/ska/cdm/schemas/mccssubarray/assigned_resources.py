@@ -2,16 +2,18 @@
 The assigned_resources module defines Marshmallow schemas that maps the
 MCCSSubarray.assigned_resources attribute to/from a JSON representation.
 """
-from marshmallow import Schema, fields, post_load
+
+from marshmallow import fields, post_load
 
 from ska.cdm.messages.mccssubarray.assigned_resources import AssignedResources
 from ska.cdm.schemas import CODEC
+from ska.cdm.schemas.shared import ValidatingSchema
 
 __all__ = ["AssignedResourcesSchema"]
 
 
 @CODEC.register_mapping(AssignedResources)
-class AssignedResourcesSchema(Schema):
+class AssignedResourcesSchema(ValidatingSchema):
     """
     Marshmallow schema for the MCCSSubarray AssignedResources class.
     """
