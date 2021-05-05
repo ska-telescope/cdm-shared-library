@@ -1,11 +1,10 @@
 """
 Unit tests for the ska.cdm.schemas.codec module.
 """
-import itertools
 import os.path
-import unittest.mock as mock
 
 import pytest
+import unittest.mock as mock
 
 from ska.cdm.exceptions import JsonValidationError
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
@@ -27,8 +26,8 @@ from ska.cdm.messages.subarray_node.configure.csp import (
 from ska.cdm.schemas import CODEC
 from ska.cdm.utils import json_is_equal
 from .central_node.test_assign_resources import (
-    VALID_MID_ASSIGN_RESOURCES_REQUEST,
-    VALID_LOW_ALLOCATE_RESOURCES_REQUEST,
+    VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
     sdp_config_for_test,
 )
 
@@ -195,7 +194,7 @@ def test_codec_loads():
     """
     sdp_config = sdp_config_for_test()
     unmarshalled = CODEC.loads(AssignResourcesRequest,
-                               VALID_MID_ASSIGN_RESOURCES_REQUEST)
+                               VALID_MID_ASSIGNRESOURCESREQUEST_JSON)
     expected = AssignResourcesRequest.from_dish(
         1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config,
     )
@@ -206,18 +205,19 @@ def test_codec_loads_mccs_only():
     """
     Verify that the codec unmarshalls objects correctly.
     """
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1*[2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    interface = 'https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0'
+    mccs = MCCSAllocate(
+        subarray_beam_ids=[1],
+        station_ids=[(1, 2)],
+        channel_blocks=[1, 2, 3, 4, 5]
     )
-    url = 'https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0'
-    unmarshalled = CODEC.loads(
-        AssignResourcesRequest, VALID_LOW_ALLOCATE_RESOURCES_REQUEST
+    expected = AssignResourcesRequest.from_mccs(
+        interface=interface,
+        subarray_id_low=1,
+        mccs=mccs
     )
-    expected = AssignResourcesRequest.from_mccs(subarray_id_low=1,
-                                                mccs_allocate=mccs_allocate,
-                                                interface_url=url)
-    assert expected == unmarshalled
+
+    assert expected == VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT
 
 
 def test_codec_dumps():
@@ -225,29 +225,10 @@ def test_codec_dumps():
     Verify that the codec marshalls dish & sdp objects to JSON.
     """
     sdp_config = sdp_config_for_test()
-    expected = VALID_MID_ASSIGN_RESOURCES_REQUEST
+    expected = VALID_MID_ASSIGNRESOURCESREQUEST_JSON
     obj = AssignResourcesRequest(
         1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config
     )
-
-    marshalled = CODEC.dumps(obj)
-    assert json_is_equal(marshalled, expected)
-
-
-def test_codec_dumps_mccs():
-    """
-    Verify that the codec marshalls mccs objects to JSON.
-    """
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    url = 'https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0'
-
-    expected = VALID_LOW_ALLOCATE_RESOURCES_REQUEST
-    obj = AssignResourcesRequest.from_mccs(subarray_id_low=1,
-                                           mccs_allocate=mccs_allocate,
-                                           interface_url=url)
 
     marshalled = CODEC.dumps(obj)
     assert json_is_equal(marshalled, expected)
@@ -304,7 +285,7 @@ def csp_config_for_test():
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration(csp_id, ReceiverBand.BAND_1, 1)
     csp_config = CSPConfiguration(
-        interface_url="https://schema.skatelescope.org/ska-csp-configure/1.0",
+        interface="https://schema.skatelescope.org/ska-csp-configure/1.0",
         subarray_config=csp_subarray_config,
         common_config=csp_common_config,
         cbf_config=cbf_config
@@ -325,7 +306,7 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
      Verify that codec dumps() with invalid schema raise exception
     """
     csp_config = csp_config_for_test()
-    csp_config.interface_url = 'http://schema.skatelescope.org/ska-csp-configure/3.0'
+    csp_config.interface = 'http://schema.skatelescope.org/ska-csp-configure/3.0'
     with pytest.raises(JsonValidationError):
         CODEC.dumps(csp_config)
 
@@ -449,7 +430,8 @@ def test_configure_request_raises_exception_on_invalid_csp_object():
      Verify that codec dumps() with invalid schema raise exception
     """
     configure_request = CODEC.loads(ConfigureRequest, VALID_CONFIGURE_REQUEST)
-    configure_request.csp.interface_url = \
+    configure_request.csp.interface = \
         'http://schema.skatelescope.org/ska-csp-configure/3.0'
+
     with pytest.raises(JsonValidationError):
-        CODEC.dumps(configure_request)
+        CODEC.dumps(configure_request, strictness=2)

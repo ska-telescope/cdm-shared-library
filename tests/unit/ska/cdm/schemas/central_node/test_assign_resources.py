@@ -1,8 +1,11 @@
 """
 Unit tests for ska.cdm.schemas module.
 """
-import itertools
+import copy
 
+import pytest
+
+from ska.cdm.exceptions import JsonValidationError
 from ska.cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
     AssignResourcesResponse,
@@ -22,9 +25,11 @@ from ska.cdm.schemas.central_node.assign_resources import (
     AssignResourcesResponseSchema,
 )
 from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
+from ska.cdm.schemas.shared import ValidatingSchema
 from ska.cdm.utils import json_is_equal
 
-VALID_MID_ASSIGN_RESOURCES_REQUEST = """{
+VALID_MID_ASSIGNRESOURCESREQUEST_JSON = """
+{
   "subarrayID": 1,
   "dish": {"receptorIDList": ["0001", "0002"]},
   "sdp": {
@@ -117,15 +122,38 @@ VALID_MID_ASSIGN_RESOURCES_REQUEST = """{
       }
     ]
   }
-}"""
+}
+"""
 
-VALID_LOW_ALLOCATE_RESOURCES_REQUEST = """{
+VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """
+{
   "interface": "https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
   "subarray_id": 1,
   "mccs": {
+    "subarray_beam_ids": [1],
     "station_ids": [[1, 2]],
-    "channel_blocks": [1, 2, 3, 4, 5],
-    "subarray_beam_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    "channel_blocks": [1, 2, 3, 4, 5]
+  }
+}
+"""
+
+VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+    interface="https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
+    subarray_id_low=1,
+    mccs=MCCSAllocate(
+        subarray_beam_ids=[1],
+        station_ids=[(1, 2)],
+        channel_blocks=[1, 2, 3, 4, 5]
+    )
+)
+
+INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """{
+  "interface": "https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
+  "subarray_id": 1,
+  "mccs": {
+    "subarray_beam_ids": [1, 2, 3],
+    "station_ids": [[1, 2]],
+    "channel_blocks": [1, 2, 3, 4, 5]
   }
 }"""
 
@@ -302,7 +330,7 @@ def test_marshal_assign_resources_request_mid():
         1, dish_allocation=dish_allocation, sdp_config=sdp_config,
     )
     json_str = AssignResourcesRequestSchema().dumps(request)
-    assert json_is_equal(json_str, VALID_MID_ASSIGN_RESOURCES_REQUEST)
+    assert json_is_equal(json_str, VALID_MID_ASSIGNRESOURCESREQUEST_JSON)
 
 
 def test_unmarshall_assign_resources_request_mid():
@@ -314,7 +342,7 @@ def test_unmarshall_assign_resources_request_mid():
     sdp_config = sdp_config_for_test()
     dish = DishAllocation(receptor_ids=["0001", "0002"])
     request = AssignResourcesRequestSchema().loads(
-        VALID_MID_ASSIGN_RESOURCES_REQUEST
+        VALID_MID_ASSIGNRESOURCESREQUEST_JSON
     )
     expected = AssignResourcesRequest(subarray_id_mid=1,
                                       dish_allocation=dish,
@@ -322,44 +350,27 @@ def test_unmarshall_assign_resources_request_mid():
     assert request == expected
 
 
-def test_marshal_assign_resources_request_low():
+def test_marshal_low_assignresourcesrequest():
     """
     Verify that assign resource request for low is marshalled
     to JSON correctly.
     """
-    # MCCS subarray allocation
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    request = AssignResourcesRequest(interface_url='https://schema.skatelescope.org/'
-                                                   'ska-low-tmc-assignresources/1.0',
-                                     subarray_id_low=1,
-                                     mccs_allocate=mccs_allocate)
-    json_str = AssignResourcesRequestSchema().dumps(request)
-    assert json_is_equal(json_str, VALID_LOW_ALLOCATE_RESOURCES_REQUEST)
+    schema = AssignResourcesRequestSchema()
+    marshaled = schema.dumps(VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT)
+    assert json_is_equal(marshaled, VALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
 
 
-def test_unmarshall_assign_resources_request_low():
+def test_unmarshall_low_assignresourcesrequest():
     """
     Verify that JSON can be unmarshalled back to an AssignResourcesRequest
     object for low.
     """
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    request = AssignResourcesRequestSchema().loads(
-        VALID_LOW_ALLOCATE_RESOURCES_REQUEST
-    )
-    expected = AssignResourcesRequest(subarray_id_low=1,
-                                      mccs_allocate=mccs_allocate,
-                                      interface_url='https://schema.skatelescope.org/'
-                                                    'ska-low-tmc-assignresources/1.0')
-    assert request == expected
+    schema = AssignResourcesRequestSchema()
+    unmarshalled = schema.loads(VALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
+    assert unmarshalled == VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT
 
 
-def test_marshall_assign_resources_response():
+def test_marshall_assignresourcesresponse():
     """
     Verify that AssignResourcesResponse is marshalled to JSON correctly.
     """
@@ -369,7 +380,7 @@ def test_marshall_assign_resources_response():
     assert json_is_equal(json_str, VALID_ASSIGN_RESOURCES_RESPONSE)
 
 
-def test_unmarshall_assign_resources_response():
+def test_unmarshall_assignresourcesresponse():
     """
     Verify that JSON can be unmarshalled back to an AssignResourcesResponse
     object.
@@ -378,3 +389,44 @@ def test_unmarshall_assign_resources_response():
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
     expected = AssignResourcesResponse(dish_allocation=dish_allocation)
     assert response == expected
+
+
+def test_deserialising_invalid_low_json_raises_exception_when_strict():
+    """
+    Verify that an exception is raised when invalid JSON is deserialised in
+    strict mode.
+    """
+    schema = AssignResourcesRequestSchema()
+    schema.context[ValidatingSchema.VALIDATE] = True
+    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
+
+    with pytest.raises(JsonValidationError):
+        _ = schema.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
+
+
+def test_serialising_invalid_low_allocation_raises_exception_when_strict():
+    """
+    Verify that an exception is raised when an invalid object is serialised in
+    strict mode.
+    """
+    o = copy.deepcopy(VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT)
+    o.mccs.subarray_beam_ids = [1, 2, 3]
+
+    schema = AssignResourcesRequestSchema()
+    schema.context[ValidatingSchema.VALIDATE] = True
+    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
+
+    with pytest.raises(JsonValidationError):
+        _ = schema.dumps(o)
+
+
+def test_serialising_valid_low_allocation_does_not_raise_exception_when_strict():
+    """
+    Verify that an exception is not raised when a valid object is serialised
+    in strict mode.
+    """
+    schema = AssignResourcesRequestSchema()
+    schema.context[ValidatingSchema.VALIDATE] = True
+    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
+
+    _ = schema.dumps(VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT)

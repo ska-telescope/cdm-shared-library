@@ -3,16 +3,17 @@ The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
 from marshmallow import Schema, fields, post_dump, post_load
-
+import json
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesResponse
-from ska.cdm.schemas import CODEC
 from ska.cdm.schemas.central_node.common import (
     DishAllocationSchema,
     DishAllocationResponseSchema,
 )
 from ska.cdm.schemas.central_node.mccs import MCCSAllocateSchema
 from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
+from ..shared import ValidatingSchema
+from ...schemas import CODEC
 
 __all__ = [
     "AssignResourcesRequestSchema",
@@ -21,23 +22,22 @@ __all__ = [
 
 
 @CODEC.register_mapping(AssignResourcesRequest)
-class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-methods
+class AssignResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the AssignResourcesRequest class.
     """
 
-    subarray_id_mid = fields.Integer(data_key="subarrayID")
-    dish = fields.Nested(DishAllocationSchema, data_key="dish")
-    sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
-    mccs = fields.Nested(MCCSAllocateSchema, data_key="mccs")
-    interface_url = fields.String(data_key="interface")
+    interface = fields.String()
     subarray_id_low = fields.Integer(data_key="subarray_id")
+    subarray_id_mid = fields.Integer(data_key="subarrayID")
+    dish = fields.Nested(DishAllocationSchema)
+    sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
+    mccs = fields.Nested(MCCSAllocateSchema)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
         marshmallow directives for AssignResourcesRequestSchema.
         """
-
         ordered = True
 
     @post_load
@@ -49,32 +49,40 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         :param _: kwargs passed by Marshmallow
         :return: AssignResources object populated from data
         """
+        interface = data.get("interface", None)
+        subarray_id_low = data.get("subarray_id_low", None)
         subarray_id_mid = data.get("subarray_id_mid", None)
         dish_allocation = data.get("dish", None)
         sdp_config = data.get("sdp_config", None)
         mccs = data.get("mccs", None)
-        interface = data.get("interface_url", None)
-        subarray_id_low = data.get("subarray_id_low", None)
 
         return AssignResourcesRequest(
-            subarray_id_mid,
+            interface=interface,
+            subarray_id_low=subarray_id_low,
+            subarray_id_mid=subarray_id_mid,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
-            mccs_allocate=mccs,
-            interface_url=interface,
-            subarray_id_low=subarray_id_low
+            mccs=mccs
         )
 
     @post_dump
-    def filter_nulls(self, data, **_):
+    def validate_on_dump(self, data, **_):
         """
+        Validating the structure of JSON against schemas and
         Filter out null values from JSON.
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
-        return {k: v for k, v in data.items() if v is not None}
+        # filter out nulls
+        data = {k: v for k, v in data.items() if v is not None}
+
+        # convert tuples to lists
+        data = json.loads(json.dumps(data))
+
+        data = super().validate_on_dump(data)
+        return data
 
 
 @CODEC.register_mapping(AssignResourcesResponse)
@@ -89,7 +97,6 @@ class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-m
         """
         Marshmallow directives for AssignResourcesResponseSchema.
         """
-
         ordered = True
 
     @post_load
