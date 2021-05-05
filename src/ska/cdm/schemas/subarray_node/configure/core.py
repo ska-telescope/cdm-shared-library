@@ -2,14 +2,14 @@
 The schemas module defines Marshmallow schemas that map shared CDM message
 classes for SubArrayNode configuration to/from a JSON representation.
 """
-import collections
 import copy
 
+import collections
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
 
-from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 import ska.cdm.messages.subarray_node.configure.core as configure_msgs
+from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 from . import csp, sdp, tmc, mccs
 from ... import CODEC, shared
 
@@ -135,7 +135,7 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
 
 
 @CODEC.register_mapping(ConfigureRequest)
-class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
+class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """

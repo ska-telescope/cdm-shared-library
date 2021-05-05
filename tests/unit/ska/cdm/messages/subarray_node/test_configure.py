@@ -64,16 +64,20 @@ def test_configure_request_eq_for_low():
         1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
-    mccs_config = MCCSConfiguration([station_config], [station_beam_config])
-    request_1 = ConfigureRequest(mccs=mccs_config,
-                                 interface='https://schema.skatelescope.org/'
-                                               'ska-low-tmc-configure/1.0',
-                                 sdp=SDPConfiguration("science_A")
-                                 )
-    request_2 = ConfigureRequest(mccs=mccs_config,
-                                 interface='https://schema.skatelescope.org/'
-                                               'ska-low-tmc-configure/1.0',
-                                 sdp=SDPConfiguration("science_A"))
+    mccs_config = MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[station_beam_config]
+    )
+    request_1 = ConfigureRequest(
+        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        mccs=mccs_config,
+        sdp=SDPConfiguration("science_A")
+    )
+    request_2 = ConfigureRequest(
+        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        mccs=mccs_config,
+        sdp=SDPConfiguration("science_A")
+    )
     assert request_1 == request_2
 
 
@@ -89,7 +93,10 @@ def test_mccs_configure_request_eq():
         1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
-    mccs_config = MCCSConfiguration([station_config], [station_beam_config])
+    mccs_config = MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[station_beam_config]
+    )
     request_1 = ConfigureRequest(mccs=mccs_config)
     request_2 = ConfigureRequest(mccs=mccs_config)
     assert request_1 == request_2
@@ -124,7 +131,10 @@ def test_mccs_configure_request_is_not_equal_to_other_objects():
         1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
-    mccs_config = MCCSConfiguration([station_config], [station_beam_config])
+    mccs_config = MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[station_beam_config]
+    )
     request = ConfigureRequest(mccs=mccs_config)
     assert request != object
     assert request is not None
@@ -140,11 +150,15 @@ def test_configure_request_is_not_equal_to_other_objects_for_low():
         1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
-    mccs_config = MCCSConfiguration([station_config], [station_beam_config])
-    request = ConfigureRequest(mccs=mccs_config,
-                               interface='https://schema.skatelescope.org/'
-                                             'ska-low-tmc-configure/1.0',
-                               sdp=SDPConfiguration("science_A"))
+    mccs_config = MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[station_beam_config]
+    )
+    request = ConfigureRequest(
+        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        mccs=mccs_config,
+        sdp=SDPConfiguration("science_A")
+    )
     assert request != object
     assert request is not None
 
@@ -159,7 +173,10 @@ def test_configure_request_mccs_independence():
         1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
-    mccs_config = MCCSConfiguration([station_config], [station_beam_config])
+    mccs_config = MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[station_beam_config]
+    )
     request = ConfigureRequest(mccs=mccs_config)
     assert request is not None
 

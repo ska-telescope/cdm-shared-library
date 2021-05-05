@@ -120,19 +120,38 @@ def test_mccs_configuration_equals():
     """
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_config = StnConfiguration(1)
-    station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-        [1.0, 1.0, 1.0], [0.0, 0.0]
+    subarray_beam_config = SubarrayBeamConfiguration(
+        subarray_beam_id=1,
+        station_ids=[1, 2],
+        channels=[[1, 2, 3, 4, 5, 6]],
+        update_rate=1.0,
+        target=target,
+        antenna_weights=[1.0, 1.0, 1.0],
+        phase_centre=[0.0, 0.0]
     )
-    config = MCCSConfiguration([station_config], [station_beam_config])
-    assert config == MCCSConfiguration([station_config], [station_beam_config])
-    assert config != MCCSConfiguration([StnConfiguration(2)], [station_beam_config])
+    config = MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[subarray_beam_config]
+    )
+    assert config == MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[subarray_beam_config]
+    )
     assert config != MCCSConfiguration(
-        [station_config],
-        [
+        station_configs=[StnConfiguration(2)],
+        subarray_beam_configs=[subarray_beam_config]
+    )
+    assert config != MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[
             SubarrayBeamConfiguration(
-                4, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-                [1.0, 1.0, 1.0], [0.0, 0.0]
+                subarray_beam_id=4,
+                station_ids=[1, 2],
+                channels=[[1, 2, 3, 4, 5, 6]],
+                update_rate=1.0,
+                target=target,
+                antenna_weights=[1.0, 1.0, 1.0],
+                phase_centre=[0.0, 0.0]
             )
         ],
     )
@@ -150,7 +169,10 @@ def test_mccs_config_not_equal_to_other_objects():
         [1.0, 1.0, 1.0], [0.0, 0.0]
     )
 
-    config = MCCSConfiguration([station_config], [station_beam_config])
+    config = MCCSConfiguration(
+        station_configs=[station_config],
+        subarray_beam_configs=[station_beam_config]
+    )
     assert config is not None
     assert config != 1
     assert config != object()
