@@ -66,9 +66,9 @@ def test_marshall_cspconfiguration_does_not_modify_original():
     Verify that serialising a CspConfiguration does not change the object.
     """
     config = CSPConfiguration(
-        "csp ID goes here",
-        ReceiverBand.BAND_5A,
-        [FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)],
+        csp_id="csp ID goes here",
+        frequency_band=ReceiverBand.BAND_5A,
+        fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)]
     )
     original_config = copy.deepcopy(config)
     CSPConfigurationSchema().dumps(config)

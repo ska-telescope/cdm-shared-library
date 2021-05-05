@@ -21,12 +21,12 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
     Marshmallow schema for the ReleaseResourcesRequest class.
     """
 
-    subarray_id_mid = fields.Integer(data_key="subarrayID")
-    dish = fields.Nested(DishAllocationSchema, data_key="dish")
-    release_all_mid = fields.Boolean(data_key="releaseALL")
-    interface_url = fields.String(data_key="interface")
+    interface = fields.String()
     subarray_id_low = fields.Integer(data_key="subarray_id")
+    subarray_id_mid = fields.Integer(data_key="subarrayID")
+    release_all_mid = fields.Boolean(data_key="releaseALL")
     release_all_low = fields.Boolean(data_key="release_all")
+    dish = fields.Nested(DishAllocationSchema)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -83,15 +83,15 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
         subarray_id_mid = data.get("subarray_id_mid", None)
         release_all_mid = data.get("release_all_mid", False)
         dish_allocation = data.get("dish", None)
-        interface = data.get("interface_url", None)
+        interface = data.get("interface", None)
         subarray_id_low = data.get("subarray_id_low", None)
         release_all_low = data.get("release_all_low", False)
 
         return ReleaseResourcesRequest(
-            subarray_id_mid=subarray_id_mid,
-            release_all_mid=release_all_mid,
-            dish_allocation=dish_allocation,
-            interface_url=interface,
+            interface=interface,
             subarray_id_low=subarray_id_low,
-            release_all_low=release_all_low
+            subarray_id_mid=subarray_id_mid,
+            dish_allocation=dish_allocation,
+            release_all_low=release_all_low,
+            release_all_mid = release_all_mid
         )

@@ -140,13 +140,13 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """
 
+    interface = fields.String()
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
     sdp = fields.Nested(sdp.SDPConfigurationSchema)
     csp = fields.Nested(csp.CSPConfigurationSchema)
     tmc = fields.Nested(tmc.TMCConfigurationSchema)
     mccs = fields.Nested(mccs.MCCSConfigurationSchema)
-    interface_url = fields.String(data_key="interface")
 
     @post_load
     def create_configuration(self, data, **_):  # pylint: disable=no-self-use
@@ -158,21 +158,21 @@ class ConfigureRequestSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: ConfigurationRequest instance populated to match JSON
         """
+        interface = data.get("interface", None)
         pointing = data.get("pointing", None)
         dish = data.get("dish", None)
         sdp = data.get("sdp", None)
         csp = data.get("csp", None)
         tmc = data.get("tmc", None)
-        interface = data.get("interface_url", None)
         mccs = data.get("mccs", None)
         return ConfigureRequest(
+            interface=interface,
             pointing=pointing,
             dish=dish,
             sdp=sdp,
             csp=csp,
             mccs=mccs,
-            tmc=tmc,
-            interface_url=interface
+            tmc=tmc
         )
 
     @post_dump

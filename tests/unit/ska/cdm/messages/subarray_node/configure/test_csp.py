@@ -161,12 +161,28 @@ def test_csp_configuration_equals():
     frequency_band = ReceiverBand.BAND_1
     fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
 
-    config1 = CSPConfiguration(csp_id, frequency_band, [fsp])
-    config2 = CSPConfiguration(csp_id, frequency_band, [fsp])
+    config1 = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=frequency_band,
+        fsp_configs=[fsp]
+    )
+    config2 = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=frequency_band,
+        fsp_configs=[fsp]
+    )
     assert config1 == config2
 
-    assert config1 != CSPConfiguration(csp_id, ReceiverBand.BAND_2, [fsp])
-    assert config1 != CSPConfiguration(csp_id, frequency_band, [fsp, fsp])
+    assert config1 != CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_2,
+        fsp_configs=[fsp]
+    )
+    assert config1 != CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=frequency_band,
+        fsp_configs=[fsp, fsp]
+    )
 
 
 def test_csp_configuration_equals_with_all_parameters():
@@ -180,41 +196,56 @@ def test_csp_configuration_equals_with_all_parameters():
     subarray_id = 1
     subarray_name = "Test Subarray"
 
-    interface_url = "https://schema.skatelescope.org/ska-csp-configure/1.0"
+    interface = "https://schema.skatelescope.org/ska-csp-configure/1.0"
     subarray_config = SubarrayConfiguration(subarray_name)
     common_config = CommonConfiguration(csp_id, frequency_band, subarray_id)
     cbf_config = CBFConfiguration([fsp])
     pst_config = None
     pss_config = None
 
-    config1 = CSPConfiguration(csp_id, frequency_band, [fsp])
-    config2 = CSPConfiguration(csp_id, frequency_band, [fsp])
+    config1 = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=frequency_band,
+        fsp_configs=[fsp]
+    )
+    config2 = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=frequency_band,
+        fsp_configs=[fsp]
+    )
 
     config3 = CSPConfiguration(
-        interface_url=interface_url,
+        interface=interface,
         subarray_config=subarray_config,
         common_config=common_config,
         cbf_config=cbf_config,
         pst_config=pst_config,
-        pss_config=pss_config)
+        pss_config=pss_config
+    )
     config4 = CSPConfiguration(
-        interface_url=interface_url,
+        interface=interface,
         subarray_config=subarray_config,
         common_config=common_config,
         cbf_config=cbf_config,
         pst_config=pst_config,
-        pss_config=pss_config)
+        pss_config=pss_config
+    )
 
     assert config1 == config2
     assert config3 == config4
 
-    assert config1 != CSPConfiguration(csp_id, ReceiverBand.BAND_2, [fsp])
+    assert config1 != CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_2,
+        fsp_configs=[fsp]
+    )
     assert config3 != CSPConfiguration(
         subarray_config=subarray_config,
         common_config=common_config,
         cbf_config=cbf_config,
         pst_config=pst_config,
-        pss_config=pss_config)
+        pss_config=pss_config
+    )
 
 
 def test_csp_configuration_support_only_new_or_old_request_in_same_call():
@@ -227,7 +258,7 @@ def test_csp_configuration_support_only_new_or_old_request_in_same_call():
     fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
     subarray_id = 1
     subarray_name = "Test Subarray"
-    interface_url = "https://schema.skatelescope.org/ska-csp-configure/1.0"
+    interface = "https://schema.skatelescope.org/ska-csp-configure/1.0"
 
     subarray_config = SubarrayConfiguration(subarray_name)
     common_config = CommonConfiguration(csp_id, frequency_band, subarray_id)
@@ -236,9 +267,17 @@ def test_csp_configuration_support_only_new_or_old_request_in_same_call():
     pss_config = None
 
     with pytest.raises(ValueError):
-        _ = CSPConfiguration(csp_id, frequency_band, [], interface_url,
-                             subarray_config, common_config,
-                             cbf_config, pst_config, pss_config)
+        _ = CSPConfiguration(
+            interface=interface,
+            csp_id=csp_id,
+            frequency_band=frequency_band,
+            fsp_configs=[],
+            subarray_config=subarray_config,
+            common_config=common_config,
+            cbf_config=cbf_config,
+            pst_config=pst_config,
+            pss_config=pss_config
+        )
 
 
 def test_csp_configuration_not_equal_to_other_objects():
@@ -249,7 +288,11 @@ def test_csp_configuration_not_equal_to_other_objects():
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     frequency_band = ReceiverBand.BAND_1
     fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
-    config = CSPConfiguration(csp_id, frequency_band, [fsp])
+    config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=frequency_band,
+        fsp_configs=[fsp]
+    )
     assert config != 1
 
 

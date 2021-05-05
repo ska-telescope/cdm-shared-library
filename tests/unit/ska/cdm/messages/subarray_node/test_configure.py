@@ -40,7 +40,9 @@ def test_configure_request_eq():
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id, frequency_band=ReceiverBand.BAND_1, fsp_configs=[fsp_config]
+    )
     request_1 = ConfigureRequest(
         pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
     )
@@ -64,12 +66,12 @@ def test_configure_request_eq_for_low():
     )
     mccs_config = MCCSConfiguration([station_config], [station_beam_config])
     request_1 = ConfigureRequest(mccs=mccs_config,
-                                 interface_url='https://schema.skatelescope.org/'
+                                 interface='https://schema.skatelescope.org/'
                                                'ska-low-tmc-configure/1.0',
                                  sdp=SDPConfiguration("science_A")
                                  )
     request_2 = ConfigureRequest(mccs=mccs_config,
-                                 interface_url='https://schema.skatelescope.org/'
+                                 interface='https://schema.skatelescope.org/'
                                                'ska-low-tmc-configure/1.0',
                                  sdp=SDPConfiguration("science_A"))
     assert request_1 == request_2
@@ -103,7 +105,9 @@ def test_configure_request_is_not_equal_to_other_objects():
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id, frequency_band=ReceiverBand.BAND_1, fsp_configs=[fsp_config]
+    )
     request = ConfigureRequest(
         pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
     )
@@ -138,7 +142,7 @@ def test_configure_request_is_not_equal_to_other_objects_for_low():
     )
     mccs_config = MCCSConfiguration([station_config], [station_beam_config])
     request = ConfigureRequest(mccs=mccs_config,
-                               interface_url='https://schema.skatelescope.org/'
+                               interface='https://schema.skatelescope.org/'
                                              'ska-low-tmc-configure/1.0',
                                sdp=SDPConfiguration("science_A"))
     assert request != object

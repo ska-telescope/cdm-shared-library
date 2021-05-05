@@ -196,10 +196,10 @@ class CSPConfigurationSchema(ValidatingSchema):
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
 
+    interface = fields.String()
     csp_id = fields.String(data_key="id")
     frequency_band = fields.String(data_key="frequencyBand")
     fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key="fsp")
-    interface_url = fields.String(data_key="interface")
     subarray_config = fields.Nested(SubarrayConfigurationSchema, data_key="subarray")
     common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
@@ -231,19 +231,25 @@ class CSPConfigurationSchema(ValidatingSchema):
         :param _: kwargs passed by Marshmallow
         :return: CSPConfiguration instance populated to match JSON
         """
+        interface = data.get("interface", None)
         csp_id = data.get("csp_id", None)
         frequency_band = data.get("frequency_band", None)
         if frequency_band is not None:
             frequency_band = ReceiverBand(frequency_band)
         fsp_configs = data.get("fsp_configs", None)
-        interface = data.get("interface_url", None)
         subarray_config = data.get("subarray_config", None)
         common_config = data.get("common_config", None)
         cbf_config = data.get("cbf_config", None)
 
-        return CSPConfiguration(csp_id, frequency_band, fsp_configs,
-                                interface, subarray_config, common_config,
-                                cbf_config)
+        return CSPConfiguration(
+            interface=interface,
+            csp_id=csp_id,
+            frequency_band=frequency_band,
+            fsp_configs=fsp_configs,
+            subarray_config=subarray_config,
+            common_config=common_config,
+            cbf_config=cbf_config
+        )
 
     @post_dump
     def validate_on_dump(self, data, **_):

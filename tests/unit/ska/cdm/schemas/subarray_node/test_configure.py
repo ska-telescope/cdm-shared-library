@@ -114,7 +114,9 @@ def test_marshall_configure_request():
         zoom_window_tuning=4700000,
     )
     csp_config = CSPConfiguration(
-        csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2]
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config_1, fsp_config_2]
     )
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -168,7 +170,9 @@ def test_unmarshall_configure_request_from_json():
         zoom_window_tuning=4700000,
     )
     csp_config = CSPConfiguration(
-        csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2]
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config_1, fsp_config_2]
     )
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -224,7 +228,9 @@ def test_unmarshall_configure_for_later_request_from_json():
         zoom_window_tuning=4700000,
     )
     csp_config = CSPConfiguration(
-        csp_id, ReceiverBand.BAND_1, [fsp_config_1, fsp_config_2]
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config_1, fsp_config_2]
     )
     tmc_config = TMCConfiguration(scan_duration)
 
@@ -296,7 +302,11 @@ def test_marshall_configure_request_no_cam():
     channel_avg_map = None
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
@@ -329,7 +339,11 @@ def test_unmarshall_configure_request_from_json_no_cam():
     channel_avg_map = None
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -364,7 +378,11 @@ def test_unmarshall_configure_for_later_request_from_json_no_cam():
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     channel_avg_map = None
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, channel_avg_map)
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -445,7 +463,11 @@ def test_marshall_configure_request_olm():
         channel_avg_map,
         output_link_map=output_link_map,
     )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
@@ -487,7 +509,11 @@ def test_unmarshall_configure_request_from_json_olm():
         channel_avg_map,
         output_link_map=output_link_map,
     )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -531,7 +557,11 @@ def test_unmarshall_configure_for_later_request_from_json_olm():
         channel_avg_map,
         output_link_map=output_link_map,
     )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -612,7 +642,11 @@ def test_marshall_configure_request_oco():
         channel_avg_map,
         fsp_channel_offset=fsp_channel_offset,
     )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
@@ -654,7 +688,11 @@ def test_unmarshall_configure_request_from_json_oco():
         channel_avg_map,
         fsp_channel_offset=fsp_channel_offset,
     )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(
@@ -733,7 +771,11 @@ def test_marshall_configure_request_zoom():
         channel_avg_map,
         zoom_window_tuning=zoom_window_tuning,
     )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     request = ConfigureRequest(
@@ -775,7 +817,11 @@ def test_unmarshall_configure_request_from_json_zoom():
         channel_avg_map,
         zoom_window_tuning=zoom_window_tuning,
     )
-    csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    csp_config = CSPConfiguration(
+        csp_id=csp_id,
+        frequency_band=ReceiverBand.BAND_1,
+        fsp_configs=[fsp_config]
+    )
     tmc_config = TMCConfiguration(scan_duration)
 
     expected = ConfigureRequest(

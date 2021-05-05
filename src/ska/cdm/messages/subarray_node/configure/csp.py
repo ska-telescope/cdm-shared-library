@@ -221,10 +221,10 @@ class CSPConfiguration:
 
     def __init__(
             self,
+            interface: str = None,
             csp_id: str = None,
             frequency_band: core.ReceiverBand = None,
             fsp_configs: List[FSPConfiguration] = None,
-            interface_url: str = None,
             subarray_config: SubarrayConfiguration = None,
             common_config: CommonConfiguration = None,
             cbf_config: CBFConfiguration = None,
@@ -237,7 +237,7 @@ class CSPConfiguration:
         compatibility, We have kept old attributes as it is and added
         support of new attributes as per ADR-18
 
-        :param interface_url: url string to determine JsonSchema version
+        :param interface: url string to determine JsonSchema version
         :param csp_id: an ID for CSP configuration
         :param frequency_band: the frequency band to set
         :param fsp_configs: the FSP configurations to set
@@ -247,7 +247,7 @@ class CSPConfiguration:
         :param pst_config: the PST configurations to set
         :param pss_config: the PSS configurations to set
         """
-        self.interface_url = interface_url
+        self.interface = interface
         self.csp_id = csp_id
         self.frequency_band = frequency_band
         self.fsp_configs = fsp_configs
@@ -257,12 +257,12 @@ class CSPConfiguration:
         self.pst_config = pst_config
         self.pss_config = pss_config
 
-        if (self.interface_url is not None
+        if (self.interface is not None
             or self.subarray_config is not None
-            or self.cbf_config is not None) and (
-            self.csp_id is not None
-            or self.frequency_band is not None
-            or self.fsp_configs is not None
+            or self.cbf_config is not None
+        ) and (self.csp_id is not None
+               or self.frequency_band is not None
+               or self.fsp_configs is not None
         ):
             raise ValueError(
                 "Can't configure old CSP and ADR-18 supported CSP attributes "
@@ -273,7 +273,7 @@ class CSPConfiguration:
         if not isinstance(other, CSPConfiguration):
             return False
         return (
-                self.interface_url == other.interface_url
+                self.interface == other.interface
                 and self.csp_id == other.csp_id
                 and self.frequency_band == other.frequency_band
                 and self.fsp_configs == other.fsp_configs
