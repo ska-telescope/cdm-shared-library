@@ -2,13 +2,15 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
-from marshmallow import Schema, fields, post_dump, post_load
+
+from marshmallow import fields, post_dump, post_load
 
 from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
-from ska.cdm.schemas import CODEC
 from ska.cdm.schemas.central_node.common import (
     DishAllocationSchema,
 )
+from ..shared import ValidatingSchema
+from ...schemas import CODEC
 
 __all__ = [
     "ReleaseResourcesRequestSchema",
@@ -16,7 +18,7 @@ __all__ = [
 
 
 @CODEC.register_mapping(ReleaseResourcesRequest)
-class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-methods
+class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the ReleaseResourcesRequest class.
     """
@@ -54,20 +56,28 @@ class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-m
         # If release_all_mid is True, other resources should be stripped - and
         # vice versa
 
-        # checking key for MID
-        if "releaseALL" in data:
-            release_all_mid = data["releaseALL"]
-        if release_all_mid:
-            del data["dish"]
-        else:
-            del data["releaseALL"]
-
-        # checking key for LOW
-        if "release_all" in data and not data["release_all"]:
-            del data["release_all"]
-
         # Filter out  null values from JSON.
         data = {k: v for k, v in data.items() if v is not None}
+
+        is_low = "low" in data.get("interface", "")
+        if is_low:
+            to_remove = ["releaseALL", "subarrayID", "dish"]
+        else:
+            to_remove = ["release_all", "subarray_id"]
+
+            # for MID, also need to remove dish specifier when release all is
+            # True. We do not need to strip partial resources for LOW as only full
+            # release is allowed.
+            release_all_mid = data.get("releaseALL", None)
+            if release_all_mid is True:
+                to_remove.append("dish")
+            else:
+                to_remove.append("releaseALL")
+
+        for key in to_remove:
+            if key in data:
+                del data[key]
+
         return data
 
     @post_load
