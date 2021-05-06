@@ -11,6 +11,7 @@ from ska.cdm.messages.subarray_node.scan import ScanRequest
 from ska.cdm.schemas.shared import ValidatingSchema
 from ska.cdm.schemas.subarray_node.scan import ScanRequestSchema
 from ska.cdm.utils import json_is_equal
+from .. import utils
 
 VALID_MID_SCANREQUEST_JSON = """
 {
@@ -42,72 +43,28 @@ INVALID_LOW_SCANREQUEST_JSON = """
 """
 
 
-@pytest.mark.parametrize('instance, expected', [
-    (VALID_MID_SCANREQUEST_OBJECT, VALID_MID_SCANREQUEST_JSON),
-    (VALID_LOW_SCANREQUEST_OBJECT, VALID_LOW_SCANREQUEST_JSON)
-])
-def test_marshal(instance, expected):
+@pytest.mark.parametrize(
+    'schema_cls,instance,modifier_fn,valid_json,invalid_json',
+    [
+        (ScanRequestSchema,
+         VALID_MID_SCANREQUEST_OBJECT,
+         None,  # No validation for MID
+         VALID_MID_SCANREQUEST_JSON,
+         None),  # no validation for MID
+        (ScanRequestSchema,
+         VALID_LOW_SCANREQUEST_OBJECT,
+         None,  # schema does not impose any constraints so nothing to test
+         VALID_LOW_SCANREQUEST_JSON,
+         INVALID_LOW_SCANREQUEST_JSON),
+    ]
+)
+def test_assigned_resources_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
     """
-    Verify that objects are marshaled to JSON correctly.
+    Verifies that ScanRequestSchema marshals, unmarshals, and validates
+    correctly.
     """
-    schema = ScanRequestSchema()
-    json_str = schema.dumps(instance)
-    assert json_is_equal(json_str, expected)
-
-
-@pytest.mark.parametrize('json_str, expected', [
-    (VALID_MID_SCANREQUEST_JSON, VALID_MID_SCANREQUEST_OBJECT),
-    (VALID_LOW_SCANREQUEST_JSON, VALID_LOW_SCANREQUEST_OBJECT)
-])
-def test_unmarshal(json_str, expected):
-    """
-    Verify that JSON can be unmarshaled back to objects.
-    """
-    schema = ScanRequestSchema()
-    unmarshaled = schema.loads(json_str)
-    assert unmarshaled == expected
-
-
-def test_deserialising_invalid_json_raises_exception_when_strict():
-    """
-    Verify that an exception is raised when invalid JSON is deserialised in
-    strict mode.
-    """
-    schema = ScanRequestSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
-
-    with pytest.raises(JsonValidationError):
-        _ = schema.loads(INVALID_LOW_SCANREQUEST_JSON)
-
-
-@pytest.mark.xfail(strict=True)
-def test_serialising_invalid_object_raises_exception_when_strict():
-    """
-    Verify that an exception is raised when an invalid object is serialised in
-    strict mode.
-
-    This test is xfailed as the telescope model schema for SubArrayNode.Scan
-    does not impose any constraints.
-    """
-    o = copy.deepcopy(VALID_LOW_SCANREQUEST_OBJECT)
-    o.scan_id = -1
-
-    schema = ScanRequestSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
-
-    with pytest.raises(JsonValidationError):
-        _ = schema.dumps(o)
-
-
-def test_serialising_valid_object_does_not_raise_exception_when_strict():
-    """
-    Verify that an exception is not raised when a valid object is serialised
-    in strict mode.
-    """
-    schema = ScanRequestSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
-
-    _ = schema.dumps(VALID_LOW_SCANREQUEST_OBJECT)
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    )

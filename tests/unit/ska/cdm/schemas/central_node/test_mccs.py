@@ -1,13 +1,14 @@
 """
 Unit tests for ska.cdm.schemas module.
 """
-import itertools
+
+import pytest
 
 from ska.cdm.messages.central_node.mccs import MCCSAllocate
 from ska.cdm.schemas.central_node.mccs import MCCSAllocateSchema
-from ska.cdm.utils import json_is_equal
+from .. import utils
 
-VALID_MCCS_ALLOCATE_REQUEST = """
+VALID_MCCSALLOCATE_JSON = """
 {
     "station_ids": [[1, 2]],
     "channel_blocks": [1, 2, 3, 4, 5],
@@ -15,27 +16,29 @@ VALID_MCCS_ALLOCATE_REQUEST = """
 }
 """
 
+VALID_MCCSALLOCATE_OBJECT = MCCSAllocate(
+    station_ids=[(1, 2)],
+    channel_blocks=[1, 2, 3, 4, 5],
+    subarray_beam_ids=[1, 2, 3, 4, 5, 6, 7, 8, 9]
+)
 
-def test_marshal_mccs_allocate_resources():
+
+@pytest.mark.parametrize(
+    'schema_cls,instance,modifier_fn,valid_json,invalid_json',
+    [
+        (MCCSAllocateSchema,
+         VALID_MCCSALLOCATE_OBJECT,
+         None,  # no validation on subschema
+         VALID_MCCSALLOCATE_JSON,
+         None),  # no validation on subschema
+    ]
+)
+def test_releaseresources_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
     """
-    Verify that MCCSAllocate is marshalled to JSON correctly.
+    Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    request = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
     )
-    json_str = MCCSAllocateSchema().dumps(request)
-    assert json_is_equal(json_str, VALID_MCCS_ALLOCATE_REQUEST)
-
-
-def test_unmarshall_mccs_allocate_resources():
-    """
-    Verify that JSON can be unmarshalled back to an MCCSAllocate
-    object.
-    """
-    expected = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    request = MCCSAllocateSchema().loads(VALID_MCCS_ALLOCATE_REQUEST)
-    assert request == expected

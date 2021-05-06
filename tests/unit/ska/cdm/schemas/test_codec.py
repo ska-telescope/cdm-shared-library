@@ -28,7 +28,7 @@ from ska.cdm.utils import json_is_equal
 from .central_node.test_assign_resources import (
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-    sdp_config_for_test,
+    VALID_SDP_OBJECT,
 )
 
 VALID_CONFIGURE_REQUEST = """
@@ -192,7 +192,7 @@ def test_codec_loads():
     """
     Verify that the codec unmarshalls objects correctly.
     """
-    sdp_config = sdp_config_for_test()
+    sdp_config = VALID_SDP_OBJECT
     unmarshalled = CODEC.loads(AssignResourcesRequest,
                                VALID_MID_ASSIGNRESOURCESREQUEST_JSON)
     expected = AssignResourcesRequest.from_dish(
@@ -224,7 +224,7 @@ def test_codec_dumps():
     """
     Verify that the codec marshalls dish & sdp objects to JSON.
     """
-    sdp_config = sdp_config_for_test()
+    sdp_config = VALID_SDP_OBJECT
     expected = VALID_MID_ASSIGNRESOURCESREQUEST_JSON
     obj = AssignResourcesRequest(
         1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config

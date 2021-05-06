@@ -6,7 +6,6 @@ import copy
 import pytest
 from datetime import timedelta
 
-from ska.cdm.exceptions import JsonValidationError
 from ska.cdm.messages.subarray_node.configure import ConfigureRequest
 from ska.cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
@@ -30,9 +29,8 @@ from ska.cdm.messages.subarray_node.configure.mccs import (
 )
 from ska.cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska.cdm.messages.subarray_node.configure.tmc import TMCConfiguration
-from ska.cdm.schemas.shared import ValidatingSchema
 from ska.cdm.schemas.subarray_node.configure import ConfigureRequestSchema
-from ska.cdm.utils import json_is_equal
+from .. import utils
 
 VALID_MID_CONFIGURE_JSON = """
 {
@@ -382,7 +380,6 @@ INVALID_LOW_CONFIGURE_JSON = """
 }
 """
 
-
 VALID_MID_DISH_ONLY_JSON = """
 {
     "dish": {
@@ -400,76 +397,52 @@ VALID_NULL_JSON = "{}"
 VALID_NULL_OBJECT = ConfigureRequest()
 
 
-@pytest.mark.parametrize('instance, expected', [
-    (VALID_MID_CONFIGURE_OBJECT, VALID_MID_CONFIGURE_JSON),
-    (VALID_MID_CONFIGURE_PRE_ADR18_OBJECT, VALID_MID_CONFIGURE_PRE_ADR18_JSON),
-    (VALID_MID_NO_CSP_CHANAVGMAP_OBJECT, VALID_MID_NO_CSP_CHANAVGMAP_JSON),
-    (VALID_LOW_CONFIGURE_OBJECT, VALID_LOW_CONFIGURE_JSON),
-    (VALID_MID_DISH_ONLY_OBJECT, VALID_MID_DISH_ONLY_JSON),
-    (VALID_NULL_OBJECT, VALID_NULL_JSON)
-])
-def test_marshal(instance, expected):
-    """
-    Verify that ConfigureRequest is marshaled to JSON correctly.
-    """
-    schema = ConfigureRequestSchema()
-    marshaled = schema.dumps(instance)
-    assert json_is_equal(marshaled, expected)
-
-
-@pytest.mark.parametrize('json_str,expected', [
-    (VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT),
-    (VALID_MID_CONFIGURE_PRE_ADR18_JSON, VALID_MID_CONFIGURE_PRE_ADR18_OBJECT),
-    (VALID_MID_NO_CSP_CHANAVGMAP_JSON, VALID_MID_NO_CSP_CHANAVGMAP_OBJECT),
-    (VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT),
-    (VALID_MID_DISH_ONLY_JSON, VALID_MID_DISH_ONLY_OBJECT),
-    (VALID_NULL_JSON, VALID_NULL_OBJECT)
-])
-def test_unmarshal(json_str, expected):
-    """
-    Verify that JSON is marshaled to a ConfigureRequest correctly.
-    """
-    schema = ConfigureRequestSchema()
-    unmarshaled = schema.loads(json_str)
-    assert unmarshaled == expected
-
-
-def test_deserialising_invalid_json_raises_exception_when_strict():
-    """
-    Verify that an exception is raised when invalid JSON is deserialised in
-    strict mode.
-    """
-    schema = ConfigureRequestSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
-
-    with pytest.raises(JsonValidationError):
-        _ = schema.loads(INVALID_LOW_CONFIGURE_JSON)
-
-
-def test_serialising_invalid_object_raises_exception_when_strict():
-    """
-    Verify that an exception is raised when an invalid object is serialised in
-    strict mode.
-    """
-    o = copy.deepcopy(VALID_LOW_CONFIGURE_OBJECT)
+def low_invalidator(o: ConfigureRequest):
+    # function to make a valid LOW ConfigureRequest invalid
     o.mccs.subarray_beam_configs[0].subarray_beam_id = -1
 
-    schema = ConfigureRequestSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
 
-    with pytest.raises(JsonValidationError):
-        _ = schema.dumps(o)
-
-
-def test_serialising_valid_object_does_not_raise_exception_when_strict():
+@pytest.mark.parametrize(
+    'schema_cls,instance,modifier_fn,valid_json,invalid_json',
+    [
+        (ConfigureRequestSchema,
+         VALID_MID_CONFIGURE_OBJECT,
+         None,  # no validation on MID
+         VALID_MID_CONFIGURE_JSON,
+         None),  # no validation on MID
+        (ConfigureRequestSchema,
+         VALID_MID_CONFIGURE_PRE_ADR18_OBJECT,
+         None,  # no validation on MID
+         VALID_MID_CONFIGURE_PRE_ADR18_JSON,
+         None),  # no validation on MID
+        (ConfigureRequestSchema,
+         VALID_MID_DISH_ONLY_OBJECT,
+         None,  # no validation on MID
+         VALID_MID_DISH_ONLY_JSON,
+         None),  # no validation on MID
+        (ConfigureRequestSchema,
+         VALID_MID_NO_CSP_CHANAVGMAP_OBJECT,
+         None,  # no validation on MID
+         VALID_MID_NO_CSP_CHANAVGMAP_JSON,
+         None),  # no validation on MID
+        (ConfigureRequestSchema,
+         VALID_NULL_OBJECT,
+         None,  # no validation for null object
+         VALID_NULL_JSON,
+         None),  # no validation for null object
+        (ConfigureRequestSchema,
+         VALID_LOW_CONFIGURE_OBJECT,
+         low_invalidator,  # no validation on MID
+         VALID_LOW_CONFIGURE_JSON,
+         INVALID_LOW_CONFIGURE_JSON),  # no validation on MID
+    ]
+)
+def test_releaseresources_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
     """
-    Verify that an exception is not raised when a valid object is serialised
-    in strict mode.
+    Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    schema = ConfigureRequestSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
-
-    _ = schema.dumps(VALID_LOW_CONFIGURE_OBJECT)
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    )

@@ -1,14 +1,10 @@
-import copy
-
 import pytest
 
-from ska.cdm.exceptions import JsonValidationError
 from ska.cdm.messages.subarray_node.assigned_resources import AssignedResources
 from ska.cdm.messages.subarray_node.assigned_resources import MCCSAllocation
-from ska.cdm.schemas.shared import ValidatingSchema
 from ska.cdm.schemas.subarray_node.assigned_resources import AssignedResourcesSchema
 from ska.cdm.schemas.subarray_node.assigned_resources import MCCSAllocationSchema
-from ska.cdm.utils import json_is_equal
+from .. import utils
 
 VALID_MCCSALLOCATION_JSON = """
 {
@@ -48,68 +44,32 @@ INVALID_ASSIGNEDRESOURCES_JSON = """
 """
 
 
-@pytest.mark.parametrize('schema_cls, instance, expected', [
-    (MCCSAllocationSchema, VALID_MCCSALLOCATION_OBJECT, VALID_MCCSALLOCATION_JSON),
-    (AssignedResourcesSchema, VALID_ASSIGNEDRESOURCES_OBJECT, VALID_ASSIGNEDRESOURCES_JSON)
-])
-def test_marshal(schema_cls, instance, expected):
-    """
-    Verify that objects are marshaled to JSON correctly.
-    """
-    schema = schema_cls()
-    json_str = schema.dumps(instance)
-    assert json_is_equal(json_str, expected)
-
-
-@pytest.mark.parametrize('schema_cls, json_str, expected', [
-    (MCCSAllocationSchema, VALID_MCCSALLOCATION_JSON, VALID_MCCSALLOCATION_OBJECT),
-    (AssignedResourcesSchema, VALID_ASSIGNEDRESOURCES_JSON, VALID_ASSIGNEDRESOURCES_OBJECT)
-])
-def test_unmarshal(schema_cls, json_str, expected):
-    """
-    Verify that JSON can be unmarshaled back to objects.
-    """
-    schema = schema_cls()
-    unmarshaled = schema.loads(json_str)
-    assert unmarshaled == expected
-
-
-def test_deserialising_invalid_json_raises_exception_when_strict():
-    """
-    Verify that an exception is raised when invalid JSON is deserialised in
-    strict mode.
-    """
-    schema = AssignedResourcesSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
-
-    with pytest.raises(JsonValidationError):
-        _ = schema.loads(INVALID_ASSIGNEDRESOURCES_JSON)
-
-
-def test_serialising_invalid_object_raises_exception_when_strict():
-    """
-    Verify that an exception is raised when an invalid object is serialised in
-    strict mode.
-    """
-    o = copy.deepcopy(VALID_ASSIGNEDRESOURCES_OBJECT)
+def modifier_fn(o: AssignedResources):
+    # function to make a valid AssignedResources invalid
     o.mccs.subarray_beam_ids = [-1]
 
-    schema = AssignedResourcesSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
 
-    with pytest.raises(JsonValidationError):
-        _ = schema.dumps(o)
-
-
-def test_serialising_valid_object_does_not_raise_exception_when_strict():
+@pytest.mark.parametrize(
+    'schema_cls,instance,modifier_fn,valid_json,invalid_json',
+    [
+        (AssignedResourcesSchema,
+         VALID_ASSIGNEDRESOURCES_OBJECT,
+         modifier_fn,
+         VALID_ASSIGNEDRESOURCES_JSON,
+         INVALID_ASSIGNEDRESOURCES_JSON),
+        (MCCSAllocationSchema,
+         VALID_MCCSALLOCATION_OBJECT,
+         None,  # no validation on MCCSAllocation subschema
+         VALID_MCCSALLOCATION_JSON,
+         None)  # no validation on MCCSAllocation subschema
+    ]
+)
+def test_releaseresources_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
     """
-    Verify that an exception is not raised when a valid object is serialised
-    in strict mode.
+    Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    schema = AssignedResourcesSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
-
-    _ = schema.dumps(VALID_ASSIGNEDRESOURCES_OBJECT)
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    )

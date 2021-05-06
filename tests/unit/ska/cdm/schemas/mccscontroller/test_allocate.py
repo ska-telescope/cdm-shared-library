@@ -1,15 +1,12 @@
 """
 Unit tests for ska.cdm.schemas.mccscontroller.allocate module.
 """
-import copy
 
 import pytest
 
-from ska.cdm.exceptions import JsonValidationError
 from ska.cdm.messages.mccscontroller.allocate import AllocateRequest
 from ska.cdm.schemas.mccscontroller.allocate import AllocateRequestSchema
-from ska.cdm.utils import json_is_equal
-from ska.cdm.schemas.shared import ValidatingSchema
+from .. import utils
 
 VALID_JSON = """
 {
@@ -31,7 +28,6 @@ INVALID_JSON = """
 }
 """
 
-
 VALID_OBJECT = AllocateRequest(
     interface="https://schema.skatelescope.org/ska-low-mccs-assignresources/1.0",
     subarray_id=1,
@@ -41,38 +37,27 @@ VALID_OBJECT = AllocateRequest(
 )
 
 
-def test_marshal_allocaterequest():
-    """
-    Verify that AllocateRequest is marshalled to JSON correctly.
-    """
-    json_str = AllocateRequestSchema().dumps(VALID_OBJECT)
-    assert json_is_equal(json_str, VALID_JSON)
-
-
-def test_deserialising_invalid_json_raises_exception_when_strict():
-    schema = AllocateRequestSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
-
-    with pytest.raises(JsonValidationError):
-        _ = schema.loads(INVALID_JSON)
-
-
-def test_serialising_invalid_object_raises_exception_when_strict():
-    o = copy.deepcopy(VALID_OBJECT)
+def invalidator_fn(o: AllocateRequest):
+    # function to make a valid AllocateRequest invalid
     o.subarray_beam_ids = [49]
 
-    schema = AllocateRequestSchema()
-    schema.context[ValidatingSchema.VALIDATE] = True
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = 2
 
-    with pytest.raises(JsonValidationError):
-        _ = schema.dumps(o)
-
-
-def test_unmarshall_allocaterequest():
+@pytest.mark.parametrize(
+    'schema_cls,instance,modifier_fn,valid_json,invalid_json',
+    [
+        (AllocateRequestSchema,
+         VALID_OBJECT,
+         invalidator_fn,
+         VALID_JSON,
+         INVALID_JSON),
+    ]
+)
+def test_releaseresources_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
     """
-    Verify that JSON can be unmarshalled back to an AllocateRequest object.
+    Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    unmarshalled = AllocateRequestSchema().loads(VALID_JSON)
-    assert unmarshalled == VALID_OBJECT
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    )
