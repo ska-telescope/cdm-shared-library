@@ -179,7 +179,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON = """
 """
 
 VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
-    subarray_id_mid=1,
+    subarray_id=1,
     dish_allocation=DishAllocation(
         receptor_ids=["0001", "0002"]
     ),
@@ -200,7 +200,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """
 
 VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
-    subarray_id_low=1,
+    subarray_id=1,
     mccs=MCCSAllocate(
         subarray_beam_ids=[1],
         station_ids=[(1, 2)],

@@ -1,6 +1,7 @@
 """
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
+import copy
 import pytest
 import itertools
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
@@ -57,34 +58,18 @@ def test_assign_resources_request_mccs_eq():
     Verify that two AssignResource request objects for the same sub-array and
     mccs allocation are considered equal.
     """
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])),
-        [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    mccs = MCCSAllocate(
+        subarray_beam_ids=[1],
+        station_ids=[(1, 2)],
+        channel_blocks=[3]
     )
-    request = AssignResourcesRequest(subarray_id_low=1, mccs=mccs_allocate)
-    assert request == AssignResourcesRequest(subarray_id_low=1,
-                                             mccs=mccs_allocate)
-    assert request != AssignResourcesRequest(
-        subarray_id_low=1,
-        mccs=MCCSAllocate(
-            list(zip(itertools.count(1, 1), 1 * [1])), [1, 2, 3, 4, 5],
-            [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        ),
-    )
-    assert request != AssignResourcesRequest(
-        subarray_id_low=1,
-        mccs=MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5],
-                          [1, 2, 3, 4, 5, 6])
-    )
-    assert request != AssignResourcesRequest(
-        subarray_id_low=1,
-        mccs=MCCSAllocate(
-            list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-            [1, 2, 3, 4, 5, 6]
-        ),
-    )
-    assert request != AssignResourcesRequest(subarray_id_low=2,
-                                             mccs=mccs_allocate)
+    request = AssignResourcesRequest(subarray_id=1, mccs=mccs)
+    assert request == AssignResourcesRequest(subarray_id=1, mccs=mccs)
+    assert request != AssignResourcesRequest(subarray_id=2, mccs=mccs)
+
+    o = copy.deepcopy(mccs)
+    o.subarray_beam_ids = [2]
+    assert request != AssignResourcesRequest(subarray_id=1, mccs=o)
 
 
 def test_assign_resources_request_from_mccs():
@@ -94,11 +79,11 @@ def test_assign_resources_request_from_mccs():
     """
     mccs_allocate = MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])),
                                  [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6])
-    request = AssignResourcesRequest.from_mccs(subarray_id_low=1,
+    request = AssignResourcesRequest.from_mccs(subarray_id=1,
                                                mccs=mccs_allocate)
 
     expected = AssignResourcesRequest(
-        subarray_id_low=1,
+        subarray_id=1,
         mccs=MCCSAllocate(
             list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5, 6]
@@ -155,7 +140,7 @@ def test_assign_resources_request_eq_mccs_with_other_objects():
         list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
         [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    request = AssignResourcesRequest(subarray_id_low=1, mccs=mccs_allocate)
+    request = AssignResourcesRequest(subarray_id=1, mccs=mccs_allocate)
     assert request != 1
     assert request != object()
 
@@ -195,26 +180,26 @@ def test_assign_resources_request_for_low_eq():
         [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
     request = AssignResourcesRequest(interface='https://schema.skatelescope.org/'
-                                                   'ska-low-tmc-assignresources/1.0',
+                                               'ska-low-tmc-assignresources/1.0',
                                      mccs=mccs_allocate,
-                                     subarray_id_low=1)
+                                     subarray_id=1)
     assert request == AssignResourcesRequest(
         interface='https://schema.skatelescope.org/'
-                      'ska-low-tmc-assignresources/1.0',
+                  'ska-low-tmc-assignresources/1.0',
         mccs=mccs_allocate,
-        subarray_id_low=1)
+        subarray_id=1)
     assert request != AssignResourcesRequest(
         mccs=MCCSAllocate(
             list(zip(itertools.count(1, 1), 1 * [1])), [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5, 6, 7, 8, 9]
         ),
         interface='https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0',
-        subarray_id_low=2
+        subarray_id=2
     )
     assert request != AssignResourcesRequest(
         mccs=MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5],
                           [1, 2, 3, 4, 5, 6]),
-        subarray_id_low=2,
+        subarray_id=2,
         interface='https://schema.skatelescope.org/ska-low-tmc-assignresources/2.0',
     )
 

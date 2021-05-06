@@ -1,6 +1,8 @@
 """
 Unit tests for the CentralNode.mccs allocate module.
 """
+import copy
+
 import itertools
 
 from ska.cdm.messages.central_node.mccs import MCCSAllocate
@@ -11,30 +13,28 @@ def test_mccs_allocate_eq():
     Verify that two MCCSAllocate objects with the same allocated elements are
     considered equal.
     """
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    orig = MCCSAllocate(
+        subarray_beam_ids=[1],
+        station_ids=[(1,2)],
+        channel_blocks=[3]
     )
-    assert mccs_allocate == MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    assert orig == MCCSAllocate(
+        subarray_beam_ids=[1],
+        station_ids=[(1,2)],
+        channel_blocks=[3]
     )
-    assert mccs_allocate != MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [0])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    alt_params = dict(
+        subarray_beam_ids=[2],
+        station_ids=[(1, 2, 3)],
+        channel_blocks=[4]
     )
-    assert mccs_allocate != MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    assert mccs_allocate != MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    )
-    assert mccs_allocate != MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7]
-    )
+
+    for k, v, in alt_params.items():
+        o = copy.deepcopy(orig)
+        setattr(o, k, v)
+        assert o != orig
 
 
 def test_mccs_allocate_eq_with_other_objects():
@@ -42,9 +42,11 @@ def test_mccs_allocate_eq_with_other_objects():
     Verify that a MCCSAllocate is considered unequal to objects of other
     types.
     """
-    mccs_allocate = MCCSAllocate(
-        list(zip(itertools.count(1, 1), 1 * [2])), [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    o = MCCSAllocate(
+        subarray_beam_ids=[1],
+        station_ids=[(1,2)],
+        channel_blocks=[3]
     )
-    assert mccs_allocate != 1
-    assert mccs_allocate != object()
+
+    assert o != 1
+    assert o != object()

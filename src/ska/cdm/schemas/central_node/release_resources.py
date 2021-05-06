@@ -24,17 +24,16 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
     """
 
     interface = fields.String()
-    subarray_id_low = fields.Integer(data_key="subarray_id")
+    subarray_id = fields.Integer()
     subarray_id_mid = fields.Integer(data_key="subarrayID")
+    release_all = fields.Boolean()
     release_all_mid = fields.Boolean(data_key="releaseALL")
-    release_all_low = fields.Boolean(data_key="release_all")
     dish = fields.Nested(DishAllocationSchema)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
         Marshmallow directives for ReleaseResourcesRequestSchema.
         """
-
         ordered = True
 
     @post_dump
@@ -56,27 +55,25 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
         # If release_all_mid is True, other resources should be stripped - and
         # vice versa
 
+        is_low = data.get('subarray_id', None) is not None and \
+                 data.get('interface', None) is not None and \
+                 'low' in data['interface']
+        if not is_low:
+            data['subarrayID'] = data['subarray_id']
+            data['releaseALL'] = data['release_all']
+            del data['subarray_id']
+            del data['release_all']
+
+            # for MID, remove dish specifier when release all is True and vice
+            # versa. We do not need to strip partial resources for LOW as only
+            # full release is allowed.
+            if data["releaseALL"]:
+                del data["dish"]
+            else:
+                del data["releaseALL"]
+
         # Filter out  null values from JSON.
         data = {k: v for k, v in data.items() if v is not None}
-
-        is_low = "low" in data.get("interface", "")
-        if is_low:
-            to_remove = ["releaseALL", "subarrayID", "dish"]
-        else:
-            to_remove = ["release_all", "subarray_id"]
-
-            # for MID, also need to remove dish specifier when release all is
-            # True. We do not need to strip partial resources for LOW as only full
-            # release is allowed.
-            release_all_mid = data.get("releaseALL", None)
-            if release_all_mid is True:
-                to_remove.append("dish")
-            else:
-                to_remove.append("releaseALL")
-
-        for key in to_remove:
-            if key in data:
-                del data[key]
 
         return data
 
@@ -90,18 +87,22 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
         :param _: kwargs passed by Marshmallow
         :return: ReleaseResourcesRequest object populated from data
         """
+        interface = data.get("interface", None)
+        subarray_id = data.get("subarray_id", None)
         subarray_id_mid = data.get("subarray_id_mid", None)
+        release_all = data.get("release_all", False)
         release_all_mid = data.get("release_all_mid", False)
         dish_allocation = data.get("dish", None)
-        interface = data.get("interface", None)
-        subarray_id_low = data.get("subarray_id_low", None)
-        release_all_low = data.get("release_all_low", False)
+
+        is_low = subarray_id is not None and interface is not None
+
+        if not is_low:
+            subarray_id = subarray_id_mid
+            release_all = release_all_mid
 
         return ReleaseResourcesRequest(
             interface=interface,
-            subarray_id_low=subarray_id_low,
-            subarray_id_mid=subarray_id_mid,
+            subarray_id=subarray_id,
+            release_all=release_all,
             dish_allocation=dish_allocation,
-            release_all_low=release_all_low,
-            release_all_mid = release_all_mid
         )

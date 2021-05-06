@@ -2,7 +2,7 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
-from marshmallow import Schema, fields, post_dump, post_load
+from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 import json
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesResponse
@@ -28,7 +28,7 @@ class AssignResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few
     """
 
     interface = fields.String()
-    subarray_id_low = fields.Integer(data_key="subarray_id")
+    subarray_id = fields.Integer()
     subarray_id_mid = fields.Integer(data_key="subarrayID")
     dish = fields.Nested(DishAllocationSchema)
     sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
@@ -50,16 +50,20 @@ class AssignResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few
         :return: AssignResources object populated from data
         """
         interface = data.get("interface", None)
-        subarray_id_low = data.get("subarray_id_low", None)
+        subarray_id = data.get("subarray_id", None)
         subarray_id_mid = data.get("subarray_id_mid", None)
         dish_allocation = data.get("dish", None)
         sdp_config = data.get("sdp_config", None)
         mccs = data.get("mccs", None)
 
+        is_low = subarray_id is not None and interface is not None
+
+        if not is_low:
+            subarray_id = subarray_id_mid
+
         return AssignResourcesRequest(
             interface=interface,
-            subarray_id_low=subarray_id_low,
-            subarray_id_mid=subarray_id_mid,
+            subarray_id=subarray_id,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
             mccs=mccs
@@ -75,6 +79,13 @@ class AssignResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
+        is_low = data.get('subarray_id', None) is not None and \
+                 data.get('interface', None) is not None and \
+                 'low' in data['interface']
+        if not is_low:
+            data['subarrayID'] = data['subarray_id']
+            del data['subarray_id']
+
         # filter out nulls
         data = {k: v for k, v in data.items() if v is not None}
 

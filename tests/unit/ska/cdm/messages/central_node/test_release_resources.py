@@ -15,14 +15,14 @@ def test_release_resources_request_eq():
     """
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = ReleaseResourcesRequest(
-        1, dish_allocation=dish_allocation, release_all_mid=False
+        subarray_id=1, dish_allocation=dish_allocation, release_all=False
     )
 
-    assert request == ReleaseResourcesRequest(1, dish_allocation=dish_allocation)
-    assert request != ReleaseResourcesRequest(1, dish_allocation=DishAllocation())
-    assert request != ReleaseResourcesRequest(2, dish_allocation=dish_allocation)
+    assert request == ReleaseResourcesRequest(subarray_id=1, dish_allocation=dish_allocation)
+    assert request != ReleaseResourcesRequest(subarray_id=1, dish_allocation=DishAllocation())
+    assert request != ReleaseResourcesRequest(subarray_id=2, dish_allocation=dish_allocation)
     assert request != ReleaseResourcesRequest(
-        1, dish_allocation=dish_allocation, release_all_mid=True
+        subarray_id=1, dish_allocation=dish_allocation, release_all=True
     )
 
 
@@ -33,11 +33,11 @@ def test_release_resources_request_eq_for_low():
     """
 
     request = ReleaseResourcesRequest(
-        subarray_id_low=1, release_all_low=True
+        subarray_id=1, release_all=True
     )
 
-    assert request == ReleaseResourcesRequest(subarray_id_low=1, release_all_low=True)
-    assert request != ReleaseResourcesRequest(subarray_id_low=2, release_all_low=True)
+    assert request == ReleaseResourcesRequest(subarray_id=1, release_all=True)
+    assert request != ReleaseResourcesRequest(subarray_id=2, release_all=True)
 
 
 def test_release_resources_request_eq_with_other_objects():
@@ -46,7 +46,7 @@ def test_release_resources_request_eq_with_other_objects():
     objects of other types.
     """
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
-    request = ReleaseResourcesRequest(1, dish_allocation=dish_allocation)
+    request = ReleaseResourcesRequest(subarray_id=1, dish_allocation=dish_allocation)
     assert request != 1
     assert request != object()
 
@@ -57,7 +57,7 @@ def test_deallocate_resources_must_define_resources_if_not_releasing_all():
     command to release all sub-array resources.
     """
     with pytest.raises(ValueError):
-        _ = ReleaseResourcesRequest(1, release_all_mid=False)
+        _ = ReleaseResourcesRequest(subarray_id=1, release_all=False)
 
 
 def test_deallocate_resources_if_not_releasing_all_in_low():
@@ -66,7 +66,7 @@ def test_deallocate_resources_if_not_releasing_all_in_low():
     command to release all sub-array resources.
     """
     with pytest.raises(ValueError):
-        _ = ReleaseResourcesRequest(1, release_all_low=False)
+        _ = ReleaseResourcesRequest(subarray_id=1, release_all=False)
 
 
 def test_deallocate_resources_enforces_boolean_release_all_argument():
@@ -74,13 +74,13 @@ def test_deallocate_resources_enforces_boolean_release_all_argument():
     Verify that the boolean release_all_mid argument is required.
     """
     with pytest.raises(ValueError):
-        _ = ReleaseResourcesRequest(1, release_all_mid=1)
+        _ = ReleaseResourcesRequest(subarray_id=1, release_all=1)
 
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
     with pytest.raises(ValueError):
-        _ = ReleaseResourcesRequest(1, release_all_mid=1,
+        _ = ReleaseResourcesRequest(subarray_id=1, release_all=1,
                                     dish_allocation=dish_allocation)
 
     # If release_all is not set as boolean for Low
     with pytest.raises(ValueError):
-        _ = ReleaseResourcesRequest(1, release_all_low=1)
+        _ = ReleaseResourcesRequest(subarray_id=1, release_all=1)

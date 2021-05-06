@@ -17,53 +17,41 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
 
     def __init__(
             self,
+            *_,  # force kwargs
             interface: str = None,
-            subarray_id_low: int = None,
-            subarray_id_mid: int = None,
-            release_all_low: bool = False,
-            release_all_mid: bool = False,
+            subarray_id: int = None,
+            release_all: bool = False,
             dish_allocation: Optional[DishAllocation] = None
     ):
         """
         Create a new ReleaseResourcesRequest object.
 
         :param interface: url string to determine JsonSchema version
-        :param subarray_id_low: the numeric SubArray ID (1..16) for LOW
-        :param subarray_id_mid: the numeric SubArray ID (1..16) for MID
-        :param release_all_mid: True to release all sub-array resources, False to
-            release just those resources specified as other arguments for MID
-        :param release_all_low: True to release all sub-array resources for LOW
+        :param subarray_id: the numeric SubArray ID (1..16)
+        :param release_all: True to release all sub-array resources, False to
+            release just those resources specified as other arguments
         :param dish_allocation: object holding the DISH resource allocation
             to release for this request.
         """
-
-        if not isinstance(release_all_mid, bool):
+        if release_all is not None and not isinstance(release_all, bool):
             raise ValueError('release_all_mid must be a boolean')
 
-        if not isinstance(release_all_low, bool):
-            raise ValueError('release_all_low must be a boolean')
-
-        if (release_all_mid is False and dish_allocation is None) and \
-                (release_all_low is False):
-            raise ValueError('Either release_all_mid or dish_allocation must be '
-                             'defined for MID or release_all_low must be '
-                             'defined for LOW request')
-        if release_all_mid:
+        if release_all is False and dish_allocation is None:
+            raise ValueError(
+                'Either release_all or dish_allocation must be defined'
+            )
+        if release_all:
             dish_allocation = None
 
         self.interface = interface
-        self.subarray_id_low = subarray_id_low
-        self.subarray_id_mid = subarray_id_mid
-        self.release_all_low = release_all_low
-        self.release_all_mid = release_all_mid
+        self.subarray_id = subarray_id
+        self.release_all = release_all
         self.dish = dish_allocation
 
     def __eq__(self, other):
         if not isinstance(other, ReleaseResourcesRequest):
             return False
         return self.interface == other.interface and \
-               self.subarray_id_low == other.subarray_id_low and \
-               self.subarray_id_mid == other.subarray_id_mid and \
+               self.subarray_id == other.subarray_id and \
                self.dish == other.dish and \
-               self.release_all_low == other.release_all_low and \
-               self.release_all_mid == other.release_all_mid
+               self.release_all == other.release_all

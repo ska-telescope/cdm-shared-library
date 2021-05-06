@@ -17,7 +17,7 @@ VALID_MID_PARTIAL_RELEASE_JSON = """
 """
 
 VALID_MID_PARTIAL_RELEASE_OBJECT = ReleaseResourcesRequest(
-    subarray_id_mid=1,
+    subarray_id=1,
     dish_allocation=DishAllocation(receptor_ids=["0001", "0002"])
 )
 
@@ -29,14 +29,14 @@ VALID_MID_FULL_RELEASE_JSON = """
 """
 
 VALID_MID_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
-    subarray_id_mid=1,
-    release_all_mid=True
+    subarray_id=1,
+    release_all=True
 )
 
 # mixed partial / full request, used to test which params are ignored
 VALID_MID_MIXED_ARGS_OBJECT = ReleaseResourcesRequest(
-    subarray_id_mid=1,
-    release_all_mid=True,
+    subarray_id=1,
+    release_all=True,
     dish_allocation=DishAllocation(receptor_ids=["0001", "0002"])
 )
 
@@ -50,8 +50,8 @@ VALID_LOW_FULL_RELEASE_JSON = """
 
 VALID_LOW_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
-    subarray_id_low=1,
-    release_all_low=True
+    subarray_id=1,
+    release_all=True
 )
 
 INVALID_LOW_FULL_RELEASE_JSON = """
@@ -65,7 +65,7 @@ INVALID_LOW_FULL_RELEASE_JSON = """
 
 def low_invalidator_fn(o: ReleaseResourcesRequest):
     # function to make a valid LOW AssignedResourcesRequest invalid
-    o.subarray_id_low = -1
+    o.subarray_id = -1
 
 
 @pytest.mark.parametrize(

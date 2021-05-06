@@ -88,6 +88,7 @@ VALID_CONFIGURE_REQUEST = """
   }
 }
 """
+
 INVALID_CONFIGURE_REQUEST = """
 {
   "pointing": {
@@ -137,6 +138,7 @@ INVALID_CONFIGURE_REQUEST = """
   }
 }
 """
+
 VALID_CSP_SCHEMA = """{
     "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
     "subarray": {
@@ -174,6 +176,7 @@ VALID_CSP_SCHEMA = """{
     }
   }
 """
+
 INVALID_CSP_SCHEMA = """{
     "interface": "https://schema.skatelescope.org/ska-csp-configure/3.0",
     "subarray": {
@@ -213,7 +216,7 @@ def test_codec_loads_mccs_only():
     )
     expected = AssignResourcesRequest.from_mccs(
         interface=interface,
-        subarray_id_low=1,
+        subarray_id=1,
         mccs=mccs
     )
 
@@ -227,7 +230,9 @@ def test_codec_dumps():
     sdp_config = VALID_SDP_OBJECT
     expected = VALID_MID_ASSIGNRESOURCESREQUEST_JSON
     obj = AssignResourcesRequest(
-        1, DishAllocation(receptor_ids=["0001", "0002"]), sdp_config=sdp_config
+        subarray_id=1,
+        dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+        sdp_config=sdp_config
     )
 
     marshalled = CODEC.dumps(obj)
