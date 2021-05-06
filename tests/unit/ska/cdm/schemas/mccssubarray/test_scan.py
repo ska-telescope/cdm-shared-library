@@ -65,18 +65,12 @@ def test_deserialising_invalid_json_raises_exception_when_strict():
         _ = schema.loads(INVALID_JSON)
 
 
-@pytest.mark.xfail(strict=True)
 def test_serialising_invalid_object_raises_exception_when_strict():
     """
     Verify that an exception is raised when an invalid object is serialised in
     strict mode.
-
-    This test is xfailed as the MCCSSubarray.Scan Telescope Model schema does
-    not have any range validations, hence there's no way to make the object
-    invalid.
     """
     o = copy.deepcopy(VALID_OBJECT)
-    # this won't work as there's no range validation
     o.start_time = -1.0
 
     schema = ScanRequestSchema()
