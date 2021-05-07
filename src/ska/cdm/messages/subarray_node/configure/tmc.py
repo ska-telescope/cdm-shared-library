@@ -23,4 +23,5 @@ class TMCConfiguration:
     def __eq__(self, other):
         if not isinstance(other, TMCConfiguration):
             return False
-        return self.scan_duration == other.scan_duration
+        return self.scan_duration == other.scan_duration \
+               and self.is_ska_mid == other.is_ska_mid
