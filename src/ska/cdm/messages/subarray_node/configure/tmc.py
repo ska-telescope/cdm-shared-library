@@ -5,7 +5,6 @@ for all scan commands following this configuration.
 
 from datetime import timedelta
 
-
 __all__ = ['TMCConfiguration']
 
 
@@ -13,8 +12,13 @@ class TMCConfiguration:
     """
     Class to hold TMC configuration
     """
-    def __init__(self, scan_duration: timedelta):
+
+    def __init__(
+            self, scan_duration: timedelta,
+            is_ska_mid: bool = True
+    ):
         self.scan_duration = scan_duration
+        self.is_ska_mid = is_ska_mid
 
     def __eq__(self, other):
         if not isinstance(other, TMCConfiguration):
