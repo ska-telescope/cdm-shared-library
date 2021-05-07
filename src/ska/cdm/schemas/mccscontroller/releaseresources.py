@@ -3,14 +3,15 @@ The releaseresources module defines Marshmallow schemas that map
 MCCSController ReleaseResourcesRequest objects to/from their JSON
 representation.
 """
-from marshmallow import Schema, fields, post_load
+from marshmallow import fields, post_load
 
 from ska.cdm.messages.mccscontroller.releaseresources import ReleaseResourcesRequest
 from ska.cdm.schemas import CODEC
+from ska.cdm.schemas.shared import ValidatingSchema
 
 
 @CODEC.register_mapping(ReleaseResourcesRequest)
-class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-methods
+class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the ReleaseResourcesRequest class.
     """

@@ -27,14 +27,14 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         csp: CSPConfiguration = None,
         mccs: MCCSConfiguration = None,
         tmc: TMCConfiguration = None,
-        interface_url: str = None,
+        interface: str = None,
     ):
         self.pointing = pointing
         self.dish = dish
         self.sdp = sdp
         self.csp = csp
         self.tmc = tmc
-        self.interface_url = interface_url
+        self.interface = interface
         self.mccs = mccs
         if self.mccs is not None and (
             self.dish is not None
@@ -47,11 +47,11 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         if not isinstance(other, ConfigureRequest):
             return False
         return (
-            self.pointing == other.pointing
-            and self.dish == other.dish
-            and self.sdp == other.sdp
-            and self.csp == other.csp
-            and self.tmc == other.tmc
-            and self.mccs == other.mccs
-            and self.interface_url == other.interface_url
+                self.pointing == other.pointing
+                and self.dish == other.dish
+                and self.sdp == other.sdp
+                and self.csp == other.csp
+                and self.tmc == other.tmc
+                and self.mccs == other.mccs
+                and self.interface == other.interface
         )

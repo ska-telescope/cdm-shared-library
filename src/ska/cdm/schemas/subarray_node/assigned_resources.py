@@ -5,9 +5,10 @@ to/from JSON.
 
 from marshmallow import Schema, fields, post_load
 
-from ska.cdm.messages.subarray_node.assigned_resources import MCCSAllocation
 from ska.cdm.messages.subarray_node.assigned_resources import AssignedResources
-from ska.cdm.schemas import CODEC
+from ska.cdm.messages.subarray_node.assigned_resources import MCCSAllocation
+from ..shared import ValidatingSchema
+from ...schemas import CODEC
 
 __all__ = [
     "MCCSAllocationSchema",
@@ -25,14 +26,14 @@ class MCCSAllocationSchema(Schema):
         fields.Integer, data_key="subarray_beam_ids", required=True
     )
     station_ids = fields.List(
-                    fields.List(fields.Integer),
-                    data_key="station_ids",
-                    required=True
+        fields.List(fields.Integer),
+        data_key="station_ids",
+        required=True
     )
     channel_blocks = fields.List(
-                    fields.Integer,
-                    data_key="channel_blocks",
-                    required=True
+        fields.Integer,
+        data_key="channel_blocks",
+        required=True
     )
 
     @post_load
@@ -52,13 +53,13 @@ class MCCSAllocationSchema(Schema):
 
 
 @CODEC.register_mapping(AssignedResources)
-class AssignedResourcesSchema(Schema):
+class AssignedResourcesSchema(ValidatingSchema):
     """
     AssignedResourcesSchema maps the AssignedResources class to/from a JSON
     representation.
     """
-    mccs = fields.Nested(MCCSAllocationSchema, required=True)
     interface = fields.String(required=True)
+    mccs = fields.Nested(MCCSAllocationSchema, required=True)
 
     @post_load
     def create_assigned_resources(self, data, **_):
@@ -70,6 +71,9 @@ class AssignedResourcesSchema(Schema):
 
         :return: AssignedResources object populated from data
         """
-        mccs = data.get("mccs", None)
         interface = data.get("interface", None)
-        return AssignedResources(interface=interface, mccs=mccs)
+        mccs = data.get("mccs", None)
+        return AssignedResources(
+            interface=interface,
+            mccs=mccs
+        )

@@ -2,44 +2,42 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
-from marshmallow import Schema, fields, post_dump, post_load
-
-from ska.cdm.messages.central_node.assign_resources import AssignResourcesResponse
+from marshmallow import Schema, fields, post_dump, post_load, pre_dump
+import json
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
-from ska.cdm.messages.central_node.release_resources import ReleaseResourcesRequest
-from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
+from ska.cdm.messages.central_node.assign_resources import AssignResourcesResponse
 from ska.cdm.schemas.central_node.common import (
     DishAllocationSchema,
     DishAllocationResponseSchema,
 )
 from ska.cdm.schemas.central_node.mccs import MCCSAllocateSchema
-from ska.cdm.schemas import CODEC
+from ska.cdm.schemas.central_node.sdp import SDPConfigurationSchema
+from ..shared import ValidatingSchema
+from ...schemas import CODEC
 
 __all__ = [
     "AssignResourcesRequestSchema",
     "AssignResourcesResponseSchema",
-    "ReleaseResourcesRequestSchema",
 ]
 
 
 @CODEC.register_mapping(AssignResourcesRequest)
-class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-methods
+class AssignResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the AssignResourcesRequest class.
     """
 
+    interface = fields.String()
+    subarray_id = fields.Integer()
     subarray_id_mid = fields.Integer(data_key="subarrayID")
-    dish = fields.Nested(DishAllocationSchema, data_key="dish")
+    dish = fields.Nested(DishAllocationSchema)
     sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
-    mccs = fields.Nested(MCCSAllocateSchema, data_key="mccs")
-    interface_url = fields.String(data_key="interface")
-    subarray_id_low = fields.Integer(data_key="subarray_id")
+    mccs = fields.Nested(MCCSAllocateSchema)
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
         marshmallow directives for AssignResourcesRequestSchema.
         """
-
         ordered = True
 
     @post_load
@@ -51,32 +49,51 @@ class AssignResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-me
         :param _: kwargs passed by Marshmallow
         :return: AssignResources object populated from data
         """
+        interface = data.get("interface", None)
+        subarray_id = data.get("subarray_id", None)
         subarray_id_mid = data.get("subarray_id_mid", None)
         dish_allocation = data.get("dish", None)
         sdp_config = data.get("sdp_config", None)
         mccs = data.get("mccs", None)
-        interface = data.get("interface_url", None)
-        subarray_id_low = data.get("subarray_id_low", None)
+
+        is_low = subarray_id is not None and interface is not None
+
+        if not is_low:
+            subarray_id = subarray_id_mid
 
         return AssignResourcesRequest(
-            subarray_id_mid,
+            interface=interface,
+            subarray_id=subarray_id,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
-            mccs_allocate=mccs,
-            interface_url=interface,
-            subarray_id_low=subarray_id_low
+            mccs=mccs
         )
 
     @post_dump
-    def filter_nulls(self, data, **_):
+    def validate_on_dump(self, data, **_):
         """
+        Validating the structure of JSON against schemas and
         Filter out null values from JSON.
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
-        return {k: v for k, v in data.items() if v is not None}
+        is_low = data.get('subarray_id', None) is not None and \
+                 data.get('interface', None) is not None and \
+                 'low' in data['interface']
+        if not is_low:
+            data['subarrayID'] = data['subarray_id']
+            del data['subarray_id']
+
+        # filter out nulls
+        data = {k: v for k, v in data.items() if v is not None}
+
+        # convert tuples to lists
+        data = json.loads(json.dumps(data))
+
+        data = super().validate_on_dump(data)
+        return data
 
 
 @CODEC.register_mapping(AssignResourcesResponse)
@@ -91,7 +108,6 @@ class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-m
         """
         Marshmallow directives for AssignResourcesResponseSchema.
         """
-
         ordered = True
 
     @post_load
@@ -106,85 +122,3 @@ class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-m
         """
         dish_allocation = data["dish"]
         return AssignResourcesResponse(dish_allocation=dish_allocation)
-
-
-@CODEC.register_mapping(ReleaseResourcesRequest)
-class ReleaseResourcesRequestSchema(Schema):  # pylint: disable=too-few-public-methods
-    """
-    Marshmallow schema for the ReleaseResourcesRequest class.
-    """
-
-    subarray_id_mid = fields.Integer(data_key="subarrayID")
-    dish = fields.Nested(DishAllocationSchema, data_key="dish")
-    release_all_mid = fields.Boolean(data_key="releaseALL")
-    interface_url = fields.String(data_key="interface")
-    subarray_id_low = fields.Integer(data_key="subarray_id")
-    release_all_low = fields.Boolean(data_key="release_all")
-
-    class Meta:  # pylint: disable=too-few-public-methods
-        """
-        Marshmallow directives for ReleaseResourcesRequestSchema.
-        """
-
-        ordered = True
-
-    @post_dump
-    def filter_args(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Filter Marshmallow's JSON based on the value of release_all_mid.
-
-        If release_all_mid is True, other resource definitions should be stripped
-        from the request.
-        If release_all_mid for MID set to False, the 'release_all_mid' key
-        itself should be stripped.
-        If release_all_low for LOW set to False, the 'release_all_low' key
-        itself should be stripped.
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for request submission
-        """
-        # If release_all_mid is True, other resources should be stripped - and
-        # vice versa
-
-        # checking key for MID
-        if "releaseALL" in data:
-            release_all_mid = data["releaseALL"]
-        if release_all_mid:
-            del data["dish"]
-        else:
-            del data["releaseALL"]
-
-        # checking key for LOW
-        if "release_all" in data and not data["release_all"]:
-            del data["release_all"]
-
-        # Filter out  null values from JSON.
-        data = {k: v for k, v in data.items() if v is not None}
-        return data
-
-    @post_load
-    def create_request(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Convert parsed JSON from an ReleaseResources request back into an
-        ReleaseResourcesRequest object.
-
-        :param data: Marshmallow-provided dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-        :return: ReleaseResourcesRequest object populated from data
-        """
-        subarray_id_mid = data.get("subarray_id_mid", None)
-        release_all_mid = data.get("release_all_mid", False)
-        dish_allocation = data.get("dish", None)
-        interface = data.get("interface_url", None)
-        subarray_id_low = data.get("subarray_id_low", None)
-        release_all_low = data.get("release_all_low", False)
-
-        return ReleaseResourcesRequest(
-            subarray_id_mid=subarray_id_mid,
-            release_all_mid=release_all_mid,
-            dish_allocation=dish_allocation,
-            interface_url=interface,
-            subarray_id_low=subarray_id_low,
-            release_all_low=release_all_low
-        )

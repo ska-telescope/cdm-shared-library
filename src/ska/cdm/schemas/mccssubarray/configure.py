@@ -10,6 +10,7 @@ from ska.cdm.messages.mccssubarray.configure import (
     SubarrayBeamConfiguration
 )
 from ska.cdm.schemas import CODEC
+from ska.cdm.schemas.shared import ValidatingSchema
 
 __all__ = [
     "ConfigureRequestSchema",
@@ -76,7 +77,7 @@ class SubarrayBeamConfigurationSchema(Schema):
 
 
 @CODEC.register_mapping(ConfigureRequest)
-class ConfigureRequestSchema(Schema):
+class ConfigureRequestSchema(ValidatingSchema):
     """
     Marshmallow schema for the mccssubarray.ConfigureRequest class
     """

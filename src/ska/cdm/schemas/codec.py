@@ -5,6 +5,9 @@ Marshmallow schema directly.
 """
 __all__ = ['MarshmallowCodec']
 
+from typing import Optional
+from .shared import ValidatingSchema
+
 
 class MarshmallowCodec:  # pylint: disable=too-few-public-methods
     """
@@ -40,48 +43,76 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         self._schema[cdm_class] = schema_class
 
-    def load_from_file(self, cls, path, validate: bool = True):
+    def load_from_file(
+            self,
+            cls,
+            path,
+            validate: bool = True,
+            strictness: Optional[int] = None
+    ):
         """
         Load an instance of a CDM class from disk.
 
         :param cls: the class to create from the file
         :param path: the path to the file
-        :param validate: default value set to true for schema
-               validation
+        :param validate: True to enable schema validation
+        :param strictness: optional validation strictness level (0=min, 2=max)
         :return: an instance of cls
         """
-
         with open(path, 'r') as json_file:
             json_data = json_file.read()
-            return self.loads(cls, json_data, validate)
+            return self.loads(cls, json_data, validate, strictness)
 
-    def loads(self, cdm_class, json_data, validate: bool = True):
+    def loads(
+            self,
+            cdm_class,
+            json_data,
+            validate: bool = True,
+            strictness: Optional[int] = None
+    ):
         """
         Create an instance of a CDM class from a JSON string.
 
+        The default strictness of the Telescope Model schema validator can be
+        overridden by supplying the validate argument.
+
         :param cdm_class: the class to create from the JSON
         :param json_data: the JSON to unmarshall
-        :param validate: default value set to true for schema
-               validation
+        :param validate: True to enable schema validation
+        :param strictness: optional validation strictness level (0=min, 2=max)
         :return: an instance of cls
         """
-
         schema_cls = self._schema[cdm_class]
         schema_obj = schema_cls()
-        schema_obj.context["custom_validate"] = validate
+
+        schema_obj.context[ValidatingSchema.VALIDATE] = validate
+        if strictness is not None:
+            schema_obj.context[ValidatingSchema.VALIDATION_STRICTNESS] = strictness
+
         return schema_obj.loads(json_data=json_data)
 
-    def dumps(self, obj, validate: bool = True):
+    def dumps(
+            self,
+            obj,
+            validate: bool = True,
+            strictness: Optional[int] = None
+    ):
         """
         Return a string JSON representation of a CDM instance.
 
-        :param obj: the instance to marshall to JSON
-        :param validate: default value set to true for schema
-               validation
-        :return: a JSON string
-        """
+        The default strictness of the Telescope Model schema validator can be
+        overridden by supplying the validate argument.
 
+        :param obj: the instance to marshall to JSON
+        :param validate: True to enable schema validation
+        :param strictness: optional validation strictness level (0=min, 2=max)
+        :return: JSON representation of obj
+        """
         schema_cls = self._schema[obj.__class__]
         schema_obj = schema_cls()
-        schema_obj.context["custom_validate"] = validate
+
+        schema_obj.context[ValidatingSchema.VALIDATE] = validate
+        if strictness is not None:
+            schema_obj.context[ValidatingSchema.VALIDATION_STRICTNESS] = strictness
+
         return schema_obj.dumps(obj)

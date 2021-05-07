@@ -2,26 +2,34 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
-from marshmallow import Schema, fields, post_load
+
+from marshmallow import (
+    fields,
+    post_load,
+    Schema
+)
 
 from ska.cdm.messages.central_node.mccs import MCCSAllocate
-from ska.cdm.schemas import CODEC
 
 __all__ = ["MCCSAllocateSchema"]
 
 
-@CODEC.register_mapping(MCCSAllocate)
 class MCCSAllocateSchema(Schema):
     """
     Marshmallow schema for the MCCSAllocate class.
     """
 
-    station_ids = fields.List(fields.Tuple((fields.Integer, fields.Integer)),
-                              data_key="station_ids", required=True)
-    channel_blocks = fields.List(fields.Integer, data_key="channel_blocks",
-                                 required=True)
+    station_ids = fields.List(
+        fields.Tuple((fields.Integer, fields.Integer)),
+        required=True
+    )
+    channel_blocks = fields.List(
+        fields.Integer,
+        required=True
+    )
     subarray_beam_ids = fields.List(
-        fields.Integer, data_key="subarray_beam_ids", required=True
+        fields.Integer,
+        required=True
     )
 
     @post_load

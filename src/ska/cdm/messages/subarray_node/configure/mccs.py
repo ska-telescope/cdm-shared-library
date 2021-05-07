@@ -155,6 +155,7 @@ class MCCSConfiguration:
 
     def __init__(
             self,
+            *_,  # force kwargs
             station_configs: List[StnConfiguration],
             subarray_beam_configs: List[SubarrayBeamConfiguration],
     ):
