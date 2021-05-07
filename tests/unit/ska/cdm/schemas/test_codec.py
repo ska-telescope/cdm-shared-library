@@ -2,10 +2,18 @@
 Unit tests for the ska.cdm.schemas.codec module.
 """
 import os.path
-
-import pytest
 import unittest.mock as mock
 
+import pytest
+
+import ska.cdm.messages.central_node.release_resources
+import ska.cdm.messages.mccscontroller.allocate
+import ska.cdm.messages.mccscontroller.releaseresources
+import ska.cdm.messages.mccssubarray.assigned_resources
+import ska.cdm.messages.mccssubarray.configure
+import ska.cdm.messages.mccssubarray.scan
+import ska.cdm.messages.subarray_node.assigned_resources
+import ska.cdm.messages.subarray_node.scan
 from ska.cdm.exceptions import JsonValidationError
 from ska.cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska.cdm.messages.central_node.common import DishAllocation
@@ -440,3 +448,23 @@ def test_configure_request_raises_exception_on_invalid_csp_object():
 
     with pytest.raises(JsonValidationError):
         CODEC.dumps(configure_request, strictness=2)
+
+
+@pytest.mark.parametrize('message_cls', [
+    ska.cdm.messages.central_node.assign_resources.AssignResourcesRequest,
+    ska.cdm.messages.central_node.assign_resources.AssignResourcesResponse,
+    ska.cdm.messages.central_node.release_resources.ReleaseResourcesRequest,
+    ska.cdm.messages.subarray_node.configure.ConfigureRequest,
+    ska.cdm.messages.subarray_node.scan.ScanRequest,
+    ska.cdm.messages.subarray_node.assigned_resources.AssignedResources,
+    ska.cdm.messages.mccscontroller.allocate.AllocateRequest,
+    ska.cdm.messages.mccscontroller.releaseresources.ReleaseResourcesRequest,
+    ska.cdm.messages.mccssubarray.configure.ConfigureRequest,
+    ska.cdm.messages.mccssubarray.scan.ScanRequest,
+    ska.cdm.messages.mccssubarray.assigned_resources.AssignedResources
+])
+def test_schema_registration(message_cls):
+    """
+    Verify that a schema is registered with the MarshmallowCodec.
+    """
+    assert message_cls in CODEC._schema
