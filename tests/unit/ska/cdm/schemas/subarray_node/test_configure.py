@@ -322,6 +322,9 @@ VALID_LOW_CONFIGURE_JSON = """
         "phase_centre": [0.0, 0.0]
       }
     ]
+  },
+  "tmc": {
+    "scan_duration": 10.0 
   }
 }
 """
@@ -348,6 +351,10 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                 phase_centre=[0.0, 0.0]
             )
         ]
+    ),
+    tmc=TMCConfiguration(
+        scan_duration=timedelta(seconds=10),
+        is_ska_mid=False
     )
 )
 
