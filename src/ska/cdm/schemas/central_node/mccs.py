@@ -19,18 +19,9 @@ class MCCSAllocateSchema(Schema):
     Marshmallow schema for the MCCSAllocate class.
     """
 
-    station_ids = fields.List(
-        fields.Tuple((fields.Integer, fields.Integer)),
-        required=True
-    )
-    channel_blocks = fields.List(
-        fields.Integer,
-        required=True
-    )
-    subarray_beam_ids = fields.List(
-        fields.Integer,
-        required=True
-    )
+    station_ids = fields.List(fields.List(fields.Integer()), required=True)
+    channel_blocks = fields.List(fields.Integer(), required=True)
+    subarray_beam_ids = fields.List(fields.Integer(), required=True)
 
     @post_load
     def create_mccs_allocate(self, data, **_):

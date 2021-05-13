@@ -7,7 +7,7 @@
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
 
-from typing import List, Tuple
+from typing import Sequence
 
 __all__ = ["MCCSAllocate"]
 
@@ -20,23 +20,21 @@ class MCCSAllocate:
 
     def __init__(
         self,
-        station_ids: List[Tuple],
-        channel_blocks: List[int],
-        subarray_beam_ids: List[int],
+        station_ids: Sequence[Sequence[int]],
+        channel_blocks: Sequence[int],
+        subarray_beam_ids: Sequence[int],
     ):
         """
         Create a new Subarray object.
 
-        :param station_ids: stations id's to allocate
-        :type station_ids: List[Tuple]
+        :param station_ids: stations IDs to allocate
         :param channel_blocks: number of channel groups to assign
-        :type channel_blocks: List[int]
         :param subarray_beam_ids: station beam id's to allocate
-        :type subarray_beam_ids: List[int]
         """
-        self.station_ids = station_ids
-        self.channel_blocks = list(channel_blocks)
-        self.subarray_beam_ids = list(subarray_beam_ids)
+        # keep sequences as lists internally
+        self.station_ids = [[int(o) for o in s] for s in station_ids]
+        self.channel_blocks = [int(o) for o in channel_blocks]
+        self.subarray_beam_ids = [int(o) for o in subarray_beam_ids]
 
     def __eq__(self, other):
         """
