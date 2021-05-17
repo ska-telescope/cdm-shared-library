@@ -26,8 +26,8 @@ autodoc_mock_imports = ["astropy", "marshmallow", "ska_telmodel"]
 
 
 def setup(app):
-    app.add_stylesheet("css/custom.css")
-    app.add_javascript("js/github.js")
+    app.add_css_file('css/custom.css')
+    app.add_js_file('js/github.js')
 
 
 add_module_names = False
