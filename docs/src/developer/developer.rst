@@ -27,7 +27,7 @@ To list all available targets, execute ``make`` without any arguments, e.g.,
 
 ::
 
-  equuleus:cdm-shared-library $ make
+  equuleus:ska-tmc-cdm $ make
   build                          build the application image
   down                           stop develop/test environment and any interactive session
   help                           show this help.
@@ -136,7 +136,7 @@ Marshmallow Schemas
 -------------------
 
 Classes to marshall the ``ska.cdm.messages`` objects to and from JSON are
-defined in the ``ska.cdm.schemas`` package. The cdm-shared-library project
+defined in the ``ska.cdm.schemas`` package. The ska-tmc-cdm project
 uses `Marshmallow <http://marshmallow.org>`_ for JSON serialisation. Classes
 in the ``ska.cdm.schemas`` define Marshmallow schemas which are used by
 Marshmallow during JSON conversion.
@@ -191,7 +191,7 @@ Extending the CDM
 
 Additional devices and applications cay use this library to communicate CDM
 elements wherever useful. Developers are encouraged to extend the
-cdm-shared-library project, adding object models and schemas for the
+ska-tmc-cdm project, adding object models and schemas for the
 structured arguments for their Tango devices.
 
 The steps to extend the CDM are:

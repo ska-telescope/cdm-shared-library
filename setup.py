@@ -14,13 +14,13 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 setuptools.setup(
-    name='cdm-shared-library',
+    name='ska-tmc-cdm',
     version="5.0.2",
-    description="Configuration data model library",
+    description="SKA Control Data Model",
     long_description=readme + '\n\n',
     author="Hélder Ribeiro",
     author_email='helder.ribeiro@fc.up.pt',
-    url='https://gitlab.com/ska-telescope/cdm-shared-library',
+    url='https://gitlab.com/ska-telescope/ska-tmc-cdm',
     packages=setuptools.find_namespace_packages(where='src', include=['ska.*']),
     package_dir={'': 'src'},
     include_package_data=True,

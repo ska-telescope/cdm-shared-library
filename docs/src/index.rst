@@ -22,29 +22,29 @@
   package/api
 
 
-================================
-cdm-shared-library documentation
-================================
+=========================
+ska-tmc-cdm documentation
+=========================
 
 Project description
 ===================
 
-cdm-shared-library provides a Python object model and serialisation library
-that assists in creating correctly formatted JSON arguments for resource
-allocation commands and telescope configuration commands. It can be considered
+ska-tmc-cdm provides a Python object model and serialisation library
+for resource allocation commands and telescope configuration commands, with a
+focus on TMC interfaces with other subsystems.
 an ICD support library, intended to be used by the Tango clients and Tango
 servers on opposing sides of a telescope control interface.
 
 Status
 ------
 
-This library supports the PI#3 version of the CDM, as
-`summarised on SKA Confluence <https://confluence.skatelescope.org/x/ARN0B>`_.
+This library supports control and configuration payloads for the following
+Tango devices:
 
-Additional material on the PI#3 schema can be found at the links below:
-
-* `<https://confluence.skatelescope.org/display/SE/CSP_Mid+Scan+Configuration+for+Correlation>`_
-* `<https://confluence.skatelescope.org/pages/viewpage.action?pageId=74716479>`_
+* TMC CentralNode
+* TMC SubArrayNode
+* MCCSController
+* MCCSSubArrayNode
 
 
 Indices and tables
