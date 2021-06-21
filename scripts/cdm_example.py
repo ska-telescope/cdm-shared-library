@@ -1,11 +1,11 @@
 """
 
- Example of using the cdm methods directly based on the AssignResourcesRequest request
+ Example of using the ska_tmc_cdm methods directly based on the AssignResourcesRequest request
 
 """
 
-from ska.cdm import CODEC
-import ska.cdm.messages.central_node as cn
+from ska_tmc_cdm import CODEC
+import ska_tmc_cdm.messages.central_node as cn
 
 if __name__ == "__main__":
     allocation = cn.DishAllocation(receptor_ids=["0001", "0002"])

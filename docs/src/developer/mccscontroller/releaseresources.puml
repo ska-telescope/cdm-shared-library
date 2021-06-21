@@ -2,7 +2,7 @@
 hide empty members
 left to right direction
 
-package ska.cdm.messages.mccscontroller {
+package ska_tmc_cdm.messages.mccscontroller {
 	package releaseresources.py <<Rectangle>> {
 		class ReleaseResourcesRequest {
 			interface: str

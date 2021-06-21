@@ -1,7 +1,7 @@
 @startuml
 hide empty members
 
-package ska.cdm.messages.mccssubarray {
+package ska_tmc_cdm.messages.mccssubarray {
     package configure.py <<Rectangle>> {
 
         class StationConfiguration {

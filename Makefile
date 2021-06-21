@@ -50,4 +50,11 @@ post-push:
 help:  ## show this help.
 	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+diagrams:  ## recreate PlantUML diagrams whose source has been modified
+	@for i in $$(git diff --name-only -- '*.puml'); \
+	do \
+		echo "Recreating $${i%%.*}.png"; \
+		cat $$i | docker run --rm -i think/plantuml -tpng $$i > $${i%%.*}.png; \
+	done
+
 .PHONY: all post-push help

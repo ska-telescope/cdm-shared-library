@@ -3,7 +3,7 @@ scale 2000 width
 !pragma useNewPackage
 hide empty members
 
-package ska.cdm.messages.mccscontroller {
+package ska_tmc_cdm.messages.mccscontroller {
     package allocate.py <<Rectangle>> {
         class AllocateRequest
     }
@@ -13,7 +13,7 @@ package ska.cdm.messages.mccscontroller {
     }
 }
 
-package ska.cdm.schemas.mccscontroller {
+package ska_tmc_cdm.schemas.mccscontroller {
 	package allocate.py <<Rectangle>> {
         class AllocateRequestSchema
 	}

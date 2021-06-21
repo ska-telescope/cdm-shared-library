@@ -3,7 +3,7 @@ scale 2000 width
 !pragma useNewPackage
 hide empty members
 
-package ska.cdm.messages.mccssubarray {
+package ska_tmc_cdm.messages.mccssubarray {
     package configure.py <<Rectangle>> {
         class ConfigureRequest
         class StationConfiguration
@@ -19,7 +19,7 @@ package ska.cdm.messages.mccssubarray {
     }
 }
 
-package ska.cdm.schemas.mccssubarray {
+package ska_tmc_cdm.schemas.mccssubarray {
 	package configure.py <<Rectangle>> {
         class ConfigureRequestSchema
         class StationConfigurationSchema

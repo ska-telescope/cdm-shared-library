@@ -1,7 +1,7 @@
 @startuml
 hide empty members
 
-package ska.cdm.messages.mccscontroller {
+package ska_tmc_cdm.messages.mccscontroller {
 	package allocate.py <<Rectangle>> {
 		note as N1
 			This module models the

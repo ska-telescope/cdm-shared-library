@@ -21,7 +21,7 @@ setuptools.setup(
     author="Hélder Ribeiro",
     author_email='helder.ribeiro@fc.up.pt',
     url='https://gitlab.com/ska-telescope/ska-tmc-cdm',
-    packages=setuptools.find_namespace_packages(where='src', include=['ska.*']),
+    packages=setuptools.find_namespace_packages(where='src'),
     package_dir={'': 'src'},
     include_package_data=True,
     license="BSD license",
