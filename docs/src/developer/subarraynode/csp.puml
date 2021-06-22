@@ -7,7 +7,7 @@ remove VLBIConfiguration
 remove PSTConfiguration
 remove PSSConfiguration
 
-package ska.cdm.messages.subarray_node.configure {
+package ska_tmc_cdm.messages.subarray_node.configure {
 	package csp.py <<Rectangle>> {
 
 	    class SubarrayConfiguration {

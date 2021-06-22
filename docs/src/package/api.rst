@@ -5,318 +5,318 @@
 API
 ***
 
-==================
-ska.cdm.jsonschema
-==================
+======================
+ska_tmc_cdm.jsonschema
+======================
 
-.. automodule:: ska.cdm.jsonschema
+.. automodule:: ska_tmc_cdm.jsonschema
    :members:
 
-..............................
-ska.cdm.jsonschema.json_schema
-..............................
+..................................
+ska_tmc_cdm.jsonschema.json_schema
+..................................
 
-.. automodule:: ska.cdm.jsonschema.json_schema
+.. automodule:: ska_tmc_cdm.jsonschema.json_schema
    :members:
 
-================
-ska.cdm.messages
-================
+====================
+ska_tmc_cdm.messages
+====================
 
-.. automodule:: ska.cdm.messages
-   :members:
-
-.............................
-ska.cdm.messages.central_node
-.............................
-
-.. automodule:: ska.cdm.messages.central_node
-   :members:
-
-..............................................
-ska.cdm.messages.central_node.assign_resources
-..............................................
-
-.. automodule:: ska.cdm.messages.central_node.assign_resources
-   :members:
-
-...............................................
-ska.cdm.messages.central_node.release_resources
-...............................................
-
-.. automodule:: ska.cdm.messages.central_node.release_resources
-   :members:
-
-....................................
-ska.cdm.messages.central_node.common
-....................................
-
-.. automodule:: ska.cdm.messages.central_node.common
+.. automodule:: ska_tmc_cdm.messages
    :members:
 
 .................................
-ska.cdm.messages.central_node.sdp
+ska_tmc_cdm.messages.central_node
 .................................
 
-.. automodule:: ska.cdm.messages.central_node.sdp
+.. automodule:: ska_tmc_cdm.messages.central_node
    :members:
 
-..................................
-ska.cdm.messages.central_node.mccs
-..................................
+..................................................
+ska_tmc_cdm.messages.central_node.assign_resources
+..................................................
 
-.. automodule:: ska.cdm.messages.central_node.mccs
+.. automodule:: ska_tmc_cdm.messages.central_node.assign_resources
+   :members:
+
+...................................................
+ska_tmc_cdm.messages.central_node.release_resources
+...................................................
+
+.. automodule:: ska_tmc_cdm.messages.central_node.release_resources
    :members:
 
 ........................................
-ska.cdm.messages.mccscontroller.allocate
+ska_tmc_cdm.messages.central_node.common
 ........................................
 
-.. automodule:: ska.cdm.messages.mccscontroller.allocate
+.. automodule:: ska_tmc_cdm.messages.central_node.common
    :members:
 
-................................................
-ska.cdm.messages.mccscontroller.releaseresources
-................................................
+.....................................
+ska_tmc_cdm.messages.central_node.sdp
+.....................................
 
-.. automodule:: ska.cdm.messages.mccscontroller.releaseresources
+.. automodule:: ska_tmc_cdm.messages.central_node.sdp
    :members:
 
-................................................
-ska.cdm.messages.mccssubarray.assigned_resources
-................................................
+......................................
+ska_tmc_cdm.messages.central_node.mccs
+......................................
 
-.. automodule:: ska.cdm.messages.mccssubarray.assigned_resources
+.. automodule:: ska_tmc_cdm.messages.central_node.mccs
    :members:
 
-.......................................
-ska.cdm.messages.mccssubarray.configure
-.......................................
+........................................
+ska_tmc_cdm.messages.mccscontroller.allocate
+........................................
 
-.. automodule:: ska.cdm.messages.mccssubarray.configure
+.. automodule:: ska_tmc_cdm.messages.mccscontroller.allocate
+   :members:
+
+....................................................
+ska_tmc_cdm.messages.mccscontroller.releaseresources
+....................................................
+
+.. automodule:: ska_tmc_cdm.messages.mccscontroller.releaseresources
+   :members:
+
+....................................................
+ska_tmc_cdm.messages.mccssubarray.assigned_resources
+....................................................
+
+.. automodule:: ska_tmc_cdm.messages.mccssubarray.assigned_resources
+   :members:
+
+...........................................
+ska_tmc_cdm.messages.mccssubarray.configure
+...........................................
+
+.. automodule:: ska_tmc_cdm.messages.mccssubarray.configure
+   :members:
+
+......................................
+ska_tmc_cdm.messages.mccssubarray.scan
+......................................
+
+.. automodule:: ska_tmc_cdm.messages.mccssubarray.scan
    :members:
 
 ..................................
-ska.cdm.messages.mccssubarray.scan
+ska_tmc_cdm.messages.subarray_node
 ..................................
 
-.. automodule:: ska.cdm.messages.mccssubarray.scan
+.. automodule:: ska_tmc_cdm.messages.subarray_node
    :members:
 
-..............................
-ska.cdm.messages.subarray_node
-..............................
+.....................................................
+ska_tmc_cdm.messages.subarray_node.assigned_resources
+.....................................................
 
-.. automodule:: ska.cdm.messages.subarray_node
+.. automodule:: ska_tmc_cdm.messages.subarray_node.assigned_resources
+   :members:
+
+............................................
+ska_tmc_cdm.messages.subarray_node.configure
+............................................
+
+.. automodule:: ska_tmc_cdm.messages.subarray_node.configure
    :members:
 
 .................................................
-ska.cdm.messages.subarray_node.assigned_resources
+ska_tmc_cdm.messages.subarray_node.configure.core
 .................................................
 
-.. automodule:: ska.cdm.messages.subarray_node.assigned_resources
+.. automodule:: ska_tmc_cdm.messages.subarray_node.configure.core
    :members:
 
-........................................
-ska.cdm.messages.subarray_node.configure
-........................................
+................................................
+ska_tmc_cdm.messages.subarray_node.configure.csp
+................................................
 
-.. automodule:: ska.cdm.messages.subarray_node.configure
+.. automodule:: ska_tmc_cdm.messages.subarray_node.configure.csp
    :members:
 
-.............................................
-ska.cdm.messages.subarray_node.configure.core
-.............................................
+................................................
+ska_tmc_cdm.messages.subarray_node.configure.sdp
+................................................
 
-.. automodule:: ska.cdm.messages.subarray_node.configure.core
+.. automodule:: ska_tmc_cdm.messages.subarray_node.configure.sdp
    :members:
 
-............................................
-ska.cdm.messages.subarray_node.configure.csp
-............................................
+.................................................
+ska_tmc_cdm.messages.subarray_node.configure.mccs
+.................................................
 
-.. automodule:: ska.cdm.messages.subarray_node.configure.csp
+.. automodule:: ska_tmc_cdm.messages.subarray_node.configure.mccs
    :members:
 
-............................................
-ska.cdm.messages.subarray_node.configure.sdp
-............................................
+................................................
+ska_tmc_cdm.messages.subarray_node.configure.tmc
+................................................
 
-.. automodule:: ska.cdm.messages.subarray_node.configure.sdp
+.. automodule:: ska_tmc_cdm.messages.subarray_node.configure.tmc
    :members:
 
-.............................................
-ska.cdm.messages.subarray_node.configure.mccs
-.............................................
+.......................................
+ska_tmc_cdm.messages.subarray_node.scan
+.......................................
 
-.. automodule:: ska.cdm.messages.subarray_node.configure.mccs
+.. automodule:: ska_tmc_cdm.messages.subarray_node.scan
    :members:
 
-............................................
-ska.cdm.messages.subarray_node.configure.tmc
-............................................
+===================
+ska_tmc_cdm.schemas
+===================
 
-.. automodule:: ska.cdm.messages.subarray_node.configure.tmc
-   :members:
-
-...................................
-ska.cdm.messages.subarray_node.scan
-...................................
-
-.. automodule:: ska.cdm.messages.subarray_node.scan
-   :members:
-
-===============
-ska.cdm.schemas
-===============
-
-.. automodule:: ska.cdm.schemas
-   :members:
-
-............................
-ska.cdm.schemas.central_node
-............................
-
-.. automodule:: ska.cdm.schemas.central_node
-   :members:
-
-.............................................
-ska.cdm.schemas.central_node.assign_resources
-.............................................
-
-.. automodule:: ska.cdm.schemas.central_node.assign_resources
-   :members:
-
-...................................
-ska.cdm.schemas.central_node.common
-...................................
-
-.. automodule:: ska.cdm.schemas.central_node.common
+.. automodule:: ska_tmc_cdm.schemas
    :members:
 
 ................................
-ska.cdm.schemas.central_node.sdp
+ska_tmc_cdm.schemas.central_node
 ................................
 
-.. automodule:: ska.cdm.schemas.central_node.sdp
+.. automodule:: ska_tmc_cdm.schemas.central_node
+   :members:
+
+.................................................
+ska_tmc_cdm.schemas.central_node.assign_resources
+.................................................
+
+.. automodule:: ska_tmc_cdm.schemas.central_node.assign_resources
+   :members:
+
+.......................................
+ska_tmc_cdm.schemas.central_node.common
+.......................................
+
+.. automodule:: ska_tmc_cdm.schemas.central_node.common
+   :members:
+
+................................
+ska_tmc_cdm.schemas.central_node.sdp
+................................
+
+.. automodule:: ska_tmc_cdm.schemas.central_node.sdp
+   :members:
+
+.....................................
+ska_tmc_cdm.schemas.central_node.mccs
+.....................................
+
+.. automodule:: ska_tmc_cdm.schemas.central_node.mccs
+   :members:
+
+.........................
+ska_tmc_cdm.schemas.codec
+.........................
+
+.. automodule:: ska_tmc_cdm.schemas.codec
+   :members:
+
+............................................
+ska_tmc_cdm.schemas.mccscontroller.allocate
+............................................
+
+.. automodule:: ska_tmc_cdm.schemas.mccscontroller.allocate
+   :members:
+
+....................................................
+ska_tmc_cdm.schemas.mccscontroller.releaseresources
+....................................................
+
+.. automodule:: ska_tmc_cdm.schemas.mccscontroller.releaseresources
+   :members:
+
+....................................................
+ska_tmc_cdm.schemas.mccssubarray.assigned_resources
+....................................................
+
+.. automodule:: ska_tmc_cdm.schemas.mccssubarray.assigned_resources
+   :members:
+
+...........................................
+ska_tmc_cdm.schemas.mccssubarray.configure
+...........................................
+
+.. automodule:: ska_tmc_cdm.schemas.mccssubarray.configure
+   :members:
+
+......................................
+ska_tmc_cdm.schemas.mccssubarray.scan
+......................................
+
+.. automodule:: ska_tmc_cdm.schemas.mccssubarray.scan
+   :members:
+
+..........................
+ska_tmc_cdm.schemas.shared
+..........................
+
+.. automodule:: ska_tmc_cdm.schemas.shared
    :members:
 
 .................................
-ska.cdm.schemas.central_node.mccs
+ska_tmc_cdm.schemas.subarray_node
 .................................
 
-.. automodule:: ska.cdm.schemas.central_node.mccs
+.. automodule:: ska_tmc_cdm.schemas.subarray_node
    :members:
 
-.....................
-ska.cdm.schemas.codec
-.....................
+....................................................
+ska_tmc_cdm.schemas.subarray_node.assigned_resources
+....................................................
 
-.. automodule:: ska.cdm.schemas.codec
-   :members:
-
-........................................
-ska.cdm.schemas.mccscontroller.allocate
-........................................
-
-.. automodule:: ska.cdm.schemas.mccscontroller.allocate
-   :members:
-
-................................................
-ska.cdm.schemas.mccscontroller.releaseresources
-................................................
-
-.. automodule:: ska.cdm.schemas.mccscontroller.releaseresources
-   :members:
-
-................................................
-ska.cdm.schemas.mccssubarray.assigned_resources
-................................................
-
-.. automodule:: ska.cdm.schemas.mccssubarray.assigned_resources
-   :members:
-
-.......................................
-ska.cdm.schemas.mccssubarray.configure
-.......................................
-
-.. automodule:: ska.cdm.schemas.mccssubarray.configure
-   :members:
-
-..................................
-ska.cdm.schemas.mccssubarray.scan
-..................................
-
-.. automodule:: ska.cdm.schemas.mccssubarray.scan
-   :members:
-
-......................
-ska.cdm.schemas.shared
-......................
-
-.. automodule:: ska.cdm.schemas.shared
-   :members:
-
-.............................
-ska.cdm.schemas.subarray_node
-.............................
-
-.. automodule:: ska.cdm.schemas.subarray_node
-   :members:
-
-................................................
-ska.cdm.schemas.subarray_node.assigned_resources
-................................................
-
-.. automodule:: ska.cdm.schemas.subarray_node.assigned_resources
-   :members:
-
-.......................................
-ska.cdm.schemas.subarray_node.configure
-.......................................
-
-.. automodule:: ska.cdm.schemas.subarray_node.configure
-   :members:
-
-............................................
-ska.cdm.schemas.subarray_node.configure.core
-............................................
-
-.. automodule:: ska.cdm.schemas.subarray_node.configure.core
+.. automodule:: ska_tmc_cdm.schemas.subarray_node.assigned_resources
    :members:
 
 ...........................................
-ska.cdm.schemas.subarray_node.configure.csp
+ska_tmc_cdm.schemas.subarray_node.configure
 ...........................................
 
-.. automodule:: ska.cdm.schemas.subarray_node.configure.csp
+.. automodule:: ska_tmc_cdm.schemas.subarray_node.configure
    :members:
 
-...........................................
-ska.cdm.schemas.subarray_node.configure.sdp
-...........................................
+................................................
+ska_tmc_cdm.schemas.subarray_node.configure.core
+................................................
 
-.. automodule:: ska.cdm.schemas.subarray_node.configure.sdp
+.. automodule:: ska_tmc_cdm.schemas.subarray_node.configure.core
    :members:
 
-............................................
-ska.cdm.schemas.subarray_node.configure.mccs
-............................................
+...............................................
+ska_tmc_cdm.schemas.subarray_node.configure.csp
+...............................................
 
-.. automodule:: ska.cdm.schemas.subarray_node.configure.mccs
+.. automodule:: ska_tmc_cdm.schemas.subarray_node.configure.csp
    :members:
 
-...........................................
-ska.cdm.schemas.subarray_node.configure.tmc
-...........................................
+...............................................
+ska_tmc_cdm.schemas.subarray_node.configure.sdp
+...............................................
 
-.. automodule:: ska.cdm.schemas.subarray_node.configure.tmc
+.. automodule:: ska_tmc_cdm.schemas.subarray_node.configure.sdp
    :members:
 
-..................................
-ska.cdm.schemas.subarray_node.scan
-..................................
+................................................
+ska_tmc_cdm.schemas.subarray_node.configure.mccs
+................................................
 
-.. automodule:: ska.cdm.schemas.subarray_node.scan
+.. automodule:: ska_tmc_cdm.schemas.subarray_node.configure.mccs
+   :members:
+
+...............................................
+ska_tmc_cdm.schemas.subarray_node.configure.tmc
+...............................................
+
+.. automodule:: ska_tmc_cdm.schemas.subarray_node.configure.tmc
+   :members:
+
+......................................
+ska_tmc_cdm.schemas.subarray_node.scan
+......................................
+
+.. automodule:: ska_tmc_cdm.schemas.subarray_node.scan
    :members:
 

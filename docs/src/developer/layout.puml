@@ -5,7 +5,7 @@ package marshmallow {
 	class Schema
 }
 
-package ska.cdm {
+package ska_tmc_cdm {
 	package messages {
 		package "<<//name of Tango device//>>" as device {
 			package "<<//name of device command//>>" as command.py <<Rectangle>> {
@@ -59,9 +59,9 @@ package ska.cdm {
 		}
 	}
 	note as N2
-		Classes in the ""ska.cdm.schemas""
+		Classes in the ""ska_tmc_cdm.schemas""
 		package transform their namesakes
-		in the ""ska.cdm.messages""
+		in the ""ska_tmc_cdm.messages""
 		package to and from JSON.
 	end note
 

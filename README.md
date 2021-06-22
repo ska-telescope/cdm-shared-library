@@ -1,11 +1,18 @@
-# cdm-shared-library
-The repository for the SKA CDM Shared Library
+# ska-tmc-cdm
+The repository for the SKA Control Data Model.
 
 ## Project description
 
-This project contains the code for the Observation Execution Tool, the
-application which provides high-level scripting facilities and a high-level
-scripting UI for the SKA.
+This project contains the code for the SKA Control Data Model, which provides
+Python/JSON serialisation for the command arguments for various TMC interfaces
+with other subsystems. 
+
+This library can marshal JSON for the following Tango devices.
+
+- TMC CentralNode
+- TMC SubArrayNode
+- MCCSController
+- MCCSSubarray
 
 ## Quickstart
 
@@ -32,7 +39,7 @@ inside the container:
 make interactive
 ```
 
-[![Documentation Status](https://readthedocs.org/projects/cdm-shared-library/badge/?version=latest)](https://developer.skatelescope.org/projects/cdm-shared-library/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/ska-tmc-cdm/badge/?version=latest)](https://developer.skatelescope.org/projects/ska-tmc-cdm/en/latest/?badge=latest)
 
 Documentation can be found in the ``docs`` folder.
 

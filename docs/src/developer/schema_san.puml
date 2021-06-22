@@ -12,7 +12,7 @@ remove VLBIConfigurationSchema
 remove PSTConfigurationSchema
 remove PSSConfigurationSchema
 
-package ska.cdm.messages.subarray_node {
+package ska_tmc_cdm.messages.subarray_node {
 	package configure {
 		package core.py <<Rectangle>> {
 			class Target
@@ -55,7 +55,7 @@ package ska.cdm.messages.subarray_node {
     }
 }
 
-package ska.cdm.schemas.subarray_node {
+package ska_tmc_cdm.schemas.subarray_node {
 	package configure as P2 {
 		package core.py as P3 {
 			class TargetSchema

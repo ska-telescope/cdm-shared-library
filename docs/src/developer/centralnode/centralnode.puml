@@ -1,7 +1,7 @@
 @startuml
 hide empty members
 
-package ska.cdm.messages.central_node {
+package ska_tmc_cdm.messages.central_node {
 	package assign_resources.py <<Rectangle>> {
 		note as N1
 			This module models the

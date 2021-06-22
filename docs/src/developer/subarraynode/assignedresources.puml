@@ -1,7 +1,7 @@
 @startuml
 hide empty members
 
-package ska.cdm.messages.subarray_node {
+package ska_tmc_cdm.messages.subarray_node {
 
         class MCCSAllocation {
             subarray_beam_ids: List[int]

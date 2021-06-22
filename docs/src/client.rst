@@ -5,8 +5,8 @@ Using the CDM
 =============
 
 To use this library in your project, create objects using the classes defined
-in ``ska.cdm.messages`` and convert them to/from JSON using
-``ska.cdm.schemas.CODEC``.
+in ``ska_tmc_cdm.messages`` and convert them to/from JSON using
+``ska_tmc_cdm.schemas.CODEC``.
 
 The Python snippet below is an example of constructing a JSON argument for a
 ``CentralNode.ReleaseResources()`` command. The resulting JSON can be sent to
@@ -15,8 +15,8 @@ the device using a ``DeviceProxy``.
 .. code-block:: python
 
   # import the classes for ReleaseResources commands and CODEC for serialisation
-  from ska.cdm.messages import ReleaseResourcesRequest
-  from ska.cdm.schemas import CODEC
+  from ska_tmc_cdm.messages import ReleaseResourcesRequest
+  from ska_tmc_cdm.schemas import CODEC
 
   # create an object for a command that will release all resources on subarray #2
   cmd_arg = ReleaseResourcesRequest(2, release_all=True)
@@ -30,8 +30,8 @@ assumes you have the string response from the command call at hand.
 .. code-block:: python
 
   # import the classes for ReleaseResources commands and CODEC for serialisation
-  from ska.cdm.messages import AssignResourcesResponse
-  from ska.cdm.schemas import CODEC
+  from ska_tmc_cdm.messages import AssignResourcesResponse
+  from ska_tmc_cdm.schemas import CODEC
 
   # assume that you have some JSON-formatted string returned by AssignResources()
   json_response = ...

@@ -1,7 +1,7 @@
 @startuml
 hide empty members
 
-package ska.cdm.messages.subarray_node {
+package ska_tmc_cdm.messages.subarray_node {
 	package scan.py <<Rectangle>> {
 		class ScanRequest {
 			interface : str

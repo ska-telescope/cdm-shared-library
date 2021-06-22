@@ -4,7 +4,7 @@ scale 2000 width
 hide empty members
 
 
-package ska.cdm.schemas {
+package ska_tmc_cdm.schemas {
 	package central_node.py <<Rectangle>> {
 		class ReleaseResourcesRequestSchema
 		class AssignResourcesRequestSchema
@@ -36,7 +36,7 @@ package ska.cdm.schemas {
 	}
 }
 
-package ska.cdm.messages.central_node {
+package ska_tmc_cdm.messages.central_node {
 	package assign_resources.py <<Rectangle>> {
 		class AssignResourcesRequest
 		class AssignResourcesResponse
