@@ -87,7 +87,7 @@ VALID_CONFIGURE_REQUEST = """
     "scan_type": "science_A"
   },
   "tmc": {
-    "scanDuration": 10.0
+    "scan_duration": 10.0
   }
 }
 """
@@ -137,7 +137,7 @@ INVALID_CONFIGURE_REQUEST = """
     "scan_type": "science_A"
   },
   "tmc": {
-    "scanDuration": 10.0
+    "scan_duration": 10.0
   }
 }
 """
@@ -194,8 +194,6 @@ INVALID_CSP_SCHEMA = """{
 """
 
 
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with ADR-35 hence, JSON schema validation will "
-                          "be failed")
 def test_codec_loads():
     """
     Verify that the codec unmarshalls objects correctly.
@@ -234,8 +232,6 @@ def test_codec_loads_mccs_only():
     assert expected == VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT
 
 
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with ADR-35 hence, JSON schema validation will "
-                          "be failed")
 def test_codec_dumps():
     """
     Verify that the codec marshalls dish & sdp objects to JSON.
@@ -259,14 +255,8 @@ def test_read_a_file_from_disk():
     Test for loading a configure request from a JSON file
     """
     cwd, _ = os.path.split(__file__)
-    test_data = os.path.join(cwd, "testfile_sample_configure.json")
-    result = CODEC.load_from_file(ConfigureRequest, test_data)
-    dish_config = DishConfiguration(ReceiverBand.BAND_1)
-    assert result.dish == dish_config
-
-    test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
-    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, validate=False)  # temprory set validate
-    # to false)
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
+    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
     dish_config = DishConfiguration(ReceiverBand.BAND_1)
     assert result_data.dish == dish_config
 
@@ -362,7 +352,7 @@ def test_codec_loads_from_file_with_schema_validation(mock_fn):
     """
     csp_config = csp_config_for_test()
     cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
     result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
     assert result_data.csp == csp_config
     assert mock_fn.call_count == 1
@@ -378,7 +368,7 @@ def test_codec_loads_from_file_without_schema_validation(mock_fn):
     """
     csp_config = csp_config_for_test()
     cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_sample_configure_ADR_18.json")
+    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
     result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, validate=False)
     assert result_data.csp == csp_config
     assert mock_fn.call_count == 0
@@ -392,7 +382,7 @@ def test_loads_from_file_with_invalid_schema_and_validation_set_to_true():
     from a JSON file
     """
     cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_invalid_configure_ADR_18.json")
+    test_new_json_data = os.path.join(cwd, "testfile_invalid_configure.json")
     with pytest.raises(JsonValidationError):
         CODEC.load_from_file(ConfigureRequest, test_new_json_data)
 
@@ -405,35 +395,9 @@ def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn
     from a JSON file
     """
     cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_invalid_configure_ADR_18.json")
+    test_new_json_data = os.path.join(cwd, "testfile_invalid_configure.json")
     result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
     assert result_data.csp.subarray_config is None
-    assert mock_fn.call_count == 0
-    mock_fn.assert_not_called()
-
-
-@mock.patch("ska_tmc_cdm.jsonschema.json_schema.schema.validate")
-def test_codec_loads_from_file_with_schema_validation_for_old_json(mock_fn):
-    """
-    Verify that the schema validation does not apply even it is set to true
-    for pre ADR-18 JSON schema
-    """
-    cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
-    CODEC.load_from_file(ConfigureRequest, test_new_json_data)
-    assert mock_fn.call_count == 0
-    mock_fn.assert_not_called()
-
-
-@mock.patch("ska_tmc_cdm.jsonschema.json_schema.schema.validate")
-def test_codec_loads_from_file_without_schema_validation_for_old_json(mock_fn):
-    """
-    Verify that the schema validation does not apply when it is set to false
-    for pre ADR-18 JSON schema
-    """
-    cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
-    CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
     assert mock_fn.call_count == 0
     mock_fn.assert_not_called()
 

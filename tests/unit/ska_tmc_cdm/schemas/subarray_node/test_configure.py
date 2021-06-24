@@ -85,7 +85,7 @@ VALID_MID_CONFIGURE_JSON = """
     "scan_type": "science_A"
   },
   "tmc": {
-    "scanDuration": 10.0
+    "scan_duration": 10.0
   }
 }
 """
@@ -187,7 +187,7 @@ VALID_MID_CONFIGURE_PRE_ADR18_JSON = """
     "scan_type": "science_A"
   },
   "tmc": {
-    "scanDuration": 10.0
+    "scan_duration": 10.0
   }
 }
 """
@@ -252,7 +252,7 @@ VALID_MID_NO_CSP_CHANAVGMAP_JSON = """
     "scan_type": "science_A"
   },
   "tmc": {
-    "scanDuration": 10.0
+    "scan_duration": 10.0
   }
 }
 """
@@ -353,8 +353,7 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
         ]
     ),
     tmc=TMCConfiguration(
-        scan_duration=timedelta(seconds=10),
-        is_ska_mid=False
+        scan_duration=timedelta(seconds=10)
     )
 )
 

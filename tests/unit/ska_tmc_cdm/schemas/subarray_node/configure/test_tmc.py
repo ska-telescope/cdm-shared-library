@@ -10,31 +10,20 @@ from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska_tmc_cdm.schemas.subarray_node.configure.tmc import TMCConfigurationSchema
 from ... import utils
 
-VALID_MID_JSON = """
-{
-  "scanDuration": 123.45
-}
-"""
-
-VALID_LOW_JSON = """
+VALID_JSON = """
 {
   "scan_duration": 123.45
 }
 """
 
-VALID_LOW_OBJECT = TMCConfiguration(
-    is_ska_mid=False,
-    scan_duration=timedelta(seconds=123.45)
-)
-
-VALID_MID_OBJECT = TMCConfiguration(
+VALID_OBJECT = TMCConfiguration(
     scan_duration=timedelta(seconds=123.45)
 )
 
 
 def test_marshall_tmcconfiguration_does_not_modify_original():
     """
-    Verify that serialising a DishConfiguration does not change the object.
+    Verify that serialising a TMCConfiguration does not change the object.
     """
     dt = timedelta(seconds=123.45)
     config = TMCConfiguration(scan_duration=dt)
@@ -47,14 +36,9 @@ def test_marshall_tmcconfiguration_does_not_modify_original():
     'schema_cls,instance,modifier_fn,valid_json,invalid_json',
     [
         (TMCConfigurationSchema,
-         VALID_MID_OBJECT,
+         VALID_OBJECT,
          None,
-         VALID_MID_JSON,
-         None),
-        (TMCConfigurationSchema,
-         VALID_LOW_OBJECT,
-         None,
-         VALID_LOW_JSON,
+         VALID_JSON,
          None),
     ]
 )

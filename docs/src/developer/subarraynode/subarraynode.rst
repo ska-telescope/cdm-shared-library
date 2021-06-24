@@ -110,7 +110,7 @@ example JSON command argument that this code can model.
   # JSON modelled specifically by tmc.py
   {
     "tmc": {
-      "scanDuration": 10.0,
+      "scan_duration": 10.0,
     }
   }
 
@@ -390,7 +390,7 @@ Example configuration JSON for MID
       "scan_type": "science_A"
     },
     "tmc": {
-      "scanDuration": 10.0,
+      "scan_duration": 10.0,
     }
   }
 
