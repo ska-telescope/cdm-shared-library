@@ -36,7 +36,7 @@ def test_configure_request_eq():
 
     pointing_config = PointingConfiguration(Target(1, 1))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
-    sdp_config = SDPConfiguration("science_A")
+    sdp_config = SDPConfiguration(scan_type="science_A")
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
@@ -71,12 +71,12 @@ def test_configure_request_eq_for_low():
     request_1 = ConfigureRequest(
         interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
         mccs=mccs_config,
-        sdp=SDPConfiguration("science_A")
+        sdp=SDPConfiguration(scan_type="science_A")
     )
     request_2 = ConfigureRequest(
         interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
         mccs=mccs_config,
-        sdp=SDPConfiguration("science_A")
+        sdp=SDPConfiguration(scan_type="science_A")
     )
     assert request_1 == request_2
 
@@ -108,7 +108,7 @@ def test_configure_request_is_not_equal_to_other_objects():
     """
     pointing_config = PointingConfiguration(Target(1, 1))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
-    sdp_config = SDPConfiguration("science_A")
+    sdp_config = SDPConfiguration(scan_type="science_A")
     channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
     csp_id = "sbi-mvp01-20200325-00001-science_A"
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
@@ -157,7 +157,7 @@ def test_configure_request_is_not_equal_to_other_objects_for_low():
     request = ConfigureRequest(
         interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
         mccs=mccs_config,
-        sdp=SDPConfiguration("science_A")
+        sdp=SDPConfiguration(scan_type="science_A")
     )
     assert request != object
     assert request is not None

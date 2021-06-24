@@ -4,17 +4,29 @@ aspects of SDP configuration that may be specified in a SubArrayNode.configure
 command.
 """
 
-__all__ = ['SDPConfiguration']
+__all__ = ["SDPConfiguration"]
+
+from typing import Optional
+
+SCHEMA = "https://schema.skao.int/ska-sdp-configure/1.0"
 
 
 class SDPConfiguration:
     """
-    Class to hold SDP configuration
+    Message class to hold SDP configuration aspect of a
+    TMC SubArrayNode.Configure call.
     """
-    def __init__(self, scan_type: str):
+
+    def __init__(
+            self,
+            *,  # force kwonly args
+            interface: Optional[str] = SCHEMA,
+            scan_type: str
+    ):
+        self.interface = interface
         self.scan_type = scan_type
 
     def __eq__(self, other):
         if not isinstance(other, SDPConfiguration):
             return False
-        return self.scan_type == other.scan_type
+        return self.interface == other.interface and self.scan_type == other.scan_type

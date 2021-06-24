@@ -1,6 +1,6 @@
 """
-This module defines Marshmallow schemas that map CDM the message classes for
-SDP configuration to and from a JSON representation.
+This module defines Marshmallow schemas that map the SDPConfiguration message
+classes to/from JSON.
 """
 
 from marshmallow import Schema, fields, post_load
@@ -17,7 +17,8 @@ class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     Marshmallow class for the SDPConfiguration class
     """
 
-    scan_type = fields.String(data_key="scan_type")
+    interface = fields.String()
+    scan_type = fields.String()
 
     @post_load
     def create_sdp_configuration(self, data, **_):  # pylint: disable=no-self-use

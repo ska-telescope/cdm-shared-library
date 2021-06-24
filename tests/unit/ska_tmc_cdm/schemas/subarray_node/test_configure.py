@@ -82,6 +82,7 @@ VALID_MID_CONFIGURE_JSON = """
     }
   },
   "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/1.0",
     "scan_type": "science_A"
   },
   "tmc": {
@@ -103,7 +104,10 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     dish=DishConfiguration(
         receiver_band=ReceiverBand.BAND_1
     ),
-    sdp=SDPConfiguration("science_A"),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/1.0",
+        scan_type="science_A"
+    ),
     csp=CSPConfiguration(
         interface="https://schema.skatelescope.org/ska-csp-configure/1.0",
         subarray_config=SubarrayConfiguration('science period 23'),
@@ -184,6 +188,7 @@ VALID_MID_CONFIGURE_PRE_ADR18_JSON = """
     ]
   },
   "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/1.0",
     "scan_type": "science_A"
   },
   "tmc": {
@@ -249,6 +254,7 @@ VALID_MID_NO_CSP_CHANAVGMAP_JSON = """
     ]
   },
   "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/1.0",
     "scan_type": "science_A"
   },
   "tmc": {
@@ -270,7 +276,9 @@ VALID_MID_NO_CSP_CHANAVGMAP_OBJECT = ConfigureRequest(
     dish=DishConfiguration(
         receiver_band=ReceiverBand.BAND_1
     ),
-    sdp=SDPConfiguration("science_A"),
+    sdp=SDPConfiguration(
+        scan_type="science_A"
+    ),
     csp=CSPConfiguration(
         csp_id="sbi-mvp01-20200325-00001-science_A",
         frequency_band=ReceiverBand.BAND_1,
