@@ -43,7 +43,7 @@ VALID_MID_CONFIGURE_JSON = """
     }
   },
   "dish": {
-    "receiverBand": "1"
+    "receiver_band": "1"
   },
   "csp": {
     "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
@@ -247,7 +247,7 @@ INVALID_LOW_CONFIGURE_JSON = """
 VALID_MID_DISH_ONLY_JSON = """
 {
     "dish": {
-        "receiverBand": "1"
+        "receiver_band": "1"
     }
 }
 """

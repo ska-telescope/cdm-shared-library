@@ -99,7 +99,7 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     receiver_band = fields.String(
-        data_key="receiverBand", required=True, validate=OneOf(["1", "2", "5a", "5b"])
+        data_key="receiver_band", required=True, validate=OneOf(["1", "2", "5a", "5b"])
     )
 
     @pre_dump

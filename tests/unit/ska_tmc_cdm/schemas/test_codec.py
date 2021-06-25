@@ -45,7 +45,7 @@ VALID_CONFIGURE_REQUEST = """
     }
   },
   "dish": {
-    "receiverBand": "1"
+    "receiver_band": "1"
   },
   "csp": {
     "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
@@ -103,7 +103,7 @@ INVALID_CONFIGURE_REQUEST = """
     }
   },
   "dish": {
-    "receiverBand": "1"
+    "receiver_band": "1"
   },
   "csp": {
     "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",

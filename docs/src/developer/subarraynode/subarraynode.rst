@@ -87,7 +87,7 @@ are:
     },
     ...
     "dish": {
-      "receiverBand": "1"
+      "receiver_band": "1"
     }
     ....
   }
@@ -348,7 +348,7 @@ Example configuration JSON for MID
       },
     },
     "dish": {
-      "receiverBand": "1"
+      "receiver_band": "1"
     },
     "csp": {
       "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",

@@ -23,7 +23,7 @@ VALID_TARGET_JSON = """
 }
 """
 
-VALID_DISH_CONFIGURATION_JSON = '{"receiverBand": "5a"}'
+VALID_DISH_CONFIGURATION_JSON = '{"receiver_band": "5a"}'
 
 
 def test_marshall_target_to_json():
