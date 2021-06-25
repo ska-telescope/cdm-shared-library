@@ -1,9 +1,9 @@
 {
   "pointing": {
     "target": {
-      "system":"ICRS",
+      "reference_frame":"ICRS",
       "name": "NGC1068",
-      "RA": "02h42m40.771s",
+      "ra": "02h42m40.771s",
       "dec": "-00h00m47.84s"
     }
   },

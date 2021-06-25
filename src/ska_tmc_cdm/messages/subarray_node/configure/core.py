@@ -23,8 +23,8 @@ class Target:
     OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
 
     #  pylint: disable=too-many-arguments
-    def __init__(self, ra, dec, name="", frame="icrs", unit=("hourangle", "deg")):
-        self.coord = SkyCoord(ra, dec, unit=unit, frame=frame)
+    def __init__(self, ra, dec, name="", reference_frame="icrs", unit=("hourangle", "deg")):
+        self.coord = SkyCoord(ra, dec, unit=unit, frame=reference_frame)
         self.name = name
 
     def __eq__(self, other):
@@ -46,17 +46,17 @@ class Target:
         raw_ra = self.coord.ra.value
         raw_dec = self.coord.dec.value
         units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
-        frame = self.coord.frame.name
+        reference_frame = self.coord.frame.name
         name = self.name
-        return "<Target(ra={!r}, dec={!r}, name={!r}, frame={!r}, unit={!r})>".format(
-            raw_ra, raw_dec, name, frame, units
+        return "<Target(ra={!r}, dec={!r}, name={!r}, reference_frame={!r}, unit={!r})>".format(
+            raw_ra, raw_dec, name, reference_frame, units
         )
 
     def __str__(self):
-        frame = self.coord.frame.name
+        reference_frame = self.coord.frame.name
         name = self.name
         hmsdms = self.coord.to_string(style="hmsdms")
-        return "<Target: {!r} ({} {})>".format(name, hmsdms, frame)
+        return "<Target: {!r} ({} {})>".format(name, hmsdms, reference_frame)
 
 
 class PointingConfiguration:  # pylint: disable=too-few-public-methods

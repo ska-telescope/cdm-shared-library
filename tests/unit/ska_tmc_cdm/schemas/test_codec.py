@@ -38,9 +38,9 @@ VALID_CONFIGURE_REQUEST = """
 {
   "pointing": {
     "target": {
-      "system": "ICRS",
+      "reference_frame": "ICRS",
       "name": "M51",
-      "RA": "13:29:52.698",
+      "ra": "13:29:52.698",
       "dec": "+47:11:42.93"
     }
   },
@@ -96,9 +96,9 @@ INVALID_CONFIGURE_REQUEST = """
 {
   "pointing": {
     "target": {
-      "system": "ICRS",
+      "reference_frame": "ICRS",
       "name": "M51",
-      "RA": "13:29:52.698",
+      "ra": "13:29:52.698",
       "dec": "+47:11:42.93"
     }
   },

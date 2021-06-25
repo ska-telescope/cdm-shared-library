@@ -20,7 +20,7 @@ __all__ = [
     "TargetSchema",
 ]
 
-JsonTarget = collections.namedtuple("JsonTarget", "ra dec frame name")
+JsonTarget = collections.namedtuple("JsonTarget", "ra dec reference_frame name")
 
 
 class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -28,9 +28,9 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
     Marshmallow schema for the subarray_node.Target class
     """
 
-    ra = fields.String(data_key="RA")
+    ra = fields.String()
     dec = fields.String()
-    frame = shared.UpperCasedField(data_key="system")
+    reference_frame = shared.UpperCasedField(data_key="reference_frame")
     name = fields.String()
 
     @pre_dump
@@ -49,7 +49,7 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         icrs_coord = target.coord.transform_to("icrs")
         hms, dms = icrs_coord.to_string("hmsdms", sep=":").split(" ")
         sexagesimal = JsonTarget(
-            ra=hms, dec=dms, frame=icrs_coord.frame.name, name=target.name
+            ra=hms, dec=dms, reference_frame=icrs_coord.frame.name, name=target.name
         )
 
         return sexagesimal
@@ -66,9 +66,9 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         name = data["name"]
         hms = data["ra"]
         dms = data["dec"]
-        frame = data["frame"]
+        reference_frame = data["reference_frame"]
         target = configure_msgs.Target(
-            hms, dms, frame=frame, name=name, unit=("hourangle", "deg")
+            hms, dms, reference_frame=reference_frame, name=name, unit=("hourangle", "deg")
         )
         return target
 

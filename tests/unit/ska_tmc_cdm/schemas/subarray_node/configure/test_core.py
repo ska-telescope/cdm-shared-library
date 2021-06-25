@@ -16,9 +16,9 @@ from ska_tmc_cdm.utils import json_is_equal
 
 VALID_TARGET_JSON = """
 {
-  "RA": "12:34:56.78",
+  "ra": "12:34:56.78",
   "dec": "+12:34:56.78",
-  "system": "ICRS",
+  "reference_frame": "ICRS",
   "name": "NGC123"
 }
 """

@@ -79,9 +79,9 @@ are:
     ...
     "pointing": {
       "target": {
-        "system":"ICRS",
+        "reference_frame":"ICRS",
         "name": "NGC6251",
-        "RA": 1.0,
+        "ra": 1.0,
         "dec": 1.0
       },
     },
@@ -341,9 +341,9 @@ Example configuration JSON for MID
   {
     "pointing": {
       "target": {
-        "system":"ICRS",
+        "reference_frame":"ICRS",
         "name": "NGC1068",
-        "RA": 0.70984,
+        "ra": 0.70984,
         "dec": 0.000233
       },
     },
