@@ -149,11 +149,13 @@ class SDPConfiguration:
         max_length: float,
         scan_types: List[ScanType],
         processing_blocks: List[ProcessingBlockConfiguration],
+        interface: str = None,
     ):
         self.sdp_id = sdp_id
         self.max_length = max_length
         self.scan_types = scan_types
         self.processing_blocks = processing_blocks
+        self.interface = interface
 
     def __eq__(self, other):
         if not isinstance(other, SDPConfiguration):
@@ -163,4 +165,5 @@ class SDPConfiguration:
             and self.max_length == other.max_length
             and self.scan_types == other.scan_types
             and self.processing_blocks == other.processing_blocks
+            and self.interface == other.interface
         )

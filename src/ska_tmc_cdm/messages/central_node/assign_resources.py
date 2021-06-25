@@ -23,6 +23,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             sdp_config: SDPConfiguration = None,
             mccs: MCCSAllocate = None,
             interface: str = None,
+            transaction_id: str = None,
     ):
         """
         Create a new AssignResourcesRequest object.
@@ -33,6 +34,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         :param sdp_config: sdp configuration
         :param mccs: MCCS subarray allocation
         :param interface: url string to determine JsonSchema version
+        :param transaction_id: ID for tracking requests
 
         :raises ValueError: if mccs is allocated with dish and sdp_config
         """
@@ -41,6 +43,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         self.sdp_config = sdp_config
         self.mccs = mccs
         self.interface = interface
+        self.transaction_id = transaction_id
 
         if self.mccs is not None and self.subarray_id is None:
             raise ValueError('subarray_id must be '
@@ -57,6 +60,8 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             subarray_id: int,
             dish_allocation: DishAllocation,
             sdp_config: SDPConfiguration = None,
+            interface: str = None,
+            transaction_id: str = None
     ):
         """
         Create a new AssignResourcesRequest object.
@@ -70,7 +75,8 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         """
         obj = cls.__new__(cls)
         obj.__init__(
-            subarray_id, dish_allocation=dish_allocation, sdp_config=sdp_config
+            subarray_id, dish_allocation=dish_allocation, sdp_config=sdp_config,
+            interface=interface, transaction_id=transaction_id
         )
         return obj
 
@@ -79,7 +85,8 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
                   subarray_id: int,
                   mccs: MCCSAllocate,
                   sdp_config: SDPConfiguration = None,
-                  interface: str = None):
+                  interface: str = None,
+                  transaction_id: str = None):
         """
         Create a new AssignResourcesRequest object.
 
@@ -94,17 +101,21 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             subarray_id=subarray_id,
             mccs=mccs,
             sdp_config=sdp_config,
-            interface=interface
+            interface=interface,
+            transaction_id=transaction_id
         )
 
     def __eq__(self, other):
         if not isinstance(other, AssignResourcesRequest):
             return False
-        return self.subarray_id == other.subarray_id and \
-               self.dish == other.dish and \
-               self.sdp_config == other.sdp_config and \
-               self.mccs == other.mccs and \
-               self.interface == other.interface
+        return (
+                self.subarray_id == other.subarray_id
+                and self.dish == other.dish
+                and self.sdp_config == other.sdp_config
+                and self.mccs == other.mccs
+                and self.interface == other.interface
+                and self.transaction_id == other.transaction_id
+        )
 
 
 class AssignResourcesResponse:  # pylint: disable=too-few-public-methods

@@ -111,7 +111,7 @@ Example JSON input modelled by ``AssignResourcesRequest`` for LOW:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-assignresources/1.0",
     "subarray_id": 1,
     "mccs": {
         "subarray_beam_ids": [1],
