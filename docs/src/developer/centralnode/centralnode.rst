@@ -39,7 +39,7 @@ Example JSON input modelled by ``AssignResourcesRequest`` for MID:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-tmc-assignresources/1.0",
+    "interface": "https://schema.skao.int/ska-tmc-assignresources/2.0",
     "transaction_id": "txn-mvp01-20200325-00001",
     "subarray_id": 1,
     "dish": {
@@ -114,7 +114,7 @@ Example JSON input modelled by ``AssignResourcesRequest`` for LOW:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-low-tmc-assignresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-assignresources/2.0",
     "subarray_id": 1,
     "mccs": {
         "subarray_beam_ids": [1],

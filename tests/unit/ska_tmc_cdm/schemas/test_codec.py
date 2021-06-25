@@ -209,7 +209,7 @@ def test_codec_loads():
         subarray_id=1,
         dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
         sdp_config=sdp_config,
-        interface='https://schema.skao.int/ska-tmc-assignresources/1.0',
+        interface='https://schema.skao.int/ska-tmc-assignresources/2.0',
         transaction_id='txn-mvp01-20200325-00004'
     )
     assert expected == unmarshalled
@@ -219,7 +219,7 @@ def test_codec_loads_mccs_only():
     """
     Verify that the codec unmarshalls objects correctly.
     """
-    interface = 'https://schema.skao.int/ska-low-tmc-assignresources/1.0'
+    interface = 'https://schema.skao.int/ska-low-tmc-assignresources/2.0'
     mccs = MCCSAllocate(
         subarray_beam_ids=[1],
         station_ids=[(1, 2)],
@@ -248,7 +248,7 @@ def test_codec_dumps():
         subarray_id=1,
         dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
         sdp_config=sdp_config,
-        interface="https://schema.skao.int/ska-tmc-assignresources/1.0",
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00004"
     )
 

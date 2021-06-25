@@ -33,23 +33,32 @@ def test_assign_resources_request_eq():
         "pb-mvp01-20200325-00001", sdp_workflow, {}
     )
     sdp_config = SDPConfiguration(
-        "sbi-mvp01-20200325-00001", 100.0, [scan_type], [pb_config]
+        "sbi-mvp01-20200325-00001", 100.0, [scan_type], [pb_config],
+        interface="https://schema.skao.int/ska-sdp-assignresources/2.0"
     )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = AssignResourcesRequest(
-        1, dish_allocation=dish_allocation, sdp_config=sdp_config
+        1, dish_allocation=dish_allocation, sdp_config=sdp_config,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001"
     )
 
     assert request == AssignResourcesRequest(
-        1, dish_allocation=dish_allocation, sdp_config=sdp_config
+        1, dish_allocation=dish_allocation, sdp_config=sdp_config,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001"
     )
 
     assert request != AssignResourcesRequest(
-        1, dish_allocation=dish_allocation, sdp_config=None
+        1, dish_allocation=dish_allocation, sdp_config=None,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00002"
     )
     assert request != AssignResourcesRequest(1, dish_allocation=None, sdp_config=None)
     assert request != AssignResourcesRequest(
-        1, dish_allocation=None, sdp_config=sdp_config
+        1, dish_allocation=None, sdp_config=sdp_config,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001"
     )
 
 
@@ -179,28 +188,32 @@ def test_assign_resources_request_for_low_eq():
         list(zip(itertools.count(1, 1), 1 * [2])),
         [1, 2, 3, 4, 5], [1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
-    request = AssignResourcesRequest(interface='https://schema.skatelescope.org/'
-                                               'ska-low-tmc-assignresources/1.0',
+    request = AssignResourcesRequest(interface='https://schema.skao.int/'
+                                               'ska-low-tmc-assignresources/2.0',
                                      mccs=mccs_allocate,
-                                     subarray_id=1)
+                                     subarray_id=1,
+                                     transaction_id="txn-mvp01-20200325-00001")
     assert request == AssignResourcesRequest(
-        interface='https://schema.skatelescope.org/'
-                  'ska-low-tmc-assignresources/1.0',
+        interface='https://schema.skao.int/'
+                  'ska-low-tmc-assignresources/2.0',
         mccs=mccs_allocate,
-        subarray_id=1)
+        subarray_id=1,
+        transaction_id="txn-mvp01-20200325-00001")
     assert request != AssignResourcesRequest(
         mccs=MCCSAllocate(
             list(zip(itertools.count(1, 1), 1 * [1])), [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5, 6, 7, 8, 9]
         ),
-        interface='https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0',
-        subarray_id=2
+        interface='https://schema.skao.int/ska-low-tmc-assignresources/2.0',
+        subarray_id=2,
+        transaction_id="txn-mvp01-20200325-00001"
     )
     assert request != AssignResourcesRequest(
         mccs=MCCSAllocate(list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5],
                           [1, 2, 3, 4, 5, 6]),
         subarray_id=2,
-        interface='https://schema.skatelescope.org/ska-low-tmc-assignresources/2.0',
+        interface='https://schema.skao.int/ska-low-tmc-assignresources/2.0',
+        transaction_id="txn-mvp01-20200325-00001"
     )
 
 

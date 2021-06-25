@@ -26,7 +26,7 @@ from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
 from .. import utils
 
 VALID_SDP_JSON = """{
-  "interface": "https://schema.skao.int/ska-sdp-assignresources/1.0",
+  "interface": "https://schema.skao.int/ska-sdp-assignresources/2.0",
   "eb_id": "eb-mvp01-20200325-00001",
   "max_length": 100.0,
   "scan_types": [
@@ -118,7 +118,7 @@ VALID_SDP_JSON = """{
 }"""
 
 VALID_SDP_OBJECT = SDPConfiguration(
-    interface="https://schema.skao.int/ska-sdp-assignresources/1.0",
+    interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     sdp_id="eb-mvp01-20200325-00001",
     max_length=100.0,
     scan_types=[
@@ -174,7 +174,7 @@ VALID_SDP_OBJECT = SDPConfiguration(
 
 VALID_MID_ASSIGNRESOURCESREQUEST_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-assignresources/1.0",
+  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.0",
   "transaction_id":"txn-mvp01-20200325-00004",
   "subarray_id": 1,
   "dish": {"receptor_ids": ["0001", "0002"]},
@@ -183,7 +183,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON = """
 """
 
 VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-tmc-assignresources/1.0",
+    interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
     transaction_id="txn-mvp01-20200325-00004",
     subarray_id=1,
     dish_allocation=DishAllocation(
@@ -194,7 +194,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
 
 VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/2.0",
   "transaction_id":"txn-mvp01-20200325-00004",
   "subarray_id": 1,
   "mccs": {
@@ -206,7 +206,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """
 """
 
 VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-low-tmc-assignresources/1.0",
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/2.0",
     transaction_id="txn-mvp01-20200325-00004",
     subarray_id=1,
     mccs=MCCSAllocate(
@@ -217,7 +217,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
 )
 
 INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/999999.0",
   "subarray_id": 1,
   "mccs": {
     "subarray_beam_ids": [1, 2, 3],
