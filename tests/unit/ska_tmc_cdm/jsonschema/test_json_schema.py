@@ -60,8 +60,8 @@ def test_schema_validation_call_ska_telescope_validate_method():
     mock_fn.assert_called_once()
 
 
-# TODO remove before merging AT2-855
-@pytest.mark.xfail
+@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
+                          "ADR-35 hence JSON schema validation will fail")
 def test_schema_validation_with_valid_json():
     """
      Verify  schema validation with test valid json

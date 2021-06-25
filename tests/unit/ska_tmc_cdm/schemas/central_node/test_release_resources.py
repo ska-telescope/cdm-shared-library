@@ -68,8 +68,9 @@ def low_invalidator_fn(o: ReleaseResourcesRequest):
     o.subarray_id = -1
 
 
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with ADR-35 hence, JSON schema validation will "
-                          "be failed")
+# TODO remove xfail before merging AT2-855
+@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
+                          "ADR-35 hence JSON schema validation will fail")
 @pytest.mark.parametrize(
     'schema_cls,instance,modifier_fn,valid_json,invalid_json',
     [
