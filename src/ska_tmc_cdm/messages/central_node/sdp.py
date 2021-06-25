@@ -75,10 +75,10 @@ class ScanType:
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self, st_id, coordinate_system: str, ra: str, dec: str, channels: List[Channel]
+        self, st_id, reference_frame: str, ra: str, dec: str, channels: List[Channel]
     ):
         self.st_id = st_id
-        self.coordinate_system = coordinate_system
+        self.reference_frame = reference_frame
         self.ra = ra  # pylint: disable=invalid-name
         self.dec = dec
         self.channels = channels
@@ -88,7 +88,7 @@ class ScanType:
             return False
         return (
             self.st_id == other.st_id
-            and self.coordinate_system == other.coordinate_system
+            and self.reference_frame == other.reference_frame
             and self.ra == other.ra
             and self.dec == other.dec
             and self.channels == other.channels

@@ -228,7 +228,7 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """{
 
 VALID_MID_ASSIGNRESOURCESRESPONSE_JSON = """
 {
-    "dish": {"receptor_ids_success": ["0001", "0002"]}
+    "dish": {"receptor_ids_allocated": ["0001", "0002"]}
 }
 """
 
