@@ -133,7 +133,7 @@ of a full CDM JSON object, the elements this maps to are:
   {
     ...
     "csp": {
-      "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+      "interface": "https://schema.skao.int/ska-csp-configure/1.0",
       "subarray": {
         "subarray_name": "science period 23"
       },
@@ -286,7 +286,7 @@ Examples below depict a populated sub-array and an empty one:
 .. code:: JSON
 
     {
-        "interface": "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+        "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/1.0",
         "mccs": {
             "subarray_beam_ids": [1],
             "station_ids": [[1,2]],
@@ -297,7 +297,7 @@ Examples below depict a populated sub-array and an empty one:
 .. code:: JSON
 
     {
-        "interface": "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+        "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/1.0",
         "mccs": {
             "subarray_beam_ids": [],
             "station_ids": [],
@@ -328,7 +328,7 @@ Example scan JSON for LOW
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skatelescope.org/ska-low-tmc-scan/1.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-scan/1.0",
     "scan_id": 1
   }
 
@@ -351,7 +351,7 @@ Example configuration JSON for MID
       "receiver_band": "1"
     },
     "csp": {
-      "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+      "interface": "https://schema.skao.int/ska-csp-configure/1.0",
       "subarray": {
         "subarray_name": "science period 23"
       },
@@ -401,7 +401,7 @@ Example configuration JSON for LOW
 .. code-block:: JSON
 
     {
-      "interface": "https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+      "interface": "https://schema.skao.int/ska-low-tmc-configure/1.0",
       "mccs": {
         "stations":[
           {

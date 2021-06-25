@@ -18,3 +18,18 @@ class JsonValidationError(ValueError):
 
     def __str__(self):
         return f'{self._msg}'
+
+
+class SchemaNotFound(ValueError):
+    """
+    Error raised when schema cannot be found.
+    """
+
+    def __init__(self, uri: str):
+        self._msg = f'JSON schema not found: {uri}'
+        super().__init__(self._msg)
+        self.uri = uri
+
+    def __str__(self):
+        return f'{self._msg}'
+

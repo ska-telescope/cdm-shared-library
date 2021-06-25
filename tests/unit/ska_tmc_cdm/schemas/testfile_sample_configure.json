@@ -1,4 +1,6 @@
 {
+  "interface": "https://schema.skao.int/ska-tmc-configure/1.0",
+  "transaction_id": "12345",
   "pointing": {
     "target": {
       "reference_frame":"ICRS",
@@ -11,7 +13,7 @@
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
     "subarray": {
       "subarray_name": "science period 23"
     },

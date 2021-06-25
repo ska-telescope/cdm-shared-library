@@ -5,11 +5,15 @@ the permissible arguments for a SubArrayNode.configure() call.
 
 __all__ = ["ConfigureRequest"]
 
+from typing import Optional
+
 from .core import PointingConfiguration, DishConfiguration
 from .csp import CSPConfiguration
+from .mccs import MCCSConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
-from .mccs import MCCSConfiguration
+
+SCHEMA = "https://schema.skao.int/ska-tmc-configure/1.0"
 
 
 class ConfigureRequest:  # pylint: disable=too-few-public-methods
@@ -27,8 +31,10 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         csp: CSPConfiguration = None,
         mccs: MCCSConfiguration = None,
         tmc: TMCConfiguration = None,
-        interface: str = None,
+        interface: Optional[str] = SCHEMA,
+        transaction_id: Optional[str] = None,
     ):
+        self.transaction_id = transaction_id
         self.pointing = pointing
         self.dish = dish
         self.sdp = sdp
@@ -54,4 +60,5 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
                 and self.tmc == other.tmc
                 and self.mccs == other.mccs
                 and self.interface == other.interface
+                and self.transaction_id == other.transaction_id
         )

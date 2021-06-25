@@ -10,7 +10,7 @@ from .. import utils
 
 VALID_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+  "interface": "https://schema.skao.int/ska-low-mccs-scan/1.0",
   "scan_id":1,
   "start_time": 0.0
 }
@@ -18,14 +18,14 @@ VALID_JSON = """
 
 INVALID_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+  "interface": "https://schema.skao.int/ska-low-mccs-scan/1.0",
   "scan_id": "foo",
   "start_time": -1.0
 }
 """
 
 VALID_OBJECT = ScanRequest(
-    interface="https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+    interface="https://schema.skao.int/ska-low-mccs-scan/1.0",
     scan_id=1,
     start_time=0.0
 )

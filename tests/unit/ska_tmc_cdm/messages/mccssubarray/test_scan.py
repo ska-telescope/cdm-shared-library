@@ -10,7 +10,7 @@ def test_releaseresourcesrequest_object_equality():
     considered equal.
     """
     constructor_args = dict(
-        interface="https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+        interface="https://schema.skao.int/ska-low-mccs-scan/1.0",
         scan_id=1,
         start_time=0.0
     )
@@ -22,7 +22,7 @@ def test_releaseresourcesrequest_object_equality():
 
     # objects where any property differs are considered unequal
     different_args = dict(
-        interface="https://schema.skatelescope.org/ska-low-mccs-scan/2.0",
+        interface="https://schema.skao.int/ska-low-mccs-scan/2.0",
         scan_id=2,
         start_time=1.0
     )
@@ -38,7 +38,7 @@ def test_releaseresourcesrequest_equality_with_other_objects():
     types.
     """
     constructor_args = dict(
-        interface="https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+        interface="https://schema.skao.int/ska-low-mccs-scan/1.0",
         scan_id=1,
         start_time=0.0
     )

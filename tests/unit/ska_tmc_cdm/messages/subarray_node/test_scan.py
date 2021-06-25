@@ -6,8 +6,8 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
-MID_SDP_INTERFACE = "https://schema.skatelescope.org/ska-mid-sdp-scan/1.0"
-LOW_TMC_INTERFACE = "https://schema.skatelescope.org/ska-low-tmc-scan/1.0"
+MID_SDP_INTERFACE = "https://schema.skao.int/ska-mid-sdp-scan/1.0"
+LOW_TMC_INTERFACE = "https://schema.skao.int/ska-low-tmc-scan/1.0"
 
 
 @pytest.mark.xfail

@@ -142,8 +142,9 @@ class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-fe
     """
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """
+    interface = fields.String(required=True)
+    transaction_id = fields.String()
 
-    interface = fields.String()
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
     sdp = fields.Nested(sdp.SDPConfigurationSchema)
@@ -161,7 +162,8 @@ class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-fe
         :param _: kwargs passed by Marshmallow
         :return: ConfigurationRequest instance populated to match JSON
         """
-        interface = data.get("interface", None)
+        interface = data.get("interface")
+        transaction_id = data.get("transaction_id", None)
         pointing = data.get("pointing", None)
         dish = data.get("dish", None)
         sdp = data.get("sdp", None)
@@ -170,6 +172,7 @@ class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-fe
         mccs = data.get("mccs", None)
         return ConfigureRequest(
             interface=interface,
+            transaction_id=transaction_id,
             pointing=pointing,
             dish=dish,
             sdp=sdp,

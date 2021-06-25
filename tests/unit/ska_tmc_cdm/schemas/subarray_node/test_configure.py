@@ -1,12 +1,15 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
-import copy
 
-import pytest
 from datetime import timedelta
 
-from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
+import pytest
+
+from ska_tmc_cdm.messages.subarray_node.configure import (
+    ConfigureRequest,
+    SCHEMA
+)
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     ReceiverBand,
@@ -34,6 +37,8 @@ from .. import utils
 
 VALID_MID_CONFIGURE_JSON = """
 {
+  "interface": "https://schema.skao.int/ska-tmc-configure/1.0",
+  "transaction_id": "12345",
   "pointing": {
     "target": {
       "reference_frame": "ICRS",
@@ -46,7 +51,7 @@ VALID_MID_CONFIGURE_JSON = """
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
     "subarray": {
       "subarray_name": "science period 23"
     },
@@ -92,6 +97,8 @@ VALID_MID_CONFIGURE_JSON = """
 """
 
 VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/1.0",
+    transaction_id="12345",
     pointing=PointingConfiguration(
         Target(
             ra="13:29:52.698",
@@ -109,7 +116,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
         scan_type="science_A"
     ),
     csp=CSPConfiguration(
-        interface="https://schema.skatelescope.org/ska-csp-configure/1.0",
+        interface="https://schema.skao.int/ska-csp-configure/1.0",
         subarray_config=SubarrayConfiguration('science period 23'),
         common_config=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
@@ -150,7 +157,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
 
 VALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/1.0",
   "mccs": {
     "stations":[
       {
@@ -188,7 +195,7 @@ VALID_LOW_CONFIGURE_JSON = """
 """
 
 VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+    interface="https://schema.skao.int/ska-low-tmc-configure/1.0",
     mccs=MCCSConfiguration(
         station_configs=[
             StnConfiguration(1),
@@ -217,7 +224,7 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
 
 INVALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/1.0",
   "mccs": {
     "stations":[
       {
@@ -246,6 +253,7 @@ INVALID_LOW_CONFIGURE_JSON = """
 
 VALID_MID_DISH_ONLY_JSON = """
 {
+    "interface": """ + f'"{SCHEMA}"' + """,
     "dish": {
         "receiver_band": "1"
     }
@@ -256,7 +264,11 @@ VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
     dish=DishConfiguration(ReceiverBand.BAND_1)
 )
 
-VALID_NULL_JSON = "{}"
+VALID_NULL_JSON = """
+{
+    "interface": """ + f'"{SCHEMA}"' + """
+}
+"""
 
 VALID_NULL_OBJECT = ConfigureRequest()
 

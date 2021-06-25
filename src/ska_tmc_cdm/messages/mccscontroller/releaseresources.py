@@ -4,7 +4,7 @@ forms the argument for an MCCSController.ReleaseResources  call.
 """
 from typing import Optional
 
-SCHEMA = "https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0"
+SCHEMA = "https://schema.skao.int/ska-low-mccs-releaseresources/1.0"
 
 
 class ReleaseResourcesRequest:

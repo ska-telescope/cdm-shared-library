@@ -1,12 +1,14 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.codec module.
 """
+import copy
 import os.path
 import unittest.mock as mock
-
+import json
 import pytest
 
-from ska_tmc_cdm.exceptions import JsonValidationError
+import ska_tmc_cdm
+from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
@@ -25,9 +27,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
 )
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import json_is_equal
-
-import ska_tmc_cdm
-
 from .central_node.test_assign_resources import (
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
@@ -36,6 +35,8 @@ from .central_node.test_assign_resources import (
 
 VALID_CONFIGURE_REQUEST = """
 {
+  "interface": "https://schema.skao.int/ska-tmc-configure/1.0",
+  "transaction_id": "12345",
   "pointing": {
     "target": {
       "reference_frame": "ICRS",
@@ -48,7 +49,7 @@ VALID_CONFIGURE_REQUEST = """
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
     "subarray": {
       "subarray_name": "science period 23"
     },
@@ -106,7 +107,7 @@ INVALID_CONFIGURE_REQUEST = """
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
     "cbf": {
       "fsp": [
         {
@@ -143,7 +144,7 @@ INVALID_CONFIGURE_REQUEST = """
 """
 
 VALID_CSP_SCHEMA = """{
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
     "subarray": {
       "subarray_name": "science period 23"
     },
@@ -180,18 +181,9 @@ VALID_CSP_SCHEMA = """{
   }
 """
 
-INVALID_CSP_SCHEMA = """{
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/9999999.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
-    "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band": "1",
-      "subarray_id": 1
-    }
-  }
-"""
+INVALID_CSP_SCHEMA = json.loads(VALID_CSP_SCHEMA)
+INVALID_CSP_SCHEMA['interface'] = 'https://foo.com/badschema/1.0'
+INVALID_CSP_SCHEMA = json.dumps(INVALID_CSP_SCHEMA)
 
 
 # TODO remove xfail before merging AT2-855
@@ -302,7 +294,7 @@ def csp_config_for_test():
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration(config_id, ReceiverBand.BAND_1, 1)
     csp_config = CSPConfiguration(
-        interface="https://schema.skatelescope.org/ska-csp-configure/1.0",
+        interface="https://schema.skao.int/ska-csp-configure/1.0",
         subarray_config=csp_subarray_config,
         common_config=csp_common_config,
         cbf_config=cbf_config
@@ -314,8 +306,8 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     """
      Verify that codec loads() with invalid schema raise exception
     """
-    with pytest.raises(JsonValidationError):
-        CODEC.loads(CSPConfiguration, INVALID_CSP_SCHEMA)
+    with pytest.raises(SchemaNotFound):
+        CODEC.loads(CSPConfiguration, INVALID_CSP_SCHEMA, strictness=2)
 
 
 def test_codec_dumps_raises_exception_on_invalid_schema():
@@ -323,9 +315,9 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
      Verify that codec dumps() with invalid schema raise exception
     """
     csp_config = csp_config_for_test()
-    csp_config.interface = 'http://schema.skatelescope.org/ska-csp-configure/3.0'
-    with pytest.raises(JsonValidationError):
-        CODEC.dumps(csp_config)
+    csp_config.interface = json.loads(INVALID_CSP_SCHEMA)['interface']
+    with pytest.raises(SchemaNotFound):
+        CODEC.dumps(csp_config, strictness=2)
 
 
 def test_codec_dumps_with_schema_validation_for_csp():
@@ -361,8 +353,10 @@ def test_codec_loads_from_file_with_schema_validation(mock_fn):
     test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
     result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
     assert result_data.csp == csp_config
-    assert mock_fn.call_count == 1
-    mock_fn.assert_called_once()
+    # we currently expect 2 calls to validate:
+    #   1. validate the ConfigureRequest JSON against the OSO-TMC configure schema
+    #   2. validate the CSP JSON against the TMC-CSP schema
+    assert mock_fn.call_count == 2
 
 
 @mock.patch("ska_tmc_cdm.jsonschema.json_schema.schema.validate")
@@ -384,10 +378,10 @@ def test_codec_loads_from_file_without_schema_validation(mock_fn):
 # TODO remove xfail before merging AT2-855
 @pytest.mark.xfail(reason="The Telescope Model library is not updated with "
                           "ADR-35 hence JSON schema validation will fail")
-def test_loads_from_file_with_invalid_schema_and_validation_set_to_true():
+def test_loads_from_file_with_invalid_json_and_validation_set_to_true():
     """
     Verify that the codec unmarshalls objects correctly with schema
-    validation and Test it with loading a invalid ADR18-configure request
+    validation and Test it with loading a invalid configure request
     from a JSON file
     """
     cwd, _ = os.path.split(__file__)
@@ -396,6 +390,9 @@ def test_loads_from_file_with_invalid_schema_and_validation_set_to_true():
         CODEC.load_from_file(ConfigureRequest, test_new_json_data)
 
 
+# TODO remove xfail before merging AT2-855
+@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
+                          "ADR-35 hence JSON schema validation will fail")
 @mock.patch("ska_tmc_cdm.jsonschema.json_schema.schema.validate")
 def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn):
     """
@@ -422,13 +419,16 @@ def test_configure_request_raises_exception_when_loads_invalid_csp_schema():
         CODEC.loads(ConfigureRequest, INVALID_CONFIGURE_REQUEST)
 
 
+# TODO remove xfail before merging AT2-855
+@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
+                          "ADR-35 hence JSON schema validation will fail")
 def test_configure_request_raises_exception_on_invalid_csp_object():
     """
      Verify that codec dumps() with invalid schema raise exception
     """
     configure_request = CODEC.loads(ConfigureRequest, VALID_CONFIGURE_REQUEST)
     configure_request.csp.interface = \
-        'http://schema.skatelescope.org/ska-csp-configure/3.0'
+        'http://schema.skao.int/ska-csp-configure/3.0'
 
     with pytest.raises(JsonValidationError):
         CODEC.dumps(configure_request, strictness=2)

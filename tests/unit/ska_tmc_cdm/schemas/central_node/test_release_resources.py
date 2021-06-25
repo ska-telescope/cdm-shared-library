@@ -51,21 +51,21 @@ VALID_MID_MIXED_ARGS_OBJECT = ReleaseResourcesRequest(
 
 VALID_LOW_FULL_RELEASE_JSON = """
 {
-    "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/1.0",
     "subarray_id": 1,
     "release_all": true
 }
 """
 
 VALID_LOW_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
-    interface="https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+    interface="https://schema.skao.int/ska-low-tmc-releaseresources/1.0",
     subarray_id=1,
     release_all=True,
 )
 
 INVALID_LOW_FULL_RELEASE_JSON = """
 {
-    "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/1.0",
     "subarray_id": -1,
     "release_all": true
 }

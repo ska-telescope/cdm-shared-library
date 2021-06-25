@@ -22,19 +22,19 @@ VALID_MCCSALLOCATION_OBJECT = MCCSAllocation(
 
 VALID_ASSIGNEDRESOURCES_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/1.0",
   "mccs": """ + VALID_MCCSALLOCATION_JSON + """
 }
 """
 
 VALID_ASSIGNEDRESOURCES_OBJECT = AssignedResources(
-    interface="https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+    interface="https://schema.skao.int/ska-low-tmc-assignedresources/1.0",
     mccs=VALID_MCCSALLOCATION_OBJECT
 )
 
 INVALID_ASSIGNEDRESOURCES_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/1.0",
   "mccs": {
     "subarray_beam_ids": [-1],
     "station_ids": [ [1,2] ],

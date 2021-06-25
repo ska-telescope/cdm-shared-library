@@ -165,7 +165,7 @@ Example JSON that requests all sub-array resources be released for LOW:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/1.0",
     "subarray_id": 1,
     "release_all": true
   }

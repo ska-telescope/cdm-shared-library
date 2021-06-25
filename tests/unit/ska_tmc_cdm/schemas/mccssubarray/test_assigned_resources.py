@@ -10,7 +10,7 @@ from .. import utils
 
 VALID_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-mccs-assignedresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-mccs-assignedresources/1.0",
   "subarray_beam_ids": [1],
   "station_ids": [[1,2]],
   "channel_blocks": [3]
@@ -19,7 +19,7 @@ VALID_JSON = """
 
 INVALID_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-mccs-assignedresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-mccs-assignedresources/1.0",
   "subarray_beam_ids": [-1],
   "station_ids": [[1,2]],
   "channel_blocks": [3]
@@ -28,7 +28,7 @@ INVALID_JSON = """
 
 VALID_EMPTY_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-mccs-assignedresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-mccs-assignedresources/1.0",
   "subarray_beam_ids": [],
   "station_ids": [],
   "channel_blocks": []
@@ -36,14 +36,14 @@ VALID_EMPTY_JSON = """
 """
 
 VALID_OBJECT = AssignedResources(
-    interface="https://schema.skatelescope.org/ska-low-mccs-assignedresources/1.0",
+    interface="https://schema.skao.int/ska-low-mccs-assignedresources/1.0",
     subarray_beam_ids=[1],
     station_ids=[[1, 2]],
     channel_blocks=[3]
 )
 
 VALID_EMPTY_OBJECT = AssignedResources(
-    interface="https://schema.skatelescope.org/ska-low-mccs-assignedresources/1.0",
+    interface="https://schema.skao.int/ska-low-mccs-assignedresources/1.0",
     subarray_beam_ids=[],
     station_ids=[],
     channel_blocks=[]

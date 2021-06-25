@@ -1,6 +1,8 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
+import copy
+
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
@@ -35,7 +37,7 @@ def test_configure_request_eq():
       - their SDP configuration is the same
       - their CSP configuration is the same
     """
-
+    transaction_id = 'transaction_id'
     pointing_config = PointingConfiguration(Target(1, 1))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration(scan_type="science_A")
@@ -58,11 +60,13 @@ def test_configure_request_eq():
         pst_config=None,
     )
     request_1 = ConfigureRequest(
-        pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
+        transaction_id=transaction_id,
+        pointing=pointing_config,
+        dish=dish_config,
+        sdp=sdp_config,
+        csp=csp_config
     )
-    request_2 = ConfigureRequest(
-        pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
-    )
+    request_2 = copy.deepcopy(request_1)
     assert request_1 == request_2
 
 
@@ -83,12 +87,12 @@ def test_configure_request_eq_for_low():
         subarray_beam_configs=[station_beam_config]
     )
     request_1 = ConfigureRequest(
-        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/1.0',
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A")
     )
     request_2 = ConfigureRequest(
-        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/1.0',
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A")
     )
@@ -181,7 +185,7 @@ def test_configure_request_is_not_equal_to_other_objects_for_low():
         subarray_beam_configs=[station_beam_config]
     )
     request = ConfigureRequest(
-        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/1.0',
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A")
     )
