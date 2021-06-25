@@ -19,6 +19,7 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             self,
             *_,  # force kwargs
             interface: str = None,
+            transaction_id: str = None,
             subarray_id: int = None,
             release_all: bool = False,
             dish_allocation: Optional[DishAllocation] = None
@@ -27,6 +28,7 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
         Create a new ReleaseResourcesRequest object.
 
         :param interface: url string to determine JsonSchema version
+        :param transaction_id: ID for tracking requests
         :param subarray_id: the numeric SubArray ID (1..16)
         :param release_all: True to release all sub-array resources, False to
             release just those resources specified as other arguments
@@ -44,6 +46,7 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             dish_allocation = None
 
         self.interface = interface
+        self.transaction_id = transaction_id
         self.subarray_id = subarray_id
         self.release_all = release_all
         self.dish = dish_allocation
@@ -52,6 +55,7 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
         if not isinstance(other, ReleaseResourcesRequest):
             return False
         return self.interface == other.interface and \
+               self.transaction_id == other.transaction_id and \
                self.subarray_id == other.subarray_id and \
                self.dish == other.dish and \
                self.release_all == other.release_all

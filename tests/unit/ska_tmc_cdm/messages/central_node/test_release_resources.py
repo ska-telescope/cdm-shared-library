@@ -15,14 +15,32 @@ def test_release_resources_request_eq():
     """
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = ReleaseResourcesRequest(
-        subarray_id=1, dish_allocation=dish_allocation, release_all=False
+        subarray_id=1,
+        dish_allocation=dish_allocation,
+        release_all=False,
+        transaction_id="tma1",
     )
 
-    assert request == ReleaseResourcesRequest(subarray_id=1, dish_allocation=dish_allocation)
-    assert request != ReleaseResourcesRequest(subarray_id=1, dish_allocation=DishAllocation())
-    assert request != ReleaseResourcesRequest(subarray_id=2, dish_allocation=dish_allocation)
+    assert request == ReleaseResourcesRequest(
+        subarray_id=1, dish_allocation=dish_allocation, transaction_id="tma1"
+    )
     assert request != ReleaseResourcesRequest(
-        subarray_id=1, dish_allocation=dish_allocation, release_all=True
+        subarray_id=1, dish_allocation=DishAllocation(), transaction_id="tma1"
+    )
+    assert request != ReleaseResourcesRequest(
+        subarray_id=2, dish_allocation=dish_allocation, transaction_id="tma1"
+    )
+    assert request != ReleaseResourcesRequest(
+        subarray_id=1,
+        dish_allocation=dish_allocation,
+        release_all=True,
+        transaction_id="tma1",
+    )
+    assert request != ReleaseResourcesRequest(
+        subarray_id=1, dish_allocation=dish_allocation, transaction_id="blah"
+    )
+    assert request != ReleaseResourcesRequest(
+        subarray_id=1, dish_allocation=dish_allocation
     )
 
 
@@ -32,9 +50,7 @@ def test_release_resources_request_eq_for_low():
     are considered equal.
     """
 
-    request = ReleaseResourcesRequest(
-        subarray_id=1, release_all=True
-    )
+    request = ReleaseResourcesRequest(subarray_id=1, release_all=True)
 
     assert request == ReleaseResourcesRequest(subarray_id=1, release_all=True)
     assert request != ReleaseResourcesRequest(subarray_id=2, release_all=True)
@@ -78,8 +94,9 @@ def test_deallocate_resources_enforces_boolean_release_all_argument():
 
     dish_allocation = DishAllocation(receptor_ids=["0001", "0002"])
     with pytest.raises(ValueError):
-        _ = ReleaseResourcesRequest(subarray_id=1, release_all=1,
-                                    dish_allocation=dish_allocation)
+        _ = ReleaseResourcesRequest(
+            subarray_id=1, release_all=1, dish_allocation=dish_allocation
+        )
 
     # If release_all is not set as boolean for Low
     with pytest.raises(ValueError):
