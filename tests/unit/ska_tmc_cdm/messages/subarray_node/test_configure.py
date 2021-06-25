@@ -12,9 +12,12 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     ReceiverBand,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    CBFConfiguration,
+    CommonConfiguration,
+    CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
-    CSPConfiguration,
+    SubarrayConfiguration
 )
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
@@ -37,11 +40,23 @@ def test_configure_request_eq():
     pointing_config = PointingConfiguration(Target(1, 1))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration(scan_type="science_A")
-    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
-    csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
     csp_config = CSPConfiguration(
-        csp_id=csp_id, frequency_band=ReceiverBand.BAND_1, fsp_configs=[fsp_config]
+        interface="interface",
+        subarray_config=SubarrayConfiguration(
+            subarray_name="subarray name"
+        ),
+        common_config=CommonConfiguration(
+            config_id="config_id",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1
+        ),
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
+                FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
+            ]
+        ),
+        pss_config=None,
+        pst_config=None,
     )
     request_1 = ConfigureRequest(
         pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
@@ -109,11 +124,23 @@ def test_configure_request_is_not_equal_to_other_objects():
     pointing_config = PointingConfiguration(Target(1, 1))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration(scan_type="science_A")
-    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
-    csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
     csp_config = CSPConfiguration(
-        csp_id=csp_id, frequency_band=ReceiverBand.BAND_1, fsp_configs=[fsp_config]
+        interface="interface",
+        subarray_config=SubarrayConfiguration(
+            subarray_name="subarray name"
+        ),
+        common_config=CommonConfiguration(
+            config_id="config_id",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1
+        ),
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
+                FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
+            ]
+        ),
+        pss_config=None,
+        pst_config=None,
     )
     request = ConfigureRequest(
         pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
@@ -189,9 +216,9 @@ def test_configure_request_mccs_independence():
     #     ConfigureRequest(dish=dish_config, sdp=sdp_config, mccs=mccs_config)
     #
     # channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
-    # csp_id = "sbi-mvp01-20200325-00001-science_A"
+    # config_id = "sbi-mvp01-20200325-00001-science_A"
     # fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
-    # csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    # csp_config = CSPConfiguration(config_id, ReceiverBand.BAND_1, [fsp_config])
     # with pytest.raises(ValueError):
     #     ConfigureRequest(
     #         dish=dish_config, sdp=sdp_config, csp=csp_config, mccs=mccs_config

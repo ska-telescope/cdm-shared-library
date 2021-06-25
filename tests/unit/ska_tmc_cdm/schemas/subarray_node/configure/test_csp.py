@@ -5,9 +5,12 @@ import copy
 import inspect
 
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    CBFConfiguration,
+    CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
+    SubarrayConfiguration
 )
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.schemas.subarray_node.configure import (
@@ -21,7 +24,7 @@ def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     Verify that optional FSPConfiguration parameters are removed when they are
     left unset.
     """
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)
+    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
     schema = FSPConfigurationSchema()
     marshalled = schema.dumps(fsp_config)
 
@@ -47,7 +50,7 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
     ]
     null_kwargs = {name: None for name in optional_kwarg_names}
 
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0, **null_kwargs)
+    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0, **null_kwargs)
     schema = FSPConfigurationSchema()
     marshalled = schema.dumps(fsp_config)
 
@@ -66,10 +69,31 @@ def test_marshall_cspconfiguration_does_not_modify_original():
     Verify that serialising a CspConfiguration does not change the object.
     """
     config = CSPConfiguration(
-        csp_id="csp ID goes here",
-        frequency_band=ReceiverBand.BAND_5A,
-        fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1400, 0)]
+        interface="interface",
+        subarray_config=SubarrayConfiguration(
+            subarray_name="subarray name"
+        ),
+        common_config=CommonConfiguration(
+            config_id="config_id",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1
+        ),
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
+                FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
+            ]
+        ),
+        pss_config=None,
+        pst_config=None,
     )
-    original_config = copy.deepcopy(config)
+    copied = copy.deepcopy(config)
     CSPConfigurationSchema().dumps(config)
-    assert config == original_config
+
+    assert config.interface == copied.interface
+    assert config.subarray_config == copied.subarray_config
+    assert config.common_config == copied.common_config
+    assert config.cbf_config == copied.cbf_config
+    assert config.pss_config == copied.pss_config
+    assert config.pst_config == copied.pst_config
+
+    assert config == copied
