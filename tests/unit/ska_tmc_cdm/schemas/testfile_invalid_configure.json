@@ -2,7 +2,7 @@
   "pointing": {
     "target": {
       "reference_frame":"ICRS",
-      "name": "NGC1068",
+      "target_name": "NGC1068",
       "ra": "02h42m40.771s",
       "dec": "-00h00m47.84s"
     }

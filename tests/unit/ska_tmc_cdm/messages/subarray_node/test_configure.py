@@ -1,7 +1,6 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
-import itertools
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
@@ -19,13 +18,13 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     FSPFunctionMode,
     SubarrayConfiguration
 )
-from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
     StnConfiguration,
     SubarrayBeamConfiguration,
     SubarrayBeamTarget
 )
+from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 
 
 def test_configure_request_eq():

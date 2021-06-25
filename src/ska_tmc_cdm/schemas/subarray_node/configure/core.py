@@ -20,7 +20,7 @@ __all__ = [
     "TargetSchema",
 ]
 
-JsonTarget = collections.namedtuple("JsonTarget", "ra dec reference_frame name")
+JsonTarget = collections.namedtuple("JsonTarget", "ra dec reference_frame target_name")
 
 
 class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -31,7 +31,7 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
     ra = fields.String()
     dec = fields.String()
     reference_frame = shared.UpperCasedField(data_key="reference_frame")
-    name = fields.String()
+    target_name = fields.String()
 
     @pre_dump
     def convert_to_icrs(
@@ -49,7 +49,7 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         icrs_coord = target.coord.transform_to("icrs")
         hms, dms = icrs_coord.to_string("hmsdms", sep=":").split(" ")
         sexagesimal = JsonTarget(
-            ra=hms, dec=dms, reference_frame=icrs_coord.frame.name, name=target.name
+            ra=hms, dec=dms, reference_frame=icrs_coord.frame.name, target_name=target.target_name
         )
 
         return sexagesimal
@@ -63,12 +63,15 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: Target instance populated to match JSON
         """
-        name = data["name"]
+        target_name = data["target_name"]
         hms = data["ra"]
         dms = data["dec"]
         reference_frame = data["reference_frame"]
         target = configure_msgs.Target(
-            hms, dms, reference_frame=reference_frame, name=name, unit=("hourangle", "deg")
+            hms, dms,
+            reference_frame=reference_frame,
+            target_name=target_name,
+            unit=("hourangle", "deg")
         )
         return target
 

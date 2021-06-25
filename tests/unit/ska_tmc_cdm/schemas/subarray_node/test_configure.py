@@ -37,7 +37,7 @@ VALID_MID_CONFIGURE_JSON = """
   "pointing": {
     "target": {
       "reference_frame": "ICRS",
-      "name": "M51",
+      "target_name": "M51",
       "ra": "13:29:52.698",
       "dec": "+47:11:42.93"
     }
@@ -96,7 +96,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
         Target(
             ra="13:29:52.698",
             dec="+47:11:42.93",
-            name="M51",
+            target_name="M51",
             reference_frame="icrs",
             unit=("hourangle", "deg"),
         )

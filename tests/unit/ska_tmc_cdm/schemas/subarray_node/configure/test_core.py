@@ -19,7 +19,7 @@ VALID_TARGET_JSON = """
   "ra": "12:34:56.78",
   "dec": "+12:34:56.78",
   "reference_frame": "ICRS",
-  "name": "NGC123"
+  "target_name": "NGC123"
 }
 """
 
@@ -30,7 +30,7 @@ def test_marshall_target_to_json():
     """
     Verify that PointingConfiguration Target is marshalled to JSON correctly.
     """
-    target = Target(ra="12h34m56.78s", dec="+12d34m56.78s", name="NGC123")
+    target = Target(ra="12h34m56.78s", dec="+12d34m56.78s", target_name="NGC123")
     expected = VALID_TARGET_JSON
     json_str = TargetSchema().dumps(target)
     assert json_is_equal(json_str, expected)
@@ -40,7 +40,7 @@ def test_unmarshall_target_from_json():
     """
     Verify that a Target is unmarshalled correctly from JSON.
     """
-    expected = Target(ra="12h34m56.78s", dec="+12d34m56.78s", name="NGC123")
+    expected = Target(ra="12h34m56.78s", dec="+12d34m56.78s", target_name="NGC123")
     unmarshalled = TargetSchema().loads(VALID_TARGET_JSON)
     assert unmarshalled == expected
 

@@ -39,7 +39,7 @@ VALID_CONFIGURE_REQUEST = """
   "pointing": {
     "target": {
       "reference_frame": "ICRS",
-      "name": "M51",
+      "target_name": "M51",
       "ra": "13:29:52.698",
       "dec": "+47:11:42.93"
     }
@@ -97,7 +97,7 @@ INVALID_CONFIGURE_REQUEST = """
   "pointing": {
     "target": {
       "reference_frame": "ICRS",
-      "name": "M51",
+      "target_name": "M51",
       "ra": "13:29:52.698",
       "dec": "+47:11:42.93"
     }
