@@ -19,9 +19,7 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
     """
 
     interface = fields.String()
-    # holds scan ID for MID
-    id = fields.Integer()
-    # holds scan ID for LOW
+    # holds scan ID for MID and LOW
     scan_id = fields.Integer()
 
     @post_load
@@ -34,13 +32,9 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
         :return: ScanRequest instance populated to match JSON
         """
 
-        is_low = 'low' in data.get("interface", '')
-        if is_low:
-            scan_id = data["scan_id"]
-            interface = data["interface"]
-        else:
-            scan_id = data["id"]
-            interface = None
+
+        scan_id = data["scan_id"]
+        interface = data["interface"]
 
         return scan_msgs.ScanRequest(
             scan_id=scan_id,
@@ -58,11 +52,5 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
         """
         # filter out nulls
         data = {k: v for k, v in data.items() if v is not None}
-
-        # set scan ID key name appropriately for telescope
-        is_low = 'low' in data.get('interface', '')
-        if not is_low:
-            data['id'] = data['scan_id']
-            del data['scan_id']
 
         return data
