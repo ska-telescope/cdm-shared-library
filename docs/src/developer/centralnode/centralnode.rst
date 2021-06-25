@@ -145,10 +145,10 @@ from a sub-array:
 .. code-block:: JSON
 
   {
-    "subarrayID": 1,
-    "dish": {
-      "receptorIDList": ["0001", "0002"]
-    }
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "transaction_id": "txn-mvp01-20200325-00001",
+    "subarray_id": 1, 
+    "receptor_ids": ["0001", "0002"]
   }
 
 Example JSON that requests all sub-array resources be released:
@@ -156,8 +156,10 @@ Example JSON that requests all sub-array resources be released:
 .. code-block:: JSON
 
   {
-    "subarrayID": 1,
-    "releaseALL": true
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "transaction_id": "txn-mvp01-20200325-00001",
+    "subarray_id": 1,
+    "release_all": true
   }
 
 Example JSON that requests all sub-array resources be released for LOW:

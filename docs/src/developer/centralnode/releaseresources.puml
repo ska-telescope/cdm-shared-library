@@ -3,26 +3,27 @@ hide empty members
 left to right direction
 
 package ska_tmc_cdm.messages.central_node {
-	package assign_resources.py <<Rectangle>> {
-		class DishAllocation
-	}
+    package assign_resources.py <<Rectangle>> {
+       class DishAllocation
+    }
 
-	package release_resources.py <<Rectangle>> {
-		class ReleaseResourcesRequest {
-      interface : str
-			subarray_id : int
-			release_all : bool
-		}
-		ReleaseResourcesRequest *-- "0..*" DishAllocation
+    package release_resources.py <<Rectangle>> {
+        class ReleaseResourcesRequest {
+            interface : str
+            transaction_id : str
+            subarray_id : int
+            release_all : bool
+        }
 
-		note as N1
-			The response returned by
-			""CentralNode.ReleaseResources()"".
-			is not structured JSON, hence we
-			don't need a ""Response"" class.
-		end note
-	}
+        ReleaseResourcesRequest *-- "0..*" DishAllocation
 
+        note as N1
+            The response returned by
+            ""CentralNode.ReleaseResources()"".
+            is not structured JSON, hence we
+            don't need a ""Response"" class.
+        end note
+    }
 }
 
 @enduml
