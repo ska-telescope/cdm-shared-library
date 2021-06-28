@@ -35,7 +35,7 @@ from .central_node.test_assign_resources import (
 
 VALID_CONFIGURE_REQUEST = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.0",
   "transaction_id": "12345",
   "pointing": {
     "target": {
@@ -49,7 +49,7 @@ VALID_CONFIGURE_REQUEST = """
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
     "subarray": {
       "subarray_name": "science period 23"
     },
@@ -107,7 +107,7 @@ INVALID_CONFIGURE_REQUEST = """
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
     "cbf": {
       "fsp": [
         {
@@ -144,7 +144,7 @@ INVALID_CONFIGURE_REQUEST = """
 """
 
 VALID_CSP_SCHEMA = """{
-    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
     "subarray": {
       "subarray_name": "science period 23"
     },
@@ -182,7 +182,7 @@ VALID_CSP_SCHEMA = """{
 """
 
 INVALID_CSP_SCHEMA = json.loads(VALID_CSP_SCHEMA)
-INVALID_CSP_SCHEMA['interface'] = 'https://foo.com/badschema/1.0'
+INVALID_CSP_SCHEMA['interface'] = 'https://foo.com/badschema/2.0'
 INVALID_CSP_SCHEMA = json.dumps(INVALID_CSP_SCHEMA)
 
 
@@ -294,7 +294,7 @@ def csp_config_for_test():
     csp_subarray_config = SubarrayConfiguration('science period 23')
     csp_common_config = CommonConfiguration(config_id, ReceiverBand.BAND_1, 1)
     csp_config = CSPConfiguration(
-        interface="https://schema.skao.int/ska-csp-configure/1.0",
+        interface="https://schema.skao.int/ska-csp-configure/2.0",
         subarray_config=csp_subarray_config,
         common_config=csp_common_config,
         cbf_config=cbf_config

@@ -48,7 +48,7 @@ Example JSON returned by ``MCCSSubarray.assigned_resources``:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-low-mccs-assignedresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-mccs-assignedresources/2.0",
     "subarray_beam_ids": [1],
     "station_ids": [[1,2]],
     "channel_blocks": [3]
@@ -72,7 +72,7 @@ Example JSON input for an ``MCCSSubarray.Configure`` call:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-low-mccs-configure/1.0",
+    "interface": "https://schema.skao.int/ska-low-mccs-configure/2.0",
     "stations":[
       {
         "station_id": 1
@@ -116,7 +116,7 @@ Example JSON input for an ``MCCSSubarray.scan()`` call:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-low-mccs-scan/1.0",
+    "interface": "https://schema.skao.int/ska-low-mccs-scan/2.0",
     "scan_id":1,
     "start_time": 0.0
   }

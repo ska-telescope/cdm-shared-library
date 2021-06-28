@@ -10,7 +10,7 @@ __all__ = [
     "AssignedResources"
 ]
 
-SCHEMA = "https://schema.skao.int/ska-low-tmc-assignedresources/1.0"
+SCHEMA = "https://schema.skao.int/ska-low-tmc-assignedresources/2.0"
 
 
 class MCCSAllocation:

@@ -6,7 +6,7 @@ from typing import Optional
 
 __all__ = ["ScanRequest"]
 
-SCHEMA = "https://schema.skao.int/ska-low-mccs-scan/1.0"
+SCHEMA = "https://schema.skao.int/ska-low-mccs-scan/2.0"
 
 
 class ScanRequest:  # pylint: disable=too-few-public-methods

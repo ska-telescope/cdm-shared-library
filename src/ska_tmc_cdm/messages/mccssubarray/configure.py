@@ -11,7 +11,7 @@ __all__ = [
     "SubarrayBeamConfiguration"
 ]
 
-SCHEMA = "https://schema.skao.int/ska-low-mccs-configure/1.0"
+SCHEMA = "https://schema.skao.int/ska-low-mccs-configure/2.0"
 
 
 class StationConfiguration:

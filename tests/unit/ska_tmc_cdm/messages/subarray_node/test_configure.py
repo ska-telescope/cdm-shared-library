@@ -87,12 +87,12 @@ def test_configure_request_eq_for_low():
         subarray_beam_configs=[station_beam_config]
     )
     request_1 = ConfigureRequest(
-        interface='https://schema.skao.int/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A")
     )
     request_2 = ConfigureRequest(
-        interface='https://schema.skao.int/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A")
     )
@@ -185,7 +185,7 @@ def test_configure_request_is_not_equal_to_other_objects_for_low():
         subarray_beam_configs=[station_beam_config]
     )
     request = ConfigureRequest(
-        interface='https://schema.skao.int/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A")
     )

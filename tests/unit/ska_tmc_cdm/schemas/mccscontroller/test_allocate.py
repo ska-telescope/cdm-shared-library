@@ -10,7 +10,7 @@ from .. import utils
 
 VALID_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-mccs-assignresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-mccs-assignresources/2.0",
   "subarray_id": 1,
   "subarray_beam_ids": [1],
   "station_ids": [[1,2]],
@@ -20,7 +20,7 @@ VALID_JSON = """
 
 INVALID_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-mccs-assignresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-mccs-assignresources/2.0",
   "subarray_id": 1,
   "subarray_beam_ids": [49],
   "station_ids": [[1,2]],
@@ -29,7 +29,7 @@ INVALID_JSON = """
 """
 
 VALID_OBJECT = AllocateRequest(
-    interface="https://schema.skao.int/ska-low-mccs-assignresources/1.0",
+    interface="https://schema.skao.int/ska-low-mccs-assignresources/2.0",
     subarray_id=1,
     subarray_beam_ids=[1],
     station_ids=[[1, 2]],

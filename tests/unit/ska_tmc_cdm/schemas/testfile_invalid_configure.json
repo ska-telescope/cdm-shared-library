@@ -1,5 +1,5 @@
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.0",
   "transaction_id": "12345",
   "pointing": {
     "target": {
@@ -13,7 +13,7 @@
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
     "subarray": {
       "subarray_name": "science period 23"
     },
@@ -49,7 +49,7 @@
     }
   },
   "sdp": {
-    "interface": "https://schema.skao.int/ska-sdp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-sdp-configure/2.0",
     "scan_type": "science_A"
   },
   "tmc": {

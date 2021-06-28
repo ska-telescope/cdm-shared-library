@@ -10,7 +10,7 @@ from ... import utils
 
 VALID_JSON = """
 {
-    "interface": "https://schema.skao.int/ska-sdp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-sdp-configure/2.0",
     "scan_type": "science_A" 
 }
 """

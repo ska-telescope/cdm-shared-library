@@ -37,7 +37,7 @@ from .. import utils
 
 VALID_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.0",
   "transaction_id": "12345",
   "pointing": {
     "target": {
@@ -51,7 +51,7 @@ VALID_MID_CONFIGURE_JSON = """
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
     "subarray": {
       "subarray_name": "science period 23"
     },
@@ -87,7 +87,7 @@ VALID_MID_CONFIGURE_JSON = """
     }
   },
   "sdp": {
-    "interface": "https://schema.skao.int/ska-sdp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-sdp-configure/2.0",
     "scan_type": "science_A"
   },
   "tmc": {
@@ -97,7 +97,7 @@ VALID_MID_CONFIGURE_JSON = """
 """
 
 VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/1.0",
+    interface="https://schema.skao.int/ska-tmc-configure/2.0",
     transaction_id="12345",
     pointing=PointingConfiguration(
         Target(
@@ -112,11 +112,11 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
         receiver_band=ReceiverBand.BAND_1
     ),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/1.0",
+        interface="https://schema.skao.int/ska-sdp-configure/2.0",
         scan_type="science_A"
     ),
     csp=CSPConfiguration(
-        interface="https://schema.skao.int/ska-csp-configure/1.0",
+        interface="https://schema.skao.int/ska-csp-configure/2.0",
         subarray_config=SubarrayConfiguration('science period 23'),
         common_config=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
@@ -157,7 +157,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
 
 VALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
   "mccs": {
     "stations":[
       {
@@ -195,7 +195,7 @@ VALID_LOW_CONFIGURE_JSON = """
 """
 
 VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-low-tmc-configure/1.0",
+    interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
     mccs=MCCSConfiguration(
         station_configs=[
             StnConfiguration(1),
@@ -224,7 +224,7 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
 
 INVALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
   "mccs": {
     "stations":[
       {

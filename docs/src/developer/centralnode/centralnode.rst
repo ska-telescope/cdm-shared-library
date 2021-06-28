@@ -46,7 +46,7 @@ Example JSON input modelled by ``AssignResourcesRequest`` for MID:
       "receptor_ids": ["0001", "0002"]
     },
      "sdp": {
-        "interface": "https://schema.skao.int/ska-sdp-assignresources/1.0",
+        "interface": "https://schema.skao.int/ska-sdp-assignresources/2.0",
         "eb_id": "eb-mvp01-20200325-00001",
         "max_length": 100.0,
         "scan_types": [
@@ -167,7 +167,7 @@ Example JSON that requests all sub-array resources be released for LOW:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/2.0",
     "subarray_id": 1,
     "release_all": true
   }

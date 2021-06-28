@@ -10,7 +10,7 @@ def test_releaseresourcesrequest_object_equality():
     considered equal.
     """
     constructor_args = dict(
-        interface="https://schema.skao.int/ska-low-mccs-releaseresources/1.0",
+        interface="https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
         subarray_id=1,
         release_all=True
     )
@@ -22,7 +22,7 @@ def test_releaseresourcesrequest_object_equality():
 
     # objects where any property differs are considered unequal
     different_args = dict(
-        interface="https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
+        interface="https://schema.skao.int/ska-low-mccs-releaseresources/999.0",
         subarray_id=2,
         release_all=False
     )
@@ -38,7 +38,7 @@ def test_releaseresourcesrequest_equality_with_other_objects():
     types.
     """
     constructor_args = dict(
-        interface="https://schema.skao.int/ska-low-mccs-releaseresources/1.0",
+        interface="https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
         subarray_id=1,
         release_all=True
     )
