@@ -6,7 +6,8 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
-MID_SDP_INTERFACE = "https://schema.skao.int/ska-mid-sdp-scan/2.0"
+MID_SDP_INTERFACE = "https://schema.skao.int/ska-tmc-scan/2.0""
+TRNS_ID           = "txn-test-00001"
 LOW_TMC_INTERFACE = "https://schema.skao.int/ska-low-tmc-scan/2.0"
 
 
@@ -19,10 +20,12 @@ def test_scan_request_init():
     scan_request = ScanRequest(
         interface = MID_SDP_INTERFACE,
         scan_id = scan_id,
+        transaction_id = TRNS_ID,
     )
     scan_request_2 = ScanRequest(
         interface = MID_SDP_INTERFACE,
         scan_id = scan_id,
+        transaction_id = TRNS_ID,
     )
 
     empty_object = {}
