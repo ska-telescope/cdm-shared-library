@@ -21,6 +21,7 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
     interface = fields.String()
     # holds scan ID for MID and LOW
     scan_id = fields.Integer()
+    transaction_id = fields.String()
 
     @post_load
     def create_scan_request(self, data, **_):  # pylint: disable=no-self-use
@@ -35,10 +36,12 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
 
         scan_id = data["scan_id"]
         interface = data["interface"]
+        transaction_id = data.get("transaction_id", None)
 
         return scan_msgs.ScanRequest(
             scan_id=scan_id,
-            interface=interface
+            interface=interface,
+            transaction_id=transaction_id
         )
 
     @post_dump
