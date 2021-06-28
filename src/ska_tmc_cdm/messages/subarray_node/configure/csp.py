@@ -4,7 +4,7 @@ aspects of CSP configuration that may be specified in a SubArrayNode.configure
 command.
 """
 import enum
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from . import core
 
@@ -148,6 +148,7 @@ class CommonConfiguration:
             config_id: str,
             frequency_band: core.ReceiverBand,
             subarray_id: int = None,
+            band_5_tuning: Optional[List[float]] = None
     ):
         """
         Create a new CSPConfiguration.
@@ -155,10 +156,12 @@ class CommonConfiguration:
         :param config_id: CSP configuration ID
         :param frequency_band: the frequency band to set
         :param subarray_id: an ID of sub-array device
+        :param band_5_tuning: band 5 receiver to set (optional)
         """
         self.config_id = config_id
         self.frequency_band = frequency_band
         self.subarray_id = subarray_id
+        self.band_5_tuning = band_5_tuning
 
     def __eq__(self, other):
         if not isinstance(other, CommonConfiguration):
@@ -167,6 +170,7 @@ class CommonConfiguration:
                 self.config_id == other.config_id
                 and self.frequency_band == other.frequency_band
                 and self.subarray_id == other.subarray_id
+                and self.band_5_tuning == other.band_5_tuning
         )
 
 

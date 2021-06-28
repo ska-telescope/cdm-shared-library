@@ -151,7 +151,8 @@ VALID_CSP_SCHEMA = """{
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "1",
-      "subarray_id": 1
+      "subarray_id": 1,
+      "band_5_tuning": [5.85, 7.25]
     },
     "cbf": {
       "fsp": [
@@ -292,7 +293,7 @@ def csp_config_for_test():
 
     cbf_config = CBFConfiguration([fsp_config_1, fsp_config_2])
     csp_subarray_config = SubarrayConfiguration('science period 23')
-    csp_common_config = CommonConfiguration(config_id, ReceiverBand.BAND_1, 1)
+    csp_common_config = CommonConfiguration(config_id, ReceiverBand.BAND_1, 1, [5.85, 7.25])
     csp_config = CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
         subarray_config=csp_subarray_config,

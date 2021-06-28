@@ -47,6 +47,7 @@ class CommonConfigurationSchema(Schema):
     config_id = fields.String(data_key="config_id", required=True)
     frequency_band = fields.String(data_key="frequency_band", required=True)
     subarray_id = fields.Integer(data_key="subarray_id", required=True)
+    band_5_tuning = fields.List(fields.Float, data_key="band_5_tuning")
 
     @pre_dump
     def convert(
@@ -66,6 +67,18 @@ class CommonConfigurationSchema(Schema):
             copied.frequency_band = common_configuration.frequency_band.value
         return copied
 
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for FSP configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -79,8 +92,9 @@ class CommonConfigurationSchema(Schema):
         frequency_band = data["frequency_band"]
         frequency_band_enum = ReceiverBand(frequency_band)
         subarray_id = data["subarray_id"]
+        band_5_tuning = data.get("band_5_tuning", None)
 
-        return CommonConfiguration(config_id, frequency_band_enum, subarray_id)
+        return CommonConfiguration(config_id, frequency_band_enum, subarray_id, band_5_tuning)
 
 
 @CODEC.register_mapping(FSPConfiguration)

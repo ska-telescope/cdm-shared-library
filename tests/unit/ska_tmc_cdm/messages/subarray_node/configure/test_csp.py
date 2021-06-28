@@ -19,7 +19,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     SubarrayConfiguration,
 )
 
-
 CONSTRUCTOR_ARGS = dict(
     interface="interface",
     subarray_config=SubarrayConfiguration(
@@ -28,11 +27,12 @@ CONSTRUCTOR_ARGS = dict(
     common_config=CommonConfiguration(
         config_id="config_id",
         frequency_band=ReceiverBand.BAND_1,
-        subarray_id=1
+        subarray_id=1,
+        band_5_tuning=[5.85, 7.25]
     ),
     cbf_config=CBFConfiguration(
         fsp_configs=[
-           FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
+            FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
         ]
     ),
     pss_config=None,
@@ -48,12 +48,14 @@ def test_common_configuration_equals():
     config_id = "sbi-mvp01-20200325-00001-science_A"
     frequency_band = ReceiverBand.BAND_1
     subarray_id = 1
+    band_5_tuning = [5.85, 7.25]
 
-    config1 = CommonConfiguration(config_id, frequency_band, subarray_id)
-    config2 = CommonConfiguration(config_id, frequency_band, subarray_id)
+    config1 = CommonConfiguration(config_id, frequency_band, subarray_id, band_5_tuning)
+    config2 = CommonConfiguration(config_id, frequency_band, subarray_id, band_5_tuning)
     assert config1 == config2
 
-    assert config1 != CommonConfiguration(config_id, ReceiverBand.BAND_2, subarray_id)
+    assert config1 != CommonConfiguration(config_id, ReceiverBand.BAND_2, subarray_id, band_5_tuning)
+    assert config1 != CommonConfiguration(config_id, frequency_band, 2, band_5_tuning)
     assert config1 != CommonConfiguration(config_id, frequency_band, 2)
 
 
@@ -65,7 +67,8 @@ def test_common_configuration_not_equal_to_other_objects():
     config_id = "sbi-mvp01-20200325-00001-science_A"
     frequency_band = ReceiverBand.BAND_1
     subarray_id = 1
-    config = CommonConfiguration(config_id, frequency_band, subarray_id)
+    band_5_tuning = [5.85, 7.25]
+    config = CommonConfiguration(config_id, frequency_band, subarray_id, band_5_tuning)
     assert config != 1
 
 
@@ -192,7 +195,8 @@ def test_csp_configuration_equals():
         common_config=CommonConfiguration(
             config_id="foo",
             frequency_band=ReceiverBand.BAND_1,
-            subarray_id=1
+            subarray_id=1,
+            band_5_tuning=[5.85, 7.25]
         ),
         cbf_config=CBFConfiguration(
             fsp_configs=[

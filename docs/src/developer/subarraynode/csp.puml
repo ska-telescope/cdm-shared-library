@@ -18,6 +18,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 	        config_id: str
             frequency_band: core.ReceiverBand
             subarray_id: int
+            band_5_tuning: List[float]
 	    }
 
 	    class CBFConfiguration {

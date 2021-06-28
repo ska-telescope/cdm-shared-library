@@ -76,7 +76,8 @@ def test_marshall_cspconfiguration_does_not_modify_original():
         common_config=CommonConfiguration(
             config_id="config_id",
             frequency_band=ReceiverBand.BAND_1,
-            subarray_id=1
+            subarray_id=1,
+            band_5_tuning=[5.85, 7.25]
         ),
         cbf_config=CBFConfiguration(
             fsp_configs=[
