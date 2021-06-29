@@ -1,60 +1,43 @@
 """
-Unit tests for the SubarrayNode.Configure request/response mapper module.
+Unit tests for the ska_tmc_cdm.messages.subarraynode.scan module
 """
 
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
-MID_SDP_INTERFACE = "https://schema.skao.int/ska-tmc-scan/2.0""
-TRNS_ID           = "txn-test-00001"
-LOW_TMC_INTERFACE = "https://schema.skao.int/ska-low-tmc-scan/2.0"
+CONSTRUCTOR_ARGS = dict(
+    interface="interface",
+    transaction_id="transaction ID",
+    scan_id=123
+)
 
 
-@pytest.mark.xfail
-def test_scan_request_init():
+def test_scanrequest_eq():
     """
-    Create a ScanRequest instance with a scan id of 2 and verify __eq__ behaviour.
+    Verify that scan requests with the same values are considered equal.
     """
-    scan_id = 2
-    scan_request = ScanRequest(
-        interface = MID_SDP_INTERFACE,
-        scan_id = scan_id,
-        transaction_id = TRNS_ID,
+    # objects with same property values are considered equal
+    request = ScanRequest(**CONSTRUCTOR_ARGS)
+    other = ScanRequest(**CONSTRUCTOR_ARGS)
+    assert request == other
+
+    alternate_args = dict(
+        interface="foo",
+        transaction_id="foo",
+        scan_id = 99999
     )
-    scan_request_2 = ScanRequest(
-        interface = MID_SDP_INTERFACE,
-        scan_id = scan_id,
-        transaction_id = TRNS_ID,
-    )
-
-    empty_object = {}
-
-    assert scan_request.scan_id == scan_id
-    assert scan_request != empty_object
-
-    # equal if the contents are identical
-    assert scan_request == scan_request_2
+    for k, v in alternate_args.items():
+        other_args = dict(CONSTRUCTOR_ARGS)
+        other_args[k] = v
+        assert request != ScanRequest(**other_args)
 
 
-def test_scan_request_init_for_low():
+def test_scanrequest_not_equal_to_other_objects():
     """
-    Create a ScanRequest instance with a scan id of 2 and verify __eq__ behaviour.
+    Verify that ScanRequest objects are not considered equal to objects
+    of other types.
     """
-    scan_id = 2
-    scan_request = ScanRequest(
-        interface=LOW_TMC_INTERFACE,
-        scan_id=scan_id,
-    )
-    scan_request_2 = ScanRequest(
-        scan_id=scan_id,
-        interface=LOW_TMC_INTERFACE
-    )
-
-    empty_object = {}
-
-    assert scan_request.scan_id == scan_id
-    assert scan_request != empty_object
-
-    # equal if the contents are identical
-    assert scan_request == scan_request_2
+    request = ScanRequest(**CONSTRUCTOR_ARGS)
+    assert request != 1
+    assert request != object()
