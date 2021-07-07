@@ -187,9 +187,6 @@ INVALID_CSP_SCHEMA['interface'] = 'https://foo.com/badschema/2.0'
 INVALID_CSP_SCHEMA = json.dumps(INVALID_CSP_SCHEMA)
 
 
-# TODO remove xfail before merging AT2-855
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
-                          "ADR-35 hence JSON schema validation will fail")
 def test_codec_loads():
     """
     Verify that the codec unmarshalls objects correctly.
@@ -228,9 +225,6 @@ def test_codec_loads_mccs_only():
     assert expected == VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT
 
 
-# TODO remove xfail before merging AT2-855
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
-                          "ADR-35 hence JSON schema validation will fail")
 def test_codec_dumps():
     """
     Verify that the codec marshalls dish & sdp objects to JSON.
@@ -376,9 +370,6 @@ def test_codec_loads_from_file_without_schema_validation(mock_fn):
     mock_fn.assert_not_called()
 
 
-# TODO remove xfail before merging AT2-855
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
-                          "ADR-35 hence JSON schema validation will fail")
 def test_loads_from_file_with_invalid_json_and_validation_set_to_true():
     """
     Verify that the codec unmarshalls objects correctly with schema
@@ -391,9 +382,6 @@ def test_loads_from_file_with_invalid_json_and_validation_set_to_true():
         CODEC.load_from_file(ConfigureRequest, test_new_json_data)
 
 
-# TODO remove xfail before merging AT2-855
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
-                          "ADR-35 hence JSON schema validation will fail")
 @mock.patch("ska_tmc_cdm.jsonschema.json_schema.schema.validate")
 def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn):
     """
@@ -409,9 +397,6 @@ def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn
     mock_fn.assert_not_called()
 
 
-# TODO remove xfail before merging AT2-855
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
-                          "ADR-35 hence JSON schema validation will fail")
 def test_configure_request_raises_exception_when_loads_invalid_csp_schema():
     """
      Verify that codec loads() with invalid schema raise exception
@@ -420,16 +405,13 @@ def test_configure_request_raises_exception_when_loads_invalid_csp_schema():
         CODEC.loads(ConfigureRequest, INVALID_CONFIGURE_REQUEST)
 
 
-# TODO remove xfail before merging AT2-855
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
-                          "ADR-35 hence JSON schema validation will fail")
 def test_configure_request_raises_exception_on_invalid_csp_object():
     """
      Verify that codec dumps() with invalid schema raise exception
     """
     configure_request = CODEC.loads(ConfigureRequest, VALID_CONFIGURE_REQUEST)
     configure_request.csp.interface = \
-        'http://schema.skao.int/ska-csp-configure/3.0'
+        'http://schema.skao.int/ska-csp-configure/9999.0'
 
     with pytest.raises(JsonValidationError):
         CODEC.dumps(configure_request, strictness=2)

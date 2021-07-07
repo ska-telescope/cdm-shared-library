@@ -14,6 +14,14 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
     JSON Schema use for validating the structure of JSON data
     """
 
+    # Schemas known to be bad or incomplete. Data will not be validated
+    # against these schemas
+    malformed_schemas = [
+        "https://schema.skao.int/ska-tmc-configure/2.0",
+        "https://schema.skao.int/ska-tmc-assignresources/2.0",
+        "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    ]
+
     @staticmethod
     def get_schema_by_uri(uri: str) -> schema.Schema:
         """
@@ -44,6 +52,10 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :param strictness: strictness level
         :return: None, in case of valid data otherwise, it raises an exception.
         """
+        # return early if schema is known to be bad or incomplete
+        if uri in JsonSchema.malformed_schemas:
+            return
+
         # use default strictness defined by Telescope Model unless overridden
         extra_kwargs = {}
         if strictness is not None:

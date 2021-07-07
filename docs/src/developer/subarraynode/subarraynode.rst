@@ -149,9 +149,15 @@ of a full CDM JSON object, the elements this maps to are:
             "function_mode": "CORR",
             "frequency_slice_id": 1,
             "integration_factor": 10,
-            "output_link_map": [[0,0], [200,1]],
+            "output_link_map": [
+              [0,0],
+              [200,1]
+            ],
             "zoom_factor": 0,
-            "channel_averaging_map": [[0, 2], [744, 0]],
+            "channel_averaging_map": [
+              [0, 2],
+              [744, 0]
+            ],
             "channel_offset": 0
           },
           {
@@ -160,8 +166,14 @@ of a full CDM JSON object, the elements this maps to are:
             "frequency_slice_id": 2,
             "integration_factor": 10,
             "zoom_factor": 1,
-            "output_link_map": [[0,4], [200,5]],
-            "channel_averaging_map": [[0, 2], [744, 0]],
+            "output_link_map": [
+              [0,4],
+             [200,5]
+            ],
+            "channel_averaging_map": [
+              [0, 2],
+              [744, 0]
+            ],
             "channel_offset": 744,
             "zoom_window_tuning": 4700000
           }
@@ -224,40 +236,15 @@ of a full CDM JSON object, the elements this maps to are:
         "subarray_beams": [
           {
             "subarray_beam_id": 1,
-            "station_ids": [
-              1,
-              2
-            ],
+            "station_ids": [1, 2],
             "update_rate": 0,
             "channels": [
-              [
-                0,
-                8,
-                1,
-                1
-              ],
-              [
-                8,
-                8,
-                2,
-                1
-              ],
-              [
-                24,
-                16,
-                2,
-                1
-              ]
+              [0, 8, 1, 1],
+              [8, 8, 2, 1],
+              [24, 16, 2, 1]
             ],
-            "antenna_weights": [
-              1,
-              1,
-              1
-            ],
-            "phase_centre": [
-              0,
-              0
-            ],
+            "antenna_weights": [1, 1, 1],
+            "phase_centre": [0, 0],
             "target": {
               "system": "HORIZON",
               "name": "DriftScan",

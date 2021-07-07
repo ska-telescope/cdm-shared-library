@@ -19,8 +19,8 @@ from ska_tmc_cdm.utils import json_is_equal
 
 VALID_SUBARRAYBEAMTARGET_JSON = """
 {
-    "system": "HORIZON",
-    "name": "DriftScan",
+    "reference_frame": "HORIZON",
+    "target_name": "DriftScan",
     "az": 180.0,
     "el": 45.0
 }

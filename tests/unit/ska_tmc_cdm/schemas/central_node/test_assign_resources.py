@@ -119,7 +119,7 @@ VALID_SDP_JSON = """{
 
 VALID_SDP_OBJECT = SDPConfiguration(
     interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
-    sdp_id="eb-mvp01-20200325-00001",
+    eb_id="eb-mvp01-20200325-00001",
     max_length=100.0,
     scan_types=[
         ScanType(
@@ -242,9 +242,6 @@ def low_invalidator_fn(o: AssignResourcesRequest):
     o.mccs.subarray_beam_ids = [1, 2, 3]
 
 
-# TODO remove xfail before merging AT2-855
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
-                          "ADR-35 hence JSON schema validation will fail")
 @pytest.mark.parametrize(
     'schema_cls,instance,modifier_fn,valid_json,invalid_json',
     [

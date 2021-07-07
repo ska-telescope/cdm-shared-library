@@ -10,7 +10,7 @@ from .. import utils
 
 VALID_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
+  "interface": "https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
   "subarray_id": 1,
   "release_all": true
 }
@@ -18,14 +18,14 @@ VALID_JSON = """
 
 INVALID_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
+  "interface": "https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
   "subarray_id": -1,
   "release_all": true
 }
 """
 
 VALID_OBJECT = ReleaseResourcesRequest(
-    interface="https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
+    interface="https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
     subarray_id=1,
     release_all=True
 )

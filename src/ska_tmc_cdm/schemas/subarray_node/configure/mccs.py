@@ -27,8 +27,8 @@ class SubarrayBeamTargetSchema(Schema):  # pylint: disable=too-few-public-method
 
     az = fields.Float(data_key="az", required=True)
     el = fields.Float(data_key="el", required=True)
-    name = fields.String(data_key="name", required=True)
-    system = fields.String(data_key="system", required=True)
+    target_name = fields.String(data_key="target_name", required=True)
+    reference_frame = fields.String(data_key="reference_frame", required=True)
 
     @post_load
     def create_target(self, data, **_):  # pylint: disable=no-self-use
@@ -41,13 +41,13 @@ class SubarrayBeamTargetSchema(Schema):  # pylint: disable=too-few-public-method
         """
         az = data["az"]
         el = data["el"]
-        name = data["name"]
-        system = data["system"]
+        target_name = data["target_name"]
+        reference_frame = data["reference_frame"]
         return SubarrayBeamTarget(
             az=az,
             el=el,
-            name=name,
-            system=system
+            target_name=target_name,
+            reference_frame=reference_frame
         )
 
 

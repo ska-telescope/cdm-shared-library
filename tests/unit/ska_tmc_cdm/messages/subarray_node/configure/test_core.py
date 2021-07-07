@@ -22,9 +22,9 @@ def test_target_eq():
     """
     Verify that Target objects are considered equal when:
 
-      - they have the same name
+      - they have the same target name
       - they point to the same place on the sky
-      - they use the same co-ordinate reference_frame
+      - they use the same co-ordinate reference frame
       - they use the same co-ordinate units
     """
     target_1 = Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg")
@@ -46,9 +46,9 @@ def test_target_repr():
     """
     Verify the repr representation of a Target.
     """
-    target = Target(ra=30, dec=-3600, target_name="name", reference_frame="icrs", unit=("deg", "arcsec"))
+    target = Target(ra=30, dec=-3600, target_name="target name", reference_frame="icrs", unit=("deg", "arcsec"))
     expected = (
-        "<Target(ra=30.0, dec=-1.0, name='name', reference_frame='icrs', unit=('deg', 'deg'))>"
+        "<Target(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'))>"
     )
     assert expected == repr(target)
 
@@ -57,8 +57,8 @@ def test_target_str():
     """
     Verify the string representation of a Target.
     """
-    target = Target(ra=30, dec="0", target_name="name", reference_frame="icrs", unit=("deg", "rad"))
-    expected = "<Target: 'name' (02h00m00s +00d00m00s icrs)>"
+    target = Target(ra=30, dec="0", target_name="target name", reference_frame="icrs", unit=("deg", "rad"))
+    expected = "<Target: 'target name' (02h00m00s +00d00m00s icrs)>"
     assert expected == str(target)
 
 

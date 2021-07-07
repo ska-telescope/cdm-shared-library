@@ -15,12 +15,12 @@ def test_subarray_beam_target_equals():
     """
     az = 180.0
     el = 45.0
-    name = 'DriftScan'
-    system = 'horizon'
+    target_name = 'DriftScan'
+    reference_frame = 'horizon'
 
-    config = SubarrayBeamTarget(az, el, name, system)
-    assert config == SubarrayBeamTarget(az, el, name, system)
-    assert config != SubarrayBeamTarget(az, el, 'name', 'system')
+    config = SubarrayBeamTarget(az, el, target_name, reference_frame)
+    assert config == SubarrayBeamTarget(az, el, target_name, reference_frame)
+    assert config != SubarrayBeamTarget(az, el, 'target_name', 'reference_frame')
 
 
 def test_stn_configuration_equals():

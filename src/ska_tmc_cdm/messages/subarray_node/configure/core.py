@@ -37,9 +37,9 @@ class Target:
         sep = self.coord.separation(other.coord)
 
         return (
-            self.target_name == other.target_name
-            and self.coord.frame.name == other.coord.frame.name
-            and sep.radian < self.OFFSET_MARGIN_IN_RAD
+                self.target_name == other.target_name
+                and self.coord.frame.name == other.coord.frame.name
+                and sep.radian < self.OFFSET_MARGIN_IN_RAD
         )
 
     def __repr__(self):
@@ -48,7 +48,7 @@ class Target:
         units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
         reference_frame = self.coord.frame.name
         target_name = self.target_name
-        return "<Target(ra={!r}, dec={!r}, name={!r}, reference_frame={!r}, unit={!r})>".format(
+        return "<Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r})>".format(
             raw_ra, raw_dec, target_name, reference_frame, units
         )
 

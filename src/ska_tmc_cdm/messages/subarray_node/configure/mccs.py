@@ -22,24 +22,19 @@ class SubarrayBeamTarget:
     """
 
     #  pylint: disable=too-many-arguments
-    def __init__(self, az: float, el: float, name: str, system: str):
+    def __init__(self, az: float, el: float, target_name: str, reference_frame: str):
         """
         Initialise the station configuration.
 
         :param az: Az specification with rates
-        :type az: float
         :param el: El specification with rates
-        :type el: float
-        :param name: Source name
-        :type name: str
-        :param system: Target coordinate system
-        :type system: str
-
+        :param target_name: target name
+        :param reference_frame: Target coordinate reference frame
         """
         self.az = az
         self.el = el
-        self.name = name
-        self.system = system
+        self.target_name = target_name
+        self.reference_frame = reference_frame
 
     def __eq__(self, other):
         """
@@ -55,8 +50,8 @@ class SubarrayBeamTarget:
             return False
         return (self.az == other.az
                 and self.el == other.el
-                and self.name == other.name
-                and self.system == other.system)
+                and self.target_name == other.target_name
+                and self.reference_frame == other.reference_frame)
 
 
 class StnConfiguration:

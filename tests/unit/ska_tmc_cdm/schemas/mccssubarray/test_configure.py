@@ -14,7 +14,7 @@ from .. import utils
 
 VALID_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-mccs-configure/2.0",
+  "interface": "https://schema.skatelescope.org/ska-low-mccs-configure/1.0",
   "stations":[
     {
       "station_id": 1
@@ -43,7 +43,7 @@ VALID_JSON = """
 
 INVALID_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-mccs-configure/2.0",
+  "interface": "https://schema.skatelescope.org/ska-low-mccs-configure/1.0",
   "stations":[
     {
       "station_id": -1
@@ -71,7 +71,7 @@ INVALID_JSON = """
 """
 
 VALID_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-low-mccs-configure/2.0",
+    interface="https://schema.skatelescope.org/ska-low-mccs-configure/1.0",
     stations=[
         StationConfiguration(station_id=1),
         StationConfiguration(station_id=2)

@@ -178,8 +178,8 @@ VALID_LOW_CONFIGURE_JSON = """
         ],
         "update_rate": 0.0,
         "target": {
-          "system": "horizon",
-          "name": "DriftScan",
+          "reference_frame": "horizon",
+          "target_name": "DriftScan",
           "az": 180.0,
           "el": 45.0
         },
@@ -238,8 +238,8 @@ INVALID_LOW_CONFIGURE_JSON = """
         "channels": [[1,2]],
         "update_rate": 1.0,
         "target": {
-              "system": "horizon",
-              "name": "DriftScan",
+              "reference_frame": "horizon",
+              "target_name": "DriftScan",
               "az": 180.0,
               "el": 45.0
         },
@@ -282,6 +282,11 @@ def low_invalidator(o: ConfigureRequest):
     'schema_cls,instance,modifier_fn,valid_json,invalid_json',
     [
         (ConfigureRequestSchema,
+         VALID_MID_CONFIGURE_OBJECT,
+         None,  # no validation on MID
+         VALID_MID_CONFIGURE_JSON,
+         None),  # no validation on MID
+        (ConfigureRequestSchema,
          VALID_MID_DISH_ONLY_OBJECT,
          None,  # no validation on MID
          VALID_MID_DISH_ONLY_JSON,
@@ -303,31 +308,6 @@ def test_configure_serialisation_and_validation(
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
-    """
-    utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
-    )
-
-
-# TODO remove xfail before merging AT2-855
-@pytest.mark.xfail(reason="The Telescope Model library is not updated with "
-                          "ADR-35 hence JSON schema validation will fail")
-@pytest.mark.parametrize(
-    'schema_cls,instance,modifier_fn,valid_json,invalid_json',
-    [
-        (ConfigureRequestSchema,
-         VALID_MID_CONFIGURE_OBJECT,
-         None,  # no validation on MID
-         VALID_MID_CONFIGURE_JSON,
-         None),  # no validation on MID
-    ]
-)
-def test_configure_fails_validation_due_to_outdated_telescope_model(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
-):
-    """
-    Placeholder for tests that should pass again once ADR-35 Telescope Model
-    is released.
     """
     utils.test_schema_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json
