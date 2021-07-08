@@ -4,9 +4,7 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.scan module
 
 import pytest
 
-from ska_tmc_cdm.messages.subarray_node.scan import (
-    ScanRequest
-)
+from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 from ska_tmc_cdm.schemas.subarray_node.scan import ScanRequestSchema
 from .. import utils
 
@@ -23,14 +21,6 @@ VALID_MID_OBJECT = ScanRequest(
     transaction_id="txn-test-00001",
     scan_id=1,
 )
-
-INVALID_MID_JSON = """
-{
-  "interface": "https://schema.skao.int/ska-tmc-scan/2.0",
-  "transaction_id": "txn-test-00001",
-  "scan_id": 1.23
-}
-"""
 
 VALID_LOW_JSON = """
 {   
@@ -62,7 +52,7 @@ INVALID_LOW_JSON = """
          VALID_MID_OBJECT,
          None,  # No validation for MID
          VALID_MID_JSON,
-         INVALID_MID_JSON),  # no validation for MID
+         None),  # no validation for MID
         (ScanRequestSchema,
          VALID_LOW_OBJECT,
          None,  # schema does not impose any constraints so nothing to test

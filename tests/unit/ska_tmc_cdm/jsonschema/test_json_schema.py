@@ -4,7 +4,7 @@ Unit tests for the ska_tmc_cdm.jsonschema.json_schema module.
 import copy
 
 import pytest
-from ska_telmodel.tmc.examples import TMC_LOW_RELEASERES_1_0 as VALID_JSON
+from ska_telmodel.tmc.examples import TMC_RELEASERES_1_0 as VALID_JSON
 
 from ska_tmc_cdm.jsonschema.json_schema import (
     JsonSchema,
