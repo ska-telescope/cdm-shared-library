@@ -83,11 +83,11 @@ VALID_MCCSCONFIGURATION_OBJECT = MCCSConfiguration(
 ])
 def test_marshal(schema_cls, instance, expected):
     """
-    Verify that instances are marshaled to JSON correctly.
+    Verify that instances are marshalled to JSON correctly.
     """
     schema = schema_cls()
-    marshaled = schema.dumps(instance)
-    assert_json_is_equal(expected, marshaled)
+    marshalled = schema.dumps(instance)
+    assert_json_is_equal(expected, marshalled)
 
 
 @pytest.mark.parametrize('schema_cls,json_str,expected', [
@@ -98,8 +98,8 @@ def test_marshal(schema_cls, instance, expected):
 ])
 def test_unmarshal(schema_cls, json_str, expected):
     """
-    Verify that instances are unmarshaled to instances correctly.
+    Verify that instances are unmarshalled to instances correctly.
     """
     schema = schema_cls()
-    unmarshaled = schema.loads(json_str)
-    assert unmarshaled == expected
+    unmarshalled = schema.loads(json_str)
+    assert unmarshalled == expected

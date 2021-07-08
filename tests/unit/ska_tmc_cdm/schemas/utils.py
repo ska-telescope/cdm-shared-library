@@ -46,20 +46,20 @@ def test_schema_serialisation_and_validation(
 
 def test_marshal(schema_cls, instance, valid_json):
     """
-    Verify that an object instance is marshaled to JSON correctly.
+    Verify that an object instance is marshalled to JSON correctly.
     """
     schema = get_schema(schema_cls, strictness=STRICTNESS)
-    marshaled = schema.dumps(instance)
-    assert_json_is_equal(marshaled, valid_json)
+    marshalled = schema.dumps(instance)
+    assert_json_is_equal(marshalled, valid_json)
 
 
 def test_unmarshal(schema_cls, valid_json, instance):
     """
-    Verify that JSON is correctly unmarshaled to the expected instance.
+    Verify that JSON is correctly unmarshalled to the expected instance.
     """
     schema = get_schema(schema_cls, strictness=STRICTNESS)
-    unmarshaled = schema.loads(valid_json)
-    assert unmarshaled == instance
+    unmarshalled = schema.loads(valid_json)
+    assert unmarshalled == instance
 
 
 def test_deserialising_invalid_json_raises_exception_when_strict(schema_cls, invalid_json):
