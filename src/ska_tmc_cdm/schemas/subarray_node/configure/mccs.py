@@ -82,7 +82,7 @@ class SubarrayBeamConfigurationSchema(Schema):
     phase_centre = fields.List(fields.Float(data_key="phase_centre"))
 
     @post_load
-    def create(self, data, **_):
+    def create(self, data, **_) -> SubarrayBeamConfiguration:
         """
          Convert parsed JSON back into a SubarrayBeamConfiguration object.
 
@@ -90,7 +90,6 @@ class SubarrayBeamConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
 
         :return: SubarrayBeamConfiguration instance populated to match JSON
-        :rtype: SubarrayBeamConfiguration
         """
         subarray_beam_id = data["subarray_beam_id"]
         station_ids = data["station_ids"]
