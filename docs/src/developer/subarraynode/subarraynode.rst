@@ -412,9 +412,6 @@ Example configuration JSON for LOW
           }
         ]
       },
-      "sdp": {
-        // TMC can ignore any SDP spec this PI
-      },
       "tmc": {
         "scan_duration": 10.0
       }

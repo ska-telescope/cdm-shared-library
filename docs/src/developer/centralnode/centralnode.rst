@@ -120,9 +120,6 @@ Example JSON input modelled by ``AssignResourcesRequest`` for LOW:
         "subarray_beam_ids": [1],
         "station_ids": [[1,2]],
         "channel_blocks": [3]
-     },
-    "sdp": {
-        ... # omitted as TMC will ignore SDP this PI
      }
   }
 
