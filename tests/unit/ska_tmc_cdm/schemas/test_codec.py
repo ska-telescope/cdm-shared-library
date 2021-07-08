@@ -2,419 +2,152 @@
 Unit tests for the ska_tmc_cdm.schemas.codec module.
 """
 import copy
-import os.path
-import unittest.mock as mock
 import json
+import tempfile
+import functools
+
 import pytest
 
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
-from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
-from ska_tmc_cdm.messages.subarray_node.configure.core import (
-    DishConfiguration,
-    ReceiverBand,
-)
-from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    CSPConfiguration,
-    FSPConfiguration,
-    FSPFunctionMode,
-    SubarrayConfiguration,
-    CBFConfiguration,
-    CommonConfiguration,
-)
 from ska_tmc_cdm.schemas import CODEC
-from ska_tmc_cdm.utils import json_is_equal
-from .central_node.test_assign_resources import (
+from ska_tmc_cdm.utils import assert_json_is_equal
+from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
-    VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-    VALID_SDP_OBJECT,
+    VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT
+)
+from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
+    VALID_MID_CONFIGURE_JSON,
+    VALID_MID_CONFIGURE_OBJECT,
+    VALID_LOW_CONFIGURE_JSON,
+    VALID_LOW_CONFIGURE_OBJECT,
+    INVALID_LOW_CONFIGURE_JSON
 )
 
-VALID_CONFIGURE_REQUEST = """
-{
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.0",
-  "transaction_id": "12345",
-  "pointing": {
-    "target": {
-      "reference_frame": "ICRS",
-      "target_name": "M51",
-      "ra": "13:29:52.698",
-      "dec": "+47:11:42.93"
-    }
-  },
-  "dish": {
-    "receiver_band": "1"
-  },
-  "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
-    "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band": "1",
-      "subarray_id": 1
-    },
-    "cbf": {
-      "fsp": [
-        {
-          "fsp_id": 1,
-          "function_mode": "CORR",
-          "frequency_slice_id": 1,
-          "integration_factor": 10,
-          "output_link_map": [[0,0], [200,1]],
-          "zoom_factor": 0,
-          "channel_averaging_map": [[0, 2], [744, 0]],
-          "channel_offset": 0
-        },
-        {
-          "fsp_id": 2,
-          "function_mode": "CORR",
-          "frequency_slice_id": 2,
-          "integration_factor": 10,
-          "zoom_factor": 1,
-          "output_link_map": [[0,4], [200,5]],
-          "channel_averaging_map": [[0, 2], [744, 0]],
-          "channel_offset": 744,
-          "zoom_window_tuning": 4700000
-        }
-      ]
-    }
-  },
-  "sdp": {
-    "scan_type": "science_A"
-  },
-  "tmc": {
-    "scan_duration": 10.0
-  }
-}
-"""
-
-INVALID_CONFIGURE_REQUEST = """
-{
-  "pointing": {
-    "target": {
-      "reference_frame": "ICRS",
-      "target_name": "M51",
-      "ra": "13:29:52.698",
-      "dec": "+47:11:42.93"
-    }
-  },
-  "dish": {
-    "receiver_band": "1"
-  },
-  "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "cbf": {
-      "fsp": [
-        {
-          "fsp_id": 1,
-          "function_mode": "CORR",
-          "frequency_slice_id": 1,
-          "integration_factor": 10,
-          "output_link_map": [[0,0], [200,1]],
-          "zoom_factor": 0,
-          "channel_averaging_map": [[0, 2], [744, 0]],
-          "channel_offset": 0
-        },
-        {
-          "fsp_id": 2,
-          "function_mode": "CORR",
-          "frequency_slice_id": 2,
-          "integration_factor": 10,
-          "zoom_factor": 1,
-          "output_link_map": [[0,4], [200,5]],
-          "channel_averaging_map": [[0, 2], [744, 0]],
-          "channel_offset": 744,
-          "zoom_window_tuning": 4700000
-        }
-      ]
-    }
-  },
-  "sdp": {
-    "scan_type": "science_A"
-  },
-  "tmc": {
-    "scan_duration": 10.0
-  }
-}
-"""
-
-VALID_CSP_SCHEMA = """{
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
-    "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band": "1",
-      "subarray_id": 1,
-      "band_5_tuning": [5.85, 7.25]
-    },
-    "cbf": {
-      "fsp": [
-        {
-          "fsp_id": 1,
-          "function_mode": "CORR",
-          "frequency_slice_id": 1,
-          "integration_factor": 10,
-          "output_link_map": [[0,0], [200,1]],
-          "zoom_factor": 0,
-          "channel_averaging_map": [[0, 2], [744, 0]],
-          "channel_offset": 0
-        },
-        {
-          "fsp_id": 2,
-          "function_mode": "CORR",
-          "frequency_slice_id": 2,
-          "integration_factor": 10,
-          "zoom_factor": 1,
-          "output_link_map": [[0,4], [200,5]],
-          "channel_averaging_map": [[0, 2], [744, 0]],
-          "channel_offset": 744,
-          "zoom_window_tuning": 4700000
-        }
-      ]
-    }
-  }
-"""
-
-INVALID_CSP_SCHEMA = json.loads(VALID_CSP_SCHEMA)
-INVALID_CSP_SCHEMA['interface'] = 'https://foo.com/badschema/2.0'
-INVALID_CSP_SCHEMA = json.dumps(INVALID_CSP_SCHEMA)
+TEST_PARAMETERS = [
+    (AssignResourcesRequest,
+     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT),
+    (AssignResourcesRequest,
+     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT),
+    (ConfigureRequest,
+     VALID_MID_CONFIGURE_JSON,
+     VALID_MID_CONFIGURE_OBJECT),
+    (ConfigureRequest,
+     VALID_LOW_CONFIGURE_JSON,
+     VALID_LOW_CONFIGURE_OBJECT),
+]
 
 
-def test_codec_loads():
+@pytest.mark.parametrize(
+    "msg_cls,json_str,expected",
+    TEST_PARAMETERS
+)
+def test_codec_loads(msg_cls, json_str, expected):
     """
     Verify that the codec unmarshalls objects correctly.
     """
-    sdp_config = VALID_SDP_OBJECT
-    unmarshalled = CODEC.loads(AssignResourcesRequest,
-                               VALID_MID_ASSIGNRESOURCESREQUEST_JSON
-                               )
-    expected = AssignResourcesRequest.from_dish(
-        subarray_id=1,
-        dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
-        sdp_config=sdp_config,
-        interface='https://schema.skao.int/ska-tmc-assignresources/2.0',
-        transaction_id='txn-mvp01-20200325-00004'
-    )
-    assert expected == unmarshalled
+    unmarshalled = CODEC.loads(msg_cls, json_str)
+    assert unmarshalled == expected
 
 
-def test_codec_loads_mccs_only():
+@pytest.mark.parametrize(
+    "msg_cls,expected,instance",
+    TEST_PARAMETERS
+)
+def test_codec_dumps(msg_cls, expected, instance):
     """
     Verify that the codec unmarshalls objects correctly.
     """
-    interface = 'https://schema.skao.int/ska-low-tmc-assignresources/2.0'
-    mccs = MCCSAllocate(
-        subarray_beam_ids=[1],
-        station_ids=[(1, 2)],
-        channel_blocks=[1, 2, 3, 4, 5]
-    )
-    expected = AssignResourcesRequest.from_mccs(
-        interface=interface,
-        subarray_id=1,
-        mccs=mccs,
-        transaction_id="txn-mvp01-20200325-00004"
-    )
-
-    assert expected == VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT
+    marshalled = CODEC.dumps(instance)
+    assert_json_is_equal(marshalled, expected)
 
 
-def test_codec_dumps():
+@pytest.mark.parametrize(
+    "msg_cls,json_str,expected",
+    TEST_PARAMETERS
+)
+def test_codec_load_from_file(msg_cls, json_str, expected):
     """
-    Verify that the codec marshalls dish & sdp objects to JSON.
+    Verify that the codec loads JSON from file for all key objects.
     """
-    sdp_config = VALID_SDP_OBJECT
-    expected = VALID_MID_ASSIGNRESOURCESREQUEST_JSON
-    obj = AssignResourcesRequest(
-        subarray_id=1,
-        dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
-        sdp_config=sdp_config,
-        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
-        transaction_id="txn-mvp01-20200325-00004"
-    )
-
-    marshalled = CODEC.dumps(obj)
-    assert json_is_equal(marshalled, expected)
-
-
-def test_read_a_file_from_disk():
-    """
-    Test for loading a configure request from a JSON file
-    """
-    cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
-    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
-    dish_config = DishConfiguration(ReceiverBand.BAND_1)
-    assert result_data.dish == dish_config
-
-
-def csp_config_for_test():
-    """
-    Fixture which returns an CSPConfiguration object
-
-    :return: CSPConfiguration
-    """
-
-    config_id = "sbi-mvp01-20200325-00001-science_A"
-    # TODO refactor this as a builder, consolidate duplicate code
-    fsp_config_1 = FSPConfiguration(
-        1,
-        FSPFunctionMode.CORR,
-        1,
-        10,
-        0,
-        channel_averaging_map=[(0, 2), (744, 0)],
-        channel_offset=0,
-        output_link_map=[(0, 0), (200, 1)]
-    )
-    fsp_config_2 = FSPConfiguration(
-        2,
-        FSPFunctionMode.CORR,
-        2,
-        10,
-        1,
-        channel_averaging_map=[(0, 2), (744, 0)],
-        channel_offset=744,
-        output_link_map=[(0, 4), (200, 5)],
-        zoom_window_tuning=4700000,
-    )
-
-    cbf_config = CBFConfiguration([fsp_config_1, fsp_config_2])
-    csp_subarray_config = SubarrayConfiguration('science period 23')
-    csp_common_config = CommonConfiguration(config_id, ReceiverBand.BAND_1, 1, [5.85, 7.25])
-    csp_config = CSPConfiguration(
-        interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray_config=csp_subarray_config,
-        common_config=csp_common_config,
-        cbf_config=cbf_config
-    )
-    return csp_config
+    # mode='w' is required otherwise tempfile expects bytes
+    with tempfile.NamedTemporaryFile(mode='w') as f:
+        f.write(json_str)
+        f.flush()
+        unmarshalled = CODEC.load_from_file(msg_cls, f.name)
+        assert unmarshalled == expected
 
 
 def test_codec_loads_raises_exception_on_invalid_schema():
     """
-     Verify that codec loads() with invalid schema raise exception
+    Verify that loading data that references an invalid schema raises
+    SchemaNotFound when strictness=2.
     """
+    # create some test JSON that references an invalid schema
+    invalid_data = json.loads(VALID_LOW_CONFIGURE_JSON)
+    invalid_data['interface'] = 'https://foo.com/badschema/2.0'
+    invalid_data = json.dumps(invalid_data)
+
     with pytest.raises(SchemaNotFound):
-        CODEC.loads(CSPConfiguration, INVALID_CSP_SCHEMA, strictness=2)
+        CODEC.loads(ConfigureRequest, invalid_data, strictness=2)
 
 
 def test_codec_dumps_raises_exception_on_invalid_schema():
     """
-     Verify that codec dumps() with invalid schema raise exception
+    Verify that dumping data that references an invalid schema raises
+    SchemaNotFound when strictness=2.
     """
-    csp_config = csp_config_for_test()
-    csp_config.interface = json.loads(INVALID_CSP_SCHEMA)['interface']
+    # create a test object that references an invalid schema
+    invalid_data = copy.deepcopy(VALID_LOW_CONFIGURE_OBJECT)
+    invalid_data.interface = 'https://foo.com/badschema/2.0'
+
+    # validation should occur regardless of strictness, but exceptions are
+    # only raised when strictness=2
+    CODEC.dumps(invalid_data, strictness=0)
+    CODEC.dumps(invalid_data, strictness=1)
     with pytest.raises(SchemaNotFound):
-        CODEC.dumps(csp_config, strictness=2)
+        CODEC.dumps(invalid_data, strictness=2)
 
 
-def test_codec_dumps_with_schema_validation_for_csp():
+def test_loads_invalid_json_with_validation_enabled():
     """
-    Verify that the codec marshalls csp objects to JSON with schema
-    validation.
+    Verify that the strictness argument is respected when loading invalid
+    JSON, resulting in a JsonValidationError with strictness=2.
     """
-    expected = VALID_CSP_SCHEMA
-    csp_config = csp_config_for_test()
-    marshalled = CODEC.dumps(csp_config)
-    assert json_is_equal(marshalled, expected)
+    test_call = functools.partial(
+        CODEC.loads, ConfigureRequest, INVALID_LOW_CONFIGURE_JSON, validate=True
+    )
 
+    # no exception should be raised unless strictness is 0 or 1
+    for strictness in [0, 1]:
+        unmarshalled = test_call(strictness=strictness)
+        marshalled = CODEC.dumps(unmarshalled, validate=False)
+        assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
 
-def test_codec_loads_with_schema_validation_for_csp():
-    """
-    Verify that the codec unmarshalls objects correctly with schema
-    validation.
-    """
-    csp_config = csp_config_for_test()
-    unmarshalled = CODEC.loads(CSPConfiguration, VALID_CSP_SCHEMA)
-    assert csp_config == unmarshalled
-
-
-@mock.patch("ska_tmc_cdm.jsonschema.json_schema.schema.validate")
-def test_codec_loads_from_file_with_schema_validation(mock_fn):
-    """
-    Verify that the codec unmarshalls objects correctly with schema
-    validation and Test it with loading a valid ADR18-configure request
-    from a JSON file
-    """
-    csp_config = csp_config_for_test()
-    cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
-    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data)
-    assert result_data.csp == csp_config
-    # we currently expect 2 calls to validate:
-    #   1. validate the ConfigureRequest JSON against the OSO-TMC configure schema
-    #   2. validate the CSP JSON against the TMC-CSP schema
-    assert mock_fn.call_count == 2
-
-
-@mock.patch("ska_tmc_cdm.jsonschema.json_schema.schema.validate")
-def test_codec_loads_from_file_without_schema_validation(mock_fn):
-    """
-    Verify that the codec unmarshalls objects correctly without schema
-    validation and Test it with loading a valid ADR18-configure request
-    from a JSON file
-    """
-    csp_config = csp_config_for_test()
-    cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_sample_configure.json")
-    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, validate=False)
-    assert result_data.csp == csp_config
-    assert mock_fn.call_count == 0
-    mock_fn.assert_not_called()
-
-
-def test_loads_from_file_with_invalid_json_and_validation_set_to_true():
-    """
-    Verify that the codec unmarshalls objects correctly with schema
-    validation and Test it with loading a invalid configure request
-    from a JSON file
-    """
-    cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_invalid_configure.json")
+    # strictness=2 should result in an error
     with pytest.raises(JsonValidationError):
-        CODEC.load_from_file(ConfigureRequest, test_new_json_data)
+        test_call(strictness=2)
 
 
-@mock.patch("ska_tmc_cdm.jsonschema.json_schema.schema.validate")
-def test_loads_from_file_with_invalid_schema_and_validation_set_to_false(mock_fn):
+@pytest.mark.parametrize("strictness", [0, 1, 2])
+def test_loads_invalid_json_with_validation_disabled(strictness):
     """
-    Verify that the codec unmarshalls objects correctly without schema
-    validation and Test it with loading a invalid ADR18-configure request
-    from a JSON file
+    Verify that the invalid JSON can be loaded when validation is disabled.
     """
-    cwd, _ = os.path.split(__file__)
-    test_new_json_data = os.path.join(cwd, "testfile_invalid_configure.json")
-    result_data = CODEC.load_from_file(ConfigureRequest, test_new_json_data, False)
-    assert result_data.csp.subarray_config is None
-    assert mock_fn.call_count == 0
-    mock_fn.assert_not_called()
-
-
-def test_configure_request_raises_exception_when_loads_invalid_csp_schema():
-    """
-     Verify that codec loads() with invalid schema raise exception
-    """
-    with pytest.raises(JsonValidationError):
-        CODEC.loads(ConfigureRequest, INVALID_CONFIGURE_REQUEST)
-
-
-def test_configure_request_raises_exception_on_invalid_csp_object():
-    """
-     Verify that codec dumps() with invalid schema raise exception
-    """
-    configure_request = CODEC.loads(ConfigureRequest, VALID_CONFIGURE_REQUEST)
-    configure_request.csp.interface = \
-        'http://schema.skao.int/ska-csp-configure/9999.0'
-
-    with pytest.raises(JsonValidationError):
-        CODEC.dumps(configure_request, strictness=2)
+    unmarshalled = CODEC.loads(
+        ConfigureRequest,
+        INVALID_LOW_CONFIGURE_JSON,
+        validate=False,
+        strictness=strictness
+    )
+    marshalled = CODEC.dumps(unmarshalled, validate=False)
+    assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
 
 
 @pytest.mark.parametrize('message_cls', [

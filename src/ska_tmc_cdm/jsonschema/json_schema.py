@@ -14,8 +14,14 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
     JSON Schema use for validating the structure of JSON data
     """
 
-    # Schemas known to be bad or incomplete. Data will not be validated
-    # against these schemas
+    # Schemas known to be bad or incomplete. JSON will not be validated
+    # against any schema present in this list.
+    #
+    # Validation against partially-defined schemas is disabled because even
+    # while the JSON covered by the schema might be valid, the JSON not
+    # yet covered by the schema (csp or sdp for MID, for instance) results
+    # in a validation error when validating with strictness=2 because the
+    # schema isn't expected the extra values.
     malformed_schemas = [
         "https://schema.skao.int/ska-tmc-configure/2.0",
         "https://schema.skao.int/ska-tmc-assignresources/2.0",
@@ -52,7 +58,8 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :param strictness: strictness level
         :return: None, in case of valid data otherwise, it raises an exception.
         """
-        # return early if schema is known to be bad or incomplete
+        # do not attempt to validate against schema known to be bad or
+        # incomplete
         if uri in JsonSchema.malformed_schemas:
             return
 

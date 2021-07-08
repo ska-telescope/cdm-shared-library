@@ -15,7 +15,7 @@ from ska_tmc_cdm.schemas.subarray_node.configure.mccs import (
     SubarrayBeamConfigurationSchema,
     SubarrayBeamTargetSchema
 )
-from ska_tmc_cdm.utils import json_is_equal
+from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_SUBARRAYBEAMTARGET_JSON = """
 {
@@ -87,7 +87,8 @@ def test_marshal(schema_cls, instance, expected):
     """
     schema = schema_cls()
     marshaled = schema.dumps(instance)
-    assert json_is_equal(expected, marshaled)
+    assert_json_is_equal(expected, marshaled)
+
 
 @pytest.mark.parametrize('schema_cls,json_str,expected', [
     (SubarrayBeamTargetSchema, VALID_SUBARRAYBEAMTARGET_JSON, VALID_SUBARRAYBEAMTARGET_OBJECT),

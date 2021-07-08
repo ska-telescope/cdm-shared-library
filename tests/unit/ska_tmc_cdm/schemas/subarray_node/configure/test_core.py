@@ -12,7 +12,7 @@ from ska_tmc_cdm.schemas.subarray_node.configure import (
     DishConfigurationSchema,
     TargetSchema,
 )
-from ska_tmc_cdm.utils import json_is_equal
+from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_TARGET_JSON = """
 {
@@ -33,7 +33,7 @@ def test_marshall_target_to_json():
     target = Target(ra="12h34m56.78s", dec="+12d34m56.78s", target_name="NGC123")
     expected = VALID_TARGET_JSON
     json_str = TargetSchema().dumps(target)
-    assert json_is_equal(json_str, expected)
+    assert_json_is_equal(json_str, expected)
 
 
 def test_unmarshall_target_from_json():

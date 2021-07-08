@@ -27,7 +27,9 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
     transaction_id = fields.String()
     subarray_id = fields.Integer()
     release_all = fields.Boolean()
-    dish = fields.Nested(DishAllocationSchema)
+    dish = fields.Pluck(
+        DishAllocationSchema, "receptor_ids", data_key="receptor_ids"
+    )
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -54,16 +56,17 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
         # If release_all_mid is True, other resources should be stripped - and
         # vice versa
 
-        is_low = data.get('subarray_id', None) is not None and \
-                 data.get('interface', None) is not None and \
-                 'low' in data['interface']
-        if not is_low:
+        # MID and LOW still have different schema for PI11. Eventually these
+        # schemas will be unified into a single schema, but for now we need
+        # to detect the difference and do some special handling.
+        is_mid = 'ska-tmc-low' not in data['interface']
 
+        if is_mid:
             # for MID, remove dish specifier when release all is True and vice
             # versa. We do not need to strip partial resources for LOW as only
             # full release is allowed.
             if data["release_all"]:
-                del data["dish"]
+                del data["receptor_ids"]
             else:
                 del data["release_all"]
 

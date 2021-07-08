@@ -4,7 +4,7 @@ import pytest
 
 from ska_tmc_cdm.exceptions import JsonValidationError
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
-from ska_tmc_cdm.utils import json_is_equal
+from ska_tmc_cdm.utils import assert_json_is_equal
 
 
 # TODO reset strictness back to 2 once Telescope Model is updated for ADR-35
@@ -50,7 +50,7 @@ def test_marshal(schema_cls, instance, valid_json):
     """
     schema = get_schema(schema_cls, strictness=STRICTNESS)
     marshaled = schema.dumps(instance)
-    assert json_is_equal(marshaled, valid_json)
+    assert_json_is_equal(marshaled, valid_json)
 
 
 def test_unmarshal(schema_cls, valid_json, instance):
