@@ -8,8 +8,7 @@ __all__ = ['MarshmallowCodec']
 from typing import Optional
 from .shared import ValidatingSchema
 
-# TODO revert to STRICTNESS=None when telescope model is updated
-STRICTNESS = 0
+STRICTNESS = None
 
 
 class MarshmallowCodec:  # pylint: disable=too-few-public-methods
