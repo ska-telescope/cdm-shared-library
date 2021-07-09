@@ -17,7 +17,7 @@ class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     receptor_ids = fields.List(
-        fields.String, data_key="receptorIDList", many=True, required=True
+        fields.String, data_key="receptor_ids", many=True, required=True
     )
 
     @post_load
@@ -41,7 +41,7 @@ class DishAllocationResponseSchema(Schema):  # pylint: disable=too-few-public-me
     """
 
     receptor_ids = fields.List(
-        fields.String, data_key="receptorIDList_success", many=True, required=True
+        fields.String, data_key="receptor_ids_allocated", many=True, required=True
     )
 
     @post_load

@@ -8,6 +8,8 @@ __all__ = ['MarshmallowCodec']
 from typing import Optional
 from .shared import ValidatingSchema
 
+STRICTNESS = None
+
 
 class MarshmallowCodec:  # pylint: disable=too-few-public-methods
     """
@@ -48,7 +50,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
             cls,
             path,
             validate: bool = True,
-            strictness: Optional[int] = None
+            strictness: Optional[int] = STRICTNESS
     ):
         """
         Load an instance of a CDM class from disk.
@@ -68,7 +70,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
             cdm_class,
             json_data,
             validate: bool = True,
-            strictness: Optional[int] = None
+            strictness: Optional[int] = STRICTNESS
     ):
         """
         Create an instance of a CDM class from a JSON string.
@@ -95,7 +97,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
             self,
             obj,
             validate: bool = True,
-            strictness: Optional[int] = None
+            strictness: Optional[int] = STRICTNESS
     ):
         """
         Return a string JSON representation of a CDM instance.

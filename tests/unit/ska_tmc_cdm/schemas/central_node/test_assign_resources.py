@@ -26,12 +26,13 @@ from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
 from .. import utils
 
 VALID_SDP_JSON = """{
-  "id": "sbi-mvp01-20200325-00001",
+  "interface": "https://schema.skao.int/ska-sdp-assignresources/2.0",
+  "eb_id": "eb-mvp01-20200325-00001",
   "max_length": 100.0,
   "scan_types": [
     {
-      "id": "science_A",
-      "coordinate_system": "ICRS",
+      "scan_type_id": "science_A",
+      "reference_frame": "ICRS",
       "ra": "02:42:40.771",
       "dec": "-00:00:47.84",
       "channels": [
@@ -54,8 +55,8 @@ VALID_SDP_JSON = """{
       ]
     },
     {
-      "id": "calibration_B",
-      "coordinate_system": "ICRS",
+      "scan_type_id": "calibration_B",
+      "reference_frame": "ICRS",
       "ra": "12:29:06.699",
       "dec": "02:03:08.598",
       "channels": [
@@ -80,44 +81,45 @@ VALID_SDP_JSON = """{
   ],
   "processing_blocks": [
     {
-      "id": "pb-mvp01-20200325-00001",
+      "pb_id": "pb-mvp01-20200325-00001",
       "workflow": {
-        "type": "realtime",
-        "id": "vis_receive",
+        "kind": "realtime",
+        "name": "vis_receive",
         "version": "0.1.0"
       },
       "parameters": {}
     },
     {
-      "id": "pb-mvp01-20200325-00002",
+      "pb_id": "pb-mvp01-20200325-00002",
       "workflow": {
-        "type": "realtime",
-        "id": "test_realtime",
+        "kind": "realtime",
+        "name": "test_realtime",
         "version": "0.1.0"
       },
       "parameters": {}
     },
     {
-      "id": "pb-mvp01-20200325-00003",
-      "workflow": {"type": "batch", "id": "ical", "version": "0.1.0"},
+      "pb_id": "pb-mvp01-20200325-00003",
+      "workflow": {"kind": "batch", "name": "ical", "version": "0.1.0"},
       "parameters": {},
       "dependencies": [
-        {"pb_id": "pb-mvp01-20200325-00001", "type": ["visibilities"]}
+        {"pb_id": "pb-mvp01-20200325-00001", "kind": ["visibilities"]}
       ]
     },
     {
-      "id": "pb-mvp01-20200325-00004",
-      "workflow": {"type": "batch", "id": "dpreb", "version": "0.1.0"},
+      "pb_id": "pb-mvp01-20200325-00004",
+      "workflow": {"kind": "batch", "name": "dpreb", "version": "0.1.0"},
       "parameters": {},
       "dependencies": [
-        {"pb_id": "pb-mvp01-20200325-00003", "type": ["calibration"]}
+        {"pb_id": "pb-mvp01-20200325-00003", "kind": ["calibration"]}
       ]
     }
   ]
 }"""
 
 VALID_SDP_OBJECT = SDPConfiguration(
-    sdp_id="sbi-mvp01-20200325-00001",
+    interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
+    eb_id="eb-mvp01-20200325-00001",
     max_length=100.0,
     scan_types=[
         ScanType(
@@ -172,13 +174,17 @@ VALID_SDP_OBJECT = SDPConfiguration(
 
 VALID_MID_ASSIGNRESOURCESREQUEST_JSON = """
 {
-  "subarrayID": 1,
-  "dish": {"receptorIDList": ["0001", "0002"]},
+  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.0",
+  "transaction_id":"txn-mvp01-20200325-00004",
+  "subarray_id": 1,
+  "dish": {"receptor_ids": ["0001", "0002"]},
   "sdp": """ + VALID_SDP_JSON + """
 }
 """
 
 VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+    transaction_id="txn-mvp01-20200325-00004",
     subarray_id=1,
     dish_allocation=DishAllocation(
         receptor_ids=["0001", "0002"]
@@ -188,7 +194,8 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
 
 VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/2.0",
+  "transaction_id":"txn-mvp01-20200325-00004",
   "subarray_id": 1,
   "mccs": {
     "subarray_beam_ids": [1],
@@ -199,7 +206,8 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """
 """
 
 VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
-    interface="https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/2.0",
+    transaction_id="txn-mvp01-20200325-00004",
     subarray_id=1,
     mccs=MCCSAllocate(
         subarray_beam_ids=[1],
@@ -209,7 +217,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
 )
 
 INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """{
-  "interface": "https://schema.skatelescope.org/ska-low-tmc-assignresources/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/999999.0",
   "subarray_id": 1,
   "mccs": {
     "subarray_beam_ids": [1, 2, 3],
@@ -220,7 +228,7 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """{
 
 VALID_MID_ASSIGNRESOURCESRESPONSE_JSON = """
 {
-    "dish": {"receptorIDList_success": ["0001", "0002"]}
+    "dish": {"receptor_ids_allocated": ["0001", "0002"]}
 }
 """
 

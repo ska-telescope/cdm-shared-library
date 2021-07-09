@@ -1,12 +1,15 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
-import copy
 
-import pytest
 from datetime import timedelta
 
-from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
+import pytest
+
+from ska_tmc_cdm.messages.subarray_node.configure import (
+    ConfigureRequest,
+    SCHEMA
+)
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     ReceiverBand,
@@ -34,83 +37,91 @@ from .. import utils
 
 VALID_MID_CONFIGURE_JSON = """
 {
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.0",
+  "transaction_id": "12345",
   "pointing": {
     "target": {
-      "system": "ICRS",
-      "name": "M51",
-      "RA": "13:29:52.698",
+      "reference_frame": "ICRS",
+      "target_name": "M51",
+      "ra": "13:29:52.698",
       "dec": "+47:11:42.93"
     }
   },
   "dish": {
-    "receiverBand": "1"
+    "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
     "subarray": {
-      "subarrayName": "science period 23"
+      "subarray_name": "science period 23"
     },
     "common": {
-      "id": "sbi-mvp01-20200325-00001-science_A",
-      "frequencyBand": "1",
-      "subarrayID": 1
+      "config_id": "sbi-mvp01-20200325-00001-science_A",
+      "frequency_band": "1",
+      "subarray_id": 1
     },
     "cbf": {
       "fsp": [
         {
-          "fspID": 1,
-          "functionMode": "CORR",
-          "frequencySliceID": 1,
-          "integrationTime": 1400,
-          "outputLinkMap": [[0,0], [200,1]],
-          "corrBandwidth": 0,
-          "channelAveragingMap": [[0, 2], [744, 0]],
-          "fspChannelOffset": 0
+          "fsp_id": 1,
+          "function_mode": "CORR",
+          "frequency_slice_id": 1,
+          "integration_factor": 10,
+          "output_link_map": [[0,0], [200,1]],
+          "zoom_factor": 0,
+          "channel_averaging_map": [[0, 2], [744, 0]],
+          "channel_offset": 0
         },
         {
-          "fspID": 2,
-          "functionMode": "CORR",
-          "frequencySliceID": 2,
-          "integrationTime": 1400,
-          "corrBandwidth": 1,
-          "outputLinkMap": [[0,4], [200,5]],
-          "channelAveragingMap": [[0, 2], [744, 0]],
-          "fspChannelOffset": 744,
-          "zoomWindowTuning": 4700000
+          "fsp_id": 2,
+          "function_mode": "CORR",
+          "frequency_slice_id": 2,
+          "integration_factor": 10,
+          "zoom_factor": 1,
+          "output_link_map": [[0,4], [200,5]],
+          "channel_averaging_map": [[0, 2], [744, 0]],
+          "channel_offset": 744,
+          "zoom_window_tuning": 4700000
         }
       ]
     }
   },
   "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/2.0",
     "scan_type": "science_A"
   },
   "tmc": {
-    "scanDuration": 10.0
+    "scan_duration": 10.0
   }
 }
 """
 
 VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/2.0",
+    transaction_id="12345",
     pointing=PointingConfiguration(
         Target(
             ra="13:29:52.698",
             dec="+47:11:42.93",
-            name="M51",
-            frame="icrs",
+            target_name="M51",
+            reference_frame="icrs",
             unit=("hourangle", "deg"),
         )
     ),
     dish=DishConfiguration(
         receiver_band=ReceiverBand.BAND_1
     ),
-    sdp=SDPConfiguration("science_A"),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/2.0",
+        scan_type="science_A"
+    ),
     csp=CSPConfiguration(
-        interface="https://schema.skatelescope.org/ska-csp-configure/1.0",
+        interface="https://schema.skao.int/ska-csp-configure/2.0",
         subarray_config=SubarrayConfiguration('science period 23'),
         common_config=CommonConfiguration(
-            "sbi-mvp01-20200325-00001-science_A",
-            ReceiverBand.BAND_1,
-            1
+            config_id="sbi-mvp01-20200325-00001-science_A",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1
         ),
         cbf_config=CBFConfiguration(
             [
@@ -118,20 +129,20 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     1,
                     FSPFunctionMode.CORR,
                     1,
-                    1400,
+                    10,
                     0,
                     channel_averaging_map=[(0, 2), (744, 0)],
-                    fsp_channel_offset=0,
+                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     2,
                     FSPFunctionMode.CORR,
                     2,
-                    1400,
+                    10,
                     1,
                     channel_averaging_map=[(0, 2), (744, 0)],
-                    fsp_channel_offset=744,
+                    channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
                     zoom_window_tuning=4700000,
                 )
@@ -143,156 +154,10 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     )
 )
 
-VALID_MID_CONFIGURE_PRE_ADR18_JSON = """
-{
-  "pointing": {
-    "target": {
-      "system": "ICRS",
-      "name": "M51",
-      "RA": "13:29:52.698",
-      "dec": "+47:11:42.93"
-    }
-  },
-  "dish": {
-    "receiverBand": "1"
-  },
-  "csp":{
-    "id": "sbi-mvp01-20200325-00001-science_A",
-    "frequencyBand": "1",
-    "fsp": [
-      {
-        "fspID": 1,
-        "functionMode": "CORR",
-        "frequencySliceID": 1,
-        "integrationTime": 1400,
-        "corrBandwidth": 0,
-        "channelAveragingMap": [[0,2], [744,0]],
-        "fspChannelOffset": 0,
-        "outputLinkMap": [[0,0], [200,1]]
-      },
-      {
-        "fspID": 2,
-        "functionMode": "CORR",
-        "frequencySliceID": 2,
-        "integrationTime": 1400,
-        "corrBandwidth": 1,
-        "channelAveragingMap": [[0,2], [744,0]],
-        "fspChannelOffset": 744,
-        "outputLinkMap": [[0,4], [200,5]],
-        "zoomWindowTuning": 4700000
-      }
-    ]
-  },
-  "sdp": {
-    "scan_type": "science_A"
-  },
-  "tmc": {
-    "scanDuration": 10.0
-  }
-}
-"""
-
-# CSP had a different format prior to ADR-18
-VALID_MID_CONFIGURE_PRE_ADR18_OBJECT = copy.deepcopy(VALID_MID_CONFIGURE_OBJECT)
-VALID_MID_CONFIGURE_PRE_ADR18_OBJECT.csp = CSPConfiguration(
-    csp_id="sbi-mvp01-20200325-00001-science_A",
-    frequency_band=ReceiverBand.BAND_1,
-    fsp_configs=[
-        FSPConfiguration(
-            1,
-            FSPFunctionMode.CORR,
-            1,
-            1400,
-            0,
-            channel_averaging_map=[(0, 2), (744, 0)],
-            fsp_channel_offset=0,
-            output_link_map=[(0, 0), (200, 1)],
-        ),
-        FSPConfiguration(
-            2,
-            FSPFunctionMode.CORR,
-            2,
-            1400,
-            1,
-            channel_averaging_map=[(0, 2), (744, 0)],
-            fsp_channel_offset=744,
-            output_link_map=[(0, 4), (200, 5)],
-            zoom_window_tuning=4700000,
-        )
-    ]
-)
-
-VALID_MID_NO_CSP_CHANAVGMAP_JSON = """
-{
-  "pointing": {
-    "target": {
-      "system": "ICRS",
-      "name": "M51",
-      "RA": "13:29:52.698",
-      "dec": "+47:11:42.93"
-    }
-  },
-  "dish": {
-    "receiverBand": "1"
-  },
-  "csp":{
-    "id": "sbi-mvp01-20200325-00001-science_A",
-    "frequencyBand": "1",
-    "fsp": [
-      {
-        "fspID": 1,
-        "functionMode": "CORR",
-        "frequencySliceID": 1,
-        "integrationTime": 1400,
-        "corrBandwidth": 0
-      }
-    ]
-  },
-  "sdp": {
-    "scan_type": "science_A"
-  },
-  "tmc": {
-    "scanDuration": 10.0
-  }
-}
-"""
-
-VALID_MID_NO_CSP_CHANAVGMAP_OBJECT = ConfigureRequest(
-    pointing=PointingConfiguration(
-        Target(
-            ra="13:29:52.698",
-            dec="+47:11:42.93",
-            name="M51",
-            frame="icrs",
-            unit=("hourangle", "deg"),
-        )
-    ),
-    dish=DishConfiguration(
-        receiver_band=ReceiverBand.BAND_1
-    ),
-    sdp=SDPConfiguration("science_A"),
-    csp=CSPConfiguration(
-        csp_id="sbi-mvp01-20200325-00001-science_A",
-        frequency_band=ReceiverBand.BAND_1,
-        fsp_configs=[
-            FSPConfiguration(
-                1,
-                FSPFunctionMode.CORR,
-                1,
-                1400,
-                0,
-                channel_averaging_map=None
-            )
-        ]
-    ),
-    tmc=TMCConfiguration(
-        scan_duration=timedelta(seconds=10)
-    )
-)
 
 VALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
   "mccs": {
     "stations":[
       {
@@ -313,8 +178,8 @@ VALID_LOW_CONFIGURE_JSON = """
         ],
         "update_rate": 0.0,
         "target": {
-          "system": "horizon",
-          "name": "DriftScan",
+          "reference_frame": "horizon",
+          "target_name": "DriftScan",
           "az": 180.0,
           "el": 45.0
         },
@@ -330,7 +195,7 @@ VALID_LOW_CONFIGURE_JSON = """
 """
 
 VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+    interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
     mccs=MCCSConfiguration(
         station_configs=[
             StnConfiguration(1),
@@ -353,14 +218,13 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
         ]
     ),
     tmc=TMCConfiguration(
-        scan_duration=timedelta(seconds=10),
-        is_ska_mid=False
+        scan_duration=timedelta(seconds=10)
     )
 )
 
 INVALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
   "mccs": {
     "stations":[
       {
@@ -374,8 +238,8 @@ INVALID_LOW_CONFIGURE_JSON = """
         "channels": [[1,2]],
         "update_rate": 1.0,
         "target": {
-              "system": "horizon",
-              "name": "DriftScan",
+              "reference_frame": "horizon",
+              "target_name": "DriftScan",
               "az": 180.0,
               "el": 45.0
         },
@@ -389,8 +253,9 @@ INVALID_LOW_CONFIGURE_JSON = """
 
 VALID_MID_DISH_ONLY_JSON = """
 {
+    "interface": """ + f'"{SCHEMA}"' + """,
     "dish": {
-        "receiverBand": "1"
+        "receiver_band": "1"
     }
 }
 """
@@ -399,7 +264,11 @@ VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
     dish=DishConfiguration(ReceiverBand.BAND_1)
 )
 
-VALID_NULL_JSON = "{}"
+VALID_NULL_JSON = """
+{
+    "interface": """ + f'"{SCHEMA}"' + """
+}
+"""
 
 VALID_NULL_OBJECT = ConfigureRequest()
 
@@ -418,19 +287,9 @@ def low_invalidator(o: ConfigureRequest):
          VALID_MID_CONFIGURE_JSON,
          None),  # no validation on MID
         (ConfigureRequestSchema,
-         VALID_MID_CONFIGURE_PRE_ADR18_OBJECT,
-         None,  # no validation on MID
-         VALID_MID_CONFIGURE_PRE_ADR18_JSON,
-         None),  # no validation on MID
-        (ConfigureRequestSchema,
          VALID_MID_DISH_ONLY_OBJECT,
          None,  # no validation on MID
          VALID_MID_DISH_ONLY_JSON,
-         None),  # no validation on MID
-        (ConfigureRequestSchema,
-         VALID_MID_NO_CSP_CHANAVGMAP_OBJECT,
-         None,  # no validation on MID
-         VALID_MID_NO_CSP_CHANAVGMAP_JSON,
          None),  # no validation on MID
         (ConfigureRequestSchema,
          VALID_NULL_OBJECT,
@@ -444,7 +303,7 @@ def low_invalidator(o: ConfigureRequest):
          INVALID_LOW_CONFIGURE_JSON),  # no validation on MID
     ]
 )
-def test_releaseresources_serialisation_and_validation(
+def test_configure_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json
 ):
     """

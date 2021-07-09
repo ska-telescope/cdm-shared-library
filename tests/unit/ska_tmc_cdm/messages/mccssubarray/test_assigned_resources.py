@@ -10,7 +10,7 @@ def test_assignresourcesrequest_object_equality():
     considered equal.
     """
     constructor_args = dict(
-        interface="https://schema.skatelescope.org/ska-low-mccs-assignedresources/1.0",
+        interface="https://schema.skao.int/ska-low-mccs-assignedresources/2.0",
         subarray_beam_ids=[1],
         station_ids=[1, 2],
         channel_blocks=[3],
@@ -23,7 +23,7 @@ def test_assignresourcesrequest_object_equality():
 
     # objects where any property differs are considered unequal
     different_args = dict(
-        interface="https://schema.skatelescope.org/ska-low-mccs-assignedresources/2.0",
+        interface="https://schema.skao.int/ska-low-mccs-assignedresources/99.0",
         subarray_beam_ids=[2],
         station_ids=[1, 2, 3],
         channel_blocks=[4],
@@ -40,7 +40,7 @@ def test_assignresourcesrequest_equality_with_other_objects():
     types.
     """
     constructor_args = dict(
-        interface="https://schema.skatelescope.org/ska-low-mccs-assignedresources/1.0",
+        interface="https://schema.skao.int/ska-low-mccs-assignedresources/2.0",
         subarray_beam_ids=[1],
         station_ids=[1, 2],
         channel_blocks=[3],

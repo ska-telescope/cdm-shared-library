@@ -79,15 +79,15 @@ are:
     ...
     "pointing": {
       "target": {
-        "system":"ICRS",
+        "reference_frame":"ICRS",
         "name": "NGC6251",
-        "RA": 1.0,
+        "ra": 1.0,
         "dec": 1.0
       },
     },
     ...
     "dish": {
-      "receiverBand": "1"
+      "receiver_band": "1"
     }
     ....
   }
@@ -110,7 +110,7 @@ example JSON command argument that this code can model.
   # JSON modelled specifically by tmc.py
   {
     "tmc": {
-      "scanDuration": 10.0,
+      "scan_duration": 10.0,
     }
   }
 
@@ -133,37 +133,49 @@ of a full CDM JSON object, the elements this maps to are:
   {
     ...
     "csp": {
-      "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+      "interface": "https://schema.skao.int/ska-csp-configure/2.0",
       "subarray": {
-        "subarrayName": "science period 23"
+        "subarray_name": "science period 23"
       },
       "common": {
-        "id": "sbi-mvp01-20200325-00001-science_A",
-        "frequencyBand": "1",
-        "subarrayID": 1
+        "config_id": "sbi-mvp01-20200325-00001-science_A",
+        "frequency_band": "1",
+        "subarray_id": 1
       },
       "cbf": {
         "fsp": [
           {
-            "fspID": 1,
-            "functionMode": "CORR",
-            "frequencySliceID": 1,
-            "integrationTime": 1400,
-            "outputLinkMap": [[0,0], [200,1]],
-            "corrBandwidth": 0,
-            "channelAveragingMap": [[0, 2], [744, 0]],
-            "fspChannelOffset": 0
+            "fsp_id": 1,
+            "function_mode": "CORR",
+            "frequency_slice_id": 1,
+            "integration_factor": 10,
+            "output_link_map": [
+              [0,0],
+              [200,1]
+            ],
+            "zoom_factor": 0,
+            "channel_averaging_map": [
+              [0, 2],
+              [744, 0]
+            ],
+            "channel_offset": 0
           },
           {
-            "fspID": 2,
-            "functionMode": "CORR",
-            "frequencySliceID": 2,
-            "integrationTime": 1400,
-            "corrBandwidth": 1,
-            "outputLinkMap": [[0,4], [200,5]],
-            "channelAveragingMap": [[0, 2], [744, 0]],
-            "fspChannelOffset": 744,
-            "zoomWindowTuning": 4700000
+            "fsp_id": 2,
+            "function_mode": "CORR",
+            "frequency_slice_id": 2,
+            "integration_factor": 10,
+            "zoom_factor": 1,
+            "output_link_map": [
+              [0,4],
+             [200,5]
+            ],
+            "channel_averaging_map": [
+              [0, 2],
+              [744, 0]
+            ],
+            "channel_offset": 744,
+            "zoom_window_tuning": 4700000
           }
         ]
       }
@@ -224,40 +236,15 @@ of a full CDM JSON object, the elements this maps to are:
         "subarray_beams": [
           {
             "subarray_beam_id": 1,
-            "station_ids": [
-              1,
-              2
-            ],
+            "station_ids": [1, 2],
             "update_rate": 0,
             "channels": [
-              [
-                0,
-                8,
-                1,
-                1
-              ],
-              [
-                8,
-                8,
-                2,
-                1
-              ],
-              [
-                24,
-                16,
-                2,
-                1
-              ]
+              [0, 8, 1, 1],
+              [8, 8, 2, 1],
+              [24, 16, 2, 1]
             ],
-            "antenna_weights": [
-              1,
-              1,
-              1
-            ],
-            "phase_centre": [
-              0,
-              0
-            ],
+            "antenna_weights": [1, 1, 1],
+            "phase_centre": [0, 0],
             "target": {
               "system": "HORIZON",
               "name": "DriftScan",
@@ -286,7 +273,7 @@ Examples below depict a populated sub-array and an empty one:
 .. code:: JSON
 
     {
-        "interface": "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+        "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/2.0",
         "mccs": {
             "subarray_beam_ids": [1],
             "station_ids": [[1,2]],
@@ -297,7 +284,7 @@ Examples below depict a populated sub-array and an empty one:
 .. code:: JSON
 
     {
-        "interface": "https://schema.skatelescope.org/ska-low-tmc-assignedresources/1.0",
+        "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/2.0",
         "mccs": {
             "subarray_beam_ids": [],
             "station_ids": [],
@@ -320,16 +307,9 @@ Below is an example JSON command argument that this code can model.
 .. code-block:: JSON
 
   {
-    "id": 2
-  }
-
-Example scan JSON for LOW
-
-.. code-block:: JSON
-
-  {
-    "interface": "https://schema.skatelescope.org/ska-low-tmc-scan/1.0",
-    "scan_id": 1
+    "interface": "https://schema.skao.int/ska-tmc-scan/2.0",
+    "transaction_id": "txn-12345",
+    "scan_id": 2
   }
 
 
@@ -341,56 +321,57 @@ Example configuration JSON for MID
   {
     "pointing": {
       "target": {
-        "system":"ICRS",
+        "reference_frame":"ICRS",
         "name": "NGC1068",
-        "RA": 0.70984,
+        "ra": 0.70984,
         "dec": 0.000233
       },
     },
     "dish": {
-      "receiverBand": "1"
+      "receiver_band": "1"
     },
     "csp": {
-      "interface": "https://schema.skatelescope.org/ska-csp-configure/1.0",
+      "interface": "https://schema.skao.int/ska-csp-configure/2.0",
       "subarray": {
-        "subarrayName": "science period 23"
+        "subarray_name": "science period 23"
       },
       "common": {
         "id": "sbi-mvp01-20200325-00001-science_A",
         "frequencyBand": "1",
-        "subarrayID": 1
+        "subarray_id": 1
       },
       "cbf": {
         "fsp": [
           {
-            "fspID": 1,
-            "functionMode": "CORR",
-            "frequencySliceID": 1,
-            "integrationTime": 1400,
-            "outputLinkMap": [[0,0], [200,1]],
-            "corrBandwidth": 0,
-            "channelAveragingMap": [[0, 2], [744, 0]],
-            "fspChannelOffset": 0
+            "fsp_id": 1,
+            "function_mode": "CORR",
+            "frequency_slice_id": 1,
+            "integration_factor": 10,
+            "output_link_map": [[0,0], [200,1]],
+            "zoom_factor": 0,
+            "channel_averaging_map": [[0, 2], [744, 0]],
+            "channel_offset": 0
           },
           {
-            "fspID": 2,
-            "functionMode": "CORR",
-            "frequencySliceID": 2,
-            "integrationTime": 1400,
-            "corrBandwidth": 1,
-            "outputLinkMap": [[0,4], [200,5]],
-            "channelAveragingMap": [[0, 2], [744, 0]],
-            "fspChannelOffset": 744,
-            "zoomWindowTuning": 4700000
+            "fsp_id": 2,
+            "function_mode": "CORR",
+            "frequency_slice_id": 2,
+            "integration_factor": 10,
+            "zoom_factor": 1,
+            "output_link_map": [[0,4], [200,5]],
+            "channel_averaging_map": [[0, 2], [744, 0]],
+            "channel_offset": 744,
+            "zoom_window_tuning": 4700000
           }
         ]
       }
     },
     "sdp": {
+      "interface": "https://schema.skao.int/ska-sdp-configure/2.0",
       "scan_type": "science_A"
     },
     "tmc": {
-      "scanDuration": 10.0,
+      "scan_duration": 10.0,
     }
   }
 
@@ -400,7 +381,7 @@ Example configuration JSON for LOW
 .. code-block:: JSON
 
     {
-      "interface": "https://schema.skatelescope.org/ska-low-tmc-configure/1.0",
+      "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
       "mccs": {
         "stations":[
           {
@@ -430,9 +411,6 @@ Example configuration JSON for LOW
             }
           }
         ]
-      },
-      "sdp": {
-        // TMC can ignore any SDP spec this PI
       },
       "tmc": {
         "scan_duration": 10.0

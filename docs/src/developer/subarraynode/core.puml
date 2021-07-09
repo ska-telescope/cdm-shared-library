@@ -7,7 +7,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 
 		class Target {
 			coord : astropy.SkyCoord
-			name : str
+			target_name : str
 		}
 
 		class PointingConfiguration

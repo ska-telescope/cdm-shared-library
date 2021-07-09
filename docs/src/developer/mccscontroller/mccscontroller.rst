@@ -39,7 +39,7 @@ Example JSON input modelled by ``MCCSController.Allocate``:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skatelescope.org/ska-low-mccs-assignresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-mccs-assignresources/2.0",
     "subarray_id": 1,
     "subarray_beam_ids": [1],
     "station_ids": [[1,2]],
@@ -65,7 +65,7 @@ from sub-array #1:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
+    "interface": "https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
     "subarray_id": 1,
     "release_all": true
   }

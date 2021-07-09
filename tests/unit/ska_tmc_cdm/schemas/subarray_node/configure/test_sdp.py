@@ -2,34 +2,38 @@
 Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.sdp module.
 """
 
+import pytest
+
 from ska_tmc_cdm.messages.subarray_node.configure import SDPConfiguration
 from ska_tmc_cdm.schemas.subarray_node.configure.sdp import SDPConfigurationSchema
-from ska_tmc_cdm.utils import json_is_equal
+from ... import utils
 
-VALID_SDP_SCAN_TYPE = '{"scan_type": "science_A"}'
+VALID_JSON = """
+{
+    "interface": "https://schema.skao.int/ska-sdp-configure/2.0",
+    "scan_type": "science_A" 
+}
+"""
+
+VALID_OBJECT = SDPConfiguration(scan_type="science_A")
 
 
-def test_marshall_sdp_scan_type():
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    [
+        (SDPConfigurationSchema,
+         VALID_OBJECT,
+         None,
+         VALID_JSON,
+         None),
+    ],
+)
+def test_releaseresources_serialisation_and_validation(
+    schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
     """
-    Verify that JSON can be marshalled to JSON correctly
+    Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    scan_type = "science_A"
-    sdp_configure = SDPConfiguration(scan_type)
-    schema = SDPConfigurationSchema()
-    result = schema.dumps(sdp_configure)
-
-    assert json_is_equal(result, VALID_SDP_SCAN_TYPE)
-
-
-def test_unmarshall_sdp_scan_type():
-    """
-    Verify that JSON can be unmarshalled to JSON correctly
-    """
-    schema = SDPConfigurationSchema()
-    result = schema.loads(VALID_SDP_SCAN_TYPE)
-
-    scan_type = "science_A"
-    expected = SDPConfiguration(scan_type)
-
-    assert isinstance(result.scan_type, str)
-    assert expected == result
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    )

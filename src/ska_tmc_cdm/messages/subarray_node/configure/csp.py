@@ -4,7 +4,7 @@ aspects of CSP configuration that may be specified in a SubArrayNode.configure
 command.
 """
 import enum
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 from . import core
 
@@ -36,11 +36,11 @@ class FSPConfiguration:
             fsp_id: int,
             function_mode: FSPFunctionMode,
             frequency_slice_id: int,
-            integration_time: int,
-            corr_bandwidth: int,
+            integration_factor: int,
+            zoom_factor: int,
             channel_averaging_map: List[Tuple] = None,
             output_link_map: List[Tuple] = None,
-            fsp_channel_offset: int = None,
+            channel_offset: int = None,
             zoom_window_tuning: int = None
     ):
         """
@@ -51,12 +51,12 @@ class FSPConfiguration:
         :param fsp_id: FSP configuration ID [1..27]
         :param function_mode: FSP function mode
         :param frequency_slice_id: frequency slicer ID [1..26]
-        :param corr_bandwidth: correlator bandwidth [0..6]
-        :param integration_time: integration time in ms
+        :param zoom_factor: zoom factor [0..6]
+        :param integration_factor: integration factor [1..10]
         :param channel_averaging_map: Optional channel averaging map
-        :param output_link_map: Optional output_link_map
-        :param fsp_channel_offset: Optional fsp_channel_offset
-        :param zoom_window_tuning: Optional zoom_window_tuning
+        :param output_link_map: Optional output link map
+        :param channel_offset: Optional FSP channel offset
+        :param zoom_window_tuning: Optional zoom window tuning
 
         :raises ValueError: Invalid parameter values entered
         """
@@ -74,24 +74,19 @@ class FSPConfiguration:
             raise ValueError(msg)
         self.frequency_slice_id = frequency_slice_id
 
-        if not 0 <= corr_bandwidth <= 6:
-            msg = "Correlator bandwidth must be in range 0..6. Got {}".format(
-                corr_bandwidth
+        if not 0 <= zoom_factor <= 6:
+            msg = "Zoom factor must be in range 0..6. Got {}".format(
+                zoom_factor
             )
             raise ValueError(msg)
-        self.corr_bandwidth = corr_bandwidth
+        self.zoom_factor = zoom_factor
 
-        if integration_time % 140:
-            msg = "Integration time must be a multiple of 140. Got {}".format(
-                integration_time
+        if not 1 <= integration_factor <= 10:
+            msg = "Integration factor must in range 1..10. Got {}" "".format(
+                integration_factor
             )
             raise ValueError(msg)
-        if not 1 <= (integration_time / 140) <= 10:
-            msg = "Integration time must in range 1..10 * 140. Got {}" "".format(
-                integration_time
-            )
-            raise ValueError(msg)
-        self.integration_time = integration_time
+        self.integration_factor = integration_factor
 
         if channel_averaging_map and len(channel_averaging_map) > 20:
             msg = (
@@ -104,7 +99,7 @@ class FSPConfiguration:
 
         # TODO: update enforcements for output_link_map
         self.output_link_map = output_link_map
-        self.fsp_channel_offset = fsp_channel_offset
+        self.channel_offset = channel_offset
         self.zoom_window_tuning = zoom_window_tuning
 
     def __eq__(self, other):
@@ -114,11 +109,11 @@ class FSPConfiguration:
                 self.fsp_id == other.fsp_id
                 and self.function_mode == other.function_mode
                 and self.frequency_slice_id == other.frequency_slice_id
-                and self.corr_bandwidth == other.corr_bandwidth
-                and self.integration_time == other.integration_time
+                and self.zoom_factor == other.zoom_factor
+                and self.integration_factor == other.integration_factor
                 and self.channel_averaging_map == other.channel_averaging_map
                 and self.output_link_map == other.output_link_map
-                and self.fsp_channel_offset == other.fsp_channel_offset
+                and self.channel_offset == other.channel_offset
                 and self.zoom_window_tuning == other.zoom_window_tuning
         )
 
@@ -150,28 +145,32 @@ class CommonConfiguration:
 
     def __init__(
             self,
-            csp_id: str,
+            config_id: str,
             frequency_band: core.ReceiverBand,
             subarray_id: int = None,
+            band_5_tuning: Optional[List[float]] = None
     ):
         """
         Create a new CSPConfiguration.
 
-        :param csp_id: an ID for CSP configuration
+        :param config_id: CSP configuration ID
         :param frequency_band: the frequency band to set
         :param subarray_id: an ID of sub-array device
+        :param band_5_tuning: band 5 receiver to set (optional)
         """
-        self.csp_id = csp_id
+        self.config_id = config_id
         self.frequency_band = frequency_band
         self.subarray_id = subarray_id
+        self.band_5_tuning = band_5_tuning
 
     def __eq__(self, other):
         if not isinstance(other, CommonConfiguration):
             return False
         return (
-                self.csp_id == other.csp_id
+                self.config_id == other.config_id
                 and self.frequency_band == other.frequency_band
                 and self.subarray_id == other.subarray_id
+                and self.band_5_tuning == other.band_5_tuning
         )
 
 
@@ -222,15 +221,11 @@ class CSPConfiguration:
     def __init__(
             self,
             interface: str = None,
-            csp_id: str = None,
-            frequency_band: core.ReceiverBand = None,
-            fsp_configs: List[FSPConfiguration] = None,
             subarray_config: SubarrayConfiguration = None,
             common_config: CommonConfiguration = None,
             cbf_config: CBFConfiguration = None,
             pst_config: PSTConfiguration = None,
             pss_config: PSSConfiguration = None
-
     ):
         """
         Create a new CSPConfiguration, In order to support backward
@@ -238,9 +233,6 @@ class CSPConfiguration:
         support of new attributes as per ADR-18
 
         :param interface: url string to determine JsonSchema version
-        :param csp_id: an ID for CSP configuration
-        :param frequency_band: the frequency band to set
-        :param fsp_configs: the FSP configurations to set
         :param subarray_config: Sub-array configuration to set
         :param common_config: the common CSP elemenets to set
         :param cbf_config: the CBF configurations to set
@@ -248,35 +240,17 @@ class CSPConfiguration:
         :param pss_config: the PSS configurations to set
         """
         self.interface = interface
-        self.csp_id = csp_id
-        self.frequency_band = frequency_band
-        self.fsp_configs = fsp_configs
         self.subarray_config = subarray_config
         self.common_config = common_config
         self.cbf_config = cbf_config
         self.pst_config = pst_config
         self.pss_config = pss_config
 
-        if (self.interface is not None
-            or self.subarray_config is not None
-            or self.cbf_config is not None
-        ) and (self.csp_id is not None
-               or self.frequency_band is not None
-               or self.fsp_configs is not None
-        ):
-            raise ValueError(
-                "Can't configure old CSP and ADR-18 supported CSP attributes "
-                "in the same call"
-            )
-
     def __eq__(self, other):
         if not isinstance(other, CSPConfiguration):
             return False
         return (
                 self.interface == other.interface
-                and self.csp_id == other.csp_id
-                and self.frequency_band == other.frequency_band
-                and self.fsp_configs == other.fsp_configs
                 and self.subarray_config == other.subarray_config
                 and self.common_config == other.common_config
                 and self.cbf_config == other.cbf_config

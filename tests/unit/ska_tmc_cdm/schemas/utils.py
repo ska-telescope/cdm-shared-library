@@ -2,9 +2,9 @@ import copy
 
 import pytest
 
-from ska_tmc_cdm.exceptions import JsonValidationError
+from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
-from ska_tmc_cdm.utils import json_is_equal
+from ska_tmc_cdm.utils import assert_json_is_equal
 
 
 def test_schema_serialisation_and_validation(
@@ -42,20 +42,24 @@ def test_schema_serialisation_and_validation(
 
 def test_marshal(schema_cls, instance, valid_json):
     """
-    Verify that an object instance is marshaled to JSON correctly.
+    Verify that an object instance is marshalled to JSON correctly.
     """
-    schema = get_schema(schema_cls, strictness=2)
-    json_str = schema.dumps(instance)
-    assert json_is_equal(json_str, valid_json)
+    # schema with strictness=1 is used so that marshalling continues when
+    # SchemaNotFound is raised
+    schema = get_schema(schema_cls, strictness=1)
+    marshalled = schema.dumps(instance)
+    assert_json_is_equal(marshalled, valid_json)
 
 
 def test_unmarshal(schema_cls, valid_json, instance):
     """
-    Verify that JSON is correctly unmarshaled to the expected instance.
+    Verify that JSON is correctly unmarshalled to the expected instance.
     """
-    schema = get_schema(schema_cls, strictness=2)
-    unmarshaled = schema.loads(valid_json)
-    assert unmarshaled == instance
+    # schema with strictness=1 is used so that marshalling continues when
+    # SchemaNotFound is raised
+    schema = get_schema(schema_cls, strictness=1)
+    unmarshalled = schema.loads(valid_json)
+    assert unmarshalled == instance
 
 
 def test_deserialising_invalid_json_raises_exception_when_strict(schema_cls, invalid_json):
@@ -74,13 +78,16 @@ def test_deserialising_invalid_json_raises_exception_when_strict(schema_cls, inv
 def test_serialising_valid_object_does_not_raise_exception_when_strict(schema_cls, instance):
     """
     Verifies that marshaling a valid instance does not result in a validation
-    error when schema validation is set to strict.
+    error when the schema exists and schema validation is set to strict.
 
     :param schema_cls: Marshmallow schema class for object type
     :param instance: valid object
     """
     schema = get_schema(schema_cls, strictness=2)
-    _ = schema.dumps(instance)
+    try:
+        _ = schema.dumps(instance)
+    except SchemaNotFound:
+        pass
 
 
 def test_serialising_invalid_object_raises_exception_when_strict(schema_cls, instance, modifier_fn):

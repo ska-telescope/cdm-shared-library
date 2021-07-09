@@ -23,9 +23,9 @@ class Target:
     OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
 
     #  pylint: disable=too-many-arguments
-    def __init__(self, ra, dec, name="", frame="icrs", unit=("hourangle", "deg")):
-        self.coord = SkyCoord(ra, dec, unit=unit, frame=frame)
-        self.name = name
+    def __init__(self, ra, dec, target_name="", reference_frame="icrs", unit=("hourangle", "deg")):
+        self.coord = SkyCoord(ra, dec, unit=unit, frame=reference_frame)
+        self.target_name = target_name
 
     def __eq__(self, other):
         if not isinstance(other, Target):
@@ -37,26 +37,26 @@ class Target:
         sep = self.coord.separation(other.coord)
 
         return (
-            self.name == other.name
-            and self.coord.frame.name == other.coord.frame.name
-            and sep.radian < self.OFFSET_MARGIN_IN_RAD
+                self.target_name == other.target_name
+                and self.coord.frame.name == other.coord.frame.name
+                and sep.radian < self.OFFSET_MARGIN_IN_RAD
         )
 
     def __repr__(self):
         raw_ra = self.coord.ra.value
         raw_dec = self.coord.dec.value
         units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
-        frame = self.coord.frame.name
-        name = self.name
-        return "<Target(ra={!r}, dec={!r}, name={!r}, frame={!r}, unit={!r})>".format(
-            raw_ra, raw_dec, name, frame, units
+        reference_frame = self.coord.frame.name
+        target_name = self.target_name
+        return "<Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r})>".format(
+            raw_ra, raw_dec, target_name, reference_frame, units
         )
 
     def __str__(self):
-        frame = self.coord.frame.name
-        name = self.name
+        reference_frame = self.coord.frame.name
+        target_name = self.target_name
         hmsdms = self.coord.to_string(style="hmsdms")
-        return "<Target: {!r} ({} {})>".format(name, hmsdms, frame)
+        return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
 
 class PointingConfiguration:  # pylint: disable=too-few-public-methods

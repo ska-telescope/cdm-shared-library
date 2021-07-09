@@ -20,7 +20,6 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     scan_duration = fields.Float()
-    scanDuration = fields.Float()
 
     @pre_dump
     def convert_scan_duration_timedelta_to_float(
@@ -38,14 +37,6 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         copied.scan_duration = in_secs
         return copied
 
-    @pre_dump
-    def do_it(self, o: TMCConfiguration, **_):
-        o = copy.deepcopy(o)
-        if o.is_ska_mid:
-            o.scanDuration = o.scan_duration
-            delattr(o, 'scan_duration')
-        return o
-
     @post_load
     def convert_scan_duration_number_to_timedelta(
         self, data, **_
@@ -57,15 +48,9 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: TMCConfiguration instance populated to match JSON
         """
-        is_low = 'scan_duration' in data
-        is_mid = 'scanDuration' in data
-
-        if is_low:
-            scan_duration = timedelta(seconds=data.get('scan_duration'))
-        if is_mid:
-            scan_duration = timedelta(seconds=data.get('scanDuration'))
+        scan_duration = timedelta(seconds=data.get('scan_duration'))
 
         tmc_config = TMCConfiguration(
-            scan_duration=scan_duration, is_ska_mid=is_mid
+            scan_duration=scan_duration
         )
         return tmc_config

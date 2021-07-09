@@ -5,7 +5,8 @@ package ska_tmc_cdm.messages.subarray_node {
 	package scan.py <<Rectangle>> {
 		class ScanRequest {
 			interface : str
-      scan_id : int
+			transaction_id: str
+            scan_id : int
 	  	}
 		note top of ScanRequest
 			This class is the input argument

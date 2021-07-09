@@ -75,10 +75,10 @@ class ScanType:
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self, st_id, coordinate_system: str, ra: str, dec: str, channels: List[Channel]
+        self, scan_type_id, reference_frame: str, ra: str, dec: str, channels: List[Channel]
     ):
-        self.st_id = st_id
-        self.coordinate_system = coordinate_system
+        self.scan_type_id = scan_type_id
+        self.reference_frame = reference_frame
         self.ra = ra  # pylint: disable=invalid-name
         self.dec = dec
         self.channels = channels
@@ -87,11 +87,11 @@ class ScanType:
         if not isinstance(other, ScanType):
             return False
         return (
-            self.st_id == other.st_id
-            and self.coordinate_system == other.coordinate_system
-            and self.ra == other.ra
-            and self.dec == other.dec
-            and self.channels == other.channels
+                self.scan_type_id == other.scan_type_id
+                and self.reference_frame == other.reference_frame
+                and self.ra == other.ra
+                and self.dec == other.dec
+                and self.channels == other.channels
         )
 
 
@@ -145,22 +145,25 @@ class SDPConfiguration:
 
     def __init__(
         self,
-        sdp_id: str,
+        eb_id: str,
         max_length: float,
         scan_types: List[ScanType],
         processing_blocks: List[ProcessingBlockConfiguration],
+        interface: str = None,
     ):
-        self.sdp_id = sdp_id
+        self.eb_id = eb_id
         self.max_length = max_length
         self.scan_types = scan_types
         self.processing_blocks = processing_blocks
+        self.interface = interface
 
     def __eq__(self, other):
         if not isinstance(other, SDPConfiguration):
             return False
         return (
-            self.sdp_id == other.sdp_id
-            and self.max_length == other.max_length
-            and self.scan_types == other.scan_types
-            and self.processing_blocks == other.processing_blocks
+                self.eb_id == other.eb_id
+                and self.max_length == other.max_length
+                and self.scan_types == other.scan_types
+                and self.processing_blocks == other.processing_blocks
+                and self.interface == other.interface
         )

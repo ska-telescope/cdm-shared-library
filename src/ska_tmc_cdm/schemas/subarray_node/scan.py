@@ -1,31 +1,38 @@
 """
-The schemas module defines Marshmallow schemas that map CDM message classes
-and data model classes to/from a JSON representation.
+The ska_tmc_cdm.schemas.subarray_node.scan module contains Marshmallow schema
+that map ska_tmc_cdm.schemas.subarray_node.scan message classes to/from JSON.
 """
 
 from marshmallow import fields, post_load, post_dump
 
-import ska_tmc_cdm.messages.subarray_node.scan as scan_msgs
+from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
 __all__ = ["ScanRequestSchema"]
 
 
-@CODEC.register_mapping(scan_msgs.ScanRequest)
+@CODEC.register_mapping(ScanRequest)
 class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
     """
-    Create the Schema for ScanDuration using timedelta
+    ScanRequestSchema is the Marshmallow schema that marshals a ScanRequest
+    to/from JSON.
     """
 
+    # Message metadata and tracing fields ------------------------------------
+
+    # schema ID, e.g., https://schema.skao.int/ska-tmc-scan/1.0
     interface = fields.String()
-    # holds scan ID for MID
-    id = fields.Integer()
-    # holds scan ID for LOW
+    # optional transaction ID, used to trace commands through the system
+    transaction_id = fields.String(required=False)
+
+    # Message content fields -------------------------------------------------
+
+    # holds numeric scan ID
     scan_id = fields.Integer()
 
     @post_load
-    def create_scan_request(self, data, **_):  # pylint: disable=no-self-use
+    def create_scanrequest(self, data, **_):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ScanRequest
 
@@ -33,18 +40,14 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
         :param _: kwargs passed by Marshmallow
         :return: ScanRequest instance populated to match JSON
         """
+        interface = data["interface"]
+        transaction_id = data.get("transaction_id", None)
+        scan_id = data["scan_id"]
 
-        is_low = 'low' in data.get("interface", '')
-        if is_low:
-            scan_id = data["scan_id"]
-            interface = data["interface"]
-        else:
-            scan_id = data["id"]
-            interface = None
-
-        return scan_msgs.ScanRequest(
-            scan_id=scan_id,
-            interface=interface
+        return ScanRequest(
+            interface=interface,
+            transaction_id=transaction_id,
+            scan_id=scan_id
         )
 
     @post_dump
@@ -58,11 +61,5 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
         """
         # filter out nulls
         data = {k: v for k, v in data.items() if v is not None}
-
-        # set scan ID key name appropriately for telescope
-        is_low = 'low' in data.get('interface', '')
-        if not is_low:
-            data['id'] = data['scan_id']
-            del data['scan_id']
 
         return data

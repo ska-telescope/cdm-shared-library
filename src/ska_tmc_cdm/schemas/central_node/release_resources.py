@@ -24,11 +24,12 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
     """
 
     interface = fields.String()
+    transaction_id = fields.String()
     subarray_id = fields.Integer()
-    subarray_id_mid = fields.Integer(data_key="subarrayID")
     release_all = fields.Boolean()
-    release_all_mid = fields.Boolean(data_key="releaseALL")
-    dish = fields.Nested(DishAllocationSchema)
+    dish = fields.Pluck(
+        DishAllocationSchema, "receptor_ids", data_key="receptor_ids"
+    )
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -39,11 +40,11 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
     @post_dump
     def filter_args(self, data, **_):  # pylint: disable=no-self-use
         """
-        Filter Marshmallow's JSON based on the value of release_all_mid.
+        Filter Marshmallow's JSON based on the value of release_all.
 
-        If release_all_mid is True, other resource definitions should be stripped
+        If release_all is True, other resource definitions should be stripped
         from the request.
-        If release_all_mid for MID set to False, the 'release_all_mid' key
+        If release_all for MID set to False, the 'release_all' key
         itself should be stripped.
         If release_all_low for LOW set to False, the 'release_all_low' key
         itself should be stripped.
@@ -55,22 +56,19 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
         # If release_all_mid is True, other resources should be stripped - and
         # vice versa
 
-        is_low = data.get('subarray_id', None) is not None and \
-                 data.get('interface', None) is not None and \
-                 'low' in data['interface']
-        if not is_low:
-            data['subarrayID'] = data['subarray_id']
-            data['releaseALL'] = data['release_all']
-            del data['subarray_id']
-            del data['release_all']
+        # MID and LOW still have different schema for PI11. Eventually these
+        # schemas will be unified into a single schema, but for now we need
+        # to detect the difference and do some special handling.
+        is_mid = 'ska-tmc-low' not in data['interface']
 
+        if is_mid:
             # for MID, remove dish specifier when release all is True and vice
             # versa. We do not need to strip partial resources for LOW as only
             # full release is allowed.
-            if data["releaseALL"]:
-                del data["dish"]
+            if data["release_all"]:
+                del data["receptor_ids"]
             else:
-                del data["releaseALL"]
+                del data["release_all"]
 
         # Filter out  null values from JSON.
         data = {k: v for k, v in data.items() if v is not None}
@@ -88,20 +86,14 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
         :return: ReleaseResourcesRequest object populated from data
         """
         interface = data.get("interface", None)
+        transaction_id = data.get("transaction_id", None)
         subarray_id = data.get("subarray_id", None)
-        subarray_id_mid = data.get("subarray_id_mid", None)
         release_all = data.get("release_all", False)
-        release_all_mid = data.get("release_all_mid", False)
         dish_allocation = data.get("dish", None)
-
-        is_low = subarray_id is not None and interface is not None
-
-        if not is_low:
-            subarray_id = subarray_id_mid
-            release_all = release_all_mid
 
         return ReleaseResourcesRequest(
             interface=interface,
+            transaction_id=transaction_id,
             subarray_id=subarray_id,
             release_all=release_all,
             dish_allocation=dish_allocation,

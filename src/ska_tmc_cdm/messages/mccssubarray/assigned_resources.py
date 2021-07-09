@@ -9,7 +9,7 @@ from typing import List, Optional
 
 __all__ = ["AssignedResources"]
 
-SCHEMA = "https://schema.skatelescope.org/ska-low-mccs-assignedresources/1.0"
+SCHEMA = "https://schema.skao.int/ska-low-mccs-assignedresources/2.0"
 
 
 class AssignedResources:

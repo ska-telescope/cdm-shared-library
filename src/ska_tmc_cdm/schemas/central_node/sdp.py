@@ -59,8 +59,8 @@ class ScanTypeSchema(Schema):
     Marshmallow schema for the ScanType class.
     """
 
-    st_id = fields.String(data_key="id", required=True)
-    coordinate_system = fields.String(data_key="coordinate_system", required=True)
+    scan_type_id = fields.String(data_key="scan_type_id", required=True)
+    reference_frame = fields.String(data_key="reference_frame", required=True)
     ra = fields.String(data_key="ra", required=True)
     dec = fields.String(data_key="dec", required=True)
     channels = fields.Nested(ChannelSchema, data_key="channels", many=True)
@@ -74,12 +74,12 @@ class ScanTypeSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: ScanType object populated from data
         """
-        st_id = data["st_id"]
-        coordinate_system = data["coordinate_system"]
+        scan_type_id = data["scan_type_id"]
+        reference_frame = data["reference_frame"]
         ra = data["ra"]  # pylint: disable=invalid-name
         dec = data["dec"]
         channels = data["channels"]
-        return ScanType(st_id, coordinate_system, ra, dec, channels)
+        return ScanType(scan_type_id, reference_frame, ra, dec, channels)
 
 
 class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -87,8 +87,8 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     Represents the type of workflow being configured on the SDP
     """
 
-    workflow_id = fields.String(data_key="id", required=True)
-    workflow_type = fields.String(data_key="type", required=True)
+    workflow_id = fields.String(data_key="name", required=True)
+    workflow_type = fields.String(data_key="kind", required=True)
     version = fields.String(data_key="version", required=True)
 
     @post_load
@@ -112,7 +112,7 @@ class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     pb_id = fields.String(data_key="pb_id")
-    pb_type = fields.List(fields.String, data_key="type")
+    pb_type = fields.List(fields.String, data_key="kind")
 
     @post_load
     def create_pb_dependency(self, data, **_):  # pylint: disable=no-self-use
@@ -133,7 +133,7 @@ class ProcessingBlockSchema(Schema):
     Marshmallow schema for the ProcessingBlock class.
     """
 
-    pb_id = fields.String(data_key="id", required=True)
+    pb_id = fields.String(data_key="pb_id", required=True)
     workflow = fields.Nested(SDPWorkflowSchema)
     parameters = fields.Dict()
     dependencies = fields.Nested(PbDependencySchema, many=True, missing=None)
@@ -166,8 +166,8 @@ class SDPConfigurationSchema(Schema):
     """
     Marsmallow class for the SDPConfiguration class
     """
-
-    sdp_id = fields.String(data_key="id", required=True)
+    interface = fields.String()
+    eb_id = fields.String(data_key="eb_id", required=True)
     max_length = fields.Float(data_key="max_length", required=True)
     scan_types = fields.Nested(ScanTypeSchema, many=True)
     processing_blocks = fields.Nested(ProcessingBlockSchema, many=True)

@@ -1,7 +1,8 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
-import itertools
+import copy
+
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
@@ -12,17 +13,20 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     ReceiverBand,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    CBFConfiguration,
+    CommonConfiguration,
+    CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
-    CSPConfiguration,
+    SubarrayConfiguration
 )
-from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
     StnConfiguration,
     SubarrayBeamConfiguration,
     SubarrayBeamTarget
 )
+from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 
 
 def test_configure_request_eq():
@@ -33,22 +37,36 @@ def test_configure_request_eq():
       - their SDP configuration is the same
       - their CSP configuration is the same
     """
-
+    transaction_id = 'transaction_id'
     pointing_config = PointingConfiguration(Target(1, 1))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
-    sdp_config = SDPConfiguration("science_A")
-    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
-    csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
+    sdp_config = SDPConfiguration(scan_type="science_A")
     csp_config = CSPConfiguration(
-        csp_id=csp_id, frequency_band=ReceiverBand.BAND_1, fsp_configs=[fsp_config]
+        interface="interface",
+        subarray_config=SubarrayConfiguration(
+            subarray_name="subarray name"
+        ),
+        common_config=CommonConfiguration(
+            config_id="config_id",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1
+        ),
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
+                FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
+            ]
+        ),
+        pss_config=None,
+        pst_config=None,
     )
     request_1 = ConfigureRequest(
-        pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
+        transaction_id=transaction_id,
+        pointing=pointing_config,
+        dish=dish_config,
+        sdp=sdp_config,
+        csp=csp_config
     )
-    request_2 = ConfigureRequest(
-        pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
-    )
+    request_2 = copy.deepcopy(request_1)
     assert request_1 == request_2
 
 
@@ -69,14 +87,14 @@ def test_configure_request_eq_for_low():
         subarray_beam_configs=[station_beam_config]
     )
     request_1 = ConfigureRequest(
-        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
         mccs=mccs_config,
-        sdp=SDPConfiguration("science_A")
+        sdp=SDPConfiguration(scan_type="science_A")
     )
     request_2 = ConfigureRequest(
-        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
         mccs=mccs_config,
-        sdp=SDPConfiguration("science_A")
+        sdp=SDPConfiguration(scan_type="science_A")
     )
     assert request_1 == request_2
 
@@ -108,12 +126,24 @@ def test_configure_request_is_not_equal_to_other_objects():
     """
     pointing_config = PointingConfiguration(Target(1, 1))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
-    sdp_config = SDPConfiguration("science_A")
-    channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
-    csp_id = "sbi-mvp01-20200325-00001-science_A"
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
+    sdp_config = SDPConfiguration(scan_type="science_A")
     csp_config = CSPConfiguration(
-        csp_id=csp_id, frequency_band=ReceiverBand.BAND_1, fsp_configs=[fsp_config]
+        interface="interface",
+        subarray_config=SubarrayConfiguration(
+            subarray_name="subarray name"
+        ),
+        common_config=CommonConfiguration(
+            config_id="config_id",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1
+        ),
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
+                FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
+            ]
+        ),
+        pss_config=None,
+        pst_config=None,
     )
     request = ConfigureRequest(
         pointing=pointing_config, dish=dish_config, sdp=sdp_config, csp=csp_config
@@ -155,9 +185,9 @@ def test_configure_request_is_not_equal_to_other_objects_for_low():
         subarray_beam_configs=[station_beam_config]
     )
     request = ConfigureRequest(
-        interface='https://schema.skatelescope.org/ska-low-tmc-configure/1.0',
+        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
         mccs=mccs_config,
-        sdp=SDPConfiguration("science_A")
+        sdp=SDPConfiguration(scan_type="science_A")
     )
     assert request != object
     assert request is not None
@@ -189,9 +219,9 @@ def test_configure_request_mccs_independence():
     #     ConfigureRequest(dish=dish_config, sdp=sdp_config, mccs=mccs_config)
     #
     # channel_avg_map = list(zip(itertools.count(1, 744), [2] + 19 * [0]))
-    # csp_id = "sbi-mvp01-20200325-00001-science_A"
+    # config_id = "sbi-mvp01-20200325-00001-science_A"
     # fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, 0, channel_avg_map)
-    # csp_config = CSPConfiguration(csp_id, ReceiverBand.BAND_1, [fsp_config])
+    # csp_config = CSPConfiguration(config_id, ReceiverBand.BAND_1, [fsp_config])
     # with pytest.raises(ValueError):
     #     ConfigureRequest(
     #         dish=dish_config, sdp=sdp_config, csp=csp_config, mccs=mccs_config

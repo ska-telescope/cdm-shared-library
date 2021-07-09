@@ -20,7 +20,7 @@ __all__ = [
     "TargetSchema",
 ]
 
-JsonTarget = collections.namedtuple("JsonTarget", "ra dec frame name")
+JsonTarget = collections.namedtuple("JsonTarget", "ra dec reference_frame target_name")
 
 
 class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -28,10 +28,10 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
     Marshmallow schema for the subarray_node.Target class
     """
 
-    ra = fields.String(data_key="RA")
+    ra = fields.String()
     dec = fields.String()
-    frame = shared.UpperCasedField(data_key="system")
-    name = fields.String()
+    reference_frame = shared.UpperCasedField(data_key="reference_frame")
+    target_name = fields.String()
 
     @pre_dump
     def convert_to_icrs(
@@ -49,7 +49,7 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         icrs_coord = target.coord.transform_to("icrs")
         hms, dms = icrs_coord.to_string("hmsdms", sep=":").split(" ")
         sexagesimal = JsonTarget(
-            ra=hms, dec=dms, frame=icrs_coord.frame.name, name=target.name
+            ra=hms, dec=dms, reference_frame=icrs_coord.frame.name, target_name=target.target_name
         )
 
         return sexagesimal
@@ -63,12 +63,15 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: Target instance populated to match JSON
         """
-        name = data["name"]
+        target_name = data["target_name"]
         hms = data["ra"]
         dms = data["dec"]
-        frame = data["frame"]
+        reference_frame = data["reference_frame"]
         target = configure_msgs.Target(
-            hms, dms, frame=frame, name=name, unit=("hourangle", "deg")
+            hms, dms,
+            reference_frame=reference_frame,
+            target_name=target_name,
+            unit=("hourangle", "deg")
         )
         return target
 
@@ -99,7 +102,7 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     receiver_band = fields.String(
-        data_key="receiverBand", required=True, validate=OneOf(["1", "2", "5a", "5b"])
+        data_key="receiver_band", required=True, validate=OneOf(["1", "2", "5a", "5b"])
     )
 
     @pre_dump
@@ -139,8 +142,9 @@ class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-fe
     """
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """
+    interface = fields.String(required=True)
+    transaction_id = fields.String()
 
-    interface = fields.String()
     pointing = fields.Nested(PointingSchema)
     dish = fields.Nested(DishConfigurationSchema)
     sdp = fields.Nested(sdp.SDPConfigurationSchema)
@@ -158,7 +162,8 @@ class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-fe
         :param _: kwargs passed by Marshmallow
         :return: ConfigurationRequest instance populated to match JSON
         """
-        interface = data.get("interface", None)
+        interface = data.get("interface")
+        transaction_id = data.get("transaction_id", None)
         pointing = data.get("pointing", None)
         dish = data.get("dish", None)
         sdp = data.get("sdp", None)
@@ -167,6 +172,7 @@ class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-fe
         mccs = data.get("mccs", None)
         return ConfigureRequest(
             interface=interface,
+            transaction_id=transaction_id,
             pointing=pointing,
             dish=dish,
             sdp=sdp,

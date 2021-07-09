@@ -6,7 +6,7 @@ from typing import List, Optional
 
 __all__ = ["AllocateRequest"]
 
-SCHEMA = "https://schema.skatelescope.org/ska-low-mccs-assignresources/1.0"
+SCHEMA = "https://schema.skao.int/ska-low-mccs-assignresources/2.0"
 
 
 class AllocateRequest:

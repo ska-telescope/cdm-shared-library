@@ -15,9 +15,10 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 	    }
 
 	    class CommonConfiguration {
-	        csp_id: str
+	        config_id: str
             frequency_band: core.ReceiverBand
             subarray_id: int
+            band_5_tuning: List[float]
 	    }
 
 	    class CBFConfiguration {
@@ -47,8 +48,8 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			fsp_id : int
 			function_mode : FSPFunctionMode
 			frequency_slice_id : int
-			integration_time : int
-			corr_bandwidth : int
+			integration_factor : int
+			zoom_factor : int
 			channel_average_map : List[Tuple]
 			output_link_map : List[Tuple]
 			zoom_window_tuning: int

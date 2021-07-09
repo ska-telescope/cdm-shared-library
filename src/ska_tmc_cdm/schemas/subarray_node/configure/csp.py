@@ -25,7 +25,7 @@ __all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema",
 
 @CODEC.register_mapping(SubarrayConfiguration)
 class SubarrayConfigurationSchema(Schema):
-    subarray_name = fields.String(data_key="subarrayName", required=True)
+    subarray_name = fields.String(data_key="subarray_name", required=True)
 
     @post_load
     def create(self, data, **_):
@@ -44,9 +44,10 @@ class SubarrayConfigurationSchema(Schema):
 
 @CODEC.register_mapping(CommonConfiguration)
 class CommonConfigurationSchema(Schema):
-    csp_id = fields.String(data_key="id", required=True)
-    frequency_band = fields.String(data_key="frequencyBand", required=True)
-    subarray_id = fields.Integer(data_key="subarrayID", required=True)
+    config_id = fields.String(data_key="config_id", required=True)
+    frequency_band = fields.String(data_key="frequency_band", required=True)
+    subarray_id = fields.Integer(data_key="subarray_id", required=True)
+    band_5_tuning = fields.List(fields.Float, data_key="band_5_tuning")
 
     @pre_dump
     def convert(
@@ -66,6 +67,18 @@ class CommonConfigurationSchema(Schema):
             copied.frequency_band = common_configuration.frequency_band.value
         return copied
 
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for FSP configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -75,12 +88,13 @@ class CommonConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: CommonConfiguration instance populated to match JSON
         """
-        csp_id = data["csp_id"]
+        config_id = data["config_id"]
         frequency_band = data["frequency_band"]
         frequency_band_enum = ReceiverBand(frequency_band)
         subarray_id = data["subarray_id"]
+        band_5_tuning = data.get("band_5_tuning", None)
 
-        return CommonConfiguration(csp_id, frequency_band_enum, subarray_id)
+        return CommonConfiguration(config_id, frequency_band_enum, subarray_id, band_5_tuning)
 
 
 @CODEC.register_mapping(FSPConfiguration)
@@ -89,23 +103,24 @@ class FSPConfigurationSchema(Schema):
     Marshmallow schema for the subarray_node.FSPConfiguration class
     """
 
-    fsp_id = fields.Integer(data_key="fspID", required=True)
+    fsp_id = fields.Integer(data_key="fsp_id", required=True)
     function_mode = fields.String(
-        data_key="functionMode",
+        data_key="function_mode",
         validate=OneOf(["CORR", "PSS-BF", "PST-BF", "VLBI"]),
         required=True,
     )
-    frequency_slice_id = fields.Integer(data_key="frequencySliceID", required=True)
-    corr_bandwidth = fields.Integer(data_key="corrBandwidth", required=True)
-    integration_time = fields.Integer(data_key="integrationTime", required=True)
+    frequency_slice_id = fields.Integer(data_key="frequency_slice_id", required=True)
+    zoom_factor = fields.Integer(data_key="zoom_factor", required=True)
+    integration_factor = fields.Integer(data_key="integration_factor", required=True)
     channel_averaging_map = fields.List(
-        fields.Tuple((fields.Integer, fields.Integer)), data_key="channelAveragingMap"
+        fields.Tuple((fields.Integer, fields.Integer)),
+        data_key="channel_averaging_map"
     )
     output_link_map = fields.List(
-        fields.Tuple((fields.Integer, fields.Integer)), data_key="outputLinkMap"
+        fields.Tuple((fields.Integer, fields.Integer)), data_key="output_link_map"
     )
-    fsp_channel_offset = fields.Integer(data_key="fspChannelOffset")
-    zoom_window_tuning = fields.Integer(data_key="zoomWindowTuning")
+    channel_offset = fields.Integer(data_key="channel_offset")
+    zoom_window_tuning = fields.Integer(data_key="zoom_window_tuning")
 
     @pre_dump
     def convert(
@@ -120,8 +135,9 @@ class FSPConfigurationSchema(Schema):
         :return: FspConfiguration instance populated to match JSON
         """
         # Convert Python Enum to its string value
-        fsp_configuration.function_mode = fsp_configuration.function_mode.value
-        return fsp_configuration
+        copied = copy.deepcopy(fsp_configuration)
+        copied.function_mode = fsp_configuration.function_mode.value
+        return copied
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -148,24 +164,24 @@ class FSPConfigurationSchema(Schema):
         function_mode = data["function_mode"]
         function_mode_enum = FSPFunctionMode(function_mode)
         frequency_slice_id = int(data["frequency_slice_id"])
-        corr_bandwidth = data["corr_bandwidth"]
-        integration_time = data["integration_time"]
+        zoom_factor = data["zoom_factor"]
+        integration_factor = data["integration_factor"]
 
         # optional arguments
         channel_averaging_map = data.get("channel_averaging_map", None)
         output_link_map = data.get("output_link_map", None)
-        fsp_channel_offset = data.get("fsp_channel_offset", None)
+        channel_offset = data.get("channel_offset", None)
         zoom_window_tuning = data.get("zoom_window_tuning", None)
 
         return FSPConfiguration(
             fsp_id,
             function_mode_enum,
             frequency_slice_id,
-            integration_time,
-            corr_bandwidth,
+            integration_factor,
+            zoom_factor,
             channel_averaging_map=channel_averaging_map,
             output_link_map=output_link_map,
-            fsp_channel_offset=fsp_channel_offset,
+            channel_offset=channel_offset,
             zoom_window_tuning=zoom_window_tuning,
         )
 
@@ -196,30 +212,9 @@ class CSPConfigurationSchema(ValidatingSchema):
     """
 
     interface = fields.String()
-    csp_id = fields.String(data_key="id")
-    frequency_band = fields.String(data_key="frequencyBand")
-    fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key="fsp")
     subarray_config = fields.Nested(SubarrayConfigurationSchema, data_key="subarray")
     common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
-
-    @pre_dump
-    def convert(
-            self, csp_configuration: CSPConfiguration, **_
-    ):  # pylint: disable=no-self-use
-        """
-        Process CSPConfiguration instance so that it is ready for conversion
-        to JSON.
-
-        :param csp_configuration: CSP configuration to process
-        :param _: kwargs passed by Marshmallow
-        :return: CSPConfiguration instance populated to match JSON
-        """
-        # Convert Python Enum to its string value
-        copied = copy.deepcopy(csp_configuration)
-        if hasattr(copied, 'frequency_band') and copied.frequency_band:
-            copied.frequency_band = csp_configuration.frequency_band.value
-        return copied
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
@@ -231,20 +226,12 @@ class CSPConfigurationSchema(ValidatingSchema):
         :return: CSPConfiguration instance populated to match JSON
         """
         interface = data.get("interface", None)
-        csp_id = data.get("csp_id", None)
-        frequency_band = data.get("frequency_band", None)
-        if frequency_band is not None:
-            frequency_band = ReceiverBand(frequency_band)
-        fsp_configs = data.get("fsp_configs", None)
         subarray_config = data.get("subarray_config", None)
         common_config = data.get("common_config", None)
         cbf_config = data.get("cbf_config", None)
 
         return CSPConfiguration(
             interface=interface,
-            csp_id=csp_id,
-            frequency_band=frequency_band,
-            fsp_configs=fsp_configs,
             subarray_config=subarray_config,
             common_config=common_config,
             cbf_config=cbf_config

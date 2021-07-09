@@ -4,7 +4,7 @@ using interface uri and validating the structure of JSON against these schemas.
 """
 
 from ska_telmodel import schema
-from ska_tmc_cdm.exceptions import JsonValidationError
+from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
 __all__ = ['JsonSchema']
 
@@ -21,11 +21,12 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
 
         :param uri: Interface Version URI
         :return: Interface schema
+        :raises: SchemaNotFound if URI does not resolve to a schema
         """
         try:
             return schema.schema_by_uri(uri)
         except ValueError as exc:
-            raise JsonValidationError(uri) from exc
+            raise SchemaNotFound(uri) from exc
 
     @staticmethod
     def validate_schema(uri: str, instance: dict, strictness=None) -> None:
@@ -51,4 +52,12 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         try:
             return schema.validate(uri, instance, **extra_kwargs)
         except ValueError as exc:
-            raise JsonValidationError(uri, instance) from exc
+            # Distinguish ValueErrors caused by schema not found from
+            # ValueErrors caused by invalid JSON.
+            try:
+                schema.schema_by_uri(uri)
+            except ValueError:
+                if strictness is not None and strictness > 1:
+                    raise SchemaNotFound(uri) from exc
+            else:
+                raise JsonValidationError(uri, instance) from exc

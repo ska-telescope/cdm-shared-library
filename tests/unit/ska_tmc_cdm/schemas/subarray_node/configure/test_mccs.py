@@ -15,12 +15,12 @@ from ska_tmc_cdm.schemas.subarray_node.configure.mccs import (
     SubarrayBeamConfigurationSchema,
     SubarrayBeamTargetSchema
 )
-from ska_tmc_cdm.utils import json_is_equal
+from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_SUBARRAYBEAMTARGET_JSON = """
 {
-    "system": "HORIZON",
-    "name": "DriftScan",
+    "reference_frame": "HORIZON",
+    "target_name": "DriftScan",
     "az": 180.0,
     "el": 45.0
 }
@@ -83,11 +83,12 @@ VALID_MCCSCONFIGURATION_OBJECT = MCCSConfiguration(
 ])
 def test_marshal(schema_cls, instance, expected):
     """
-    Verify that instances are marshaled to JSON correctly.
+    Verify that instances are marshalled to JSON correctly.
     """
     schema = schema_cls()
-    marshaled = schema.dumps(instance)
-    assert json_is_equal(expected, marshaled)
+    marshalled = schema.dumps(instance)
+    assert_json_is_equal(expected, marshalled)
+
 
 @pytest.mark.parametrize('schema_cls,json_str,expected', [
     (SubarrayBeamTargetSchema, VALID_SUBARRAYBEAMTARGET_JSON, VALID_SUBARRAYBEAMTARGET_OBJECT),
@@ -97,8 +98,8 @@ def test_marshal(schema_cls, instance, expected):
 ])
 def test_unmarshal(schema_cls, json_str, expected):
     """
-    Verify that instances are unmarshaled to instances correctly.
+    Verify that instances are unmarshalled to instances correctly.
     """
     schema = schema_cls()
-    unmarshaled = schema.loads(json_str)
-    assert unmarshaled == expected
+    unmarshalled = schema.loads(json_str)
+    assert unmarshalled == expected

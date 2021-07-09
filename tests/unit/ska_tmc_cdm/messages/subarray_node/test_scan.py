@@ -1,45 +1,43 @@
 """
-Unit tests for the SubarrayNode.Configure request/response mapper module.
+Unit tests for the ska_tmc_cdm.messages.subarraynode.scan module
 """
+
+import pytest
 
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
+CONSTRUCTOR_ARGS = dict(
+    interface="interface",
+    transaction_id="transaction ID",
+    scan_id=123
+)
 
-def test_scan_request_init():
+
+def test_scanrequest_eq():
     """
-    Create a ScanRequest instance with a scan id of 2 and verify __eq__ behaviour.
+    Verify that scan requests with the same values are considered equal.
     """
-    scan_id = 2
-    scan_request = ScanRequest(scan_id)
-    scan_request_2 = ScanRequest(scan_id)
+    # objects with same property values are considered equal
+    request = ScanRequest(**CONSTRUCTOR_ARGS)
+    other = ScanRequest(**CONSTRUCTOR_ARGS)
+    assert request == other
 
-    empty_object = {}
-
-    assert scan_request.scan_id == scan_id
-    assert scan_request != empty_object
-
-    # equal if the contents are identical
-    assert scan_request == scan_request_2
-
-
-def test_scan_request_init_for_low():
-    """
-    Create a ScanRequest instance with a scan id of 2 and verify __eq__ behaviour.
-    """
-    scan_id = 2
-    scan_request = ScanRequest(
-        interface='https://schema.skatelescope.org/ska-low-tmc-scan/1.0',
-        scan_id=scan_id,
+    alternate_args = dict(
+        interface="foo",
+        transaction_id="foo",
+        scan_id = 99999
     )
-    scan_request_2 = ScanRequest(
-        scan_id=scan_id,
-        interface='https://schema.skatelescope.org/ska-low-tmc-scan/1.0'
-    )
+    for k, v in alternate_args.items():
+        other_args = dict(CONSTRUCTOR_ARGS)
+        other_args[k] = v
+        assert request != ScanRequest(**other_args)
 
-    empty_object = {}
 
-    assert scan_request.scan_id == scan_id
-    assert scan_request != empty_object
-
-    # equal if the contents are identical
-    assert scan_request == scan_request_2
+def test_scanrequest_not_equal_to_other_objects():
+    """
+    Verify that ScanRequest objects are not considered equal to objects
+    of other types.
+    """
+    request = ScanRequest(**CONSTRUCTOR_ARGS)
+    assert request != 1
+    assert request != object()
