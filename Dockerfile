@@ -1,5 +1,10 @@
-FROM artefact.skao.int/ska-tango-images-pytango-builder:9.3.10 AS buildenv
-FROM artefact.skao.int/ska-tango-images-pytango-runtime:9.3.10 AS runtime
+ARG CAR_OCI_REGISTRY_HOST
+ARG CAR_PYPI_REPOSITORY_URL
+
+FROM $CAR_OCI_REGISTRY_HOST/ska-tango-images-pytango-builder:9.3.10 AS buildenv
+FROM $CAR_OCI_REGISTRY_HOST/ska-tango-images-pytango-runtime:9.3.10 AS runtime
+
+ENV PIP_INDEX_URL=${CAR_PYPI_REPOSITORY_URL}
 
 ENV PATH="/home/tango/.local/bin:${PATH}"
 
@@ -23,15 +28,14 @@ ENV PATH="/home/tango/.local/bin:${PATH}"
 #RUN --mount=type=cache,target=/home/tango/.cache/pip,uid=1000,gid=1000 \
 #RUN \
 #    python3 -m pip install \
-#    --extra-index-url https://nexus.engageska-portugal.pt/repository/pypi/simple \
+#    --use-feature=in-tree-build \
 #    git+https://gitlab.com/ska-telescope/telescope-model@at1-905
 
 # Exchange the RUN statements to cache pip wheels. Useful for developer environments.
 #RUN --mount=type=cache,target=/home/tango/.cache/pip,uid=1000,gid=1000 \
 RUN \
     python3 -m pip install \
-    --extra-index-url https://nexus.engageska-portugal.pt/repository/pypi/simple \
-    #--extra-index-url https://artefact.skao.int/repository/pypi/simple \
+    --use-feature=in-tree-build \
     # Running tests via an IDE required the test dependencies to be installed.
     # The quickest way to achieve this is by uncommenting the line below
 #     -r tests/requirements.txt \
