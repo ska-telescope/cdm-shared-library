@@ -1,16 +1,16 @@
 #
 # Project makefile for a Tango project. You should normally only need to modify
-# DOCKER_REGISTRY_USER and PROJECT below.
+# CAR_OCI_REGISTRY_USER and PROJECT below.
 #
 
 #
-# DOCKER_REGISTRY_HOST, DOCKER_REGISTRY_USER and PROJECT are combined to define
-# the Docker tag for this project. The definition below inherits the standard
-# value for DOCKER_REGISTRY_HOST (=rnexus.engageska-portugal.pt) and overwrites
-# DOCKER_REGISTRY_USER and PROJECT to give a final Docker tag of
-# nexus.engageska-portugal.pt/tango-example/powersupply
+# CAR_OCI_REGISTRY_USER  and PROJECT are combined to define the Docker
+# tag for this project. The definition below inherits the standard
+# value for CAR_OCI_REGISTRY_USER  (=artefact.skao.int) and overwrites
+# PROJECT to give a final Docker tag of artefact.skao.int/ska-tmc-cdm
 #
-DOCKER_REGISTRY_USER:=ska-telescope
+CAR_OCI_REGISTRY_HOST ?= artefact.skao.int
+CAR_OCI_REGISTRY_USERNAME ?= ska-telescope
 PROJECT = ska-tmc-cdm
 
 # Docker, K8s and Gitlab CI variables
@@ -23,15 +23,13 @@ DOCKER_HOST ?= unix:///var/run/docker.sock
 # DOCKER_VOLUMES pass in local domain socket for DOCKER_HOST
 DOCKER_VOLUMES ?= /var/run/docker.sock:/var/run/docker.sock
 # registry credentials - user/pass/registry - set these in PrivateRules.mak
-DOCKER_REGISTRY_USER_LOGIN ?=  ## registry credentials - user - set in PrivateRules.mak
+CAR_OCI_REGISTRY_USER_LOGIN ?=  ## registry credentials - user - set in PrivateRules.mak
 CI_REGISTRY_PASS_LOGIN ?=  ## registry credentials - pass - set in PrivateRules.mak
 CI_REGISTRY ?= gitlab.com/ska-telescope/ska-tmc-cdm
 
 CI_PROJECT_DIR ?= .
 
-XAUTHORITYx ?= ${XAUTHORITY}
-THIS_HOST := $(shell ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | head -n1)
-DISPLAY := $(THIS_HOST):0
+CAR_PYPI_REPOSITORY_URL ?= https://artefact.skao.int/repository/pypi-internal/simple
 
 # define private overrides for above variables in here
 -include PrivateRules.mak
