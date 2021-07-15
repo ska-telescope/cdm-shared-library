@@ -29,7 +29,7 @@ CI_REGISTRY ?= gitlab.com/ska-telescope/ska-tmc-cdm
 
 CI_PROJECT_DIR ?= .
 
-CAR_PYPI_REPOSITORY_URL ?= https://artefact.skao.int/repository/pypi-internal/simple
+CAR_PYPI_REPOSITORY_URL ?= https://artefact.skao.int/repository/pypi-internal
 
 # define private overrides for above variables in here
 -include PrivateRules.mak
