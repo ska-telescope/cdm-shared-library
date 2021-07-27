@@ -27,7 +27,7 @@ def test_assign_resources_request_eq():
     )
     scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
     sdp_workflow = SDPWorkflow(
-        workflow_id="vis_receive", workflow_type="realtime", version="0.1.0"
+        name="vis_receive", kind="realtime", version="0.1.0"
     )
     pb_config = ProcessingBlockConfiguration(
         "pb-mvp01-20200325-00001", sdp_workflow, {}
