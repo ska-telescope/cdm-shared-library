@@ -39,7 +39,7 @@ inside the container:
 make interactive
 ```
 
-[![Documentation Status](https://readthedocs.org/projects/ska-tmc-cdm/badge/?version=latest)](https://developer.skatelescope.org/projects/ska-tmc-cdm/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/ska-telescope-ska-tmc-cdm/badge/?version=latest)](https://developer.skao.int/projects/ska-tmc-cdm/en/latest/?badge=latest)
 
 Documentation can be found in the ``docs`` folder.
 
