@@ -15,7 +15,7 @@ with open('README.md') as readme_file:
 
 setuptools.setup(
     name='ska-tmc-cdm',
-    version="6.0.1",
+    version="6.0.2",
     description="SKA Control Data Model",
     long_description=readme + '\n\n',
     author="Hélder Ribeiro",
@@ -41,7 +41,7 @@ setuptools.setup(
     install_requires=[
         'astropy',
         'marshmallow>=3.0.0rc7',
-        'ska-telescope-model>=1.3.0',
+        'ska-telescope-model==1.3.1',
     ],
     setup_requires=[] + pytest_runner,
     tests_require=[

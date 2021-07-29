@@ -19,17 +19,17 @@ class SDPWorkflow:  # pylint: disable=too-few-public-methods
     Class to hold SDPWorkflows for ProcessingBlock
     """
 
-    def __init__(self, workflow_id: str, workflow_type: str, version: str):
-        self.workflow_id = workflow_id
-        self.workflow_type = workflow_type
+    def __init__(self, name: str, kind: str, version: str):
+        self.name = name
+        self.kind = kind
         self.version = version
 
     def __eq__(self, other):
         if not isinstance(other, SDPWorkflow):
             return False
         return (
-            self.workflow_id == other.workflow_id
-            and self.workflow_type == other.workflow_type
+            self.name == other.name
+            and self.kind == other.kind
             and self.version == other.version
         )
 

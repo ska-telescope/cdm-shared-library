@@ -36,8 +36,8 @@ package ska_tmc_cdm.messages.central_node {
         }
 
         class SDPWorkflow {
-            workflow_id : str
-            workflow_type : str
+            name : str
+            kind : str
             version : str
         }
 
