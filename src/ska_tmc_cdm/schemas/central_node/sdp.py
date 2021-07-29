@@ -87,8 +87,8 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     Represents the type of workflow being configured on the SDP
     """
 
-    workflow_id = fields.String(data_key="name", required=True)
-    workflow_type = fields.String(data_key="kind", required=True)
+    name = fields.String(data_key="name", required=True)
+    kind = fields.String(data_key="kind", required=True)
     version = fields.String(data_key="version", required=True)
 
     @post_load
@@ -100,10 +100,10 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: SDP Workflow object populated from data
         """
-        wf_id = data["workflow_id"]
-        wf_type = data["workflow_type"]
+        name = data["name"]
+        kind = data["kind"]
         version = data["version"]
-        return SDPWorkflow(wf_id, wf_type, version)
+        return SDPWorkflow(name, kind, version)
 
 
 class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods

@@ -92,17 +92,17 @@ def test_scan_type_not_equal_to_other_objects():
 def test_workflow_equals():
     """
     Verify that SDPWorkflow objects are considered equal when they have:
-     - the same ID
-     - the same type
+     - the same name
+     - the same kind
      - the same version
     """
-    workflow1 = SDPWorkflow("id", "type", "version")
-    workflow2 = SDPWorkflow("id", "type", "version")
+    workflow1 = SDPWorkflow("name", "kind", "version")
+    workflow2 = SDPWorkflow("name", "kind", "version")
     assert workflow1 == workflow2
 
-    assert workflow1 != SDPWorkflow("", "type", "version")
-    assert workflow1 != SDPWorkflow("id", "", "version")
-    assert workflow1 != SDPWorkflow("id", "type", "")
+    assert workflow1 != SDPWorkflow("", "kind", "version")
+    assert workflow1 != SDPWorkflow("name", "", "version")
+    assert workflow1 != SDPWorkflow("name", "kind", "")
 
 
 def test_workflow_not_equal_to_other_objects():
@@ -110,7 +110,7 @@ def test_workflow_not_equal_to_other_objects():
     Verify that SDPWorkflow objects are not considered equal to objects of
     other types.
     """
-    workflow = SDPWorkflow("id", "type", "version")
+    workflow = SDPWorkflow("name", "kind", "version")
     assert workflow != 1
 
 
