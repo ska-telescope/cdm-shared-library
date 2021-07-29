@@ -15,7 +15,7 @@ with open('README.md') as readme_file:
 
 setuptools.setup(
     name='ska-tmc-cdm',
-    version="6.0.2",
+    version="6.0.3",
     description="SKA Control Data Model",
     long_description=readme + '\n\n',
     author="Hélder Ribeiro",
