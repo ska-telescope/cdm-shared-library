@@ -8,7 +8,7 @@ __all__ = ["SDPConfiguration"]
 
 from typing import Optional
 
-SCHEMA = "https://schema.skao.int/ska-sdp-configure/2.0"
+SCHEMA = "https://schema.skao.int/ska-sdp-configure/0.3"
 
 
 class SDPConfiguration:

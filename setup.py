@@ -41,7 +41,7 @@ setuptools.setup(
     install_requires=[
         'astropy',
         'marshmallow>=3.0.0rc7',
-        'ska-telescope-model>=1.3.0',
+        'ska-telescope-model==1.3.1',
     ],
     setup_requires=[] + pytest_runner,
     tests_require=[
