@@ -367,7 +367,7 @@ Example configuration JSON for MID
       }
     },
     "sdp": {
-      "interface": "https://schema.skao.int/ska-sdp-configure/2.0",
+      "interface": "https://schema.skao.int/ska-sdp-configure/0.3",
       "scan_type": "science_A"
     },
     "tmc": {

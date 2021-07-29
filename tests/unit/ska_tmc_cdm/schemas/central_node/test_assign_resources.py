@@ -3,6 +3,8 @@ Unit tests for ska_tmc_cdm.schemas module.
 """
 
 import pytest
+import copy
+import json
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
@@ -267,7 +269,7 @@ def low_invalidator_fn(o: AssignResourcesRequest):
          None),  # No validation on SDP subschema
     ]
 )
-def test_releaseresources_serialisation_and_validation(
+def test_assignresources_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json
 ):
     """
@@ -275,4 +277,20 @@ def test_releaseresources_serialisation_and_validation(
     """
     utils.test_schema_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json
+    )
+
+
+def test_assignresources_serialisation_and_validation_without_optional_params():
+    valid_json_no_optional_params = json.loads(
+        copy.deepcopy(VALID_MID_ASSIGNRESOURCESREQUEST_JSON)
+    )
+    del valid_json_no_optional_params['sdp']['interface']
+    del valid_json_no_optional_params['interface']
+
+    request = copy.deepcopy(VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT)
+    request.sdp_config.interface = None
+    request.interface = None
+
+    utils.test_schema_serialisation_and_validation(
+        AssignResourcesRequestSchema, request, None, json.dumps(valid_json_no_optional_params), None
     )

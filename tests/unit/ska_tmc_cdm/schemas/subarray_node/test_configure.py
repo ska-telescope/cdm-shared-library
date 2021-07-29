@@ -87,7 +87,7 @@ VALID_MID_CONFIGURE_JSON = """
     }
   },
   "sdp": {
-    "interface": "https://schema.skao.int/ska-sdp-configure/2.0",
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.3",
     "scan_type": "science_A"
   },
   "tmc": {
@@ -112,7 +112,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
         receiver_band=ReceiverBand.BAND_1
     ),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/2.0",
+        interface="https://schema.skao.int/ska-sdp-configure/0.3",
         scan_type="science_A"
     ),
     csp=CSPConfiguration(

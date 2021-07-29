@@ -172,6 +172,17 @@ class SDPConfigurationSchema(Schema):
     scan_types = fields.Nested(ScanTypeSchema, many=True)
     processing_blocks = fields.Nested(ProcessingBlockSchema, many=True)
 
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
     @post_load
     def create_sdp_config(self, data, **_):  # pylint: disable=no-self-use
         """
