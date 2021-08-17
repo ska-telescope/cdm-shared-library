@@ -17,8 +17,6 @@ stages:
 
 test:
   stage: test
-  dependencies:
-    - build
   tags:
     - k8srunner
   script:
