@@ -18,6 +18,10 @@ OCI_IMAGE_BUILD_CONTEXT = $(PWD)
 # include your own private variables for custom deployment configuration
 -include PrivateRules.mak
 
+# unset defaults so settings in pyproject.toml take effect
+PYTHON_SWITCHES_FOR_BLACK =
+PYTHON_SWITCHES_FOR_ISORT =
+
 diagrams:  ## recreate PlantUML diagrams whose source has been modified
 	@for i in $$(git diff --name-only -- '*.puml'); \
 	do \

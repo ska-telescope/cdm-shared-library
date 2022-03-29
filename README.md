@@ -16,27 +16,39 @@ This library can marshal JSON for the following Tango devices.
 
 ## Quickstart
 
-This project is structured to use Docker containers for development and
-testing so that the build environment, test environment and test results are
-all completely reproducible and are independent of host environment. It uses
-``make`` to provide a consistent UI.
-
-Build a new Docker image for the OET with:
+To clone this repository, run
 
 ```
-make build
+git clone --recurse-submodules git@gitlab.com:ska-telescope/ska-tmc-cdm.git
 ```
 
-Execute the test suite with:
-```
-make test
-```
-
-Launch an interactive shell inside a container, with your workspace visible
-inside the container:
+To refresh the GitLab Submodule, execute below commands:
 
 ```
-make interactive
+git submodule update --recursive --remote
+git submodule update --init --recursive
+```
+
+## Build and test
+
+Execute the test suite and lint the project with:
+
+```
+make python-test
+make python-lint
+```
+
+To build a new Docker image, run
+
+```
+make oci-build
+```
+
+To rebuild the PlantUML diagrams after modification, from a
+non-interactive session run
+
+```
+make diagrams
 ```
 
 [![Documentation Status](https://readthedocs.org/projects/ska-telescope-ska-tmc-cdm/badge/?version=latest)](https://developer.skao.int/projects/ska-tmc-cdm/en/latest/?badge=latest)
