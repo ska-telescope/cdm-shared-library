@@ -2,8 +2,6 @@
 Unit tests for the ska_tmc_cdm.messages.subarraynode.scan module
 """
 
-import pytest
-
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
 CONSTRUCTOR_ARGS = dict(

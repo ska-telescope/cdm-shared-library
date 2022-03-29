@@ -58,7 +58,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         :param strictness: optional validation strictness level (0=min, 2=max)
         :return: an instance of cls
         """
-        with open(path, "r") as json_file:
+        with open(path, "r", encoding="utf-8") as json_file:
             json_data = json_file.read()
             return self.loads(cls, json_data, validate, strictness)
 

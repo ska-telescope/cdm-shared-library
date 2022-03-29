@@ -22,6 +22,10 @@ OCI_IMAGE_BUILD_CONTEXT = $(PWD)
 PYTHON_SWITCHES_FOR_BLACK =
 PYTHON_SWITCHES_FOR_ISORT =
 
+# disable convention and refactoring lint warnings
+PYTHON_SWITCHES_FOR_PYLINT = --disable=C,R
+
+
 diagrams:  ## recreate PlantUML diagrams whose source has been modified
 	@for i in $$(git diff --name-only -- '*.puml'); \
 	do \

@@ -53,8 +53,8 @@ def test_codec_loads(msg_cls, json_str, expected):
     assert unmarshalled == expected
 
 
-@pytest.mark.parametrize("msg_cls,expected,instance", TEST_PARAMETERS)
-def test_codec_dumps(msg_cls, expected, instance):
+@pytest.mark.parametrize("_,expected,instance", TEST_PARAMETERS)
+def test_codec_dumps(_, expected, instance):
     """
     Verify that the codec unmarshalls objects correctly.
     """
@@ -161,4 +161,5 @@ def test_schema_registration(message_cls):
     """
     Verify that a schema is registered with the MarshmallowCodec.
     """
+    # pylint: disable=protected-access
     assert message_cls in CODEC._schema

@@ -100,7 +100,7 @@ class FSPConfiguration:
             raise ValueError(msg)
         self.channel_averaging_map = channel_averaging_map
 
-        # TODO: update enforcements for output_link_map
+        # could we add enforcements for output_link_map? What are the limits?
         self.output_link_map = output_link_map
         self.channel_offset = channel_offset
         self.zoom_window_tuning = zoom_window_tuning

@@ -142,6 +142,8 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         return configure_msgs.DishConfiguration(enum_obj)
 
 
+# these class properties do not interfere with the module imports
+# pylint: disable=redefined-outer-name
 @CODEC.register_mapping(ConfigureRequest)
 class ConfigureRequestSchema(
     shared.ValidatingSchema

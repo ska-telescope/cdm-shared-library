@@ -244,6 +244,8 @@ class CSPConfigurationSchema(ValidatingSchema):
             cbf_config=cbf_config,
         )
 
+    # deliberately don't want to expose process_fn from superclass
+    # pylint: disable=arguments-differ
     @post_dump
     def validate_on_dump(self, data, **_):
         """

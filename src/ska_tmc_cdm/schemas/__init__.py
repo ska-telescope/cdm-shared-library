@@ -8,7 +8,6 @@ from .codec import MarshmallowCodec
 CODEC = MarshmallowCodec()
 # this is intentional because CODEC has to be defined before these are included
 # pylint: disable=wrong-import-position
-# pylint: imported but unused
 from . import (  # noqa F401 E402
     central_node,
     mccscontroller,
