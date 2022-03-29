@@ -3,16 +3,13 @@
 # In this case we use the latest python docker image to build and test this project.
 image: $SKA_K8S_TOOLS_DOCKER_BUILDER_IMAGE
 
-# cache is used to specify a list of files and directories which should be cached between jobs. You can only use paths that are within the project workspace.
-# If cache is defined outside the scope of jobs, it means it is set globally and all jobs will use that definition
-#cache:
-#  paths:
-#    - build
+default:
+  tags:
+    - k8srunner
 
-# before_script is used to define the command that should be run before all jobs, including deploy jobs, but after the restoration of artifacts.
-# This can be an array or a multi-line string.
-#before_script:
-#  - docker login -u $CAR_OCI_REGISTRY_USERNAME -p $CAR_OCI_REGISTRY_PASSWORD $CAR_OCI_REGISTRY_HOST
+# Standardised included jobs
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
 
 # The YAML file defines a set of jobs with constraints stating when they should be run.
 # You can specify an unlimited number of jobs which are defined as top-level elements with an arbitrary name and always have to contain at least the script clause.
@@ -20,72 +17,26 @@ image: $SKA_K8S_TOOLS_DOCKER_BUILDER_IMAGE
 # It is also specified that only the master branch will be subject of this job.
 
 stages:
-  - build
   - lint
+  - build
   - test
   - pages
+  - scan
   - publish
 
-build:
-  stage: build
-  tags:
-    - k8srunner
-  before_script:
-    - echo $CAR_OCI_REGISTRY_PASSWORD | docker login -u $CAR_OCI_REGISTRY_USERNAME --password-stdin $CAR_OCI_REGISTRY_HOST
-  script:
-    - make build
-  artifacts:
-    when: always
-    paths:
-      - build
-
-test:
-  stage: test
-  dependencies:
-    - build
-  tags:
-    - k8srunner
-  script:
-    - make test
-  artifacts:
-    name: "$CI_PROJECT_NAME-$CI_JOB_ID"
-    paths:
-      - build
-    expire_in: 7 days
-
-lint:
-  stage: lint
-  tags:
-    - k8srunner
-  script:
-    - make lint
-  artifacts:
-    paths:
-      - build
-
-pages:
-  stage: pages
-  tags:
-    - k8srunner
-  script:
-    - mkdir public
-    - cp -R build public
-  when: always
-  allow_failure: true
-  artifacts:
-    paths:
-      - public
-    expire_in: 7 days
-
-# Standardised included jobs
 include:
-# Create Gitlab CI badges from CI metrics
-# https://developer.skatelescope.org/en/latest/tools/continuousintegration.html#automated-collection-of-ci-health-metrics-as-part-of-the-ci-pipeline
-- project: 'ska-telescope/templates-repository'
-  file: 'gitlab-ci/includes/post_step.yml'
-
-- project: 'ska-telescope/templates-repository'
-  file: 'gitlab-ci/includes/build_push.yml'
-
-- project: 'ska-telescope/templates-repository'
-  file: 'gitlab-ci/includes/build_wheel.yml'
+  # Python
+  - project: "ska-telescope/templates-repository"
+    file: "gitlab-ci/includes/python.gitlab-ci.yml"
+  # OCI
+  - project: "ska-telescope/templates-repository"
+    file: "gitlab-ci/includes/oci-image.gitlab-ci.yml"
+  # Docs pages
+  - project: 'ska-telescope/templates-repository'
+    file: 'gitlab-ci/includes/docs-pages.gitlab-ci.yml'
+  # .post step finalisers eg: badges
+  - project: "ska-telescope/templates-repository"
+    file: "gitlab-ci/includes/finaliser.gitlab-ci.yml"
+  # change log and release notes
+  - project: "ska-telescope/templates-repository"
+    file: "gitlab-ci/includes/changelog.gitlab-ci.yml"
