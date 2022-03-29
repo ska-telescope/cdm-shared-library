@@ -7,13 +7,13 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
     StnConfiguration,
     SubarrayBeamConfiguration,
-    SubarrayBeamTarget
+    SubarrayBeamTarget,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure.mccs import (
     MCCSConfigurationSchema,
     StnConfigurationSchema,
     SubarrayBeamConfigurationSchema,
-    SubarrayBeamTargetSchema
+    SubarrayBeamTargetSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
 
@@ -26,7 +26,9 @@ VALID_SUBARRAYBEAMTARGET_JSON = """
 }
 """
 
-VALID_SUBARRAYBEAMTARGET_OBJECT = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
+VALID_SUBARRAYBEAMTARGET_OBJECT = SubarrayBeamTarget(
+    180.0, 45.0, "DriftScan", "HORIZON"
+)
 
 VALID_STNCONFIGURATION_JSON = """
 {
@@ -36,7 +38,8 @@ VALID_STNCONFIGURATION_JSON = """
 
 VALID_STNCONFIGURATION_OBJECT = StnConfiguration(1)
 
-VALID_SUBARRAYBEAMCONFIGURATION_JSON = """
+VALID_SUBARRAYBEAMCONFIGURATION_JSON = (
+    """
 {
     "subarray_beam_id": 1,
     "station_ids": [1,2],
@@ -44,9 +47,12 @@ VALID_SUBARRAYBEAMCONFIGURATION_JSON = """
     "update_rate": 0.0,
     "antenna_weights": [1.0, 1.0, 1.0],
     "phase_centre": [0.0, 0.0],
-    "target": """ + VALID_SUBARRAYBEAMTARGET_JSON + """
+    "target": """
+    + VALID_SUBARRAYBEAMTARGET_JSON
+    + """
 }
 """
+)
 
 VALID_SUBARRAYBEAMCONFIGURATION_OBJECT = SubarrayBeamConfiguration(
     subarray_beam_id=1,
@@ -55,32 +61,57 @@ VALID_SUBARRAYBEAMCONFIGURATION_OBJECT = SubarrayBeamConfiguration(
     update_rate=0.0,
     target=VALID_SUBARRAYBEAMTARGET_OBJECT,
     antenna_weights=[1.0, 1.0, 1.0],
-    phase_centre=[0.0, 0.0]
+    phase_centre=[0.0, 0.0],
 )
 
-VALID_MCCSCONFIGURATION_JSON = """
+VALID_MCCSCONFIGURATION_JSON = (
+    """
 {
     "stations": [
-    """ + VALID_STNCONFIGURATION_JSON + """
+    """
+    + VALID_STNCONFIGURATION_JSON
+    + """
     ],
     "subarray_beams": [
-    """ + VALID_SUBARRAYBEAMCONFIGURATION_JSON + """
+    """
+    + VALID_SUBARRAYBEAMCONFIGURATION_JSON
+    + """
     ]
 }
 """
+)
 
 VALID_MCCSCONFIGURATION_OBJECT = MCCSConfiguration(
     station_configs=[VALID_STNCONFIGURATION_OBJECT],
-    subarray_beam_configs=[VALID_SUBARRAYBEAMCONFIGURATION_OBJECT]
+    subarray_beam_configs=[VALID_SUBARRAYBEAMCONFIGURATION_OBJECT],
 )
 
 
-@pytest.mark.parametrize('schema_cls,instance,expected', [
-    (SubarrayBeamTargetSchema, VALID_SUBARRAYBEAMTARGET_OBJECT, VALID_SUBARRAYBEAMTARGET_JSON),
-    (StnConfigurationSchema, VALID_STNCONFIGURATION_OBJECT, VALID_STNCONFIGURATION_JSON),
-    (SubarrayBeamConfigurationSchema, VALID_SUBARRAYBEAMCONFIGURATION_OBJECT, VALID_SUBARRAYBEAMCONFIGURATION_JSON),
-    (MCCSConfigurationSchema, VALID_MCCSCONFIGURATION_OBJECT, VALID_MCCSCONFIGURATION_JSON)
-])
+@pytest.mark.parametrize(
+    "schema_cls,instance,expected",
+    [
+        (
+            SubarrayBeamTargetSchema,
+            VALID_SUBARRAYBEAMTARGET_OBJECT,
+            VALID_SUBARRAYBEAMTARGET_JSON,
+        ),
+        (
+            StnConfigurationSchema,
+            VALID_STNCONFIGURATION_OBJECT,
+            VALID_STNCONFIGURATION_JSON,
+        ),
+        (
+            SubarrayBeamConfigurationSchema,
+            VALID_SUBARRAYBEAMCONFIGURATION_OBJECT,
+            VALID_SUBARRAYBEAMCONFIGURATION_JSON,
+        ),
+        (
+            MCCSConfigurationSchema,
+            VALID_MCCSCONFIGURATION_OBJECT,
+            VALID_MCCSCONFIGURATION_JSON,
+        ),
+    ],
+)
 def test_marshal(schema_cls, instance, expected):
     """
     Verify that instances are marshalled to JSON correctly.
@@ -90,12 +121,31 @@ def test_marshal(schema_cls, instance, expected):
     assert_json_is_equal(expected, marshalled)
 
 
-@pytest.mark.parametrize('schema_cls,json_str,expected', [
-    (SubarrayBeamTargetSchema, VALID_SUBARRAYBEAMTARGET_JSON, VALID_SUBARRAYBEAMTARGET_OBJECT),
-    (StnConfigurationSchema, VALID_STNCONFIGURATION_JSON, VALID_STNCONFIGURATION_OBJECT),
-    (SubarrayBeamConfigurationSchema, VALID_SUBARRAYBEAMCONFIGURATION_JSON, VALID_SUBARRAYBEAMCONFIGURATION_OBJECT),
-    (MCCSConfigurationSchema, VALID_MCCSCONFIGURATION_JSON, VALID_MCCSCONFIGURATION_OBJECT)
-])
+@pytest.mark.parametrize(
+    "schema_cls,json_str,expected",
+    [
+        (
+            SubarrayBeamTargetSchema,
+            VALID_SUBARRAYBEAMTARGET_JSON,
+            VALID_SUBARRAYBEAMTARGET_OBJECT,
+        ),
+        (
+            StnConfigurationSchema,
+            VALID_STNCONFIGURATION_JSON,
+            VALID_STNCONFIGURATION_OBJECT,
+        ),
+        (
+            SubarrayBeamConfigurationSchema,
+            VALID_SUBARRAYBEAMCONFIGURATION_JSON,
+            VALID_SUBARRAYBEAMCONFIGURATION_OBJECT,
+        ),
+        (
+            MCCSConfigurationSchema,
+            VALID_MCCSCONFIGURATION_JSON,
+            VALID_MCCSCONFIGURATION_OBJECT,
+        ),
+    ],
+)
 def test_unmarshal(schema_cls, json_str, expected):
     """
     Verify that instances are unmarshalled to instances correctly.

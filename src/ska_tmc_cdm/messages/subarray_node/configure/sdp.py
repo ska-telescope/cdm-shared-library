@@ -18,10 +18,7 @@ class SDPConfiguration:
     """
 
     def __init__(
-            self,
-            *,  # force kwonly args
-            interface: Optional[str] = SCHEMA,
-            scan_type: str
+        self, *, interface: Optional[str] = SCHEMA, scan_type: str  # force kwonly args
     ):
         self.interface = interface
         self.scan_type = scan_type

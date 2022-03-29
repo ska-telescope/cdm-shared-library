@@ -4,15 +4,15 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.csp module.
 import copy
 import inspect
 
+from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
-    SubarrayConfiguration
+    SubarrayConfiguration,
 )
-from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.schemas.subarray_node.configure import (
     CSPConfigurationSchema,
     FSPConfigurationSchema,
@@ -70,19 +70,15 @@ def test_marshall_cspconfiguration_does_not_modify_original():
     """
     config = CSPConfiguration(
         interface="interface",
-        subarray_config=SubarrayConfiguration(
-            subarray_name="subarray name"
-        ),
+        subarray_config=SubarrayConfiguration(subarray_name="subarray name"),
         common_config=CommonConfiguration(
             config_id="config_id",
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
-            band_5_tuning=[5.85, 7.25]
+            band_5_tuning=[5.85, 7.25],
         ),
         cbf_config=CBFConfiguration(
-            fsp_configs=[
-                FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-            ]
+            fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)]
         ),
         pss_config=None,
         pst_config=None,

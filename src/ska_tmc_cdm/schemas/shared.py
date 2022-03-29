@@ -3,16 +3,12 @@ The schemas module defines Marshmallow schemas that are shared by various
 other serialisation schemas.
 """
 
-from marshmallow import (
-    post_dump,
-    pre_load,
-    Schema,
-)
+from marshmallow import Schema, post_dump, pre_load
 from marshmallow.fields import Field
 
 from ..jsonschema.json_schema import JsonSchema
 
-__all__ = ['UpperCasedField', 'OrderedSchema', 'ValidatingSchema']
+__all__ = ["UpperCasedField", "OrderedSchema", "ValidatingSchema"]
 
 
 class UpperCasedField(Field):  # pylint: disable=too-few-public-methods
@@ -23,7 +19,7 @@ class UpperCasedField(Field):  # pylint: disable=too-few-public-methods
 
     def _serialize(self, value, attr, obj, **kwargs):  # pylint: disable=no-self-use
         if value is None:
-            return ''
+            return ""
         return value.upper()
 
     def _deserialize(self, value, attr, data, **kwargs):  # pylint: disable=no-self-use
@@ -41,6 +37,7 @@ class OrderedSchema(Schema):  # pylint: disable=too-few-public-methods
         """
         marshmallow directive to respect order of JSON properties  in message.
         """
+
         ordered = True
 
 
@@ -70,7 +67,9 @@ class ValidatingSchema(Schema):
         return data
 
     @post_dump
-    def validate_on_dump(self, data, process_fn=lambda x: x, **_):  # pylint: disable=no-self-use
+    def validate_on_dump(
+        self, data, process_fn=lambda x: x, **_
+    ):  # pylint: disable=no-self-use
         """
         Validate the serialised object against the relevant Telescope Model
         schema.
@@ -100,7 +99,7 @@ class ValidatingSchema(Schema):
             return
 
         strictness = self.context.get(self.VALIDATION_STRICTNESS, None)
-        interface = data.get('interface', None)
+        interface = data.get("interface", None)
         if interface:
             JsonSchema.validate_schema(
                 interface, process_fn(data), strictness=strictness

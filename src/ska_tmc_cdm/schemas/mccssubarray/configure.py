@@ -7,7 +7,7 @@ from marshmallow import Schema, fields, post_load
 from ska_tmc_cdm.messages.mccssubarray.configure import (
     ConfigureRequest,
     StationConfiguration,
-    SubarrayBeamConfiguration
+    SubarrayBeamConfiguration,
 )
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
@@ -15,7 +15,7 @@ from ska_tmc_cdm.schemas.shared import ValidatingSchema
 __all__ = [
     "ConfigureRequestSchema",
     "StationConfigurationSchema",
-    "SubarrayBeamConfiguration"
+    "SubarrayBeamConfiguration",
 ]
 
 
@@ -33,9 +33,7 @@ class StationConfigurationSchema(Schema):
         :return: StnConfiguration instance populated to match JSON
         """
         station_id = data["station_id"]
-        return StationConfiguration(
-            station_id=station_id
-        )
+        return StationConfiguration(station_id=station_id)
 
 
 class SubarrayBeamConfigurationSchema(Schema):
@@ -72,7 +70,7 @@ class SubarrayBeamConfigurationSchema(Schema):
             channels=channels,
             sky_coordinates=sky_coordinates,
             antenna_weights=antenna_weights,
-            phase_centre=phase_centre
+            phase_centre=phase_centre,
         )
 
 
@@ -102,7 +100,5 @@ class ConfigureRequestSchema(ValidatingSchema):
         stations = data["stations"]
         subarray_beams = data["subarray_beams"]
         return ConfigureRequest(
-            interface=interface,
-            stations=stations,
-            subarray_beams=subarray_beams
+            interface=interface, stations=stations, subarray_beams=subarray_beams
         )

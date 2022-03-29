@@ -6,6 +6,7 @@ import pytest
 
 from ska_tmc_cdm.messages.mccscontroller.allocate import AllocateRequest
 from ska_tmc_cdm.schemas.mccscontroller.allocate import AllocateRequestSchema
+
 from .. import utils
 
 VALID_JSON = """
@@ -33,7 +34,7 @@ VALID_OBJECT = AllocateRequest(
     subarray_id=1,
     subarray_beam_ids=[1],
     station_ids=[[1, 2]],
-    channel_blocks=[3]
+    channel_blocks=[3],
 )
 
 
@@ -43,17 +44,13 @@ def invalidator_fn(o: AllocateRequest):
 
 
 @pytest.mark.parametrize(
-    'schema_cls,instance,modifier_fn,valid_json,invalid_json',
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
     [
-        (AllocateRequestSchema,
-         VALID_OBJECT,
-         invalidator_fn,
-         VALID_JSON,
-         INVALID_JSON),
-    ]
+        (AllocateRequestSchema, VALID_OBJECT, invalidator_fn, VALID_JSON, INVALID_JSON),
+    ],
 )
 def test_releaseresources_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    schema_cls, instance, modifier_fn, valid_json, invalid_json
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.

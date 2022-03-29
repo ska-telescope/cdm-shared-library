@@ -15,11 +15,11 @@ def test_upper_cased_field_serialises_to_uppercase():
         """
 
         def __init__(self):
-            self.attr = 'bar'
+            self.attr = "bar"
 
     obj = TestObject()
-    serialised = shared.UpperCasedField().serialize('attr', obj)
-    assert serialised == 'BAR'
+    serialised = shared.UpperCasedField().serialize("attr", obj)
+    assert serialised == "BAR"
 
 
 def test_upper_cased_field_serialises_none():
@@ -36,13 +36,13 @@ def test_upper_cased_field_serialises_none():
             self.attr = None
 
     obj = TestObject()
-    serialised = shared.UpperCasedField().serialize('attr', obj)
-    assert serialised == ''
+    serialised = shared.UpperCasedField().serialize("attr", obj)
+    assert serialised == ""
 
 
 def test_upper_cased_field_deserialises_to_uppercase():
     """
     Verify that UpperCasedField deserialises to lowercase text.
     """
-    deserialised = shared.UpperCasedField().deserialize('FOO')
-    assert deserialised == 'foo'
+    deserialised = shared.UpperCasedField().deserialize("FOO")
+    assert deserialised == "foo"

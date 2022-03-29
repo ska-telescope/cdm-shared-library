@@ -2,16 +2,17 @@
 The schemas module defines Marshmallow schemas that map shared CDM message
 classes for SubArrayNode configuration to/from a JSON representation.
 """
+import collections
 import copy
 
-import collections
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
 
 import ska_tmc_cdm.messages.subarray_node.configure.core as configure_msgs
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
-from . import csp, sdp, tmc, mccs
+
 from ... import CODEC, shared
+from . import csp, mccs, sdp, tmc
 
 __all__ = [
     "ConfigureRequestSchema",
@@ -49,7 +50,10 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         icrs_coord = target.coord.transform_to("icrs")
         hms, dms = icrs_coord.to_string("hmsdms", sep=":").split(" ")
         sexagesimal = JsonTarget(
-            ra=hms, dec=dms, reference_frame=icrs_coord.frame.name, target_name=target.target_name
+            ra=hms,
+            dec=dms,
+            reference_frame=icrs_coord.frame.name,
+            target_name=target.target_name,
         )
 
         return sexagesimal
@@ -68,10 +72,11 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         dms = data["dec"]
         reference_frame = data["reference_frame"]
         target = configure_msgs.Target(
-            hms, dms,
+            hms,
+            dms,
             reference_frame=reference_frame,
             target_name=target_name,
-            unit=("hourangle", "deg")
+            unit=("hourangle", "deg"),
         )
         return target
 
@@ -138,10 +143,13 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
 
 
 @CODEC.register_mapping(ConfigureRequest)
-class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-few-public-methods
+class ConfigureRequestSchema(
+    shared.ValidatingSchema
+):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """
+
     interface = fields.String(required=True)
     transaction_id = fields.String()
 
@@ -178,7 +186,7 @@ class ConfigureRequestSchema(shared.ValidatingSchema):  # pylint: disable=too-fe
             sdp=sdp,
             csp=csp,
             mccs=mccs,
-            tmc=tmc
+            tmc=tmc,
         )
 
     @post_dump

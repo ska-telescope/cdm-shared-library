@@ -9,7 +9,7 @@ from ska_telmodel.tmc.examples import TMC_RELEASERES_1_0 as VALID_JSON
 from ska_tmc_cdm.jsonschema.json_schema import (
     JsonSchema,
     JsonValidationError,
-    SchemaNotFound
+    SchemaNotFound,
 )
 
 INVALID_JSON = copy.deepcopy(VALID_JSON)
@@ -21,8 +21,7 @@ def test_schema_validation_with_valid_json():
     Verify schema validation with test valid json
     """
     json_schema_obj = JsonSchema()
-    json_schema_obj.validate_schema(uri=VALID_JSON["interface"],
-                                    instance=VALID_JSON)
+    json_schema_obj.validate_schema(uri=VALID_JSON["interface"], instance=VALID_JSON)
 
 
 def test_schema_validation_with_invalid_json():
@@ -32,8 +31,9 @@ def test_schema_validation_with_invalid_json():
     """
     json_schema_obj = JsonSchema()
     with pytest.raises(JsonValidationError):
-        json_schema_obj.validate_schema(uri=INVALID_JSON["interface"],
-                                        instance=INVALID_JSON)
+        json_schema_obj.validate_schema(
+            uri=INVALID_JSON["interface"], instance=INVALID_JSON
+        )
 
 
 def test_schema_with_invalid_schema_uri():

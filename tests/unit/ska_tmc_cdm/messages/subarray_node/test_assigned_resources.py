@@ -4,9 +4,9 @@ Unit tests for the TMC Assigned Resources
 
 
 from ska_tmc_cdm.messages.subarray_node.assigned_resources import (
+    SCHEMA,
     AssignedResources,
     MCCSAllocation,
-    SCHEMA
 )
 
 
@@ -85,8 +85,7 @@ def test_assigned_resources_offered_interface():
     mccs_allocation = MCCSAllocation([], [], [])
     expected_string = "a_string"
     assigned_resources = AssignedResources(
-        interface=expected_string,
-        mccs=mccs_allocation
+        interface=expected_string, mccs=mccs_allocation
     )
     assert assigned_resources.interface == expected_string
 

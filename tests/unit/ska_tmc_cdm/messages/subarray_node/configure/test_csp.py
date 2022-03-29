@@ -1,10 +1,10 @@
 """
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
+import copy
 import functools
 import itertools
 
-import copy
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
@@ -21,19 +21,15 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
 
 CONSTRUCTOR_ARGS = dict(
     interface="interface",
-    subarray_config=SubarrayConfiguration(
-        subarray_name="subarray name"
-    ),
+    subarray_config=SubarrayConfiguration(subarray_name="subarray name"),
     common_config=CommonConfiguration(
         config_id="config_id",
         frequency_band=ReceiverBand.BAND_1,
         subarray_id=1,
-        band_5_tuning=[5.85, 7.25]
+        band_5_tuning=[5.85, 7.25],
     ),
     cbf_config=CBFConfiguration(
-        fsp_configs=[
-            FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-        ]
+        fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)]
     ),
     pss_config=None,
     pst_config=None,
@@ -54,7 +50,9 @@ def test_common_configuration_equals():
     config2 = CommonConfiguration(config_id, frequency_band, subarray_id, band_5_tuning)
     assert config1 == config2
 
-    assert config1 != CommonConfiguration(config_id, ReceiverBand.BAND_2, subarray_id, band_5_tuning)
+    assert config1 != CommonConfiguration(
+        config_id, ReceiverBand.BAND_2, subarray_id, band_5_tuning
+    )
     assert config1 != CommonConfiguration(config_id, frequency_band, 2, band_5_tuning)
     assert config1 != CommonConfiguration(config_id, frequency_band, 2)
 
@@ -189,19 +187,15 @@ def test_csp_configuration_equals():
 
     alt_constructor_args = dict(
         interface="foo",
-        subarray_config=SubarrayConfiguration(
-            subarray_name="foo"
-        ),
+        subarray_config=SubarrayConfiguration(subarray_name="foo"),
         common_config=CommonConfiguration(
             config_id="foo",
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
-            band_5_tuning=[5.85, 7.25]
+            band_5_tuning=[5.85, 7.25],
         ),
         cbf_config=CBFConfiguration(
-            fsp_configs=[
-                FSPConfiguration(2, FSPFunctionMode.CORR, 1, 10, 0)
-            ]
+            fsp_configs=[FSPConfiguration(2, FSPFunctionMode.CORR, 1, 10, 0)]
         ),
         pss_config=PSSConfiguration(),
         pst_config=PSTConfiguration(),

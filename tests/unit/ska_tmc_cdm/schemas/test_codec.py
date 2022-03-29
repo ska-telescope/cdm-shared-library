@@ -2,9 +2,9 @@
 Unit tests for the ska_tmc_cdm.schemas.codec module.
 """
 import copy
+import functools
 import json
 import tempfile
-import functools
 
 import pytest
 
@@ -15,39 +15,36 @@ from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
+    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
-    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-    VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT
 )
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
-    VALID_MID_CONFIGURE_JSON,
-    VALID_MID_CONFIGURE_OBJECT,
+    INVALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_OBJECT,
-    INVALID_LOW_CONFIGURE_JSON
+    VALID_MID_CONFIGURE_JSON,
+    VALID_MID_CONFIGURE_OBJECT,
 )
 
 TEST_PARAMETERS = [
-    (AssignResourcesRequest,
-     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
-     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT),
-    (AssignResourcesRequest,
-     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT),
-    (ConfigureRequest,
-     VALID_MID_CONFIGURE_JSON,
-     VALID_MID_CONFIGURE_OBJECT),
-    (ConfigureRequest,
-     VALID_LOW_CONFIGURE_JSON,
-     VALID_LOW_CONFIGURE_OBJECT),
+    (
+        AssignResourcesRequest,
+        VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+        VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
+    ),
+    (
+        AssignResourcesRequest,
+        VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+        VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
+    ),
+    (ConfigureRequest, VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT),
+    (ConfigureRequest, VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT),
 ]
 
 
-@pytest.mark.parametrize(
-    "msg_cls,json_str,expected",
-    TEST_PARAMETERS
-)
+@pytest.mark.parametrize("msg_cls,json_str,expected", TEST_PARAMETERS)
 def test_codec_loads(msg_cls, json_str, expected):
     """
     Verify that the codec unmarshalls objects correctly.
@@ -56,10 +53,7 @@ def test_codec_loads(msg_cls, json_str, expected):
     assert unmarshalled == expected
 
 
-@pytest.mark.parametrize(
-    "msg_cls,expected,instance",
-    TEST_PARAMETERS
-)
+@pytest.mark.parametrize("msg_cls,expected,instance", TEST_PARAMETERS)
 def test_codec_dumps(msg_cls, expected, instance):
     """
     Verify that the codec unmarshalls objects correctly.
@@ -68,16 +62,13 @@ def test_codec_dumps(msg_cls, expected, instance):
     assert_json_is_equal(marshalled, expected)
 
 
-@pytest.mark.parametrize(
-    "msg_cls,json_str,expected",
-    TEST_PARAMETERS
-)
+@pytest.mark.parametrize("msg_cls,json_str,expected", TEST_PARAMETERS)
 def test_codec_load_from_file(msg_cls, json_str, expected):
     """
     Verify that the codec loads JSON from file for all key objects.
     """
     # mode='w' is required otherwise tempfile expects bytes
-    with tempfile.NamedTemporaryFile(mode='w') as f:
+    with tempfile.NamedTemporaryFile(mode="w") as f:
         f.write(json_str)
         f.flush()
         unmarshalled = CODEC.load_from_file(msg_cls, f.name)
@@ -91,7 +82,7 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     """
     # create some test JSON that references an invalid schema
     invalid_data = json.loads(VALID_LOW_CONFIGURE_JSON)
-    invalid_data['interface'] = 'https://foo.com/badschema/2.0'
+    invalid_data["interface"] = "https://foo.com/badschema/2.0"
     invalid_data = json.dumps(invalid_data)
 
     with pytest.raises(SchemaNotFound):
@@ -105,7 +96,7 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
     """
     # create a test object that references an invalid schema
     invalid_data = copy.deepcopy(VALID_LOW_CONFIGURE_OBJECT)
-    invalid_data.interface = 'https://foo.com/badschema/2.0'
+    invalid_data.interface = "https://foo.com/badschema/2.0"
 
     # validation should occur regardless of strictness, but exceptions are
     # only raised when strictness=2
@@ -144,25 +135,28 @@ def test_loads_invalid_json_with_validation_disabled(strictness):
         ConfigureRequest,
         INVALID_LOW_CONFIGURE_JSON,
         validate=False,
-        strictness=strictness
+        strictness=strictness,
     )
     marshalled = CODEC.dumps(unmarshalled, validate=False)
     assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
 
 
-@pytest.mark.parametrize('message_cls', [
-    ska_tmc_cdm.messages.central_node.assign_resources.AssignResourcesRequest,
-    ska_tmc_cdm.messages.central_node.assign_resources.AssignResourcesResponse,
-    ska_tmc_cdm.messages.central_node.release_resources.ReleaseResourcesRequest,
-    ska_tmc_cdm.messages.subarray_node.configure.ConfigureRequest,
-    ska_tmc_cdm.messages.subarray_node.scan.ScanRequest,
-    ska_tmc_cdm.messages.subarray_node.assigned_resources.AssignedResources,
-    ska_tmc_cdm.messages.mccscontroller.allocate.AllocateRequest,
-    ska_tmc_cdm.messages.mccscontroller.releaseresources.ReleaseResourcesRequest,
-    ska_tmc_cdm.messages.mccssubarray.configure.ConfigureRequest,
-    ska_tmc_cdm.messages.mccssubarray.scan.ScanRequest,
-    ska_tmc_cdm.messages.mccssubarray.assigned_resources.AssignedResources
-])
+@pytest.mark.parametrize(
+    "message_cls",
+    [
+        ska_tmc_cdm.messages.central_node.assign_resources.AssignResourcesRequest,
+        ska_tmc_cdm.messages.central_node.assign_resources.AssignResourcesResponse,
+        ska_tmc_cdm.messages.central_node.release_resources.ReleaseResourcesRequest,
+        ska_tmc_cdm.messages.subarray_node.configure.ConfigureRequest,
+        ska_tmc_cdm.messages.subarray_node.scan.ScanRequest,
+        ska_tmc_cdm.messages.subarray_node.assigned_resources.AssignedResources,
+        ska_tmc_cdm.messages.mccscontroller.allocate.AllocateRequest,
+        ska_tmc_cdm.messages.mccscontroller.releaseresources.ReleaseResourcesRequest,
+        ska_tmc_cdm.messages.mccssubarray.configure.ConfigureRequest,
+        ska_tmc_cdm.messages.mccssubarray.scan.ScanRequest,
+        ska_tmc_cdm.messages.mccssubarray.assigned_resources.AssignedResources,
+    ],
+)
 def test_schema_registration(message_cls):
     """
     Verify that a schema is registered with the MarshmallowCodec.

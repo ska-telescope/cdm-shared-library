@@ -23,7 +23,9 @@ class Target:
     OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
 
     #  pylint: disable=too-many-arguments
-    def __init__(self, ra, dec, target_name="", reference_frame="icrs", unit=("hourangle", "deg")):
+    def __init__(
+        self, ra, dec, target_name="", reference_frame="icrs", unit=("hourangle", "deg")
+    ):
         self.coord = SkyCoord(ra, dec, unit=unit, frame=reference_frame)
         self.target_name = target_name
 
@@ -37,9 +39,9 @@ class Target:
         sep = self.coord.separation(other.coord)
 
         return (
-                self.target_name == other.target_name
-                and self.coord.frame.name == other.coord.frame.name
-                and sep.radian < self.OFFSET_MARGIN_IN_RAD
+            self.target_name == other.target_name
+            and self.coord.frame.name == other.coord.frame.name
+            and sep.radian < self.OFFSET_MARGIN_IN_RAD
         )
 
     def __repr__(self):
