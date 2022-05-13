@@ -51,7 +51,7 @@ INVALID_ASSIGNEDRESOURCES_JSON = """
 """
 
 
-def modifier_fn(o: AssignedResources):
+def invalidate_assignresources(o: AssignedResources):
     # function to make a valid AssignedResources invalid
     o.mccs.subarray_beam_ids = [-1]
 
@@ -62,7 +62,7 @@ def modifier_fn(o: AssignedResources):
         (
             AssignedResourcesSchema,
             VALID_ASSIGNEDRESOURCES_OBJECT,
-            modifier_fn,
+            invalidate_assignresources,
             VALID_ASSIGNEDRESOURCES_JSON,
             INVALID_ASSIGNEDRESOURCES_JSON,
         ),

@@ -88,7 +88,7 @@ VALID_OBJECT = ConfigureRequest(
 )
 
 
-def modifier_fn(o):
+def invalidate_configurerequest(o):
     # function to make a valid ConfigureRequest invalid
     o.stations[0].station_id = -1
 
@@ -96,7 +96,13 @@ def modifier_fn(o):
 @pytest.mark.parametrize(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json",
     [
-        (ConfigureRequestSchema, VALID_OBJECT, modifier_fn, VALID_JSON, INVALID_JSON),
+        (
+            ConfigureRequestSchema,
+            VALID_OBJECT,
+            invalidate_configurerequest,
+            VALID_JSON,
+            INVALID_JSON,
+        ),
     ],
 )
 def test_assigned_resources_serialisation_and_validation(

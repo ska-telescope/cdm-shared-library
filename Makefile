@@ -34,4 +34,3 @@ diagrams:  ## recreate PlantUML diagrams whose source has been modified
 		cat $$i | docker run --rm -i think/plantuml -tpng $$i > $${i%%.*}.png; \
 	done
 
-.PHONY: all post-push help

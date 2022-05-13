@@ -161,7 +161,9 @@ class ConfigureRequestSchema(
     mccs = fields.Nested(mccs.MCCSConfigurationSchema)
 
     @post_load
-    def create_configuration(self, data, **_):  # pylint: disable=no-self-use
+    def create_configuration(
+        self, data, **_
+    ):  # pylint: disable=no-self-use,redefined-outer-name
         """
         Converted parsed JSON backn into a subarray_node.ConfigureRequest
         object.

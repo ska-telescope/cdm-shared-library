@@ -28,4 +28,4 @@ docs/apidocs
 **/.pydevproject
 **/.settings
 
-PrivateRules.mak
+/PrivateRules.mak
