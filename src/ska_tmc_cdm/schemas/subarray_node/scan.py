@@ -3,7 +3,7 @@ The ska_tmc_cdm.schemas.subarray_node.scan module contains Marshmallow schema
 that map ska_tmc_cdm.schemas.subarray_node.scan message classes to/from JSON.
 """
 
-from marshmallow import fields, post_load, post_dump
+from marshmallow import fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 from ska_tmc_cdm.schemas import CODEC
@@ -45,9 +45,7 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
         scan_id = data["scan_id"]
 
         return ScanRequest(
-            interface=interface,
-            transaction_id=transaction_id,
-            scan_id=scan_id
+            interface=interface, transaction_id=transaction_id, scan_id=scan_id
         )
 
     @post_dump

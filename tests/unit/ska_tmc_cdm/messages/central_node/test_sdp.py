@@ -2,9 +2,14 @@
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 
-from ska_tmc_cdm.messages.central_node.sdp import ProcessingBlockConfiguration
-from ska_tmc_cdm.messages.central_node.sdp import PbDependency, ScanType, Channel
-from ska_tmc_cdm.messages.central_node.sdp import SDPWorkflow, SDPConfiguration
+from ska_tmc_cdm.messages.central_node.sdp import (
+    Channel,
+    PbDependency,
+    ProcessingBlockConfiguration,
+    ScanType,
+    SDPConfiguration,
+    SDPWorkflow,
+)
 
 
 def test_channel_equals():

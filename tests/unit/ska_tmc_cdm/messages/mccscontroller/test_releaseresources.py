@@ -12,7 +12,7 @@ def test_releaseresourcesrequest_object_equality():
     constructor_args = dict(
         interface="https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
         subarray_id=1,
-        release_all=True
+        release_all=True,
     )
     request = ReleaseResourcesRequest(**constructor_args)
 
@@ -24,7 +24,7 @@ def test_releaseresourcesrequest_object_equality():
     different_args = dict(
         interface="https://schema.skao.int/ska-low-mccs-releaseresources/999.0",
         subarray_id=2,
-        release_all=False
+        release_all=False,
     )
     for k, v in different_args.items():
         other_args = dict(constructor_args)
@@ -40,7 +40,7 @@ def test_releaseresourcesrequest_equality_with_other_objects():
     constructor_args = dict(
         interface="https://schema.skao.int/ska-low-mccs-releaseresources/2.0",
         subarray_id=1,
-        release_all=True
+        release_all=True,
     )
     request = ReleaseResourcesRequest(**constructor_args)
 

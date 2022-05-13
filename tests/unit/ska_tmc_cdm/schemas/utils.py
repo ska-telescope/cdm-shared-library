@@ -8,11 +8,7 @@ from ska_tmc_cdm.utils import assert_json_is_equal
 
 
 def test_schema_serialisation_and_validation(
-        schema_cls,
-        instance,
-        modifier_fn,
-        valid_json,
-        invalid_json
+    schema_cls, instance, modifier_fn, valid_json, invalid_json
 ):
     """
     Performs a set of tests to confirm that the Marshmallow schema validates
@@ -29,15 +25,21 @@ def test_schema_serialisation_and_validation(
     """
     test_marshal(schema_cls, instance, valid_json)
     test_unmarshal(schema_cls, valid_json, instance)
-    test_serialising_valid_object_does_not_raise_exception_when_strict(schema_cls, instance)
+    test_serialising_valid_object_does_not_raise_exception_when_strict(
+        schema_cls, instance
+    )
 
     # not all schema have validation, such as TMC MID at time of writing
     if modifier_fn is not None:
-        test_serialising_invalid_object_raises_exception_when_strict(schema_cls, instance, modifier_fn)
+        test_serialising_invalid_object_raises_exception_when_strict(
+            schema_cls, instance, modifier_fn
+        )
 
     # Empty instances such as '{}' do not have an invalid representation
     if invalid_json is not None:
-        test_deserialising_invalid_json_raises_exception_when_strict(schema_cls, invalid_json)
+        test_deserialising_invalid_json_raises_exception_when_strict(
+            schema_cls, invalid_json
+        )
 
 
 def test_marshal(schema_cls, instance, valid_json):
@@ -62,7 +64,9 @@ def test_unmarshal(schema_cls, valid_json, instance):
     assert unmarshalled == instance
 
 
-def test_deserialising_invalid_json_raises_exception_when_strict(schema_cls, invalid_json):
+def test_deserialising_invalid_json_raises_exception_when_strict(
+    schema_cls, invalid_json
+):
     """
     Verifies that unmarshaling an invalid JSON string results in an exception
     when the schema validation is set to strict.
@@ -75,7 +79,9 @@ def test_deserialising_invalid_json_raises_exception_when_strict(schema_cls, inv
         _ = schema.loads(invalid_json)
 
 
-def test_serialising_valid_object_does_not_raise_exception_when_strict(schema_cls, instance):
+def test_serialising_valid_object_does_not_raise_exception_when_strict(
+    schema_cls, instance
+):
     """
     Verifies that marshaling a valid instance does not result in a validation
     error when the schema exists and schema validation is set to strict.
@@ -90,7 +96,9 @@ def test_serialising_valid_object_does_not_raise_exception_when_strict(schema_cl
         pass
 
 
-def test_serialising_invalid_object_raises_exception_when_strict(schema_cls, instance, modifier_fn):
+def test_serialising_invalid_object_raises_exception_when_strict(
+    schema_cls, instance, modifier_fn
+):
     """
     Verify that marshaling an invalid object results in a validation error
     when schema validation is set to strict.

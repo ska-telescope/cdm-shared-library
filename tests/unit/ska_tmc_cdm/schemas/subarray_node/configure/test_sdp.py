@@ -6,6 +6,7 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure import SDPConfiguration
 from ska_tmc_cdm.schemas.subarray_node.configure.sdp import SDPConfigurationSchema
+
 from ... import utils
 
 VALID_JSON = """
@@ -21,11 +22,7 @@ VALID_OBJECT = SDPConfiguration(scan_type="science_A")
 @pytest.mark.parametrize(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json",
     [
-        (SDPConfigurationSchema,
-         VALID_OBJECT,
-         None,
-         VALID_JSON,
-         None),
+        (SDPConfigurationSchema, VALID_OBJECT, None, VALID_JSON, None),
     ],
 )
 def test_releaseresources_serialisation_and_validation(

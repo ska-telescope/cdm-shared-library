@@ -6,11 +6,10 @@ Central Node message classes to/from a JSON representation.
 from marshmallow import fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
-from ska_tmc_cdm.schemas.central_node.common import (
-    DishAllocationSchema,
-)
-from ..shared import ValidatingSchema
+from ska_tmc_cdm.schemas.central_node.common import DishAllocationSchema
+
 from ...schemas import CODEC
+from ..shared import ValidatingSchema
 
 __all__ = [
     "ReleaseResourcesRequestSchema",
@@ -18,7 +17,9 @@ __all__ = [
 
 
 @CODEC.register_mapping(ReleaseResourcesRequest)
-class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
+class ReleaseResourcesRequestSchema(
+    ValidatingSchema
+):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the ReleaseResourcesRequest class.
     """
@@ -27,14 +28,13 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
     transaction_id = fields.String()
     subarray_id = fields.Integer()
     release_all = fields.Boolean()
-    dish = fields.Pluck(
-        DishAllocationSchema, "receptor_ids", data_key="receptor_ids"
-    )
+    dish = fields.Pluck(DishAllocationSchema, "receptor_ids", data_key="receptor_ids")
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
         Marshmallow directives for ReleaseResourcesRequestSchema.
         """
+
         ordered = True
 
     @post_dump
@@ -59,7 +59,7 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
         # MID and LOW still have different schema for PI11. Eventually these
         # schemas will be unified into a single schema, but for now we need
         # to detect the difference and do some special handling.
-        is_mid = 'ska-tmc-low' not in data['interface']
+        is_mid = "ska-tmc-low" not in data["interface"]
 
         if is_mid:
             # for MID, remove dish specifier when release all is True and vice

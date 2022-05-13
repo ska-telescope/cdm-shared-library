@@ -15,11 +15,11 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(
-            self,
-            *,  # force kwonly args
-            interface: Optional[str] = SCHEMA,
-            scan_id: int,
-            start_time: float
+        self,
+        *,  # force kwonly args
+        interface: Optional[str] = SCHEMA,
+        scan_id: int,
+        start_time: float,
     ):
         self.interface = interface
         self.scan_id = scan_id
@@ -29,7 +29,7 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
         if not isinstance(other, ScanRequest):
             return False
         return (
-                self.interface == other.interface
-                and self.scan_id == other.scan_id
-                and self.start_time == other.start_time
+            self.interface == other.interface
+            and self.scan_id == other.scan_id
+            and self.start_time == other.start_time
         )

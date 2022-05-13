@@ -3,14 +3,11 @@ The schemas.central_node module defines Marshmallow schemas that map
 MCCSController AllocateRequest message classes to/from their JSON
 representation.
 """
-from marshmallow import (
-    fields,
-    post_load,
-)
+from marshmallow import fields, post_load
 
-from ..shared import ValidatingSchema
 from ...messages.mccscontroller.allocate import AllocateRequest
 from ...schemas import CODEC
+from ..shared import ValidatingSchema
 
 __all__ = ["AllocateRequestSchema"]
 
@@ -47,5 +44,5 @@ class AllocateRequestSchema(ValidatingSchema):
             subarray_id=subarray_id,
             subarray_beam_ids=subarray_beam_ids,
             station_ids=station_ids,
-            channel_blocks=channel_blocks
+            channel_blocks=channel_blocks,
         )

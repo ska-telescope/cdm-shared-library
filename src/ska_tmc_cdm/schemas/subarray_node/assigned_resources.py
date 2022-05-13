@@ -5,15 +5,15 @@ to/from JSON.
 
 from marshmallow import Schema, fields, post_load
 
-from ska_tmc_cdm.messages.subarray_node.assigned_resources import AssignedResources
-from ska_tmc_cdm.messages.subarray_node.assigned_resources import MCCSAllocation
-from ..shared import ValidatingSchema
-from ...schemas import CODEC
+from ska_tmc_cdm.messages.subarray_node.assigned_resources import (
+    AssignedResources,
+    MCCSAllocation,
+)
 
-__all__ = [
-    "MCCSAllocationSchema",
-    "AssignedResourcesSchema"
-]
+from ...schemas import CODEC
+from ..shared import ValidatingSchema
+
+__all__ = ["MCCSAllocationSchema", "AssignedResourcesSchema"]
 
 
 @CODEC.register_mapping(MCCSAllocation)
@@ -26,14 +26,10 @@ class MCCSAllocationSchema(Schema):
         fields.Integer, data_key="subarray_beam_ids", required=True
     )
     station_ids = fields.List(
-        fields.List(fields.Integer),
-        data_key="station_ids",
-        required=True
+        fields.List(fields.Integer), data_key="station_ids", required=True
     )
     channel_blocks = fields.List(
-        fields.Integer,
-        data_key="channel_blocks",
-        required=True
+        fields.Integer, data_key="channel_blocks", required=True
     )
 
     @post_load
@@ -58,6 +54,7 @@ class AssignedResourcesSchema(ValidatingSchema):
     AssignedResourcesSchema maps the AssignedResources class to/from a JSON
     representation.
     """
+
     interface = fields.String(required=True)
     mccs = fields.Nested(MCCSAllocationSchema, required=True)
 
@@ -73,7 +70,4 @@ class AssignedResourcesSchema(ValidatingSchema):
         """
         interface = data.get("interface", None)
         mccs = data.get("mccs", None)
-        return AssignedResources(
-            interface=interface,
-            mccs=mccs
-        )
+        return AssignedResources(interface=interface, mccs=mccs)

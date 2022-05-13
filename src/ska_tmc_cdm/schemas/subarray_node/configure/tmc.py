@@ -48,9 +48,7 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: TMCConfiguration instance populated to match JSON
         """
-        scan_duration = timedelta(seconds=data.get('scan_duration'))
+        scan_duration = timedelta(seconds=data.get("scan_duration"))
 
-        tmc_config = TMCConfiguration(
-            scan_duration=scan_duration
-        )
+        tmc_config = TMCConfiguration(scan_duration=scan_duration)
         return tmc_config

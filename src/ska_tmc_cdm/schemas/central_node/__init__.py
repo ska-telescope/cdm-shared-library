@@ -16,7 +16,7 @@ from .assign_resources import (
     AssignResourcesRequestSchema,
     AssignResourcesResponseSchema,
 )
-from .common import DishAllocationSchema, DishAllocationResponseSchema
+from .common import DishAllocationResponseSchema, DishAllocationSchema
 from .mccs import MCCSAllocateSchema
 from .release_resources import ReleaseResourcesRequestSchema
 from .sdp import SDPConfigurationSchema

@@ -3,9 +3,10 @@ The codec module contains classes used by clients to marshall CDM classes to
 and from JSON. This saves the clients having to instantiate and manipulate the
 Marshmallow schema directly.
 """
-__all__ = ['MarshmallowCodec']
+__all__ = ["MarshmallowCodec"]
 
 from typing import Optional
+
 from .shared import ValidatingSchema
 
 STRICTNESS = None
@@ -46,11 +47,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         self._schema[cdm_class] = schema_class
 
     def load_from_file(
-            self,
-            cls,
-            path,
-            validate: bool = True,
-            strictness: Optional[int] = STRICTNESS
+        self, cls, path, validate: bool = True, strictness: Optional[int] = STRICTNESS
     ):
         """
         Load an instance of a CDM class from disk.
@@ -61,16 +58,16 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         :param strictness: optional validation strictness level (0=min, 2=max)
         :return: an instance of cls
         """
-        with open(path, 'r') as json_file:
+        with open(path, "r", encoding="utf-8") as json_file:
             json_data = json_file.read()
             return self.loads(cls, json_data, validate, strictness)
 
     def loads(
-            self,
-            cdm_class,
-            json_data,
-            validate: bool = True,
-            strictness: Optional[int] = STRICTNESS
+        self,
+        cdm_class,
+        json_data,
+        validate: bool = True,
+        strictness: Optional[int] = STRICTNESS,
     ):
         """
         Create an instance of a CDM class from a JSON string.
@@ -93,12 +90,7 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         return schema_obj.loads(json_data=json_data)
 
-    def dumps(
-            self,
-            obj,
-            validate: bool = True,
-            strictness: Optional[int] = STRICTNESS
-    ):
+    def dumps(self, obj, validate: bool = True, strictness: Optional[int] = STRICTNESS):
         """
         Return a string JSON representation of a CDM instance.
 

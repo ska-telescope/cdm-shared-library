@@ -2,7 +2,7 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from typing import List, Dict
+from typing import Dict, List
 
 __all__ = [
     "SDPWorkflow",
@@ -75,7 +75,12 @@ class ScanType:
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self, scan_type_id, reference_frame: str, ra: str, dec: str, channels: List[Channel]
+        self,
+        scan_type_id,
+        reference_frame: str,
+        ra: str,
+        dec: str,
+        channels: List[Channel],
     ):
         self.scan_type_id = scan_type_id
         self.reference_frame = reference_frame
@@ -87,11 +92,11 @@ class ScanType:
         if not isinstance(other, ScanType):
             return False
         return (
-                self.scan_type_id == other.scan_type_id
-                and self.reference_frame == other.reference_frame
-                and self.ra == other.ra
-                and self.dec == other.dec
-                and self.channels == other.channels
+            self.scan_type_id == other.scan_type_id
+            and self.reference_frame == other.reference_frame
+            and self.ra == other.ra
+            and self.dec == other.dec
+            and self.channels == other.channels
         )
 
 
@@ -161,9 +166,9 @@ class SDPConfiguration:
         if not isinstance(other, SDPConfiguration):
             return False
         return (
-                self.eb_id == other.eb_id
-                and self.max_length == other.max_length
-                and self.scan_types == other.scan_types
-                and self.processing_blocks == other.processing_blocks
-                and self.interface == other.interface
+            self.eb_id == other.eb_id
+            and self.max_length == other.max_length
+            and self.scan_types == other.scan_types
+            and self.processing_blocks == other.processing_blocks
+            and self.interface == other.interface
         )

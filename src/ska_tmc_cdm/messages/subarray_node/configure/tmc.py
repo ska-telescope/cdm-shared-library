@@ -5,7 +5,7 @@ for all scan commands following this configuration.
 
 from datetime import timedelta
 
-__all__ = ['TMCConfiguration']
+__all__ = ["TMCConfiguration"]
 
 
 class TMCConfiguration:
@@ -14,7 +14,8 @@ class TMCConfiguration:
     """
 
     def __init__(
-            self, scan_duration: timedelta,
+        self,
+        scan_duration: timedelta,
     ):
         self.scan_duration = scan_duration
 

@@ -5,10 +5,7 @@ TMC Assigned Resources
 
 from typing import List, Optional
 
-__all__ = [
-    "MCCSAllocation",
-    "AssignedResources"
-]
+__all__ = ["MCCSAllocation", "AssignedResources"]
 
 SCHEMA = "https://schema.skao.int/ska-low-tmc-assignedresources/2.0"
 
@@ -62,11 +59,7 @@ class MCCSAllocation:
         Determine that the current MCCSAllocation instance
         is empty (none of the attribute Lists are populated)
         """
-        return not (
-            self.subarray_beam_ids
-            or self.station_ids
-            or self.channel_blocks
-        )
+        return not (self.subarray_beam_ids or self.station_ids or self.channel_blocks)
 
 
 class AssignedResources:
@@ -74,11 +67,9 @@ class AssignedResources:
     AssignedResources models the structured JSON returned when the
     MCCSSubarray.assigned_resources Tango attribute is read.
     """
+
     def __init__(
-        self,
-        *,  # force kwargs
-        interface: Optional[str] = SCHEMA,
-        mccs: MCCSAllocation
+        self, *, interface: Optional[str] = SCHEMA, mccs: MCCSAllocation  # force kwargs
     ):
         """
         Create a new AssignedResources instance.
@@ -92,10 +83,7 @@ class AssignedResources:
     def __eq__(self, other):
         if not isinstance(other, AssignedResources):
             return False
-        return (
-            self.mccs == other.mccs
-            and self.interface == other.interface
-        )
+        return self.mccs == other.mccs and self.interface == other.interface
 
     def is_empty(self) -> bool:
         """

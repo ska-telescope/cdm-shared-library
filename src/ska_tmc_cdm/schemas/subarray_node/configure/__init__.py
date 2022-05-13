@@ -26,15 +26,15 @@ from .core import (
     TargetSchema,
 )
 from .csp import (
+    CBFConfigurationSchema,
+    CommonConfigurationSchema,
     CSPConfigurationSchema,
     FSPConfigurationSchema,
     SubarrayConfigurationSchema,
-    CommonConfigurationSchema,
-    CBFConfigurationSchema
 )
-from .sdp import SDPConfigurationSchema
 from .mccs import (
     MCCSConfigurationSchema,
     StnConfigurationSchema,
     SubarrayBeamConfigurationSchema,
 )
+from .sdp import SDPConfigurationSchema

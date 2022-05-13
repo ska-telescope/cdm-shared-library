@@ -11,7 +11,9 @@ from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
 
 @CODEC.register_mapping(ReleaseResourcesRequest)
-class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
+class ReleaseResourcesRequestSchema(
+    ValidatingSchema
+):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the ReleaseResourcesRequest class.
     """
@@ -34,7 +36,5 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-fe
         subarray_id = data["subarray_id"]
         release_all = data["release_all"]
         return ReleaseResourcesRequest(
-            interface=interface,
-            subarray_id=subarray_id,
-            release_all=release_all
+            interface=interface, subarray_id=subarray_id, release_all=release_all
         )

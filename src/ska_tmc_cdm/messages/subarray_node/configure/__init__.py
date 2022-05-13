@@ -7,7 +7,7 @@ __all__ = ["ConfigureRequest"]
 
 from typing import Optional
 
-from .core import PointingConfiguration, DishConfiguration
+from .core import DishConfiguration, PointingConfiguration
 from .csp import CSPConfiguration
 from .mccs import MCCSConfiguration
 from .sdp import SDPConfiguration
@@ -42,9 +42,7 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         self.tmc = tmc
         self.interface = interface
         self.mccs = mccs
-        if self.mccs is not None and (
-            self.dish is not None
-        ):
+        if self.mccs is not None and (self.dish is not None):
             raise ValueError(
                 "Can't allocate dish, csp and sdp in the same call as mccs"
             )
@@ -53,12 +51,12 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
         if not isinstance(other, ConfigureRequest):
             return False
         return (
-                self.pointing == other.pointing
-                and self.dish == other.dish
-                and self.sdp == other.sdp
-                and self.csp == other.csp
-                and self.tmc == other.tmc
-                and self.mccs == other.mccs
-                and self.interface == other.interface
-                and self.transaction_id == other.transaction_id
+            self.pointing == other.pointing
+            and self.dish == other.dish
+            and self.sdp == other.sdp
+            and self.csp == other.csp
+            and self.tmc == other.tmc
+            and self.mccs == other.mccs
+            and self.interface == other.interface
+            and self.transaction_id == other.transaction_id
         )

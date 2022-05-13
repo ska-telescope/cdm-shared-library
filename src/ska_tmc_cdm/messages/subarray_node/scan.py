@@ -4,9 +4,7 @@ request for a TMC SubArrayNode.Scan command.
 """
 from typing import Optional
 
-__all__ = [
-    "ScanRequest"
-]
+__all__ = ["ScanRequest"]
 
 # The existence of LOW_SCHEMA is an accident dating from when we thought MID
 # and LOW TMC would have different schema rather than a single unified MID+LOW
@@ -23,12 +21,12 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(
-            self,
-            *,  # force kw-only args
-            interface: Optional[str] = MID_SCHEMA,
-            transaction_id: Optional[str] = None,
-            scan_id: int,
-        ):
+        self,
+        *,  # force kw-only args
+        interface: Optional[str] = MID_SCHEMA,
+        transaction_id: Optional[str] = None,
+        scan_id: int,
+    ):
         """
         Create a new ScanRequest.
 
@@ -44,6 +42,8 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
     def __eq__(self, other):
         if not isinstance(other, ScanRequest):
             return False
-        return self.interface == other.interface and \
-               self.transaction_id == other.transaction_id and \
-               self.scan_id == other.scan_id
+        return (
+            self.interface == other.interface
+            and self.transaction_id == other.transaction_id
+            and self.scan_id == other.scan_id
+        )
