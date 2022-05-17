@@ -19,12 +19,12 @@ class AssignedResources:
     """
 
     def __init__(
-            self,
-            *,  # force kwonly args
-            interface: Optional[str] = SCHEMA,
-            subarray_beam_ids: List[int] = None,
-            station_ids: List[List[int]] = None,
-            channel_blocks: List[int] = None,
+        self,
+        *,  # force kwonly args
+        interface: Optional[str] = SCHEMA,
+        subarray_beam_ids: List[int] = None,
+        station_ids: List[List[int]] = None,
+        channel_blocks: List[int] = None,
     ):
         """
         Create a new object for an MCCSSubarray.assigned_resources response.
@@ -56,8 +56,8 @@ class AssignedResources:
         if not isinstance(other, AssignedResources):
             return False
         return (
-                self.interface == other.interface
-                and self.subarray_beam_ids == other.subarray_beam_ids
-                and self.station_ids == other.station_ids
-                and self.channel_blocks == other.channel_blocks
+            self.interface == other.interface
+            and self.subarray_beam_ids == other.subarray_beam_ids
+            and self.station_ids == other.station_ids
+            and self.channel_blocks == other.channel_blocks
         )

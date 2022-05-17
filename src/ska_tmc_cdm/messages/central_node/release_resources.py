@@ -6,7 +6,7 @@ from typing import Optional
 
 from .common import DishAllocation
 
-__all__ = ['ReleaseResourcesRequest']
+__all__ = ["ReleaseResourcesRequest"]
 
 
 class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
@@ -16,13 +16,13 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
     """
 
     def __init__(
-            self,
-            *_,  # force kwargs
-            interface: str = None,
-            transaction_id: str = None,
-            subarray_id: int = None,
-            release_all: bool = False,
-            dish_allocation: Optional[DishAllocation] = None
+        self,
+        *_,  # force kwargs
+        interface: str = None,
+        transaction_id: str = None,
+        subarray_id: int = None,
+        release_all: bool = False,
+        dish_allocation: Optional[DishAllocation] = None,
     ):
         """
         Create a new ReleaseResourcesRequest object.
@@ -36,12 +36,10 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             to release for this request.
         """
         if release_all is not None and not isinstance(release_all, bool):
-            raise ValueError('release_all_mid must be a boolean')
+            raise ValueError("release_all_mid must be a boolean")
 
         if release_all is False and dish_allocation is None:
-            raise ValueError(
-                'Either release_all or dish_allocation must be defined'
-            )
+            raise ValueError("Either release_all or dish_allocation must be defined")
         if release_all:
             dish_allocation = None
 
@@ -54,8 +52,10 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
     def __eq__(self, other):
         if not isinstance(other, ReleaseResourcesRequest):
             return False
-        return self.interface == other.interface and \
-               self.transaction_id == other.transaction_id and \
-               self.subarray_id == other.subarray_id and \
-               self.dish == other.dish and \
-               self.release_all == other.release_all
+        return (
+            self.interface == other.interface
+            and self.transaction_id == other.transaction_id
+            and self.subarray_id == other.subarray_id
+            and self.dish == other.dish
+            and self.release_all == other.release_all
+        )

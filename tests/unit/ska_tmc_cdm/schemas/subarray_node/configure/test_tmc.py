@@ -8,6 +8,7 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska_tmc_cdm.schemas.subarray_node.configure.tmc import TMCConfigurationSchema
+
 from ... import utils
 
 VALID_JSON = """
@@ -16,9 +17,7 @@ VALID_JSON = """
 }
 """
 
-VALID_OBJECT = TMCConfiguration(
-    scan_duration=timedelta(seconds=123.45)
-)
+VALID_OBJECT = TMCConfiguration(scan_duration=timedelta(seconds=123.45))
 
 
 def test_marshall_tmcconfiguration_does_not_modify_original():
@@ -33,17 +32,13 @@ def test_marshall_tmcconfiguration_does_not_modify_original():
 
 
 @pytest.mark.parametrize(
-    'schema_cls,instance,modifier_fn,valid_json,invalid_json',
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
     [
-        (TMCConfigurationSchema,
-         VALID_OBJECT,
-         None,
-         VALID_JSON,
-         None),
-    ]
+        (TMCConfigurationSchema, VALID_OBJECT, None, VALID_JSON, None),
+    ],
 )
 def test_releaseresources_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    schema_cls, instance, modifier_fn, valid_json, invalid_json
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.

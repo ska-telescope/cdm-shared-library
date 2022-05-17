@@ -41,5 +41,5 @@ class AssignedResourcesSchema(ValidatingSchema):
             interface=interface,
             subarray_beam_ids=subarray_beam_ids,
             station_ids=station_ids,
-            channel_blocks=channel_blocks
+            channel_blocks=channel_blocks,
         )

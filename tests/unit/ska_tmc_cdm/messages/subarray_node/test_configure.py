@@ -7,10 +7,10 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
-    PointingConfiguration,
     DishConfiguration,
-    Target,
+    PointingConfiguration,
     ReceiverBand,
+    Target,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CBFConfiguration,
@@ -18,13 +18,13 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
-    SubarrayConfiguration
+    SubarrayConfiguration,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
     StnConfiguration,
     SubarrayBeamConfiguration,
-    SubarrayBeamTarget
+    SubarrayBeamTarget,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 
@@ -37,24 +37,18 @@ def test_configure_request_eq():
       - their SDP configuration is the same
       - their CSP configuration is the same
     """
-    transaction_id = 'transaction_id'
+    transaction_id = "transaction_id"
     pointing_config = PointingConfiguration(Target(1, 1))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration(scan_type="science_A")
     csp_config = CSPConfiguration(
         interface="interface",
-        subarray_config=SubarrayConfiguration(
-            subarray_name="subarray name"
-        ),
+        subarray_config=SubarrayConfiguration(subarray_name="subarray name"),
         common_config=CommonConfiguration(
-            config_id="config_id",
-            frequency_band=ReceiverBand.BAND_1,
-            subarray_id=1
+            config_id="config_id", frequency_band=ReceiverBand.BAND_1, subarray_id=1
         ),
         cbf_config=CBFConfiguration(
-            fsp_configs=[
-                FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-            ]
+            fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)]
         ),
         pss_config=None,
         pst_config=None,
@@ -64,7 +58,7 @@ def test_configure_request_eq():
         pointing=pointing_config,
         dish=dish_config,
         sdp=sdp_config,
-        csp=csp_config
+        csp=csp_config,
     )
     request_2 = copy.deepcopy(request_1)
     assert request_1 == request_2
@@ -79,22 +73,20 @@ def test_configure_request_eq_for_low():
     station_config = StnConfiguration(1)
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-        [1.0, 1.0, 1.0], [0.0, 0.0]
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     mccs_config = MCCSConfiguration(
-        station_configs=[station_config],
-        subarray_beam_configs=[station_beam_config]
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
     request_1 = ConfigureRequest(
-        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
+        interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
         mccs=mccs_config,
-        sdp=SDPConfiguration(scan_type="science_A")
+        sdp=SDPConfiguration(scan_type="science_A"),
     )
     request_2 = ConfigureRequest(
-        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
+        interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
         mccs=mccs_config,
-        sdp=SDPConfiguration(scan_type="science_A")
+        sdp=SDPConfiguration(scan_type="science_A"),
     )
     assert request_1 == request_2
 
@@ -108,12 +100,10 @@ def test_mccs_configure_request_eq():
     station_config = StnConfiguration(1)
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-        [1.0, 1.0, 1.0], [0.0, 0.0]
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     mccs_config = MCCSConfiguration(
-        station_configs=[station_config],
-        subarray_beam_configs=[station_beam_config]
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
     request_1 = ConfigureRequest(mccs=mccs_config)
     request_2 = ConfigureRequest(mccs=mccs_config)
@@ -129,18 +119,12 @@ def test_configure_request_is_not_equal_to_other_objects():
     sdp_config = SDPConfiguration(scan_type="science_A")
     csp_config = CSPConfiguration(
         interface="interface",
-        subarray_config=SubarrayConfiguration(
-            subarray_name="subarray name"
-        ),
+        subarray_config=SubarrayConfiguration(subarray_name="subarray name"),
         common_config=CommonConfiguration(
-            config_id="config_id",
-            frequency_band=ReceiverBand.BAND_1,
-            subarray_id=1
+            config_id="config_id", frequency_band=ReceiverBand.BAND_1, subarray_id=1
         ),
         cbf_config=CBFConfiguration(
-            fsp_configs=[
-                FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-            ]
+            fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)]
         ),
         pss_config=None,
         pst_config=None,
@@ -158,12 +142,10 @@ def test_mccs_configure_request_is_not_equal_to_other_objects():
     station_config = StnConfiguration(1)
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-        [1.0, 1.0, 1.0], [0.0, 0.0]
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     mccs_config = MCCSConfiguration(
-        station_configs=[station_config],
-        subarray_beam_configs=[station_beam_config]
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
     request = ConfigureRequest(mccs=mccs_config)
     assert request != object
@@ -177,17 +159,15 @@ def test_configure_request_is_not_equal_to_other_objects_for_low():
     station_config = StnConfiguration(1)
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-        [1.0, 1.0, 1.0], [0.0, 0.0]
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     mccs_config = MCCSConfiguration(
-        station_configs=[station_config],
-        subarray_beam_configs=[station_beam_config]
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
     request = ConfigureRequest(
-        interface='https://schema.skao.int/ska-low-tmc-configure/2.0',
+        interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
         mccs=mccs_config,
-        sdp=SDPConfiguration(scan_type="science_A")
+        sdp=SDPConfiguration(scan_type="science_A"),
     )
     assert request != object
     assert request is not None
@@ -200,12 +180,10 @@ def test_configure_request_mccs_independence():
     station_config = StnConfiguration(1)
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-        [1.0, 1.0, 1.0], [0.0, 0.0]
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     mccs_config = MCCSConfiguration(
-        station_configs=[station_config],
-        subarray_beam_configs=[station_beam_config]
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
     request = ConfigureRequest(mccs=mccs_config)
     assert request is not None

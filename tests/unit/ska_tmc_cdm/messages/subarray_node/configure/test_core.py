@@ -14,7 +14,9 @@ def test_target_defaults():
     Verify Target default arguments.
     """
     target_1 = Target(ra=1, dec=0.5)
-    target_2 = Target(ra=1, dec=0.5, target_name="", reference_frame="icrs", unit=("hourangle", "deg"))
+    target_2 = Target(
+        ra=1, dec=0.5, target_name="", reference_frame="icrs", unit=("hourangle", "deg")
+    )
     assert target_1 == target_2
 
 
@@ -27,8 +29,12 @@ def test_target_eq():
       - they use the same co-ordinate reference frame
       - they use the same co-ordinate units
     """
-    target_1 = Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg")
-    target_2 = Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg")
+    target_1 = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
+    target_2 = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
     target_3 = Target(ra=1, dec=1)
     assert target_1 == target_2
     assert target_1 != target_3
@@ -38,7 +44,9 @@ def test_target_is_not_equal_to_other_objects():
     """
     Verify that Target objects are considered unequal to other objects.
     """
-    target = Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg")
+    target = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
     assert target != object
 
 
@@ -46,10 +54,14 @@ def test_target_repr():
     """
     Verify the repr representation of a Target.
     """
-    target = Target(ra=30, dec=-3600, target_name="target name", reference_frame="icrs", unit=("deg", "arcsec"))
-    expected = (
-        "<Target(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'))>"
+    target = Target(
+        ra=30,
+        dec=-3600,
+        target_name="target name",
+        reference_frame="icrs",
+        unit=("deg", "arcsec"),
     )
+    expected = "<Target(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'))>"
     assert expected == repr(target)
 
 
@@ -57,7 +69,13 @@ def test_target_str():
     """
     Verify the string representation of a Target.
     """
-    target = Target(ra=30, dec="0", target_name="target name", reference_frame="icrs", unit=("deg", "rad"))
+    target = Target(
+        ra=30,
+        dec="0",
+        target_name="target name",
+        reference_frame="icrs",
+        unit=("deg", "rad"),
+    )
     expected = "<Target: 'target name' (02h00m00s +00d00m00s icrs)>"
     assert expected == str(target)
 
@@ -67,9 +85,15 @@ def test_pointing_configuration_eq():
     Verify that PointingConfiguration objects are considered equal when:
       - they point to the same target
     """
-    target_1 = Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg")
-    target_2 = Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg")
-    target_3 = Target(ra=1, dec=2, target_name="foobar", reference_frame="fk4", unit="deg")
+    target_1 = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
+    target_2 = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
+    target_3 = Target(
+        ra=1, dec=2, target_name="foobar", reference_frame="fk4", unit="deg"
+    )
     config_1 = PointingConfiguration(target_1)
     config_2 = PointingConfiguration(target_2)
     config_3 = PointingConfiguration(target_3)
@@ -82,7 +106,9 @@ def test_pointing_configuration_is_not_equal_to_other_objects():
     Verify that PointingConfiguration is not considered equal to
     non-PointingConfiguration objects.
     """
-    target = Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg")
+    target = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
     config = PointingConfiguration(target)
     assert config != object
 

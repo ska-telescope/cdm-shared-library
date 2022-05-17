@@ -2,18 +2,23 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
-from marshmallow import Schema, fields, post_dump, post_load
 import json
-from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
-from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesResponse
+
+from marshmallow import Schema, fields, post_dump, post_load
+
+from ska_tmc_cdm.messages.central_node.assign_resources import (
+    AssignResourcesRequest,
+    AssignResourcesResponse,
+)
 from ska_tmc_cdm.schemas.central_node.common import (
-    DishAllocationSchema,
     DishAllocationResponseSchema,
+    DishAllocationSchema,
 )
 from ska_tmc_cdm.schemas.central_node.mccs import MCCSAllocateSchema
 from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
-from ..shared import ValidatingSchema
+
 from ...schemas import CODEC
+from ..shared import ValidatingSchema
 
 __all__ = [
     "AssignResourcesRequestSchema",
@@ -22,7 +27,9 @@ __all__ = [
 
 
 @CODEC.register_mapping(AssignResourcesRequest)
-class AssignResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
+class AssignResourcesRequestSchema(
+    ValidatingSchema
+):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the AssignResourcesRequest class.
     """
@@ -38,6 +45,7 @@ class AssignResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few
         """
         marshmallow directives for AssignResourcesRequestSchema.
         """
+
         ordered = True
 
     @post_load
@@ -62,11 +70,11 @@ class AssignResourcesRequestSchema(ValidatingSchema):  # pylint: disable=too-few
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
             mccs=mccs,
-            transaction_id=transaction_id
+            transaction_id=transaction_id,
         )
 
     @post_dump
-    def validate_on_dump(self, data, **_):
+    def validate_on_dump(self, data, **_):  # pylint: disable=arguments-differ
         """
         Validating the structure of JSON against schemas and
         Filter out null values from JSON.
@@ -98,6 +106,7 @@ class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-m
         """
         Marshmallow directives for AssignResourcesResponseSchema.
         """
+
         ordered = True
 
     @post_load

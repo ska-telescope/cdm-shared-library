@@ -10,7 +10,7 @@ __all__ = [
     "MCCSConfiguration",
     "StnConfiguration",
     "SubarrayBeamConfiguration",
-    "SubarrayBeamTarget"
+    "SubarrayBeamTarget",
 ]
 
 
@@ -48,10 +48,12 @@ class SubarrayBeamTarget:
         """
         if not isinstance(other, SubarrayBeamTarget):
             return False
-        return (self.az == other.az
-                and self.el == other.el
-                and self.target_name == other.target_name
-                and self.reference_frame == other.reference_frame)
+        return (
+            self.az == other.az
+            and self.el == other.el
+            and self.target_name == other.target_name
+            and self.reference_frame == other.reference_frame
+        )
 
 
 class StnConfiguration:
@@ -85,14 +87,14 @@ class SubarrayBeamConfiguration:
     """A class to hold subarray_beam configuration attributes"""
 
     def __init__(
-            self,
-            subarray_beam_id: int,
-            station_ids: List[int],
-            channels: List[List[int]],
-            update_rate: float,
-            target: SubarrayBeamTarget,
-            antenna_weights: List[float],
-            phase_centre: List[float]
+        self,
+        subarray_beam_id: int,
+        station_ids: List[int],
+        channels: List[List[int]],
+        update_rate: float,
+        target: SubarrayBeamTarget,
+        antenna_weights: List[float],
+        phase_centre: List[float],
     ):
         """
         Initialise the station beam configuration.
@@ -122,24 +124,24 @@ class SubarrayBeamConfiguration:
 
     def __eq__(self, other):
         """
-            Check for equality between two station beam configuration objects
+        Check for equality between two station beam configuration objects
 
-            :param other: the object to check against this object
-            :type other: station beam configuration object
+        :param other: the object to check against this object
+        :type other: station beam configuration object
 
-            :return: returns True if the objects are the same, else False
-            :rtype: boolean
-            """
+        :return: returns True if the objects are the same, else False
+        :rtype: boolean
+        """
         if not isinstance(other, SubarrayBeamConfiguration):
             return False
         return (
-                self.subarray_beam_id == other.subarray_beam_id
-                and self.station_ids == other.station_ids
-                and self.channels == other.channels
-                and self.update_rate == other.update_rate
-                and self.target == other.target
-                and self.antenna_weights == other.antenna_weights
-                and self.phase_centre == other.phase_centre
+            self.subarray_beam_id == other.subarray_beam_id
+            and self.station_ids == other.station_ids
+            and self.channels == other.channels
+            and self.update_rate == other.update_rate
+            and self.target == other.target
+            and self.antenna_weights == other.antenna_weights
+            and self.phase_centre == other.phase_centre
         )
 
 
@@ -149,10 +151,10 @@ class MCCSConfiguration:
     """
 
     def __init__(
-            self,
-            *_,  # force kwargs
-            station_configs: List[StnConfiguration],
-            subarray_beam_configs: List[SubarrayBeamConfiguration],
+        self,
+        *_,  # force kwargs
+        station_configs: List[StnConfiguration],
+        subarray_beam_configs: List[SubarrayBeamConfiguration],
     ):
         """
         Create a new MCCSConfiguration.
@@ -178,6 +180,6 @@ class MCCSConfiguration:
         if not isinstance(other, MCCSConfiguration):
             return False
         return (
-                self.station_configs == other.station_configs
-                and self.subarray_beam_configs == other.subarray_beam_configs
+            self.station_configs == other.station_configs
+            and self.subarray_beam_configs == other.subarray_beam_configs
         )

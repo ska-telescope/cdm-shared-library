@@ -2,14 +2,10 @@
 Unit tests for the ska_tmc_cdm.messages.subarraynode.scan module
 """
 
-import pytest
-
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
 CONSTRUCTOR_ARGS = dict(
-    interface="interface",
-    transaction_id="transaction ID",
-    scan_id=123
+    interface="interface", transaction_id="transaction ID", scan_id=123
 )
 
 
@@ -22,11 +18,7 @@ def test_scanrequest_eq():
     other = ScanRequest(**CONSTRUCTOR_ARGS)
     assert request == other
 
-    alternate_args = dict(
-        interface="foo",
-        transaction_id="foo",
-        scan_id = 99999
-    )
+    alternate_args = dict(interface="foo", transaction_id="foo", scan_id=99999)
     for k, v in alternate_args.items():
         other_args = dict(CONSTRUCTOR_ARGS)
         other_args[k] = v

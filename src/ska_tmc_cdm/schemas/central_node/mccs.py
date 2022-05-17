@@ -3,11 +3,7 @@ The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
 
-from marshmallow import (
-    fields,
-    post_load,
-    Schema
-)
+from marshmallow import Schema, fields, post_load
 
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 

@@ -2,10 +2,12 @@
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.mccs module.
 """
 
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import StnConfiguration
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
+from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
+    MCCSConfiguration,
+    StnConfiguration,
+    SubarrayBeamConfiguration,
+    SubarrayBeamTarget,
+)
 
 
 def test_subarray_beam_target_equals():
@@ -15,12 +17,12 @@ def test_subarray_beam_target_equals():
     """
     az = 180.0
     el = 45.0
-    target_name = 'DriftScan'
-    reference_frame = 'horizon'
+    target_name = "DriftScan"
+    reference_frame = "horizon"
 
     config = SubarrayBeamTarget(az, el, target_name, reference_frame)
     assert config == SubarrayBeamTarget(az, el, target_name, reference_frame)
-    assert config != SubarrayBeamTarget(az, el, 'target_name', 'reference_frame')
+    assert config != SubarrayBeamTarget(az, el, "target_name", "reference_frame")
 
 
 def test_stn_configuration_equals():
@@ -58,28 +60,47 @@ def test_stnbeam_configuration_equals():
     antenna_weights = [1.0, 1.0, 1.0]
     phase_centre = [0.0, 0.0]
     station_beam_config = SubarrayBeamConfiguration(
-        subarray_beam_id, station_ids, channels, update_rate,
-        target, antenna_weights, phase_centre
+        subarray_beam_id,
+        station_ids,
+        channels,
+        update_rate,
+        target,
+        antenna_weights,
+        phase_centre,
     )
     config = station_beam_config
     config1 = station_beam_config
     assert config == config1
 
     assert config != SubarrayBeamConfiguration(
-        6, station_ids, channels, update_rate, target,
-        antenna_weights, phase_centre
+        6, station_ids, channels, update_rate, target, antenna_weights, phase_centre
     )
     assert config != SubarrayBeamConfiguration(
-        subarray_beam_id, [3, 4], channels, update_rate, target,
-        antenna_weights, phase_centre
+        subarray_beam_id,
+        [3, 4],
+        channels,
+        update_rate,
+        target,
+        antenna_weights,
+        phase_centre,
     )
     assert config != SubarrayBeamConfiguration(
-        subarray_beam_id, station_ids, [[1, 2, 3, 4, 5, 6]], update_rate, target,
-        antenna_weights, phase_centre
+        subarray_beam_id,
+        station_ids,
+        [[1, 2, 3, 4, 5, 6]],
+        update_rate,
+        target,
+        antenna_weights,
+        phase_centre,
     )
     assert config != SubarrayBeamConfiguration(
-        subarray_beam_id, station_ids, channels, 4.5, target,
-        antenna_weights, phase_centre
+        subarray_beam_id,
+        station_ids,
+        channels,
+        4.5,
+        target,
+        antenna_weights,
+        phase_centre,
     )
     assert config != SubarrayBeamConfiguration(
         subarray_beam_id,
@@ -87,15 +108,29 @@ def test_stnbeam_configuration_equals():
         channels,
         update_rate,
         SubarrayBeamTarget(190.0, 45.0, "DriftScan", "HORIZON"),
-        antenna_weights, phase_centre)
+        antenna_weights,
+        phase_centre,
+    )
 
     assert config != SubarrayBeamConfiguration(
-        subarray_beam_id, station_ids, channels, update_rate,
-        target, [2.0, 2.0, 2.0], phase_centre)
+        subarray_beam_id,
+        station_ids,
+        channels,
+        update_rate,
+        target,
+        [2.0, 2.0, 2.0],
+        phase_centre,
+    )
 
     assert config != SubarrayBeamConfiguration(
-        subarray_beam_id, station_ids, channels, update_rate,
-        target, antenna_weights, [1.0, 1.0])
+        subarray_beam_id,
+        station_ids,
+        channels,
+        update_rate,
+        target,
+        antenna_weights,
+        [1.0, 1.0],
+    )
 
 
 def test_stnbeam_configuration_not_equal_to_other_objects():
@@ -105,8 +140,7 @@ def test_stnbeam_configuration_not_equal_to_other_objects():
     """
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     config = SubarrayBeamConfiguration(
-        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-        [1.0, 1.0, 1.0], [0.0, 0.0]
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
     )
     assert config is not None
     assert config != 1
@@ -127,19 +161,17 @@ def test_mccs_configuration_equals():
         update_rate=1.0,
         target=target,
         antenna_weights=[1.0, 1.0, 1.0],
-        phase_centre=[0.0, 0.0]
+        phase_centre=[0.0, 0.0],
     )
     config = MCCSConfiguration(
-        station_configs=[station_config],
-        subarray_beam_configs=[subarray_beam_config]
+        station_configs=[station_config], subarray_beam_configs=[subarray_beam_config]
     )
     assert config == MCCSConfiguration(
-        station_configs=[station_config],
-        subarray_beam_configs=[subarray_beam_config]
+        station_configs=[station_config], subarray_beam_configs=[subarray_beam_config]
     )
     assert config != MCCSConfiguration(
         station_configs=[StnConfiguration(2)],
-        subarray_beam_configs=[subarray_beam_config]
+        subarray_beam_configs=[subarray_beam_config],
     )
     assert config != MCCSConfiguration(
         station_configs=[station_config],
@@ -151,7 +183,7 @@ def test_mccs_configuration_equals():
                 update_rate=1.0,
                 target=target,
                 antenna_weights=[1.0, 1.0, 1.0],
-                phase_centre=[0.0, 0.0]
+                phase_centre=[0.0, 0.0],
             )
         ],
     )
@@ -165,13 +197,11 @@ def test_mccs_config_not_equal_to_other_objects():
     target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
     station_config = StnConfiguration(1)
     station_beam_config = SubarrayBeamConfiguration(
-        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target,
-        [1.0, 1.0, 1.0], [0.0, 0.0]
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
     )
 
     config = MCCSConfiguration(
-        station_configs=[station_config],
-        subarray_beam_configs=[station_beam_config]
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
     assert config is not None
     assert config != 1

@@ -14,11 +14,11 @@ class ReleaseResourcesRequest:
     """
 
     def __init__(
-            self,
-            *,  # force kwonly args
-            interface: Optional[str] = SCHEMA,
-            subarray_id: int,
-            release_all: bool
+        self,
+        *,  # force kwonly args
+        interface: Optional[str] = SCHEMA,
+        subarray_id: int,
+        release_all: bool,
     ):
         self.interface = interface
         self.subarray_id = subarray_id
@@ -34,7 +34,7 @@ class ReleaseResourcesRequest:
         if not isinstance(other, ReleaseResourcesRequest):
             return False
         return (
-                self.interface == other.interface
-                and self.subarray_id == other.subarray_id
-                and self.release_all == other.release_all
+            self.interface == other.interface
+            and self.subarray_id == other.subarray_id
+            and self.release_all == other.release_all
         )

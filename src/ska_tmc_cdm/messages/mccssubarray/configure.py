@@ -5,11 +5,7 @@ various structured bits of JSON given in an MCCSSubarray.Configure call.
 
 from typing import List, Optional
 
-__all__ = [
-    "ConfigureRequest",
-    "StationConfiguration",
-    "SubarrayBeamConfiguration"
-]
+__all__ = ["ConfigureRequest", "StationConfiguration", "SubarrayBeamConfiguration"]
 
 SCHEMA = "https://schema.skao.int/ska-low-mccs-configure/2.0"
 
@@ -43,15 +39,15 @@ class SubarrayBeamConfiguration:
     """A class to hold subarray beam configuration attributes"""
 
     def __init__(
-            self,
-            *,  # force kwonly args
-            subarray_beam_id: int,
-            station_ids: List[int],
-            update_rate: float,
-            channels: List[List[int]],
-            sky_coordinates: List[float],
-            antenna_weights: List[float],
-            phase_centre: List[float]
+        self,
+        *,  # force kwonly args
+        subarray_beam_id: int,
+        station_ids: List[int],
+        update_rate: float,
+        channels: List[List[int]],
+        sky_coordinates: List[float],
+        antenna_weights: List[float],
+        phase_centre: List[float],
     ):
         """
         Initialise the subarray beam configuration.
@@ -83,13 +79,13 @@ class SubarrayBeamConfiguration:
         if not isinstance(other, SubarrayBeamConfiguration):
             return False
         return (
-                self.subarray_beam_id == other.subarray_beam_id
-                and self.station_ids == other.station_ids
-                and self.channels == other.channels
-                and self.update_rate == other.update_rate
-                and self.sky_coordinates == other.sky_coordinates
-                and self.antenna_weights == other.antenna_weights
-                and self.phase_centre == other.phase_centre
+            self.subarray_beam_id == other.subarray_beam_id
+            and self.station_ids == other.station_ids
+            and self.channels == other.channels
+            and self.update_rate == other.update_rate
+            and self.sky_coordinates == other.sky_coordinates
+            and self.antenna_weights == other.antenna_weights
+            and self.phase_centre == other.phase_centre
         )
 
 
@@ -99,11 +95,11 @@ class ConfigureRequest:
     """
 
     def __init__(
-            self,
-            *,  # force kwonly args
-            interface: Optional[str] = SCHEMA,
-            stations: List[StationConfiguration],
-            subarray_beams: List[SubarrayBeamConfiguration]
+        self,
+        *,  # force kwonly args
+        interface: Optional[str] = SCHEMA,
+        stations: List[StationConfiguration],
+        subarray_beams: List[SubarrayBeamConfiguration],
     ):
         """
         Create a new MCCSConfiguration.
@@ -126,7 +122,7 @@ class ConfigureRequest:
         if not isinstance(other, ConfigureRequest):
             return False
         return (
-                self.interface == other.interface
-                and self.stations == other.stations
-                and self.subarray_beams == other.subarray_beams
+            self.interface == other.interface
+            and self.stations == other.stations
+            and self.subarray_beams == other.subarray_beams
         )

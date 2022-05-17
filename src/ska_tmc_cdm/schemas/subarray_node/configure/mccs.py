@@ -2,20 +2,22 @@
 This module defines Marshmallow schemas that map the CDM classes for
 SubArrayNode MCCS configuration to/from JSON.
 """
-from marshmallow import Schema, fields, post_load, pre_load, post_dump
+from marshmallow import Schema, fields, post_dump, post_load, pre_load
 
 from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import MCCSConfiguration
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import StnConfiguration
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import SubarrayBeamTarget
+from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
+    MCCSConfiguration,
+    StnConfiguration,
+    SubarrayBeamConfiguration,
+    SubarrayBeamTarget,
+)
 from ska_tmc_cdm.schemas import CODEC
 
 __all__ = [
     "MCCSConfigurationSchema",
     "StnConfigurationSchema",
     "SubarrayBeamConfigurationSchema",
-    "SubarrayBeamTargetSchema"
+    "SubarrayBeamTargetSchema",
 ]
 
 
@@ -44,10 +46,7 @@ class SubarrayBeamTargetSchema(Schema):  # pylint: disable=too-few-public-method
         target_name = data["target_name"]
         reference_frame = data["reference_frame"]
         return SubarrayBeamTarget(
-            az=az,
-            el=el,
-            target_name=target_name,
-            reference_frame=reference_frame
+            az=az, el=el, target_name=target_name, reference_frame=reference_frame
         )
 
 
@@ -74,8 +73,7 @@ class StnConfigurationSchema(Schema):
 class SubarrayBeamConfigurationSchema(Schema):
     subarray_beam_id = fields.Integer(data_key="subarray_beam_id", required=True)
     station_ids = fields.List(fields.Integer(data_key="station_ids", required=True))
-    channels = fields.List(fields.List(fields.Integer),
-                           data_key="channels")
+    channels = fields.List(fields.List(fields.Integer), data_key="channels")
     update_rate = fields.Float(data_key="update_rate")
     target = fields.Nested(SubarrayBeamTargetSchema, data_key="target")
     antenna_weights = fields.List(fields.Float(data_key="antenna_weights"))
@@ -106,7 +104,7 @@ class SubarrayBeamConfigurationSchema(Schema):
             update_rate=update_rate,
             target=target,
             antenna_weights=antenna_weights,
-            phase_centre=phase_centre
+            phase_centre=phase_centre,
         )
 
 
@@ -137,12 +135,11 @@ class MCCSConfigurationSchema(Schema):
         stn_configs = data["station_configs"]
         subarray_beam_configs = data["subarray_beam_configs"]
         return MCCSConfiguration(
-            station_configs=stn_configs,
-            subarray_beam_configs=subarray_beam_configs
+            station_configs=stn_configs, subarray_beam_configs=subarray_beam_configs
         )
 
     @pre_load
-    def validate_schema(self, data, **_): # pylint: disable=no-self-use
+    def validate_schema(self, data, **_):  # pylint: disable=no-self-use
         """
         validating the structure of JSON against schemas
 
@@ -155,7 +152,8 @@ class MCCSConfigurationSchema(Schema):
 
     @post_dump
     def filter_nulls_and_validate_schema(
-            self, data, **_):  # pylint: disable=no-self-use
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         validating the structure of JSON against schemas and
         Filter out null values from JSON.
@@ -166,7 +164,7 @@ class MCCSConfigurationSchema(Schema):
         """
         data = {k: v for k, v in data.items() if v is not None}
 
-        #~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?
+        # ~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?
         self.validate_json(data)
         return data
 
@@ -179,9 +177,9 @@ class MCCSConfigurationSchema(Schema):
         :return:
         """
         # return early unless custom_validate is defined and True
-        if not self.context.get('custom_validate', False):
+        if not self.context.get("custom_validate", False):
             return
 
-        interface = data.get('interface', None)
+        interface = data.get("interface", None)
         if interface:
             JsonSchema.validate_schema(interface, process_fn(data))

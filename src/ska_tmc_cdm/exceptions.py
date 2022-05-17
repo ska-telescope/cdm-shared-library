@@ -11,13 +11,13 @@ class JsonValidationError(ValueError):
     """
 
     def __init__(self, uri: str, json_dict: dict = None):
-        self._msg = f'JSON validation error: data is not compliant with {uri}'
+        self._msg = f"JSON validation error: data is not compliant with {uri}"
         super().__init__(self._msg)
         self.uri = uri
         self.json_dict = json_dict
 
     def __str__(self):
-        return f'{self._msg}'
+        return f"{self._msg}"
 
 
 class SchemaNotFound(ValueError):
@@ -26,10 +26,9 @@ class SchemaNotFound(ValueError):
     """
 
     def __init__(self, uri: str):
-        self._msg = f'JSON schema not found: {uri}'
+        self._msg = f"JSON schema not found: {uri}"
         super().__init__(self._msg)
         self.uri = uri
 
     def __str__(self):
-        return f'{self._msg}'
-
+        return f"{self._msg}"

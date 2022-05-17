@@ -4,9 +4,10 @@ using interface uri and validating the structure of JSON against these schemas.
 """
 
 from ska_telmodel import schema
+
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
-__all__ = ['JsonSchema']
+__all__ = ["JsonSchema"]
 
 
 class JsonSchema:  # pylint: disable=too-few-public-methods

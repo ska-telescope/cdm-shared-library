@@ -4,23 +4,29 @@ SubArrayNode CSP configuration to/from JSON.
 """
 import copy
 import json
-from marshmallow import Schema, fields, post_load, pre_dump, post_dump
+
+from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
-from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    FSPFunctionMode,
-    FSPConfiguration,
-    SubarrayConfiguration,
-    CommonConfiguration,
-    CBFConfiguration,
-    CSPConfiguration
-)
+
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
+from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    CBFConfiguration,
+    CommonConfiguration,
+    CSPConfiguration,
+    FSPConfiguration,
+    FSPFunctionMode,
+    SubarrayConfiguration,
+)
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
-__all__ = ["CSPConfigurationSchema", "FSPConfigurationSchema",
-           "SubarrayConfigurationSchema", "CommonConfigurationSchema",
-           "CBFConfigurationSchema"]
+__all__ = [
+    "CSPConfigurationSchema",
+    "FSPConfigurationSchema",
+    "SubarrayConfigurationSchema",
+    "CommonConfigurationSchema",
+    "CBFConfigurationSchema",
+]
 
 
 @CODEC.register_mapping(SubarrayConfiguration)
@@ -51,7 +57,7 @@ class CommonConfigurationSchema(Schema):
 
     @pre_dump
     def convert(
-            self, common_configuration: CommonConfiguration, **_
+        self, common_configuration: CommonConfiguration, **_
     ):  # pylint: disable=no-self-use
         """
         Process CommonConfiguration instance so that it is ready for conversion
@@ -63,7 +69,7 @@ class CommonConfigurationSchema(Schema):
         """
         # Convert Python Enum to its string value
         copied = copy.deepcopy(common_configuration)
-        if hasattr(copied, 'frequency_band'):
+        if hasattr(copied, "frequency_band"):
             copied.frequency_band = common_configuration.frequency_band.value
         return copied
 
@@ -94,7 +100,9 @@ class CommonConfigurationSchema(Schema):
         subarray_id = data["subarray_id"]
         band_5_tuning = data.get("band_5_tuning", None)
 
-        return CommonConfiguration(config_id, frequency_band_enum, subarray_id, band_5_tuning)
+        return CommonConfiguration(
+            config_id, frequency_band_enum, subarray_id, band_5_tuning
+        )
 
 
 @CODEC.register_mapping(FSPConfiguration)
@@ -113,8 +121,7 @@ class FSPConfigurationSchema(Schema):
     zoom_factor = fields.Integer(data_key="zoom_factor", required=True)
     integration_factor = fields.Integer(data_key="integration_factor", required=True)
     channel_averaging_map = fields.List(
-        fields.Tuple((fields.Integer, fields.Integer)),
-        data_key="channel_averaging_map"
+        fields.Tuple((fields.Integer, fields.Integer)), data_key="channel_averaging_map"
     )
     output_link_map = fields.List(
         fields.Tuple((fields.Integer, fields.Integer)), data_key="output_link_map"
@@ -124,7 +131,7 @@ class FSPConfigurationSchema(Schema):
 
     @pre_dump
     def convert(
-            self, fsp_configuration: FSPConfiguration, **_
+        self, fsp_configuration: FSPConfiguration, **_
     ):  # pylint: disable=no-self-use
         """
         Process FSPConfiguration instance so that it is ready for conversion
@@ -234,11 +241,11 @@ class CSPConfigurationSchema(ValidatingSchema):
             interface=interface,
             subarray_config=subarray_config,
             common_config=common_config,
-            cbf_config=cbf_config
+            cbf_config=cbf_config,
         )
 
     @post_dump
-    def validate_on_dump(self, data, **_):
+    def validate_on_dump(self, data, **_):  # pylint: disable=arguments-differ
         """
         Validating the structure of JSON against schemas and
         Filter out null values from JSON.

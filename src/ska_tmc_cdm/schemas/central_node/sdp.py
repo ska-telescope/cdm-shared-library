@@ -5,12 +5,12 @@ Central Node message classes to/from a JSON representation.
 from marshmallow import Schema, fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.central_node.sdp import (
-    SDPConfiguration,
-    ScanType,
     Channel,
-    ProcessingBlockConfiguration,
-    SDPWorkflow,
     PbDependency,
+    ProcessingBlockConfiguration,
+    ScanType,
+    SDPConfiguration,
+    SDPWorkflow,
 )
 from ska_tmc_cdm.schemas import CODEC
 
@@ -166,6 +166,7 @@ class SDPConfigurationSchema(Schema):
     """
     Marsmallow class for the SDPConfiguration class
     """
+
     interface = fields.String()
     eb_id = fields.String(data_key="eb_id", required=True)
     max_length = fields.Float(data_key="max_length", required=True)

@@ -4,13 +4,18 @@ aspects of CSP configuration that may be specified in a SubArrayNode.configure
 command.
 """
 import enum
-from typing import List, Tuple, Optional
+from typing import List, Optional, Tuple
 
 from . import core
 
-__all__ = ["CSPConfiguration", "FSPConfiguration", "FSPFunctionMode",
-           "CBFConfiguration", "SubarrayConfiguration",
-           "CommonConfiguration"]
+__all__ = [
+    "CSPConfiguration",
+    "FSPConfiguration",
+    "FSPFunctionMode",
+    "CBFConfiguration",
+    "SubarrayConfiguration",
+    "CommonConfiguration",
+]
 
 
 class FSPFunctionMode(enum.Enum):
@@ -32,16 +37,16 @@ class FSPConfiguration:
 
     # pylint: disable=too-many-arguments
     def __init__(
-            self,
-            fsp_id: int,
-            function_mode: FSPFunctionMode,
-            frequency_slice_id: int,
-            integration_factor: int,
-            zoom_factor: int,
-            channel_averaging_map: List[Tuple] = None,
-            output_link_map: List[Tuple] = None,
-            channel_offset: int = None,
-            zoom_window_tuning: int = None
+        self,
+        fsp_id: int,
+        function_mode: FSPFunctionMode,
+        frequency_slice_id: int,
+        integration_factor: int,
+        zoom_factor: int,
+        channel_averaging_map: List[Tuple] = None,
+        output_link_map: List[Tuple] = None,
+        channel_offset: int = None,
+        zoom_window_tuning: int = None,
     ):
         """
         Create a new FSPConfiguration.
@@ -75,9 +80,7 @@ class FSPConfiguration:
         self.frequency_slice_id = frequency_slice_id
 
         if not 0 <= zoom_factor <= 6:
-            msg = "Zoom factor must be in range 0..6. Got {}".format(
-                zoom_factor
-            )
+            msg = "Zoom factor must be in range 0..6. Got {}".format(zoom_factor)
             raise ValueError(msg)
         self.zoom_factor = zoom_factor
 
@@ -97,7 +100,7 @@ class FSPConfiguration:
             raise ValueError(msg)
         self.channel_averaging_map = channel_averaging_map
 
-        # TODO: update enforcements for output_link_map
+        # could we add enforcements for output_link_map? What are the limits?
         self.output_link_map = output_link_map
         self.channel_offset = channel_offset
         self.zoom_window_tuning = zoom_window_tuning
@@ -106,21 +109,21 @@ class FSPConfiguration:
         if not isinstance(other, FSPConfiguration):
             return False
         return (
-                self.fsp_id == other.fsp_id
-                and self.function_mode == other.function_mode
-                and self.frequency_slice_id == other.frequency_slice_id
-                and self.zoom_factor == other.zoom_factor
-                and self.integration_factor == other.integration_factor
-                and self.channel_averaging_map == other.channel_averaging_map
-                and self.output_link_map == other.output_link_map
-                and self.channel_offset == other.channel_offset
-                and self.zoom_window_tuning == other.zoom_window_tuning
+            self.fsp_id == other.fsp_id
+            and self.function_mode == other.function_mode
+            and self.frequency_slice_id == other.frequency_slice_id
+            and self.zoom_factor == other.zoom_factor
+            and self.integration_factor == other.integration_factor
+            and self.channel_averaging_map == other.channel_averaging_map
+            and self.output_link_map == other.output_link_map
+            and self.channel_offset == other.channel_offset
+            and self.zoom_window_tuning == other.zoom_window_tuning
         )
 
 
 class SubarrayConfiguration:
     """
-     Class to hold the parameters relevant only for the current sub-array device.
+    Class to hold the parameters relevant only for the current sub-array device.
     """
 
     def __init__(self, subarray_name: str):
@@ -133,22 +136,20 @@ class SubarrayConfiguration:
     def __eq__(self, other):
         if not isinstance(other, SubarrayConfiguration):
             return False
-        return (
-                self.subarray_name == other.subarray_name
-        )
+        return self.subarray_name == other.subarray_name
 
 
 class CommonConfiguration:
     """
-     Class to hold the CSP sub-elements.
+    Class to hold the CSP sub-elements.
     """
 
     def __init__(
-            self,
-            config_id: str,
-            frequency_band: core.ReceiverBand,
-            subarray_id: int = None,
-            band_5_tuning: Optional[List[float]] = None
+        self,
+        config_id: str,
+        frequency_band: core.ReceiverBand,
+        subarray_id: int = None,
+        band_5_tuning: Optional[List[float]] = None,
     ):
         """
         Create a new CSPConfiguration.
@@ -167,10 +168,10 @@ class CommonConfiguration:
         if not isinstance(other, CommonConfiguration):
             return False
         return (
-                self.config_id == other.config_id
-                and self.frequency_band == other.frequency_band
-                and self.subarray_id == other.subarray_id
-                and self.band_5_tuning == other.band_5_tuning
+            self.config_id == other.config_id
+            and self.frequency_band == other.frequency_band
+            and self.subarray_id == other.subarray_id
+            and self.band_5_tuning == other.band_5_tuning
         )
 
 
@@ -180,13 +181,13 @@ class VLBIConfiguration:
 
 class CBFConfiguration:
     """
-      Class to hold all FSP and VLBI configurations.
+    Class to hold all FSP and VLBI configurations.
     """
 
     def __init__(
-            self,
-            fsp_configs: List[FSPConfiguration],
-            vlbi_config: VLBIConfiguration = None,
+        self,
+        fsp_configs: List[FSPConfiguration],
+        vlbi_config: VLBIConfiguration = None,
     ):
         """
         Create a new CBFConfiguration.
@@ -200,8 +201,8 @@ class CBFConfiguration:
         if not isinstance(other, CBFConfiguration):
             return False
         return (
-                self.fsp_configs == other.fsp_configs
-                and self.vlbi_config == other.vlbi_config
+            self.fsp_configs == other.fsp_configs
+            and self.vlbi_config == other.vlbi_config
         )
 
 
@@ -219,13 +220,13 @@ class CSPConfiguration:
     """
 
     def __init__(
-            self,
-            interface: str = None,
-            subarray_config: SubarrayConfiguration = None,
-            common_config: CommonConfiguration = None,
-            cbf_config: CBFConfiguration = None,
-            pst_config: PSTConfiguration = None,
-            pss_config: PSSConfiguration = None
+        self,
+        interface: str = None,
+        subarray_config: SubarrayConfiguration = None,
+        common_config: CommonConfiguration = None,
+        cbf_config: CBFConfiguration = None,
+        pst_config: PSTConfiguration = None,
+        pss_config: PSSConfiguration = None,
     ):
         """
         Create a new CSPConfiguration, In order to support backward
@@ -250,10 +251,10 @@ class CSPConfiguration:
         if not isinstance(other, CSPConfiguration):
             return False
         return (
-                self.interface == other.interface
-                and self.subarray_config == other.subarray_config
-                and self.common_config == other.common_config
-                and self.cbf_config == other.cbf_config
-                and self.pst_config == other.pst_config
-                and self.pss_config == other.pss_config
+            self.interface == other.interface
+            and self.subarray_config == other.subarray_config
+            and self.common_config == other.common_config
+            and self.cbf_config == other.cbf_config
+            and self.pst_config == other.pst_config
+            and self.pss_config == other.pss_config
         )

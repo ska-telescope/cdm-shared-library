@@ -5,7 +5,7 @@ Unit tests for the ska_tmc_cdm.messages.mccssubarray.configure module.
 from ska_tmc_cdm.messages.mccssubarray.configure import (
     ConfigureRequest,
     StationConfiguration,
-    SubarrayBeamConfiguration
+    SubarrayBeamConfiguration,
 )
 
 
@@ -39,15 +39,11 @@ def test_subarraybeamconfiguration_object_equality():
     constructor_args = dict(
         subarray_beam_id=1,
         station_ids=[2, 3],
-        channels=[
-            [0, 8, 1, 1],
-            [8, 8, 2, 1],
-            [24, 16, 2, 1]
-        ],
+        channels=[[0, 8, 1, 1], [8, 8, 2, 1], [24, 16, 2, 1]],
         update_rate=1.5,
         sky_coordinates=[0.1, 180.0, 0.5, 45.0, 1.6],
         antenna_weights=[1.0, 1.0, 1.0],
-        phase_centre=[0.0, 0.0]
+        phase_centre=[0.0, 0.0],
     )
     config = SubarrayBeamConfiguration(**constructor_args)
 
@@ -65,7 +61,7 @@ def test_subarraybeamconfiguration_object_equality():
         update_rate=2.5,
         sky_coordinates=[0.9, 180.0, 0.5, 45.0, 1.6],
         antenna_weights=[0.8, 1.0],
-        phase_centre=[0.1, 0.1]
+        phase_centre=[0.1, 0.1],
     )
     for k, v in alternate_args.items():
         other_args = dict(constructor_args)
@@ -81,15 +77,11 @@ def test_subarraybeam_configuration_not_equal_to_other_objects():
     constructor_args = dict(
         subarray_beam_id=1,
         station_ids=[2, 3],
-        channels=[
-            [0, 8, 1, 1],
-            [8, 8, 2, 1],
-            [24, 16, 2, 1]
-        ],
+        channels=[[0, 8, 1, 1], [8, 8, 2, 1], [24, 16, 2, 1]],
         update_rate=1.5,
         sky_coordinates=[0.1, 180.0, 0.5, 45.0, 1.6],
         antenna_weights=[1.0, 1.0, 1.0],
-        phase_centre=[0.0, 0.0]
+        phase_centre=[0.0, 0.0],
     )
     config = SubarrayBeamConfiguration(**constructor_args)
 
@@ -109,38 +101,28 @@ def test_configurerequest_equals():
     subarray_beam_config = SubarrayBeamConfiguration(
         subarray_beam_id=1,
         station_ids=[1, 2],
-        channels=[
-            [0, 8, 1, 1],
-            [8, 8, 2, 1],
-            [24, 16, 2, 1]
-        ],
+        channels=[[0, 8, 1, 1], [8, 8, 2, 1], [24, 16, 2, 1]],
         update_rate=1.5,
         sky_coordinates=[0.1, 180.0, 0.5, 45.0, 1.6],
         antenna_weights=[1.0, 1.0],
-        phase_centre=[0.0, 0.0]
+        phase_centre=[0.0, 0.0],
     )
 
     request = ConfigureRequest(
-        stations=station_configs,
-        subarray_beams=[subarray_beam_config]
+        stations=station_configs, subarray_beams=[subarray_beam_config]
     )
 
     other = ConfigureRequest(
-        stations=station_configs,
-        subarray_beams=[subarray_beam_config]
+        stations=station_configs, subarray_beams=[subarray_beam_config]
     )
     assert request == other
 
     other = ConfigureRequest(
-        stations=station_configs[1:],
-        subarray_beams=[subarray_beam_config]
+        stations=station_configs[1:], subarray_beams=[subarray_beam_config]
     )
     assert request != other
 
-    other = ConfigureRequest(
-        stations=station_configs,
-        subarray_beams=[]
-    )
+    other = ConfigureRequest(stations=station_configs, subarray_beams=[])
     assert request != other
 
 
@@ -156,20 +138,15 @@ def test_configurerequest_not_equal_to_other_objects():
     subarray_beam_config = SubarrayBeamConfiguration(
         subarray_beam_id=1,
         station_ids=[1, 2],
-        channels=[
-            [0, 8, 1, 1],
-            [8, 8, 2, 1],
-            [24, 16, 2, 1]
-        ],
+        channels=[[0, 8, 1, 1], [8, 8, 2, 1], [24, 16, 2, 1]],
         update_rate=1.5,
         sky_coordinates=[0.1, 180.0, 0.5, 45.0, 1.6],
         antenna_weights=[1.0, 1.0],
-        phase_centre=[0.0, 0.0]
+        phase_centre=[0.0, 0.0],
     )
 
     request = ConfigureRequest(
-        stations=station_configs,
-        subarray_beams=[subarray_beam_config]
+        stations=station_configs, subarray_beams=[subarray_beam_config]
     )
 
     assert request != 1
