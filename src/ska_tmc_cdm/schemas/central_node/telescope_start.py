@@ -1,8 +1,12 @@
 import json
+
 from marshmallow import fields, post_dump, post_load
+
 from ska_tmc_cdm.messages.central_node.telescope_start import StartTelescope
+
 from ...schemas import CODEC
 from ..shared import ValidatingSchema
+
 
 @CODEC.register_mapping(StartTelescope)
 class StartTelescopeSchema(ValidatingSchema):
@@ -13,6 +17,7 @@ class StartTelescopeSchema(ValidatingSchema):
         """
         marshmallow directives for StartTelescopeSchema.
         """
+
         ordered = True
 
     @post_load
