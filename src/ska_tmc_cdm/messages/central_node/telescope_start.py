@@ -6,10 +6,8 @@ structured request and response for a TMC CentralNode.start
 
 class StartTelescope:
     def __init__(self, subarray_id: int = None, transaction_id: str = None):
-
         """
-        Create a new StartTelescope object.
-
+        Create a new StartTelescope object
         :param transaction_id: ID for tracking requests
         :param subarray_id: the numeric SubArray ID (1..16)
         """
