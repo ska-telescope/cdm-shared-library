@@ -7,7 +7,7 @@ from ska_tmc_cdm.messages.central_node.telescope_start import StartTelescope
 from ...schemas import CODEC
 from ..shared import ValidatingSchema
 
-
+__all__ = ["StartTelescopeSchema"]
 @CODEC.register_mapping(StartTelescope)
 class StartTelescopeSchema(ValidatingSchema):
     transaction_id = fields.String(data_key="transaction_id")
