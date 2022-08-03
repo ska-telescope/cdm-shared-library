@@ -4,6 +4,7 @@ structured request and response for a TMC CentralNode.start
 """
 __all__ = ["StartTelescope"]
 
+
 class StartTelescope:
     def __init__(self, subarray_id: int = None, transaction_id: str = None):
         """

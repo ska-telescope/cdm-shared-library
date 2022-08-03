@@ -8,6 +8,8 @@ from ...schemas import CODEC
 from ..shared import ValidatingSchema
 
 __all__ = ["StartTelescopeSchema"]
+
+
 @CODEC.register_mapping(StartTelescope)
 class StartTelescopeSchema(ValidatingSchema):
     transaction_id = fields.String(data_key="transaction_id")
