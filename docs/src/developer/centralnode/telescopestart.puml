@@ -1,0 +1,45 @@
+@startuml
+scale 2000 width
+!pragma useNewPackage
+allow_mixing
+hide empty members
+
+package ska_tmc_cdm.messages.central_node {
+
+    package telescope_start.py <<Rectangle>> {
+        class StartTelescope
+        {
+        subarray_id: int
+        transaction_id: str
+        }
+        
+    }
+}
+package ska_tmc_cdm.schemas {
+
+
+    package shared.py <<Rectangle>>
+     {
+        class ValidatingSchema
+        
+    }
+}
+package ska_tmc_cdm.schemas {
+    file codec.py
+
+}
+
+package ska_tmc_cdm.schemas.central_node {
+	package telescope_start.py <<Rectangle>> {
+        class StartTelescopeSchema 
+{
+    transaction_id = fields.String(data_key="transaction_id")
+    subarray_id = fields.Integer(data_key="subarray_id")
+}
+	}
+}
+
+ValidatingSchema --|> StartTelescopeSchema
+codec.py --|> StartTelescopeSchema
+StartTelescope <---> StartTelescopeSchema
+@enduml

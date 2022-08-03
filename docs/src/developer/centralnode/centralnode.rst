@@ -1,26 +1,26 @@
-.. _`CentralNode commands`:
+.. _`central_node commands`:
 
 ===============
-TMC CentralNode
+TMC central_node
 ===============
 
 Overview
 ========
 
 Sub-array resource allocation is achieved via communication with a TMC
-CentralNode device. The ``centralnode`` package models the JSON input and
-responses for TMC CentralNode commands. The contents of this package are
+central_node device. The ``central_node`` package models the JSON input and
+responses for TMC central_node commands. The contents of this package are
 shown in the figure below.
 
-.. figure:: centralnode.png
+.. figure:: central_node.png
    :align: center
-   :alt: High-level overview of centralnode package
+   :alt: High-level overview of central_node package
 
 Classes in the `assign_resources.py`_ module model the arguments for the
-``CentralNode.AssignResources()`` command.
+``central_node.AssignResources()`` command.
 
 Classes in the `release_resources.py`_ module model the arguments for the
-``CentralNode.ReleaseResources()`` command.
+``central_node.ReleaseResources()`` command.
 
 assign_resources.py
 ===================
@@ -32,7 +32,7 @@ assign_resources.py
    assign_resources.py object model
 
 The ``assign_resources.py`` module models the the JSON input and response
-for a ``CentralNode.AssignResources()`` command.
+for a ``central_node.AssignResources()`` command.
 
 Example JSON input modelled by ``AssignResourcesRequest`` for MID:
 
@@ -134,7 +134,7 @@ release_resources.py
    release_resources.py object model
 
 The ``release_resources.py`` module models the input JSON for a
-``CentralNode.ReleaseResources()`` command.
+``central_node.ReleaseResources()`` command.
 
 Example ReleaseResourcesRequest JSON that requests specific dishes be released
 from a sub-array:
@@ -168,3 +168,31 @@ Example JSON that requests all sub-array resources be released for LOW:
     "subarray_id": 1,
     "release_all": true
   }
+  
+  telescope_start.py
+====================
+
+.. figure:: telescopestart.png
+   :align: center
+   :alt: Overview of the telescope_start.py module
+
+   telescope_start.py object model
+
+The ``telescope_start`` module models the input JSON for a
+``central_node.StartTelescope()`` command.
+
+Example StartTelescope JSON that requests specific (here id=1) sub array be started:
+
+.. code-block:: JSON
+
+{
+  "subarray_id": 1,"transaction_id":"txn-ts01-20220803-00004"  
+}
+
+The equivalent example of StartTelescope object 
+.. code-block:: Object
+from ska_tmc_cdm.messages.central_node.telescope_start import StartTelescope
+
+StartTelescope(
+    subarray_id=1, transaction_id="txn-ts01-20220803-00004"
+)
