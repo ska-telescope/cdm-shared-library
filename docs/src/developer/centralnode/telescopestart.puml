@@ -1,5 +1,5 @@
 @startuml
-scale 2000 width
+scale 600 width
 !pragma useNewPackage
 allow_mixing
 hide empty members

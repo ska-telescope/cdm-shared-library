@@ -169,12 +169,13 @@ Example JSON that requests all sub-array resources be released for LOW:
     "release_all": true
   }
   
-  telescope_start.py
+telescope_start.py
 ====================
 
 .. figure:: telescopestart.png
    :align: center
    :alt: Overview of the telescope_start.py module
+   :width: 400
 
    telescope_start.py object model
 
@@ -185,14 +186,16 @@ Example StartTelescope JSON that requests specific (here id=1) sub array be star
 
 .. code-block:: JSON
 
-{
-  "subarray_id": 1,"transaction_id":"txn-ts01-20220803-00004"  
-}
+  {
+    "subarray_id": 1,"transaction_id":"txn-ts01-20220803-00004"  
+  }
 
 The equivalent example of StartTelescope object 
-.. code-block:: Object
-from ska_tmc_cdm.messages.central_node.telescope_start import StartTelescope
 
-StartTelescope(
-    subarray_id=1, transaction_id="txn-ts01-20220803-00004"
-)
+.. code-block:: JSON
+
+  from ska_tmc_cdm.messages.central_node.telescope_start import StartTelescope
+
+  StartTelescope(
+      subarray_id=1, transaction_id="txn-ts01-20220803-00004"
+                )
