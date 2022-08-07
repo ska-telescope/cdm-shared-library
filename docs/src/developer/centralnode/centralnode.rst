@@ -182,20 +182,10 @@ telescope_start.py
 The ``telescope_start`` module models the input JSON for a
 ``central_node.StartTelescope()`` command.
 
-Example StartTelescope JSON that requests specific (here id=1) sub array be started:
+Example JSON that requests specific (here id=1) sub array be started:
 
 .. code-block:: JSON
 
   {
-    "subarray_id": 1,"transaction_id":"txn-ts01-20220803-00004"  
+    "subarray_id": 1, "interface": "https://schema.skao.int/ska-sdp-telestart/1.0", "transaction_id":"txn-ts01-20220803-00004"  
   }
-
-The equivalent example of StartTelescope object 
-
-.. code-block:: JSON
-
-  from ska_tmc_cdm.messages.central_node.telescope_start import StartTelescope
-
-  StartTelescope(
-      subarray_id=1, transaction_id="txn-ts01-20220803-00004"
-                )

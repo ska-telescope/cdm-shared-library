@@ -11,6 +11,7 @@ import pytest
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
+from ska_tmc_cdm.messages.central_node.telescope_start import StartTelescopeRequest
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
@@ -19,6 +20,10 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
+)
+from tests.unit.ska_tmc_cdm.schemas.central_node.test_start_telescope import (
+    VALID_TELESCSTART_JSON,
+    VALID_TELESCSTART_OBJECT,
 )
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
@@ -41,6 +46,7 @@ TEST_PARAMETERS = [
     ),
     (ConfigureRequest, VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT),
     (ConfigureRequest, VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT),
+    (StartTelescopeRequest, VALID_TELESCSTART_JSON, VALID_TELESCSTART_OBJECT),
 ]
 
 
@@ -147,6 +153,7 @@ def test_loads_invalid_json_with_validation_disabled(strictness):
         ska_tmc_cdm.messages.central_node.assign_resources.AssignResourcesRequest,
         ska_tmc_cdm.messages.central_node.assign_resources.AssignResourcesResponse,
         ska_tmc_cdm.messages.central_node.release_resources.ReleaseResourcesRequest,
+        ska_tmc_cdm.messages.central_node.telescope_start.StartTelescopeRequest,
         ska_tmc_cdm.messages.subarray_node.configure.ConfigureRequest,
         ska_tmc_cdm.messages.subarray_node.scan.ScanRequest,
         ska_tmc_cdm.messages.subarray_node.assigned_resources.AssignedResources,
