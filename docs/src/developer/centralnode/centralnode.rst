@@ -185,7 +185,9 @@ The ``telescope_start`` module models the input JSON for a
 Example JSON that requests specific (here id=1) sub array be started:
 
 .. code-block:: JSON
-
+ # dummy interface
   {
-    "subarray_id": 1, "interface": "https://schema.skao.int/ska-sdp-telestart/1.0", "transaction_id":"txn-ts01-20220803-00004"  
+    "subarray_id": 1, 
+    "interface": "https://schema.skao.int/ska-tmc-telescopestart/1.0", 
+    "transaction_id":"txn-ts01-20220803-00004"  
   }

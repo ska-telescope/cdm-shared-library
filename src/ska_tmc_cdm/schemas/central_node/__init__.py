@@ -6,6 +6,7 @@ __all__ = [
     "AssignResourcesRequestSchema",
     "AssignResourcesResponseSchema",
     "ReleaseResourcesRequestSchema",
+    "StartTelescopeRequestSchema",
     "DishAllocationSchema",
     "DishAllocationResponseSchema",
     "SDPConfigurationSchema",
@@ -20,3 +21,4 @@ from .common import DishAllocationResponseSchema, DishAllocationSchema
 from .mccs import MCCSAllocateSchema
 from .release_resources import ReleaseResourcesRequestSchema
 from .sdp import SDPConfigurationSchema
+from .telescope_start import StartTelescopeRequestSchema

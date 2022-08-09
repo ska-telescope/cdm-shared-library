@@ -19,7 +19,9 @@ def test_start_telescope_eq():
     )
     # ... different transaction id, subarray id ...
     assert start_telescope != StartTelescopeRequest(
-        3, "https://schema.skao.int/ska-sdp-telestart/1.0", "txn-ts01-20220803-00004"
+        3,
+        "https://schema.skao.int/ska-tmc-telescopestart/1.0",
+        "txn-ts01-20220803-00004"
     )
 
 

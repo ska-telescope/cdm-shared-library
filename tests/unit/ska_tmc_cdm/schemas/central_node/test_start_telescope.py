@@ -12,12 +12,14 @@ from .. import utils
 # sample valid json, object for telescope start ...
 VALID_TELESCSTART_JSON = """
 {
-  "subarray_id": 1,"interface": "https://schema.skao.int/ska-sdp-telestart/1.0","transaction_id":"txn-ts01-20220803-00004"  
+  "subarray_id": 1,
+  "interface": "https://schema.skao.int/ska-tmc-telescopestart/1.0",
+  "transaction_id":"txn-ts01-20220803-00004"  
 }
 """
 VALID_TELESCSTART_OBJECT = StartTelescopeRequest(
     subarray_id=1,
-    interface="https://schema.skao.int/ska-sdp-telestart/1.0",
+    interface="https://schema.skao.int/ska-tmc-telescopestart/1.0",  # dummy interface url
     transaction_id="txn-ts01-20220803-00004",
 )
 

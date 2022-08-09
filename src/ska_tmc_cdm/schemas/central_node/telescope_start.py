@@ -1,6 +1,4 @@
-import json
-
-from marshmallow import fields, post_dump, post_load
+from marshmallow import fields, post_load
 
 from ska_tmc_cdm.messages.central_node.telescope_start import StartTelescopeRequest
 
@@ -31,22 +29,3 @@ class StartTelescopeRequestSchema(ValidatingSchema):
         return StartTelescopeRequest(
             subarray_id=subarray_id, interface=interface, transaction_id=transaction_id
         )
-
-    @post_dump
-    def validate_on_dump(self, data, **_):  # pylint: disable=arguments-differ
-        """
-        Validating the structure of JSON against schemas and
-        Filter out null values from JSON
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for SubArrayNode configuration
-        """
-
-        # filter out nulls
-        data = {k: v for k, v in data.items() if v is not None}
-
-        # convert tuples to lists
-        data = json.loads(json.dumps(data))
-
-        data = super().validate_on_dump(data)
-        return data
