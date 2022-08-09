@@ -183,9 +183,9 @@ The ``telescope_start`` module models the input JSON for a
 ``central_node.StartTelescope()`` command.
 
 Example JSON that requests specific (here id=1) sub array be started:
-
+ # dummy interface link given
 .. code-block:: JSON
- # dummy interface
+
   {
     "subarray_id": 1, 
     "interface": "https://schema.skao.int/ska-tmc-telescopestart/1.0", 
