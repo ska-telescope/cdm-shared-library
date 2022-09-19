@@ -43,3 +43,6 @@ include:
   # release notes
   - project: 'ska-telescope/templates-repository'
     file: "gitlab-ci/includes/release.gitlab-ci.yml"
+  # license reporting in CI machinery
+  - template: Security/License-Scanning.gitlab-ci.yml
+
