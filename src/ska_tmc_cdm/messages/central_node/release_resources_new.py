@@ -3,7 +3,6 @@ The release_resources module provides simple Python representations of the
 structured request and response for a TMC CentralNode.ReleaseResources call.
 """
 import json
-
 from typing import Optional
 
 from .common import DishAllocation
@@ -25,8 +24,8 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int = None,
         release_all: bool = None,
         dish_allocation: Optional[DishAllocation] = None,
-        json_key_value="{}", 
-        **kwargs
+        json_key_value="{}",
+        **kwargs,
     ):
         """
         Create a new ReleaseResourcesRequest object.
@@ -51,7 +50,7 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
         # update new keywords-value pairs.
         self.__dict__.update(kwargs)
         self.__dict__.update(json.loads(json_key_value))
-        # value errors        
+        # value errors
         if self.release_all is not None and not isinstance(self.release_all, bool):
             raise ValueError("release_all_mid must be a boolean")
 

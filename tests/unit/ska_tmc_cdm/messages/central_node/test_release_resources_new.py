@@ -4,11 +4,14 @@ in the CentralNode.ReleaseResources request/response mapper
 module.
 """
 import json
+
 import pytest
+
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.release_resources_new import (
     ReleaseResourcesRequest,
 )
+
 
 # Based on OET → TMC (Mid) CentralNode.AssignResources
 # example JSON after ADR-3

@@ -2,8 +2,6 @@
 The release_resources module provides simple Python representations of the
 structured request and response for a TMC CentralNode.ReleaseResources call.
 """
-import json
-
 from typing import Optional
 
 from .common import DishAllocation
@@ -44,33 +42,11 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             raise ValueError("Either release_all or dish_allocation must be defined")
         if release_all:
             dish_allocation = None
-        # existing keys
         self.interface = interface
         self.transaction_id = transaction_id
         self.subarray_id = subarray_id
         self.release_all = release_all
         self.dish_allocation = dish_allocation
-
-    # a class method to initialize the default constructor then update key-value pairs 
-    @classmethod
-    def from_any_schema_keyvalue(cls,json_keyValuePair='{}',**kwargs):
-        """Two ways of initializing object with keyword-values
-        1. json_keyValuePair (recommended) : json input key-value pair or,
-        2. keyword1=value1, keyword2=value2 ...
-        """
-        self=cls(release_all=None) 
-        # Should init as cls() but here to avoid any thrown value error ...
-        # for either release_all or dish_allocation. 
-        # Correct values are anyway updated in next lines.
-        self.__dict__.update(kwargs)
-        self.__dict__.update(json.loads(json_keyValuePair))
-        # check the value errors same as constructor
-        if self.release_all is not None and not isinstance(self.release_all, bool):
-            raise ValueError("release_all_mid must be a boolean")
-        if self.release_all is False and self.dish_allocation is None:
-            raise ValueError("Either release_all or dish_allocation must be defined")
-        #if no value error occur then only return the object
-        return self
 
     def __eq__(self, other):
         if not isinstance(other, ReleaseResourcesRequest):
