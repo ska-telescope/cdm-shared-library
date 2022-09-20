@@ -43,3 +43,4 @@ include:
   # release notes
   - project: 'ska-telescope/templates-repository'
     file: "gitlab-ci/includes/release.gitlab-ci.yml"
+
