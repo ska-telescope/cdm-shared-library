@@ -17,7 +17,7 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
 
     def __init__(
         self,
-        *_,
+        *_,  # force kwargs
         interface: str = None,
         transaction_id: str = None,
         subarray_id: int = None,
@@ -42,11 +42,12 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             raise ValueError("Either release_all or dish_allocation must be defined")
         if release_all:
             dish_allocation = None
+
         self.interface = interface
         self.transaction_id = transaction_id
         self.subarray_id = subarray_id
         self.release_all = release_all
-        self.dish_allocation = dish_allocation
+        self.dish = dish_allocation
 
     def __eq__(self, other):
         if not isinstance(other, ReleaseResourcesRequest):
@@ -55,6 +56,6 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             self.interface == other.interface
             and self.transaction_id == other.transaction_id
             and self.subarray_id == other.subarray_id
-            and self.dish_allocation == other.dish_allocation
+            and self.dish == other.dish
             and self.release_all == other.release_all
         )
