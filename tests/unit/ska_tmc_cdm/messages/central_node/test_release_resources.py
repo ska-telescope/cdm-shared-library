@@ -8,6 +8,49 @@ from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 
 
+def test_new_keyvalues_obj():
+    """
+    Verify that object can be created with new key-value pair
+    along with already declared.
+    "subbands": [0.55e9,0.95e9,186] //long,long,int
+    :param subbands: min freq, max freq, no of channels
+    """
+    # expand
+    request = ReleaseResourcesRequest(
+        transaction_id="tma1",
+        subarray_id=1,
+        dish_allocation=DishAllocation(receptor_ids=["ac", "b", "aab"]),
+        sdp_id="sbi-mvp01-20220919-00001",  # new in this schema
+        sdp_max_length=125.40,  # new in this schema
+        subbands=[0.55e9, 0.95e9, 186],  # arbitary new key-value captured
+        release_all=False,
+    )
+
+    # check whether object created with correct values
+    assert (
+        request.sdp_id == "sbi-mvp01-20220919-00001"
+        and request.sdp_max_length == 125.40
+        # pylint: disable=E1101(no-member)
+        and request.subbands == [0.55e9, 0.95e9, 186]
+    )
+
+    # contract
+    request2 = ReleaseResourcesRequest(
+        transaction_id="tma1",
+        subarray_id=1,
+        dish_allocation=DishAllocation(receptor_ids=["ac", "b", "aab"]),
+        sdp_id="sbi-mvp01-20220919-00001",  # new in this schema
+    )
+
+    # check whether both objects are identical
+    assert (
+        request.transaction_id == request2.transaction_id
+        and request.subarray_id == request2.subarray_id
+        and request.dish == request2.dish
+        and request.sdp_id == request2.sdp_id
+    )
+
+
 def test_release_resources_request_eq():
     """
     Verify that two ReleaseResource requests for the same sub-array and
