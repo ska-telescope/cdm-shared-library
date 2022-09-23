@@ -6,9 +6,6 @@ import pytest
 
 from ska_tmc_cdm.messages.mccscontroller.releaseresources import ReleaseResourcesRequest
 from ska_tmc_cdm.schemas import CODEC
-from ska_tmc_cdm.schemas.mccscontroller.releaseresources import (
-    ReleaseResourcesRequestSchema,
-)
 from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_JSON = """
@@ -41,14 +38,11 @@ VALID_OBJECT = ReleaseResourcesRequest(
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "instance,valid_json",
     [
         (
-            ReleaseResourcesRequestSchema,
             VALID_OBJECT,
-            lambda o: setattr(o, "subarray_id", -1),
             VALID_JSON,
-            INVALID_JSON,
         )
     ],
 )
