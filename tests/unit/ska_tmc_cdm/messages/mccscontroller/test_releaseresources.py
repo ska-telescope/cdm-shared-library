@@ -14,8 +14,7 @@ def test_releaseresourcesrequest_object_equality():
         subarray_id=1,
         release_all=True,
         subarray_beam_ids=[1],
-        channels=[[1, 2]]
-
+        channels=[[1, 2]],
     )
     request = ReleaseResourcesRequest(**constructor_args)
 
@@ -47,7 +46,7 @@ def test_releaseresourcesrequest_equality_with_other_objects():
         subarray_id=1,
         release_all=True,
         subarray_beam_ids=[1],
-        channels=[[1, 2]]
+        channels=[[1, 2]],
     )
     request = ReleaseResourcesRequest(**constructor_args)
 

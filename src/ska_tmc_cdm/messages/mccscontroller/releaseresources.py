@@ -32,7 +32,7 @@ class ReleaseResourcesRequest:
         self.subarray_id = subarray_id
         self.release_all = release_all
         self.subarray_beam_ids = subarray_beam_ids
-        self.channels = channels  
+        self.channels = channels
 
     def __eq__(self, other):
         """

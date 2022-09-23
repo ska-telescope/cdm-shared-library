@@ -3,7 +3,7 @@ The releaseresources module defines Marshmallow schemas that map
 MCCSController ReleaseResourcesRequest objects to/from their JSON
 representation.
 """
-from marshmallow import fields, post_load, post_dump
+from marshmallow import fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.mccscontroller.releaseresources import ReleaseResourcesRequest
 from ska_tmc_cdm.schemas import CODEC
@@ -40,13 +40,11 @@ class ReleaseResourcesRequestSchema(
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for request submission
         """
-  
 
         # Filter out  null values from JSON.
         data = {k: v for k, v in data.items() if v is not None}
 
         return data
-
 
     @post_load
     def create_request(self, data, **_):  # pylint: disable=no-self-use
@@ -61,9 +59,12 @@ class ReleaseResourcesRequestSchema(
         interface = data["interface"]
         subarray_id = data["subarray_id"]
         release_all = data["release_all"]
-        subarray_beam_ids = data.get("subarray_beam_ids",None)
-        channels = data.get("channels",None)
+        subarray_beam_ids = data.get("subarray_beam_ids", None)
+        channels = data.get("channels", None)
         return ReleaseResourcesRequest(
-            interface=interface, subarray_id=subarray_id, release_all=release_all, subarray_beam_ids=subarray_beam_ids, 
-            channels=channels
+            interface=interface,
+            subarray_id=subarray_id,
+            release_all=release_all,
+            subarray_beam_ids=subarray_beam_ids,
+            channels=channels,
         )

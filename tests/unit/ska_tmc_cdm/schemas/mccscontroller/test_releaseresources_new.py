@@ -5,12 +5,11 @@ Unit tests for ska_tmc_cdm.schemas.mccscontroller.releaseresources module.
 import pytest
 
 from ska_tmc_cdm.messages.mccscontroller.releaseresources import ReleaseResourcesRequest
+from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.mccscontroller.releaseresources import (
     ReleaseResourcesRequestSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
-from ska_tmc_cdm.schemas import CODEC
-from .. import utils
 
 VALID_JSON = """
 {
@@ -37,7 +36,7 @@ VALID_OBJECT = ReleaseResourcesRequest(
     subarray_id=1,
     release_all=True,
     subarray_beam_ids=[1],
-    channels=[[1, 2]]
+    channels=[[1, 2]],
 )
 
 
@@ -53,13 +52,11 @@ VALID_OBJECT = ReleaseResourcesRequest(
         )
     ],
 )
-def test_releaseresources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
-):
+def test_releaseresources_serialisation_and_validation(instance, valid_json):
     """
     Verifies that ReleaseResourcesRequestSchema marshals, unmarshals, and
     validates correctly.
     """
-   
+
     marshalled = CODEC.dumps(instance)
     assert_json_is_equal(marshalled, valid_json)
