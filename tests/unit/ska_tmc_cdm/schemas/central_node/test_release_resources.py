@@ -84,6 +84,25 @@ INVALID_LOW_FULL_RELEASE_JSON = """
     "sdp_max_length" : 125.40
 }
 """
+VALID_MID_NEW_RELEASE_JSON = """
+{
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "transaction_id": "txn-blah-blah-00001",
+    "subarray_id": 1, 
+    "sdp_id": "sbi-mvp01-20220919-00001",  
+     "sdp_max_length" : 125.40, 
+    "receptor_ids": ["0001", "0002"]
+}
+"""
+
+VALID_MID_NEW_RELEASE_OBJECT = ReleaseResourcesRequest(
+    interface="https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    transaction_id="txn-blah-blah-00001",
+    subarray_id=1,
+    dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+    sdp_id="sbi-mvp01-20220919-00001",
+    sdp_max_length=125.40,
+)
 
 
 def low_invalidator_fn(o: ReleaseResourcesRequest):
