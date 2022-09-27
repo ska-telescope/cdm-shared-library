@@ -37,7 +37,7 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             release just those resources specified as other arguments
         :param dish_allocation: object holding the DISH resource allocation
                                 to release for this request.
-        # 2 new dummy parameters
+        # two new addational parameters added for expand JSON schema
         :param sdp_id: string denoting id for science data processor in use.
         :param sdp_max_length: float denoting max length required in seconds.
 

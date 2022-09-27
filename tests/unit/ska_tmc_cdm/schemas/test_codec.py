@@ -23,8 +23,14 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
 )
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_release_resources import (
-    VALID_MID_NEW_RELEASE_JSON,
-    VALID_MID_NEW_RELEASE_OBJECT,
+    VALID_LOW_FULL_RELEASE_JSON,
+    VALID_LOW_FULL_RELEASE_JSON_NEW,
+    VALID_LOW_FULL_RELEASE_OBJECT,
+    VALID_LOW_FULL_RELEASE_OBJECT_NEW,
+    VALID_MID_PARTIAL_RELEASE_JSON,
+    VALID_MID_PARTIAL_RELEASE_JSON_NEW,
+    VALID_MID_PARTIAL_RELEASE_OBJECT,
+    VALID_MID_PARTIAL_RELEASE_OBJECT_NEW,
 )
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_start_telescope import (
     VALID_TELESCSTART_JSON,
@@ -52,7 +58,26 @@ TEST_PARAMETERS = [
     (ConfigureRequest, VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT),
     (ConfigureRequest, VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT),
     (StartTelescopeRequest, VALID_TELESCSTART_JSON, VALID_TELESCSTART_OBJECT),
-    (ReleaseResourcesRequest, VALID_MID_NEW_RELEASE_JSON, VALID_MID_NEW_RELEASE_OBJECT),
+    (
+        ReleaseResourcesRequest,
+        VALID_MID_PARTIAL_RELEASE_JSON_NEW,
+        VALID_MID_PARTIAL_RELEASE_OBJECT_NEW,
+    ),
+    (
+        ReleaseResourcesRequest,
+        VALID_MID_PARTIAL_RELEASE_JSON,
+        VALID_MID_PARTIAL_RELEASE_OBJECT,
+    ),
+    (
+        ReleaseResourcesRequest,
+        VALID_LOW_FULL_RELEASE_JSON,
+        VALID_LOW_FULL_RELEASE_OBJECT,
+    ),
+    (
+        ReleaseResourcesRequest,
+        VALID_LOW_FULL_RELEASE_JSON_NEW,
+        VALID_LOW_FULL_RELEASE_OBJECT_NEW,
+    ),
 ]
 
 

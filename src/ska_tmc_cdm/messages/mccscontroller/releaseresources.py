@@ -11,6 +11,9 @@ class ReleaseResourcesRequest:
     """
     ReleaseResourcesRequest is the object representation of the JSON argument
     for an MCCSController.ReleaseResources command.
+     # two new addational parameters added for expand JSON schema
+        :param subarray_beam_ids: subarray beam IDs to allocate to the subarray
+        :param channels: channels to allocate
     """
 
     def __init__(

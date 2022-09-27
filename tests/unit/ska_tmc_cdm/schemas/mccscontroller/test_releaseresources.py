@@ -35,34 +35,6 @@ VALID_OBJECT = ReleaseResourcesRequest(
     release_all=True,
 )
 
-VALID_JSON_EXPAND_CONTRACT = """
-{
-  "interface": "https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
-  "subarray_id": 1,
-  "release_all": true,
-  "subarray_beam_ids":[1],
-  "channels":[[1, 2]]
-}
-"""
-
-INVALID_JSON_EXPAND_CONTRACT = """
-{
-  "interface": "https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
-  "subarray_id": -1,
-  "release_all": true,
-  "subarray_beam_ids":[1],
-  "channels":[[1, 2]]
-}
-"""
-
-VALID_OBJECT_EXPAND_CONTRACT = ReleaseResourcesRequest(
-    interface="https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
-    subarray_id=1,
-    release_all=True,
-    subarray_beam_ids=[1],
-    channels=[[1, 2]],
-)
-
 
 @pytest.mark.parametrize(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json",
@@ -88,12 +60,41 @@ def test_releaseresources_serialisation_and_validation(
     )
 
 
+VALID_JSON_NEW = """
+{
+  "interface": "https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
+  "subarray_id": 1,
+  "release_all": true,
+  "subarray_beam_ids":[1],
+  "channels":[[1, 2]]
+}
+"""
+
+INVALID_JSON_NEW = """
+{
+  "interface": "https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
+  "subarray_id": -1,
+  "release_all": true,
+  "subarray_beam_ids":[1],
+  "channels":[[1, 2]]
+}
+"""
+
+VALID_OBJECT_NEW = ReleaseResourcesRequest(
+    interface="https://schema.skatelescope.org/ska-low-mccs-releaseresources/1.0",
+    subarray_id=1,
+    release_all=True,
+    subarray_beam_ids=[1],
+    channels=[[1, 2]],
+)
+
+
 @pytest.mark.parametrize(
     "instance,valid_json",
     [
         (
-            VALID_OBJECT,
-            VALID_JSON,
+            VALID_OBJECT_NEW,
+            VALID_JSON_NEW,
         )
     ],
 )
@@ -102,7 +103,8 @@ def test_releaseresources_serialisation_and_validation_with_expand_contract(
 ):
     """
     Verifies that ReleaseResourcesRequestSchema marshals, unmarshals, and
-    validates correctly.
+    validates correctly with new addational keys as part of expand json schema.
     """
+
     marshalled = CODEC.dumps(instance)
     assert_json_is_equal(marshalled, valid_json)
