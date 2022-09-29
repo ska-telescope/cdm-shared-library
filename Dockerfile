@@ -1,5 +1,5 @@
-ARG BUILD_IMAGE="artefact.skao.int/ska-tango-images-pytango-builder:9.3.28"
-ARG BASE_IMAGE="artefact.skao.int/ska-tango-images-pytango-runtime:9.3.16"
+ARG BUILD_IMAGE="artefact.skao.int/ska-tango-images-pytango-builder:9.3.32"
+ARG BASE_IMAGE="artefact.skao.int/ska-tango-images-pytango-runtime:9.3.19"
 ARG CAR_OCI_REGISTRY_HOST=artefact.skao.int
 
 # ignore DL3006: tag the version of an image explicitly
@@ -11,15 +11,17 @@ FROM $BASE_IMAGE
 ARG CAR_PYPI_REPOSITORY_URL=https://artefact.skao.int/repository/pypi-internal
 ENV PIP_INDEX_URL=${CAR_PYPI_REPOSITORY_URL}
 
-# Install Poetry
 USER root
-WORKDIR /app
+
+# Copy poetry.lock* in case it doesn't exist in the repo
 COPY pyproject.toml poetry.lock* ./
 
 # Install runtime dependencies and the app
-RUN poetry install --no-dev
+RUN poetry export --format requirements.txt --output poetry-requirements.txt --without-hashes && \
+    pip install -r poetry-requirements.txt && \
+    rm poetry-requirements.txt && \
+    pip install .
 
 USER tango
-RUN poetry config virtualenvs.create false
 
 CMD ["python3"]
