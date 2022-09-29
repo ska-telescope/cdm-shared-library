@@ -46,9 +46,9 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         self.transaction_id = transaction_id
 
         if self.mccs is not None and self.subarray_id is None:
-            raise ValueError("subarray_id must be " "defined for LOW request")
+            raise ValueError("subarray_id must be defined for LOW request")
         if self.dish is not None and self.subarray_id is None:
-            raise ValueError("subarray_id must be " "defined for MID request")
+            raise ValueError("subarray_id must be defined for MID request")
         if self.mccs is not None and self.dish is not None:
             raise ValueError("Can't allocate dish in the same call as mccs")
 
