@@ -17,6 +17,10 @@ PYTHON_SWITCHES_FOR_ISORT =
 # disable convention and refactoring lint warnings
 PYTHON_SWITCHES_FOR_PYLINT = --disable=C,R
 
+# resolve various conflicts with Black formatting
+PYTHON_SWITCHES_FOR_FLAKE8 = --max-line-length=88 \
+                             --extend-ignore=E501,W291,W503
+
 # include makefile to pick up the standard Make targets from the submodule
 -include .make/base.mk
 -include .make/python.mk
@@ -33,4 +37,3 @@ diagrams:  ## recreate PlantUML diagrams whose source has been modified
 		echo "Recreating $${i%%.*}.png"; \
 		cat $$i | docker run --rm -i think/plantuml -tpng $$i > $${i%%.*}.png; \
 	done
-
