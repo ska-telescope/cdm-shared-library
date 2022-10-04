@@ -9,6 +9,12 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ScanType,
     SDPConfiguration,
     SDPWorkflow,
+    BeamConfiguration,
+    ChannelConfiguration,
+    PolarisationConfiguration,
+    PhaseDir,
+    FieldConfiguration,
+    ResourceBlockConfiguration
 )
 
 
@@ -23,23 +29,23 @@ def test_channel_equals():
      - link_map
     """
     channel1 = Channel(
-        744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+      "fsp_2_channels", 744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
     )
     channel2 = Channel(
-        744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+       "fsp_2_channels", 744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
     )
     assert channel1 == channel2
 
     assert channel1 != Channel(
-        744, 2000, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+       "fsp_2_channels", 744, 2000, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
     )
     assert channel1 != Channel(
-        744, 0, 1, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+       "fsp_2_channels", 744, 0, 1, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
     )
     assert channel1 != Channel(
-        744, 0, 2, 0.36e9, 1.04e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+        "fsp_2_channels", 744, 0, 2, 0.36e9, 1.04e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
     )
-    assert channel1 != Channel(744, 0, 2, 0.35e9, 1.05e9, [[2000, 4], [2200, 5]])
+    assert channel1 != Channel("fsp_2_channels", 744, 0, 2, 0.35e9, 1.05e9, [[2000, 4], [2200, 5]])
 
 
 def test_channel_not_equal_to_other_objects():
@@ -47,7 +53,7 @@ def test_channel_not_equal_to_other_objects():
     Verify that Channel objects are not considered equal to objects of
     other types.
     """
-    channel = Channel(744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
+    channel = Channel("fsp_2_channels", 744, 0, 2, 0.35e9, 1.05e9, [[0, 0], [200, 1], [744, 2], [944, 3]])
     assert channel != 1
 
 
@@ -56,9 +62,9 @@ def test_scan_type_equals():
     Verify that ScanType objects are considered equal for the same passed parameter list
     """
     channel_1 = Channel(
-        744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+       "fsp_2_channels", 744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
     )
-    channel_2 = Channel(744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]])
+    channel_2 = Channel("fsp_2_channels", 744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]])
     scan_type1 = ScanType(
         "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2]
     )
@@ -88,7 +94,7 @@ def test_scan_type_not_equal_to_other_objects():
     other types.
     """
     channel = Channel(
-        744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+       "fsp_2_channels", 744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
     )
     scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
     assert scan_type != 1
@@ -180,7 +186,7 @@ def test_sdp_configuration_block_equals():
     Verify that SDPConfiguration objects are considered equal
     """
     channel = Channel(
-        744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+        "fsp_2_channels", 744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
     )
     scan_type1 = ScanType(
         "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel]
@@ -232,3 +238,163 @@ def test_sdp_configuration_not_equal_to_other_objects():
     """
     sdp = SDPConfiguration(None, None, None, None)
     assert sdp != 1
+
+
+def test_beam_equals():
+    """
+    Verify that Beam objects are considered equal when they have:
+     - the same Beam ID
+     - the same Function
+     - the same Search Beam ID
+    """
+    beam1 = BeamConfiguration("pss1", 1, "pulsar search")
+    beam2 = BeamConfiguration("pss1", 1, "pulsar search")
+
+    assert beam1 == beam2
+
+    assert beam1 != BeamConfiguration("pss1", 2, "pulsar search")
+    assert beam2 != BeamConfiguration("pss1", 2, "pulsar search")
+
+
+def test_beam_equals_not_equal_to_other_objects():
+    """
+    Verify that Beam objects are not considered equal to objects of
+    other types.
+    """
+    beam = BeamConfiguration("pss1", 1, "pulsar search")
+    assert beam != 1
+
+
+def test_chanel_configuration_equals():
+    """
+    Verify that Channels Configuration objects are considered equal when they have:
+     - the same Channels ID
+     - the same Spectral Windows
+    """
+    channels1 = ChannelConfiguration("vis_channels", ["fsp_2_channels",744,0,2,0.35e9, 1.05e9,[[0, 0], [200, 1], [744, 2], [944, 3]]])
+    channels2 = ChannelConfiguration("vis_channels", ["fsp_2_channels",744,0,2,0.35e9, 1.05e9,[[0, 0], [200, 1], [744, 2], [944, 3]]])
+
+    assert channels1 == channels2
+
+    assert channels1 != ChannelConfiguration("pulsar_channels", ["fsp_2_channels",744,0,2,0.35e9, 1.05e9,[[0, 0], [200, 1], [744, 2], [944, 3]]])
+    assert channels2 != ChannelConfiguration("pulsar_channels", ["fsp_2_channels",744,0,2,0.35e9, 1.05e9,[[0, 0], [200, 1], [744, 2], [944, 3]]])
+
+
+def test_chanel_configuration_equals_not_equal_to_other_objects():
+
+
+    """
+    Verify that Channels Configuration objects are not considered equal to objects of
+    other types.
+    """
+    channels = ChannelConfiguration("pulsar_channels", ["fsp_2_channels",744,0,2,0.35e9, 1.05e9,[[0, 0], [200, 1], [744, 2], [944, 3]]])
+    assert channels != 1
+
+
+def test_polarisation_configuration_equals():
+    """
+    Verify that Polarisation Configuration objects are considered equal when they have:
+     - the same polarisation_id
+     - the same corr_type
+    """
+    polar1 = PolarisationConfiguration("all", ["XX","XY","YY","YX"])
+    polar2 = PolarisationConfiguration("all", ["XX","XY","YY","YX"])
+
+    assert polar1 == polar2
+
+    assert polar1 != PolarisationConfiguration("all", ["XY","XY","YY","YX"])
+    assert polar2 != PolarisationConfiguration("all", ["YY","XY","YY","YX"])
+
+
+def test_polarisation_configuration_equals_not_equal_to_other_objects():
+
+    
+    """
+    Verify that Channels Configuration objects are not considered equal to objects of
+    other types.
+    """
+    polar = PolarisationConfiguration("all", ["XY","XY","YY","YX"])
+    assert polar != 1
+
+
+def test_phase_dir_equals():
+    """
+    Verify that Phase Dir objects are considered equal when they have:
+     - the same ra
+     - the same dec
+     - the same refrence_time
+     - the same refrence_frame
+    """
+    phasedir1 = PhaseDir([123,0.1],[123,0.1],"...","ICRF3")
+    phasedir2 = PhaseDir([123,0.1],[123,0.1],"...","ICRF3")
+
+    assert phasedir1 == phasedir2
+
+    assert phasedir1 != PhaseDir([123,0.1],[123,0.1],"...","ICRF34")
+    assert phasedir2 != PhaseDir([123,0.1],[123,0.1],"...","ICRF34")
+
+
+def test_phase_dir_equals_not_equal_to_other_objects():
+
+    
+    """
+    Verify that Channels Configuration objects are not considered equal to objects of
+    other types.
+    """
+    phasedir = PhaseDir([123,0.1],[123,0.1],"...","ICRF3")
+    assert phasedir != 1
+
+    
+def test_field_equals():
+    """
+    Verify that Field Configuration objects are considered equal when they have:
+     - the same field_id
+     - the same pointing_fqdn
+     - the same phase_dir
+    """
+    field1 = FieldConfiguration("field_a","low-tmc/telstate/0/pointing",[[123,0.1],[123,0.1],"...","ICRF3"])
+    field2 = FieldConfiguration("field_a","low-tmc/telstate/0/pointing",[[123,0.1],[123,0.1],"...","ICRF3"])
+
+    assert field1 == field2
+
+    assert field1 != FieldConfiguration("field_a","low-tmc/telstate/0/pointings",[[123,0.1],[123,0.1],"...","ICRF3"])
+    assert field2 != FieldConfiguration("field_a","low-tmc/telstate/0/pointings",[[123,0.1],[123,0.1],"...","ICRF3"])
+
+
+def test_field_equals_not_equal_to_other_objects():
+
+    
+    """
+    Verify that Field Configuration objects are not considered equal to objects of
+    other types.
+    """
+    field = FieldConfiguration("field_a","low-tmc/telstate/0/pointing",[[123,0.1],[123,0.1],"...","ICRF3"])
+    assert field != 1
+
+
+def test_resource_equals():
+    """
+    Verify that Resource Configuration objects are considered equal when they have:
+     - the same csp_links
+     - the same receptors
+     - the same receiver_nodes
+    """
+    resource1 = ResourceBlockConfiguration([1,2,3,4],["FS4","FS8"],10)
+    resource2 = ResourceBlockConfiguration([1,2,3,4],["FS4","FS8"],10)
+
+    assert resource1 == resource2
+
+    assert resource1 != ResourceBlockConfiguration([1,2,3],["FS4","FS8"],10)
+    assert resource2 != ResourceBlockConfiguration([1,2,3],["FS4","FS8"],10)
+
+
+def test_resource_equals_not_equal_to_other_objects():
+
+    
+    """
+    Verify that Field Configuration objects are not considered equal to objects of
+    other types.
+    """
+    resource = ResourceBlockConfiguration([1,2,3,4],["FS4","FS8"],10)
+    assert resource != 1
+    

@@ -18,6 +18,11 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ScanType,
     SDPConfiguration,
     SDPWorkflow,
+    BeamConfiguration,
+    ChannelConfiguration,
+    PolarisationConfiguration,
+    FieldConfiguration,
+    ExecutionBlockConfuguration
 )
 
 
@@ -247,3 +252,69 @@ def test_assign_resources_if_no_subarray_id_argument():
 
     with pytest.raises(ValueError):
         _ = AssignResourcesRequest(dish_allocation=dish_allocation)
+
+
+
+# New modified JSO -> PI 16
+
+def test_modified_assign_resources_request_eq():
+    """
+    Verify that two AssignResource request objects for the same sub-array and
+    dish allocation are considered equal.
+    """
+    channel = Channel(
+       "fsp_2_channels", 744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    )
+    scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
+    sdp_workflow = SDPWorkflow(name="vis_receive", kind="realtime", version="0.1.0")
+    pb_config = ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00001", sdp_workflow, {}
+    )
+    beams =  BeamConfiguration("pss1", 1, "pulsar search")
+    channels = ChannelConfiguration("vis_channels", ["fsp_2_channels",744,0,2,0.35e9, 1.05e9,[[0, 0], [200, 1], [744, 2], [944, 3]]])
+    polarisation = PolarisationConfiguration("all", ["XX","XY","YY","YX"])
+    fields = FieldConfiguration("field_a","low-tmc/telstate/0/pointing",[[123,0.1],[123,0.1],"...","ICRF3"])
+
+    execution_block = ExecutionBlockConfuguration(
+        "eb-mvp01-20200325-00001",100,{}, [beams],[channels],[polarisation],[fields]
+    )
+    sdp_config = SDPConfiguration(
+        "eb-mvp01-20200325-00001",
+        100.0,
+        [scan_type],
+        [pb_config],
+        [execution_block],
+        interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
+    )
+    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+    request = AssignResourcesRequest(
+        1,
+        dish_allocation=dish_allocation,
+        sdp_config=sdp_config,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+    )
+
+    assert request == AssignResourcesRequest(
+        1,
+        dish_allocation=dish_allocation,
+        sdp_config=sdp_config,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+    )
+
+    assert request != AssignResourcesRequest(
+        1,
+        dish_allocation=dish_allocation,
+        sdp_config=None,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00002",
+    )
+    assert request != AssignResourcesRequest(1, dish_allocation=None, sdp_config=None)
+    assert request != AssignResourcesRequest(
+        1,
+        dish_allocation=None,
+        sdp_config=sdp_config,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+    )
