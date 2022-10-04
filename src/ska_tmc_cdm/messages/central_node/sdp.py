@@ -54,7 +54,7 @@ class Channel:
         freq_min: float,
         freq_max: float,
         link_map: List[List],
-        spectral_window_id: str = None
+        spectral_window_id: str = None,
     ):
         self.count = count
         self.start = start
@@ -135,7 +135,7 @@ class ProcessingBlockConfiguration:
         pb_id: str = None,
         workflow: SDPWorkflow = None,
         parameters: Dict = None,
-        dependencies = None,  # how to handel datatype change for now added new key dependencies_new
+        dependencies=None,  # how to handel datatype change for now added new key dependencies_new
         sbi_ids: List = None,
         script: Dict = None,
         # dependencies_new: Dict = None,
