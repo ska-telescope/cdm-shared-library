@@ -51,6 +51,19 @@ class ChannelSchema(Schema):
     link_map = fields.List(fields.List(fields.Integer()))
     spectral_window_id = fields.String()
 
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+
     @post_load
     def create_channel(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -66,7 +79,8 @@ class ChannelSchema(Schema):
         freq_min = data["freq_min"]
         freq_max = data["freq_max"]
         link_map = data.get("link_map")
-        return Channel(count, start, stride, freq_min, freq_max, link_map)
+        spectral_window_id = data.get("spectral_window_id")
+        return Channel(count, start, stride, freq_min, freq_max, link_map,spectral_window_id)
 
 
 class ScanTypeSchema(Schema):
@@ -79,6 +93,18 @@ class ScanTypeSchema(Schema):
     ra = fields.String(data_key="ra", required=True)
     dec = fields.String(data_key="dec", required=True)
     channels = fields.Nested(ChannelSchema, data_key="channels", many=True)
+
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
 
     @post_load
     def create_scan_type(self, data, **_):  # pylint: disable=no-self-use
@@ -251,7 +277,8 @@ class ChannelConfigurationSchema(Schema):  # PI16
     """
 
     channels_id = fields.String()
-    spectral_windows = fields.List(fields.Nested(ChannelSchema))
+    #spectral_windows = fields.List(fields.Nested(ChannelSchema))
+    spectral_windows = fields.Nested(ChannelSchema,many=True)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -312,8 +339,8 @@ class PhaseDirSchema(Schema):  # PI16
     Marsmallow class for the PhaseDir class
     """
 
-    ra = fields.List(fields.Integer())
-    dec = fields.List(fields.Integer())
+    ra = fields.List(fields.Float()) #decimal not json serializable so time being converting to string need to discuss
+    dec = fields.List(fields.Number())
     reference_time = fields.String()
     reference_frame = fields.String()
 
@@ -380,7 +407,7 @@ class ExecutionBlockConfugurationSchema(Schema):
 
     # parameters
     eb_id = fields.String(data_key="eb_id")
-    max_length = fields.Float(data_key="max_length")
+    max_length = fields.Integer(data_key="max_length")
     context = fields.Dict()  # PI16
     beams = fields.List(fields.Nested(BeamConfigurationSchema))  # PI16
     channels = fields.List(fields.Nested(ChannelConfigurationSchema) ) # PI16
@@ -423,7 +450,8 @@ class SDPConfigurationSchema(Schema):
     eb_id = fields.String(data_key="eb_id")
     max_length = fields.Float(data_key="max_length")
     scan_types = fields.Nested(ScanTypeSchema, many=True)
-    processing_blocks = fields.List(fields.Nested(ProcessingBlockSchema))
+    #processing_blocks = fields.List(fields.Nested(ProcessingBlockSchema))
+    processing_blocks = fields.Nested(ProcessingBlockSchema,many=True)
     resources = fields.Nested(ResourceBlockConfigurationSchema)
 
 

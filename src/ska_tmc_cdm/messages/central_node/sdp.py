@@ -219,14 +219,14 @@ class PolarisationConfiguration:
     """
 
     def __init__(self, polarisations_id: str, corr_type: List[str] = None):
-        self.polarisation_id = polarisations_id
+        self.polarisations_id = polarisations_id
         self.corr_type = corr_type
 
     def __eq__(self, other):
         if not isinstance(other, PolarisationConfiguration):
             return False
         return (
-            self.polarisation_id == other.polarisation_id
+            self.polarisations_id == other.polarisations_id
             and self.corr_type == other.corr_type
         )
 
@@ -350,8 +350,8 @@ class SDPConfiguration:
         self.max_length = max_length
         self.scan_types = scan_types
         self.processing_blocks = processing_blocks
-        self.interface = (interface,)
-        self.execution_block = (execution_block,)
+        self.interface = interface
+        self.execution_block = execution_block
         self.resources = resources
 
     def __eq__(self, other):
