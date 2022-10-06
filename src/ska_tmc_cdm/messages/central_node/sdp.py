@@ -296,10 +296,8 @@ class ExecutionBlockConfuguration:
         self.polarisations = polarisations
         self.fields = fields
 
-        print("@@@@@@@@@@@@@@@@@@@@from ExecutionBlockconfig",self.__dict__)
 
     def __eq__(self, other):
-        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         if not isinstance(other, ExecutionBlockConfuguration):
             return False
         return (

@@ -223,4 +223,3 @@ def test_validate_serialization_and_deserialization_assign_resource_json_using_s
 
     assert_json_is_equal(SDPConfigurationSchema().dumps(sdp_configuration_object), VALID_SDP_JSON_PI16)
 
-  
