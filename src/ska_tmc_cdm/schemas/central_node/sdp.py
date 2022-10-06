@@ -5,9 +5,16 @@ Central Node message classes to/from a JSON representation.
 from marshmallow import Schema, fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.central_node.sdp import (
+    BeamConfiguration,
     Channel,
+    ChannelConfiguration,
+    ExecutionBlockConfuguration,
+    FieldConfiguration,
     PbDependency,
+    PhaseDir,
+    PolarisationConfiguration,
     ProcessingBlockConfiguration,
+    ResourceBlockConfiguration,
     ScanType,
     SDPConfiguration,
     SDPWorkflow,
@@ -21,6 +28,13 @@ __all__ = [
     "ChannelSchema",
     "ProcessingBlockSchema",
     "SDPConfigurationSchema",
+    "ExecutionBlockConfugurationSchema",
+    "BeamConfigurationSchema",
+    "ChannelConfigurationSchema",
+    "PolarisationConfigurationSchema",
+    "FieldConfigurationSchema",
+    "PhaseDirSchema",
+    "ResourceBlockConfigurationSchema",
 ]
 
 
@@ -31,10 +45,11 @@ class ChannelSchema(Schema):
 
     count = fields.Integer(data_key="count", required=True)
     start = fields.Integer(data_key="start", required=True)
-    stride = fields.Integer(data_key="stride", required=True)
+    stride = fields.Integer()
     freq_min = fields.Float(data_key="freq_min", required=True)
     freq_max = fields.Float(data_key="freq_max", required=True)
-    link_map = fields.List(fields.List(fields.Int), data_key="link_map", required=True)
+    link_map = fields.List(fields.List(fields.Integer()))
+    spectral_window_id = fields.String()
 
     @post_load
     def create_channel(self, data, **_):  # pylint: disable=no-self-use
@@ -47,10 +62,10 @@ class ChannelSchema(Schema):
         """
         count = data["count"]
         start = data["start"]
-        stride = data["stride"]
+        stride = data.get("stride")
         freq_min = data["freq_min"]
         freq_max = data["freq_max"]
-        link_map = data["link_map"]
+        link_map = data.get("link_map")
         return Channel(count, start, stride, freq_min, freq_max, link_map)
 
 
@@ -136,7 +151,9 @@ class ProcessingBlockSchema(Schema):
     pb_id = fields.String(data_key="pb_id", required=True)
     workflow = fields.Nested(SDPWorkflowSchema)
     parameters = fields.Dict()
-    dependencies = fields.Nested(PbDependencySchema, many=True, missing=None)
+    dependencies = fields.Dict()
+    sbi_ids = fields.List(fields.String())
+    script = fields.Dict()
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -161,17 +178,254 @@ class ProcessingBlockSchema(Schema):
         return ProcessingBlockConfiguration(**data)
 
 
+class ResourceBlockConfigurationSchema(Schema):  # PI16
+    """
+    Marsmallow class for the PhaseDir class
+    """
+
+    csp_links = fields.List(fields.Integer())
+    receptors = fields.List(fields.String())
+    receive_nodes = fields.Integer()
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_resource_block_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return ResourceBlockConfiguration(**data)
+
+
+
+class BeamConfigurationSchema(Schema):  # PI16
+    """
+    Marsmallow class for the BeamConfiguration class
+    """
+
+    beam_id = fields.String()
+    function = fields.String()
+    search_beam_id = fields.Integer()
+    timing_beam_id = fields.Integer()
+    vlbi_beam_id = fields.Integer()
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_beam_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return BeamConfiguration(**data)
+
+
+class ChannelConfigurationSchema(Schema):  # PI16
+    """
+    Marsmallow class for the ChannelConfiguration class
+    """
+
+    channels_id = fields.String()
+    spectral_windows = fields.List(fields.Nested(ChannelSchema))
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_channel_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return ChannelConfiguration(**data)
+
+
+class PolarisationConfigurationSchema(Schema):  # PI16
+    """
+    Marsmallow class for the PolarisationConfiguration class
+    """
+
+    polarisations_id = fields.String()
+    corr_type = fields.List(fields.String())
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return PolarisationConfiguration(**data)
+
+
+class PhaseDirSchema(Schema):  # PI16
+    """
+    Marsmallow class for the PhaseDir class
+    """
+
+    ra = fields.List(fields.Integer())
+    dec = fields.List(fields.Integer())
+    reference_time = fields.String()
+    reference_frame = fields.String()
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_phase_dir_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return PhaseDir(**data)
+
+
+
+class FieldConfigurationSchema(Schema):  # PI16
+    """
+    Marsmallow class for the PolarisationConfiguration class
+    """
+
+    field_id = fields.String()
+    phase_dir = fields.Nested(PhaseDirSchema)
+    pointing_fqdn = fields.String()
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return FieldConfiguration(**data)
+
+
+class ExecutionBlockConfugurationSchema(Schema):
+    """
+    Marsmallow class for the SDPConfiguration class
+    """
+
+    # parameters
+    eb_id = fields.String(data_key="eb_id")
+    max_length = fields.Float(data_key="max_length")
+    context = fields.Dict()  # PI16
+    beams = fields.List(fields.Nested(BeamConfigurationSchema))  # PI16
+    channels = fields.List(fields.Nested(ChannelConfigurationSchema) ) # PI16
+    polarisations = fields.List(fields.Nested(PolarisationConfigurationSchema))  # PI16
+    fields = fields.List(fields.Nested(FieldConfigurationSchema))
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return ExecutionBlockConfuguration(**data)
+
+
+
 @CODEC.register_mapping(SDPConfiguration)
 class SDPConfigurationSchema(Schema):
     """
     Marsmallow class for the SDPConfiguration class
     """
-
     interface = fields.String()
-    eb_id = fields.String(data_key="eb_id", required=True)
-    max_length = fields.Float(data_key="max_length", required=True)
+    execution_block = fields.Nested(ExecutionBlockConfugurationSchema)  # PI 16
+
+
+    eb_id = fields.String(data_key="eb_id")
+    max_length = fields.Float(data_key="max_length")
     scan_types = fields.Nested(ScanTypeSchema, many=True)
-    processing_blocks = fields.Nested(ProcessingBlockSchema, many=True)
+    processing_blocks = fields.List(fields.Nested(ProcessingBlockSchema))
+    resources = fields.Nested(ResourceBlockConfigurationSchema)
+
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -194,3 +448,6 @@ class SDPConfigurationSchema(Schema):
         :return: SDPConfiguration object populated from data
         """
         return SDPConfiguration(**data)
+
+
+

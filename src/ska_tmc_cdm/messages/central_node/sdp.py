@@ -216,8 +216,8 @@ class PolarisationConfiguration:
     Class to hold Dependencies for ExecutionBlock
     """
 
-    def __init__(self, polarisation_id: str, corr_type: List[str] = None):
-        self.polarisation_id = polarisation_id
+    def __init__(self, polarisations_id: str, corr_type: List[str] = None):
+        self.polarisation_id = polarisations_id
         self.corr_type = corr_type
 
     def __eq__(self, other):
@@ -283,7 +283,7 @@ class ExecutionBlockConfuguration:
         context: Dict,
         beams: List[BeamConfiguration] = None,
         channels: List[ChannelConfiguration] = None,
-        polarisation: List[PolarisationConfiguration] = None,
+        polarisations: List[PolarisationConfiguration] = None,
         fields: List[FieldConfiguration] = None,
     ):
         self.eb_id = eb_id
@@ -291,10 +291,13 @@ class ExecutionBlockConfuguration:
         self.context = context
         self.beams = beams
         self.channels = channels
-        self.polarisation = polarisation
+        self.polarisations = polarisations
         self.fields = fields
 
+        print("@@@@@@@@@@@@@@@@@@@@from ExecutionBlockconfig",self.__dict__)
+
     def __eq__(self, other):
+        print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
         if not isinstance(other, ExecutionBlockConfuguration):
             return False
         return (
@@ -303,7 +306,7 @@ class ExecutionBlockConfuguration:
             and self.context == other.context
             and self.beams == other.beams
             and self.channels == other.channels
-            and self.polarisation == other.polarisation
+            and self.polarisations == other.polarisations
             and self.fields == other.fields
         )
 
