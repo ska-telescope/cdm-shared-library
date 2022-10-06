@@ -54,7 +54,7 @@ class Channel:
         freq_min: float,
         freq_max: float,
         link_map: List[List],
-        spectral_window_id: str = None,
+        spectral_window_id: str = None
     ):
         self.count = count
         self.start = start
@@ -135,10 +135,12 @@ class ProcessingBlockConfiguration:
         pb_id: str = None,
         workflow: SDPWorkflow = None,
         parameters: Dict = None,
-        dependencies=None,  # how to handel datatype change for now added new key dependencies_new
+        dependencies: List[
+            PbDependency
+        ] = None,  # how to handel datatype change for now added new key dependencies_new
         sbi_ids: List = None,
         script: Dict = None,
-        # dependencies_new: Dict = None,
+        dependencies_new: Dict = None,
     ):
         self.pb_id = pb_id
         self.workflow = workflow
@@ -146,7 +148,7 @@ class ProcessingBlockConfiguration:
         self.dependencies = dependencies
         self.sbi_ids = sbi_ids
         self.script = script
-        # self.dependencies_new = dependencies_new
+        self.dependencies_new = dependencies_new
 
     def __eq__(self, other):
         if not isinstance(other, ProcessingBlockConfiguration):
@@ -158,7 +160,7 @@ class ProcessingBlockConfiguration:
             and self.dependencies == other.dependencies
             and self.sbi_ids == other.sbi_ids
             and self.script == other.script
-            # and self.dependencies_new == other.dependencies_new
+            and self.dependencies_new == other.dependencies_new
         )
 
 
