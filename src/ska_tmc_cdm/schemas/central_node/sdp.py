@@ -339,7 +339,7 @@ class PhaseDirSchema(Schema):  # PI16
     Marsmallow class for the PhaseDir class
     """
 
-    ra = fields.List(fields.Float()) #decimal not json serializable so time being converting to string need to discuss
+    ra = fields.List(fields.Float())
     dec = fields.List(fields.Number())
     reference_time = fields.String()
     reference_frame = fields.String()
@@ -450,7 +450,6 @@ class SDPConfigurationSchema(Schema):
     eb_id = fields.String(data_key="eb_id")
     max_length = fields.Float(data_key="max_length")
     scan_types = fields.Nested(ScanTypeSchema, many=True)
-    #processing_blocks = fields.List(fields.Nested(ProcessingBlockSchema))
     processing_blocks = fields.Nested(ProcessingBlockSchema,many=True)
     resources = fields.Nested(ResourceBlockConfigurationSchema)
 

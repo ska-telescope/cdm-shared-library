@@ -610,11 +610,8 @@ def test_validate_serialization_and_deserialization_sdp_json_using_schema_class(
     """
 
     sdp_configuration_object = SDPConfigurationSchema().loads(VALID_SDP_JSON_PI16)
-
     serialized_sdp_config = SDPConfigurationSchema().dumps(sdp_configuration_object)
 
-
-    print(f"VALID SDP JSOn:\n\n================================ {VALID_SDP_JSON_PI16}\n\n\n==============================================Serialized SDP:\n=========={serialized_sdp_config}===========================\n\n\n")
     assert_json_is_equal(VALID_SDP_JSON_PI16, serialized_sdp_config)
 
 
