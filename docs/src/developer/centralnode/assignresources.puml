@@ -27,13 +27,17 @@ package ska_tmc_cdm.messages.central_node {
             reference_frame : str
             ra : str
             dec : str
-            dec_new : str
         }
         ScanType *-- "*" Channel
 
         class PbDependency {
             pb_id : str
             pb_type : List[str]
+        }
+         class ResourceBlockConfiguration {
+            csp_links: List, 
+            receptors: List,
+            eceive_nodes: int
         }
         class PhaseDir {
             ra: List,
@@ -50,14 +54,11 @@ package ska_tmc_cdm.messages.central_node {
         }
         class ChannelConfiguration {
             channels_id: str, 
-            spectral_windows: List[Channel] = None
-            
         }
         ChannelConfiguration  *-- "*" Channel
         class PolarisationConfiguration {
             field_id: str, 
             pointing_fqdn: str, 
-            phase_dir: PhaseDir = None
         }
         PolarisationConfiguration  *-- "*" PhaseDir
         class FieldConfiguration {
@@ -81,9 +82,6 @@ package ska_tmc_cdm.messages.central_node {
             eb_id: str,
             max_length: int,
             context: Dict,
-            beams: List[BeamConfiguration] = None,
-            channels: List[ChannelConfiguration] = None,
-            polarisation: List[PolarisationConfiguration] = None,
             fields: List[FieldConfiguration] = None,
         }
         ExecutionBlockConfuguration  *-- "1" BeamConfiguration
@@ -99,6 +97,7 @@ package ska_tmc_cdm.messages.central_node {
         SDPConfiguration *-- "*" ScanType
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
         SDPConfiguration *-- "*" ExecutionBlockConfuguration
+        SDPConfiguration *-- "*" ResourceBlockConfiguration
 
         class AssignResourcesRequest {
             interface : str
