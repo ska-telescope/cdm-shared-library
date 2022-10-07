@@ -16,8 +16,9 @@ __all__ = [
     "PolarisationConfiguration",
     "PhaseDir",
     "FieldConfiguration",
-    "ExecutionBlockConfuguration",
-    "ResourceBlockConfiguration",
+    "ScriptConfiguration",
+    "ExecutionConfiguration",
+    "ResourceConfiguration",
     "ScriptConfiguration",
 ]
 
@@ -274,7 +275,7 @@ class FieldConfiguration:
         )
 
 
-class ExecutionBlockConfuguration:
+class ExecutionConfiguration:
     """
     Class to hold ExecutionBlock configuration
     """
@@ -298,7 +299,7 @@ class ExecutionBlockConfuguration:
         self.fields = fields
 
     def __eq__(self, other):
-        if not isinstance(other, ExecutionBlockConfuguration):
+        if not isinstance(other, ExecutionConfiguration):
             return False
         return (
             self.eb_id == other.eb_id
@@ -311,7 +312,7 @@ class ExecutionBlockConfuguration:
         )
 
 
-class ResourceBlockConfiguration:
+class ResourceConfiguration:
     """
     Class to hold Dependencies for ExecutionBlock
     """
@@ -322,7 +323,7 @@ class ResourceBlockConfiguration:
         self.receive_nodes = receive_nodes
 
     def __eq__(self, other):
-        if not isinstance(other, ResourceBlockConfiguration):
+        if not isinstance(other, ResourceConfiguration):
             return False
         return (
             self.csp_links == other.csp_links
@@ -342,9 +343,9 @@ class SDPConfiguration:
         max_length: float = None,
         scan_types: List[ScanType] = None,
         processing_blocks: List[ProcessingBlockConfiguration] = None,
-        execution_block: ExecutionBlockConfuguration = None,
+        execution_block: ExecutionConfiguration = None,
         interface: str = None,
-        resources: ResourceBlockConfiguration = None,
+        resources: ResourceConfiguration = None,
     ):
         self.eb_id = eb_id
         self.max_length = max_length

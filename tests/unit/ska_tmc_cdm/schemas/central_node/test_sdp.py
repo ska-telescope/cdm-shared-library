@@ -4,11 +4,11 @@ from ska_tmc_cdm.schemas.central_node.assign_resources import (
 from ska_tmc_cdm.schemas.central_node.sdp import (
     BeamConfigurationSchema,
     ChannelConfigurationSchema,
-    ExecutionBlockConfugurationSchema,
+    ExecutionConfigurationSchema,
     FieldConfigurationSchema,
     PolarisationConfigurationSchema,
     ProcessingBlockSchema,
-    ResourceBlockConfigurationSchema,
+    ResourceConfigurationSchema,
     SDPConfigurationSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
@@ -770,10 +770,10 @@ def test_validate_serialization_and_deserialization_execution_block_using_schema
     """
     Verifies that the Execution Block schema marshal and Unmarshal works correctly
     """
-    execution_block_config = ExecutionBlockConfugurationSchema().loads(
+    execution_block_config = ExecutionConfigurationSchema().loads(
         VALID_EXECUTION_BLOCK_JSON_PI16
     )
-    serialized_execution_block_config = ExecutionBlockConfugurationSchema().dumps(
+    serialized_execution_block_config = ExecutionConfigurationSchema().dumps(
         execution_block_config
     )
 
@@ -807,6 +807,7 @@ def test_validate_serialization_and_deserialization_channels_using_schema_class(
 
 
 def test_validate_serialization_and_deserialization_polarisation_using_schema_class():
+
     """
     Verifies that the Polarisation schema marshal and Unmarshal works correctly
     """
@@ -834,12 +835,8 @@ def test_validate_serialization_and_deserialization_resources_block_using_schema
     """
     Verifies that the  Resource Block schema marshal and Unmarshal works correctly
     """
-    resources_config = ResourceBlockConfigurationSchema().loads(
-        VALID_RESOURCES_JSON_PI16
-    )
-    serialized_resource_config = ResourceBlockConfigurationSchema().dumps(
-        resources_config
-    )
+    resources_config = ResourceConfigurationSchema().loads(VALID_RESOURCES_JSON_PI16)
+    serialized_resource_config = ResourceConfigurationSchema().dumps(resources_config)
 
     assert_json_is_equal(VALID_RESOURCES_JSON_PI16, serialized_resource_config)
 

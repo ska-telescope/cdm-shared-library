@@ -27,13 +27,17 @@ package ska_tmc_cdm.messages.central_node {
             reference_frame : str
             ra : str
             dec : str
-            dec_new : str
         }
         ScanType *-- "*" Channel
 
         class PbDependency {
             pb_id : str
             pb_type : List[str]
+        }
+         class ResourceConfiguration {
+            csp_links: List, 
+            receptors: List,
+            receive_nodes: int
         }
         class PhaseDir {
             ra: List,
@@ -50,20 +54,20 @@ package ska_tmc_cdm.messages.central_node {
         }
         class ChannelConfiguration {
             channels_id: str, 
-            spectral_windows: List[Channel] = None
-            
         }
         ChannelConfiguration  *-- "*" Channel
         class PolarisationConfiguration {
-            field_id: str, 
-            pointing_fqdn: str, 
-            phase_dir: PhaseDir = None
+            polarisations_id: str,
+            corr_type: List[str] = None  
         }
-        PolarisationConfiguration  *-- "*" PhaseDir
+
         class FieldConfiguration {
             pb_id : str
             pb_type : List[str]
         }
+
+        FieldConfiguration  *-- "*" PhaseDir
+
         class SDPWorkflow {
             name : str
             kind : str
@@ -77,19 +81,16 @@ package ska_tmc_cdm.messages.central_node {
         ProcessingBlockConfiguration  *-- "1" SDPWorkflow
         ProcessingBlockConfiguration  *-- "*" PbDependency
 
-        class ExecutionBlockConfuguration {
+        class ExecutionConfiguration {
             eb_id: str,
             max_length: int,
             context: Dict,
-            beams: List[BeamConfiguration] = None,
-            channels: List[ChannelConfiguration] = None,
-            polarisation: List[PolarisationConfiguration] = None,
             fields: List[FieldConfiguration] = None,
         }
-        ExecutionBlockConfuguration  *-- "1" BeamConfiguration
-        ExecutionBlockConfuguration  *-- "*" ChannelConfiguration
-        ExecutionBlockConfuguration  *-- "1" PolarisationConfiguration
-        ExecutionBlockConfuguration  *-- "*" FieldConfiguration
+        ExecutionConfiguration  *-- "1" BeamConfiguration
+        ExecutionConfiguration  *-- "*" ChannelConfiguration
+        ExecutionConfiguration  *-- "1" PolarisationConfiguration
+        ExecutionConfiguration  *-- "*" FieldConfiguration
 
         class SDPConfiguration {
             sdp_id : str
@@ -98,7 +99,8 @@ package ska_tmc_cdm.messages.central_node {
         }
         SDPConfiguration *-- "*" ScanType
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
-        SDPConfiguration *-- "*" ExecutionBlockConfuguration
+        SDPConfiguration *-- "*" ExecutionConfiguration
+        SDPConfiguration *-- "*" ResourceConfiguration
 
         class AssignResourcesRequest {
             interface : str
