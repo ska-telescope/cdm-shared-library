@@ -18,6 +18,7 @@ __all__ = [
     "FieldConfiguration",
     "ExecutionBlockConfuguration",
     "ResourceBlockConfiguration",
+    "ScriptConfiguration",
 ]
 
 
@@ -54,7 +55,7 @@ class Channel:
         freq_min: float,
         freq_max: float,
         link_map: List[List],
-        spectral_window_id: str = None
+        spectral_window_id: str = None,
     ):
         self.count = count
         self.start = start
@@ -115,14 +116,14 @@ class PbDependency:
     Class to hold Dependencies for ProcessingBlock
     """
 
-    def __init__(self, pb_id: str, pb_type: List[str]):
+    def __init__(self, pb_id: str, kind: List[str]):
         self.pb_id = pb_id
-        self.pb_type = pb_type
+        self.kind = kind
 
     def __eq__(self, other):
         if not isinstance(other, PbDependency):
             return False
-        return self.pb_id == other.pb_id and self.pb_type == other.pb_type
+        return self.pb_id == other.pb_id and self.kind == other.kind
 
 
 class ProcessingBlockConfiguration:
@@ -296,7 +297,6 @@ class ExecutionBlockConfuguration:
         self.polarisations = polarisations
         self.fields = fields
 
-
     def __eq__(self, other):
         if not isinstance(other, ExecutionBlockConfuguration):
             return False
@@ -364,4 +364,24 @@ class SDPConfiguration:
             and self.processing_blocks == other.processing_blocks
             and self.interface == other.interface
             and self.resources == other.resources
+        )
+
+
+class ScriptConfiguration:
+    """
+    Class to hold ScriptConfiguration
+    """
+
+    def __init__(self, kind: str = None, name: str = None, version: str = None):
+        self.kind = kind
+        self.name = name
+        self.version = version
+
+    def __eq__(self, other):
+        if not isinstance(other, ScriptConfiguration):
+            return False
+        return (
+            self.kind == other.kind
+            and self.name == other.name
+            and self.version == other.version
         )

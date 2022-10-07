@@ -2,6 +2,8 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
+
+
 from marshmallow import Schema, fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.central_node.sdp import (
@@ -16,6 +18,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ProcessingBlockConfiguration,
     ResourceBlockConfiguration,
     ScanType,
+    ScriptConfiguration,
     SDPConfiguration,
     SDPWorkflow,
 )
@@ -35,6 +38,7 @@ __all__ = [
     "FieldConfigurationSchema",
     "PhaseDirSchema",
     "ResourceBlockConfigurationSchema",
+    "ScriptConfigurationSchema",
 ]
 
 
@@ -51,7 +55,6 @@ class ChannelSchema(Schema):
     link_map = fields.List(fields.List(fields.Integer()))
     spectral_window_id = fields.String()
 
-
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -62,7 +65,6 @@ class ChannelSchema(Schema):
         :return: dict suitable for PB configuration
         """
         return {k: v for k, v in data.items() if v is not None}
-
 
     @post_load
     def create_channel(self, data, **_):  # pylint: disable=no-self-use
@@ -80,7 +82,9 @@ class ChannelSchema(Schema):
         freq_max = data["freq_max"]
         link_map = data.get("link_map")
         spectral_window_id = data.get("spectral_window_id")
-        return Channel(count, start, stride, freq_min, freq_max, link_map,spectral_window_id)
+        return Channel(
+            count, start, stride, freq_min, freq_max, link_map, spectral_window_id
+        )
 
 
 class ScanTypeSchema(Schema):
@@ -93,7 +97,6 @@ class ScanTypeSchema(Schema):
     ra = fields.String(data_key="ra", required=True)
     dec = fields.String(data_key="dec", required=True)
     channels = fields.Nested(ChannelSchema, data_key="channels", many=True)
-
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -153,7 +156,7 @@ class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     pb_id = fields.String(data_key="pb_id")
-    pb_type = fields.List(fields.String, data_key="kind")
+    kind = fields.List(fields.String())
 
     @post_load
     def create_pb_dependency(self, data, **_):  # pylint: disable=no-self-use
@@ -165,8 +168,40 @@ class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
         :return: PbDependency object populated from data
         """
         pb_id = data["pb_id"]
-        pb_type = data["pb_type"]
-        return PbDependency(pb_id, pb_type)
+        kind = data["kind"]
+        return PbDependency(pb_id, kind)
+
+
+class ScriptConfigurationSchema(Schema):
+    """
+    Marshmallow schema for the ScriptConfiguration class.
+    """
+
+    kind = fields.String()
+    name = fields.String()
+    version = fields.String()
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return ScriptConfiguration(**data)
 
 
 class ProcessingBlockSchema(Schema):
@@ -177,9 +212,9 @@ class ProcessingBlockSchema(Schema):
     pb_id = fields.String(data_key="pb_id", required=True)
     workflow = fields.Nested(SDPWorkflowSchema)
     parameters = fields.Dict()
-    dependencies = fields.Dict()
+    dependencies = fields.List(fields.Nested(PbDependencySchema))
     sbi_ids = fields.List(fields.String())
-    script = fields.Dict()
+    script = fields.Nested(ScriptConfigurationSchema)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -204,9 +239,9 @@ class ProcessingBlockSchema(Schema):
         return ProcessingBlockConfiguration(**data)
 
 
-class ResourceBlockConfigurationSchema(Schema):  # PI16
+class ResourceBlockConfigurationSchema(Schema):
     """
-    Marsmallow class for the PhaseDir class
+    Marsmallow class for the ResourceBlockConfiguration class
     """
 
     csp_links = fields.List(fields.Integer())
@@ -236,8 +271,7 @@ class ResourceBlockConfigurationSchema(Schema):  # PI16
         return ResourceBlockConfiguration(**data)
 
 
-
-class BeamConfigurationSchema(Schema):  # PI16
+class BeamConfigurationSchema(Schema):
     """
     Marsmallow class for the BeamConfiguration class
     """
@@ -271,14 +305,13 @@ class BeamConfigurationSchema(Schema):  # PI16
         return BeamConfiguration(**data)
 
 
-class ChannelConfigurationSchema(Schema):  # PI16
+class ChannelConfigurationSchema(Schema):
     """
     Marsmallow class for the ChannelConfiguration class
     """
 
     channels_id = fields.String()
-    #spectral_windows = fields.List(fields.Nested(ChannelSchema))
-    spectral_windows = fields.Nested(ChannelSchema,many=True)
+    spectral_windows = fields.Nested(ChannelSchema, many=True)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -303,7 +336,7 @@ class ChannelConfigurationSchema(Schema):  # PI16
         return ChannelConfiguration(**data)
 
 
-class PolarisationConfigurationSchema(Schema):  # PI16
+class PolarisationConfigurationSchema(Schema):
     """
     Marsmallow class for the PolarisationConfiguration class
     """
@@ -334,7 +367,7 @@ class PolarisationConfigurationSchema(Schema):  # PI16
         return PolarisationConfiguration(**data)
 
 
-class PhaseDirSchema(Schema):  # PI16
+class PhaseDirSchema(Schema):
     """
     Marsmallow class for the PhaseDir class
     """
@@ -367,8 +400,7 @@ class PhaseDirSchema(Schema):  # PI16
         return PhaseDir(**data)
 
 
-
-class FieldConfigurationSchema(Schema):  # PI16
+class FieldConfigurationSchema(Schema):
     """
     Marsmallow class for the PolarisationConfiguration class
     """
@@ -402,16 +434,15 @@ class FieldConfigurationSchema(Schema):  # PI16
 
 class ExecutionBlockConfugurationSchema(Schema):
     """
-    Marsmallow class for the SDPConfiguration class
+    Marsmallow class for the ExecutionBlockConfuguration class
     """
 
-    # parameters
     eb_id = fields.String(data_key="eb_id")
     max_length = fields.Integer(data_key="max_length")
-    context = fields.Dict()  # PI16
-    beams = fields.List(fields.Nested(BeamConfigurationSchema))  # PI16
-    channels = fields.List(fields.Nested(ChannelConfigurationSchema) ) # PI16
-    polarisations = fields.List(fields.Nested(PolarisationConfigurationSchema))  # PI16
+    context = fields.Dict()
+    beams = fields.List(fields.Nested(BeamConfigurationSchema))
+    channels = fields.List(fields.Nested(ChannelConfigurationSchema))
+    polarisations = fields.List(fields.Nested(PolarisationConfigurationSchema))
     fields = fields.List(fields.Nested(FieldConfigurationSchema))
 
     @post_dump
@@ -437,22 +468,20 @@ class ExecutionBlockConfugurationSchema(Schema):
         return ExecutionBlockConfuguration(**data)
 
 
-
 @CODEC.register_mapping(SDPConfiguration)
 class SDPConfigurationSchema(Schema):
     """
     Marsmallow class for the SDPConfiguration class
     """
-    interface = fields.String()
-    execution_block = fields.Nested(ExecutionBlockConfugurationSchema)  # PI 16
 
+    interface = fields.String()
+    execution_block = fields.Nested(ExecutionBlockConfugurationSchema)
 
     eb_id = fields.String(data_key="eb_id")
     max_length = fields.Float(data_key="max_length")
     scan_types = fields.Nested(ScanTypeSchema, many=True)
-    processing_blocks = fields.Nested(ProcessingBlockSchema,many=True)
+    processing_blocks = fields.Nested(ProcessingBlockSchema, many=True)
     resources = fields.Nested(ResourceBlockConfigurationSchema)
-
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -475,6 +504,3 @@ class SDPConfigurationSchema(Schema):
         :return: SDPConfiguration object populated from data
         """
         return SDPConfiguration(**data)
-
-
-
