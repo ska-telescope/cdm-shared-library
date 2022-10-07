@@ -37,7 +37,7 @@ package ska_tmc_cdm.messages.central_node {
          class ResourceConfiguration {
             csp_links: List, 
             receptors: List,
-            eceive_nodes: int
+            receive_nodes: int
         }
         class PhaseDir {
             ra: List,
