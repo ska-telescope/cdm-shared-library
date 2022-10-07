@@ -34,7 +34,7 @@ package ska_tmc_cdm.messages.central_node {
             pb_id : str
             pb_type : List[str]
         }
-         class ResourceBlockConfiguration {
+         class ResourceConfiguration {
             csp_links: List, 
             receptors: List,
             eceive_nodes: int
@@ -57,14 +57,17 @@ package ska_tmc_cdm.messages.central_node {
         }
         ChannelConfiguration  *-- "*" Channel
         class PolarisationConfiguration {
-            field_id: str, 
-            pointing_fqdn: str, 
+            polarisations_id: str,
+            corr_type: List[str] = None  
         }
-        PolarisationConfiguration  *-- "*" PhaseDir
+
         class FieldConfiguration {
             pb_id : str
             pb_type : List[str]
         }
+
+        FieldConfiguration  *-- "*" PhaseDir
+
         class SDPWorkflow {
             name : str
             kind : str
@@ -78,16 +81,16 @@ package ska_tmc_cdm.messages.central_node {
         ProcessingBlockConfiguration  *-- "1" SDPWorkflow
         ProcessingBlockConfiguration  *-- "*" PbDependency
 
-        class ExecutionBlockConfuguration {
+        class ExecutionConfiguration {
             eb_id: str,
             max_length: int,
             context: Dict,
             fields: List[FieldConfiguration] = None,
         }
-        ExecutionBlockConfuguration  *-- "1" BeamConfiguration
-        ExecutionBlockConfuguration  *-- "*" ChannelConfiguration
-        ExecutionBlockConfuguration  *-- "1" PolarisationConfiguration
-        ExecutionBlockConfuguration  *-- "*" FieldConfiguration
+        ExecutionConfiguration  *-- "1" BeamConfiguration
+        ExecutionConfiguration  *-- "*" ChannelConfiguration
+        ExecutionConfiguration  *-- "1" PolarisationConfiguration
+        ExecutionConfiguration  *-- "*" FieldConfiguration
 
         class SDPConfiguration {
             sdp_id : str
@@ -96,8 +99,8 @@ package ska_tmc_cdm.messages.central_node {
         }
         SDPConfiguration *-- "*" ScanType
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
-        SDPConfiguration *-- "*" ExecutionBlockConfuguration
-        SDPConfiguration *-- "*" ResourceBlockConfiguration
+        SDPConfiguration *-- "*" ExecutionConfiguration
+        SDPConfiguration *-- "*" ResourceConfiguration
 
         class AssignResourcesRequest {
             interface : str

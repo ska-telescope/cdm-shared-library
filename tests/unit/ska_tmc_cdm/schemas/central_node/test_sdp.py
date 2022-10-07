@@ -1,29 +1,29 @@
-import pytest
 import json
+
+import pytest
+
 from ska_tmc_cdm.schemas import CODEC
-from ska_tmc_cdm.utils import assert_json_is_equal
-from ska_tmc_cdm.schemas.central_node.sdp import (
-
-    ScanTypeSchema,
-    SDPWorkflowSchema,
-    PbDependencySchema,
-    ChannelSchema,
-    ProcessingBlockSchema,
-    SDPConfigurationSchema,
-    ExecutionBlockConfugurationSchema,
-    BeamConfigurationSchema,
-    ChannelConfigurationSchema,
-    PolarisationConfigurationSchema,
-    FieldConfigurationSchema,
-    PhaseDirSchema,
-    ResourceBlockConfigurationSchema
-)
-
-
 from ska_tmc_cdm.schemas.central_node.assign_resources import (
     AssignResourcesRequestSchema,
     AssignResourcesResponseSchema,
 )
+from ska_tmc_cdm.schemas.central_node.sdp import (
+    BeamConfigurationSchema,
+    ChannelConfigurationSchema,
+    ChannelSchema,
+    ExecutionConfigurationSchema,
+    FieldConfigurationSchema,
+    PbDependencySchema,
+    PhaseDirSchema,
+    PolarisationConfigurationSchema,
+    ProcessingBlockSchema,
+    ResourceConfigurationSchema,
+    ScanTypeSchema,
+    SDPConfigurationSchema,
+    SDPWorkflowSchema,
+)
+from ska_tmc_cdm.utils import assert_json_is_equal
+
 from .. import utils
 
 VALID_RESOURCES_JSON_PI16 = """{ 
@@ -71,7 +71,7 @@ VALID_PROCESSING_BLOCK_JSON_PI16 = """[
     }
 ]"""
 
-VALID_FIELDS_JSON_PI16 =  """[
+VALID_FIELDS_JSON_PI16 = """[
     {
         "field_id": "field_a",
         "phase_dir": {
@@ -560,31 +560,48 @@ VALID_SDP_JSON_PI16 = """{
     }"""
 
 
-
-
 def test_validate_serialization_and_deserialization_execution_block_using_schema_class():
-    execution_block_config = ExecutionBlockConfugurationSchema().loads(VALID_EXECUTION_BLOCK_JSON_PI16)
-    serialized_execution_block_config = ExecutionBlockConfugurationSchema().dumps(execution_block_config)
+    execution_block_config = ExecutionConfigurationSchema().loads(
+        VALID_EXECUTION_BLOCK_JSON_PI16
+    )
+    serialized_execution_block_config = ExecutionConfigurationSchema().dumps(
+        execution_block_config
+    )
 
-    assert_json_is_equal(VALID_EXECUTION_BLOCK_JSON_PI16, serialized_execution_block_config)
+    assert_json_is_equal(
+        VALID_EXECUTION_BLOCK_JSON_PI16, serialized_execution_block_config
+    )
+
 
 def test_validate_serialization_and_deserialization_beams_using_schema_class():
     beams_config = BeamConfigurationSchema(many=True).loads(VALID_BEAMS_JSON_PI16)
     serialized_beams_config = BeamConfigurationSchema(many=True).dumps(beams_config)
 
     assert_json_is_equal(VALID_BEAMS_JSON_PI16, serialized_beams_config)
+
+
 def test_validate_serialization_and_deserialization_channels_using_schema_class():
-    channels_config = ChannelConfigurationSchema(many=True).loads(VALID_CHANNELS_JSON_PI16)
-    serialized_field_config = ChannelConfigurationSchema(many=True).dumps(channels_config)
+    channels_config = ChannelConfigurationSchema(many=True).loads(
+        VALID_CHANNELS_JSON_PI16
+    )
+    serialized_field_config = ChannelConfigurationSchema(many=True).dumps(
+        channels_config
+    )
 
     assert_json_is_equal(VALID_CHANNELS_JSON_PI16, serialized_field_config)
 
 
 def test_validate_serialization_and_deserialization_polarisation_using_schema_class():
-    polarisation_config = PolarisationConfigurationSchema(many=True).loads(VALID_POLARISATION_JSON_PI16)
-    serialized_field_config = PolarisationConfigurationSchema(many=True).dumps(polarisation_config)
+    polarisation_config = PolarisationConfigurationSchema(many=True).loads(
+        VALID_POLARISATION_JSON_PI16
+    )
+    serialized_field_config = PolarisationConfigurationSchema(many=True).dumps(
+        polarisation_config
+    )
 
     assert_json_is_equal(VALID_POLARISATION_JSON_PI16, serialized_field_config)
+
+
 def test_validate_serialization_and_deserialization_fields_using_schema_class():
     fields_config = FieldConfigurationSchema(many=True).loads(VALID_FIELDS_JSON_PI16)
     serialized_field_config = FieldConfigurationSchema(many=True).dumps(fields_config)
@@ -593,16 +610,24 @@ def test_validate_serialization_and_deserialization_fields_using_schema_class():
 
 
 def test_validate_serialization_and_deserialization_resources_block_using_schema_class():
-    resources_config = ResourceBlockConfigurationSchema().loads(VALID_RESOURCES_JSON_PI16)
-    serialized_resource_config = ResourceBlockConfigurationSchema().dumps(resources_config)
+    resources_config = ResourceConfigurationSchema().loads(VALID_RESOURCES_JSON_PI16)
+    serialized_resource_config = ResourceConfigurationSchema().dumps(resources_config)
 
     assert_json_is_equal(VALID_RESOURCES_JSON_PI16, serialized_resource_config)
 
-def test_validate_serialization_and_deserialization_processing_block_using_schema_class():
-    processing_block_config = ProcessingBlockSchema(many=True).loads(VALID_PROCESSING_BLOCK_JSON_PI16)
-    serialized_processing_block_config = ProcessingBlockSchema(many=True).dumps(processing_block_config)
 
-    assert_json_is_equal(VALID_PROCESSING_BLOCK_JSON_PI16, serialized_processing_block_config)
+def test_validate_serialization_and_deserialization_processing_block_using_schema_class():
+    processing_block_config = ProcessingBlockSchema(many=True).loads(
+        VALID_PROCESSING_BLOCK_JSON_PI16
+    )
+    serialized_processing_block_config = ProcessingBlockSchema(many=True).dumps(
+        processing_block_config
+    )
+
+    assert_json_is_equal(
+        VALID_PROCESSING_BLOCK_JSON_PI16, serialized_processing_block_config
+    )
+
 
 def test_validate_serialization_and_deserialization_sdp_json_using_schema_class():
     """
@@ -613,6 +638,3 @@ def test_validate_serialization_and_deserialization_sdp_json_using_schema_class(
     serialized_sdp_config = SDPConfigurationSchema().dumps(sdp_configuration_object)
 
     assert_json_is_equal(VALID_SDP_JSON_PI16, serialized_sdp_config)
-
-
-

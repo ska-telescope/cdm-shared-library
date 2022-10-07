@@ -11,7 +11,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     PhaseDir,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
-    ResourceBlockConfiguration,
+    ResourceConfiguration,
     ScanType,
     SDPConfiguration,
     SDPWorkflow,
@@ -510,13 +510,13 @@ def test_resource_equals():
      - the same receptors
      - the same receiver_nodes
     """
-    resource1 = ResourceBlockConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
-    resource2 = ResourceBlockConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
+    resource1 = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
+    resource2 = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
 
     assert resource1 == resource2
 
-    assert resource1 != ResourceBlockConfiguration([1, 2, 3], ["FS4", "FS8"], 10)
-    assert resource2 != ResourceBlockConfiguration([1, 2, 3], ["FS4", "FS8"], 10)
+    assert resource1 != ResourceConfiguration([1, 2, 3], ["FS4", "FS8"], 10)
+    assert resource2 != ResourceConfiguration([1, 2, 3], ["FS4", "FS8"], 10)
 
 
 def test_resource_equals_not_equal_to_other_objects():
@@ -525,5 +525,5 @@ def test_resource_equals_not_equal_to_other_objects():
     Verify that Field Configuration objects are not considered equal to objects of
     other types.
     """
-    resource = ResourceBlockConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
+    resource = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
     assert resource != 1

@@ -8,13 +8,13 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
     ChannelConfiguration,
-    ExecutionBlockConfuguration,
+    ExecutionConfiguration,
     FieldConfiguration,
     PbDependency,
     PhaseDir,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
-    ResourceBlockConfiguration,
+    ResourceConfiguration,
     ScanType,
     SDPConfiguration,
     SDPWorkflow,
@@ -28,13 +28,13 @@ __all__ = [
     "ChannelSchema",
     "ProcessingBlockSchema",
     "SDPConfigurationSchema",
-    "ExecutionBlockConfugurationSchema",
+    "ExecutionConfigurationSchema",
     "BeamConfigurationSchema",
     "ChannelConfigurationSchema",
     "PolarisationConfigurationSchema",
     "FieldConfigurationSchema",
     "PhaseDirSchema",
-    "ResourceBlockConfigurationSchema",
+    "ResourceConfigurationSchema",
 ]
 
 
@@ -51,7 +51,6 @@ class ChannelSchema(Schema):
     link_map = fields.List(fields.List(fields.Integer()))
     spectral_window_id = fields.String()
 
-
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -62,7 +61,6 @@ class ChannelSchema(Schema):
         :return: dict suitable for PB configuration
         """
         return {k: v for k, v in data.items() if v is not None}
-
 
     @post_load
     def create_channel(self, data, **_):  # pylint: disable=no-self-use
@@ -80,7 +78,9 @@ class ChannelSchema(Schema):
         freq_max = data["freq_max"]
         link_map = data.get("link_map")
         spectral_window_id = data.get("spectral_window_id")
-        return Channel(count, start, stride, freq_min, freq_max, link_map,spectral_window_id)
+        return Channel(
+            count, start, stride, freq_min, freq_max, link_map, spectral_window_id
+        )
 
 
 class ScanTypeSchema(Schema):
@@ -93,7 +93,6 @@ class ScanTypeSchema(Schema):
     ra = fields.String(data_key="ra", required=True)
     dec = fields.String(data_key="dec", required=True)
     channels = fields.Nested(ChannelSchema, data_key="channels", many=True)
-
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -204,7 +203,7 @@ class ProcessingBlockSchema(Schema):
         return ProcessingBlockConfiguration(**data)
 
 
-class ResourceBlockConfigurationSchema(Schema):  # PI16
+class ResourceConfigurationSchema(Schema):  # PI16
     """
     Marsmallow class for the PhaseDir class
     """
@@ -227,14 +226,13 @@ class ResourceBlockConfigurationSchema(Schema):  # PI16
     @post_load
     def create_resource_block_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+        Convert parsed JSON back into a ExecutionConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
-        return ResourceBlockConfiguration(**data)
-
+        return ResourceConfiguration(**data)
 
 
 class BeamConfigurationSchema(Schema):  # PI16
@@ -262,7 +260,7 @@ class BeamConfigurationSchema(Schema):  # PI16
     @post_load
     def create_beam_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+        Convert parsed JSON back into a ExecutionConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -277,8 +275,8 @@ class ChannelConfigurationSchema(Schema):  # PI16
     """
 
     channels_id = fields.String()
-    #spectral_windows = fields.List(fields.Nested(ChannelSchema))
-    spectral_windows = fields.Nested(ChannelSchema,many=True)
+    # spectral_windows = fields.List(fields.Nested(ChannelSchema))
+    spectral_windows = fields.Nested(ChannelSchema, many=True)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -294,7 +292,7 @@ class ChannelConfigurationSchema(Schema):  # PI16
     @post_load
     def create_channel_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+        Convert parsed JSON back into a ExecutionConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -325,7 +323,7 @@ class PolarisationConfigurationSchema(Schema):  # PI16
     @post_load
     def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+        Convert parsed JSON back into a ExecutionConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -358,14 +356,13 @@ class PhaseDirSchema(Schema):  # PI16
     @post_load
     def create_phase_dir_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+        Convert parsed JSON back into a ExecutionConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
         return PhaseDir(**data)
-
 
 
 class FieldConfigurationSchema(Schema):  # PI16
@@ -391,7 +388,7 @@ class FieldConfigurationSchema(Schema):  # PI16
     @post_load
     def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+        Convert parsed JSON back into a ExecutionConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -400,7 +397,7 @@ class FieldConfigurationSchema(Schema):  # PI16
         return FieldConfiguration(**data)
 
 
-class ExecutionBlockConfugurationSchema(Schema):
+class ExecutionConfigurationSchema(Schema):
     """
     Marsmallow class for the SDPConfiguration class
     """
@@ -410,7 +407,7 @@ class ExecutionBlockConfugurationSchema(Schema):
     max_length = fields.Integer(data_key="max_length")
     context = fields.Dict()  # PI16
     beams = fields.List(fields.Nested(BeamConfigurationSchema))  # PI16
-    channels = fields.List(fields.Nested(ChannelConfigurationSchema) ) # PI16
+    channels = fields.List(fields.Nested(ChannelConfigurationSchema))  # PI16
     polarisations = fields.List(fields.Nested(PolarisationConfigurationSchema))  # PI16
     fields = fields.List(fields.Nested(FieldConfigurationSchema))
 
@@ -428,14 +425,13 @@ class ExecutionBlockConfugurationSchema(Schema):
     @post_load
     def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+        Convert parsed JSON back into a ExecutionConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
-        return ExecutionBlockConfuguration(**data)
-
+        return ExecutionConfiguration(**data)
 
 
 @CODEC.register_mapping(SDPConfiguration)
@@ -443,16 +439,15 @@ class SDPConfigurationSchema(Schema):
     """
     Marsmallow class for the SDPConfiguration class
     """
-    interface = fields.String()
-    execution_block = fields.Nested(ExecutionBlockConfugurationSchema)  # PI 16
 
+    interface = fields.String()
+    execution_block = fields.Nested(ExecutionConfigurationSchema)  # PI 16
 
     eb_id = fields.String(data_key="eb_id")
     max_length = fields.Float(data_key="max_length")
     scan_types = fields.Nested(ScanTypeSchema, many=True)
-    processing_blocks = fields.Nested(ProcessingBlockSchema,many=True)
-    resources = fields.Nested(ResourceBlockConfigurationSchema)
-
+    processing_blocks = fields.Nested(ProcessingBlockSchema, many=True)
+    resources = fields.Nested(ResourceConfigurationSchema)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -475,6 +470,3 @@ class SDPConfigurationSchema(Schema):
         :return: SDPConfiguration object populated from data
         """
         return SDPConfiguration(**data)
-
-
-
