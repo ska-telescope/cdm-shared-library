@@ -18,6 +18,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ProcessingBlockConfiguration,
     ResourceConfiguration,
     ScanType,
+    ScanTypesBeams,
     ScriptConfiguration,
     SDPConfiguration,
     SDPWorkflow,
@@ -39,6 +40,8 @@ __all__ = [
     "PhaseDirSchema",
     "ResourceConfigurationSchema",
     "ScriptConfigurationSchema",
+    "ScanTypesBeamsSchema",
+    "ScanTypesSchema",
 ]
 
 
@@ -432,6 +435,64 @@ class FieldConfigurationSchema(Schema):
         return FieldConfiguration(**data)
 
 
+class ScanTypesBeamsSchema(Schema):
+    field_id = fields.String()
+    channels_id = fields.String()
+    polarisations_id = fields.String()
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionConfiguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return ScanTypesBeams(**data)
+
+
+class ScanTypesSchema(Schema):
+    scan_type_id = fields.String()
+    beams = fields.Dict(
+        keys=fields.String(), values=fields.Nested(ScanTypesBeamsSchema)
+    )
+    derive_from = fields.String()
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_scantypes_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ExecutionConfiguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: SDPConfiguration object populated from data
+        """
+        return ScanTypesBeams(**data)
+
+
 class ExecutionConfigurationSchema(Schema):
     """
     Marsmallow class for the ExecutionBlockConfuguration class
@@ -443,6 +504,7 @@ class ExecutionConfigurationSchema(Schema):
     beams = fields.List(fields.Nested(BeamConfigurationSchema))
     channels = fields.List(fields.Nested(ChannelConfigurationSchema))
     polarisations = fields.List(fields.Nested(PolarisationConfigurationSchema))
+    scan_types = fields.List(fields.Nested(ScanTypesSchema))
     fields = fields.List(fields.Nested(FieldConfigurationSchema))
 
     @post_dump

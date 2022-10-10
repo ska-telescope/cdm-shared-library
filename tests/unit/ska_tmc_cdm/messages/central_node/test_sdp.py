@@ -13,6 +13,9 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ProcessingBlockConfiguration,
     ResourceConfiguration,
     ScanType,
+    ScanTypes,
+    ScanTypesBeams,
+    ScriptConfiguration,
     SDPConfiguration,
     SDPWorkflow,
 )
@@ -423,7 +426,7 @@ def test_polarisation_configuration_equals():
 def test_polarisation_configuration_equals_not_equal_to_other_objects():
 
     """
-    Verify that Channels Configuration objects are not considered equal to objects of
+    Verify that Polarisation Configuration objects are not considered equal to objects of
     other types.
     """
     polar = PolarisationConfiguration("all", ["XY", "XY", "YY", "YX"])
@@ -450,7 +453,7 @@ def test_phase_dir_equals():
 def test_phase_dir_equals_not_equal_to_other_objects():
 
     """
-    Verify that Channels Configuration objects are not considered equal to objects of
+    Verify that Phase Dir objects are not considered equal to objects of
     other types.
     """
     phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
@@ -522,8 +525,90 @@ def test_resource_equals():
 def test_resource_equals_not_equal_to_other_objects():
 
     """
-    Verify that Field Configuration objects are not considered equal to objects of
+    Verify that Resource Configuration objects are not considered equal to objects of
     other types.
     """
     resource = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
     assert resource != 1
+
+
+def test_scantypes_equals():
+    """
+    Verify that ScanTypes objects are considered equal when they have:
+     - the same scan_type_id
+     - the same beams
+     - the same derive_from
+    """
+    scantypes1 = ScanTypes("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    scantypes2 = ScanTypes("science", {"vis0": {"field_id": "field_a"}}, ".default")
+
+    assert scantypes1 == scantypes2
+
+    assert scantypes1 != ScanTypes(
+        "calibration", {"vis0": {"field_id": "field_a"}}, ".default"
+    )
+    assert scantypes2 != ScanTypes(
+        "calibration", {"vis0": {"field_id": "field_a"}}, ".default"
+    )
+
+
+def test_scantypes_equals_not_equal_to_other_objects():
+
+    """
+    Verify that ScanTypes objects are not considered equal to objects of
+    other types.
+    """
+    scantypes = ScanTypes("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    assert scantypes != 1
+
+
+def test_scantypesbeams_equals():
+    """
+    Verify that ScanTypesBeams objects are considered equal when they have:
+     - the same field_id
+     - the same channels_id
+     - the same polarisations_id
+    """
+    scantypesbeams1 = ScanTypesBeams("science-target", "vis_channels", "all")
+    scantypesbeams2 = ScanTypesBeams("science-target", "vis_channels", "all")
+
+    assert scantypesbeams1 == scantypesbeams2
+
+    assert scantypesbeams1 != ScanTypesBeams("pks1934-638", "vis_channels", "all")
+    assert scantypesbeams2 != ScanTypesBeams("pks1934-638", "vis_channels", "all")
+
+
+def test_scantypesbeams_equals_not_equal_to_other_objects():
+
+    """
+    Verify that ScanTypesBeams objects are not considered equal to objects of
+    other types.
+    """
+    scantypesbeams = ScanTypesBeams("science-target", "vis_channels", "all")
+    assert scantypesbeams != 1
+
+
+def test_script_equals():
+    """
+    Verify that ScriptConfiguration objects are considered equal when they have:
+     - the same kind
+     - the same name
+     - the same version
+    """
+    script1 = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
+    script2 = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
+
+    assert script1 == script2
+
+    assert script1 != ScriptConfiguration("realtime", "test-receive-addresses", "0.5.1")
+    assert script2 != ScriptConfiguration("realtime", "test-receive-addresses", "0.5.1")
+
+
+def test_scripts_equals_not_equal_to_other_objects():
+
+    """
+    Verify that ScriptConfiguration  objects are not considered equal to objects of
+    other types.
+    """
+    script = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
+    assert script != 1

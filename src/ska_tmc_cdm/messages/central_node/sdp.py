@@ -21,7 +21,7 @@ __all__ = [
     "ResourceConfiguration",
     "ScriptConfiguration",
     "ScanTypesBeams",
-    "ScanType"
+    "ScanType",
 ]
 
 
@@ -129,6 +129,26 @@ class PbDependency:
         return self.pb_id == other.pb_id and self.kind == other.kind
 
 
+class ScriptConfiguration:
+    """
+    Class to hold ScriptConfiguration
+    """
+
+    def __init__(self, kind: str = None, name: str = None, version: str = None):
+        self.kind = kind
+        self.name = name
+        self.version = version
+
+    def __eq__(self, other):
+        if not isinstance(other, ScriptConfiguration):
+            return False
+        return (
+            self.kind == other.kind
+            and self.name == other.name
+            and self.version == other.version
+        )
+
+
 class ProcessingBlockConfiguration:
     """
     Class to hold ProcessingBlock configuration
@@ -139,12 +159,9 @@ class ProcessingBlockConfiguration:
         pb_id: str = None,
         workflow: SDPWorkflow = None,
         parameters: Dict = None,
-        dependencies: List[
-            PbDependency
-        ] = None,  # how to handel datatype change for now added new key dependencies_new
+        dependencies: List[PbDependency] = None,
         sbi_ids: List = None,
-        script: Dict = None,
-        dependencies_new: Dict = None,
+        script: ScriptConfiguration = None,
     ):
         self.pb_id = pb_id
         self.workflow = workflow
@@ -152,7 +169,6 @@ class ProcessingBlockConfiguration:
         self.dependencies = dependencies
         self.sbi_ids = sbi_ids
         self.script = script
-        self.dependencies_new = dependencies_new
 
     def __eq__(self, other):
         if not isinstance(other, ProcessingBlockConfiguration):
@@ -164,7 +180,6 @@ class ProcessingBlockConfiguration:
             and self.dependencies == other.dependencies
             and self.sbi_ids == other.sbi_ids
             and self.script == other.script
-            and self.dependencies_new == other.dependencies_new
         )
 
 
@@ -175,8 +190,8 @@ class BeamConfiguration:
 
     def __init__(
         self,
-        beam_id: str,
-        function: str,
+        beam_id: str = None,
+        function: str = None,
         search_beam_id: int = None,
         timing_beam_id: int = None,
         vlbi_beam_id: int = None,
@@ -204,7 +219,7 @@ class ChannelConfiguration:
     Class to hold Dependencies for ExecutionBlock
     """
 
-    def __init__(self, channels_id: str, spectral_windows: List[Channel] = None):
+    def __init__(self, channels_id: str = None, spectral_windows: List[Channel] = None):
         self.channels_id = channels_id
         self.spectral_windows = spectral_windows
 
@@ -222,7 +237,7 @@ class PolarisationConfiguration:
     Class to hold Dependencies for ExecutionBlock
     """
 
-    def __init__(self, polarisations_id: str, corr_type: List[str] = None):
+    def __init__(self, polarisations_id: str = None, corr_type: List[str] = None):
         self.polarisations_id = polarisations_id
         self.corr_type = corr_type
 
@@ -240,7 +255,13 @@ class PhaseDir:
     Class to hold Dependencies for FieldConfiguration
     """
 
-    def __init__(self, ra: List, dec: List, reference_time: str, reference_frame: str):
+    def __init__(
+        self,
+        ra: List = None,
+        dec: List = None,
+        reference_time: str = None,
+        reference_frame: str = None,
+    ):
         self.ra = ra
         self.dec = dec
         self.reference_time = reference_time
@@ -262,7 +283,12 @@ class FieldConfiguration:
     Class to hold Dependencies for ExecutionBlock
     """
 
-    def __init__(self, field_id: str, pointing_fqdn: str, phase_dir: PhaseDir = None):
+    def __init__(
+        self,
+        field_id: str = None,
+        pointing_fqdn: str = None,
+        phase_dir: PhaseDir = None,
+    ):
         self.field_id = field_id
         self.pointing_fqdn = pointing_fqdn
         self.phase_dir = phase_dir
@@ -278,35 +304,45 @@ class FieldConfiguration:
 
 
 class ScanTypesBeams:
-    def __init__(self,field_id:str = None,channels_id:str = None,polarisations_id:str = None):
+    def __init__(
+        self,
+        field_id: str = None,
+        channels_id: str = None,
+        polarisations_id: str = None,
+    ):
+
         self.field_id = field_id
         self.channels_id = channels_id
         self.polarisations_id = polarisations_id
 
-    def __eq__(self,other):
+    def __eq__(self, other):
         if not isinstance(other, ScanTypesBeams):
             return False
         return (
-                self.field_id == other.field_id
-                and self.channels_id == other.channels_id
-                and self.polarisations_id == other.polarisations_id
-                )
+            self.field_id == other.field_id
+            and self.channels_id == other.channels_id
+            and self.polarisations_id == other.polarisations_id
+        )
 
 
 class ScanTypes:
-    def __init__(self,scan_type_id:str = None,beams:Dict = {},derive_from:str = None):
+    def __init__(
+        self, scan_type_id: str = None, beams: Dict = None, derive_from: str = None
+    ):
+
         self.scan_type_id = scan_type_id
         self.beams = beams
         self.derive_from = derive_from
 
-    def __eq__(self,other):
-        if not isinstance(other, ScanTypesBeams):
+    def __eq__(self, other):
+        if not isinstance(other, ScanTypes):
             return False
         return (
-                self.scan_type_id == other.scan_type_id
-                and self.beams == other.beams
-                and self.derive_from == other.derive_from
-                )
+            self.scan_type_id == other.scan_type_id
+            and self.beams == other.beams
+            and self.derive_from == other.derive_from
+        )
+
 
 class ExecutionConfiguration:
     """
@@ -315,14 +351,14 @@ class ExecutionConfiguration:
 
     def __init__(
         self,
-        eb_id: str,
-        max_length: int,
-        context: Dict,
+        eb_id: str = None,
+        max_length: int = None,
+        context: Dict = None,
         beams: List[BeamConfiguration] = None,
         channels: List[ChannelConfiguration] = None,
         polarisations: List[PolarisationConfiguration] = None,
         fields: List[FieldConfiguration] = None,
-        scan_types: ScanTypes = None
+        scan_types: ScanTypes = None,
     ):
         self.eb_id = eb_id
         self.max_length = max_length
@@ -352,7 +388,9 @@ class ResourceConfiguration:
     Class to hold Dependencies for ExecutionBlock
     """
 
-    def __init__(self, csp_links: List, receptors: List, receive_nodes: int):
+    def __init__(
+        self, csp_links: List = None, receptors: List = None, receive_nodes: int = None
+    ):
         self.csp_links = csp_links
         self.receptors = receptors
         self.receive_nodes = receive_nodes
@@ -401,24 +439,3 @@ class SDPConfiguration:
             and self.interface == other.interface
             and self.resources == other.resources
         )
-
-
-class ScriptConfiguration:
-    """
-    Class to hold ScriptConfiguration
-    """
-
-    def __init__(self, kind: str = None, name: str = None, version: str = None):
-        self.kind = kind
-        self.name = name
-        self.version = version
-
-    def __eq__(self, other):
-        if not isinstance(other, ScriptConfiguration):
-            return False
-        return (
-            self.kind == other.kind
-            and self.name == other.name
-            and self.version == other.version
-        )
-
