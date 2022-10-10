@@ -32,7 +32,7 @@ package ska_tmc_cdm.messages.central_node {
 
         class PbDependency {
             pb_id : str
-            pb_type : List[str]
+            kind : List[str]
         }
          class ResourceConfiguration {
             csp_links: List, 
@@ -62,8 +62,8 @@ package ska_tmc_cdm.messages.central_node {
         }
 
         class FieldConfiguration {
-            pb_id : str
-            pb_type : List[str]
+            field_id : str
+            pointing_fqdn : List[str],
         }
 
         FieldConfiguration  *-- "*" PhaseDir
