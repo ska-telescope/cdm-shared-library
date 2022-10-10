@@ -20,6 +20,8 @@ __all__ = [
     "ExecutionConfiguration",
     "ResourceConfiguration",
     "ScriptConfiguration",
+    "ScanTypesBeams",
+    "ScanType"
 ]
 
 
@@ -275,6 +277,37 @@ class FieldConfiguration:
         )
 
 
+class ScanTypesBeams:
+    def __init__(self,field_id:str = None,channels_id:str = None,polarisations_id:str = None):
+        self.field_id = field_id
+        self.channels_id = channels_id
+        self.polarisations_id = polarisations_id
+
+    def __eq__(self,other):
+        if not isinstance(other, ScanTypesBeams):
+            return False
+        return (
+                self.field_id == other.field_id
+                and self.channels_id == other.channels_id
+                and self.polarisations_id == other.polarisations_id
+                )
+
+
+class ScanTypes:
+    def __init__(self,scan_type_id:str = None,beams:Dict = {},derive_from:str = None):
+        self.scan_type_id = scan_type_id
+        self.beams = beams
+        self.derive_from = derive_from
+
+    def __eq__(self,other):
+        if not isinstance(other, ScanTypesBeams):
+            return False
+        return (
+                self.scan_type_id == other.scan_type_id
+                and self.beams == other.beams
+                and self.derive_from == other.derive_from
+                )
+
 class ExecutionConfiguration:
     """
     Class to hold ExecutionBlock configuration
@@ -289,6 +322,7 @@ class ExecutionConfiguration:
         channels: List[ChannelConfiguration] = None,
         polarisations: List[PolarisationConfiguration] = None,
         fields: List[FieldConfiguration] = None,
+        scan_types: ScanTypes = None
     ):
         self.eb_id = eb_id
         self.max_length = max_length
@@ -297,6 +331,7 @@ class ExecutionConfiguration:
         self.channels = channels
         self.polarisations = polarisations
         self.fields = fields
+        self.scan_types = scan_types
 
     def __eq__(self, other):
         if not isinstance(other, ExecutionConfiguration):
@@ -386,3 +421,4 @@ class ScriptConfiguration:
             and self.name == other.name
             and self.version == other.version
         )
+
