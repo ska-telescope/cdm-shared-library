@@ -307,7 +307,7 @@ Below is an example JSON command argument that this code can model.
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-tmc-scan/2.0",
+    "interface": "https://schema.skao.int/ska-tmc-scan/2.1",
     "transaction_id": "txn-12345",
     "scan_id": 2
   }
