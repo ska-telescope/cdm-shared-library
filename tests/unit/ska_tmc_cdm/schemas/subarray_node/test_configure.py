@@ -35,7 +35,7 @@ from .. import utils
 
 VALID_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.0",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
   "transaction_id": "12345",
   "pointing": {
     "target": {
@@ -95,7 +95,7 @@ VALID_MID_CONFIGURE_JSON = """
 """
 
 VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/2.0",
+    interface="https://schema.skao.int/ska-tmc-configure/2.1",
     transaction_id="12345",
     pointing=PointingConfiguration(
         Target(

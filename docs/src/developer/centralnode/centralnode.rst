@@ -369,7 +369,7 @@ from a sub-array:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "transaction_id": "txn-mvp01-20200325-00001",
     "subarray_id": 1, 
     "receptor_ids": ["0001", "0002"]
@@ -380,7 +380,7 @@ Example JSON that requests all sub-array resources be released:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "transaction_id": "txn-mvp01-20200325-00001",
     "subarray_id": 1,
     "release_all": true

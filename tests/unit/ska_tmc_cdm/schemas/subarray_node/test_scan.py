@@ -11,14 +11,14 @@ from .. import utils
 
 VALID_MID_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-scan/2.0",
+  "interface": "https://schema.skao.int/ska-tmc-scan/2.1",
   "transaction_id": "txn-test-00001",
   "scan_id": 1
 }
 """
 
 VALID_MID_OBJECT = ScanRequest(
-    interface="https://schema.skao.int/ska-tmc-scan/2.0",
+    interface="https://schema.skao.int/ska-tmc-scan/2.1",
     transaction_id="txn-test-00001",
     scan_id=1,
 )
