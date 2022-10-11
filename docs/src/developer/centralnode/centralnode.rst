@@ -26,11 +26,6 @@ assign_resources.py
 ===================
 
 .. figure:: assignresources.png
-
-Classes in the `release_resources.py`_ module model for PI16 the arguments for the
-``CentralNode.ReleaseResources()`` command.
-
-.. figure:: assignresource_PI16.png
    :align: center
    :alt: Overview of the assign_resources.py module
 
@@ -374,7 +369,7 @@ from a sub-array:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "transaction_id": "txn-mvp01-20200325-00001",
     "subarray_id": 1, 
     "receptor_ids": ["0001", "0002"]
@@ -385,7 +380,7 @@ Example JSON that requests all sub-array resources be released:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "transaction_id": "txn-mvp01-20200325-00001",
     "subarray_id": 1,
     "release_all": true
