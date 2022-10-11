@@ -438,8 +438,9 @@ class FieldConfigurationSchema(Schema):
 
 class ScanTypesBeamsSchema(Schema):
     """
-        Marsmallow class for the ScanTypesBeams class
+    Marsmallow class for the ScanTypesBeams class
     """
+
     field_id = fields.String()
     channels_id = fields.String()
     polarisations_id = fields.String()
@@ -469,16 +470,17 @@ class ScanTypesBeamsSchema(Schema):
 
 class ScanTypesSchema(Schema):
     """
-            Marsmallow class for the ScanTypesBeams class
+    Marsmallow class for the ScanTypesBeams class
     """
 
     scan_type_id = fields.String()
     beams = fields.Dict(
-       keys=fields.String(), values=fields.Nested(ScanTypesBeamsSchema)
+        keys=fields.String(), values=fields.Nested(ScanTypesBeamsSchema)
     )
     derive_from = fields.String()
     import pdb
-    #pdb.set_trace()
+
+    # pdb.set_trace()
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -490,7 +492,6 @@ class ScanTypesSchema(Schema):
         """
 
         return {k: v for k, v in data.items() if v is not None}
-
 
     @post_load
     def create_scantypes_config(self, data, **_):  # pylint: disable=no-self-use

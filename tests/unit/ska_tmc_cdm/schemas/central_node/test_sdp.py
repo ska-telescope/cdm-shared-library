@@ -9,9 +9,9 @@ from ska_tmc_cdm.schemas.central_node.sdp import (
     PolarisationConfigurationSchema,
     ProcessingBlockSchema,
     ResourceConfigurationSchema,
-    SDPConfigurationSchema,
     ScanTypesBeamsSchema,
-    ScanTypesSchema
+    ScanTypesSchema,
+    SDPConfigurationSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
 
@@ -45,18 +45,15 @@ VALID_SCAN_TYPES_JSON_PI16 = """[
 VALID_SCAN_TYPES_JSON_PI16_test = """
 [
          {
-            "scan_type_id": ".default"
-            
+            "scan_type_id": ".default"    
          },
          {
             "scan_type_id": "science",
-            "derive_from": ".default"
-            
+            "derive_from": ".default"    
          },
          {
             "scan_type_id": "calibration",
-            "derive_from": ".default"
-            
+            "derive_from": ".default"        
          }
       ]"""
 
@@ -1039,18 +1036,16 @@ VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16 = """{
 }
 """
 
-VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
+VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """
+{
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
-    "resources": {
-        
+    "resources": {    
         "receptors": ["SKA001", "SKA036", "SKA063", "SKA100"]
     },
     "execution_block": {
         "eb_id": "eb-mvp01-20220929-00000",
-        
         "max_length": 3600.0,
         "context": {},
-        
         "beams": [{ "beam_id": "vis0", "function": "visibilities" }],
         "scan_types": [{
             "scan_type_id": ".default",
@@ -1076,7 +1071,6 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
         }],
         "channels": [{
             "channels_id": "vis_channels",
-            
             "spectral_windows": [{
                 "spectral_window_id": "fsp_1_channels",
                 "count": 14480, "start": 0, "stride": 1,
@@ -1084,7 +1078,6 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
                 "link_map": [ [0, 0] ]
             }]
         }],
-      
         "polarisations": [{
             "polarisations_id": "all",
             "corr_type": ["XX", "XY", "YY", "YX"]
@@ -1092,7 +1085,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
         "fields": [{
             "field_id": "science-target",
             "phase_dir": {
-                "ra": [], "dec": [],
+                "ra": ["TBD"], "dec": ["TBD"],
                 "reference_time": "TBD", "reference_frame": "ICRF3"
             }
         },{
@@ -1104,7 +1097,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
         },{
             "field_id": "delay-field-TBD",
             "phase_dir": {
-                "ra": [], "dec": [],
+                "ra": ["TBD"], "dec": ["TBD"],
                 "reference_time": "TBD", "reference_frame": "ICRF3"
             }
         },{
@@ -1115,7 +1108,6 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
             }
         }]
     },
-  
   "processing_blocks": [
     {
       "pb_id": "pb-test-20220916-00000",
@@ -1123,15 +1115,16 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
       "sbi_ids": ["sbi-test-20220916-00000"],
       "parameters": {}
     }
-  ]
+]
 }
-
 """
 
 VALID_BEAMS_VIS0_JSON_PI16 = """{
                   "polarisations_id": "all",
                   "channels_id": "vis_channels"
                }"""
+
+
 def test_validate_serialization_and_deserialization_assign_resource_all_parameters_using_schema_class():
     """
     Verifies that the Assign Resource schema marshal and Unmarshal works correctly
@@ -1144,7 +1137,8 @@ def test_validate_serialization_and_deserialization_assign_resource_all_paramete
     )
 
     assert_json_is_equal(
-        VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16, serialized_assign_resource_all_params_config
+        VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16,
+        serialized_assign_resource_all_params_config,
     )
 
 
@@ -1160,7 +1154,8 @@ def test_validate_serialization_and_deserialization_assign_resource_minimal_para
     )
 
     assert_json_is_equal(
-        VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16, serialized_assign_resource_all_params_config
+        VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16,
+        serialized_assign_resource_all_params_config,
     )
 
 
@@ -1168,32 +1163,23 @@ def test_validate_serialization_and_deserialization_scan_types_using_schema_clas
     """
     Verifies that the Assign Resource schema marshal and Unmarshal works correctly
     """
-    scan_types_config = ScanTypesSchema(many=True).loads(
-        VALID_SCAN_TYPES_JSON_PI16
-    )
-    serialized_scan_types_config = ScanTypesSchema(many=True).dumps(
-        scan_types_config
-    )
+    scan_types_config = ScanTypesSchema(many=True).loads(VALID_SCAN_TYPES_JSON_PI16)
+    serialized_scan_types_config = ScanTypesSchema(many=True).dumps(scan_types_config)
 
-    assert_json_is_equal(
-        VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config
-    )
+    assert_json_is_equal(VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config)
 
 
 def test_validate_serialization_and_deserialization_beams_vis0_using_schema_class():
     """
     Verifies that the Assign Resource schema marshal and Unmarshal works correctly
     """
-    scan_types_beams_config = ScanTypesBeamsSchema().loads(
-        VALID_BEAMS_VIS0_JSON_PI16
-    )
-    serialized_scan_types_beams_config= ScanTypesBeamsSchema().dumps(
+    scan_types_beams_config = ScanTypesBeamsSchema().loads(VALID_BEAMS_VIS0_JSON_PI16)
+    serialized_scan_types_beams_config = ScanTypesBeamsSchema().dumps(
         scan_types_beams_config
     )
 
-    assert_json_is_equal(
-        VALID_BEAMS_VIS0_JSON_PI16, serialized_scan_types_beams_config
-    )
+    assert_json_is_equal(VALID_BEAMS_VIS0_JSON_PI16, serialized_scan_types_beams_config)
+
 
 def test_validate_serialization_and_deserialization_assign_resource_using_schema_class():
     """
