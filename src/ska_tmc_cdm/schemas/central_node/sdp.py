@@ -18,6 +18,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ProcessingBlockConfiguration,
     ResourceConfiguration,
     ScanType,
+    ScanTypes,
     ScanTypesBeams,
     ScriptConfiguration,
     SDPConfiguration,
@@ -436,6 +437,10 @@ class FieldConfigurationSchema(Schema):
 
 
 class ScanTypesBeamsSchema(Schema):
+    """
+    Marsmallow class for the ScanTypesBeams class
+    """
+
     field_id = fields.String()
     channels_id = fields.String()
     polarisations_id = fields.String()
@@ -452,7 +457,7 @@ class ScanTypesBeamsSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_scantypesbeams_config(self, data, **_):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ExecutionConfiguration object.
 
@@ -464,12 +469,18 @@ class ScanTypesBeamsSchema(Schema):
 
 
 class ScanTypesSchema(Schema):
+    """
+    Marsmallow class for the ScanTypesBeams class
+    """
+
     scan_type_id = fields.String()
     beams = fields.Dict(
         keys=fields.String(), values=fields.Nested(ScanTypesBeamsSchema)
     )
     derive_from = fields.String()
+    import pdb
 
+    # pdb.set_trace()
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -479,6 +490,7 @@ class ScanTypesSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for PB configuration
         """
+
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
@@ -490,7 +502,8 @@ class ScanTypesSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
-        return ScanTypesBeams(**data)
+
+        return ScanTypes(**data)
 
 
 class ExecutionConfigurationSchema(Schema):
