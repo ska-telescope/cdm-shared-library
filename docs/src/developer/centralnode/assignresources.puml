@@ -40,7 +40,7 @@ package ska_tmc_cdm.messages.central_node {
             receptors: List,
             receive_nodes: int
         }
-        
+
         class PhaseDir {
             ra: List,
             dec: List, 
@@ -85,6 +85,12 @@ package ska_tmc_cdm.messages.central_node {
         FieldConfiguration  *-- "*" PhaseDir
 
         class SDPWorkflow {
+            name : str
+            kind : str
+            version : str
+        }
+        
+        class ScriptConfiguration {
             name : str
             kind : str
             version : str
