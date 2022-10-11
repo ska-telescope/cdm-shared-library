@@ -1042,15 +1042,15 @@ VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16 = """{
 VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
     "resources": {
-        // SKA-TEL-AIV-2410001 Table 18 batch 1
+        
         "receptors": ["SKA001", "SKA036", "SKA063", "SKA100"]
     },
     "execution_block": {
         "eb_id": "eb-mvp01-20220929-00000",
-        // Length? Sum of scan lengths seems to add up to roughly an hour?
+        
         "max_length": 3600.0,
         "context": {},
-        // Single visibility beam
+        
         "beams": [{ "beam_id": "vis0", "function": "visibilities" }],
         "scan_types": [{
             "scan_type_id": ".default",
@@ -1076,7 +1076,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
         }],
         "channels": [{
             "channels_id": "vis_channels",
-            // Assuming a single FSP, covering 220 MHz from 0.95 GHz
+            
             "spectral_windows": [{
                 "spectral_window_id": "fsp_1_channels",
                 "count": 14480, "start": 0, "stride": 1,
@@ -1084,7 +1084,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
                 "link_map": [ [0, 0] ]
             }]
         }],
-        // Assuming full linear polarisation
+      
         "polarisations": [{
             "polarisations_id": "all",
             "corr_type": ["XX", "XY", "YY", "YX"]
@@ -1092,7 +1092,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
         "fields": [{
             "field_id": "science-target",
             "phase_dir": {
-                "ra": [/* TBD */], "dec": [/* TBD */],
+                "ra": [], "dec": [],
                 "reference_time": "TBD", "reference_frame": "ICRF3"
             }
         },{
@@ -1104,7 +1104,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
         },{
             "field_id": "delay-field-TBD",
             "phase_dir": {
-                "ra": [/* TBD */], "dec": [/* TBD */],
+                "ra": [], "dec": [],
                 "reference_time": "TBD", "reference_frame": "ICRF3"
             }
         },{
@@ -1115,7 +1115,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """{
             }
         }]
     },
-  // Only stand-in processing block without receive for the moment
+  
   "processing_blocks": [
     {
       "pb_id": "pb-test-20220916-00000",
@@ -1136,15 +1136,31 @@ def test_validate_serialization_and_deserialization_assign_resource_all_paramete
     """
     Verifies that the Assign Resource schema marshal and Unmarshal works correctly
     """
-    assign_resource_all_params_config = AssignResourcesRequestSchema().loads(
+    assign_resource_all_params_config = SDPConfigurationSchema().loads(
         VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16
     )
-    serialized_assign_resource_all_params_config = AssignResourcesRequestSchema().dumps(
+    serialized_assign_resource_all_params_config = SDPConfigurationSchema().dumps(
         assign_resource_all_params_config
     )
 
     assert_json_is_equal(
         VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16, serialized_assign_resource_all_params_config
+    )
+
+
+def test_validate_serialization_and_deserialization_assign_resource_minimal_parameters_using_schema_class():
+    """
+    Verifies that the Assign Resource schema marshal and Unmarshal works correctly
+    """
+    assign_resource_all_params_config = SDPConfigurationSchema().loads(
+        VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16
+    )
+    serialized_assign_resource_all_params_config = SDPConfigurationSchema().dumps(
+        assign_resource_all_params_config
+    )
+
+    assert_json_is_equal(
+        VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16, serialized_assign_resource_all_params_config
     )
 
 

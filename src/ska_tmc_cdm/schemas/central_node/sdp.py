@@ -488,9 +488,7 @@ class ScanTypesSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for PB configuration
         """
-        print("temp####################################################",data)
-        import pdb
-        #pdb.set_trace()
+
         return {k: v for k, v in data.items() if v is not None}
 
 
@@ -503,9 +501,7 @@ class ScanTypesSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
-        import pdb
-        #pdb.set_trace()
-        print("temp########################################",data)
+
         return ScanTypes(**data)
 
 
