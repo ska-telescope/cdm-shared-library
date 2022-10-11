@@ -26,11 +26,6 @@ assign_resources.py
 ===================
 
 .. figure:: assignresources.png
-
-Classes in the `release_resources.py`_ module model for PI16 the arguments for the
-``CentralNode.ReleaseResources()`` command.
-
-.. figure:: assignresource_PI16.png
    :align: center
    :alt: Overview of the assign_resources.py module
 
