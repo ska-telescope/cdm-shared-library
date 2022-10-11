@@ -1085,7 +1085,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """
         "fields": [{
             "field_id": "science-target",
             "phase_dir": {
-                "ra": ["TBD"], "dec": ["TBD"],
+                "ra": [-1], "dec": [-1],
                 "reference_time": "TBD", "reference_frame": "ICRF3"
             }
         },{
@@ -1097,7 +1097,7 @@ VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """
         },{
             "field_id": "delay-field-TBD",
             "phase_dir": {
-                "ra": ["TBD"], "dec": ["TBD"],
+                "ra": [-1], "dec": [-1],
                 "reference_time": "TBD", "reference_frame": "ICRF3"
             }
         },{
