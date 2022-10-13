@@ -17,7 +17,7 @@ __all__ = [
     "PhaseDir",
     "FieldConfiguration",
     "ScriptConfiguration",
-    "ExecutionConfiguration",
+    "ExecutionBlockConfiguration",
     "ResourceConfiguration",
     "ScriptConfiguration",
     "ScanTypesBeams",
@@ -345,7 +345,7 @@ class ScanTypes:
         )
 
 
-class ExecutionConfiguration:
+class ExecutionBlockConfiguration:
     """
     Class to hold ExecutionBlock configuration
     """
@@ -371,7 +371,7 @@ class ExecutionConfiguration:
         self.scan_types = scan_types
 
     def __eq__(self, other):
-        if not isinstance(other, ExecutionConfiguration):
+        if not isinstance(other, ExecutionBlockConfiguration):
             return False
         return (
             self.eb_id == other.eb_id
@@ -417,7 +417,7 @@ class SDPConfiguration:
         max_length: float = None,
         scan_types: List[ScanType] = None,
         processing_blocks: List[ProcessingBlockConfiguration] = None,
-        execution_block: ExecutionConfiguration = None,
+        execution_block: ExecutionBlockConfiguration = None,
         interface: str = None,
         resources: ResourceConfiguration = None,
     ):

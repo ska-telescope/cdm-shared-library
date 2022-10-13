@@ -1,6 +1,3 @@
-from ska_tmc_cdm.schemas.central_node.assign_resources import (
-    AssignResourcesRequestSchema,
-)
 from ska_tmc_cdm.schemas.central_node.sdp import (
     BeamConfigurationSchema,
     ChannelConfigurationSchema,
@@ -590,209 +587,6 @@ VALID_SDP_JSON_PI16 = """{
         }
     }"""
 
-VALID_ASSIGN_RESOURCE_JSON_PI16 = """
-{
-  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
-  "transaction_id": "txn-....-00001",
-  "subarray_id": 1,
-  "dish": {
-    "receptor_ids": [
-      "0001"
-    ]
-  },
-  "sdp": {
-    "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
-    "execution_block": {
-      "eb_id": "eb-mvp01-20200325-00001",
-      "max_length": 100,
-      "context": {},
-      "beams": [
-        {
-          "beam_id": "vis0",
-          "function": "visibilities"
-        },
-        {
-          "beam_id": "pss1",
-          "search_beam_id": 1,
-          "function": "pulsar search"
-        },
-        {
-          "beam_id": "pss2",
-          "search_beam_id": 2,
-          "function": "pulsar search"
-        },
-        {
-          "beam_id": "pst1",
-          "timing_beam_id": 1,
-          "function": "pulsar timing"
-        },
-        {
-          "beam_id": "pst2",
-          "timing_beam_id": 2,
-          "function": "pulsar timing"
-        },
-        {
-          "beam_id": "vlbi1",
-          "vlbi_beam_id": 1,
-          "function": "vlbi"
-        }
-      ],
-      "channels": [
-        {
-          "channels_id": "vis_channels",
-          "spectral_windows": [
-            {
-              "count": 744,
-              "start": 0,
-              "stride": 2,
-              "freq_min": 350000000,
-              "freq_max": 368000000,
-              "link_map": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  200,
-                  1
-                ],
-                [
-                  744,
-                  2
-                ],
-                [
-                  944,
-                  3
-                ]
-              ]
-            },
-            {
-              "spectral_window_id": "fsp_2_channels",
-              "count": 744,
-              "start": 2000,
-              "stride": 1,
-              "freq_min": 360000000,
-              "freq_max": 368000000,
-              "link_map": [
-                [
-                  2000,
-                  4
-                ],
-                [
-                  2200,
-                  5
-                ]
-              ]
-            },
-            {
-              "spectral_window_id": "zoom_window_1",
-              "count": 744,
-              "start": 4000,
-              "stride": 1,
-              "freq_min": 360000000,
-              "freq_max": 361000000,
-              "link_map": [
-                [
-                  4000,
-                  6
-                ],
-                [
-                  4200,
-                  7
-                ]
-              ]
-            }
-          ]
-        },
-        {
-          "channels_id": "pulsar_channels",
-          "spectral_windows": [
-            {
-              "spectral_window_id": "pulsar_fsp_channels",
-              "count": 744,
-              "start": 0,
-              "freq_min": 350000000,
-              "freq_max": 368000000
-            }
-          ]
-        }
-      ],
-      "polarisations": [
-        {
-          "polarisations_id": "all",
-          "corr_type": [
-            "XX",
-            "XY",
-            "YY",
-            "YX"
-          ]
-        }
-      ],
-      "fields": [
-        {
-          "field_id": "field_a",
-          "phase_dir": {
-            "ra": [
-              123,
-              0.1
-            ],
-            "dec": [
-              123,
-              0.1
-            ],
-            "reference_time": "...",
-            "reference_frame": "ICRF3"
-          },
-          "pointing_fqdn": "low-tmc/telstate/0/pointing"
-        }
-      ]
-    },
-    "processing_blocks": [
-      {
-        "pb_id": "pb-mvp01-20200325-00001",
-        "sbi_ids": [
-          "sbi-mvp01-20200325-00001"
-        ],
-        "script": {},
-        "parameters": {},
-        "dependencies": []
-      },
-      {
-        "pb_id": "pb-mvp01-20200325-00002",
-        "sbi_ids": [
-          "sbi-mvp01-20200325-00002"
-        ],
-        "script": {},
-        "parameters": {},
-        "dependencies": []
-      },
-      {
-        "pb_id": "pb-mvp01-20200325-00003",
-        "sbi_ids": [
-          "sbi-mvp01-20200325-00001",
-          "sbi-mvp01-20200325-00002"
-        ],
-        "script": {},
-        "parameters": {},
-        "dependencies": []
-      }
-    ],
-    "resources": {
-      "csp_links": [
-        1,
-        2,
-        3,
-        4
-      ],
-      "receptors": [
-        "FS4",
-        "FS8"
-      ],
-      "receive_nodes": 10
-    }
-  }
-}"""
-
 VALID_MINIMAL_ASSIGN_RESOURCES_JSON_PI16 = """
 {
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
@@ -882,7 +676,7 @@ VALID_MINIMAL_ASSIGN_RESOURCES_JSON_PI16 = """
 }
 """
 
-VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16 = """{
+VALID_SDP_ALL_PARAMETERS_JSON_PI16 = """{
    "interface":"https://schema.skao.int/ska-sdp-assignres/0.4",
 
    "resources": {
@@ -1036,7 +830,7 @@ VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16 = """{
 }
 """
 
-VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16 = """
+VALID_SDP_MINIMAL_JSON_PI16 = """
 {
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
     "resources": {    
@@ -1125,37 +919,35 @@ VALID_BEAMS_VIS0_JSON_PI16 = """{
                }"""
 
 
-def test_validate_serialization_and_deserialization_assign_resource_all_parameters_using_schema_class():
+def test_validate_serialization_and_deserialization_sdp_all_parameters_using_schema_class():
     """
-    Verifies that the Assign Resource schema marshal and Unmarshal works correctly
+    Verifies that the SDP schema marshal and Unmarshal works correctly with all parameters
     """
-    assign_resource_all_params_config = SDPConfigurationSchema().loads(
-        VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16
+    sdp_all_params_config = SDPConfigurationSchema().loads(
+        VALID_SDP_ALL_PARAMETERS_JSON_PI16
     )
-    serialized_assign_resource_all_params_config = SDPConfigurationSchema().dumps(
-        assign_resource_all_params_config
+    serialized_sdp_all_params_config = SDPConfigurationSchema().dumps(
+        sdp_all_params_config
     )
 
     assert_json_is_equal(
-        VALID_ASSIGN_RESOURCES_ALL_PARAMETERS_JSON_PI16,
-        serialized_assign_resource_all_params_config,
+        VALID_SDP_ALL_PARAMETERS_JSON_PI16,
+        serialized_sdp_all_params_config,
     )
 
 
-def test_validate_serialization_and_deserialization_assign_resource_minimal_parameters_using_schema_class():
+def test_validate_serialization_and_deserialization_sdp_minimal_parameters_using_schema_class():
     """
-    Verifies that the Assign Resource schema marshal and Unmarshal works correctly
+    Verifies that the SDP schema marshal and Unmarshal works correctly with minimum parameters
     """
-    assign_resource_all_params_config = SDPConfigurationSchema().loads(
-        VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16
-    )
-    serialized_assign_resource_all_params_config = SDPConfigurationSchema().dumps(
-        assign_resource_all_params_config
+    sdp_all_params_config = SDPConfigurationSchema().loads(VALID_SDP_MINIMAL_JSON_PI16)
+    serialized_sdp_all_params_config = SDPConfigurationSchema().dumps(
+        sdp_all_params_config
     )
 
     assert_json_is_equal(
-        VALID_ASSIGN_RESOURCE_MINIMAL_JSON_PI16,
-        serialized_assign_resource_all_params_config,
+        VALID_SDP_MINIMAL_JSON_PI16,
+        serialized_sdp_all_params_config,
     )
 
 
@@ -1179,22 +971,6 @@ def test_validate_serialization_and_deserialization_beams_vis0_using_schema_clas
     )
 
     assert_json_is_equal(VALID_BEAMS_VIS0_JSON_PI16, serialized_scan_types_beams_config)
-
-
-def test_validate_serialization_and_deserialization_assign_resource_using_schema_class():
-    """
-    Verifies that the Assign Resource schema marshal and Unmarshal works correctly
-    """
-    assign_resource_config = AssignResourcesRequestSchema().loads(
-        VALID_ASSIGN_RESOURCE_JSON_PI16
-    )
-    serialized_assign_resource_config = AssignResourcesRequestSchema().dumps(
-        assign_resource_config
-    )
-
-    assert_json_is_equal(
-        VALID_ASSIGN_RESOURCE_JSON_PI16, serialized_assign_resource_config
-    )
 
 
 def test_validate_serialization_and_deserialization_execution_block_using_schema_class():

@@ -16,7 +16,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
     ChannelConfiguration,
-    ExecutionConfiguration,
+    ExecutionBlockConfiguration,
     FieldConfiguration,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
@@ -296,7 +296,7 @@ def test_modified_assign_resources_request_eq():
         [[123, 0.1], [123, 0.1], "...", "ICRF3"],
     )
 
-    execution_block = ExecutionConfiguration(
+    execution_block = ExecutionBlockConfiguration(
         "eb-mvp01-20200325-00001",
         100,
         {},
@@ -386,7 +386,7 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         [[123, 0.1], [123, 0.1], "...", "ICRF3"],
     )
 
-    execution_block = ExecutionConfiguration(
+    execution_block = ExecutionBlockConfiguration(
         "eb-mvp01-20200325-00001",
         100,
         {},

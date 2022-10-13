@@ -10,7 +10,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
     ChannelConfiguration,
-    ExecutionConfiguration,
+    ExecutionBlockConfiguration,
     FieldConfiguration,
     PbDependency,
     PhaseDir,
@@ -266,7 +266,7 @@ class ResourceConfigurationSchema(Schema):
     @post_load
     def create_resource_block_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -300,7 +300,7 @@ class BeamConfigurationSchema(Schema):
     @post_load
     def create_beam_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -331,7 +331,7 @@ class ChannelConfigurationSchema(Schema):
     @post_load
     def create_channel_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -362,7 +362,7 @@ class PolarisationConfigurationSchema(Schema):
     @post_load
     def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -395,7 +395,7 @@ class PhaseDirSchema(Schema):
     @post_load
     def create_phase_dir_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -427,7 +427,7 @@ class FieldConfigurationSchema(Schema):
     @post_load
     def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -459,7 +459,7 @@ class ScanTypesBeamsSchema(Schema):
     @post_load
     def create_scantypesbeams_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -496,7 +496,7 @@ class ScanTypesSchema(Schema):
     @post_load
     def create_scantypes_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -534,13 +534,13 @@ class ExecutionConfigurationSchema(Schema):
     @post_load
     def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionConfiguration object.
+        Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
-        return ExecutionConfiguration(**data)
+        return ExecutionBlockConfiguration(**data)
 
 
 @CODEC.register_mapping(SDPConfiguration)

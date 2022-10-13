@@ -81,16 +81,16 @@ package ska_tmc_cdm.messages.central_node {
         ProcessingBlockConfiguration  *-- "1" SDPWorkflow
         ProcessingBlockConfiguration  *-- "*" PbDependency
 
-        class ExecutionConfiguration {
+        class ExecutionBlockConfiguration {
             eb_id: str,
             max_length: int,
             context: Dict,
             fields: List[FieldConfiguration] = None,
         }
-        ExecutionConfiguration  *-- "1" BeamConfiguration
-        ExecutionConfiguration  *-- "*" ChannelConfiguration
-        ExecutionConfiguration  *-- "1" PolarisationConfiguration
-        ExecutionConfiguration  *-- "*" FieldConfiguration
+        ExecutionBlockConfiguration  *-- "1" BeamConfiguration
+        ExecutionBlockConfiguration  *-- "*" ChannelConfiguration
+        ExecutionBlockConfiguration  *-- "1" PolarisationConfiguration
+        ExecutionBlockConfiguration  *-- "*" FieldConfiguration
 
         class SDPConfiguration {
             sdp_id : str
@@ -99,7 +99,7 @@ package ska_tmc_cdm.messages.central_node {
         }
         SDPConfiguration *-- "*" ScanType
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
-        SDPConfiguration *-- "*" ExecutionConfiguration
+        SDPConfiguration *-- "*" ExecutionBlockConfiguration
         SDPConfiguration *-- "*" ResourceConfiguration
 
         class AssignResourcesRequest {
