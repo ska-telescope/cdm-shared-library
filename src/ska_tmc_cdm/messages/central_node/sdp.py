@@ -30,7 +30,14 @@ class SDPWorkflow:  # pylint: disable=too-few-public-methods
     Class to hold SDPWorkflows for ProcessingBlock
     """
 
-    def __init__(self, name: str, kind: str, version: str):
+    def __init__(self, name: str, kind: str, version: str) -> object:
+        """
+        Create a new SDPWorkflow object.
+
+        :param name: name
+        :param kind: The kind of processing script
+        :param version: version
+        """
         self.name = name
         self.kind = kind
         self.version = version
@@ -59,7 +66,19 @@ class Channel:
         freq_max: float,
         link_map: List[List],
         spectral_window_id: str = None,
-    ):
+    ) -> object:
+        """
+        Create a new Channel object.
+
+        :param count: Number of channels
+        :param start: First channel ID
+        :param stride: Distance between subsequent channel IDs
+        :param freq_min: Lower bound of first channel
+        :param freq_max: Upper bound of last channel
+        :param link_map: Channel map that specifies which network link is going to get used to send channels to SDP. Intended to allow SDP to optimise network and receive node configuration.
+        :param spectral_window_id: spectral_window_id
+        """
+
         self.count = count
         self.start = start
         self.stride = stride
@@ -87,7 +106,6 @@ class ScanType:
     Class to hold ScanType configuration
     """
 
-    # pylint: disable=too-many-arguments
     def __init__(
         self,
         scan_type_id,
@@ -95,7 +113,16 @@ class ScanType:
         ra: str,
         dec: str,
         channels: List[Channel],
-    ):
+    ) -> object:
+        """
+         Create a new ScanType object.
+
+        :param scan_type_id:(any scan type)
+        :param reference_frame: Specification of the reference frame or system for a set of pointing coordinates
+        :param ra: Right Ascension in degrees
+        :param dec: Declination in degrees
+        :param channels: Expected channel configuration.
+        """
         self.scan_type_id = scan_type_id
         self.reference_frame = reference_frame
         self.ra = ra  # pylint: disable=invalid-name
@@ -119,7 +146,13 @@ class PbDependency:
     Class to hold Dependencies for ProcessingBlock
     """
 
-    def __init__(self, pb_id: str, kind: List[str]):
+    def __init__(self, pb_id: str, kind: List[str]) -> object:
+        """
+        Create a new PbDependency object.
+
+        :param pb_id: Unique identifier for this processing block
+        :param kind: The kind of processing script (realtime or batch)
+        """
         self.pb_id = pb_id
         self.kind = kind
 
@@ -162,7 +195,18 @@ class ProcessingBlockConfiguration:
         dependencies: List[PbDependency] = None,
         sbi_ids: List = None,
         script: ScriptConfiguration = None,
-    ):
+    ) -> object:
+
+        """
+        Create a new ProcessingBlockConfiguration object.
+
+        :param pb_id: Processing block ID
+        :param workflow: Specification of the workflow to be executed along with configuration parameters for the workflow.
+        :param parameters: Processing script parameters
+        :param dependencies: Dependencies on other processing blocks
+        :param sbi_ids: List of scheduling block ids
+        :param script: Processing script description (dictionary for now)
+        """
         self.pb_id = pb_id
         self.workflow = workflow
         self.parameters = parameters
@@ -195,7 +239,16 @@ class BeamConfiguration:
         search_beam_id: int = None,
         timing_beam_id: int = None,
         vlbi_beam_id: int = None,
-    ):
+    ) -> object:
+        """
+        Create a new BeamConfiguration object.
+
+        :param beam_id: Name to identify the beam within the SDP configuration.
+        :param function: Identifies the type and origin of the generated beam data.
+        :param search_beam_id: search_beam_id
+        :param timing_beam_id: timing_beam_id
+        :param vlbi_beam_id: vlbi_beam_id
+        """
         self.beam_id = beam_id
         self.function = function
         self.search_beam_id = search_beam_id
@@ -219,7 +272,15 @@ class ChannelConfiguration:
     Class to hold Dependencies for ExecutionBlock
     """
 
-    def __init__(self, channels_id: str = None, spectral_windows: List[Channel] = None):
+    def __init__(
+        self, channels_id: str = None, spectral_windows: List[Channel] = None
+    ) -> object:
+        """
+        Create a new ChannelConfiguration object.
+
+        :param channels_id: channels_id
+        :param spectral_windows: spectral_windows
+        """
         self.channels_id = channels_id
         self.spectral_windows = spectral_windows
 
@@ -237,7 +298,15 @@ class PolarisationConfiguration:
     Class to hold Dependencies for ExecutionBlock
     """
 
-    def __init__(self, polarisations_id: str = None, corr_type: List[str] = None):
+    def __init__(
+        self, polarisations_id: str = None, corr_type: List[str] = None
+    ) -> object:
+        """
+        Create a new PolarisationConfiguration object.
+
+        :param polarisations_id: polarisations_id
+        :param corr_type: corr_type
+        """
         self.polarisations_id = polarisations_id
         self.corr_type = corr_type
 
@@ -419,7 +488,19 @@ class SDPConfiguration:
         execution_block: ExecutionBlockConfiguration = None,
         interface: str = None,
         resources: ResourceConfiguration = None,
-    ):
+    ) -> object:
+
+        """
+        Create a new SDPConfiguration object.
+
+        :param eb_id: Execution block ID to associate with processing
+        :param max_length: Hint about the maximum observation length to support by the SDP.
+        :param scan_types: Scan types to be supported on subarray
+        :param processing_blocks: A Processing Block is an atomic unit of data processing for the purpose of SDP’s internal scheduler
+        :param execution_block: execution_block
+        :param interface: url string to determine JsonSchema version
+        :param resources: resources
+        """
         self.eb_id = eb_id
         self.max_length = max_length
         self.scan_types = scan_types
