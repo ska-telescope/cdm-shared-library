@@ -321,7 +321,7 @@ class PolarisationConfiguration:
 
 class PhaseDir:
     """
-    Class to hold Dependencies for FieldConfiguration
+    Class to hold PhaseDir configuration
     """
 
     def __init__(
@@ -330,7 +330,15 @@ class PhaseDir:
         dec: List = None,
         reference_time: str = None,
         reference_frame: str = None,
-    ):
+    ) -> object:
+        """
+        Create a new PhaseDir object.
+
+        :param ra: Right Ascension in degrees (see ADR-49)
+        :param dec: Declination in degrees (see ADR-49)
+        :param reference_time: reference_time,
+        :param reference_frame: Specification of the reference frame or system for a set of pointing coordinates (see ADR-49)
+        """
         self.ra = ra
         self.dec = dec
         self.reference_time = reference_time
@@ -349,7 +357,7 @@ class PhaseDir:
 
 class FieldConfiguration:
     """
-    Class to hold Dependencies for ExecutionBlock
+    Class to hold FieldConfiguration configuration
     """
 
     def __init__(
@@ -357,7 +365,14 @@ class FieldConfiguration:
         field_id: str = None,
         pointing_fqdn: str = None,
         phase_dir: PhaseDir = None,
-    ):
+    ) -> object:
+        """
+        Create a new FieldConfiguration object.
+
+        :param field_id: field_id
+        :param pointing_fqdn: pointing_fqdn
+        :param phase_dir: Phase direction
+        """
         self.field_id = field_id
         self.pointing_fqdn = pointing_fqdn
         self.phase_dir = phase_dir
@@ -373,13 +388,23 @@ class FieldConfiguration:
 
 
 class ScanTypesBeams:
+    """
+    Class to hold ScanTypesBeams configuration
+    """
+
     def __init__(
         self,
         field_id: str = None,
         channels_id: str = None,
         polarisations_id: str = None,
-    ):
+    ) -> object:
+        """
+        Create a new ScanTypesBeams object.
 
+        :param field_id: field_id
+        :param channels_id: channels_id
+        :param polarisations_id: polarisations_id
+        """
         self.field_id = field_id
         self.channels_id = channels_id
         self.polarisations_id = polarisations_id
@@ -395,10 +420,20 @@ class ScanTypesBeams:
 
 
 class ScanTypes:
+    """
+    Class to hold ScanTypes configuration
+    """
+
     def __init__(
         self, scan_type_id: str = None, beams: Dict = None, derive_from: str = None
-    ):
+    ) -> object:
+        """
+        Create a new ScanTypes object.
 
+        :param scan_type_id: scan_type_id
+        :param beams: Beam parameters for the purpose of the Science Data Processor.
+        :param derive_from: derive_from
+        """
         self.scan_type_id = scan_type_id
         self.beams = beams
         self.derive_from = derive_from
@@ -428,7 +463,19 @@ class ExecutionBlockConfiguration:
         polarisations: List[PolarisationConfiguration] = None,
         fields: List[FieldConfiguration] = None,
         scan_types: ScanTypes = None,
-    ):
+    ) -> object:
+        """
+        Create a new ExecutionBlockConfiguration object.
+
+        :param eb_id: Execution block ID to associate with processing
+        :param max_length: Hint about the maximum observation length to support by the SDP.
+        :param context: Free-form information from OET, see ADR-54
+        :param beams: Beam parameters for the purpose of the Science Data Processor.
+        :param channels: Spectral windows per channel configuration.
+        :param polarisations: Polarisation definition.
+        :param fields: Fields / Targets
+        :param scan_types: Scan types. Associates scans with per-beam fields & channel configurations
+        """
         self.eb_id = eb_id
         self.max_length = max_length
         self.context = context
@@ -454,12 +501,19 @@ class ExecutionBlockConfiguration:
 
 class ResourceConfiguration:
     """
-    Class to hold Dependencies for ExecutionBlock
+    Class to hold Resource configuration
     """
 
     def __init__(
         self, csp_links: List = None, receptors: List = None, receive_nodes: int = None
-    ):
+    ) -> object:
+        """
+        Create a new ResourceConfiguration object.
+
+        :param csp_links: csp_links
+        :param receptors: receptors
+        :param receive_nodes: receive_nodes
+        """
         self.csp_links = csp_links
         self.receptors = receptors
         self.receive_nodes = receive_nodes
@@ -476,7 +530,7 @@ class ResourceConfiguration:
 
 class SDPConfiguration:
     """
-    Class to hold SDPConfiguration
+    Class to hold SDP Configuration
     """
 
     def __init__(
@@ -500,6 +554,7 @@ class SDPConfiguration:
         :param execution_block: execution_block
         :param interface: url string to determine JsonSchema version
         :param resources: resources
+
         """
         self.eb_id = eb_id
         self.max_length = max_length
