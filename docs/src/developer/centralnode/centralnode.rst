@@ -34,296 +34,266 @@ assign_resources.py
 The ``assign_resources.py`` module models the the JSON input and response
 for a ``CentralNode.AssignResources()`` command.
 
-Example JSON input modelled by ``AssignResourcesRequest`` for MID:
+Example PI16 JSON input modelled by ``AssignResourcesRequest`` for MID:
+For PI14 JSON please `refer <https://confluence.skatelescope.org/display/SWSI/Configuration+Schemas>`_
 
 .. code-block:: JSON
 
-  {
-    "interface": "https://schema.skao.int/ska-tmc-assignresources/2.0",
-    "transaction_id": "txn-mvp01-20200325-00001",
-    "subarray_id": 1,
-    "dish": {
-      "receptor_ids": ["0001", "0002"]
-    },
-     "sdp": {
-        "interface": "https://schema.skao.int/ska-sdp-assignresources/2.0",
-        "eb_id": "eb-mvp01-20200325-00001",
-        "max_length": 100.0,
-        "scan_types": [
-          {
-            "scan_type_id": "science_A",
-            "reference_frame": "ICRS", "ra": "02:42:40.771", "dec": "-00:00:47.84",
-            "channels": [{
-               "count": 744, "start": 0, "stride": 2, "freq_min": 0.35e9, "freq_max": 1.05e9,
-               "link_map": [[1,0], [101,1]]
-            }]
-          },
-          {
-            "scan_type_id": "calibration_B",
-            "reference_frame": "ICRS", "ra": "12:29:06.699", "dec": "02:03:08.598",
-            "channels": [{
-              "count": 744, "start": 0, "stride": 2, "freq_min": 0.35e9, "freq_max": 1.05e9,
-              "link_map": [[1,0], [101,1]]
-            }]
-          }
-        ],
-        "processing_blocks": [
-          {
-            "pb_id": "pb-mvp01-20200325-00001",
-            "workflow": {"kind": "realtime", "name": "vis_receive", "version": "0.1.0"},
-            "parameters": {}
-          },
-          {
-            "pb_id": "pb-mvp01-20200325-00002",
-            "workflow": {"kind": "realtime", "name": "test_realtime", "version": "0.1.0"},
-            "parameters": {}
-          },
-          {
-            "pb_id": "pb-mvp01-20200325-00003",
-            "workflow": {"kind": "batch", "name": "ical", "version": "0.1.0"},
-            "parameters": {},
-            "dependencies": [
-              {"pb_id": "pb-mvp01-20200325-00001", "kind": ["visibilities"]}
-            ]
-          },
-          {
-            "pb_id": "pb-mvp01-20200325-00004",
-            "workflow": {"kind": "batch", "name": "dpreb", "version": "0.1.0"},
-            "parameters": {},
-            "dependencies": [
-              {"pb_id": "pb-mvp01-20200325-00003", "kind": ["calibration"]}
-            ]
-          }
-        ]
-      }
-  }
-
-
-Example JSON input PI16 modelled by ``AssignResourcesRequest`` for MID:
-
-.. code-block:: JSON
-
-    {
-      "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
-      "transaction_id": "txn-....-00001",
-      "subarray_id": 1,
-      "dish": {
-        "receptor_ids": [
-          "0001"
-        ]
+{
+  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
+  "transaction_id": "txn-....-00001",
+  "subarray_id": 1,
+  "dish": {
+    "receptor_ids": [
+      "0001"
+    ]
+  },
+  "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
+    "execution_block": {
+      "eb_id": "eb-mvp01-20200325-00001",
+      "max_length": 100,
+      "context": {
+        
       },
-      "sdp": {
-        "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
-        "execution_block": {
-          "eb_id": "eb-mvp01-20200325-00001",
-          "max_length": 100,
-          "context": {
-            
-          },
-          "beams": [
+      "beams": [
+        {
+          "beam_id": "vis0",
+          "function": "visibilities"
+        },
+        {
+          "beam_id": "pss1",
+          "search_beam_id": 1,
+          "function": "pulsar search"
+        },
+        {
+          "beam_id": "pss2",
+          "search_beam_id": 2,
+          "function": "pulsar search"
+        },
+        {
+          "beam_id": "pst1",
+          "timing_beam_id": 1,
+          "function": "pulsar timing"
+        },
+        {
+          "beam_id": "pst2",
+          "timing_beam_id": 2,
+          "function": "pulsar timing"
+        },
+        {
+          "beam_id": "vlbi1",
+          "vlbi_beam_id": 1,
+          "function": "vlbi"
+        }
+      ],
+      "channels": [
+        {
+          "channels_id": "vis_channels",
+          "spectral_windows": [
             {
-              "beam_id": "vis0",
-              "function": "visibilities"
-            },
-            {
-              "beam_id": "pss1",
-              "search_beam_id": 1,
-              "function": "pulsar search"
-            },
-            {
-              "beam_id": "pss2",
-              "search_beam_id": 2,
-              "function": "pulsar search"
-            },
-            {
-              "beam_id": "pst1",
-              "timing_beam_id": 1,
-              "function": "pulsar timing"
-            },
-            {
-              "beam_id": "pst2",
-              "timing_beam_id": 2,
-              "function": "pulsar timing"
-            },
-            {
-              "beam_id": "vlbi1",
-              "vlbi_beam_id": 1,
-              "function": "vlbi"
-            }
-          ],
-          "channels": [
-            {
-              "channels_id": "vis_channels",
-              "spectral_windows": [
-                {
-                  "count": 744,
-                  "start": 0,
-                  "stride": 2,
-                  "freq_min": 350000000,
-                  "freq_max": 368000000,
-                  "link_map": [
-                    [
-                      0,
-                      0
-                    ],
-                    [
-                      200,
-                      1
-                    ],
-                    [
-                      744,
-                      2
-                    ],
-                    [
-                      944,
-                      3
-                    ]
-                  ]
-                },
-                {
-                  "spectral_window_id": "fsp_2_channels",
-                  "count": 744,
-                  "start": 2000,
-                  "stride": 1,
-                  "freq_min": 360000000,
-                  "freq_max": 368000000,
-                  "link_map": [
-                    [
-                      2000,
-                      4
-                    ],
-                    [
-                      2200,
-                      5
-                    ]
-                  ]
-                },
-                {
-                  "spectral_window_id": "zoom_window_1",
-                  "count": 744,
-                  "start": 4000,
-                  "stride": 1,
-                  "freq_min": 360000000,
-                  "freq_max": 361000000,
-                  "link_map": [
-                    [
-                      4000,
-                      6
-                    ],
-                    [
-                      4200,
-                      7
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "channels_id": "pulsar_channels",
-              "spectral_windows": [
-                {
-                  "spectral_window_id": "pulsar_fsp_channels",
-                  "count": 744,
-                  "start": 0,
-                  "freq_min": 350000000,
-                  "freq_max": 368000000
-                }
-              ]
-            }
-          ],
-          "polarisations": [
-            {
-              "polarisations_id": "all",
-              "corr_type": [
-                "XX",
-                "XY",
-                "YY",
-                "YX"
-              ]
-            }
-          ],
-          "fields": [
-            {
-              "field_id": "field_a",
-              "phase_dir": {
-                "ra": [
-                  123,
-                  0.1
+              "count": 744,
+              "start": 0,
+              "stride": 2,
+              "freq_min": 350000000,
+              "freq_max": 368000000,
+              "link_map": [
+                [
+                  0,
+                  0
                 ],
-                "dec": [
-                  123,
-                  0.1
+                [
+                  200,
+                  1
                 ],
-                "reference_time": "...",
-                "reference_frame": "ICRF3"
-              },
-              "pointing_fqdn": "low-tmc/telstate/0/pointing"
+                [
+                  744,
+                  2
+                ],
+                [
+                  944,
+                  3
+                ]
+              ]
+            },
+            {
+              "spectral_window_id": "fsp_2_channels",
+              "count": 744,
+              "start": 2000,
+              "stride": 1,
+              "freq_min": 360000000,
+              "freq_max": 368000000,
+              "link_map": [
+                [
+                  2000,
+                  4
+                ],
+                [
+                  2200,
+                  5
+                ]
+              ]
+            },
+            {
+              "spectral_window_id": "zoom_window_1",
+              "count": 744,
+              "start": 4000,
+              "stride": 1,
+              "freq_min": 360000000,
+              "freq_max": 361000000,
+              "link_map": [
+                [
+                  4000,
+                  6
+                ],
+                [
+                  4200,
+                  7
+                ]
+              ]
             }
           ]
         },
-        "processing_blocks": [
-          {
-            "pb_id": "pb-mvp01-20200325-00001",
-            "sbi_ids": [
-              "sbi-mvp01-20200325-00001"
-            ],
-            "script": {
-              
-            },
-            "parameters": {
-              
-            },
-            "dependencies": {
-              
+        {
+          "channels_id": "pulsar_channels",
+          "spectral_windows": [
+            {
+              "spectral_window_id": "pulsar_fsp_channels",
+              "count": 744,
+              "start": 0,
+              "freq_min": 350000000,
+              "freq_max": 368000000
             }
-          },
-          {
-            "pb_id": "pb-mvp01-20200325-00002",
-            "sbi_ids": [
-              "sbi-mvp01-20200325-00002"
+          ]
+        }
+      ],
+      "polarisations": [
+        {
+          "polarisations_id": "all",
+          "corr_type": [
+            "XX",
+            "XY",
+            "YY",
+            "YX"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "field_id": "field_a",
+          "phase_dir": {
+            "ra": [
+              123,
+              0.1
             ],
-            "script": {
-              
-            },
-            "parameters": {
-              
-            },
-            "dependencies": {
-              
-            }
-          },
-          {
-            "pb_id": "pb-mvp01-20200325-00003",
-            "sbi_ids": [
-              "sbi-mvp01-20200325-00001",
-              "sbi-mvp01-20200325-00002"
+            "dec": [
+              123,
+              0.1
             ],
-            "script": {
-              
-            },
-            "parameters": {
-              
-            },
-            "dependencies": {
-              
+            "reference_time": "...",
+            "reference_frame": "ICRF3"
+          },
+          "pointing_fqdn": "low-tmc/telstate/0/pointing"
+        }
+      ],
+      "scan_types": [
+        {
+          "scan_type_id": ".default",
+          "beams": {
+            "vis0": {
+              "polarisations_id": "all",
+              "channels_id": "vis_channels"
             }
           }
+        },
+        {
+          "scan_type_id": "science",
+          "derive_from": ".default",
+          "beams": {
+            "vis0": {
+              "field_id": "field_a"
+            }
+          }
+        },
+        {
+          "scan_type_id": "calibration",
+          "derive_from": ".default",
+          "beams": {
+            "vis0": {
+              "field_id": "field_b"
+            }
+          }
+        }
+      ]
+    },
+    "processing_blocks": [
+      {
+        "pb_id": "pb-mvp01-20200325-00001",
+        "sbi_ids": [
+          "sbi-mvp01-20200325-00001"
         ],
-        "resources": {
-          "csp_links": [
-            1,
-            2,
-            3,
-            4
-          ],
-          "receptors": [
-            "FS4",
-            "FS8"
-          ],
-          "receive_nodes": 10
+        "workflow": {
+          "kind": "realtime",
+          "name": "vis_receive",
+          "version": "0.1.0"
+        },
+        "script": {
+          
+        },
+        "parameters": {
+          
+        },
+        "dependencies": {
+          
+        }
+      },
+      {
+        "pb_id": "pb-mvp01-20200325-00002",
+        "sbi_ids": [
+          "sbi-mvp01-20200325-00002"
+        ],
+        "script": {
+          
+        },
+        "parameters": {
+          
+        },
+        "dependencies": {
+          
+        }
+      },
+      {
+        "pb_id": "pb-mvp01-20200325-00003",
+        "sbi_ids": [
+          "sbi-mvp01-20200325-00001",
+          "sbi-mvp01-20200325-00002"
+        ],
+        "script": {
+          
+        },
+        "parameters": {
+          
+        },
+        "dependencies": {
+          
         }
       }
+    ],
+    "resources": {
+      "csp_links": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "receptors": [
+        "FS4",
+        "FS8"
+      ],
+      "receive_nodes": 10
     }
+  }
+}
 
 Example JSON response modelled by ``AssignResourcesResponse`` for MID:
 
