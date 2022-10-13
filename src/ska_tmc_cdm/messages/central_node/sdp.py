@@ -34,9 +34,9 @@ class SDPWorkflow:  # pylint: disable=too-few-public-methods
         """
         Create a new SDPWorkflow object.
 
-        :param name: name
+        :param name: The name of the processing script
         :param kind: The kind of processing script
-        :param version: version
+        :param version: Version of the processing script
         """
         self.name = name
         self.kind = kind
@@ -75,7 +75,8 @@ class Channel:
         :param stride: Distance between subsequent channel IDs
         :param freq_min: Lower bound of first channel
         :param freq_max: Upper bound of last channel
-        :param link_map: Channel map that specifies which network link is going to get used to send channels to SDP. Intended to allow SDP to optimise network and receive node configuration.
+        :param link_map: Channel map that specifies which network link is going to get used to send channels to SDP.
+                         Intended to allow SDP to optimise network and receive node configuration.
         :param spectral_window_id: spectral_window_id
         """
 
@@ -168,6 +169,13 @@ class ScriptConfiguration:
     """
 
     def __init__(self, kind: str = None, name: str = None, version: str = None):
+        """
+        Create a new ScriptConfiguration object.
+
+        :param name: The name of the processing script
+        :param kind: The kind of processing script
+        :param version: Version of the processing script
+        """
         self.kind = kind
         self.name = name
         self.version = version
@@ -304,7 +312,7 @@ class PolarisationConfiguration:
         """
         Create a new PolarisationConfiguration object.
 
-        :param polarisations_id: polarisations_id
+        :param polarisations_id: Polarisation definitions id
         :param corr_type: corr_type
         """
         self.polarisations_id = polarisations_id
