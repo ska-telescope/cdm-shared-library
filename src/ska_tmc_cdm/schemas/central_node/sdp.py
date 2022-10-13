@@ -33,7 +33,7 @@ __all__ = [
     "ChannelSchema",
     "ProcessingBlockSchema",
     "SDPConfigurationSchema",
-    "ExecutionConfigurationSchema",
+    "ExecutionBlockConfigurationSchema",
     "BeamConfigurationSchema",
     "ChannelConfigurationSchema",
     "PolarisationConfigurationSchema",
@@ -506,7 +506,7 @@ class ScanTypesSchema(Schema):
         return ScanTypes(**data)
 
 
-class ExecutionConfigurationSchema(Schema):
+class ExecutionBlockConfigurationSchema(Schema):
     """
     Marsmallow class for the ExecutionBlockConfuguration class
     """
@@ -550,7 +550,7 @@ class SDPConfigurationSchema(Schema):
     """
 
     interface = fields.String()
-    execution_block = fields.Nested(ExecutionConfigurationSchema)
+    execution_block = fields.Nested(ExecutionBlockConfigurationSchema)
 
     eb_id = fields.String(data_key="eb_id")
     max_length = fields.Float(data_key="max_length")

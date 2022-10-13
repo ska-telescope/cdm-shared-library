@@ -1,7 +1,7 @@
 from ska_tmc_cdm.schemas.central_node.sdp import (
     BeamConfigurationSchema,
     ChannelConfigurationSchema,
-    ExecutionConfigurationSchema,
+    ExecutionBlockConfigurationSchema,
     FieldConfigurationSchema,
     PolarisationConfigurationSchema,
     ProcessingBlockSchema,
@@ -888,10 +888,10 @@ def test_validate_serialization_and_deserialization_execution_block_using_schema
     """
     Verifies that the Execution Block schema marshal and Unmarshal works correctly
     """
-    execution_block_config = ExecutionConfigurationSchema().loads(
+    execution_block_config = ExecutionBlockConfigurationSchema().loads(
         VALID_EXECUTION_BLOCK_JSON_PI16
     )
-    serialized_execution_block_config = ExecutionConfigurationSchema().dumps(
+    serialized_execution_block_config = ExecutionBlockConfigurationSchema().dumps(
         execution_block_config
     )
 
