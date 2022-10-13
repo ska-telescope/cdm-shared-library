@@ -67,7 +67,8 @@ Format the Python code:
 make python-format
 ```
 
-##Release a new version
+## Release a new version
+
 See SKAO instructions [here](https://developer.skao.int/en/latest/tools/software-package-release-procedure.html#software-package-release-procedure) 
 
 
