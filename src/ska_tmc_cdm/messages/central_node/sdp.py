@@ -333,7 +333,6 @@ class ScanTypes:
         self.scan_type_id = scan_type_id
         self.beams = beams
         self.derive_from = derive_from
-        print("temp2#####################################", self.__dict__)
 
     def __eq__(self, other):
         if not isinstance(other, ScanTypes):
