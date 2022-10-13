@@ -864,7 +864,7 @@ def test_validate_serialization_and_deserialization_sdp_minimal_parameters_using
 
 def test_validate_serialization_and_deserialization_scan_types_using_schema_class():
     """
-    Verifies that the Assign Resource schema marshal and Unmarshal works correctly
+    Verifies that the ScanTypes schema marshal and Unmarshal works correctly
     """
     scan_types_config = ScanTypesSchema(many=True).loads(VALID_SCAN_TYPES_JSON_PI16)
     serialized_scan_types_config = ScanTypesSchema(many=True).dumps(scan_types_config)
@@ -874,7 +874,7 @@ def test_validate_serialization_and_deserialization_scan_types_using_schema_clas
 
 def test_validate_serialization_and_deserialization_beams_vis0_using_schema_class():
     """
-    Verifies that the Assign Resource schema marshal and Unmarshal works correctly
+    Verifies that the ScanTypes Beams schema marshal and Unmarshal works correctly
     """
     scan_types_beams_config = ScanTypesBeamsSchema().loads(VALID_BEAMS_VIS0_JSON_PI16)
     serialized_scan_types_beams_config = ScanTypesBeamsSchema().dumps(
