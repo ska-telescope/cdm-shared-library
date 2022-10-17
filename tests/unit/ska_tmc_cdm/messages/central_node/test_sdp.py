@@ -467,15 +467,16 @@ def test_field_equals():
      - the same pointing_fqdn
      - the same phase_dir
     """
+    phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
     field1 = FieldConfiguration(
         "field_a",
         "low-tmc/telstate/0/pointing",
-        [[123, 0.1], [123, 0.1], "...", "ICRF3"],
+        phasedir,
     )
     field2 = FieldConfiguration(
         "field_a",
         "low-tmc/telstate/0/pointing",
-        [[123, 0.1], [123, 0.1], "...", "ICRF3"],
+        phasedir,
     )
 
     assert field1 == field2
@@ -483,12 +484,12 @@ def test_field_equals():
     assert field1 != FieldConfiguration(
         "field_a",
         "low-tmc/telstate/0/pointings",
-        [[123, 0.1], [123, 0.1], "...", "ICRF3"],
+        phasedir,
     )
     assert field2 != FieldConfiguration(
         "field_a",
         "low-tmc/telstate/0/pointings",
-        [[123, 0.1], [123, 0.1], "...", "ICRF3"],
+        phasedir,
     )
 
 
@@ -498,10 +499,11 @@ def test_field_equals_not_equal_to_other_objects():
     Verify that Field Configuration objects are not considered equal to objects of
     other types.
     """
+    phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
     field = FieldConfiguration(
         "field_a",
         "low-tmc/telstate/0/pointing",
-        [[123, 0.1], [123, 0.1], "...", "ICRF3"],
+        phasedir,
     )
     assert field != 1
 

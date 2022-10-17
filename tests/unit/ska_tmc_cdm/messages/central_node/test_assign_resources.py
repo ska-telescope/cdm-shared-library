@@ -18,8 +18,10 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ChannelConfiguration,
     ExecutionBlockConfiguration,
     FieldConfiguration,
+    PhaseDir,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
+    ResourceConfiguration,
     ScanType,
     SDPConfiguration,
     SDPWorkflow,
@@ -279,21 +281,14 @@ def test_modified_assign_resources_request_eq():
     beams = BeamConfiguration("pss1", 1, "pulsar search")
     channels = ChannelConfiguration(
         "vis_channels",
-        [
-            "fsp_2_channels",
-            744,
-            0,
-            2,
-            0.35e9,
-            1.05e9,
-            [[0, 0], [200, 1], [744, 2], [944, 3]],
-        ],
+        [channel],
     )
     polarisation = PolarisationConfiguration("all", ["XX", "XY", "YY", "YX"])
+    phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
     fields = FieldConfiguration(
         "field_a",
         "low-tmc/telstate/0/pointing",
-        [[123, 0.1], [123, 0.1], "...", "ICRF3"],
+        phasedir,
     )
 
     execution_block = ExecutionBlockConfiguration(
@@ -369,21 +364,14 @@ def test_modified_assign_resources_request_eq_with_other_objects():
     beams = BeamConfiguration("pss1", 1, "pulsar search")
     channels = ChannelConfiguration(
         "vis_channels",
-        [
-            "fsp_2_channels",
-            744,
-            0,
-            2,
-            0.35e9,
-            1.05e9,
-            [[0, 0], [200, 1], [744, 2], [944, 3]],
-        ],
+        [channel],
     )
     polarisation = PolarisationConfiguration("all", ["XX", "XY", "YY", "YX"])
+    phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
     fields = FieldConfiguration(
         "field_a",
         "low-tmc/telstate/0/pointing",
-        [[123, 0.1], [123, 0.1], "...", "ICRF3"],
+        phasedir,
     )
 
     execution_block = ExecutionBlockConfiguration(
@@ -395,12 +383,14 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         [polarisation],
         [fields],
     )
+    resource = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
     sdp_config = SDPConfiguration(
         "eb-mvp01-20200325-00001",
         100.0,
+        resource,
         [scan_type],
         [pb_config],
-        [execution_block],
+        execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])

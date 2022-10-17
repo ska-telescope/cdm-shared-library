@@ -548,8 +548,8 @@ class SDPConfiguration:
         scan_types: List[ScanType] = None,
         processing_blocks: List[ProcessingBlockConfiguration] = None,
         execution_block: ExecutionBlockConfiguration = None,
-        interface: str = None,
         resources: ResourceConfiguration = None,
+        interface: str = None,
     ) -> object:
 
         """
