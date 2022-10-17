@@ -478,9 +478,7 @@ class ScanTypesSchema(Schema):
         keys=fields.String(), values=fields.Nested(ScanTypesBeamsSchema)
     )
     derive_from = fields.String()
-    import pdb
 
-    # pdb.set_trace()
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -512,7 +510,7 @@ class ExecutionBlockConfigurationSchema(Schema):
     """
 
     eb_id = fields.String(data_key="eb_id")
-    max_length = fields.Integer(data_key="max_length")
+    max_length = fields.Float(data_key="max_length")
     context = fields.Dict()
     beams = fields.List(fields.Nested(BeamConfigurationSchema))
     channels = fields.List(fields.Nested(ChannelConfigurationSchema))

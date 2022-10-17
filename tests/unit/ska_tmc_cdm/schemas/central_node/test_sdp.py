@@ -250,7 +250,7 @@ VALID_BEAMS_JSON_PI16 = """
 VALID_EXECUTION_BLOCK_JSON_PI16 = """
     {
       "eb_id": "eb-mvp01-20200325-00001",
-      "max_length": 100,
+      "max_length": 100.0,
       "context": {},
       "beams": [ 
         {
@@ -399,7 +399,7 @@ VALID_SDP_JSON_PI16 = """{
         "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
         "execution_block": {
             "eb_id": "eb-mvp01-20200325-00001",
-            "max_length": 100,
+            "max_length": 100.0,
             "context": {},
             "beams": [
                 {

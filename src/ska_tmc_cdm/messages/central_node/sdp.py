@@ -451,7 +451,7 @@ class ScanTypes:
             return False
         return (
             self.scan_type_id == other.scan_type_id
-            #   and self.beams == other.beams
+            and self.beams == other.beams
             and self.derive_from == other.derive_from
         )
 
@@ -464,13 +464,13 @@ class ExecutionBlockConfiguration:
     def __init__(
         self,
         eb_id: str = None,
-        max_length: int = None,
+        max_length: float = None,
         context: Dict = None,
         beams: List[BeamConfiguration] = None,
         channels: List[ChannelConfiguration] = None,
         polarisations: List[PolarisationConfiguration] = None,
         fields: List[FieldConfiguration] = None,
-        scan_types: ScanTypes = None,
+        scan_types: List[ScanTypes] = None,
     ) -> object:
         """
         Create a new ExecutionBlockConfiguration object.
