@@ -11,7 +11,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     Channel,
     ChannelConfiguration,
     EBScanType,
-    EBScanTypeBeams,
+    EBScanTypeBeam,
     ExecutionBlockConfiguration,
     FieldConfiguration,
     PbDependency,
@@ -41,7 +41,7 @@ __all__ = [
     "PhaseDirSchema",
     "ResourceConfigurationSchema",
     "ScriptConfigurationSchema",
-    "EBScanTypeBeamsSchema",
+    "EBScanTypeBeamSchema",
     "EBScanTypeSchema",
 ]
 
@@ -436,9 +436,9 @@ class FieldConfigurationSchema(Schema):
         return FieldConfiguration(**data)
 
 
-class EBScanTypeBeamsSchema(Schema):
+class EBScanTypeBeamSchema(Schema):
     """
-    Marsmallow class for the EBScanTypeBeams class
+    Marsmallow class for the EBScanTypeBeam class
     """
 
     field_id = fields.String()
@@ -459,23 +459,23 @@ class EBScanTypeBeamsSchema(Schema):
     @post_load
     def create_ebscantypebeams_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a EBScanTypeBeams object.
+        Convert parsed JSON back into a EBScanTypeBeam object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
-        return EBScanTypeBeams(**data)
+        return EBScanTypeBeam(**data)
 
 
 class EBScanTypeSchema(Schema):
     """
-    Marsmallow class for the EBScanTypeBeams class
+    Marsmallow class for the EBScanTypeBeam class
     """
 
     scan_type_id = fields.String()
     beams = fields.Dict(
-        keys=fields.String(), values=fields.Nested(EBScanTypeBeamsSchema)
+        keys=fields.String(), values=fields.Nested(EBScanTypeBeamSchema)
     )
     derive_from = fields.String()
 

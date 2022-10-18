@@ -20,7 +20,7 @@ __all__ = [
     "ExecutionBlockConfiguration",
     "ResourceConfiguration",
     "ScriptConfiguration",
-    "EBScanTypeBeams",
+    "EBScanTypeBeam",
     "EBScanType",
 ]
 
@@ -395,9 +395,9 @@ class FieldConfiguration:
         )
 
 
-class EBScanTypeBeams:
+class EBScanTypeBeam:
     """
-    Class to hold EBScanTypeBeams Configuration
+    Class to hold EBScanTypeBeam Configuration
     """
 
     def __init__(
@@ -407,7 +407,7 @@ class EBScanTypeBeams:
         polarisations_id: str = None,
     ) -> object:
         """
-        Create a new EBScanTypeBeams object.
+        Create a new EBScanTypeBeam object.
 
         :param field_id: field_id
         :param channels_id: channels_id
@@ -418,7 +418,7 @@ class EBScanTypeBeams:
         self.polarisations_id = polarisations_id
 
     def __eq__(self, other):
-        if not isinstance(other, EBScanTypeBeams):
+        if not isinstance(other, EBScanTypeBeam):
             return False
         return (
             self.field_id == other.field_id

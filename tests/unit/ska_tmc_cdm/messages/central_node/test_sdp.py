@@ -7,7 +7,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     Channel,
     ChannelConfiguration,
     EBScanType,
-    EBScanTypeBeams,
+    EBScanTypeBeam,
     FieldConfiguration,
     PbDependency,
     PhaseDir,
@@ -564,30 +564,30 @@ def test_ebscantype_equals_not_equal_to_other_objects():
     assert eb_scan_type != 1
 
 
-def test_ebscantypebeams_equals():
+def test_ebscantypebeam_equals():
     """
-    Verify that EBScanTypeBeams objects are considered equal when they have:
+    Verify that EBScanTypeBeam objects are considered equal when they have:
      - the same field_id
      - the same channels_id
      - the same polarisations_id
     """
-    eb_scan_type_beam1 = EBScanTypeBeams("science-target", "vis_channels", "all")
-    eb_scan_type_beam2 = EBScanTypeBeams("science-target", "vis_channels", "all")
+    eb_scan_type_beam1 = EBScanTypeBeam("science-target", "vis_channels", "all")
+    eb_scan_type_beam2 = EBScanTypeBeam("science-target", "vis_channels", "all")
 
     assert eb_scan_type_beam1 == eb_scan_type_beam2
 
-    assert eb_scan_type_beam1 != EBScanTypeBeams("pks1934-638", "vis_channels", "all")
-    assert eb_scan_type_beam2 != EBScanTypeBeams("pks1934-638", "vis_channels", "all")
+    assert eb_scan_type_beam1 != EBScanTypeBeam("pks1934-638", "vis_channels", "all")
+    assert eb_scan_type_beam2 != EBScanTypeBeam("pks1934-638", "vis_channels", "all")
 
 
-def test_ebscantypebeams_equals_not_equal_to_other_objects():
+def test_ebscantypebeam_equals_not_equal_to_other_objects():
 
     """
-    Verify that EBScanTypeBeams objects are not considered equal to objects of
+    Verify that EBScanTypeBeam objects are not considered equal to objects of
     other types.
     """
-    eb_scan_type_beams = EBScanTypeBeams("science-target", "vis_channels", "all")
-    assert eb_scan_type_beams != 1
+    eb_scan_type_beam = EBScanTypeBeam("science-target", "vis_channels", "all")
+    assert eb_scan_type_beam != 1
 
 
 def test_script_equals():

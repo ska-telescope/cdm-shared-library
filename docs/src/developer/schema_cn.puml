@@ -42,7 +42,7 @@ package ska_tmc_cdm.schemas {
         class PhaseDirSchema
         class ResourceConfigurationSchema
         class ScriptConfigurationSchema
-        class EBScanTypeBeamsSchema
+        class EBScanTypeBeamSchema
         class EBScanTypeSchema
 	}
 }
@@ -67,7 +67,7 @@ package ska_tmc_cdm.messages.central_node {
         class PhaseDir
         class ResourceConfiguration
         class ScriptConfiguration
-        class EBScanTypeBeams
+        class EBScanTypeBeam
         class EBScanType
 	}
 
@@ -95,7 +95,7 @@ FieldConfigurationSchema --- FieldConfiguration
 PhaseDirSchema --- PhaseDir
 ResourceConfigurationSchema --- ResourceConfiguration
 ScriptConfigurationSchema --- ScriptConfiguration
-EBScanTypeBeamsSchema --- EBScanTypeBeams
+EBScanTypeBeamSchema --- EBScanTypeBeam
 EBScanTypeSchema --- EBScanType
 
 @enduml

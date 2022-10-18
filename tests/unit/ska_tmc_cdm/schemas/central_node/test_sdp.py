@@ -1,7 +1,7 @@
 from ska_tmc_cdm.schemas.central_node.sdp import (
     BeamConfigurationSchema,
     ChannelConfigurationSchema,
-    EBScanTypeBeamsSchema,
+    EBScanTypeBeamSchema,
     EBScanTypeSchema,
     ExecutionBlockConfigurationSchema,
     FieldConfigurationSchema,
@@ -214,7 +214,7 @@ VALID_CHANNELS_JSON_PI16 = """
         }
     ]"""
 
-VALID_BEAMS_JSON_PI16 = """
+VALID_BEAM_JSON_PI16 = """
     [ 
         {
           "beam_id": "vis0",
@@ -824,7 +824,7 @@ VALID_SDP_MINIMAL_JSON_PI16 = """
 }
 """
 
-VALID_BEAMS_VIS0_JSON_PI16 = """{
+VALID_BEAM_VIS0_JSON_PI16 = """{
                   "polarisations_id": "all",
                   "channels_id": "vis_channels"
                }"""
@@ -872,16 +872,16 @@ def test_validate_serialization_and_deserialization_ebscantype_using_schema_clas
     assert_json_is_equal(VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config)
 
 
-def test_validate_serialization_and_deserialization_beams_vis0_using_schema_class():
+def test_validate_serialization_and_deserialization_beam_vis0_using_schema_class():
     """
-    Verifies that the EBScanType Beams schema marshal and Unmarshal works correctly
+    Verifies that the EBScanType Beam schema marshal and Unmarshal works correctly
     """
-    scan_types_beams_config = EBScanTypeBeamsSchema().loads(VALID_BEAMS_VIS0_JSON_PI16)
-    serialized_scan_types_beams_config = EBScanTypeBeamsSchema().dumps(
-        scan_types_beams_config
+    scan_types_beam_config = EBScanTypeBeamSchema().loads(VALID_BEAM_VIS0_JSON_PI16)
+    serialized_scan_types_beam_config = EBScanTypeBeamSchema().dumps(
+        scan_types_beam_config
     )
 
-    assert_json_is_equal(VALID_BEAMS_VIS0_JSON_PI16, serialized_scan_types_beams_config)
+    assert_json_is_equal(VALID_BEAM_VIS0_JSON_PI16, serialized_scan_types_beam_config)
 
 
 def test_validate_serialization_and_deserialization_executionblockconfiguration_using_schema_class():
@@ -904,10 +904,10 @@ def test_validate_serialization_and_deserialization_beamconfiguration_using_sche
     """
     Verifies that the BeamConfiguration schema marshal and Unmarshal works correctly
     """
-    beams_config = BeamConfigurationSchema(many=True).loads(VALID_BEAMS_JSON_PI16)
-    serialized_beams_config = BeamConfigurationSchema(many=True).dumps(beams_config)
+    beam_config = BeamConfigurationSchema(many=True).loads(VALID_BEAM_JSON_PI16)
+    serialized_beam_config = BeamConfigurationSchema(many=True).dumps(beam_config)
 
-    assert_json_is_equal(VALID_BEAMS_JSON_PI16, serialized_beams_config)
+    assert_json_is_equal(VALID_BEAM_JSON_PI16, serialized_beam_config)
 
 
 def test_validate_serialization_and_deserialization_channelconfiguration_using_schema_class():
