@@ -534,60 +534,60 @@ def test_resource_equals_not_equal_to_other_objects():
     assert resource != 1
 
 
-def test_ebscantype_equals():
+def test_EBScanType_equals():
     """
     Verify that EBScanType objects are considered equal when they have:
      - the same scan_type_id
      - the same beams
      - the same derive_from
     """
-    eb_scan_type1 = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
-    eb_scan_type2 = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    EBScanType1 = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    EBScanType2 = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
 
-    assert eb_scan_type1 == eb_scan_type2
+    assert EBScanType1 == EBScanType2
 
-    assert eb_scan_type1 != EBScanType(
+    assert EBScanType1 != EBScanType(
         "calibration", {"vis0": {"field_id": "field_a"}}, ".default"
     )
-    assert eb_scan_type2 != EBScanType(
+    assert EBScanType2 != EBScanType(
         "calibration", {"vis0": {"field_id": "field_a"}}, ".default"
     )
 
 
-def test_ebscantype_equals_not_equal_to_other_objects():
+def test_EBScanType_equals_not_equal_to_other_objects():
 
     """
     Verify that EBScanType objects are not considered equal to objects of
     other types.
     """
-    eb_scan_type = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
-    assert eb_scan_type != 1
+    ebscantype = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    assert ebscantype != 1
 
 
-def test_ebscantypebeams_equals():
+def test_EBScanTypebeams_equals():
     """
     Verify that EBScanTypeBeams objects are considered equal when they have:
      - the same field_id
      - the same channels_id
      - the same polarisations_id
     """
-    eb_scan_type_beams1 = EBScanTypeBeams("science-target", "vis_channels", "all")
-    eb_scan_type_beams2 = EBScanTypeBeams("science-target", "vis_channels", "all")
+    EBScanTypebeams1 = EBScanTypeBeams("science-target", "vis_channels", "all")
+    EBScanTypebeams2 = EBScanTypeBeams("science-target", "vis_channels", "all")
 
-    assert eb_scan_type_beams1 == eb_scan_type_beams2
+    assert EBScanTypebeams1 == EBScanTypebeams2
 
-    assert eb_scan_type_beams1 != EBScanTypeBeams("pks1934-638", "vis_channels", "all")
-    assert eb_scan_type_beams2 != EBScanTypeBeams("pks1934-638", "vis_channels", "all")
+    assert EBScanTypebeams1 != EBScanTypeBeams("pks1934-638", "vis_channels", "all")
+    assert EBScanTypebeams2 != EBScanTypeBeams("pks1934-638", "vis_channels", "all")
 
 
-def test_ebscantypebeams_equals_not_equal_to_other_objects():
+def test_EBScanTypebeams_equals_not_equal_to_other_objects():
 
     """
     Verify that EBScanTypeBeams objects are not considered equal to objects of
     other types.
     """
-    eb_scan_type_beams = EBScanTypeBeams("science-target", "vis_channels", "all")
-    assert eb_scan_type_beams != 1
+    EBScanTypebeams = EBScanTypeBeams("science-target", "vis_channels", "all")
+    assert EBScanTypebeams != 1
 
 
 def test_script_equals():
