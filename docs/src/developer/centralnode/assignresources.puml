@@ -64,17 +64,17 @@ package ska_tmc_cdm.messages.central_node {
             polarisations_id: str,
             corr_type: List[str]  
         }
-        class ScanTypesBeams {
+        class EBScanTypeBeams {
             field_id: str,
             channels_id: Dict, 
             polarisations_id: str, 
         }
-        class ScanTypes {
+        class EBScanType {
             scan_type_id: str,
-            beams: ScanTypesBeams, 
+            beams: EBScanTypeBeams,
             derive_from: str, 
         }
-        ScanTypes  *-- "*" ScanTypesBeams
+        EBScanType  *-- "*" EBScanTypeBeams
 
         class FieldConfiguration {
             field_id : str
@@ -116,7 +116,7 @@ package ska_tmc_cdm.messages.central_node {
             channels: List[ChannelConfiguration],
             polarisations: List[PolarisationConfiguration],
             fields: List[FieldConfiguration],
-            scan_types: ScanTypes,
+            scan_types: EBScanType,
         }
 
         ExecutionBlockConfiguration  *-- "1" BeamConfiguration

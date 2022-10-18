@@ -6,6 +6,8 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
     ChannelConfiguration,
+    EBScanType,
+    EBScanTypeBeams,
     FieldConfiguration,
     PbDependency,
     PhaseDir,
@@ -13,8 +15,6 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ProcessingBlockConfiguration,
     ResourceConfiguration,
     ScanType,
-    ScanTypes,
-    ScanTypesBeams,
     ScriptConfiguration,
     SDPConfiguration,
     SDPWorkflow,
@@ -534,60 +534,60 @@ def test_resource_equals_not_equal_to_other_objects():
     assert resource != 1
 
 
-def test_scantypes_equals():
+def test_EBScanType_equals():
     """
-    Verify that ScanTypes objects are considered equal when they have:
+    Verify that EBScanType objects are considered equal when they have:
      - the same scan_type_id
      - the same beams
      - the same derive_from
     """
-    scantypes1 = ScanTypes("science", {"vis0": {"field_id": "field_a"}}, ".default")
-    scantypes2 = ScanTypes("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    EBScanType1 = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    EBScanType2 = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
 
-    assert scantypes1 == scantypes2
+    assert EBScanType1 == EBScanType2
 
-    assert scantypes1 != ScanTypes(
+    assert EBScanType1 != EBScanType(
         "calibration", {"vis0": {"field_id": "field_a"}}, ".default"
     )
-    assert scantypes2 != ScanTypes(
+    assert EBScanType2 != EBScanType(
         "calibration", {"vis0": {"field_id": "field_a"}}, ".default"
     )
 
 
-def test_scantypes_equals_not_equal_to_other_objects():
+def test_EBScanType_equals_not_equal_to_other_objects():
 
     """
-    Verify that ScanTypes objects are not considered equal to objects of
+    Verify that EBScanType objects are not considered equal to objects of
     other types.
     """
-    scantypes = ScanTypes("science", {"vis0": {"field_id": "field_a"}}, ".default")
-    assert scantypes != 1
+    ebscantype = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    assert ebscantype != 1
 
 
-def test_scantypesbeams_equals():
+def test_EBScanTypebeams_equals():
     """
-    Verify that ScanTypesBeams objects are considered equal when they have:
+    Verify that EBScanTypeBeams objects are considered equal when they have:
      - the same field_id
      - the same channels_id
      - the same polarisations_id
     """
-    scantypesbeams1 = ScanTypesBeams("science-target", "vis_channels", "all")
-    scantypesbeams2 = ScanTypesBeams("science-target", "vis_channels", "all")
+    EBScanTypebeams1 = EBScanTypeBeams("science-target", "vis_channels", "all")
+    EBScanTypebeams2 = EBScanTypeBeams("science-target", "vis_channels", "all")
 
-    assert scantypesbeams1 == scantypesbeams2
+    assert EBScanTypebeams1 == EBScanTypebeams2
 
-    assert scantypesbeams1 != ScanTypesBeams("pks1934-638", "vis_channels", "all")
-    assert scantypesbeams2 != ScanTypesBeams("pks1934-638", "vis_channels", "all")
+    assert EBScanTypebeams1 != EBScanTypeBeams("pks1934-638", "vis_channels", "all")
+    assert EBScanTypebeams2 != EBScanTypeBeams("pks1934-638", "vis_channels", "all")
 
 
-def test_scantypesbeams_equals_not_equal_to_other_objects():
+def test_EBScanTypebeams_equals_not_equal_to_other_objects():
 
     """
-    Verify that ScanTypesBeams objects are not considered equal to objects of
+    Verify that EBScanTypeBeams objects are not considered equal to objects of
     other types.
     """
-    scantypesbeams = ScanTypesBeams("science-target", "vis_channels", "all")
-    assert scantypesbeams != 1
+    EBScanTypebeams = EBScanTypeBeams("science-target", "vis_channels", "all")
+    assert EBScanTypebeams != 1
 
 
 def test_script_equals():

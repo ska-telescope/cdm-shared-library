@@ -1,13 +1,13 @@
 from ska_tmc_cdm.schemas.central_node.sdp import (
     BeamConfigurationSchema,
     ChannelConfigurationSchema,
+    EBScanTypeBeamsSchema,
+    EBScanTypeSchema,
     ExecutionBlockConfigurationSchema,
     FieldConfigurationSchema,
     PolarisationConfigurationSchema,
     ProcessingBlockSchema,
     ResourceConfigurationSchema,
-    ScanTypesBeamsSchema,
-    ScanTypesSchema,
     SDPConfigurationSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
@@ -864,20 +864,20 @@ def test_validate_serialization_and_deserialization_sdp_minimal_parameters_using
 
 def test_validate_serialization_and_deserialization_scan_types_using_schema_class():
     """
-    Verifies that the ScanTypes schema marshal and Unmarshal works correctly
+    Verifies that the EBScanType schema marshal and Unmarshal works correctly
     """
-    scan_types_config = ScanTypesSchema(many=True).loads(VALID_SCAN_TYPES_JSON_PI16)
-    serialized_scan_types_config = ScanTypesSchema(many=True).dumps(scan_types_config)
+    scan_types_config = EBScanTypeSchema(many=True).loads(VALID_SCAN_TYPES_JSON_PI16)
+    serialized_scan_types_config = EBScanTypeSchema(many=True).dumps(scan_types_config)
 
     assert_json_is_equal(VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config)
 
 
 def test_validate_serialization_and_deserialization_beams_vis0_using_schema_class():
     """
-    Verifies that the ScanTypes Beams schema marshal and Unmarshal works correctly
+    Verifies that the EBScanType Beams schema marshal and Unmarshal works correctly
     """
-    scan_types_beams_config = ScanTypesBeamsSchema().loads(VALID_BEAMS_VIS0_JSON_PI16)
-    serialized_scan_types_beams_config = ScanTypesBeamsSchema().dumps(
+    scan_types_beams_config = EBScanTypeBeamsSchema().loads(VALID_BEAMS_VIS0_JSON_PI16)
+    serialized_scan_types_beams_config = EBScanTypeBeamsSchema().dumps(
         scan_types_beams_config
     )
 

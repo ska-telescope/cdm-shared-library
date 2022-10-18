@@ -32,7 +32,7 @@ package ska_tmc_cdm.schemas {
 			resource assignment request
 		end note
 
-        class ScanTypeSchema
+        class EBScanTypechema
 	}
 }
 
@@ -58,7 +58,7 @@ DishAllocationResponseSchema --- DishAllocation
 AssignResourcesRequestSchema --- AssignResourcesRequest
 AssignResourcesResponseSchema --- AssignResourcesResponse
 ReleaseResourcesRequestSchema --- ReleaseResourcesRequest
-ScanTypeSchema --- ScanType
+EBScanTypechema --- ScanType
 SDPWorkflowSchema --- SDPWorkflow
 PbDependencySchema --- PbDependency
 ProcessingBlockSchema --- ProcessingBlockConfiguration

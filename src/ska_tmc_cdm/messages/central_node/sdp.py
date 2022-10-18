@@ -20,8 +20,8 @@ __all__ = [
     "ExecutionBlockConfiguration",
     "ResourceConfiguration",
     "ScriptConfiguration",
-    "ScanTypesBeams",
-    "ScanTypes",
+    "EBScanTypeBeams",
+    "EBScanType",
 ]
 
 
@@ -395,9 +395,9 @@ class FieldConfiguration:
         )
 
 
-class ScanTypesBeams:
+class EBScanTypeBeams:
     """
-    Class to hold ScanTypesBeams configuration
+    Class to hold EBScanTypeBeams configuration
     """
 
     def __init__(
@@ -407,7 +407,7 @@ class ScanTypesBeams:
         polarisations_id: str = None,
     ) -> object:
         """
-        Create a new ScanTypesBeams object.
+        Create a new EBScanTypeBeams object.
 
         :param field_id: field_id
         :param channels_id: channels_id
@@ -418,7 +418,7 @@ class ScanTypesBeams:
         self.polarisations_id = polarisations_id
 
     def __eq__(self, other):
-        if not isinstance(other, ScanTypesBeams):
+        if not isinstance(other, EBScanTypeBeams):
             return False
         return (
             self.field_id == other.field_id
@@ -427,16 +427,16 @@ class ScanTypesBeams:
         )
 
 
-class ScanTypes:
+class EBScanType:
     """
-    Class to hold ScanTypes configuration
+    Class to hold EBScanType configuration
     """
 
     def __init__(
         self, scan_type_id: str = None, beams: Dict = None, derive_from: str = None
     ) -> object:
         """
-        Create a new ScanTypes object.
+        Create a new EBScanType object.
 
         :param scan_type_id: scan_type_id
         :param beams: Beam parameters for the purpose of the Science Data Processor.
@@ -447,7 +447,7 @@ class ScanTypes:
         self.derive_from = derive_from
 
     def __eq__(self, other):
-        if not isinstance(other, ScanTypes):
+        if not isinstance(other, EBScanType):
             return False
         return (
             self.scan_type_id == other.scan_type_id
@@ -470,7 +470,7 @@ class ExecutionBlockConfiguration:
         channels: List[ChannelConfiguration] = None,
         polarisations: List[PolarisationConfiguration] = None,
         fields: List[FieldConfiguration] = None,
-        scan_types: List[ScanTypes] = None,
+        scan_types: List[EBScanType] = None,
     ) -> object:
         """
         Create a new ExecutionBlockConfiguration object.

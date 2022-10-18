@@ -10,6 +10,8 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
     ChannelConfiguration,
+    EBScanType,
+    EBScanTypeBeams,
     ExecutionBlockConfiguration,
     FieldConfiguration,
     PbDependency,
@@ -18,8 +20,6 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ProcessingBlockConfiguration,
     ResourceConfiguration,
     ScanType,
-    ScanTypes,
-    ScanTypesBeams,
     ScriptConfiguration,
     SDPConfiguration,
     SDPWorkflow,
@@ -27,7 +27,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
 from ska_tmc_cdm.schemas import CODEC
 
 __all__ = [
-    "ScanTypeSchema",
+    "EBScanTypechema",
     "SDPWorkflowSchema",
     "PbDependencySchema",
     "ChannelSchema",
@@ -41,8 +41,8 @@ __all__ = [
     "PhaseDirSchema",
     "ResourceConfigurationSchema",
     "ScriptConfigurationSchema",
-    "ScanTypesBeamsSchema",
-    "ScanTypesSchema",
+    "EBScanTypeBeamsSchema",
+    "EBScanTypeSchema",
 ]
 
 
@@ -91,7 +91,7 @@ class ChannelSchema(Schema):
         )
 
 
-class ScanTypeSchema(Schema):
+class EBScanTypechema(Schema):
     """
     Marshmallow schema for the ScanType class.
     """
@@ -436,9 +436,9 @@ class FieldConfigurationSchema(Schema):
         return FieldConfiguration(**data)
 
 
-class ScanTypesBeamsSchema(Schema):
+class EBScanTypeBeamsSchema(Schema):
     """
-    Marsmallow class for the ScanTypesBeams class
+    Marsmallow class for the EBScanTypeBeams class
     """
 
     field_id = fields.String()
@@ -457,7 +457,7 @@ class ScanTypesBeamsSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_scantypesbeams_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_EBScanTypebeams_config(self, data, **_):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
@@ -465,17 +465,17 @@ class ScanTypesBeamsSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: SDPConfiguration object populated from data
         """
-        return ScanTypesBeams(**data)
+        return EBScanTypeBeams(**data)
 
 
-class ScanTypesSchema(Schema):
+class EBScanTypeSchema(Schema):
     """
-    Marsmallow class for the ScanTypesBeams class
+    Marsmallow class for the EBScanTypeBeams class
     """
 
     scan_type_id = fields.String()
     beams = fields.Dict(
-        keys=fields.String(), values=fields.Nested(ScanTypesBeamsSchema)
+        keys=fields.String(), values=fields.Nested(EBScanTypeBeamsSchema)
     )
     derive_from = fields.String()
 
@@ -492,7 +492,7 @@ class ScanTypesSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_scantypes_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_EBScanType_config(self, data, **_):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ExecutionBlockConfiguration object.
 
@@ -501,7 +501,7 @@ class ScanTypesSchema(Schema):
         :return: SDPConfiguration object populated from data
         """
 
-        return ScanTypes(**data)
+        return EBScanType(**data)
 
 
 class ExecutionBlockConfigurationSchema(Schema):
@@ -515,7 +515,7 @@ class ExecutionBlockConfigurationSchema(Schema):
     beams = fields.List(fields.Nested(BeamConfigurationSchema))
     channels = fields.List(fields.Nested(ChannelConfigurationSchema))
     polarisations = fields.List(fields.Nested(PolarisationConfigurationSchema))
-    scan_types = fields.List(fields.Nested(ScanTypesSchema))
+    scan_types = fields.List(fields.Nested(EBScanTypeSchema))
     fields = fields.List(fields.Nested(FieldConfigurationSchema))
 
     @post_dump
@@ -552,7 +552,7 @@ class SDPConfigurationSchema(Schema):
 
     eb_id = fields.String(data_key="eb_id")
     max_length = fields.Float(data_key="max_length")
-    scan_types = fields.Nested(ScanTypeSchema, many=True)
+    scan_types = fields.Nested(EBScanTypechema, many=True)
     processing_blocks = fields.Nested(ProcessingBlockSchema, many=True)
     resources = fields.Nested(ResourceConfigurationSchema)
 
