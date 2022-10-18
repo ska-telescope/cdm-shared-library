@@ -237,7 +237,7 @@ class ProcessingBlockConfiguration:
 
 class BeamConfiguration:
     """
-    Class to hold Dependencies for ExecutionBlock
+    Class to hold Dependencies for Beam Configuration
     """
 
     def __init__(
@@ -277,7 +277,7 @@ class BeamConfiguration:
 
 class ChannelConfiguration:
     """
-    Class to hold Dependencies for ExecutionBlock
+    Class to hold Dependencies for Channel Configuration
     """
 
     def __init__(
@@ -303,7 +303,7 @@ class ChannelConfiguration:
 
 class PolarisationConfiguration:
     """
-    Class to hold Dependencies for ExecutionBlock
+    Class to hold Dependencies for Polarisation Configuration
     """
 
     def __init__(
@@ -365,7 +365,7 @@ class PhaseDir:
 
 class FieldConfiguration:
     """
-    Class to hold FieldConfiguration configuration
+    Class to hold Field configuration
     """
 
     def __init__(
@@ -397,7 +397,7 @@ class FieldConfiguration:
 
 class EBScanTypeBeams:
     """
-    Class to hold EBScanTypeBeams configuration
+    Class to hold EBScanTypeBeams Configuration
     """
 
     def __init__(

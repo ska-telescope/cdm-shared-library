@@ -123,6 +123,7 @@ package ska_tmc_cdm.messages.central_node {
         ExecutionBlockConfiguration  *-- "*" ChannelConfiguration
         ExecutionBlockConfiguration  *-- "1" PolarisationConfiguration
         ExecutionBlockConfiguration  *-- "*" FieldConfiguration
+        ExecutionBlockConfiguration  *-- "*" EBScanType
 
 
         class SDPConfiguration {

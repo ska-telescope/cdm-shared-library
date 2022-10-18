@@ -830,9 +830,9 @@ VALID_BEAMS_VIS0_JSON_PI16 = """{
                }"""
 
 
-def test_validate_serialization_and_deserialization_sdp_all_parameters_using_schema_class():
+def test_validate_serialization_and_deserialization_sdpconfiguration_all_parameters_using_schema_class():
     """
-    Verifies that the SDP schema marshal and Unmarshal works correctly with all parameters
+    Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly with all parameters
     """
     sdp_all_params_config = SDPConfigurationSchema().loads(
         VALID_SDP_ALL_PARAMETERS_JSON_PI16
@@ -847,9 +847,9 @@ def test_validate_serialization_and_deserialization_sdp_all_parameters_using_sch
     )
 
 
-def test_validate_serialization_and_deserialization_sdp_minimal_parameters_using_schema_class():
+def test_validate_serialization_and_deserialization_sdpconfiguration_minimal_parameters_using_schema_class():
     """
-    Verifies that the SDP schema marshal and Unmarshal works correctly with minimum parameters
+    Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly with minimum parameters
     """
     sdp_all_params_config = SDPConfigurationSchema().loads(VALID_SDP_MINIMAL_JSON_PI16)
     serialized_sdp_all_params_config = SDPConfigurationSchema().dumps(
@@ -862,7 +862,7 @@ def test_validate_serialization_and_deserialization_sdp_minimal_parameters_using
     )
 
 
-def test_validate_serialization_and_deserialization_scan_types_using_schema_class():
+def test_validate_serialization_and_deserialization_ebscantype_using_schema_class():
     """
     Verifies that the EBScanType schema marshal and Unmarshal works correctly
     """
@@ -884,9 +884,9 @@ def test_validate_serialization_and_deserialization_beams_vis0_using_schema_clas
     assert_json_is_equal(VALID_BEAMS_VIS0_JSON_PI16, serialized_scan_types_beams_config)
 
 
-def test_validate_serialization_and_deserialization_execution_block_using_schema_class():
+def test_validate_serialization_and_deserialization_executionblockconfiguration_using_schema_class():
     """
-    Verifies that the Execution Block schema marshal and Unmarshal works correctly
+    Verifies that the ExecutionBlockConfiguration schema marshal and Unmarshal works correctly
     """
     execution_block_config = ExecutionBlockConfigurationSchema().loads(
         VALID_EXECUTION_BLOCK_JSON_PI16
@@ -900,9 +900,9 @@ def test_validate_serialization_and_deserialization_execution_block_using_schema
     )
 
 
-def test_validate_serialization_and_deserialization_beams_using_schema_class():
+def test_validate_serialization_and_deserialization_beamconfiguration_using_schema_class():
     """
-    Verifies that the Beams schema marshal and Unmarshal works correctly
+    Verifies that the BeamConfiguration schema marshal and Unmarshal works correctly
     """
     beams_config = BeamConfigurationSchema(many=True).loads(VALID_BEAMS_JSON_PI16)
     serialized_beams_config = BeamConfigurationSchema(many=True).dumps(beams_config)
@@ -910,9 +910,9 @@ def test_validate_serialization_and_deserialization_beams_using_schema_class():
     assert_json_is_equal(VALID_BEAMS_JSON_PI16, serialized_beams_config)
 
 
-def test_validate_serialization_and_deserialization_channels_using_schema_class():
+def test_validate_serialization_and_deserialization_channelconfiguration_using_schema_class():
     """
-    Verifies that the Channels schema marshal and Unmarshal works correctly
+    Verifies that the ChannelConfiguration schema marshal and Unmarshal works correctly
     """
     channels_config = ChannelConfigurationSchema(many=True).loads(
         VALID_CHANNELS_JSON_PI16
@@ -924,10 +924,10 @@ def test_validate_serialization_and_deserialization_channels_using_schema_class(
     assert_json_is_equal(VALID_CHANNELS_JSON_PI16, serialized_field_config)
 
 
-def test_validate_serialization_and_deserialization_polarisation_using_schema_class():
+def test_validate_serialization_and_deserialization_polarisationconfiguration_using_schema_class():
 
     """
-    Verifies that the Polarisation schema marshal and Unmarshal works correctly
+    Verifies that the PolarisationConfiguration schema marshal and Unmarshal works correctly
     """
     polarisation_config = PolarisationConfigurationSchema(many=True).loads(
         VALID_POLARISATION_JSON_PI16
@@ -939,9 +939,9 @@ def test_validate_serialization_and_deserialization_polarisation_using_schema_cl
     assert_json_is_equal(VALID_POLARISATION_JSON_PI16, serialized_field_config)
 
 
-def test_validate_serialization_and_deserialization_fields_using_schema_class():
+def test_validate_serialization_and_deserialization_fieldconfiguration_using_schema_class():
     """
-    Verifies that the Fields schema marshal and Unmarshal works correctly
+    Verifies that the FieldConfiguration schema marshal and Unmarshal works correctly
     """
     fields_config = FieldConfigurationSchema(many=True).loads(VALID_FIELDS_JSON_PI16)
     serialized_field_config = FieldConfigurationSchema(many=True).dumps(fields_config)
@@ -949,9 +949,9 @@ def test_validate_serialization_and_deserialization_fields_using_schema_class():
     assert_json_is_equal(VALID_FIELDS_JSON_PI16, serialized_field_config)
 
 
-def test_validate_serialization_and_deserialization_resources_block_using_schema_class():
+def test_validate_serialization_and_deserialization_resourceconfiguration_using_schema_class():
     """
-    Verifies that the  Resource Block schema marshal and Unmarshal works correctly
+    Verifies that the  ResourceConfiguration schema marshal and Unmarshal works correctly
     """
     resources_config = ResourceConfigurationSchema().loads(VALID_RESOURCES_JSON_PI16)
     serialized_resource_config = ResourceConfigurationSchema().dumps(resources_config)
@@ -959,9 +959,9 @@ def test_validate_serialization_and_deserialization_resources_block_using_schema
     assert_json_is_equal(VALID_RESOURCES_JSON_PI16, serialized_resource_config)
 
 
-def test_validate_serialization_and_deserialization_processing_block_using_schema_class():
+def test_validate_serialization_and_deserialization_processingblock_using_schema_class():
     """
-    Verifies that the Processing Block schema marshal and Unmarshal works correctly
+    Verifies that the ProcessingBlock schema marshal and Unmarshal works correctly
     """
     processing_block_config = ProcessingBlockSchema(many=True).loads(
         VALID_PROCESSING_BLOCK_JSON_PI16
@@ -975,9 +975,9 @@ def test_validate_serialization_and_deserialization_processing_block_using_schem
     )
 
 
-def test_validate_serialization_and_deserialization_sdp_json_using_schema_class():
+def test_validate_serialization_and_deserialization_sdpconfiguration_json_using_schema_class():
     """
-    Verifies that the SDP schema marshal and Unmarshal works correctly
+    Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly
     """
 
     sdp_configuration_object = SDPConfigurationSchema().loads(VALID_SDP_JSON_PI16)

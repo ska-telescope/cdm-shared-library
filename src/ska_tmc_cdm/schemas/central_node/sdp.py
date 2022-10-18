@@ -27,7 +27,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
 from ska_tmc_cdm.schemas import CODEC
 
 __all__ = [
-    "EBScanTypechema",
+    "ScanTypeSchema",
     "SDPWorkflowSchema",
     "PbDependencySchema",
     "ChannelSchema",
@@ -91,7 +91,7 @@ class ChannelSchema(Schema):
         )
 
 
-class EBScanTypechema(Schema):
+class ScanTypeSchema(Schema):
     """
     Marshmallow schema for the ScanType class.
     """
@@ -199,7 +199,7 @@ class ScriptConfigurationSchema(Schema):
     @post_load
     def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfuguration object.
+        Convert parsed JSON back into a ScriptConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -234,7 +234,7 @@ class ProcessingBlockSchema(Schema):
     @post_load
     def create_processing_block_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a PB object.
+        Convert parsed JSON back into a ProcessingBlock object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -245,7 +245,7 @@ class ProcessingBlockSchema(Schema):
 
 class ResourceConfigurationSchema(Schema):
     """
-    Marsmallow class for the ResourceBlockConfiguration class
+    Marsmallow class for the ResourceConfiguration class
     """
 
     csp_links = fields.List(fields.Integer())
@@ -266,7 +266,7 @@ class ResourceConfigurationSchema(Schema):
     @post_load
     def create_resource_block_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfiguration object.
+        Convert parsed JSON back into a ResourceConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -300,7 +300,7 @@ class BeamConfigurationSchema(Schema):
     @post_load
     def create_beam_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfiguration object.
+        Convert parsed JSON back into a BeamConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -331,7 +331,7 @@ class ChannelConfigurationSchema(Schema):
     @post_load
     def create_channel_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfiguration object.
+        Convert parsed JSON back into a ChannelConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -362,7 +362,7 @@ class PolarisationConfigurationSchema(Schema):
     @post_load
     def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfiguration object.
+        Convert parsed JSON back into a PolarisationConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -395,7 +395,7 @@ class PhaseDirSchema(Schema):
     @post_load
     def create_phase_dir_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfiguration object.
+        Convert parsed JSON back into a PhaseDir object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -406,7 +406,7 @@ class PhaseDirSchema(Schema):
 
 class FieldConfigurationSchema(Schema):
     """
-    Marsmallow class for the PolarisationConfiguration class
+    Marsmallow class for the FieldConfiguration class
     """
 
     field_id = fields.String()
@@ -427,7 +427,7 @@ class FieldConfigurationSchema(Schema):
     @post_load
     def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfiguration object.
+        Convert parsed JSON back into a FieldConfiguration object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -457,9 +457,9 @@ class EBScanTypeBeamsSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_EBScanTypebeams_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_ebscantypebeams_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfiguration object.
+        Convert parsed JSON back into a EBScanTypeBeams object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -492,9 +492,9 @@ class EBScanTypeSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_EBScanType_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_ebscantype_config(self, data, **_):  # pylint: disable=no-self-use
         """
-        Convert parsed JSON back into a ExecutionBlockConfiguration object.
+        Convert parsed JSON back into a EBScanType object.
 
         :param data: Marshmallow-provided dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -506,7 +506,7 @@ class EBScanTypeSchema(Schema):
 
 class ExecutionBlockConfigurationSchema(Schema):
     """
-    Marsmallow class for the ExecutionBlockConfuguration class
+    Marsmallow class for the ExecutionBlockConfiguration class
     """
 
     eb_id = fields.String(data_key="eb_id")
@@ -552,7 +552,7 @@ class SDPConfigurationSchema(Schema):
 
     eb_id = fields.String(data_key="eb_id")
     max_length = fields.Float(data_key="max_length")
-    scan_types = fields.Nested(EBScanTypechema, many=True)
+    scan_types = fields.Nested(ScanTypeSchema, many=True)
     processing_blocks = fields.Nested(ProcessingBlockSchema, many=True)
     resources = fields.Nested(ResourceConfigurationSchema)
 
