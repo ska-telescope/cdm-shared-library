@@ -32,7 +32,18 @@ package ska_tmc_cdm.schemas {
 			resource assignment request
 		end note
 
-        class EBScanTypechema
+        class ScanTypeSchema
+        class ChannelSchema
+        class ExecutionBlockConfigurationSchema
+        class BeamConfigurationSchema
+        class ChannelConfigurationSchema
+        class PolarisationConfigurationSchema
+        class FieldConfigurationSchema
+        class PhaseDirSchema
+        class ResourceConfigurationSchema
+        class ScriptConfigurationSchema
+        class EBScanTypeBeamsSchema
+        class EBScanTypeSchema
 	}
 }
 
@@ -47,6 +58,17 @@ package ska_tmc_cdm.messages.central_node {
         class ProcessingBlockConfiguration
         class SDPConfiguration
         class MCCSAllocate
+        class Channel
+        class ExecutionBlockConfiguration
+        class BeamConfiguration
+        class ChannelConfiguration
+        class PolarisationConfiguration
+        class FieldConfiguration
+        class PhaseDir
+        class ResourceConfiguration
+        class ScriptConfiguration
+        class EBScanTypeBeams
+        class EBScanType
 	}
 
 	package release_resources.py <<Rectangle>> {
@@ -58,12 +80,22 @@ DishAllocationResponseSchema --- DishAllocation
 AssignResourcesRequestSchema --- AssignResourcesRequest
 AssignResourcesResponseSchema --- AssignResourcesResponse
 ReleaseResourcesRequestSchema --- ReleaseResourcesRequest
-EBScanTypechema --- ScanType
+ScanTypeSchema --- ScanType
 SDPWorkflowSchema --- SDPWorkflow
 PbDependencySchema --- PbDependency
 ProcessingBlockSchema --- ProcessingBlockConfiguration
 SdpConfigurationSchema --- SDPConfiguration
 MCCSAllocateSchema --- MCCSAllocate
-
+ChannelSchema --- Channel
+ExecutionBlockConfigurationSchema --- ExecutionBlockConfiguration
+BeamConfigurationSchema --- BeamConfiguration
+ChannelConfigurationSchema -- ChannelConfiguration
+PolarisationConfigurationSchema -- PolarisationConfiguration
+FieldConfigurationSchema --- FieldConfiguration
+PhaseDirSchema --- PhaseDir
+ResourceConfigurationSchema --- ResourceConfiguration
+ScriptConfigurationSchema --- ScriptConfiguration
+EBScanTypeBeamsSchema --- EBScanTypeBeams
+EBScanTypeSchema --- EBScanType
 
 @enduml
