@@ -8,6 +8,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ChannelConfiguration,
     EBScanType,
     EBScanTypeBeam,
+    ExecutionBlockConfiguration,
     FieldConfiguration,
     PbDependency,
     PhaseDir,
@@ -759,3 +760,110 @@ def test_PI_16_processing_block_not_equal_to_other_objects():
         "pb-mvp01-20200325-00001", {}, {}, [sbi_ids], script
     )
     assert p_block != 1
+
+
+def test_executionblockconfiguration_equals():
+    """
+    Verify that ExecutionBlockConfiguration objects are considered equal when they have:
+     - the same eb_id
+     - the same  max_length
+     - the same context
+     - the same beams
+     - the same channels
+     - the same polarisations
+     - the same fields
+     - the same scan_types
+    """
+    channel = Channel(
+        "fsp_2_channels",
+        744,
+        0,
+        2,
+        0.35e9,
+        0.368e9,
+        [[0, 0], [200, 1], [744, 2], [944, 3]],
+    )
+
+    beams = BeamConfiguration("pss1", 1, "pulsar search")
+    channels = ChannelConfiguration(
+        "vis_channels",
+        [channel],
+    )
+    polarisation = PolarisationConfiguration("all", ["XX", "XY", "YY", "YX"])
+    phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
+    fields = FieldConfiguration(
+        "field_a",
+        "low-tmc/telstate/0/pointing",
+        phasedir,
+    )
+
+    eb_scan_type1 = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+
+    execution_block1 = ExecutionBlockConfiguration(
+        "eb-mvp01-20200325-00001",
+        100,
+        {},
+        [beams],
+        [channels],
+        [polarisation],
+        [fields],
+        [eb_scan_type1],
+    )
+
+    execution_block2 = ExecutionBlockConfiguration(
+        "eb-mvp01-20200325-00001",
+        100,
+        {},
+        [beams],
+        [channels],
+        [polarisation],
+        [fields],
+        [eb_scan_type1],
+    )
+
+    assert execution_block1 == execution_block2
+
+
+def test_executionblock_not_equal_to_other_objects():
+    """
+    Verify that ExecutionBlockConfiguration  objects are not considered equal to objects of
+    other types.
+    """
+
+    channel = Channel(
+        "fsp_2_channels",
+        744,
+        0,
+        2,
+        0.35e9,
+        0.368e9,
+        [[0, 0], [200, 1], [744, 2], [944, 3]],
+    )
+
+    beams = BeamConfiguration("pss1", 1, "pulsar search")
+    channels = ChannelConfiguration(
+        "vis_channels",
+        [channel],
+    )
+    polarisation = PolarisationConfiguration("all", ["XX", "XY", "YY", "YX"])
+    phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
+    fields = FieldConfiguration(
+        "field_a",
+        "low-tmc/telstate/0/pointing",
+        phasedir,
+    )
+
+    eb_scan_type1 = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+
+    execution_block1 = ExecutionBlockConfiguration(
+        "eb-mvp01-20200325-00001",
+        100,
+        {},
+        [beams],
+        [channels],
+        [polarisation],
+        [fields],
+        [eb_scan_type1],
+    )
+
+    assert execution_block1 != 1
