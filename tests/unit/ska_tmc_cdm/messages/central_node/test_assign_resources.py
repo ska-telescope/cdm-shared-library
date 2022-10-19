@@ -264,20 +264,26 @@ def test_modified_assign_resources_request_eq():
     dish allocation are considered equal.
     """
     channel = Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        2,
-        0.35e9,
-        0.368e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=0.368e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
     )
-    scan_type = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    scan_type = EBScanType(
+        scan_type_id="science",
+        beams={"vis0": {"field_id": "field_a"}},
+        derive_from=".default",
+    )
     sbi_ids = "sbi-mvp01-20200325-00001"
-    script = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
+    script = ScriptConfiguration(
+        kind="realtime", name="test-receive-addresses", version="0.5.0"
+    )
     pb_config = ProcessingBlockConfiguration(
-        "pb-mvp01-20200325-00003",
-        {
+        pb_id="pb-mvp01-20200325-00003",
+        parameters={
             "plasmaEnabled": True,
             "reception": {
                 "layout": "http://127.0.0.1:80/model/default/ska1_low/layout",
@@ -324,38 +330,45 @@ def test_modified_assign_resources_request_eq():
                 ],
             },
         },
-        {},
-        [sbi_ids],
-        script,
+        sbi_ids=[sbi_ids],
+        script=script,
     )
-    beams = BeamConfiguration("pss1", 1, "pulsar search")
+    beams = BeamConfiguration(
+        beam_id="pss1", search_beam_id=1, function="pulsar search"
+    )
     channels = ChannelConfiguration(
-        "vis_channels",
-        [channel],
+        channels_id="vis_channels",
+        spectral_windows=[channel],
     )
-    polarisation = PolarisationConfiguration("all", ["XX", "XY", "YY", "YX"])
-    phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
+    polarisation = PolarisationConfiguration(
+        polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
+    )
+    phase_dir = PhaseDir(
+        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+    )
     fields = FieldConfiguration(
-        "field_a",
-        "low-tmc/telstate/0/pointing",
-        phasedir,
+        field_id="field_a",
+        pointing_fqdn="low-tmc/telstate/0/pointing",
+        phase_dir=phase_dir,
     )
 
     execution_block = ExecutionBlockConfiguration(
-        "eb-mvp01-20200325-00001",
-        100,
-        {},
-        [beams],
-        [channels],
-        [polarisation],
-        [fields],
-        [scan_type],
+        eb_id="eb-mvp01-20200325-00001",
+        max_length=100,
+        context={},
+        beams=[beams],
+        channels=[channels],
+        polarisations=[polarisation],
+        fields=[fields],
+        scan_types=[scan_type],
     )
-    resource = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
+    resource = ResourceConfiguration(
+        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
+    )
     sdp_config = SDPConfiguration(
-        resource,
-        [pb_config],
-        execution_block,
+        resources=resource,
+        processing_blocks=[pb_config],
+        execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
@@ -363,7 +376,7 @@ def test_modified_assign_resources_request_eq():
         1,
         dish_allocation=dish_allocation,
         sdp_config=sdp_config,
-        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
         transaction_id="txn-mvp01-20200325-00001",
     )
 
@@ -371,7 +384,7 @@ def test_modified_assign_resources_request_eq():
         1,
         dish_allocation=dish_allocation,
         sdp_config=sdp_config,
-        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
         transaction_id="txn-mvp01-20200325-00001",
     )
 
@@ -398,20 +411,26 @@ def test_modified_assign_resources_request_eq_with_other_objects():
     objects of other types.
     """
     channel = Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        2,
-        0.35e9,
-        0.368e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=0.368e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+    )
+    scan_type = EBScanType(
+        scan_type_id="science",
+        beams={"vis0": {"field_id": "field_a"}},
+        derive_from=".default",
     )
     sbi_ids = "sbi-mvp01-20200325-00001"
-    script = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
-    scan_type = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    script = ScriptConfiguration(
+        kind="realtime", name="test-receive-addresses", version="0.5.0"
+    )
     pb_config = ProcessingBlockConfiguration(
-        "pb-mvp01-20200325-00003",
-        {
+        pb_id="pb-mvp01-20200325-00003",
+        parameters={
             "plasmaEnabled": True,
             "reception": {
                 "layout": "http://127.0.0.1:80/model/default/ska1_low/layout",
@@ -458,43 +477,54 @@ def test_modified_assign_resources_request_eq_with_other_objects():
                 ],
             },
         },
-        {},
-        [sbi_ids],
-        script,
+        sbi_ids=[sbi_ids],
+        script=script,
     )
-    beams = BeamConfiguration("pss1", 1, "pulsar search")
+    beams = BeamConfiguration(
+        beam_id="pss1", search_beam_id=1, function="pulsar search"
+    )
     channels = ChannelConfiguration(
-        "vis_channels",
-        [channel],
+        channels_id="vis_channels",
+        spectral_windows=[channel],
     )
-    polarisation = PolarisationConfiguration("all", ["XX", "XY", "YY", "YX"])
-    phasedir = PhaseDir([123, 0.1], [123, 0.1], "...", "ICRF3")
+    polarisation = PolarisationConfiguration(
+        polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
+    )
+    phase_dir = PhaseDir(
+        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+    )
     fields = FieldConfiguration(
-        "field_a",
-        "low-tmc/telstate/0/pointing",
-        phasedir,
+        field_id="field_a",
+        pointing_fqdn="low-tmc/telstate/0/pointing",
+        phase_dir=phase_dir,
     )
 
     execution_block = ExecutionBlockConfiguration(
-        "eb-mvp01-20200325-00001",
-        100,
-        {},
-        [beams],
-        [channels],
-        [polarisation],
-        [fields],
-        [scan_type],
+        eb_id="eb-mvp01-20200325-00001",
+        max_length=100,
+        context={},
+        beams=[beams],
+        channels=[channels],
+        polarisations=[polarisation],
+        fields=[fields],
+        scan_types=[scan_type],
     )
-    resource = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
+    resource = ResourceConfiguration(
+        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
+    )
     sdp_config = SDPConfiguration(
-        resource,
-        [pb_config],
-        execution_block,
+        resources=resource,
+        processing_blocks=[pb_config],
+        execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = AssignResourcesRequest(
-        1, dish_allocation=dish_allocation, sdp_config=sdp_config
+        1,
+        dish_allocation=dish_allocation,
+        sdp_config=sdp_config,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
+        transaction_id="txn-mvp01-20200325-00001",
     )
     assert request != 1
     assert request != object()
