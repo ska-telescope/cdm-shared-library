@@ -433,7 +433,10 @@ class EBScanType:
     """
 
     def __init__(
-        self, scan_type_id: str = None, beams: Dict = None, derive_from: str = None
+        self,
+        scan_type_id: str = None,
+        beams: Dict[str, EBScanTypeBeam] = None,
+        derive_from: str = None,
     ) -> object:
         """
         Create a new EBScanType object.
