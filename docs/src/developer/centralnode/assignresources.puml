@@ -71,10 +71,10 @@ package ska_tmc_cdm.messages.central_node {
         }
         class EBScanType {
             scan_type_id: str,
-            beams: EBScanTypeBeam,
+            beams: Dict[str,EBScanTypeBeam],
             derive_from: str, 
         }
-        EBScanType  *-- "*" EBScanTypeBeam
+        EBScanType  *-- "1" EBScanTypeBeam
 
         class FieldConfiguration {
             field_id : str
@@ -82,7 +82,7 @@ package ska_tmc_cdm.messages.central_node {
             phase_dir : PhaseDir
         }
 
-        FieldConfiguration  *-- "*" PhaseDir
+        FieldConfiguration  *-- "1" PhaseDir
 
         class SDPWorkflow {
             name : str
@@ -106,7 +106,7 @@ package ska_tmc_cdm.messages.central_node {
         }
         ProcessingBlockConfiguration  *-- "1" SDPWorkflow
         ProcessingBlockConfiguration  *-- "*" PbDependency
-        ProcessingBlockConfiguration  *-- "*" ScriptConfiguration
+        ProcessingBlockConfiguration  *-- "1" ScriptConfiguration
 
         class ExecutionBlockConfiguration {
             eb_id: str,
@@ -116,12 +116,12 @@ package ska_tmc_cdm.messages.central_node {
             channels: List[ChannelConfiguration],
             polarisations: List[PolarisationConfiguration],
             fields: List[FieldConfiguration],
-            scan_types: EBScanType,
+            scan_types: List[EBScanType],
         }
 
-        ExecutionBlockConfiguration  *-- "1" BeamConfiguration
+        ExecutionBlockConfiguration  *-- "*" BeamConfiguration
         ExecutionBlockConfiguration  *-- "*" ChannelConfiguration
-        ExecutionBlockConfiguration  *-- "1" PolarisationConfiguration
+        ExecutionBlockConfiguration  *-- "*" PolarisationConfiguration
         ExecutionBlockConfiguration  *-- "*" FieldConfiguration
         ExecutionBlockConfiguration  *-- "*" EBScanType
 
@@ -133,8 +133,8 @@ package ska_tmc_cdm.messages.central_node {
         }
         SDPConfiguration *-- "*" ScanType
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
-        SDPConfiguration *-- "*" ExecutionBlockConfiguration
-        SDPConfiguration *-- "*" ResourceConfiguration
+        SDPConfiguration *-- "1" ExecutionBlockConfiguration
+        SDPConfiguration *-- "1" ResourceConfiguration
 
         class AssignResourcesRequest {
             interface : str
