@@ -16,6 +16,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
     ChannelConfiguration,
+    EBScanType,
     ExecutionBlockConfiguration,
     FieldConfiguration,
     PhaseDir,
@@ -23,6 +24,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ProcessingBlockConfiguration,
     ResourceConfiguration,
     ScanType,
+    ScriptConfiguration,
     SDPConfiguration,
     SDPWorkflow,
 )
@@ -256,9 +258,6 @@ def test_assign_resources_if_no_subarray_id_argument():
         _ = AssignResourcesRequest(dish_allocation=dish_allocation)
 
 
-# New modified JSO -> PI 16
-
-
 def test_modified_assign_resources_request_eq():
     """
     Verify that two AssignResource request objects for the same sub-array and
@@ -273,10 +272,61 @@ def test_modified_assign_resources_request_eq():
         0.368e9,
         [[0, 0], [200, 1], [744, 2], [944, 3]],
     )
-    scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
-    sdp_workflow = SDPWorkflow(name="vis_receive", kind="realtime", version="0.1.0")
+    scan_type = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
+    sbi_ids = "sbi-mvp01-20200325-00001"
+    script = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
     pb_config = ProcessingBlockConfiguration(
-        "pb-mvp01-20200325-00001", sdp_workflow, {}
+        "pb-mvp01-20200325-00003",
+        {
+            "plasmaEnabled": True,
+            "reception": {
+                "layout": "http://127.0.0.1:80/model/default/ska1_low/layout",
+                "num_channels": 13824,
+                "channels_per_stream": 6912,
+                "continuous_mode": True,
+                "transport_protocol": "tcp",
+            },
+            "pvc": {"name": "receive-data"},
+            "plasma_parameters": {
+                "initContainers": [
+                    {
+                        "name": "existing-output-remover",
+                        "image": "artefact.skao.int/ska-sdp-realtime-receive-modules:3.3.0",
+                        "command": ["rm", "-rf", "/mnt/data/output*.ms"],
+                        "volumeMounts": [
+                            {"mountPath": "/mnt/data", "name": "receive-data"}
+                        ],
+                    }
+                ],
+                "extraContainers": [
+                    {
+                        "name": "plasma-processor",
+                        "image": "artefact.skao.int/ska-sdp-realtime-receive-modules:3.3.0",
+                        "command": [
+                            "plasma-mswriter",
+                            "-s",
+                            "/plasma/socket",
+                            "--max_payloads",
+                            "12",
+                            "--use_plasmastman",
+                            "False",
+                            "/mnt/data/output.ms",
+                        ],
+                        "volumeMounts": [
+                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {"mountPath": "/mnt/data", "name": "receive-data"},
+                        ],
+                    },
+                    {
+                        "name": "tmlite-server",
+                        "image": "artefact.skao.int/ska-sdp-tmlite-server:0.3.0",
+                    },
+                ],
+            },
+        },
+        {},
+        [sbi_ids],
+        script,
     )
     beams = BeamConfiguration("pss1", 1, "pulsar search")
     channels = ChannelConfiguration(
@@ -299,13 +349,13 @@ def test_modified_assign_resources_request_eq():
         [channels],
         [polarisation],
         [fields],
-    )
-    sdp_config = SDPConfiguration(
-        "eb-mvp01-20200325-00001",
-        100.0,
         [scan_type],
+    )
+    resource = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
+    sdp_config = SDPConfiguration(
+        resource,
         [pb_config],
-        [execution_block],
+        execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
@@ -356,10 +406,61 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         0.368e9,
         [[0, 0], [200, 1], [744, 2], [944, 3]],
     )
-    scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
-    sdp_workflow = SDPWorkflow(name="vis_receive", kind="realtime", version="0.1.0")
+    sbi_ids = "sbi-mvp01-20200325-00001"
+    script = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
+    scan_type = EBScanType("science", {"vis0": {"field_id": "field_a"}}, ".default")
     pb_config = ProcessingBlockConfiguration(
-        "pb-mvp01-20200325-00001", sdp_workflow, {}
+        "pb-mvp01-20200325-00003",
+        {
+            "plasmaEnabled": True,
+            "reception": {
+                "layout": "http://127.0.0.1:80/model/default/ska1_low/layout",
+                "num_channels": 13824,
+                "channels_per_stream": 6912,
+                "continuous_mode": True,
+                "transport_protocol": "tcp",
+            },
+            "pvc": {"name": "receive-data"},
+            "plasma_parameters": {
+                "initContainers": [
+                    {
+                        "name": "existing-output-remover",
+                        "image": "artefact.skao.int/ska-sdp-realtime-receive-modules:3.3.0",
+                        "command": ["rm", "-rf", "/mnt/data/output*.ms"],
+                        "volumeMounts": [
+                            {"mountPath": "/mnt/data", "name": "receive-data"}
+                        ],
+                    }
+                ],
+                "extraContainers": [
+                    {
+                        "name": "plasma-processor",
+                        "image": "artefact.skao.int/ska-sdp-realtime-receive-modules:3.3.0",
+                        "command": [
+                            "plasma-mswriter",
+                            "-s",
+                            "/plasma/socket",
+                            "--max_payloads",
+                            "12",
+                            "--use_plasmastman",
+                            "False",
+                            "/mnt/data/output.ms",
+                        ],
+                        "volumeMounts": [
+                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {"mountPath": "/mnt/data", "name": "receive-data"},
+                        ],
+                    },
+                    {
+                        "name": "tmlite-server",
+                        "image": "artefact.skao.int/ska-sdp-tmlite-server:0.3.0",
+                    },
+                ],
+            },
+        },
+        {},
+        [sbi_ids],
+        script,
     )
     beams = BeamConfiguration("pss1", 1, "pulsar search")
     channels = ChannelConfiguration(
@@ -382,13 +483,11 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         [channels],
         [polarisation],
         [fields],
+        [scan_type],
     )
     resource = ResourceConfiguration([1, 2, 3, 4], ["FS4", "FS8"], 10)
     sdp_config = SDPConfiguration(
-        "eb-mvp01-20200325-00001",
-        100.0,
         resource,
-        [scan_type],
         [pb_config],
         execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",

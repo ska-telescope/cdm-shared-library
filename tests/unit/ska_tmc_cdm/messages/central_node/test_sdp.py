@@ -614,3 +614,148 @@ def test_scripts_equals_not_equal_to_other_objects():
     """
     script = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
     assert script != 1
+
+
+def test_PI16_processing_block_equals():
+    """
+    Verify that PI16 ProcessingBlock objects are considered equal
+    """
+    sbi_ids = "sbi-mvp01-20200325-00001"
+    script = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
+    pb1 = ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00003",
+        {
+            "plasmaEnabled": True,
+            "reception": {
+                "layout": "http://127.0.0.1:80/model/default/ska1_low/layout",
+                "num_channels": 13824,
+                "channels_per_stream": 6912,
+                "continuous_mode": True,
+                "transport_protocol": "tcp",
+            },
+            "pvc": {"name": "receive-data"},
+            "plasma_parameters": {
+                "initContainers": [
+                    {
+                        "name": "existing-output-remover",
+                        "image": "artefact.skao.int/ska-sdp-realtime-receive-modules:3.3.0",
+                        "command": ["rm", "-rf", "/mnt/data/output*.ms"],
+                        "volumeMounts": [
+                            {"mountPath": "/mnt/data", "name": "receive-data"}
+                        ],
+                    }
+                ],
+                "extraContainers": [
+                    {
+                        "name": "plasma-processor",
+                        "image": "artefact.skao.int/ska-sdp-realtime-receive-modules:3.3.0",
+                        "command": [
+                            "plasma-mswriter",
+                            "-s",
+                            "/plasma/socket",
+                            "--max_payloads",
+                            "12",
+                            "--use_plasmastman",
+                            "False",
+                            "/mnt/data/output.ms",
+                        ],
+                        "volumeMounts": [
+                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {"mountPath": "/mnt/data", "name": "receive-data"},
+                        ],
+                    },
+                    {
+                        "name": "tmlite-server",
+                        "image": "artefact.skao.int/ska-sdp-tmlite-server:0.3.0",
+                    },
+                ],
+            },
+        },
+        {},
+        [sbi_ids],
+        script,
+    )
+    pb2 = ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00003",
+        {
+            "plasmaEnabled": True,
+            "reception": {
+                "layout": "http://127.0.0.1:80/model/default/ska1_low/layout",
+                "num_channels": 13824,
+                "channels_per_stream": 6912,
+                "continuous_mode": True,
+                "transport_protocol": "tcp",
+            },
+            "pvc": {"name": "receive-data"},
+            "plasma_parameters": {
+                "initContainers": [
+                    {
+                        "name": "existing-output-remover",
+                        "image": "artefact.skao.int/ska-sdp-realtime-receive-modules:3.3.0",
+                        "command": ["rm", "-rf", "/mnt/data/output*.ms"],
+                        "volumeMounts": [
+                            {"mountPath": "/mnt/data", "name": "receive-data"}
+                        ],
+                    }
+                ],
+                "extraContainers": [
+                    {
+                        "name": "plasma-processor",
+                        "image": "artefact.skao.int/ska-sdp-realtime-receive-modules:3.3.0",
+                        "command": [
+                            "plasma-mswriter",
+                            "-s",
+                            "/plasma/socket",
+                            "--max_payloads",
+                            "12",
+                            "--use_plasmastman",
+                            "False",
+                            "/mnt/data/output.ms",
+                        ],
+                        "volumeMounts": [
+                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {"mountPath": "/mnt/data", "name": "receive-data"},
+                        ],
+                    },
+                    {
+                        "name": "tmlite-server",
+                        "image": "artefact.skao.int/ska-sdp-tmlite-server:0.3.0",
+                    },
+                ],
+            },
+        },
+        {},
+        [sbi_ids],
+        script,
+    )
+
+    assert pb1 == pb2
+
+    assert pb1 != ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00001", {}, {}, [sbi_ids], script
+    )
+    assert pb1 != ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00003", None, {}, [sbi_ids], script
+    )
+    assert pb1 != ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00003", {}, None, [sbi_ids], script
+    )
+    assert pb1 != ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00003", {}, {}, None, script
+    )
+    assert pb1 != ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00003", {}, {}, [sbi_ids], None
+    )
+
+
+def test_PI_16_processing_block_not_equal_to_other_objects():
+    """
+    Verify that PI16 ProcessingBlock objects are not considered equal to objects of
+    other types.
+    """
+    sbi_ids = "sbi-mvp01-20200325-00001"
+    script = ScriptConfiguration("realtime", "test-receive-addresses", "0.5.0")
+    p_block = ProcessingBlockConfiguration(
+        "pb-mvp01-20200325-00001", {}, {}, [sbi_ids], script
+    )
+    assert p_block != 1
