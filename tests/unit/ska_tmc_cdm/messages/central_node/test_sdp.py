@@ -14,7 +14,6 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     PhaseDir,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
-    ResourceConfiguration,
     ScanType,
     ScriptConfiguration,
     SDPConfiguration,
@@ -404,9 +403,11 @@ def test_sdp_modified_configuration_block_equals():
         fields=[fields],
         scan_types=[scan_type],
     )
-    resource = ResourceConfiguration(
-        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
-    )
+    resource = {
+        "csp_links": [1, 2, 3, 4],
+        "receptors": ["FS4", "FS8"],
+        "receive_nodes": 10,
+    }
 
     sdp1 = SDPConfiguration(
         resources=resource,
@@ -541,9 +542,11 @@ def test_sdp_modified_configuration_not_equal_to_other_objects():
         fields=[fields],
         scan_types=[scan_type],
     )
-    resource = ResourceConfiguration(
-        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
-    )
+    resource = {
+        "csp_links": [1, 2, 3, 4],
+        "receptors": ["FS4", "FS8"],
+        "receive_nodes": 10,
+    }
     sdp = SDPConfiguration(
         resources=resource,
         processing_blocks=[pb_config],
@@ -768,43 +771,7 @@ def test_field_equals_not_equal_to_other_objects():
     assert field != 1
 
 
-def test_resource_equals():
-    """
-    Verify that Resource Configuration objects are considered equal when they have:
-     - the same csp_links
-     - the same receptors
-     - the same receiver_nodes
-    """
-    resource1 = ResourceConfiguration(
-        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
-    )
-    resource2 = ResourceConfiguration(
-        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
-    )
-
-    assert resource1 == resource2
-
-    assert resource1 != ResourceConfiguration(
-        csp_links=[1, 2, 3], receptors=["FS4", "FS8"], receive_nodes=10
-    )
-    assert resource2 != ResourceConfiguration(
-        csp_links=[1, 2, 3], receptors=["FS4", "FS8"], receive_nodes=10
-    )
-
-
-def test_resource_equals_not_equal_to_other_objects():
-
-    """
-    Verify that Resource Configuration objects are not considered equal to objects of
-    other types.
-    """
-    resource = ResourceConfiguration(
-        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
-    )
-    assert resource != 1
-
-
-def test_ebscantype_equals():
+def test_eb_scan_type_equals():
     """
     Verify that EBScanType objects are considered equal when they have:
      - the same scan_type_id
@@ -835,7 +802,7 @@ def test_ebscantype_equals():
     )
 
 
-def test_ebscantype_equals_not_equal_to_other_objects():
+def test_eb_scan_type_equals_not_equal_to_other_objects():
 
     """
     Verify that EBScanType objects are not considered equal to objects of
@@ -850,7 +817,7 @@ def test_ebscantype_equals_not_equal_to_other_objects():
     assert eb_scan_type1 != 1
 
 
-def test_ebscantypebeam_equals():
+def test_eb_scan_type_beam_equals():
     """
     Verify that EBScanTypeBeam objects are considered equal when they have:
      - the same field_id
@@ -874,7 +841,7 @@ def test_ebscantypebeam_equals():
     )
 
 
-def test_ebscantypebeam_equals_not_equal_to_other_objects():
+def test_eb_scan_type_beam_equals_not_equal_to_other_objects():
 
     """
     Verify that EBScanTypeBeam objects are not considered equal to objects of
@@ -922,7 +889,7 @@ def test_scripts_equals_not_equal_to_other_objects():
     assert script != 1
 
 
-def test_PI16_processing_block_equals():
+def test_pi_16_processing_block_equals():
     """
     Verify that PI16 ProcessingBlock objects are considered equal
     """
@@ -1144,7 +1111,7 @@ def test_PI16_processing_block_equals():
     )
 
 
-def test_PI_16_processing_block_not_equal_to_other_objects():
+def test_pi_16_processing_block_not_equal_to_other_objects():
     """
     Verify that PI16 ProcessingBlock objects are not considered equal to objects of
     other types.
@@ -1209,7 +1176,7 @@ def test_PI_16_processing_block_not_equal_to_other_objects():
     assert p_block != 1
 
 
-def test_executionblockconfiguration_equals():
+def test_execution_block_configuration_equals():
     """
     Verify that ExecutionBlockConfiguration objects are considered equal when they have:
      - the same eb_id
@@ -1298,7 +1265,7 @@ def test_executionblockconfiguration_equals():
     )
 
 
-def test_executionblock_not_equal_to_other_objects():
+def test_execution_block_not_equal_to_other_objects():
     """
     Verify that ExecutionBlockConfiguration  objects are not considered equal to objects of
     other types.

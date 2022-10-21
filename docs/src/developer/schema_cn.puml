@@ -40,7 +40,6 @@ package ska_tmc_cdm.schemas {
         class PolarisationConfigurationSchema
         class FieldConfigurationSchema
         class PhaseDirSchema
-        class ResourceConfigurationSchema
         class ScriptConfigurationSchema
         class EBScanTypeBeamSchema
         class EBScanTypeSchema
@@ -65,7 +64,6 @@ package ska_tmc_cdm.messages.central_node {
         class PolarisationConfiguration
         class FieldConfiguration
         class PhaseDir
-        class ResourceConfiguration
         class ScriptConfiguration
         class EBScanTypeBeam
         class EBScanType
@@ -93,7 +91,6 @@ ChannelConfigurationSchema -- ChannelConfiguration
 PolarisationConfigurationSchema -- PolarisationConfiguration
 FieldConfigurationSchema --- FieldConfiguration
 PhaseDirSchema --- PhaseDir
-ResourceConfigurationSchema --- ResourceConfiguration
 ScriptConfigurationSchema --- ScriptConfiguration
 EBScanTypeBeamSchema --- EBScanTypeBeam
 EBScanTypeSchema --- EBScanType

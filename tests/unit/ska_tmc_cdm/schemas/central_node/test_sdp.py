@@ -7,7 +7,6 @@ from ska_tmc_cdm.schemas.central_node.sdp import (
     FieldConfigurationSchema,
     PolarisationConfigurationSchema,
     ProcessingBlockSchema,
-    ResourceConfigurationSchema,
     SDPConfigurationSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
@@ -947,16 +946,6 @@ def test_validate_serialization_and_deserialization_fieldconfiguration_using_sch
     serialized_field_config = FieldConfigurationSchema(many=True).dumps(fields_config)
 
     assert_json_is_equal(VALID_FIELDS_JSON_PI16, serialized_field_config)
-
-
-def test_validate_serialization_and_deserialization_resourceconfiguration_using_schema_class():
-    """
-    Verifies that the  ResourceConfiguration schema marshal and Unmarshal works correctly
-    """
-    resources_config = ResourceConfigurationSchema().loads(VALID_RESOURCES_JSON_PI16)
-    serialized_resource_config = ResourceConfigurationSchema().dumps(resources_config)
-
-    assert_json_is_equal(VALID_RESOURCES_JSON_PI16, serialized_resource_config)
 
 
 def test_validate_serialization_and_deserialization_processingblock_using_schema_class():

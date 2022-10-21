@@ -35,11 +35,7 @@ package ska_tmc_cdm.messages.central_node {
             pb_id : str
             kind : List[str]
         }
-         class ResourceConfiguration {
-            csp_links: List, 
-            receptors: List,
-            receive_nodes: int
-        }
+
 
         class PhaseDir {
             ra: List,
@@ -66,7 +62,7 @@ package ska_tmc_cdm.messages.central_node {
         }
         class EBScanTypeBeam {
             field_id: str,
-            channels_id: Dict, 
+            channels_id: str,
             polarisations_id: str, 
         }
         class EBScanType {
@@ -78,7 +74,7 @@ package ska_tmc_cdm.messages.central_node {
 
         class FieldConfiguration {
             field_id : str
-            pointing_fqdn : List[str],
+            pointing_fqdn : str,
             phase_dir : PhaseDir
         }
 
@@ -129,12 +125,12 @@ package ska_tmc_cdm.messages.central_node {
         class SDPConfiguration {
             eb_id : str
             max_length : float
+            resources : Dict
             interface : str
         }
         SDPConfiguration *-- "*" ScanType
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
         SDPConfiguration *-- "1" ExecutionBlockConfiguration
-        SDPConfiguration *-- "1" ResourceConfiguration
 
         class AssignResourcesRequest {
             interface : str

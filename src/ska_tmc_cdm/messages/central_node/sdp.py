@@ -18,7 +18,6 @@ __all__ = [
     "FieldConfiguration",
     "ScriptConfiguration",
     "ExecutionBlockConfiguration",
-    "ResourceConfiguration",
     "ScriptConfiguration",
     "EBScanTypeBeam",
     "EBScanType",
@@ -510,35 +509,6 @@ class ExecutionBlockConfiguration:
         )
 
 
-class ResourceConfiguration:
-    """
-    Class to hold Resource configuration
-    """
-
-    def __init__(
-        self, csp_links: List = None, receptors: List = None, receive_nodes: int = None
-    ) -> object:
-        """
-        Create a new ResourceConfiguration object.
-
-        :param csp_links: csp_links
-        :param receptors: receptors
-        :param receive_nodes: receive_nodes
-        """
-        self.csp_links = csp_links
-        self.receptors = receptors
-        self.receive_nodes = receive_nodes
-
-    def __eq__(self, other):
-        if not isinstance(other, ResourceConfiguration):
-            return False
-        return (
-            self.csp_links == other.csp_links
-            and self.receptors == other.receptors
-            and self.receive_nodes == other.receive_nodes
-        )
-
-
 class SDPConfiguration:
     """
     Class to hold SDP Configuration
@@ -551,7 +521,7 @@ class SDPConfiguration:
         scan_types: List[ScanType] = None,
         processing_blocks: List[ProcessingBlockConfiguration] = None,
         execution_block: ExecutionBlockConfiguration = None,
-        resources: ResourceConfiguration = None,
+        resources: Dict = None,
         interface: str = None,
     ) -> object:
 

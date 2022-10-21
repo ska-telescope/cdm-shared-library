@@ -18,7 +18,6 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     PhaseDir,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
-    ResourceConfiguration,
     ScanType,
     ScriptConfiguration,
     SDPConfiguration,
@@ -39,7 +38,6 @@ __all__ = [
     "PolarisationConfigurationSchema",
     "FieldConfigurationSchema",
     "PhaseDirSchema",
-    "ResourceConfigurationSchema",
     "ScriptConfigurationSchema",
     "EBScanTypeBeamSchema",
     "EBScanTypeSchema",
@@ -241,38 +239,6 @@ class ProcessingBlockSchema(Schema):
         :return: PB object populated from data
         """
         return ProcessingBlockConfiguration(**data)
-
-
-class ResourceConfigurationSchema(Schema):
-    """
-    Marsmallow class for the ResourceConfiguration class
-    """
-
-    csp_links = fields.List(fields.Integer())
-    receptors = fields.List(fields.String())
-    receive_nodes = fields.Integer()
-
-    @post_dump
-    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Filter out null values from JSON.
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for PB configuration
-        """
-        return {k: v for k, v in data.items() if v is not None}
-
-    @post_load
-    def create_resource_block_config(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Convert parsed JSON back into a ResourceConfiguration object.
-
-        :param data: Marshmallow-provided dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-        :return: SDPConfiguration object populated from data
-        """
-        return ResourceConfiguration(**data)
 
 
 class BeamConfigurationSchema(Schema):
@@ -554,7 +520,7 @@ class SDPConfigurationSchema(Schema):
     max_length = fields.Float(data_key="max_length")
     scan_types = fields.Nested(ScanTypeSchema, many=True)
     processing_blocks = fields.Nested(ProcessingBlockSchema, many=True)
-    resources = fields.Nested(ResourceConfigurationSchema)
+    resources = fields.Dict()
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use

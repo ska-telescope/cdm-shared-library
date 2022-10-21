@@ -22,7 +22,6 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     PhaseDir,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
-    ResourceConfiguration,
     ScanType,
     ScriptConfiguration,
     SDPConfiguration,
@@ -362,9 +361,11 @@ def test_modified_assign_resources_request_eq():
         fields=[fields],
         scan_types=[scan_type],
     )
-    resource = ResourceConfiguration(
-        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
-    )
+    resource = {
+        "csp_links": [1, 2, 3, 4],
+        "receptors": ["FS4", "FS8"],
+        "receive_nodes": 10,
+    }
     sdp_config = SDPConfiguration(
         resources=resource,
         processing_blocks=[pb_config],
@@ -509,9 +510,11 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         fields=[fields],
         scan_types=[scan_type],
     )
-    resource = ResourceConfiguration(
-        csp_links=[1, 2, 3, 4], receptors=["FS4", "FS8"], receive_nodes=10
-    )
+    resource = {
+        "csp_links": [1, 2, 3, 4],
+        "receptors": ["FS4", "FS8"],
+        "receive_nodes": 10,
+    }
     sdp_config = SDPConfiguration(
         resources=resource,
         processing_blocks=[pb_config],
