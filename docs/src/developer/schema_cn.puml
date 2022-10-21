@@ -33,6 +33,16 @@ package ska_tmc_cdm.schemas {
 		end note
 
         class ScanTypeSchema
+        class ChannelSchema
+        class ExecutionBlockConfigurationSchema
+        class BeamConfigurationSchema
+        class ChannelConfigurationSchema
+        class PolarisationConfigurationSchema
+        class FieldConfigurationSchema
+        class PhaseDirSchema
+        class ScriptConfigurationSchema
+        class EBScanTypeBeamSchema
+        class EBScanTypeSchema
 	}
 }
 
@@ -47,6 +57,16 @@ package ska_tmc_cdm.messages.central_node {
         class ProcessingBlockConfiguration
         class SDPConfiguration
         class MCCSAllocate
+        class Channel
+        class ExecutionBlockConfiguration
+        class BeamConfiguration
+        class ChannelConfiguration
+        class PolarisationConfiguration
+        class FieldConfiguration
+        class PhaseDir
+        class ScriptConfiguration
+        class EBScanTypeBeam
+        class EBScanType
 	}
 
 	package release_resources.py <<Rectangle>> {
@@ -64,6 +84,15 @@ PbDependencySchema --- PbDependency
 ProcessingBlockSchema --- ProcessingBlockConfiguration
 SdpConfigurationSchema --- SDPConfiguration
 MCCSAllocateSchema --- MCCSAllocate
-
+ChannelSchema --- Channel
+ExecutionBlockConfigurationSchema --- ExecutionBlockConfiguration
+BeamConfigurationSchema --- BeamConfiguration
+ChannelConfigurationSchema -- ChannelConfiguration
+PolarisationConfigurationSchema -- PolarisationConfiguration
+FieldConfigurationSchema --- FieldConfiguration
+PhaseDirSchema --- PhaseDir
+ScriptConfigurationSchema --- ScriptConfiguration
+EBScanTypeBeamSchema --- EBScanTypeBeam
+EBScanTypeSchema --- EBScanType
 
 @enduml

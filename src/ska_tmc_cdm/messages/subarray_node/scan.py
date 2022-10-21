@@ -12,7 +12,7 @@ __all__ = ["ScanRequest"]
 # which will become the single schema for SubArrayNode.Scan and probably be
 # renamed SCHEMA rather than SCHEMA at that point.
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-scan/2.0"
-MID_SCHEMA = "https://schema.skao.int/ska-tmc-scan/2.0"
+MID_SCHEMA = "https://schema.skao.int/ska-tmc-scan/2.1"
 
 
 class ScanRequest:  # pylint: disable=too-few-public-methods

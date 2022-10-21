@@ -14,7 +14,7 @@ from .. import utils
 
 VALID_MID_PARTIAL_RELEASE_JSON = """
 {
-    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "transaction_id": "txn-blah-blah-00001",
     "subarray_id": 1, 
     "receptor_ids": ["0001", "0002"]
@@ -22,7 +22,7 @@ VALID_MID_PARTIAL_RELEASE_JSON = """
 """
 
 VALID_MID_PARTIAL_RELEASE_OBJECT = ReleaseResourcesRequest(
-    interface="https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     transaction_id="txn-blah-blah-00001",
     subarray_id=1,
     dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
@@ -30,21 +30,21 @@ VALID_MID_PARTIAL_RELEASE_OBJECT = ReleaseResourcesRequest(
 
 VALID_MID_FULL_RELEASE_JSON = """
 {
-    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "subarray_id": 1,
     "release_all": true
 }
 """
 
 VALID_MID_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
-    interface="https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     subarray_id=1,
     release_all=True,
 )
 
 # mixed partial / full request, used to test which params are ignored
 VALID_MID_MIXED_ARGS_OBJECT = ReleaseResourcesRequest(
-    interface="https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     subarray_id=1,
     release_all=True,
     dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
