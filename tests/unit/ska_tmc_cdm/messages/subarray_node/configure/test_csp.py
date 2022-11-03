@@ -45,36 +45,33 @@ CSP_CONFIGURATION_ARGS_PI16 = dict(
     ),
     pss_config={},
     pst_config={},
-    cbf_config=CBFConfiguration(fsp_configs=
-    [
-        FSPConfiguration(
-            fsp_id=1,
-            function_mode=FSPFunctionMode.CORR,
-            frequency_slice_id=1,
-            integration_factor=1,
-            zoom_factor=0,
-            channel_averaging_map=[(0, 2), (744, 0)],
-            channel_offset=0,
-            output_link_map=[(0, 0), (200, 1)],
-        ),
-        FSPConfiguration(
-            fsp_id=2,
-            function_mode=FSPFunctionMode.CORR,
-            frequency_slice_id=2,
-            integration_factor=1,
-            zoom_factor=1,
-            channel_averaging_map=[(0, 2), (744, 0)],
-            channel_offset=744,
-            output_link_map=[(0, 4), (200, 5)],
-            zoom_window_tuning=650000,
-        ),
-    ],
+    cbf_config=CBFConfiguration(
+        fsp_configs=[
+            FSPConfiguration(
+                fsp_id=1,
+                function_mode=FSPFunctionMode.CORR,
+                frequency_slice_id=1,
+                integration_factor=1,
+                zoom_factor=0,
+                channel_averaging_map=[(0, 2), (744, 0)],
+                channel_offset=0,
+                output_link_map=[(0, 0), (200, 1)],
+            ),
+            FSPConfiguration(
+                fsp_id=2,
+                function_mode=FSPFunctionMode.CORR,
+                frequency_slice_id=2,
+                integration_factor=1,
+                zoom_factor=1,
+                channel_averaging_map=[(0, 2), (744, 0)],
+                channel_offset=744,
+                output_link_map=[(0, 4), (200, 5)],
+                zoom_window_tuning=650000,
+            ),
+        ],
         vlbi_config={},
     ),
 )
-
-
-
 
 
 def test_common_configuration_equals():
@@ -258,13 +255,10 @@ def test_csp_configuration_not_equal_to_other_objects():
     assert o != 1
 
 
-
-
-
 def test_csp_configuration_objects_are_equal_pi16():
     """
-        Verify that CSPConfiguration objects are considered equal when all
-        attributes are equal.
+    Verify that CSPConfiguration objects are considered equal when all
+    attributes are equal.
     """
 
     csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI16)
@@ -273,26 +267,23 @@ def test_csp_configuration_objects_are_equal_pi16():
     assert csp_obj_1 == csp_obj_2
 
     alt_csp_configuration_csp_2_0_args = CSP_CONFIGURATION_ARGS_PI16.copy()
-    alt_csp_configuration_csp_2_0_args["interface"] = "Changing interface value for creating object with different value"
+    alt_csp_configuration_csp_2_0_args[
+        "interface"
+    ] = "Changing interface value for creating object with different value"
 
     csp_obj_3 = CSPConfiguration(**alt_csp_configuration_csp_2_0_args)
 
     assert csp_obj_1 != csp_obj_3
 
 
-
-
-
 def test_csp_configuration_not_equal_to_other_objects_pi16():
     """
-        Verify that CSPConfiguration objects are not considered equal to objects
-        of other types.
+    Verify that CSPConfiguration objects are not considered equal to objects
+    of other types.
     """
     csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI16)
 
     assert csp_obj_1 != 1
-
-
 
 
 def test_fsp_id_range():

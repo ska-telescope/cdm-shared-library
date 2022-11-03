@@ -118,8 +118,8 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
         ),
-        cbf_config=CBFConfiguration(fsp_configs=
-            [
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
                 FSPConfiguration(
                     1,
                     FSPFunctionMode.CORR,
@@ -350,16 +350,10 @@ VALID_MID_CONFIGURE_JSON_PI16 = """
           "zoom_window_tuning": 650000
         }
       ],
-      "vlbi": {
-  
-      }
+      "vlbi": {}
     },
-    "pss": {
-  
-    },
-    "pst": {
-  
-    }
+    "pss": {},
+    "pst": {}
   },
   "sdp": {
     "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
@@ -394,10 +388,10 @@ VALID_MID_CONFIGURE_OBJECT_PI16 = ConfigureRequest(
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
         ),
-        pss_config = {},
-        pst_config= {},
-        cbf_config=CBFConfiguration(fsp_configs=
-            [
+        pss_config={},
+        pst_config={},
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
                 FSPConfiguration(
                     fsp_id=1,
                     function_mode=FSPFunctionMode.CORR,
@@ -475,11 +469,15 @@ def test_configure_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json
     )
 
+
 def test_configure_serialisation_and_validation_pi16():
     """
-        Verifies that the ConfigurationRequest schema marshals, unmarshals, and validates correctly.
+    Verifies that the ConfigurationRequest schema marshals, unmarshals, and validates correctly.
     """
     utils.test_schema_serialisation_and_validation(
-         schema_cls=ConfigureRequestSchema, instance=VALID_MID_CONFIGURE_OBJECT_PI16, modifier_fn=None, valid_json=VALID_MID_CONFIGURE_JSON_PI16, invalid_json=None
-     )
-
+        schema_cls=ConfigureRequestSchema,
+        instance=VALID_MID_CONFIGURE_OBJECT_PI16,
+        modifier_fn=None,
+        valid_json=VALID_MID_CONFIGURE_JSON_PI16,
+        invalid_json=None,
+    )

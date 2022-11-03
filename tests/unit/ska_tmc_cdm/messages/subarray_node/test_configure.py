@@ -3,6 +3,7 @@ Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
 import copy
 from datetime import timedelta
+
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
@@ -29,7 +30,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 
-
 CONFIGURE_OBJECT_ARGS_PI16 = dict(
     interface="https://schema.skao.int/ska-tmc-configure/2.1",
     transaction_id="txn-....-00001",
@@ -53,10 +53,10 @@ CONFIGURE_OBJECT_ARGS_PI16 = dict(
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
         ),
-        pss_config = {},
-        pst_config= {},
-        cbf_config=CBFConfiguration(fsp_configs=
-            [
+        pss_config={},
+        pst_config={},
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
                 FSPConfiguration(
                     fsp_id=1,
                     function_mode=FSPFunctionMode.CORR,
@@ -84,6 +84,7 @@ CONFIGURE_OBJECT_ARGS_PI16 = dict(
     ),
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
+
 
 def test_configure_request_eq():
     """
@@ -262,13 +263,10 @@ def test_configure_request_mccs_independence():
     #     )
 
 
-
-
-
 def test_csp_configuration_equals_pi16():
     """
-        Verify that CSPConfiguration objects are considered equal when all
-        attributes are equal.
+    Verify that CSPConfiguration objects are considered equal when all
+    attributes are equal.
     """
 
     configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI16)
@@ -277,20 +275,19 @@ def test_csp_configuration_equals_pi16():
     assert configure_request_obj_1 == configure_request_obj_2
 
     alt_csp_configuration_csp_2_0_args = CONFIGURE_OBJECT_ARGS_PI16.copy()
-    alt_csp_configuration_csp_2_0_args["interface"] = "Changing interface value for creating object with different value"
+    alt_csp_configuration_csp_2_0_args[
+        "interface"
+    ] = "Changing interface value for creating object with different value"
 
     configure_request_obj_3 = ConfigureRequest(**alt_csp_configuration_csp_2_0_args)
 
     assert configure_request_obj_1 != configure_request_obj_3
 
 
-
-
-
 def test_csp_configuration_not_equal_to_other_objects_pi16():
     """
-        Verify that CSPConfiguration objects are not considered equal to objects
-        of other types.
+    Verify that CSPConfiguration objects are not considered equal to objects
+    of other types.
     """
     configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI16)
 
