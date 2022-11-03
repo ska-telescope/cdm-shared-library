@@ -18,6 +18,127 @@ from ska_tmc_cdm.schemas.subarray_node.configure import (
     FSPConfigurationSchema,
 )
 
+from ... import utils
+
+VALID_CSP_JSON_PI16= """{
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+        "subarray_name": "science period 23"
+    },
+    "common": {
+        "config_id": "sbi-mvp01-20200325-00001-science_A",
+        "frequency_band": "1",
+        "subarray_id": 1
+    },
+    "cbf": {
+        "fsp": [
+            {
+                "fsp_id": 1,
+                "function_mode": "CORR",
+                "frequency_slice_id": 1,
+                "integration_factor": 1,
+                "zoom_factor": 0,
+                "channel_averaging_map": [
+                    [
+                        0,
+                        2
+                    ],
+                    [
+                        744,
+                        0
+                    ]
+                ],
+                "channel_offset": 0,
+                "output_link_map": [
+                    [
+                        0,
+                        0
+                    ],
+                    [
+                        200,
+                        1
+                    ]
+                ]
+            },
+            {
+                "fsp_id": 2,
+                "function_mode": "CORR",
+                "frequency_slice_id": 2,
+                "integration_factor": 1,
+                "zoom_factor": 1,
+                "channel_averaging_map": [
+                    [
+                        0,
+                        2
+                    ],
+                    [
+                        744,
+                        0
+                    ]
+                ],
+                "channel_offset": 744,
+                "output_link_map": [
+                    [
+                        0,
+                        4
+                    ],
+                    [
+                        200,
+                        5
+                    ]
+                ],
+                "zoom_window_tuning": 650000
+            }
+        ],
+        "vlbi": {
+
+        }
+    },
+    "pss": {
+
+    },
+    "pst": {
+
+    }
+}"""
+
+CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
+    interface="https://schema.skao.int/ska-csp-configure/2.0",
+    subarray_config=SubarrayConfiguration("science period 23"),
+    common_config=CommonConfiguration(
+        config_id="sbi-mvp01-20200325-00001-science_A",
+        frequency_band=ReceiverBand.BAND_1,
+        subarray_id=1,
+    ),
+    pss_config={},
+    pst_config={},
+    cbf_config=CBFConfiguration(fsp_configs=
+    [
+        FSPConfiguration(
+            fsp_id=1,
+            function_mode=FSPFunctionMode.CORR,
+            frequency_slice_id=1,
+            integration_factor=1,
+            zoom_factor=0,
+            channel_averaging_map=[(0, 2), (744, 0)],
+            channel_offset=0,
+            output_link_map=[(0, 0), (200, 1)],
+        ),
+        FSPConfiguration(
+            fsp_id=2,
+            function_mode=FSPFunctionMode.CORR,
+            frequency_slice_id=2,
+            integration_factor=1,
+            zoom_factor=1,
+            channel_averaging_map=[(0, 2), (744, 0)],
+            channel_offset=744,
+            output_link_map=[(0, 4), (200, 5)],
+            zoom_window_tuning=650000,
+        ),
+    ],
+        vlbi_config={},
+    ),
+)
 
 def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     """
@@ -64,7 +185,7 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
         assert field not in marshalled
 
 
-def test_marshall_cspconfiguration_does_not_modify_original():
+def test_marshall_csp_configuration_does_not_modify_original():
     """
     Verify that serialising a CspConfiguration does not change the object.
     """
@@ -94,3 +215,20 @@ def test_marshall_cspconfiguration_does_not_modify_original():
     assert config.pst_config == copied.pst_config
 
     assert config == copied
+
+
+def test_marshall_for_csp_configuration_pi16():
+    """
+        Verify that serialising a CSPConfiguration does not change the object.
+    """
+    utils.test_schema_serialisation_and_validation(
+        schema_cls=CSPConfigurationSchema, instance=CSP_CONFIGURATION_OBJECT_PI16, modifier_fn=None,
+        valid_json=VALID_CSP_JSON_PI16, invalid_json=None
+    )
+
+
+
+
+
+
+

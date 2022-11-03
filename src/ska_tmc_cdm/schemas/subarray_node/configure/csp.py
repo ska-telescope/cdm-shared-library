@@ -196,7 +196,7 @@ class FSPConfigurationSchema(Schema):
 @CODEC.register_mapping(CBFConfiguration)
 class CBFConfigurationSchema(Schema):
     fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key="fsp")
-
+    vlbi_config = fields.Dict(data_key="vlbi")
     @post_load
     def create(self, data, **_):
         """
@@ -208,8 +208,22 @@ class CBFConfigurationSchema(Schema):
         :return: CBFConfiguration instance populated to match JSON
         :rtype: CBFConfiguration
         """
-        fsp_configs = data["fsp_configs"]
-        return CBFConfiguration(fsp_configs)
+        fsp_configs = data.get("fsp_configs",None)
+        vlbi_config = data.get("vlbi_config",None)
+        return CBFConfiguration(fsp_configs=fsp_configs,vlbi_config=vlbi_config)
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for FSP configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
 
 
 @CODEC.register_mapping(CSPConfiguration)
@@ -223,6 +237,10 @@ class CSPConfigurationSchema(ValidatingSchema):
     common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
 
+    # Todo in future when csp2.2 will be used than these 2 parameter type will be replaced with the respective class schema
+    #  (PSSonfigurationSchema,PSTConfigurationSchema)
+    pss_config = fields.Dict(data_key="pss")
+    pst_config = fields.Dict(data_key="pst")
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
         """
@@ -236,12 +254,17 @@ class CSPConfigurationSchema(ValidatingSchema):
         subarray_config = data.get("subarray_config", None)
         common_config = data.get("common_config", None)
         cbf_config = data.get("cbf_config", None)
+        pss = data.get("pss_config",None)
+        pst = data.get("pst_config",None)
 
         return CSPConfiguration(
             interface=interface,
             subarray_config=subarray_config,
             common_config=common_config,
             cbf_config=cbf_config,
+            pss_config = pss,
+            pst_config = pst
+
         )
 
     @post_dump
@@ -254,6 +277,7 @@ class CSPConfigurationSchema(ValidatingSchema):
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
+
         # filter out null values from JSON
         data = {k: v for k, v in data.items() if v is not None}
 
