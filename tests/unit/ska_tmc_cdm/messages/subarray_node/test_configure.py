@@ -263,10 +263,10 @@ def test_configure_request_mccs_independence():
     #     )
 
 
-def test_csp_configuration_equals_pi16():
+def test_configure_request_equals_pi16():
     """
-    Verify that CSPConfiguration objects are considered equal when all
-    attributes are equal.
+    Verify that ConfigureRequest objects are considered equal when all
+    attributes are equal and not equal when there value differ.
     """
 
     configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI16)
@@ -284,9 +284,9 @@ def test_csp_configuration_equals_pi16():
     assert configure_request_obj_1 != configure_request_obj_3
 
 
-def test_csp_configuration_not_equal_to_other_objects_pi16():
+def test_configure_request_not_equal_to_other_objects_pi16():
     """
-    Verify that CSPConfiguration objects are not considered equal to objects
+    Verify that ConfigureRequest objects are not considered equal to objects
     of other types.
     """
     configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI16)

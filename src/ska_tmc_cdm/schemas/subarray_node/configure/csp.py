@@ -220,7 +220,7 @@ class CBFConfigurationSchema(Schema):
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
-        :return: dict suitable for FSP configuration
+        :return: dict suitable for CBF configuration
         """
         result = {k: v for k, v in data.items() if v is not None}
         return result
@@ -237,8 +237,8 @@ class CSPConfigurationSchema(ValidatingSchema):
     common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
 
-    # TODO: in future when csp2.2 will be used than these 2 parameter type will be replaced with # pylint: disable=W0511
-    #  the respective class schema (PSSonfigurationSchema,PSTConfigurationSchema)
+    # TODO: in future when csp2.2 will be used than these 2 parameter type will be # pylint: disable=W0511
+    #  replaced with the respective class schema (PSSConfigurationSchema,PSTConfigurationSchema)
     pss_config = fields.Dict(data_key="pss")
     pst_config = fields.Dict(data_key="pst")
 
