@@ -210,6 +210,8 @@ class CBFConfigurationSchema(Schema):
         :rtype: CBFConfiguration
         """
         fsp_configs = data.get("fsp_configs", None)
+        # TODO: In future, when csp Interface 2.2 will be used than vlbi_config parameter type will be                  # pylint: disable=W0511
+        #  replaced with the respective class schema (VLBIConfigurationSchema)
         vlbi_config = data.get("vlbi_config", None)
         return CBFConfiguration(fsp_configs=fsp_configs, vlbi_config=vlbi_config)
 
@@ -237,7 +239,7 @@ class CSPConfigurationSchema(ValidatingSchema):
     common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
 
-    # TODO: in future when csp2.2 will be used than these 2 parameter type will be # pylint: disable=W0511
+    # TODO: In future when csp Interface 2.2 will be used than these 2 parameter type will be                           # pylint: disable=W0511
     #  replaced with the respective class schema (PSSConfigurationSchema,PSTConfigurationSchema)
     pss_config = fields.Dict(data_key="pss")
     pst_config = fields.Dict(data_key="pst")

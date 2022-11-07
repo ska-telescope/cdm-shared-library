@@ -187,7 +187,7 @@ class CBFConfiguration:
     def __init__(
         self,
         fsp_configs: List[FSPConfiguration],
-        # TODO: in future when csp 2.2 will be used than type of vlbi_config parameter # pylint: disable=W0511
+        # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter                        # pylint: disable=W0511
         #  will be replaced with the respective class(VLBIConfiguration)
         vlbi_config: dict = None,
     ):
@@ -227,7 +227,7 @@ class CSPConfiguration:
         subarray_config: SubarrayConfiguration = None,
         common_config: CommonConfiguration = None,
         cbf_config: CBFConfiguration = None,
-        # TODO: in future when csp2.2 will be used than type of pst_config and pss_config # pylint: disable=W0511
+        # TODO: In future when csp Interface 2.2 will be used than type of pst_config and pss_config                    # pylint: disable=W0511
         #  parameter will be replaced with the respective class(PSTConfiguration,PSSConfiguration)
         pst_config: dict = None,
         pss_config: dict = None,
