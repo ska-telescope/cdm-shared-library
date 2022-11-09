@@ -119,7 +119,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
             subarray_id=1,
         ),
         cbf_config=CBFConfiguration(
-            [
+            fsp_configs=[
                 FSPConfiguration(
                     1,
                     FSPFunctionMode.CORR,
@@ -265,6 +265,162 @@ VALID_NULL_JSON = (
 VALID_NULL_OBJECT = ConfigureRequest()
 
 
+VALID_MID_CONFIGURE_JSON_PI16 = """
+{
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
+  "transaction_id": "txn-....-00001",
+  "pointing": {
+    "target": {
+      "reference_frame": "ICRS",
+      "target_name": "Polaris Australis",
+      "ra": "21:08:47.92",
+      "dec": "-88:57:22.9"
+    }
+  },
+  "dish": {
+    "receiver_band": "1"
+  },
+  "csp": {
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+      "subarray_name": "science period 23"
+    },
+    "common": {
+      "config_id": "sbi-mvp01-20200325-00001-science_A",
+      "frequency_band": "1",
+      "subarray_id": 1
+    },
+    "cbf": {
+      "fsp": [
+        {
+          "fsp_id": 1,
+          "function_mode": "CORR",
+          "frequency_slice_id": 1,
+          "integration_factor": 1,
+          "zoom_factor": 0,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
+          "output_link_map": [
+            [
+              0,
+              0
+            ],
+            [
+              200,
+              1
+            ]
+          ]
+        },
+        {
+          "fsp_id": 2,
+          "function_mode": "CORR",
+          "frequency_slice_id": 2,
+          "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 744,
+          "output_link_map": [
+            [
+              0,
+              4
+            ],
+            [
+              200,
+              5
+            ]
+          ],
+          "zoom_window_tuning": 650000
+        }
+      ],
+      "vlbi": {}
+    },
+    "pss": {},
+    "pst": {}
+  },
+  "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+    "scan_type": "science_A"
+  },
+  "tmc": {
+    "scan_duration": 10.0
+  }
+}"""
+
+
+VALID_MID_CONFIGURE_OBJECT_PI16 = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/2.1",
+    transaction_id="txn-....-00001",
+    pointing=PointingConfiguration(
+        Target(
+            ra="21:08:47.92",
+            dec="-88:57:22.9",
+            target_name="Polaris Australis",
+            reference_frame="icrs",
+        )
+    ),
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+    ),
+    csp=CSPConfiguration(
+        interface="https://schema.skao.int/ska-csp-configure/2.0",
+        subarray_config=SubarrayConfiguration("science period 23"),
+        common_config=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1,
+        ),
+        pss_config={},
+        pst_config={},
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
+                FSPConfiguration(
+                    fsp_id=1,
+                    function_mode=FSPFunctionMode.CORR,
+                    frequency_slice_id=1,
+                    integration_factor=1,
+                    zoom_factor=0,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
+                    output_link_map=[(0, 0), (200, 1)],
+                ),
+                FSPConfiguration(
+                    fsp_id=2,
+                    function_mode=FSPFunctionMode.CORR,
+                    frequency_slice_id=2,
+                    integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=744,
+                    output_link_map=[(0, 4), (200, 5)],
+                    zoom_window_tuning=650000,
+                ),
+            ],
+            vlbi_config={},
+        ),
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+)
+
+
 def low_invalidator(o: ConfigureRequest):
     # function to make a valid LOW ConfigureRequest invalid
     o.mccs.subarray_beam_configs[0].subarray_beam_id = -1
@@ -311,4 +467,17 @@ def test_configure_serialisation_and_validation(
     """
     utils.test_schema_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json
+    )
+
+
+def test_configure_serialisation_and_validation_pi16():
+    """
+    Verifies that the ConfigurationRequest schema marshals, unmarshals, and validates correctly.
+    """
+    utils.test_schema_serialisation_and_validation(
+        schema_cls=ConfigureRequestSchema,
+        instance=VALID_MID_CONFIGURE_OBJECT_PI16,
+        modifier_fn=None,
+        valid_json=VALID_MID_CONFIGURE_JSON_PI16,
+        invalid_json=None,
     )

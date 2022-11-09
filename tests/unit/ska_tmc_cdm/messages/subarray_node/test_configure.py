@@ -2,6 +2,7 @@
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
 import copy
+from datetime import timedelta
 
 import pytest
 
@@ -27,6 +28,62 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     SubarrayBeamTarget,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
+from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
+
+CONFIGURE_OBJECT_ARGS_PI16 = dict(
+    interface="https://schema.skao.int/ska-tmc-configure/2.1",
+    transaction_id="txn-....-00001",
+    pointing=PointingConfiguration(
+        Target(
+            ra="21:08:47.92",
+            dec="-88:57:22.9",
+            target_name="Polaris Australis",
+            reference_frame="icrs",
+        )
+    ),
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+    ),
+    csp=CSPConfiguration(
+        interface="https://schema.skao.int/ska-csp-configure/2.0",
+        subarray_config=SubarrayConfiguration("science period 23"),
+        common_config=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1,
+        ),
+        pss_config={},
+        pst_config={},
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
+                FSPConfiguration(
+                    fsp_id=1,
+                    function_mode=FSPFunctionMode.CORR,
+                    frequency_slice_id=1,
+                    integration_factor=1,
+                    zoom_factor=0,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
+                    output_link_map=[(0, 0), (200, 1)],
+                ),
+                FSPConfiguration(
+                    fsp_id=2,
+                    function_mode=FSPFunctionMode.CORR,
+                    frequency_slice_id=2,
+                    integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=744,
+                    output_link_map=[(0, 4), (200, 5)],
+                    zoom_window_tuning=650000,
+                ),
+            ],
+            vlbi_config={},
+        ),
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+)
 
 
 def test_configure_request_eq():
@@ -204,3 +261,34 @@ def test_configure_request_mccs_independence():
     #     ConfigureRequest(
     #         dish=dish_config, sdp=sdp_config, csp=csp_config, mccs=mccs_config
     #     )
+
+
+def test_configure_request_equals_pi16():
+    """
+    Verify that ConfigureRequest objects are considered equal when all
+    attributes are equal and not equal when there value differ.
+    """
+
+    configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI16)
+    configure_request_obj_2 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI16)
+
+    assert configure_request_obj_1 == configure_request_obj_2
+
+    alt_csp_configuration_csp_2_0_args = CONFIGURE_OBJECT_ARGS_PI16.copy()
+    alt_csp_configuration_csp_2_0_args[
+        "interface"
+    ] = "Changing interface value for creating object with different value"
+
+    configure_request_obj_3 = ConfigureRequest(**alt_csp_configuration_csp_2_0_args)
+
+    assert configure_request_obj_1 != configure_request_obj_3
+
+
+def test_configure_request_not_equal_to_other_objects_pi16():
+    """
+    Verify that ConfigureRequest objects are not considered equal to objects
+    of other types.
+    """
+    configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI16)
+
+    assert configure_request_obj_1 != 1
