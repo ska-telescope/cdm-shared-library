@@ -1,10 +1,11 @@
 .. _`CDM Library Integration steps for validating JSON schema in Central Node`:
+
 ==================================================
 Validating JSON schema through CDM in Central Node
 ==================================================
 
 **Understanding the usefulness of validating through creation of Control Data Model (CDM) object over current approach of custom JSON parsing in Central Node**
-===============================================================================================================================================
+================================================================================================================================================================
 
 ‘ska-tmc-cdm’ validation/serialisation library contains message and
 schema classes for several commands of CentralNode , SubArrayNode of
@@ -32,7 +33,9 @@ replacing its local validation.
 
 1. Import from ‘ska-tmc-cdm’ message classes for the command here
 ReleaseResources as well as CODEC from schemas in following way
+
 .. code-block:: python
+
     # for mid telescope
     from ska_tmc_cdm.messages.central_node.release_resources import
     (
@@ -47,7 +50,9 @@ ReleaseResources as well as CODEC from schemas in following way
 # CODEC provides the loads and dumps methods for converting JSON
 String—>Python object and vice versa for classes defined in
 ska_tmc_cdm.message
+
 .. code-block:: python
+
     from ska_tmc_cdm.schemas import CODEC
 
 2. Find the appropriate place where currently the JSON string is being
@@ -55,7 +60,9 @@ validated and result code, error message is being returned.
 
 In this example, for release resources we found one validate_input_json
 method in release_resources_command.py.
+
 .. code-block:: python
+
     try:
         # created python dictionary parsing from input json string
         jsonArgument = json.loads(argin)
@@ -77,8 +84,10 @@ if request JSON is invalid for the command be it by syntax or logical.
 
 iii. For the time being some validations which are not been checked at
 CDM and/or Telescope Model need to be done within else block of try.
-Finally code snippet should look like:-
+Finally code snippet should look like:
+
 .. code-block:: python
+
     try:
         # creation of cdm object from input json argin.
         release_request = CODEC.loads(ReleaseResourcesRequest, argin)
@@ -88,11 +97,11 @@ Finally code snippet should look like:-
     else:
         # remaining custom local validation
         ...
+
         # if no error occurred
         return ResultCode.OK, ""
 
 **Scenarios for unit tests**
-----------------------------
 
 We can only be sure that this approach worked by writing unit-tests
 where we see ResultCode to be Ok and successfully requested object gets

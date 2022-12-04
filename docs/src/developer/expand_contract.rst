@@ -1,4 +1,5 @@
 .. _`Integration Steps for Expand and Contract Design Pattern in CDM for Tango Command Interfaces`:
+
 =========================================
 Expand and Contract Design Pattern in CDM
 =========================================
@@ -27,7 +28,7 @@ hence we start there by showing how commands through CDM will support
 the strategy with particular example of ‘release resources’.
 
 **Supporting existing and upcoming schemas with new keys in expand phase**
---------------------------------------------------------------------------
+
 
 We need to modify two message classes and two schema classes of release
 resource for both mid (central_node) and low (mccscontroller) telescopes
@@ -41,16 +42,19 @@ of a dummy schema for mid-telescope release resources.
 that they may take is well understood.
 
 .. code-block:: JSON
+
 	{
 	 <existing keys> ...
 	 "sdp_id": "sbi-mvp01-20220919-00001", # new in this schema
 	 "sdp_max_length": 125.40, # new in this schema
 	}
+
 **Steps:**
 
 1. In constructor of the message class for <command>(here
 ReleaseResourcesRequest), add new parameters and declare them None
 value.
+
 .. code-block:: python
      
      def \__init__(
@@ -71,10 +75,13 @@ value.
           # value errors
           ...
 
+
 2. Inside @post_load of schema class for <command> (here
 ‘ReleaseResourcesRequestSchema’), we modify for the same new keys as
 added in messages
+
 .. code-block:: python
+
      @post_load
 	def create_request(self, data, **_):
 		..
@@ -87,14 +94,18 @@ added in messages
 		sdp_max_length=sdp_max_length,
 	)
 
+
 3. We need to add the new keys otherwise unknown field validation error
 would be raised.
+
 .. code-block:: python
+
 	class ReleaseResourcesRequestSchema(ValidatingSchema):
 	# known fields
 		...
 		sdp_id = fields.String()
 		sdp_max_length = fields.Float()
+
 **Scenario 2 :** While supporting multiple schemas the number of unique
 keys across several versions of schemas has grown very large and their
 validation is maintained at Telescope Model and/or the values they take
@@ -107,11 +118,16 @@ very important like we want to raise value error for incorrect value etc
 , rest let pass through kwargs.
 
 2. In the body of constructor we need to add one line,
+
 .. code-block:: python
+
      self.__dict__.update(kwargs)
 
+
 Finally the code snippet should look like:-
+
 .. code-block:: python
+
      def \__init__(
           self,
           \*_, # force non-keyword args
@@ -135,12 +151,16 @@ Finally the code snippet should look like:-
           # value errors
           ...
 
+
 3. Inside @post_load of schema class for <command> (here
 ‘ReleaseResourcesRequestSchema’), we modify to allow all keys to come.
+
 .. code-block:: python
+
      @post_load
      def create_request(self, data, \**_):
           return ReleaseResourcesRequest(**data, )
+
 
 4. However there is an additional challenge that validation error may
 get raised since the new keys are not mentioned inside schema class for
@@ -151,16 +171,18 @@ pass validation and work with load. But if we dump from object to JSON
 string these keys on the fly won’t be there. To have them working in
 both load and dump it seems we need to explicitly know atleast the keys
 and mention as additional.
+
 .. code-block:: python
+
      class Meta:
           unknown = INCLUDE # passes validation and load but dump won't show these keys
           additional=('subbands','dummy_key1',) # mention all such expected keys
+
 
 ii. Since CDM extends Telescope Model we can expect Telescope Model to
 maintain all keys and accepted values for validation to pass anyway.
 
 **Expectations in Contract phase**
-----------------------------------
 
 There should be additional challenges in contract phase that will be
 understood as we evolve. However for now we expect to:
@@ -175,12 +197,14 @@ iii. Have logical default values instead of declaring with NonelNull
      Users should not get away without correct keys and valid values in
      contract phase.
 
-     **How to use during expand phase**
+**How to use during expand phase**
 
 from ska_tmc_cdm.schemas import CODEC
 
 *1. If we have some JSON-formatted string release_input_str*
+
 .. code-block:: JSON
+
      {
       "interface":"https://schema.skao.int/ska-tmc-releaseresources/2.0",
       "transaction_id":"txn-....-00001",
@@ -191,20 +215,29 @@ from ska_tmc_cdm.schemas import CODEC
       "subbands": [0.55e9, 0.95e9, 186], # on the fly
       "dummy_key1":"val1" # on the fly
      }
+
 # Convert the JSON to a Python object
+
 .. code-block:: python
+
      req=CODEC.loads(ReleaseResourcesRequest, release_input_str) # requested object
+
 
 *2. If we received the object and want to convert it to JSON which may
 be used in a DeviceProxy call*
+
 .. code-block:: python
+
      json_str=CODEC.dumps(req) # from object to JSON string
+
 
 3. Inside @post_load of schema class for <command> (here
 ‘ReleaseResourcesRequestSchema’) we expect the same message class
 constructor ‘ReleaseResourcesRequest’ to be able to support across
 different schemas using kwargs.
+
 .. code-block:: python
+     
      # expand
      request = ReleaseResourcesRequest(
           transaction_id="tma1",
@@ -223,13 +256,16 @@ different schemas using kwargs.
           sdp_id="sbi-mvp01-20220919-00001", # new in this schema
           )
 
+
 **Resources**
 
 1. A prototype can be found at
 https://gitlab.com/ska-telescope/ska-tmc-cdm/-/tree/nak-74-expand-contract-design-pattern.
 
 2. Dummy schema for mid telescope release resource.
+   
 .. code-block:: JSON
+
      {
       "interface": https://schema.skao.int/ska-tmc-releaseresources/2.2, #optional
       "subarray_id": 1,
@@ -241,7 +277,9 @@ https://gitlab.com/ska-telescope/ska-tmc-cdm/-/tree/nak-74-expand-contract-desig
      }
 
 3. Dummy schema for low telescope release resource.
+
 .. code-block:: JSON
+
      {
       "interface": https://schema.skao.int/ska-tmc-releaseresources/2.2, #optional
       "subarray_id": 1,
