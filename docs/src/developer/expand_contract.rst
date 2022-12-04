@@ -88,11 +88,11 @@ added in messages
 		sdp_id = data.get("sdp_id", None) 
 		sdp_max_length = data.get("sdp_max_length", None)
 
-	return ReleaseResourcesRequest(
+	     return ReleaseResourcesRequest(
 		...
 		sdp_id=sdp_id,
 		sdp_max_length=sdp_max_length,
-	)
+	     )
 
 
 3. We need to add the new keys otherwise unknown field validation error
@@ -237,7 +237,7 @@ constructor ‘ReleaseResourcesRequest’ to be able to support across
 different schemas using kwargs.
 
 .. code-block:: python
-     
+
      # expand
      request = ReleaseResourcesRequest(
           transaction_id="tma1",
