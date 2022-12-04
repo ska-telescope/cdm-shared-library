@@ -1,4 +1,8 @@
 .. _`Integration Steps for Expand and Contract Design Pattern in CDM for Tango Command Interfaces`:
+=========================================
+Expand and Contract Design Pattern in CDM
+=========================================
+
 **Understanding expand and contract pattern and where to start**
 ================================================================
 
@@ -37,15 +41,11 @@ of a dummy schema for mid-telescope release resources.
 that they may take is well understood.
 
 .. code-block:: JSON
-       {
-
-          <existing keys> ...
-
-          "sdp_id": "sbi-mvp01-20220919-00001", # new in this schema
-
-          "sdp_max_length": 125.40, # new in this schema
-       }
-
+	{
+	 <existing keys> ...
+	 "sdp_id": "sbi-mvp01-20220919-00001", # new in this schema
+	 "sdp_max_length": 125.40, # new in this schema
+	}
 **Steps:**
 
 1. In constructor of the message class for <command>(here
@@ -54,74 +54,47 @@ value.
 .. code-block:: python
      
      def \__init__(
-
-self,
-
-interface: str = None,
-
-transaction_id: str = None,
-
-subarray_id: int = None,
-
-release_all: bool = False,
-
-dish_allocation: Optional[DishAllocation] = None,
-
-sdp_id: str = None,
-
-sdp_max_length: float = None,
-
-):
-
-# init existing keys
-
-...
-
-self.sdp_id = sdp_id
-
-self.sdp_max_length = sdp_max_length
-
-# value errors
-
-…
+          self,
+          interface: str = None,
+          transaction_id: str = None,
+          subarray_id: int = None,
+          release_all: bool = False,
+          dish_allocation: Optional[DishAllocation] = None,
+          sdp_id: str = None,
+          sdp_max_length: float = None,
+          ):
+          # init existing keys
+          ...
+          self.sdp_id = sdp_id
+          self.sdp_max_length = sdp_max_length
+     
+          # value errors
+          ...
 
 2. Inside @post_load of schema class for <command> (here
 ‘ReleaseResourcesRequestSchema’), we modify for the same new keys as
 added in messages
+.. code-block:: python
+     @post_load
+	def create_request(self, data, **_):
+		..
+		sdp_id = data.get("sdp_id", None) 
+		sdp_max_length = data.get("sdp_max_length", None)
 
-@post_load
-
-def create_request(self, data, \**_):
-
-..
-
-sdp_id = data.get("sdp_id", None)
-
-sdp_max_length = data.get("sdp_max_length", None)
-
-return ReleaseResourcesRequest(
-
-...
-
-sdp_id=sdp_id,
-
-sdp_max_length=sdp_max_length,
-
-)
+	return ReleaseResourcesRequest(
+		...
+		sdp_id=sdp_id,
+		sdp_max_length=sdp_max_length,
+	)
 
 3. We need to add the new keys otherwise unknown field validation error
 would be raised.
-
-class ReleaseResourcesRequestSchema(ValidatingSchema):
-
-# known fields
-
-...
-
-sdp_id = fields.String()
-
-sdp_max_length = fields.Float()
-
+.. code-block:: python
+	class ReleaseResourcesRequestSchema(ValidatingSchema):
+	# known fields
+		...
+		sdp_id = fields.String()
+		sdp_max_length = fields.Float()
 **Scenario 2 :** While supporting multiple schemas the number of unique
 keys across several versions of schemas has grown very large and their
 validation is maintained at Telescope Model and/or the values they take
@@ -134,59 +107,40 @@ very important like we want to raise value error for incorrect value etc
 , rest let pass through kwargs.
 
 2. In the body of constructor we need to add one line,
-
-self.__dict__.update(kwargs)
+.. code-block:: python
+     self.__dict__.update(kwargs)
 
 Finally the code snippet should look like:-
-
-def \__init__(
-
-self,
-
-\*_, # force non-keyword args
-
-interface: str = None,
-
-transaction_id: str = None,
-
-subarray_id: int = None,
-
-release_all: bool = False,
-
-dish_allocation: Optional[DishAllocation] = None,
-
-sdp_id: str = None,
-
-sdp_max_length: float = None,
-
-\**kwargs, # arbitary keyword-value pairs
-
-):
-
-# init existing keys
-
-...
-
-self.sdp_id = sdp_id
-
-.sdp_max_length = sdp_max_length
-
-# update new keywords-value pairs.
-
-self.__dict__.update(kwargs)
-
-# value errors
-
-…
+.. code-block:: python
+     def \__init__(
+          self,
+          \*_, # force non-keyword args
+          interface: str = None,
+          transaction_id: str = None,
+          subarray_id: int = None,
+          release_all: bool = False,
+          dish_allocation: Optional[DishAllocation] = None,
+          sdp_id: str = None,
+          sdp_max_length: float = None,
+          \**kwargs, # arbitary keyword-value pairs
+          ):
+          # init existing keys
+          ...
+          self.sdp_id = sdp_id
+          self.sdp_max_length = sdp_max_length
+          
+          # update new keywords-value pairs.
+          self.__dict__.update(kwargs)
+          
+          # value errors
+          ...
 
 3. Inside @post_load of schema class for <command> (here
 ‘ReleaseResourcesRequestSchema’), we modify to allow all keys to come.
-
-@post_load
-
-def create_request(self, data, \**_):
-
-return ReleaseResourcesRequest(**data, )
+.. code-block:: python
+     @post_load
+     def create_request(self, data, \**_):
+          return ReleaseResourcesRequest(**data, )
 
 4. However there is an additional challenge that validation error may
 get raised since the new keys are not mentioned inside schema class for
@@ -197,13 +151,10 @@ pass validation and work with load. But if we dump from object to JSON
 string these keys on the fly won’t be there. To have them working in
 both load and dump it seems we need to explicitly know atleast the keys
 and mention as additional.
-
-class Meta:
-
-unknown = INCLUDE # passes validation and load but dump won't show these
-keys
-
-additional=('subbands','dummy_key1',) # mention all such expected keys
+.. code-block:: python
+     class Meta:
+          unknown = INCLUDE # passes validation and load but dump won't show these keys
+          additional=('subbands','dummy_key1',) # mention all such expected keys
 
 ii. Since CDM extends Telescope Model we can expect Telescope Model to
 maintain all keys and accepted values for validation to pass anyway.
@@ -229,76 +180,48 @@ iii. Have logical default values instead of declaring with NonelNull
 from ska_tmc_cdm.schemas import CODEC
 
 *1. If we have some JSON-formatted string release_input_str*
-
-{
-
-"interface":"https://schema.skao.int/ska-tmc-releaseresources/2.0",
-
-"transaction_id":"txn-....-00001",
-
-"subarray_id":1,
-
-"release_all":true,
-
-"receptor_ids":[],
-
-"sdp_max_length": 125.40, # new key but mentioned in message, schema
-classes
-
-"subbands": [0.55e9, 0.95e9, 186], # on the fly
-
-"dummy_key1":"val1" # on the fly
-
-}
-
+.. code-block:: JSON
+     {
+      "interface":"https://schema.skao.int/ska-tmc-releaseresources/2.0",
+      "transaction_id":"txn-....-00001",
+      "subarray_id":1,
+      "release_all":true,
+      "receptor_ids":[],
+      "sdp_max_length": 125.40, # new key but mentioned in message, schema classes
+      "subbands": [0.55e9, 0.95e9, 186], # on the fly
+      "dummy_key1":"val1" # on the fly
+     }
 # Convert the JSON to a Python object
-
-req=CODEC.loads(ReleaseResourcesRequest, release_input_str) # requested
-object
+.. code-block:: python
+     req=CODEC.loads(ReleaseResourcesRequest, release_input_str) # requested object
 
 *2. If we received the object and want to convert it to JSON which may
 be used in a DeviceProxy call*
-
-json_str=CODEC.dumps(req) # from object to JSON string
+.. code-block:: python
+     json_str=CODEC.dumps(req) # from object to JSON string
 
 3. Inside @post_load of schema class for <command> (here
 ‘ReleaseResourcesRequestSchema’) we expect the same message class
 constructor ‘ReleaseResourcesRequest’ to be able to support across
 different schemas using kwargs.
-
-# expand
-
-request = ReleaseResourcesRequest(
-
-transaction_id="tma1",
-
-subarray_id=1,
-
-dish_allocation=DishAllocation(receptor_ids=["ac", "b", "aab"]),
-
-sdp_id="sbi-mvp01-20220919-00001", # new in this schema
-
-sdp_max_length=125.40, # new in this schema
-
-subbands=[0.55e9, 0.95e9, 186], # arbitary new key-value captured
-
-release_all=False,
-
-)
-
-# contract
-
-request = ReleaseResourcesRequest(
-
-transaction_id="tma1",
-
-subarray_id=1,
-
-dish_allocation=DishAllocation(receptor_ids=["ac", "b", "aab"]),
-
-sdp_id="sbi-mvp01-20220919-00001", # new in this schema
-
-)
+.. code-block:: python
+     # expand
+     request = ReleaseResourcesRequest(
+          transaction_id="tma1",
+          subarray_id=1,
+          dish_allocation=DishAllocation(receptor_ids=["ac", "b", "aab"]),
+          sdp_id="sbi-mvp01-20220919-00001", # new in this schema
+          sdp_max_length=125.40, # new in this schema
+          subbands=[0.55e9, 0.95e9, 186], # arbitary new key-value captured
+          release_all=False,
+          )
+     # contract
+     request = ReleaseResourcesRequest(
+          transaction_id="tma1",
+          subarray_id=1,
+          dish_allocation=DishAllocation(receptor_ids=["ac", "b", "aab"]),
+          sdp_id="sbi-mvp01-20220919-00001", # new in this schema
+          )
 
 **Resources**
 
@@ -306,40 +229,23 @@ sdp_id="sbi-mvp01-20220919-00001", # new in this schema
 https://gitlab.com/ska-telescope/ska-tmc-cdm/-/tree/nak-74-expand-contract-design-pattern.
 
 2. Dummy schema for mid telescope release resource.
-
-{
-
-"interface": https://schema.skao.int/ska-tmc-releaseresources/2.2,
-#optional
-
-"subarray_id": 1,
-
-"release_all": False,
-
-"receptor_ids": ["ac", "b", "aab"],
-
-"sdp_id": "sbi-mvp01-20220919-00001", # new in this schema
-
-"sdp_max_length": 125.40, # new in this schema
-
-"subbands: [0.55e9, 0.95e9, 186] # arbitary new key-value captured by
-kwargs​
-
-}
+.. code-block:: JSON
+     {
+      "interface": https://schema.skao.int/ska-tmc-releaseresources/2.2, #optional
+      "subarray_id": 1,
+      "release_all": False,
+      "receptor_ids": ["ac", "b", "aab"],
+      "sdp_id": "sbi-mvp01-20220919-00001", # new in this schema
+      "sdp_max_length": 125.40, # new in this schema
+      "subbands: [0.55e9, 0.95e9, 186] # arbitary new key-value captured by kwargs​
+     }
 
 3. Dummy schema for low telescope release resource.
-
-{
-
-"interface": https://schema.skao.int/ska-tmc-releaseresources/2.2,
-#optional
-
-"subarray_id": 1,
-
-"release_all": False,
-
-"subarray_beam_ids": [3], # new in this schema
-
-"channels": [[3, 4]], # new in this schema
-
-}
+.. code-block:: JSON
+     {
+      "interface": https://schema.skao.int/ska-tmc-releaseresources/2.2, #optional
+      "subarray_id": 1,
+      "release_all": False,
+      "subarray_beam_ids": [3], # new in this schema
+      "channels": [[3, 4]], # new in this schema
+     }

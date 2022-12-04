@@ -1,4 +1,8 @@
 .. _`CDM Library Integration steps for validating JSON schema in Central Node`:
+==================================================
+Validating JSON schema through CDM in Central Node
+==================================================
+
 **Understanding the usefulness of validating through creation of Control Data Model (CDM) object over current approach of custom JSON parsing in Central Node**
 ===============================================================================================================================================
 
@@ -28,54 +32,38 @@ replacing its local validation.
 
 1. Import from ‘ska-tmc-cdm’ message classes for the command here
 ReleaseResources as well as CODEC from schemas in following way
-
-# for mid telescope
-
-from ska_tmc_cdm.messages.central_node.release_resources import
-
-(
-
-ReleaseResourcesRequest,
-
-)
-
-# for low telescope
-
-from ska_tmc_cdm.messages.mccscontroller.releaseresources import
-
-(
-
-ReleaseResourcesRequest as ReleaseResourcesRequestLow,
-
-)
+.. code-block:: python
+    # for mid telescope
+    from ska_tmc_cdm.messages.central_node.release_resources import
+    (
+        ReleaseResourcesRequest,
+    )
+    # for low telescope
+    from ska_tmc_cdm.messages.mccscontroller.releaseresources import
+    (
+        ReleaseResourcesRequest as ReleaseResourcesRequestLow,
+    )
 
 # CODEC provides the loads and dumps methods for converting JSON
 String—>Python object and vice versa for classes defined in
 ska_tmc_cdm.message
-
-from ska_tmc_cdm.schemas import CODEC
+.. code-block:: python
+    from ska_tmc_cdm.schemas import CODEC
 
 2. Find the appropriate place where currently the JSON string is being
 validated and result code, error message is being returned.
 
 In this example, for release resources we found one validate_input_json
 method in release_resources_command.py.
-
-try:
-
-# created python dictionary parsing from input json string
-
-jsonArgument = json.loads(argin)
-
-except Exception as e:
-
-# ResultCode Failed and custom error message
-
-...
-
-# all validations here and if all success then
-
-return ResultCode.OK, ""
+.. code-block:: python
+    try:
+        # created python dictionary parsing from input json string
+        jsonArgument = json.loads(argin)
+    except Exception as e:
+        # ResultCode Failed and custom error message
+        ...
+    # all validations here and if all success then
+    return ResultCode.OK, ""
 
 3. Changes to be considered :
 
@@ -90,28 +78,18 @@ if request JSON is invalid for the command be it by syntax or logical.
 iii. For the time being some validations which are not been checked at
 CDM and/or Telescope Model need to be done within else block of try.
 Finally code snippet should look like:-
-
-try:
-
-# creation of cdm object from input json argin.
-
-release_request = CODEC.loads(ReleaseResourcesRequest, argin)
-
-except Exception as excep:
-
-# return ResultCode Failed and exception message
-
-...
-
-else:
-
-# remaining custom local validation
-
-...
-
-# if no error occurred
-
-return ResultCode.OK, ""
+.. code-block:: python
+    try:
+        # creation of cdm object from input json argin.
+        release_request = CODEC.loads(ReleaseResourcesRequest, argin)
+    except Exception as excep:
+        # return ResultCode Failed and exception message
+        ...
+    else:
+        # remaining custom local validation
+        ...
+        # if no error occurred
+        return ResultCode.OK, ""
 
 **Scenarios for unit tests**
 ----------------------------
