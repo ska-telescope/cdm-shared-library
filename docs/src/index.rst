@@ -14,7 +14,9 @@
   :hidden:
 
   developer/developer
+  developer/expand_contract
   developer/centralnode/centralnode
+  developer/validation_json
   developer/subarraynode/subarraynode
   developer/mccssubarray/mccssubarray
   developer/mccscontroller/mccscontroller
