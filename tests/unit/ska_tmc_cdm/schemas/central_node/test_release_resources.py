@@ -72,7 +72,7 @@ VALID_LOW_FULL_RELEASE_JSON = """
 
 INVALID_LOW_FULL_RELEASE_JSON = """
 {
-    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/2.0",
     "subarray_id": -1,
     "release_all": true
 }

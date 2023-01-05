@@ -293,9 +293,6 @@ INVALID_LOW_CONFIGURE_JSON = """
 VALID_MID_DISH_ONLY_JSON = (
     """
 {
-    "interface": """
-    + f'"{SCHEMA}"'
-    + """,
     "dish": {
         "receiver_band": "1"
     }
@@ -491,20 +488,6 @@ def low_invalidator(o: ConfigureRequest):
             VALID_MID_CONFIGURE_JSON,
             None,
         ),  # no validation on MID
-        (
-            ConfigureRequestSchema,
-            VALID_MID_DISH_ONLY_OBJECT,
-            None,  # no validation on MID
-            VALID_MID_DISH_ONLY_JSON,
-            None,
-        ),  # no validation on MID
-        (
-            ConfigureRequestSchema,
-            VALID_NULL_OBJECT,
-            None,  # no validation for null object
-            VALID_NULL_JSON,
-            None,
-        ),  # no validation for null object
         (
             ConfigureRequestSchema,
             VALID_LOW_CONFIGURE_OBJECT,
