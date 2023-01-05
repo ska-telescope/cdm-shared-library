@@ -290,12 +290,30 @@ INVALID_LOW_CONFIGURE_JSON = """
 }
 """
 
+
 VALID_MID_DISH_ONLY_JSON = (
     """
 {
+    "interface": """
+    + f'"{SCHEMA}"'
+    + """,
     "dish": {
         "receiver_band": "1"
     }
+}
+"""
+)
+
+VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
+    dish=DishConfiguration(ReceiverBand.BAND_1)
+)
+
+VALID_NULL_JSON = (
+    """
+{
+    "interface": """
+    + f'"{SCHEMA}"'
+    + """
 }
 """
 )
