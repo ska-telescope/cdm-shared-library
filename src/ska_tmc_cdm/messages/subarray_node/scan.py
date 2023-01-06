@@ -2,9 +2,7 @@
 The scan module defines simple Python representations of the structured
 request for a TMC SubArrayNode.Scan command.
 """
-from typing import Dict, Optional
-
-from .scan import CSPConfiguration
+from typing import Optional
 
 __all__ = ["ScanRequest"]
 
@@ -15,8 +13,6 @@ __all__ = ["ScanRequest"]
 # renamed SCHEMA rather than SCHEMA at that point.
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-scan/2.0"
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-scan/2.1"
-
-__all__ = ["CSPConfiguration"]
 
 
 class ScanRequest:  # pylint: disable=too-few-public-methods
@@ -30,7 +26,6 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
         interface: Optional[str] = MID_SCHEMA,
         transaction_id: Optional[str] = None,
         scan_id: int,
-        csp_config: CSPConfiguration = None,
     ):
         """
         Create a new ScanRequest.
@@ -43,7 +38,6 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
         self.transaction_id = transaction_id
         self.interface = interface
         self.scan_id = scan_id
-        self.csp_config = csp_config
 
     def __eq__(self, other):
         if not isinstance(other, ScanRequest):
@@ -52,29 +46,4 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
             self.interface == other.interface
             and self.transaction_id == other.transaction_id
             and self.scan_id == other.scan_id
-            and self.csp_config == other.csp_config
         )
-
-
-class CSPConfiguration:
-    def __init__(
-        self,
-        *,  # force kw-only args
-        common: Dict = None,
-        lowcbf: Dict = None,
-    ):
-        """
-        Create a new ScanRequest.
-
-        :param interface: Interface URI. Defaults to
-            https://schema.skao.int/ska-tmc-scan/2.0
-        :param transaction_id: optional transaction ID
-        :param scan_id: integer scan ID
-        """
-        self.common = common
-        self.lowcbf = lowcbf
-
-    def __eq__(self, other):
-        if not isinstance(other, CSPConfiguration):
-            return False
-        return self.common == other.common and self.lowcbf == other.lowcbf
