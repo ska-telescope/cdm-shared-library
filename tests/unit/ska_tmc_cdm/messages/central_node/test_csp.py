@@ -86,25 +86,6 @@ def test_err():
             interface=valid_iface, lowcbf=valid_lowcbf, common={"subarray_id": "1"}
         )
 
-    """
-    {
-        "resources": [
-            {
-                "device": 0, # given int instead of str
-                "shared": 20,  # shared given int instead of bool
-                "fw_image": 8, # fw_image given int instead of str
-                "fw_mode": 9, # fw_mode given int instead of str
-            },
-            {
-                "device": "pst",
-                "shared": True,  
-                "fw_image": "p4.bin",
-                "fw_mode": "p4",
-            },
-        ]
-    }
-    """
-
     # device given int instead of str
     lowcbf_device_int = copy.deepcopy(valid_lowcbf)
     lowcbf_device_int["resources"][0]["device"] = 0
