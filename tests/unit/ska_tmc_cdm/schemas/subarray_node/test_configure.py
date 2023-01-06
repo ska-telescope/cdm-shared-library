@@ -33,72 +33,16 @@ from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 
 from .. import utils
 
-# TMC_CONFIGURE_MID_2_1 = {
-#     "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
-#     "transaction_id": "txn-....-00001",
-#     "pointing": {
-#         "target": {
-#             "reference_frame": "ICRS",
-#             "target_name": "Polaris Australis",
-#             "ra": "21:08:47.92",
-#             "dec": "-88:57:22.9",
-#         }
-#     },
-#     "dish": {"receiver_band": "1"},
-#     "csp": {
-#         "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-#         "subarray": {"subarray_name": "science period 23"},
-#         "common": {
-#             "config_id": "sbi-mvp01-20200325-00001-science_A",
-#             "frequency_band": "1",
-#             "subarray_id": 1,
-#         },
-#         "cbf": {
-#             "fsp": [
-#                 {
-#                     "fsp_id": 1,
-#                     "function_mode": "CORR",
-#                     "frequency_slice_id": 1,
-#                     "integration_factor": 1,
-#                     "zoom_factor": 0,
-#                     "channel_averaging_map": [[0, 2], [744, 0]],
-#                     "channel_offset": 0,
-#                     "output_link_map": [[0, 0], [200, 1]],
-#                 },
-#                 {
-#                     "fsp_id": 2,
-#                     "function_mode": "CORR",
-#                     "frequency_slice_id": 2,
-#                     "integration_factor": 1,
-#                     "zoom_factor": 1,
-#                     "channel_averaging_map": [[0, 2], [744, 0]],
-#                     "channel_offset": 744,
-#                     "output_link_map": [[0, 4], [200, 5]],
-#                     "zoom_window_tuning": 650000,
-#                 },
-#             ],
-#             "vlbi": {},
-#         },
-#         "pss": {},
-#         "pst": {},
-#     },
-#     "sdp": {
-#         "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
-#         "scan_type": "science_A",
-#     },
-#     "tmc": {"scan_duration": 10.0},
-# }
-
 VALID_MID_CONFIGURE_JSON = """
 {
   "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
-  "transaction_id": "txn-....-00001",
+  "transaction_id": "12345",
   "pointing": {
     "target": {
       "reference_frame": "ICRS",
-      "target_name": "Polaris Australis",
-      "ra": "21:08:47.92",
-      "dec": "-88:57:22.9"
+      "target_name": "M51",
+      "ra": "13:29:52.698",
+      "dec": "+47:11:42.93"
     }
   },
   "dish": {
@@ -141,7 +85,7 @@ VALID_MID_CONFIGURE_JSON = """
     }
   },
   "sdp": {
-    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.3",
     "scan_type": "science_A"
   },
   "tmc": {
@@ -152,18 +96,19 @@ VALID_MID_CONFIGURE_JSON = """
 
 VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.1",
-    transaction_id="txn-....-00001",
+    transaction_id="12345",
     pointing=PointingConfiguration(
         Target(
-            ra="21:08:47.92",
-            dec="-88:57:22.9",
-            target_name="Polaris Australis",
+            ra="13:29:52.698",
+            dec="+47:11:42.93",
+            target_name="M51",
             reference_frame="icrs",
+            unit=("hourangle", "deg"),
         )
     ),
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+        interface="https://schema.skao.int/ska-sdp-configure/0.3", scan_type="science_A"
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
@@ -290,7 +235,6 @@ INVALID_LOW_CONFIGURE_JSON = """
 }
 """
 
-
 VALID_MID_DISH_ONLY_JSON = (
     """
 {
@@ -300,20 +244,6 @@ VALID_MID_DISH_ONLY_JSON = (
     "dish": {
         "receiver_band": "1"
     }
-}
-"""
-)
-
-VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
-    dish=DishConfiguration(ReceiverBand.BAND_1)
-)
-
-VALID_NULL_JSON = (
-    """
-{
-    "interface": """
-    + f'"{SCHEMA}"'
-    + """
 }
 """
 )
@@ -506,6 +436,20 @@ def low_invalidator(o: ConfigureRequest):
             VALID_MID_CONFIGURE_JSON,
             None,
         ),  # no validation on MID
+        (
+            ConfigureRequestSchema,
+            VALID_MID_DISH_ONLY_OBJECT,
+            None,  # no validation on MID
+            VALID_MID_DISH_ONLY_JSON,
+            None,
+        ),  # no validation on MID
+        (
+            ConfigureRequestSchema,
+            VALID_NULL_OBJECT,
+            None,  # no validation for null object
+            VALID_NULL_JSON,
+            None,
+        ),  # no validation for null object
         (
             ConfigureRequestSchema,
             VALID_LOW_CONFIGURE_OBJECT,

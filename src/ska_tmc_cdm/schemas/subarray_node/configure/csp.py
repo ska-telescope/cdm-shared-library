@@ -7,9 +7,8 @@ import json
 
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
+
 from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
-
-
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CBFConfiguration,
@@ -306,6 +305,3 @@ class CSPConfigurationSchema(ValidatingSchema):
         interface = data.get("interface", None)
         if interface:
             JsonSchema.validate_schema(interface, process_fn(data))
-
-    
-    

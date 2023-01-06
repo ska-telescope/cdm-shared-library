@@ -4,14 +4,12 @@ Unit tests for ska_tmc_cdm.schemas module.
 
 import pytest
 
-from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska_tmc_cdm.schemas.central_node.release_resources import (
     ReleaseResourcesRequestSchema,
 )
 
 from .. import utils
-
 
 VALID_MID_FULL_RELEASE_JSON = """
 {
@@ -33,26 +31,26 @@ VALID_MID_PARTIAL_RELEASE_JSON = """
 
 
 VALID_MID_PARTIAL_RELEASE_OBJECT = ReleaseResourcesRequest(
-    interface = "https://schema.skao.int/ska-tmc-releaseresources/2.1",
-    transaction_id = "txn-....-00001",
-    subarray_id = 1,
-    release_all = True,
+    interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
+    transaction_id="txn-....-00001",
+    subarray_id=1,
+    release_all=True,
 )
 
 
 VALID_MID_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
-    interface = "https://schema.skao.int/ska-tmc-releaseresources/2.1",
-    transaction_id = "txn-....-00001",
-    subarray_id = 1,
-    release_all = True,
+    interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
+    transaction_id="txn-....-00001",
+    subarray_id=1,
+    release_all=True,
 )
 
 # mixed partial / full request, used to test which params are ignored
 VALID_MID_MIXED_ARGS_OBJECT = ReleaseResourcesRequest(
-    interface = "https://schema.skao.int/ska-tmc-releaseresources/2.1",
-    transaction_id = "txn-....-00001",
-    subarray_id = 1,
-    release_all = True,
+    interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
+    transaction_id="txn-....-00001",
+    subarray_id=1,
+    release_all=True,
 )
 
 
