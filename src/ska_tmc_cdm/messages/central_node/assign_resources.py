@@ -4,6 +4,7 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 
 from .common import DishAllocation
+from .csp import CSPConfiguration
 from .mccs import MCCSAllocate
 from .sdp import SDPConfiguration
 
@@ -21,6 +22,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int = None,
         dish_allocation: DishAllocation = None,
         sdp_config: SDPConfiguration = None,
+        csp_config: CSPConfiguration = None,
         mccs: MCCSAllocate = None,
         interface: str = None,
         transaction_id: str = None,
@@ -41,6 +43,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         self.subarray_id = subarray_id
         self.dish = dish_allocation
         self.sdp_config = sdp_config
+        self.csp_config = csp_config
         self.mccs = mccs
         self.interface = interface
         self.transaction_id = transaction_id
@@ -58,6 +61,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int,
         dish_allocation: DishAllocation,
         sdp_config: SDPConfiguration = None,
+        csp_config: CSPConfiguration = None,
         interface: str = None,
         transaction_id: str = None,
     ):
@@ -76,6 +80,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             subarray_id,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
+            csp_config=csp_config,
             interface=interface,
             transaction_id=transaction_id,
         )
@@ -87,6 +92,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int,
         mccs: MCCSAllocate,
         sdp_config: SDPConfiguration = None,
+        csp_config: CSPConfiguration = None,
         interface: str = None,
         transaction_id: str = None,
     ):
@@ -104,6 +110,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             subarray_id=subarray_id,
             mccs=mccs,
             sdp_config=sdp_config,
+            csp_config=csp_config,
             interface=interface,
             transaction_id=transaction_id,
         )
@@ -115,6 +122,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             self.subarray_id == other.subarray_id
             and self.dish == other.dish
             and self.sdp_config == other.sdp_config
+            and self.csp_config == other.csp_config
             and self.mccs == other.mccs
             and self.interface == other.interface
             and self.transaction_id == other.transaction_id

@@ -11,6 +11,7 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesResponse,
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
+from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
@@ -49,11 +50,32 @@ def test_assign_resources_request_eq():
         [pb_config],
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
+    csp_config = CSPConfiguration(
+        interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
+        common={"subarray_id": 1},
+        lowcbf={
+            "resources": [
+                {
+                    "device": "fsp_01",
+                    "shared": True,
+                    "fw_image": "pst",
+                    "fw_mode": "unused",
+                },
+                {
+                    "device": "p4_01",
+                    "shared": True,
+                    "fw_image": "p4.bin",
+                    "fw_mode": "p4",
+                },
+            ]
+        },
+    )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = AssignResourcesRequest(
         1,
         dish_allocation=dish_allocation,
         sdp_config=sdp_config,
+        csp_config=csp_config,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00001",
     )
@@ -62,6 +84,7 @@ def test_assign_resources_request_eq():
         1,
         dish_allocation=dish_allocation,
         sdp_config=sdp_config,
+        csp_config=csp_config,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00001",
     )
@@ -70,14 +93,18 @@ def test_assign_resources_request_eq():
         1,
         dish_allocation=dish_allocation,
         sdp_config=None,
+        csp_config=None,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00002",
     )
-    assert request != AssignResourcesRequest(1, dish_allocation=None, sdp_config=None)
+    assert request != AssignResourcesRequest(
+        1, dish_allocation=None, sdp_config=None, csp_config=None
+    )
     assert request != AssignResourcesRequest(
         1,
         dish_allocation=None,
         sdp_config=sdp_config,
+        csp_config=csp_config,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00001",
     )
@@ -151,7 +178,7 @@ def test_assign_resources_request_eq_with_other_objects():
     """
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = AssignResourcesRequest(
-        1, dish_allocation=dish_allocation, sdp_config=None
+        1, dish_allocation=dish_allocation, sdp_config=None, csp_config=None
     )
     assert request != 1
     assert request != object()
@@ -372,11 +399,32 @@ def test_modified_assign_resources_request_eq():
         execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
+    csp_config = CSPConfiguration(
+        interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
+        common={"subarray_id": 1},
+        lowcbf={
+            "resources": [
+                {
+                    "device": "fsp_01",
+                    "shared": True,
+                    "fw_image": "pst",
+                    "fw_mode": "unused",
+                },
+                {
+                    "device": "p4_01",
+                    "shared": True,
+                    "fw_image": "p4.bin",
+                    "fw_mode": "p4",
+                },
+            ]
+        },
+    )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = AssignResourcesRequest(
         1,
         dish_allocation=dish_allocation,
         sdp_config=sdp_config,
+        csp_config=csp_config,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
         transaction_id="txn-mvp01-20200325-00001",
     )
@@ -385,6 +433,7 @@ def test_modified_assign_resources_request_eq():
         1,
         dish_allocation=dish_allocation,
         sdp_config=sdp_config,
+        csp_config=csp_config,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
         transaction_id="txn-mvp01-20200325-00001",
     )
@@ -393,14 +442,18 @@ def test_modified_assign_resources_request_eq():
         1,
         dish_allocation=dish_allocation,
         sdp_config=None,
+        csp_config=None,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00002",
     )
-    assert request != AssignResourcesRequest(1, dish_allocation=None, sdp_config=None)
+    assert request != AssignResourcesRequest(
+        1, dish_allocation=None, sdp_config=None, csp_config=None
+    )
     assert request != AssignResourcesRequest(
         1,
         dish_allocation=None,
         sdp_config=sdp_config,
+        csp_config=csp_config,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00001",
     )
@@ -521,11 +574,32 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
+    csp_config = CSPConfiguration(
+        interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
+        common={"subarray_id": 1},
+        lowcbf={
+            "resources": [
+                {
+                    "device": "fsp_01",
+                    "shared": True,
+                    "fw_image": "pst",
+                    "fw_mode": "unused",
+                },
+                {
+                    "device": "p4_01",
+                    "shared": True,
+                    "fw_image": "p4.bin",
+                    "fw_mode": "p4",
+                },
+            ]
+        },
+    )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = AssignResourcesRequest(
         1,
         dish_allocation=dish_allocation,
         sdp_config=sdp_config,
+        csp_config=csp_config,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
         transaction_id="txn-mvp01-20200325-00001",
     )
