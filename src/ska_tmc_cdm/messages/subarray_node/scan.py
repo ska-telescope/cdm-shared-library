@@ -2,7 +2,10 @@
 The scan module defines simple Python representations of the structured
 request for a TMC SubArrayNode.Scan command.
 """
-from typing import Optional
+from typing import Dict, Optional
+from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    CSPConfiguration
+)
 
 __all__ = ["ScanRequest"]
 
@@ -26,6 +29,7 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
         interface: Optional[str] = MID_SCHEMA,
         transaction_id: Optional[str] = None,
         scan_id: int,
+        csp_config: CSPConfiguration = None,
     ):
         """
         Create a new ScanRequest.
@@ -38,6 +42,7 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
         self.transaction_id = transaction_id
         self.interface = interface
         self.scan_id = scan_id
+        self.csp_config = csp_config
 
     def __eq__(self, other):
         if not isinstance(other, ScanRequest):
@@ -46,4 +51,7 @@ class ScanRequest:  # pylint: disable=too-few-public-methods
             self.interface == other.interface
             and self.transaction_id == other.transaction_id
             and self.scan_id == other.scan_id
+            and self.csp_config == other.csp_config
         )
+
+

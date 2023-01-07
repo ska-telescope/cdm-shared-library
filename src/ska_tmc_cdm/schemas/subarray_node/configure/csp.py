@@ -16,6 +16,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     FSPConfiguration,
     FSPFunctionMode,
     SubarrayConfiguration,
+    LOWCBFConfiguration
 )
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
@@ -26,6 +27,7 @@ __all__ = [
     "SubarrayConfigurationSchema",
     "CommonConfigurationSchema",
     "CBFConfigurationSchema",
+    "LOWCBFConfigurationSchema"
 ]
 
 
@@ -227,6 +229,49 @@ class CBFConfigurationSchema(Schema):
         result = {k: v for k, v in data.items() if v is not None}
         return result
 
+@CODEC.register_mapping(LOWCBFConfiguration)
+class LOWCBFConfigurationSchema(Schema):
+    scan_id = fields.Integer(data_key="scan_id", required=False)
+    unix_epoch_seconds = fields.Integer(data_key="unix_epoch_seconds", required=False)
+    timestamp_ns = fields.Integer(data_key="timestamp_ns", required=False)
+    packet_offset = fields.Integer(data_key="packet_offset", required=False)
+    scan_seconds = fields.Integer(data_key="scan_seconds", required=False)
+    
+    @post_load
+    def create(self, data, **_):
+        """
+         Convert parsed JSON back into a CBFConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+
+        :return: CBFConfiguration instance populated to match JSON
+        :rtype: CBFConfiguration
+        "scan_id": 987654321,
+        "unix_epoch_seconds": 1616971738,
+        "timestamp_ns": 987654321,
+        "packet_offset": 123456789,
+        "scan_seconds": 30
+        """
+        scan_id = data.get("scan_id", None)
+        unix_epoch_seconds = data.get("unix_epoch_seconds", None)
+        timestamp_ns = data.get("timestamp_ns", None)
+        packet_offset = data.get("packet_offset", None)
+        scan_seconds = data.get("scan_seconds", None)
+        return CBFConfiguration(scan_id=scan_id, unix_epoch_seconds=unix_epoch_seconds, timestamp_ns=timestamp_ns, packet_offset=packet_offset, scan_seconds=scan_seconds)
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CBF configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
 
 @CODEC.register_mapping(CSPConfiguration)
 class CSPConfigurationSchema(ValidatingSchema):
@@ -238,6 +283,7 @@ class CSPConfigurationSchema(ValidatingSchema):
     subarray_config = fields.Nested(SubarrayConfigurationSchema, data_key="subarray")
     common_config = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
+    low_cbf_config = fields.Nested(LOWCBFConfigurationSchema, data_key="low_cbf")
 
     # TODO: In future when csp Interface 2.2 will be used than these 2 parameter type will be                           # pylint: disable=W0511
     #  replaced with the respective class schema (PSSConfigurationSchema,PSTConfigurationSchema)
@@ -259,6 +305,7 @@ class CSPConfigurationSchema(ValidatingSchema):
         cbf_config = data.get("cbf_config", None)
         pss = data.get("pss_config", None)
         pst = data.get("pst_config", None)
+        low_cbf_config = data.get("low_cbf_config", None)
 
         return CSPConfiguration(
             interface=interface,
@@ -267,6 +314,7 @@ class CSPConfigurationSchema(ValidatingSchema):
             cbf_config=cbf_config,
             pss_config=pss,
             pst_config=pst,
+            low_cbf_config=low_cbf_config
         )
 
     @post_dump

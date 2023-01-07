@@ -146,8 +146,8 @@ class CommonConfiguration:
 
     def __init__(
         self,
-        config_id: str,
-        frequency_band: core.ReceiverBand,
+        config_id: str = None,
+        frequency_band: core.ReceiverBand = None,
         subarray_id: int = None,
         band_5_tuning: Optional[List[float]] = None,
     ):
@@ -207,6 +207,42 @@ class CBFConfiguration:
             and self.vlbi_config == other.vlbi_config
         )
 
+class LOWCBFConfiguration:
+    """
+    Class to hold all FSP and VLBI configurations.
+    """
+
+    def __init__(
+        self,
+        scan_id: int = None,
+        unix_epoch_seconds: int = None,
+        timestamp_ns: int = None,
+        packet_offset: int = None,
+        scan_seconds: int = None
+    ):
+        """
+        Create a new CBFConfiguration.
+        :param fsp_configs: the FSP configurations to set
+        :param vlbi_config: the VLBI configurations to set, it is optional
+        """
+        self.scan_id = scan_id
+        self.unix_epoch_seconds = unix_epoch_seconds
+        self.timestamp_ns = timestamp_ns
+        self.packet_offset = packet_offset
+        self.scan_seconds = scan_seconds
+
+    def __eq__(self, other):
+        if not isinstance(other, CBFConfiguration):
+            return False
+        return (
+            self.scan_id == other.scan_id
+            and self.unix_epoch_seconds == other.unix_epoch_seconds
+            and self.timestamp_ns == other.timestamp_ns
+            and self.packet_offset == other.packet_offset
+            and self.scan_seconds == other.scan_seconds
+        )
+
+
 
 class PSTConfiguration:
     pass
@@ -215,6 +251,43 @@ class PSTConfiguration:
 class PSSConfiguration:
     pass
 
+class LowCBFConfiguration:
+    """
+    Class to hold Low CBF Configuration.
+    """
+
+    def __init__(
+        self,
+        scan_id: int = None,
+        unix_epoch_seconds: int = None,
+        timestamp_ns: int = None,
+        packet_offset: int = None,
+        scan_seconds: int = None
+    ):
+        """
+        Create a new LowCBFConfiguration.
+
+        :param stations: stations
+        :param timing_beams: timing_beams
+        :param search_beams: search_beams
+        :param zooms: zooms
+        """
+        self.scan_id = scan_id
+        self.unix_epoch_seconds = unix_epoch_seconds
+        self.timestamp_ns = timestamp_ns
+        self.packet_offset = packet_offset
+        self.scan_seconds = scan_seconds
+
+    def __eq__(self, other):
+        if not isinstance(other, LowCBFConfiguration):
+            return False
+        return (
+            self.scan_id == other.scan_id
+            and self.unix_epoch_seconds == other.unix_epoch_seconds
+            and self.timestamp_ns == other.timestamp_ns
+            and self.packet_offset == other.packet_offset
+            and self.scan_seconds == other.scan_seconds
+        )
 
 class CSPConfiguration:
     """
@@ -227,6 +300,7 @@ class CSPConfiguration:
         subarray_config: SubarrayConfiguration = None,
         common_config: CommonConfiguration = None,
         cbf_config: CBFConfiguration = None,
+        low_cbf_config: LowCBFConfiguration = None,
         # TODO: In future when csp Interface 2.2 will be used than type of pst_config and pss_config                    # pylint: disable=W0511
         #  parameter will be replaced with the respective class(PSTConfiguration,PSSConfiguration)
         pst_config: dict = None,
@@ -250,6 +324,7 @@ class CSPConfiguration:
         self.cbf_config = cbf_config
         self.pst_config = pst_config
         self.pss_config = pss_config
+        self.low_cbf_config = low_cbf_config
 
     def __eq__(self, other):
         if not isinstance(other, CSPConfiguration):
@@ -261,4 +336,5 @@ class CSPConfiguration:
             and self.cbf_config == other.cbf_config
             and self.pst_config == other.pst_config
             and self.pss_config == other.pss_config
+            and self.low_cbf_config == other.low_cbf_config
         )

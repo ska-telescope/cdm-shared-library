@@ -12,6 +12,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     FSPConfiguration,
     FSPFunctionMode,
     SubarrayConfiguration,
+    LOWCBFConfiguration
 )
 from ska_tmc_cdm.schemas.subarray_node.configure import (
     CSPConfigurationSchema,
@@ -199,6 +200,13 @@ def test_marshall_csp_configuration_does_not_modify_original():
             subarray_id=1,
             band_5_tuning=[5.85, 7.25],
         ),
+        low_cbf_config=LOWCBFConfiguration(
+            scan_id = 987654321,
+            unix_epoch_seconds = 987654321,
+            timestamp_ns = 987654321,
+            packet_offset = 987654321,
+            scan_seconds = 987654321,
+        ),
         cbf_config=CBFConfiguration(
             fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)]
         ),
@@ -211,9 +219,10 @@ def test_marshall_csp_configuration_does_not_modify_original():
     assert config.interface == copied.interface
     assert config.subarray_config == copied.subarray_config
     assert config.common_config == copied.common_config
+    assert config.pst_config == copied.pst_config
     assert config.cbf_config == copied.cbf_config
     assert config.pss_config == copied.pss_config
-    assert config.pst_config == copied.pst_config
+    assert config.low_cbf_config == copied.low_cbf_config
 
     assert config == copied
 
