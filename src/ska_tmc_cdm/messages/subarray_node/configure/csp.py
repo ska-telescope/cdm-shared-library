@@ -15,6 +15,7 @@ __all__ = [
     "CBFConfiguration",
     "SubarrayConfiguration",
     "CommonConfiguration",
+    "LowCBFConfiguration",
 ]
 
 
@@ -146,8 +147,8 @@ class CommonConfiguration:
 
     def __init__(
         self,
-        config_id: str,
-        frequency_band: core.ReceiverBand,
+        config_id: str = None,
+        frequency_band: core.ReceiverBand = None,
         subarray_id: int = None,
         band_5_tuning: Optional[List[float]] = None,
     ):
@@ -172,6 +173,185 @@ class CommonConfiguration:
             and self.frequency_band == other.frequency_band
             and self.subarray_id == other.subarray_id
             and self.band_5_tuning == other.band_5_tuning
+        )
+
+
+class StnBeamConfiguration:
+    """
+    Class to hold Stations Beam Configuration.
+    """
+
+    def __init__(
+        self,
+        beam_id: int = None,
+        freq_ids: List[int] = None,
+        boresight_dly_poly: str = None,
+    ):
+        """
+        Create a new StnBeamConfiguration.
+
+        :param beam_id: beam_id
+        :param freq_ids: freq_ids
+        :param boresight_dly_poly: boresight_dly_poly
+        """
+        self.beam_id = beam_id
+        self.freq_ids = freq_ids
+        self.boresight_dly_poly = boresight_dly_poly
+
+    def __eq__(self, other):
+        if not isinstance(other, StnBeamConfiguration):
+            return False
+        return (
+            self.beam_id == other.beam_id
+            and self.freq_ids == other.freq_ids
+            and self.boresight_dly_poly == other.boresight_dly_poly
+        )
+
+
+class StationsConfiguration:
+    """
+    Class to hold Stations Configuration.
+    """
+
+    def __init__(
+        self,
+        stns: List[List[int]] = None,
+        stn_beams: List[StnBeamConfiguration] = None,
+    ):
+        """
+        Create a new StationsConfiguration.
+
+        :param stns: stns
+        :param stn_beams: stn_beams
+        """
+        self.stns = stns
+        self.stn_beams = stn_beams
+
+    def __eq__(self, other):
+        if not isinstance(other, StationsConfiguration):
+            return False
+        return self.stns == other.stns and self.stn_beams == other.stn_beams
+
+
+class BeamsConfiguration:
+    """
+    Class to hold Beams Configuration.
+    """
+
+    def __init__(
+        self,
+        pst_beam_id: int = None,
+        stn_beam_id: int = None,
+        offset_dly_poly: str = None,
+        stn_weights: List[float] = None,
+        jones: str = None,
+        dest_ip: List[str] = None,
+        dest_chans: List[int] = None,
+        rfi_enable: List[bool] = None,
+        rfi_static_chans: List[int] = None,
+        rfi_dynamic_chans: List[int] = None,
+        rfi_weighted: List[float] = None,
+    ):
+        """
+        Create a new BeamsConfiguration.
+
+        :param pst_beam_id: pst_beam_id
+        :param stn_beam_id: stn_beam_id
+        :param offset_dly_poly: offset_dly_poly
+        :param stn_weights: stn_weights
+        :param jones: jones
+        :param dest_ip: dest_ip
+        :param dest_chans: dest_chans
+        :param rfi_enable: rfi_enable
+        :param rfi_static_chans: rfi_static_chans
+        :param rfi_dynamic_chans: rfi_dynamic_chans
+        :param rfi_weighted: rfi_weighted
+        """
+        self.pst_beam_id = pst_beam_id
+        self.stn_beam_id = stn_beam_id
+        self.offset_dly_poly = offset_dly_poly
+        self.stn_weights = stn_weights
+        self.jones = jones
+        self.dest_ip = dest_ip
+        self.dest_chans = dest_chans
+        self.rfi_enable = rfi_enable
+        self.rfi_static_chans = rfi_static_chans
+        self.rfi_dynamic_chans = rfi_dynamic_chans
+        self.rfi_weighted = rfi_weighted
+
+    def __eq__(self, other):
+        if not isinstance(other, BeamsConfiguration):
+            return False
+        return (
+            self.pst_beam_id == other.pst_beam_id
+            and self.stn_beam_id == other.stn_beam_id
+            and self.offset_dly_poly == other.offset_dly_poly
+            and self.stn_weights == other.stn_weights
+            and self.jones == other.jones
+            and self.dest_ip == other.dest_ip
+            and self.dest_chans == other.dest_chans
+            and self.rfi_enable == other.rfi_enable
+            and self.rfi_static_chans == other.rfi_static_chans
+            and self.rfi_dynamic_chans == other.rfi_dynamic_chans
+            and self.rfi_weighted == other.rfi_weighted
+        )
+
+
+class TimingBeamsConfiguration:
+    """
+    Class to hold Timing Beams Configuration.
+    """
+
+    def __init__(
+        self,
+        beams: List[BeamsConfiguration] = None,
+    ):
+        """
+        Create a new TimingBeamsConfiguration.
+
+        :param beams: beams
+        """
+        self.beams = beams
+
+    def __eq__(self, other):
+        if not isinstance(other, TimingBeamsConfiguration):
+            return False
+        return self.beams == other.beams
+
+
+class LowCBFConfiguration:
+    """
+    Class to hold Low CBF Configuration.
+    """
+
+    def __init__(
+        self,
+        stations: StationsConfiguration = None,
+        timing_beams: TimingBeamsConfiguration = None,
+        search_beams: str = None,
+        zooms: str = None,
+    ):
+        """
+        Create a new LowCBFConfiguration.
+
+        :param stations: stations
+        :param timing_beams: timing_beams
+        :param search_beams: search_beams
+        :param zooms: zooms
+        """
+        self.stations = stations
+        self.timing_beams = timing_beams
+        self.search_beams = search_beams
+        self.zooms = zooms
+
+    def __eq__(self, other):
+        if not isinstance(other, LowCBFConfiguration):
+            return False
+        return (
+            self.stations == other.stations
+            and self.timing_beams == other.timing_beams
+            and self.search_beams == other.search_beams
+            and self.zooms == other.zooms
         )
 
 
@@ -224,13 +404,14 @@ class CSPConfiguration:
     def __init__(
         self,
         interface: str = None,
-        subarray_config: SubarrayConfiguration = None,
-        common_config: CommonConfiguration = None,
+        subarray: SubarrayConfiguration = None,
+        common: CommonConfiguration = None,
         cbf_config: CBFConfiguration = None,
         # TODO: In future when csp Interface 2.2 will be used than type of pst_config and pss_config                    # pylint: disable=W0511
         #  parameter will be replaced with the respective class(PSTConfiguration,PSSConfiguration)
         pst_config: dict = None,
         pss_config: dict = None,
+        lowcbf: LowCBFConfiguration = None,
     ):
         """
         Create a new CSPConfiguration, In order to support backward
@@ -238,27 +419,29 @@ class CSPConfiguration:
         support of new attributes as per ADR-18
 
         :param interface: url string to determine JsonSchema version
-        :param subarray_config: Sub-array configuration to set
-        :param common_config: the common CSP elemenets to set
+        :param subarray: Sub-array configuration to set
+        :param common: the common CSP elemenets to set
         :param cbf_config: the CBF configurations to set
         :param pst_config: the PST configurations to set
         :param pss_config: the PSS configurations to set
         """
         self.interface = interface
-        self.subarray_config = subarray_config
-        self.common_config = common_config
+        self.subarray = subarray
+        self.common = common
         self.cbf_config = cbf_config
         self.pst_config = pst_config
         self.pss_config = pss_config
+        self.lowcbf = lowcbf
 
     def __eq__(self, other):
         if not isinstance(other, CSPConfiguration):
             return False
         return (
             self.interface == other.interface
-            and self.subarray_config == other.subarray_config
-            and self.common_config == other.common_config
+            and self.subarray == other.subarray
+            and self.common == other.common
             and self.cbf_config == other.cbf_config
             and self.pst_config == other.pst_config
             and self.pss_config == other.pss_config
+            and self.lowcbf == other.lowcbf
         )

@@ -9,20 +9,25 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    BeamsConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
+    LowCBFConfiguration,
     PSSConfiguration,
     PSTConfiguration,
+    StationsConfiguration,
+    StnBeamConfiguration,
     SubarrayConfiguration,
+    TimingBeamsConfiguration,
 )
 
 CONSTRUCTOR_ARGS = dict(
     interface="interface",
-    subarray_config=SubarrayConfiguration(subarray_name="subarray name"),
-    common_config=CommonConfiguration(
+    subarray=SubarrayConfiguration(subarray_name="subarray name"),
+    common=CommonConfiguration(
         config_id="config_id",
         frequency_band=ReceiverBand.BAND_1,
         subarray_id=1,
@@ -37,8 +42,8 @@ CONSTRUCTOR_ARGS = dict(
 
 CSP_CONFIGURATION_ARGS_PI16 = dict(
     interface="https://schema.skao.int/ska-csp-configure/2.0",
-    subarray_config=SubarrayConfiguration("science period 23"),
-    common_config=CommonConfiguration(
+    subarray=SubarrayConfiguration("science period 23"),
+    common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
         frequency_band=ReceiverBand.BAND_1,
         subarray_id=1,
@@ -74,7 +79,7 @@ CSP_CONFIGURATION_ARGS_PI16 = dict(
 )
 
 
-def test_common_configuration_equals():
+def test_commonuration_equals():
     """
     Verify that CommonConfiguration objects are considered equal when all
     attributes are equal.
@@ -95,7 +100,7 @@ def test_common_configuration_equals():
     assert config1 != CommonConfiguration(config_id, frequency_band, 2)
 
 
-def test_common_configuration_not_equal_to_other_objects():
+def test_commonuration_not_equal_to_other_objects():
     """
     Verify that CommonConfiguration objects are not considered equal to objects
     of other types.
@@ -108,7 +113,7 @@ def test_common_configuration_not_equal_to_other_objects():
     assert config != 1
 
 
-def test_subarray_configuration_equals():
+def test_subarrayuration_equals():
     """
     Verify that SubarrayConfiguration objects are considered equal when all
     attributes are equal.
@@ -122,7 +127,7 @@ def test_subarray_configuration_equals():
     assert config1 != SubarrayConfiguration("Test Subarray2")
 
 
-def test_subarray_configuration_not_equal_to_other_objects():
+def test_subarrayuration_not_equal_to_other_objects():
     """
     Verify that SubarrayConfiguration objects are not considered equal to objects
     of other types.
@@ -222,11 +227,40 @@ def test_csp_configuration_equals():
     """
     o = CSPConfiguration(**CONSTRUCTOR_ARGS)
     assert o == copy.deepcopy(o)
+    stn_beam = {
+        "beam_id": 1,
+        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+        "boresight_dly_poly": "url",
+    }
+    station = {
+        "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
+        "stn_beams": [StnBeamConfiguration(stn_beam)],
+    }
+    beams = {
+        "pst_beam_id": 13,
+        "stn_beam_id": 1,
+        "offset_dly_poly": "url",
+        "stn_weights": [0.9, 1.0, 1.0, 0.9],
+        "jones": "url",
+        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
+        "dest_chans": [128, 256],
+        "rfi_enable": [True, True, True],
+        "rfi_static_chans": [1, 206, 997],
+        "rfi_dynamic_chans": [242, 1342],
+        "rfi_weighted": 0.87,
+    }
+    timing_beams = {"beams": BeamsConfiguration(beams)}
+    low_cbf = {
+        "station": StationsConfiguration(station),
+        "timing_beams": TimingBeamsConfiguration(timing_beams),
+        "search_beams": "",
+        "zooms": "",
+    }
 
     alt_constructor_args = dict(
         interface="foo",
-        subarray_config=SubarrayConfiguration(subarray_name="foo"),
-        common_config=CommonConfiguration(
+        subarray=SubarrayConfiguration(subarray_name="foo"),
+        common=CommonConfiguration(
             config_id="foo",
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
@@ -237,6 +271,7 @@ def test_csp_configuration_equals():
         ),
         pss_config=PSSConfiguration(),
         pst_config=PSTConfiguration(),
+        lowcbf=LowCBFConfiguration(low_cbf),
     )
 
     for k, v in alt_constructor_args.items():
@@ -350,3 +385,252 @@ def test_number_of_channel_avg_mapping_tuples():
     channel_avg_map = list(zip(itertools.count(1, 744), 21 * [0]))
     with pytest.raises(ValueError):
         _ = fsp_constructor(channel_avg_map)
+
+
+def test_stn_beam_configuration_equals():
+    """
+    Verify that StnBeamConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    stn_beam = {
+        "beam_id": 1,
+        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+        "boresight_dly_poly": "url",
+    }
+
+    config1 = StnBeamConfiguration(stn_beam)
+    config2 = StnBeamConfiguration(stn_beam)
+    assert config1 == config2
+
+    assert config1 != StnBeamConfiguration({"beam_id": 1})
+
+
+def test_stn_beam_configuration_not_equal_to_other_objects():
+    """
+    Verify that StnBeamConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    stn_beam = {
+        "beam_id": 1,
+        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+        "boresight_dly_poly": "url",
+    }
+    config = StnBeamConfiguration(stn_beam)
+    assert config != 1
+
+
+def test_station_configuration_equals():
+    """
+    Verify that StationsConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    stn_beam = {
+        "beam_id": 1,
+        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+        "boresight_dly_poly": "url",
+    }
+    station = {
+        "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
+        "stn_beams": [StnBeamConfiguration(stn_beam)],
+    }
+
+    config1 = StationsConfiguration(station)
+    config2 = StationsConfiguration(station)
+    assert config1 == config2
+
+    assert config1 != StationsConfiguration({"stns": [[1, 0], [2, 0], [3, 0], [4, 0]]})
+
+
+def test_station_configuration_not_equal_to_other_objects():
+    """
+    Verify that StationsConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    stn_beam = {
+        "beam_id": 1,
+        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+        "boresight_dly_poly": "url",
+    }
+    station = {
+        "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
+        "stn_beams": [StnBeamConfiguration(stn_beam)],
+    }
+
+    config = StationsConfiguration(station)
+    assert config != 1
+
+
+def test_beams_configuration_equals():
+    """
+    Verify that BeamsConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    beams = {
+        "pst_beam_id": 13,
+        "stn_beam_id": 1,
+        "offset_dly_poly": "url",
+        "stn_weights": [0.9, 1.0, 1.0, 0.9],
+        "jones": "url",
+        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
+        "dest_chans": [128, 256],
+        "rfi_enable": [True, True, True],
+        "rfi_static_chans": [1, 206, 997],
+        "rfi_dynamic_chans": [242, 1342],
+        "rfi_weighted": 0.87,
+    }
+
+    config1 = BeamsConfiguration(beams)
+    config2 = BeamsConfiguration(beams)
+    assert config1 == config2
+    assert config1 != BeamsConfiguration({"pst_beam_id": 13})
+
+
+def test_beams_configuration_not_equal_to_other_objects():
+    """
+    Verify that BeamConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    beams = {
+        "pst_beam_id": 13,
+        "stn_beam_id": 1,
+        "offset_dly_poly": "url",
+        "stn_weights": [0.9, 1.0, 1.0, 0.9],
+        "jones": "url",
+        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
+        "dest_chans": [128, 256],
+        "rfi_enable": [True, True, True],
+        "rfi_static_chans": [1, 206, 997],
+        "rfi_dynamic_chans": [242, 1342],
+        "rfi_weighted": 0.87,
+    }
+
+    config = BeamsConfiguration(beams)
+    assert config != 1
+
+
+def test_timing_beams_configuration_equals():
+    """
+    Verify that TimingBeamsConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    beams = {
+        "pst_beam_id": 13,
+        "stn_beam_id": 1,
+        "offset_dly_poly": "url",
+        "stn_weights": [0.9, 1.0, 1.0, 0.9],
+        "jones": "url",
+        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
+        "dest_chans": [128, 256],
+        "rfi_enable": [True, True, True],
+        "rfi_static_chans": [1, 206, 997],
+        "rfi_dynamic_chans": [242, 1342],
+        "rfi_weighted": 0.87,
+    }
+    timing_beams = {"beams": BeamsConfiguration(beams)}
+    config1 = TimingBeamsConfiguration(timing_beams)
+    config2 = TimingBeamsConfiguration(timing_beams)
+    assert config1 == config2
+    assert config1 != TimingBeamsConfiguration(
+        {"beams": BeamsConfiguration({"pst_beam_id": 13})}
+    )
+
+
+def test_timing_beams_configuration_not_equal_to_other_objects():
+    """
+    Verify that TimingBeamsConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    beams = {
+        "pst_beam_id": 13,
+        "stn_beam_id": 1,
+        "offset_dly_poly": "url",
+        "stn_weights": [0.9, 1.0, 1.0, 0.9],
+        "jones": "url",
+        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
+        "dest_chans": [128, 256],
+        "rfi_enable": [True, True, True],
+        "rfi_static_chans": [1, 206, 997],
+        "rfi_dynamic_chans": [242, 1342],
+        "rfi_weighted": 0.87,
+    }
+    timing_beams = {"beams": BeamsConfiguration(beams)}
+    config = TimingBeamsConfiguration(timing_beams)
+    assert config != 1
+
+
+def test_low_cbf_configuration_equals():
+    """
+    Verify that LowCBFConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    stn_beam = {
+        "beam_id": 1,
+        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+        "boresight_dly_poly": "url",
+    }
+    station = {
+        "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
+        "stn_beams": [StnBeamConfiguration(stn_beam)],
+    }
+    beams = {
+        "pst_beam_id": 13,
+        "stn_beam_id": 1,
+        "offset_dly_poly": "url",
+        "stn_weights": [0.9, 1.0, 1.0, 0.9],
+        "jones": "url",
+        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
+        "dest_chans": [128, 256],
+        "rfi_enable": [True, True, True],
+        "rfi_static_chans": [1, 206, 997],
+        "rfi_dynamic_chans": [242, 1342],
+        "rfi_weighted": 0.87,
+    }
+    timing_beams = {"beams": BeamsConfiguration(beams)}
+    low_cbf = {
+        "station": StationsConfiguration(station),
+        "timing_beams": TimingBeamsConfiguration(timing_beams),
+        "search_beams": "",
+        "zooms": "",
+    }
+    config1 = LowCBFConfiguration(low_cbf)
+    config2 = LowCBFConfiguration(low_cbf)
+    assert config1 == config2
+    assert config1 != LowCBFConfiguration({"station": station})
+
+
+def test_tlow_cbf_configuration_not_equal_to_other_objects():
+    """
+    Verify that LowCBFConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    stn_beam = {
+        "beam_id": 1,
+        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+        "boresight_dly_poly": "url",
+    }
+    station = {
+        "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
+        "stn_beams": [StnBeamConfiguration(stn_beam)],
+    }
+    beams = {
+        "pst_beam_id": 13,
+        "stn_beam_id": 1,
+        "offset_dly_poly": "url",
+        "stn_weights": [0.9, 1.0, 1.0, 0.9],
+        "jones": "url",
+        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
+        "dest_chans": [128, 256],
+        "rfi_enable": [True, True, True],
+        "rfi_static_chans": [1, 206, 997],
+        "rfi_dynamic_chans": [242, 1342],
+        "rfi_weighted": 0.87,
+    }
+    timing_beams = {"beams": BeamsConfiguration(beams)}
+    low_cbf = {
+        "station": StationsConfiguration(station),
+        "timing_beams": TimingBeamsConfiguration(timing_beams),
+        "search_beams": "",
+        "zooms": "",
+    }
+    config = LowCBFConfiguration(low_cbf)
+    assert config != 1
