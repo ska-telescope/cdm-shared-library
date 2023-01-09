@@ -5,7 +5,7 @@ import copy
 
 import pytest
 
-from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
+from ska_tmc_cdm.messages.central_node.csp import CSPLowConfiguration
 
 # example valid interface
 valid_iface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
@@ -19,7 +19,7 @@ valid_lowcbf = {
 # example valid common
 valid_comm = {"subarray_id": 1}
 # valid CSP with these inputs
-valid_obj = CSPConfiguration(
+valid_obj = CSPLowConfiguration(
     interface=valid_iface, lowcbf=valid_lowcbf, common=valid_comm
 )
 
@@ -38,16 +38,16 @@ def test_eq():
     """
     Verify that two different CSP objects of same values considered equal
     """
-    test_obj = CSPConfiguration(
+    test_obj = CSPLowConfiguration(
         interface=valid_iface, lowcbf=valid_lowcbf, common=valid_comm
     )
     assert test_obj == valid_obj
     # however should be unequal for different value of interface
-    assert valid_obj != CSPConfiguration(
+    assert valid_obj != CSPLowConfiguration(
         interface="2.0", lowcbf=valid_lowcbf, common=valid_comm
     )
     # however should be unequal from any other object
-    test_obj = CSPConfiguration(
+    test_obj = CSPLowConfiguration(
         interface=valid_iface, lowcbf=valid_lowcbf, common=valid_comm
     )
     assert test_obj != int(1)
@@ -70,19 +70,19 @@ def test_err():
     del dict(lowcbf_missing_key2["resources"][1])["fw_image"]
     # checking KeyError raised
     with pytest.raises(KeyError):
-        CSPConfiguration(
+        CSPLowConfiguration(
             interface=valid_iface, lowcbf=lowcbf_missing_key1, common=valid_comm
         )
-        CSPConfiguration(
+        CSPLowConfiguration(
             interface=valid_iface, lowcbf=lowcbf_missing_key2, common=valid_comm
         )
     # checking TypeError raised
     # interface not given str value
     with pytest.raises(TypeError):
-        CSPConfiguration(interface=2.0, lowcbf=valid_lowcbf, common=valid_comm)
+        CSPLowConfiguration(interface=2.0, lowcbf=valid_lowcbf, common=valid_comm)
     # 'subarray_id' not given a int
     with pytest.raises(TypeError):
-        CSPConfiguration(
+        CSPLowConfiguration(
             interface=valid_iface, lowcbf=valid_lowcbf, common={"subarray_id": "1"}
         )
 
@@ -90,27 +90,27 @@ def test_err():
     lowcbf_device_int = copy.deepcopy(valid_lowcbf)
     lowcbf_device_int["resources"][0]["device"] = 0
     with pytest.raises(TypeError):
-        CSPConfiguration(
+        CSPLowConfiguration(
             interface=valid_iface, lowcbf=lowcbf_device_int, common=valid_comm
         )
     # shared given int instead of bool
     lowcbf_shared_int = copy.deepcopy(valid_lowcbf)
     lowcbf_shared_int["resources"][0]["shared"] = 20
     with pytest.raises(TypeError):
-        CSPConfiguration(
+        CSPLowConfiguration(
             interface=valid_iface, lowcbf=lowcbf_shared_int, common=valid_comm
         )
     # fw_image given int instead of str
     lowcbf_image_int = copy.deepcopy(valid_lowcbf)
     lowcbf_image_int["resources"][0]["fw_image"] = 8
     with pytest.raises(TypeError):
-        CSPConfiguration(
+        CSPLowConfiguration(
             interface=valid_iface, lowcbf=lowcbf_image_int, common=valid_comm
         )
     # fw_mode given int instead of str
     lowcbf_mode_int = copy.deepcopy(valid_lowcbf)
     lowcbf_mode_int["resources"][0]["fw_mode"] = 9
     with pytest.raises(TypeError):
-        CSPConfiguration(
+        CSPLowConfiguration(
             interface=valid_iface, lowcbf=lowcbf_mode_int, common=valid_comm
         )

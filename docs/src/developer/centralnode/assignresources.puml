@@ -132,6 +132,12 @@ package ska_tmc_cdm.messages.central_node {
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
         SDPConfiguration *-- "1" ExecutionBlockConfiguration
 
+        class CSPLowConfiguration {
+            interface: str
+            common: Dict[str, int]
+            lowcbf: Dict[str, List[Dict]]
+        }
+
         class AssignResourcesRequest {
             interface : str
             transaction_id : str
@@ -141,10 +147,10 @@ package ska_tmc_cdm.messages.central_node {
         AssignResourcesRequest *-- "1" DishAllocation
         AssignResourcesRequest *-- "1" MCCSAllocate
         AssignResourcesRequest *-- "1" SDPConfiguration
+        AssignResourcesRequest *-- "1" CSPLowConfiguration
 
         class AssignResourcesResponse
         AssignResourcesResponse *-- "1" DishAllocation
 	}
 }
-
 @enduml

@@ -702,6 +702,50 @@ VALID_ASSIGN_RESOURCE_WITH_SDP_MINIMAL_PARAMETERS_JSON_PI16 = """
 }
 }"""
 
+VALID_LOW_ASSIGN_RESOURCE_WITH_CSP_JSON_PI17 = """
+{
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.0",
+  "transaction_id": "txn-....-00001",
+  "subarray_id": 1,
+  "mccs": {
+    "subarray_beam_ids": [
+      1
+    ],
+    "station_ids": [
+      [
+        1,
+        2
+      ]
+    ],
+    "channel_blocks": [
+      3
+    ]
+  },
+  "csp": {
+    "interface": "https://schema.skao.int/ska-low-csp-assignresources/2.0",
+    "common": {
+      "subarray_id": 1
+    },
+    "lowcbf": {
+      "resources": [
+        {
+          "device": "fsp_01",
+          "shared": true,
+          "fw_image": "pst",
+          "fw_mode": "unused"
+        },
+        {
+          "device": "p4_01",
+          "shared": true,
+          "fw_image": "p4.bin",
+          "fw_mode": "p4"
+        }
+      ]
+    }
+  }
+}
+"""
+
 
 def low_invalidator_fn(o: AssignResourcesRequest):
     # function to make a valid LOW AssignedResourcesRequest invalid
@@ -818,5 +862,22 @@ def test_validate_serialization_and_deserialization_assign_resource_with_sdp_min
 
     assert_json_is_equal(
         VALID_ASSIGN_RESOURCE_WITH_SDP_MINIMAL_PARAMETERS_JSON_PI16,
+        serialized_assign_resource_config,
+    )
+
+
+def test_validate_serialization_and_deserialization_low_assign_resource_with_csp_parameters_using_schema_class():
+    """
+    Verifies that the Assign Resource schema marshal and Unmarshal works correctly
+    """
+    assign_resource_config = AssignResourcesRequestSchema().loads(
+        VALID_LOW_ASSIGN_RESOURCE_WITH_CSP_JSON_PI17
+    )
+    serialized_assign_resource_config = AssignResourcesRequestSchema().dumps(
+        assign_resource_config
+    )
+
+    assert_json_is_equal(
+        VALID_LOW_ASSIGN_RESOURCE_WITH_CSP_JSON_PI17,
         serialized_assign_resource_config,
     )

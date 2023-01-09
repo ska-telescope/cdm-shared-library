@@ -4,7 +4,7 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 
 from .common import DishAllocation
-from .csp import CSPConfiguration
+from .csp import CSPLowConfiguration
 from .mccs import MCCSAllocate
 from .sdp import SDPConfiguration
 
@@ -22,7 +22,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int = None,
         dish_allocation: DishAllocation = None,
         sdp_config: SDPConfiguration = None,
-        csp_config: CSPConfiguration = None,
+        csp_config: CSPLowConfiguration = None,
         mccs: MCCSAllocate = None,
         interface: str = None,
         transaction_id: str = None,
@@ -61,7 +61,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int,
         dish_allocation: DishAllocation,
         sdp_config: SDPConfiguration = None,
-        csp_config: CSPConfiguration = None,
+        csp_config: CSPLowConfiguration = None,
         interface: str = None,
         transaction_id: str = None,
     ):
@@ -92,7 +92,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int,
         mccs: MCCSAllocate,
         sdp_config: SDPConfiguration = None,
-        csp_config: CSPConfiguration = None,
+        csp_config: CSPLowConfiguration = None,
         interface: str = None,
         transaction_id: str = None,
     ):
