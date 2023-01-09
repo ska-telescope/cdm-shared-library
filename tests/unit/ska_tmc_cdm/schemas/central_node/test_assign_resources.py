@@ -20,6 +20,15 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ScanType,
     SDPConfiguration,
     SDPWorkflow,
+    ExecutionBlockConfiguration,
+    BeamConfiguration,
+    EBScanType,
+    EBScanTypeBeam,
+    ChannelConfiguration,
+    Channel,
+    PolarisationConfiguration,
+    FieldConfiguration,
+    ScriptConfiguration
 )
 from ska_tmc_cdm.schemas.central_node.assign_resources import (
     AssignResourcesRequestSchema,
@@ -31,160 +40,606 @@ from ska_tmc_cdm.utils import assert_json_is_equal
 from .. import utils
 
 VALID_SDP_JSON = """{
-  "interface": "https://schema.skao.int/ska-sdp-assignresources/2.0",
-  "eb_id": "eb-mvp01-20200325-00001",
-  "max_length": 100.0,
-  "scan_types": [
-    {
-      "scan_type_id": "science_A",
-      "reference_frame": "ICRS",
-      "ra": "02:42:40.771",
-      "dec": "-00:00:47.84",
-      "channels": [
-        {
-          "count": 744,
-          "start": 0,
-          "stride": 2,
-          "freq_min": 0.35e9,
-          "freq_max": 0.368e9,
-          "link_map": [[0, 0], [200, 1], [744, 2], [944, 3]]
-        },
-        {
-          "count": 744,
-          "start": 2000,
-          "stride": 1,
-          "freq_min": 0.36e9,
-          "freq_max": 0.368e9,
-          "link_map": [[2000, 4], [2200, 5]]
-        }
-      ]
-    },
-    {
-      "scan_type_id": "calibration_B",
-      "reference_frame": "ICRS",
-      "ra": "12:29:06.699",
-      "dec": "02:03:08.598",
-      "channels": [
-        {
-          "count": 744,
-          "start": 0,
-          "stride": 2,
-          "freq_min": 0.35e9,
-          "freq_max": 0.368e9,
-          "link_map": [[0, 0], [200, 1], [744, 2], [944, 3]]
-        },
-        {
-          "count": 744,
-          "start": 2000,
-          "stride": 1,
-          "freq_min": 0.36e9,
-          "freq_max": 0.368e9,
-          "link_map": [[2000, 4], [2200, 5]]
-        }
-      ]
-    }
-  ],
-  "processing_blocks": [
-    {
-      "pb_id": "pb-mvp01-20200325-00001",
-      "workflow": {
-        "kind": "realtime",
-        "name": "vis_receive",
-        "version": "0.1.0"
+      "interface":"https://schema.skao.int/ska-sdp-assignres/0.4",
+      "execution_block":{
+         "eb_id":"eb-mvp01-20210623-00000",
+         "max_length":100.0,
+         "context":{
+            
+         },
+         "beams":[
+            {
+               "beam_id":"vis0",
+               "function":"visibilities"
+            },
+            {
+               "beam_id":"pss1",
+               "search_beam_id":1,
+               "function":"pulsar search"
+            },
+            {
+               "beam_id":"pss2",
+               "search_beam_id":2,
+               "function":"pulsar search"
+            },
+            {
+               "beam_id":"pst1",
+               "timing_beam_id":1,
+               "function":"pulsar timing"
+            },
+            {
+               "beam_id":"pst2",
+               "timing_beam_id":2,
+               "function":"pulsar timing"
+            },
+            {
+               "beam_id":"vlbi1",
+               "vlbi_beam_id":1,
+               "function":"vlbi"
+            }
+         ],
+         "scan_types":[
+            {
+               "scan_type_id":".default",
+               "beams":{
+                  "vis0":{
+                     "channels_id":"vis_channels",
+                     "polarisations_id":"all"
+                  },
+                  "pss1":{
+                     "field_id":"pss_field_0",
+                     "channels_id":"pulsar_channels",
+                     "polarisations_id":"all"
+                  },
+                  "pss2":{
+                     "field_id":"pss_field_1",
+                     "channels_id":"pulsar_channels",
+                     "polarisations_id":"all"
+                  },
+                  "pst1":{
+                     "field_id":"pst_field_0",
+                     "channels_id":"pulsar_channels",
+                     "polarisations_id":"all"
+                  },
+                  "pst2":{
+                     "field_id":"pst_field_1",
+                     "channels_id":"pulsar_channels",
+                     "polarisations_id":"all"
+                  },
+                  "vlbi":{
+                     "field_id":"vlbi_field",
+                     "channels_id":"vlbi_channels",
+                     "polarisations_id":"all"
+                  }
+               }
+            },
+            {
+               "scan_type_id":"target:a",
+               "derive_from":".default",
+               "beams":{
+                  "vis0":{
+                     "field_id":"field_a"
+                  }
+               }
+            }
+         ],
+         "channels":[
+            {
+               "channels_id":"vis_channels",
+               "spectral_windows":[
+                  {
+                     "spectral_window_id":"fsp_1_channels",
+                     "count":744,
+                     "start":0,
+                     "stride":2,
+                     "freq_min":350000000.0,
+                     "freq_max":368000000.0,
+                     "link_map":[
+                        [
+                           0,
+                           0
+                        ],
+                        [
+                           200,
+                           1
+                        ],
+                        [
+                           744,
+                           2
+                        ],
+                        [
+                           944,
+                           3
+                        ]
+                     ]
+                  },
+                  {
+                     "spectral_window_id":"fsp_2_channels",
+                     "count":744,
+                     "start":2000,
+                     "stride":1,
+                     "freq_min":360000000.0,
+                     "freq_max":368000000.0,
+                     "link_map":[
+                        [
+                           2000,
+                           4
+                        ],
+                        [
+                           2200,
+                           5
+                        ]
+                     ]
+                  },
+                  {
+                     "spectral_window_id":"zoom_window_1",
+                     "count":744,
+                     "start":4000,
+                     "stride":1,
+                     "freq_min":360000000.0,
+                     "freq_max":361000000.0,
+                     "link_map":[
+                        [
+                           4000,
+                           6
+                        ],
+                        [
+                           4200,
+                           7
+                        ]
+                     ]
+                  }
+               ]
+            }
+         ],
+         "polarisations":[
+            {
+               "polarisations_id":"all",
+               "corr_type":[
+                  "XX",
+                  "XY",
+                  "YY",
+                  "YX"
+               ]
+            }
+         ],
+         "fields":[
+            {
+               "field_id":"field_a",
+               "phase_dir":{
+                  "ra":[
+                     123,
+                     0.1
+                  ],
+                  "dec":[
+                     80,
+                     0.1
+                  ],
+                  "reference_time":"...",
+                  "reference_frame":"ICRF3"
+               },
+               "pointing_fqdn":"low-tmc/telstate/0/pointing"
+            }
+         ]
       },
-      "parameters": {}
-    },
-    {
-      "pb_id": "pb-mvp01-20200325-00002",
-      "workflow": {
-        "kind": "realtime",
-        "name": "test_realtime",
-        "version": "0.1.0"
-      },
-      "parameters": {}
-    },
-    {
-      "pb_id": "pb-mvp01-20200325-00003",
-      "workflow": {"kind": "batch", "name": "ical", "version": "0.1.0"},
-      "parameters": {},
-      "dependencies": [
-        {"pb_id": "pb-mvp01-20200325-00001", "kind": ["visibilities"]}
-      ]
-    },
-    {
-      "pb_id": "pb-mvp01-20200325-00004",
-      "workflow": {"kind": "batch", "name": "dpreb", "version": "0.1.0"},
-      "parameters": {},
-      "dependencies": [
-        {"pb_id": "pb-mvp01-20200325-00003", "kind": ["calibration"]}
-      ]
-    }
-  ]
+      "processing_blocks":[
+         {
+            "pb_id":"pb-mvp01-20210623-00000",
+            "sbi_ids":[
+               "sbi-mvp01-20200325-00001"
+            ],
+            "script":{
+               "kind":"realtime",
+               "name":"vis_receive",
+               "version":"0.1.0"
+            },
+            "parameters":{
+               
+            }
+         },
+         {
+            "pb_id":"pb-mvp01-20210623-00001",
+            "sbi_ids":[
+               "sbi-mvp01-20200325-00001"
+            ],
+            "script":{
+               "kind":"realtime",
+               "name":"test_realtime",
+               "version":"0.1.0"
+            },
+            "parameters":{
+               
+            }
+         },
+         {
+            "pb_id":"pb-mvp01-20210623-00002",
+            "sbi_ids":[
+               "sbi-mvp01-20200325-00002"
+            ],
+            "script":{
+               "kind":"batch",
+               "name":"ical",
+               "version":"0.1.0"
+            },
+            "parameters":{
+               
+            },
+            "dependencies":[
+               {
+                  "pb_id":"pb-mvp01-20210623-00000",
+                  "kind":[
+                     "visibilities"
+                  ]
+               }
+            ]
+         },
+         {
+            "pb_id":"pb-mvp01-20210623-00003",
+            "sbi_ids":[
+               "sbi-mvp01-20200325-00001",
+               "sbi-mvp01-20200325-00002"
+            ],
+            "script":{
+               "kind":"batch",
+               "name":"dpreb",
+               "version":"0.1.0"
+            },
+            "parameters":{
+               
+            },
+            "dependencies":[
+               {
+                  "pb_id":"pb-mvp01-20210623-00002",
+                  "kind":[
+                     "calibration"
+                  ]
+               }
+            ]
+         }
+      ],
+      "resources":{
+         "csp_links":[
+            1,
+            2,
+            3,
+            4
+         ],
+         "receptors":[
+            "FS4",
+            "FS8",
+            "FS16",
+            "FS17",
+            "FS22",
+            "FS23",
+            "FS30",
+            "FS31",
+            "FS32",
+            "FS33",
+            "FS36",
+            "FS52",
+            "FS56",
+            "FS57",
+            "FS59",
+            "FS62",
+            "FS66",
+            "FS69",
+            "FS70",
+            "FS72",
+            "FS73",
+            "FS78",
+            "FS80",
+            "FS88",
+            "FS89",
+            "FS90",
+            "FS91",
+            "FS98",
+            "FS108",
+            "FS111",
+            "FS132",
+            "FS144",
+            "FS146",
+            "FS158",
+            "FS165",
+            "FS167",
+            "FS176",
+            "FS183",
+            "FS193",
+            "FS200",
+            "FS345",
+            "FS346",
+            "FS347",
+            "FS348",
+            "FS349",
+            "FS350",
+            "FS351",
+            "FS352",
+            "FS353",
+            "FS354",
+            "FS355",
+            "FS356",
+            "FS429",
+            "FS430",
+            "FS431",
+            "FS432",
+            "FS433",
+            "FS434",
+            "FS465",
+            "FS466",
+            "FS467",
+            "FS468",
+            "FS469",
+            "FS470"
+         ],
+         "receive_nodes":10
+      }
 }"""
 
 VALID_SDP_OBJECT = SDPConfiguration(
-    interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
-    eb_id="eb-mvp01-20200325-00001",
-    max_length=100.0,
-    scan_types=[
-        ScanType(
-            "science_A",
-            "ICRS",
-            "02:42:40.771",
-            "-00:00:47.84",
-            [
-                Channel(
-                    744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    interface="https://schema.skao.int/ska-sdp-assignres/0.4",
+    execution_block = ExecutionBlockConfiguration(
+            eb_id = "eb-mvp01-20210623-00000",
+            max_length = 100.0,
+            context = {},
+            beams = [BeamConfiguration(
+                  beam_id = "vis0", 
+                  function = "visibilities"
                 ),
-                Channel(744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]]),
-            ],
-        ),
-        ScanType(
-            "calibration_B",
-            "ICRS",
-            "12:29:06.699",
-            "02:03:08.598",
-            [
-                Channel(
-                    744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+                BeamConfiguration(
+                    beam_id = "pss1",
+                    search_beam_id = 1,
+                    function = "pulsar search",
                 ),
-                Channel(744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]]),
+                BeamConfiguration(
+                    beam_id = "pss2",
+                    search_beam_id = 2,
+                    function = "pulsar search",
+                ),
+                BeamConfiguration(
+                    beam_id = "pst1",
+                    timing_beam_id = 1,
+                    function = "pulsar timing",
+                ),
+                BeamConfiguration(
+                    beam_id = "pst2",
+                    timing_beam_id = 2,
+                    function = "pulsar timing",
+                ),
+                BeamConfiguration(
+                    beam_id = "vlbi1", 
+                    vlbi_beam_id = 1, 
+                    function =  "vlbi"
+                ),
             ],
-        ),
-    ],
-    processing_blocks=[
-        ProcessingBlockConfiguration(
-            pb_id="pb-mvp01-20200325-00001",
-            workflow=SDPWorkflow("vis_receive", "realtime", "0.1.0"),
-            parameters={},
-        ),
-        ProcessingBlockConfiguration(
-            pb_id="pb-mvp01-20200325-00002",
-            workflow=SDPWorkflow("test_realtime", "realtime", "0.1.0"),
-            parameters={},
-        ),
-        ProcessingBlockConfiguration(
-            pb_id="pb-mvp01-20200325-00003",
-            workflow=SDPWorkflow("ical", "batch", "0.1.0"),
-            parameters={},
-            dependencies=[PbDependency("pb-mvp01-20200325-00001", ["visibilities"])],
-        ),
-        ProcessingBlockConfiguration(
-            pb_id="pb-mvp01-20200325-00004",
-            workflow=SDPWorkflow("dpreb", "batch", "0.1.0"),
-            parameters={},
-            dependencies=[PbDependency("pb-mvp01-20200325-00003", ["calibration"])],
-        ),
-    ],
+        scan_types = [EBScanType
+                (
+                    scan_type_id = ".default",
+                    beams = { "vis0":EBScanTypeBeam(
+                            channels_id = "vis_channels",
+                            polarisations_id = "all",
+                    ),
+                        "pss1":EBScanTypeBeam(
+                            field_id = "pss_field_0",
+                            channels_id = "pulsar_channels",
+                            polarisations_id = "all",
+                        ),
+                        "pss2":EBScanTypeBeam(
+                            field_id = "pss_field_1",
+                            channels_id = "pulsar_channels",
+                            polarisations_id = "all",
+                        ),
+                        "pst1":EBScanTypeBeam(
+                            field_id = "pst_field_0",
+                            channels_id = "pulsar_channels",
+                            polarisations_id = "all",
+                        ),
+                        "pst2":EBScanTypeBeam(
+                            field_id = "pst_field_1",
+                            channels_id = "pulsar_channels",
+                            polarisations_id = "all",
+                        ),
+                        "vlbi":EBScanTypeBeam(
+                            field_id = "vlbi_field",
+                            channels_id = "vlbi_channels",
+                            polarisations_id = "all",
+                        ),
+                    },
+                ),
+                EBScanType(
+                    scan_type_id = "target:a",
+                    derive_from = ".default",
+                    beams = {"vis0": EBScanTypeBeam(field_id = "field_a")}
+                ),
+        ],
+        channels = [ChannelConfiguration
+                (
+                    channels_id = "vis_channels",
+                    spectral_windows = [
+                        Channel(
+                            spectral_window_id = "fsp_1_channels",
+                            count = 744,
+                            start = 0,
+                            stride = 2,
+                            freq_min = 350000000.0,
+                            freq_max = 368000000.0,
+                            link_map = [[0, 0], [200, 1], [744, 2], [944, 3]],
+                        ),
+                        Channel(
+                            spectral_window_id = "fsp_2_channels",
+                            count = 744,
+                            start = 2000,
+                            stride = 1,
+                            freq_min = 360000000.0,
+                            freq_max = 368000000.0,
+                            link_map = [[2000, 4], [2200, 5]],
+                        ),
+                        Channel(
+                            spectral_window_id = "zoom_window_1",
+                            count = 744,
+                            start = 4000,
+                            stride = 1,
+                            freq_min = 360000000.0,
+                            freq_max = 361000000.0,
+                            link_map = [[4000, 6], [4200, 7]],
+                        ),
+                    ],
+                )
+        ],
+        polarisations = [PolarisationConfiguration
+                (
+                    polarisations_id = "all",
+                    corr_type = ["XX", "XY", "YY", "YX"],
+                )
+            ],
+        fields = [FieldConfiguration(
+                    field_id = "field_a",
+                    phase_dir = {
+                        "ra" :[123, 0.1],
+                        "dec" :[80, 0.1],
+                        "reference_time" : "...",
+                        "reference_frame" : "ICRF3",
+                    },
+                    pointing_fqdn = "low-tmc/telstate/0/pointing",
+                )
+            ],     
+   ),
+   processing_blocks = [ProcessingBlockConfiguration
+            (
+                pb_id = "pb-mvp01-20210623-00000",
+                sbi_ids = ["sbi-mvp01-20200325-00001"],
+                script = ScriptConfiguration(
+                    kind = "realtime",
+                    name = "vis_receive",
+                    version = "0.1.0",
+                ),
+                parameters = {},
+            ),
+            ProcessingBlockConfiguration(
+                pb_id = "pb-mvp01-20210623-00001",
+                sbi_ids = ["sbi-mvp01-20200325-00001"],
+                script = ScriptConfiguration(
+                    kind = "realtime",
+                    name = "test_realtime",
+                    version = "0.1.0",
+                ),
+                parameters = {},
+            ),
+            ProcessingBlockConfiguration(
+                pb_id = "pb-mvp01-20210623-00002",
+                sbi_ids = ["sbi-mvp01-20200325-00002"],
+                script = ScriptConfiguration(
+                    kind = "batch",
+                    name = "ical",
+                    version = "0.1.0",
+                ),
+                parameters = {},
+                dependencies = [PbDependency
+                    (
+                        pb_id = "pb-mvp01-20210623-00000",
+                        kind = ["visibilities"],
+                    )
+                ],
+            ),
+            ProcessingBlockConfiguration(
+                pb_id = "pb-mvp01-20210623-00003",
+                sbi_ids = [
+                    "sbi-mvp01-20200325-00001",
+                    "sbi-mvp01-20200325-00002",
+                ],
+                script = ScriptConfiguration(
+                    kind = "batch",
+                    name = "dpreb",
+                    version = "0.1.0",
+                ),
+                parameters = {},
+                dependencies = [PbDependency
+                    (
+                        pb_id = "pb-mvp01-20210623-00002",
+                        kind = ["calibration"],
+                    )
+                ],
+            ),
+        ],
+        resources = {
+            "csp_links": [1, 2, 3, 4],
+            "receptors": [
+                "FS4",
+                "FS8",
+                "FS16",
+                "FS17",
+                "FS22",
+                "FS23",
+                "FS30",
+                "FS31",
+                "FS32",
+                "FS33",
+                "FS36",
+                "FS52",
+                "FS56",
+                "FS57",
+                "FS59",
+                "FS62",
+                "FS66",
+                "FS69",
+                "FS70",
+                "FS72",
+                "FS73",
+                "FS78",
+                "FS80",
+                "FS88",
+                "FS89",
+                "FS90",
+                "FS91",
+                "FS98",
+                "FS108",
+                "FS111",
+                "FS132",
+                "FS144",
+                "FS146",
+                "FS158",
+                "FS165",
+                "FS167",
+                "FS176",
+                "FS183",
+                "FS193",
+                "FS200",
+                "FS345",
+                "FS346",
+                "FS347",
+                "FS348",
+                "FS349",
+                "FS350",
+                "FS351",
+                "FS352",
+                "FS353",
+                "FS354",
+                "FS355",
+                "FS356",
+                "FS429",
+                "FS430",
+                "FS431",
+                "FS432",
+                "FS433",
+                "FS434",
+                "FS465",
+                "FS466",
+                "FS467",
+                "FS468",
+                "FS469",
+                "FS470",
+            ],
+            "receive_nodes": 10,
+        },
 )
+
+
 
 VALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
     """
 {
-  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.0",
-  "transaction_id":"txn-mvp01-20200325-00004",
+  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
+  "transaction_id":"txn-....-00001",
   "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001", "0002"]},
+  "dish": {"receptor_ids": ["0001"]},
   "sdp": """
     + VALID_SDP_JSON
     + """
@@ -193,10 +648,10 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
 )
 
 VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
-    transaction_id="txn-mvp01-20200325-00004",
+    interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
+    transaction_id="txn-....-00001",
     subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+    dish_allocation=DishAllocation(receptor_ids=["0001"]),
     sdp_config=VALID_SDP_OBJECT,
 )
 
