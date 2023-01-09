@@ -6,7 +6,7 @@ from datetime import timedelta
 
 import pytest
 
-from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
+from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     PointingConfiguration,
@@ -233,50 +233,6 @@ INVALID_LOW_CONFIGURE_JSON = """
   }
 }
 """
-
-
-VALID_MID_DISH_ONLY_JSON = (
-    """
-{
-    "interface": """
-    + f'"{SCHEMA}"'
-    + """,
-    "dish": {
-        "receiver_band": "1"
-    }
-}
-"""
-)
-
-VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
-    dish=DishConfiguration(ReceiverBand.BAND_1)
-)
-
-VALID_NULL_JSON = (
-    """
-{
-    "interface": """
-    + f'"{SCHEMA}"'
-    + """
-}
-"""
-)
-
-VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
-    dish=DishConfiguration(ReceiverBand.BAND_1)
-)
-
-VALID_NULL_JSON = (
-    """
-{
-    "interface": """
-    + f'"{SCHEMA}"'
-    + """
-}
-"""
-)
-
-VALID_NULL_OBJECT = ConfigureRequest()
 
 
 VALID_MID_CONFIGURE_JSON_PI16 = """
