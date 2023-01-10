@@ -210,7 +210,8 @@ Example PI 17 JSON input modelled by ``AssignResourcesRequest`` for LOW:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-low-tmc-assignresources/2.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.0",
+    "transaction_id": "txn-....-00001",
     "subarray_id": 1,
     "mccs": {
         "subarray_beam_ids": [1],
