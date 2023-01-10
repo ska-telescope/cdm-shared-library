@@ -63,7 +63,7 @@ VALID_LOW_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-releaseresources/3.0",
     subarray_id=1,
     release_all=True,
-    transaction_id= "txn-....-00001",
+    transaction_id="txn-....-00001",
 )
 
 INVALID_LOW_FULL_RELEASE_JSON = """
