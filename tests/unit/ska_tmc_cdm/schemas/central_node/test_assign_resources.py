@@ -230,8 +230,7 @@ VALID_SDP_JSON = """
                "name":"vis_receive",
                "version":"0.1.0"
             },
-            "parameters":{
-               
+            "parameters":{      
             }
          },
          {
@@ -244,8 +243,7 @@ VALID_SDP_JSON = """
                "name":"test_realtime",
                "version":"0.1.0"
             },
-            "parameters":{
-               
+            "parameters":{       
             }
          },
          {
@@ -259,7 +257,6 @@ VALID_SDP_JSON = """
                "version":"0.1.0"
             },
             "parameters":{
-               
             },
             "dependencies":[
                {
@@ -281,8 +278,7 @@ VALID_SDP_JSON = """
                "name":"dpreb",
                "version":"0.1.0"
             },
-            "parameters":{
-               
+            "parameters":{  
             },
             "dependencies":[
                {
