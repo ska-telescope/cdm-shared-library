@@ -430,10 +430,13 @@ def test_configure_request_eq_for_low_pi17():
     }
 
     request_1 = ConfigureRequest(
-        interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
+        interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
         transaction_id="txn-....-00001",
         mccs=mccs_config,
-        sdp=SDPConfiguration(scan_type="science_A"),
+        sdp=SDPConfiguration(
+            interface="https://schema.skao.int/ska-sdp-configure/0.4",
+            scan_type="science_A",
+        ),
         tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
         csp=CSPConfiguration(
             interface="https://schema.skao.int/ska-csp-configure/2.0",
@@ -492,10 +495,13 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
     }
 
     request = ConfigureRequest(
-        interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
+        interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
         transaction_id="txn-....-00001",
         mccs=mccs_config,
-        sdp=SDPConfiguration(scan_type="science_A"),
+        sdp=SDPConfiguration(
+            interface="https://schema.skao.int/ska-sdp-configure/0.4",
+            scan_type="science_A",
+        ),
         tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
         csp=CSPConfiguration(
             interface="https://schema.skao.int/ska-csp-configure/2.0",

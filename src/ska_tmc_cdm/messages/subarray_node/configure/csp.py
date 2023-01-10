@@ -16,6 +16,10 @@ __all__ = [
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
+    "TimingBeamsConfiguration",
+    "BeamsConfiguration",
+    "StationsConfiguration",
+    "StnBeamConfiguration",
 ]
 
 
@@ -48,7 +52,7 @@ class FSPConfiguration:
         output_link_map: List[Tuple] = None,
         channel_offset: int = None,
         zoom_window_tuning: int = None,
-    ):
+    ) -> object:
         """
         Create a new FSPConfiguration.
 
@@ -127,7 +131,7 @@ class SubarrayConfiguration:
     Class to hold the parameters relevant only for the current sub-array device.
     """
 
-    def __init__(self, subarray_name: str):
+    def __init__(self, subarray_name: str) -> object:
         """
         Create  sub-array device configuration.
         :param sub-array_name: Name of the sub-array
@@ -151,7 +155,7 @@ class CommonConfiguration:
         frequency_band: core.ReceiverBand = None,
         subarray_id: int = None,
         band_5_tuning: Optional[List[float]] = None,
-    ):
+    ) -> object:
         """
         Create a new CSPConfiguration.
 
@@ -186,7 +190,7 @@ class StnBeamConfiguration:
         beam_id: int = None,
         freq_ids: List[int] = None,
         boresight_dly_poly: str = None,
-    ):
+    ) -> object:
         """
         Create a new StnBeamConfiguration.
 
@@ -251,7 +255,7 @@ class BeamsConfiguration:
         rfi_static_chans: List[int] = None,
         rfi_dynamic_chans: List[int] = None,
         rfi_weighted: List[float] = None,
-    ):
+    ) -> object:
         """
         Create a new BeamsConfiguration.
 
@@ -305,7 +309,7 @@ class TimingBeamsConfiguration:
     def __init__(
         self,
         beams: List[BeamsConfiguration] = None,
-    ):
+    ) -> object:
         """
         Create a new TimingBeamsConfiguration.
 
@@ -330,7 +334,7 @@ class LowCBFConfiguration:
         timing_beams: TimingBeamsConfiguration = None,
         search_beams: str = None,
         zooms: str = None,
-    ):
+    ) -> object:
         """
         Create a new LowCBFConfiguration.
 
@@ -370,7 +374,7 @@ class CBFConfiguration:
         # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter                        # pylint: disable=W0511
         #  will be replaced with the respective class(VLBIConfiguration)
         vlbi_config: dict = None,
-    ):
+    ) -> object:
         """
         Create a new CBFConfiguration.
         :param fsp_configs: the FSP configurations to set
@@ -412,7 +416,7 @@ class CSPConfiguration:
         pst_config: dict = None,
         pss_config: dict = None,
         lowcbf: LowCBFConfiguration = None,
-    ):
+    ) -> object:
         """
         Create a new CSPConfiguration, In order to support backward
         compatibility, We have kept old attributes as it is and added
