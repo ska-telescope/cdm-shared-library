@@ -5,18 +5,18 @@ for the TMC CentralNode.AssignResources command.
 """
 from marshmallow import Schema, fields, post_dump, post_load
 
-from ska_tmc_cdm.messages.central_node.csp import CSPLowConfiguration
+from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
 from ska_tmc_cdm.schemas import CODEC
 
 __all__ = [
-    "CSPLowConfigurationSchema",
+    "CSPConfigurationSchema",
 ]
 
 
 class Resources(Schema):
     """
     Marsmallow class for the resources field
-    of CSPLowConfigurationSchema
+    of CSPConfigurationSchema
     """
 
     device = fields.String(metadata={"require": True})
@@ -25,8 +25,8 @@ class Resources(Schema):
     fw_mode = fields.String(metadata={"require": True})
 
 
-@CODEC.register_mapping(CSPLowConfiguration)
-class CSPLowConfigurationSchema(Schema):
+@CODEC.register_mapping(CSPConfiguration)
+class CSPConfigurationSchema(Schema):
     """
     Marsmallow class for the CSPConfiguration class
     """
@@ -61,4 +61,4 @@ class CSPLowConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: CSPConfiguration object populated from data
         """
-        return CSPLowConfiguration(**data)
+        return CSPConfiguration(**data)

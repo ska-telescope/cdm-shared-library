@@ -11,7 +11,7 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesResponse,
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.csp import CSPLowConfiguration
+from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
@@ -50,7 +50,7 @@ def test_assign_resources_request_eq():
         [pb_config],
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
-    csp_config = CSPLowConfiguration(
+    csp_config = CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
         common={"subarray_id": 1},
         lowcbf={
@@ -399,7 +399,7 @@ def test_modified_assign_resources_request_eq():
         execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
-    csp_config = CSPLowConfiguration(
+    csp_config = CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
         common={"subarray_id": 1},
         lowcbf={
@@ -574,7 +574,7 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
-    csp_config = CSPLowConfiguration(
+    csp_config = CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
         common={"subarray_id": 1},
         lowcbf={

@@ -5,11 +5,11 @@ request and response for the TMC CentralNode.AssignResources command.
 from typing import Dict, List
 
 __all__ = [
-    "CSPLowConfiguration",
+    "CSPConfiguration",
 ]
 
 
-class CSPLowConfiguration:
+class CSPConfiguration:
     """
     Class to get CSP Configuration
     """
@@ -47,7 +47,7 @@ class CSPLowConfiguration:
     ) -> object:
 
         """
-        Create a new CSPLowConfiguration object.
+        Create a new CSPConfiguration object.
 
         :param interface:
         :param common:
@@ -60,7 +60,7 @@ class CSPLowConfiguration:
         self.lowcbf = lowcbf
 
     def __eq__(self, other):
-        if not isinstance(other, CSPLowConfiguration):
+        if not isinstance(other, CSPConfiguration):
             return False
         return (
             self.interface == other.interface
