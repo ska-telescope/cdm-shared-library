@@ -723,16 +723,10 @@ def low_invalidator(o: ConfigureRequest):
         ),
     ],
 )
-def test_configure_serialisation_and_validation(instance, valid_json):
+def test_configure_serialisation_and_validation(valid_json):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    # utils.test_schema_serialisation_and_validation(
-    #     schema_cls, instance, modifier_fn, valid_json, invalid_json
-    # )
-
-    # marshalled = CODEC.dumps(instance)
-    # assert_json_is_equal(marshalled, valid_json)
     configure_configuration_object = ConfigureRequestSchema().loads(valid_json)
     serialized_sdp_config = ConfigureRequestSchema().dumps(
         configure_configuration_object

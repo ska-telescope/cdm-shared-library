@@ -31,6 +31,7 @@ from .csp import (
     CommonConfigurationSchema,
     CSPConfigurationSchema,
     FSPConfigurationSchema,
+    LowCBFConfigurationSchema,
     SubarrayConfigurationSchema,
 )
 from .mccs import (
