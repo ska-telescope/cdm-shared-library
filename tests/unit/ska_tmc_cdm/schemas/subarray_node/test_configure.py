@@ -699,39 +699,40 @@ def low_invalidator(o: ConfigureRequest):
 
 
 @pytest.mark.parametrize(
-    "instance,valid_json",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
     [
         (
+            ConfigureRequestSchema,
             VALID_MID_CONFIGURE_OBJECT,
+            None,  # no validation on MID
             VALID_MID_CONFIGURE_JSON,
+            None,
         ),  # no validation on MID
         (
+            ConfigureRequestSchema,
             VALID_MID_DISH_ONLY_OBJECT,
+            None,  # no validation on MID
             VALID_MID_DISH_ONLY_JSON,
+            None,
         ),  # no validation on MID
         (
+            ConfigureRequestSchema,
             VALID_NULL_OBJECT,
+            None,  # no validation for null object
             VALID_NULL_JSON,
-        ),  # no validation for null object
-        (
-            VALID_LOW_CONFIGURE_OBJECT,
-            VALID_LOW_CONFIGURE_JSON,
-        ),  # no validation on MID
-        (
-            VALID_MID_CONFIGURE_OBJECT_PI16,
-            VALID_LOW_CONFIGURE_JSON_PI17,
+            None,
         ),
     ],
 )
-def test_configure_serialisation_and_validation(valid_json):
+def test_configure_serialisation_and_validation(
+    schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    configure_configuration_object = ConfigureRequestSchema().loads(valid_json)
-    serialized_sdp_config = ConfigureRequestSchema().dumps(
-        configure_configuration_object
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json
     )
-    assert_json_is_equal(valid_json, serialized_sdp_config)
 
 
 def test_configure_serialisation_and_validation_pi16():
