@@ -6,7 +6,7 @@ from datetime import timedelta
 
 import pytest
 
-from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
+from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     PointingConfiguration,
@@ -390,6 +390,35 @@ VALID_MID_CONFIGURE_OBJECT_PI16 = ConfigureRequest(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
+VALID_MID_DISH_ONLY_JSON = (
+    """
+{
+    "interface": """
+    + f'"{SCHEMA}"'
+    + """,
+    "dish": {
+        "receiver_band": "1"
+    }
+}
+"""
+)
+
+VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
+    dish=DishConfiguration(ReceiverBand.BAND_1)
+)
+
+VALID_NULL_JSON = (
+    """
+{
+    "interface": """
+    + f'"{SCHEMA}"'
+    + """
+}
+"""
+)
+
+VALID_NULL_OBJECT = ConfigureRequest()
+
 
 def low_invalidator(o: ConfigureRequest):
     # function to make a valid LOW ConfigureRequest invalid
@@ -436,4 +465,34 @@ def test_configure_serialisation_and_validation_pi16():
         modifier_fn=None,
         valid_json=VALID_MID_CONFIGURE_JSON_PI16,
         invalid_json=None,
+    )
+
+
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    [
+        (
+            ConfigureRequestSchema,
+            VALID_MID_DISH_ONLY_OBJECT,
+            None,  # no validation on MID
+            VALID_MID_DISH_ONLY_JSON,
+            None,
+        ),  # no validation on MID
+        (
+            ConfigureRequestSchema,
+            VALID_NULL_OBJECT,
+            None,  # no validation for null object
+            VALID_NULL_JSON,
+            None,
+        ),  # no validation for null object
+    ],
+)
+def test_configure_serialisation_and_validation_pi17(
+    schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
+    """
+    Verifies that the schema marshals, unmarshals, and validates correctly.
+    """
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json, validate=False
     )
