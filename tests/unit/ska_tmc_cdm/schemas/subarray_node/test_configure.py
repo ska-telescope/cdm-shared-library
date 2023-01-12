@@ -334,7 +334,34 @@ VALID_MID_CONFIGURE_JSON_PI16 = """
   }
 }"""
 
+VALID_MID_DISH_ONLY_JSON = (
+    """
+{
+    "interface": """
+    + f'"{SCHEMA}"'
+    + """,
+    "dish": {
+        "receiver_band": "1"
+    }
+}
+"""
+)
 
+VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
+    dish=DishConfiguration(ReceiverBand.BAND_1)
+)
+
+VALID_NULL_JSON = (
+    """
+{
+    "interface": """
+    + f'"{SCHEMA}"'
+    + """
+}
+"""
+)
+
+VALID_NULL_OBJECT = ConfigureRequest()
 VALID_MID_CONFIGURE_OBJECT_PI16 = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.1",
     transaction_id="txn-....-00001",
@@ -389,35 +416,6 @@ VALID_MID_CONFIGURE_OBJECT_PI16 = ConfigureRequest(
     ),
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
-
-VALID_MID_DISH_ONLY_JSON = (
-    """
-{
-    "interface": """
-    + f'"{SCHEMA}"'
-    + """,
-    "dish": {
-        "receiver_band": "1"
-    }
-}
-"""
-)
-
-VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
-    dish=DishConfiguration(ReceiverBand.BAND_1)
-)
-
-VALID_NULL_JSON = (
-    """
-{
-    "interface": """
-    + f'"{SCHEMA}"'
-    + """
-}
-"""
-)
-
-VALID_NULL_OBJECT = ConfigureRequest()
 
 
 def low_invalidator(o: ConfigureRequest):
