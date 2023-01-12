@@ -20,6 +20,7 @@ package ska_tmc_cdm.messages.central_node {
             freq_min : float
             freq_max : float
             link_map : List[List[int]]
+            spectral_window_id : str
         }
 
         class ScanType {
@@ -32,10 +33,60 @@ package ska_tmc_cdm.messages.central_node {
 
         class PbDependency {
             pb_id : str
-            pb_type : List[str]
+            kind : List[str]
         }
 
+
+        class PhaseDir {
+            ra: List,
+            dec: List, 
+            reference_time: str, 
+            reference_frame: str
+        }
+        class BeamConfiguration {
+            beam_id: str,
+            function: str,
+            search_beam_id: int,
+            timing_beam_id: int,
+            vlbi_beam_id: int,
+        }
+        class ChannelConfiguration {
+            channels_id: str,
+            spectral_windows:List[Channel] 
+        }
+        ChannelConfiguration  *-- "*" Channel
+
+        class PolarisationConfiguration {
+            polarisations_id: str,
+            corr_type: List[str]  
+        }
+        class EBScanTypeBeam {
+            field_id: str,
+            channels_id: str,
+            polarisations_id: str, 
+        }
+        class EBScanType {
+            scan_type_id: str,
+            beams: Dict[str,EBScanTypeBeam],
+            derive_from: str, 
+        }
+        EBScanType  *-- "1" EBScanTypeBeam
+
+        class FieldConfiguration {
+            field_id : str
+            pointing_fqdn : str,
+            phase_dir : PhaseDir
+        }
+
+        FieldConfiguration  *-- "1" PhaseDir
+
         class SDPWorkflow {
+            name : str
+            kind : str
+            version : str
+        }
+        
+        class ScriptConfiguration {
             name : str
             kind : str
             version : str
@@ -43,18 +94,43 @@ package ska_tmc_cdm.messages.central_node {
 
         class ProcessingBlockConfiguration {
             pb_id : str
-            parameters : Dict
+            parameters : Dict,
+            dependencies: List[PbDependency],
+            sbi_ids : List,
+            workflow : SDPWorkflow,
+            script : ScriptConfiguration
         }
         ProcessingBlockConfiguration  *-- "1" SDPWorkflow
         ProcessingBlockConfiguration  *-- "*" PbDependency
+        ProcessingBlockConfiguration  *-- "1" ScriptConfiguration
+
+        class ExecutionBlockConfiguration {
+            eb_id: str,
+            max_length: int,
+            context: Dict,
+            beams: List[BeamConfiguration],
+            channels: List[ChannelConfiguration],
+            polarisations: List[PolarisationConfiguration],
+            fields: List[FieldConfiguration],
+            scan_types: List[EBScanType],
+        }
+
+        ExecutionBlockConfiguration  *-- "*" BeamConfiguration
+        ExecutionBlockConfiguration  *-- "*" ChannelConfiguration
+        ExecutionBlockConfiguration  *-- "*" PolarisationConfiguration
+        ExecutionBlockConfiguration  *-- "*" FieldConfiguration
+        ExecutionBlockConfiguration  *-- "*" EBScanType
+
 
         class SDPConfiguration {
-            sdp_id : str
+            eb_id : str
             max_length : float
+            resources : Dict
             interface : str
         }
         SDPConfiguration *-- "*" ScanType
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
+        SDPConfiguration *-- "1" ExecutionBlockConfiguration
 
         class AssignResourcesRequest {
             interface : str

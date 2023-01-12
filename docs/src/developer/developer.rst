@@ -7,37 +7,50 @@ Developer Documentation
 Quickstart
 ==========
 
-This project uses Docker containers for development and testing, and ``make``
-to provide a consistent UI.
+This project is structured to use Docker containers for development and
+testing so that the build environment, test environment and test results are
+all completely reproducible and are independent of host environment. It uses
+``make`` to provide a consistent UI (see `Makefile targets`_).
 
 Build a new Docker image and execute the test suite with:
 
 ::
 
-  make test
+  make oci-build
 
-Launch an interactive shell inside a container, with your workspace visible
-inside the container, with:
 
-::
-
-  make interactive
-
-To list all available targets, execute ``make`` without any arguments, e.g.,
+Execute the test suite and lint the project with:
 
 ::
 
-  equuleus:ska-tmc-cdm $ make
-  build                          build the application image
-  down                           stop develop/test environment and any interactive session
-  help                           show this help.
-  interactive                    start an interactive session using the project image (caution: R/W mounts source directory to /app)
-  lint                           lint the application (static code analysis)
-  piplock                        overwrite Pipfile.lock with the image version
-  pull                           download the application image
-  push                           push the image to the Docker registry
-  test                           test the application
-  up                             start develop/test environment
+  make python-test && make python-lint
+
+Format the Python code:
+
+::
+
+  make python-format
+
+
+Makefile targets
+================
+This project contains a `Makefile Gitlab Submodule  <https://gitlab.com/ska-telescope/sdi/ska-cicd-makefile>`_ which acts as a UI for building Docker
+images, testing images, and for launching interactive developer environments.
+The following make targets are defined:
+
++-----------------+------------------------------------------------+
+| Makefile target | Description                                    |
++=================+================================================+
+| oci-build       | Build a new application image                  |
++-----------------+------------------------------------------------+
+| python-test     | Test the application image                     |
++-----------------+------------------------------------------------+
+| python-lint     | Lint the application image                     |
++-----------------+------------------------------------------------+
+| python-format   |  Format the Python code                        |
++-----------------+------------------------------------------------+
+| help            | show a summary of the makefile targets above   |
++-----------------+------------------------------------------------+
 
 
 Background
