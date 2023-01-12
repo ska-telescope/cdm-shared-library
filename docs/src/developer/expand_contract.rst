@@ -41,7 +41,7 @@ of a dummy schema for mid-telescope release resources.
 **Scenario 1 :** Small number of additional unique keys and the values
 that they may take is well understood.
 
-.. code-block:: JSON
+.. code-block:: 
 
 	{
 	 <existing keys> ...
@@ -203,7 +203,7 @@ from ska_tmc_cdm.schemas import CODEC
 
 *1. If we have some JSON-formatted string release_input_str*
 
-.. code-block:: JSON
+.. code-block:: 
 
      {
       "interface":"https://schema.skao.int/ska-tmc-releaseresources/2.0",
@@ -264,7 +264,7 @@ https://gitlab.com/ska-telescope/ska-tmc-cdm/-/tree/nak-74-expand-contract-desig
 
 2. Dummy schema for mid telescope release resource.
    
-.. code-block:: JSON
+.. code-block:: 
 
      {
       "interface": https://schema.skao.int/ska-tmc-releaseresources/2.2, #optional
@@ -278,7 +278,7 @@ https://gitlab.com/ska-telescope/ska-tmc-cdm/-/tree/nak-74-expand-contract-desig
 
 3. Dummy schema for low telescope release resource.
 
-.. code-block:: JSON
+.. code-block:: 
 
      {
       "interface": https://schema.skao.int/ska-tmc-releaseresources/2.2, #optional
