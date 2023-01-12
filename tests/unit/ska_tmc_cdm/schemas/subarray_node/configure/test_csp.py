@@ -359,39 +359,6 @@ def test_marshall_csp_configuration_does_not_modify_original():
         ),
         pss_config=None,
         pst_config=None,
-        lowcbf=LowCBFConfiguration(
-            {
-                "stations": {
-                    "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
-                    "stn_beams": [
-                        {
-                            "beam_id": 1,
-                            "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
-                            "boresight_dly_poly": "url",
-                        }
-                    ],
-                },
-                "timing_beams": {
-                    "beams": [
-                        {
-                            "pst_beam_id": 13,
-                            "stn_beam_id": 1,
-                            "offset_dly_poly": "url",
-                            "stn_weights": [0.9, 1.0, 1.0, 0.9],
-                            "jones": "url",
-                            "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
-                            "dest_chans": [128, 256],
-                            "rfi_enable": [True, True, True],
-                            "rfi_static_chans": [1, 206, 997],
-                            "rfi_dynamic_chans": [242, 1342],
-                            "rfi_weighted": 0.87,
-                        }
-                    ]
-                },
-                "search_beams": "tbd",
-                "zooms": "tbd",
-            }
-        ),
     )
     copied = copy.deepcopy(config)
     CSPConfigurationSchema().dumps(config)
@@ -433,18 +400,8 @@ def test_marshall_station_configuration_does_not_modify_original():
     Verify that serialising a StationsConfiguration does not change the object.
     """
     config = StationsConfiguration(
-        {
-            "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
-            "stn_beams": [
-                StnBeamConfiguration(
-                    {
-                        "beam_id": 1,
-                        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
-                        "boresight_dly_poly": "url",
-                    }
-                )
-            ],
-        }
+        stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+        stn_beams=[StnBeamConfiguration(1, [64, 65, 66, 67, 68, 68, 70, 71], "url")],
     )
     copied = copy.deepcopy(config)
     StationsConfigurationSchema().dumps(config)
@@ -458,13 +415,7 @@ def test_marshall_station_beam_configuration_does_not_modify_original():
     """
     Verify that serialising a StationsConfiguration does not change the object.
     """
-    config = StnBeamConfiguration(
-        {
-            "beam_id": 1,
-            "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
-            "boresight_dly_poly": "url",
-        }
-    )
+    config = StnBeamConfiguration(1, [64, 65, 66, 67, 68, 68, 70, 71], "url")
     copied = copy.deepcopy(config)
     StnBeamConfigurationSchema().dumps(config)
 
@@ -479,25 +430,21 @@ def test_marshall_timing_beam_configuration_does_not_modify_original():
     Verify that serialising a TimingBeamsConfiguration does not change the object.
     """
     config = TimingBeamsConfiguration(
-        {
-            "beams": [
-                BeamsConfiguration(
-                    {
-                        "pst_beam_id": 13,
-                        "stn_beam_id": 1,
-                        "offset_dly_poly": "url",
-                        "stn_weights": [0.9, 1.0, 1.0, 0.9],
-                        "jones": "url",
-                        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
-                        "dest_chans": [128, 256],
-                        "rfi_enable": [True, True, True],
-                        "rfi_static_chans": [1, 206, 997],
-                        "rfi_dynamic_chans": [242, 1342],
-                        "rfi_weighted": 0.87,
-                    }
-                )
-            ]
-        }
+        beams=[
+            BeamsConfiguration(
+                pst_beam_id=13,
+                stn_beam_id=1,
+                offset_dly_poly="url",
+                stn_weights=[0.9, 1.0, 1.0, 0.9],
+                jones="url",
+                dest_ip=["10.22.0.1:2345", "10.22.0.3:3456"],
+                dest_chans=[128, 256],
+                rfi_enable=[True, True, True],
+                rfi_static_chans=[1, 206, 997],
+                rfi_dynamic_chans=[242, 1342],
+                rfi_weighted=0.87,
+            )
+        ]
     )
 
     copied = copy.deepcopy(config)
@@ -513,19 +460,17 @@ def test_marshall_beam_configuration_does_not_modify_original():
     Verify that serialising a StationsConfiguration does not change the object.
     """
     config = BeamsConfiguration(
-        {
-            "pst_beam_id": 13,
-            "stn_beam_id": 1,
-            "offset_dly_poly": "url",
-            "stn_weights": [0.9, 1.0, 1.0, 0.9],
-            "jones": "url",
-            "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
-            "dest_chans": [128, 256],
-            "rfi_enable": [True, True, True],
-            "rfi_static_chans": [1, 206, 997],
-            "rfi_dynamic_chans": [242, 1342],
-            "rfi_weighted": 0.87,
-        }
+        pst_beam_id=13,
+        stn_beam_id=1,
+        offset_dly_poly="url",
+        stn_weights=[0.9, 1.0, 1.0, 0.9],
+        jones="url",
+        dest_ip=["10.22.0.1:2345", "10.22.0.3:3456"],
+        dest_chans=[128, 256],
+        rfi_enable=[True, True, True],
+        rfi_static_chans=[1, 206, 997],
+        rfi_dynamic_chans=[242, 1342],
+        rfi_weighted=0.87,
     )
     copied = copy.deepcopy(config)
     BeamsConfigurationSchema().dumps(config)

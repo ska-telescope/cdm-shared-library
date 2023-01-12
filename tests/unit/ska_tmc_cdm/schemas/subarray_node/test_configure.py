@@ -192,49 +192,9 @@ VALID_LOW_CONFIGURE_JSON = """
   }
 }
 """
+
 VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
-    transaction_id="txn-....-00001",
-    sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
-    ),
-    csp=CSPConfiguration(
-        interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray=SubarrayConfiguration("science period 23"),
-        common=CommonConfiguration(
-            config_id="sbi-mvp01-20200325-00001-science_A",
-            frequency_band=ReceiverBand.BAND_1,
-            subarray_id=1,
-        ),
-        pss_config={},
-        pst_config={},
-        cbf_config=CBFConfiguration(
-            fsp_configs=[
-                FSPConfiguration(
-                    fsp_id=1,
-                    function_mode=FSPFunctionMode.CORR,
-                    frequency_slice_id=1,
-                    integration_factor=1,
-                    zoom_factor=0,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=0,
-                    output_link_map=[(0, 0), (200, 1)],
-                ),
-                FSPConfiguration(
-                    fsp_id=2,
-                    function_mode=FSPFunctionMode.CORR,
-                    frequency_slice_id=2,
-                    integration_factor=1,
-                    zoom_factor=1,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=744,
-                    output_link_map=[(0, 4), (200, 5)],
-                    zoom_window_tuning=650000,
-                ),
-            ],
-            vlbi_config={},
-        ),
-    ),
     mccs=MCCSConfiguration(
         station_configs=[StnConfiguration(1), StnConfiguration(2)],
         subarray_beam_configs=[
@@ -251,6 +211,7 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
+
 
 INVALID_LOW_CONFIGURE_JSON = """
 {
@@ -466,170 +427,144 @@ VALID_MID_CONFIGURE_OBJECT_PI16 = ConfigureRequest(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
+
 VALID_LOW_CONFIGURE_JSON_PI17 = """
 {
-   "interface":"https://schema.skao.int/ska-low-tmc-configure/3.0",
-   "transaction_id":"txn-....-00001",
-   "mccs":{
-      "stations":[
-         {
-            "station_id":1
-         },
-         {
-            "station_id":2
-         }
-      ],
-      "subarray_beams":[
-         {
-            "subarray_beam_id":1,
-            "station_ids":[
-               1,
-               2
-            ],
-            "update_rate":0.0,
-            "channels":[
-               [
-                  0,
-                  8,
-                  1,
-                  1
-               ],
-               [
-                  8,
-                  8,
-                  2,
-                  1
-               ],
-               [
-                  24,
-                  16,
-                  2,
-                  1
-               ]
-            ],
-            "antenna_weights":[
-               1.0,
-               1.0,
-               1.0
-            ],
-            "phase_centre":[
-               0.0,
-               0.0
-            ],
-            "target":{
-               "reference_frame":"HORIZON",
-               "target_name":"DriftScan",
-               "az":180.0,
-               "el":45.0
-            }
-         }
-      ]
-   },
-   "sdp":{
-      "interface":"https://schema.skao.int/ska-sdp-configure/0.4",
-      "scan_type":"science_A"
-   },
-   "csp":{
-      "interface":"https://schema.skao.int/ska-csp-configure/2.0",
-      "subarray":{
-         "subarray_name":"science period 23"
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/3.0",
+  "transaction_id": "txn-....-00001",
+  "mccs": {
+    "stations":[
+      {
+        "station_id": 1
       },
-      "common":{
-         "config_id":"sbi-mvp01-20200325-00001-science_A",
-         "subarray_id":1,
-         "frequency_band":"1"
-      },
-      "lowcbf":{
-         "stations":{
-            "stns":[
-               [
-                  1,
-                  0
-               ],
-               [
-                  2,
-                  0
-               ],
-               [
-                  3,
-                  0
-               ],
-               [
-                  4,
-                  0
-               ]
-            ],
-            "stn_beams":[
-               {
-                  "beam_id":1,
-                  "freq_ids":[
-                     64,
-                     65,
-                     66,
-                     67,
-                     68,
-                     68,
-                     70,
-                     71
-                  ],
-                  "boresight_dly_poly":"url"
-               }
-            ]
-         },
-         "timing_beams":{
-            "beams":[
-               {
-                  "pst_beam_id":13,
-                  "stn_beam_id":1,
-                  "offset_dly_poly":"url",
-                  "stn_weights":[
-                     0.9,
-                     1.0,
-                     1.0,
-                     0.9
-                  ],
-                  "jones":"url",
-                  "dest_ip":[
-                     "10.22.0.1:2345",
-                     "10.22.0.3:3456"
-                  ],
-                  "dest_chans":[
-                     128,
-                     256
-                  ],
-                  "rfi_enable":[
-                     true,
-                     true,
-                     true
-                  ],
-                  "rfi_static_chans":[
-                     1,
-                     206,
-                     997
-                  ],
-                  "rfi_dynamic_chans":[
-                     242,
-                     1342
-                  ],
-                  "rfi_weighted":0.87
-               }
-            ]
-         },
-         "search_beams":"tbd",
-         "zooms":"tbd"
+      {
+        "station_id": 2
       }
-   },
-   "tmc":{
-      "scan_duration":10.0
-   }
+    ],
+    "subarray_beams": [
+      {
+        "subarray_beam_id":1,
+        "station_ids": [1,2],
+        "channels": [
+          [0, 8, 1, 1],
+          [8, 8, 2, 1],
+          [24, 16, 2, 1]
+        ],
+        "update_rate": 0.0,
+        "target": {
+          "reference_frame": "horizon",
+          "target_name": "DriftScan",
+          "az": 180.0,
+          "el": 45.0
+        },
+        "antenna_weights": [1.0, 1.0, 1.0],
+        "phase_centre": [0.0, 0.0]
+      }
+    ]
+  },
+  "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+    "scan_type": "science_A"
+  },
+  "tmc": {
+    "scan_duration": 10.0 
+  },
+  "csp": {
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+      "subarray_name": "science period 23"
+    },
+    "common": {
+      "config_id": "sbi-mvp01-20200325-00001-science_A",
+      "subarray_id": 1,
+      "frequency_band":"1"
+    },
+    "lowcbf": {
+      "stations": {
+        "stns": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "stn_beams": [
+          {
+            "beam_id": 1,
+            "freq_ids": [
+              64,
+              65,
+              66,
+              67,
+              68,
+              68,
+              70,
+              71
+            ],
+            "boresight_dly_poly": "url"
+          }
+        ]
+      },
+      "timing_beams": {
+        "beams": [
+          {
+            "pst_beam_id": 13,
+            "stn_beam_id": 1,
+            "offset_dly_poly": "url",
+            "stn_weights": [
+              0.9,
+              1.0,
+              1.0,
+              0.9
+            ],
+            "jones": "url",
+            "dest_ip": [
+              "10.22.0.1:2345",
+              "10.22.0.3:3456"
+            ],
+            "dest_chans": [
+              128,
+              256
+            ],
+            "rfi_enable": [
+              true,
+              true,
+              true
+            ],
+            "rfi_static_chans": [
+              1,
+              206,
+              997
+            ],
+            "rfi_dynamic_chans": [
+              242,
+              1342
+            ],
+            "rfi_weighted": 0.87
+          }
+        ]
+      },
+      "search_beams": "tbd",
+      "zooms": "tbd"
+    }
+  }
 }
 """
+
 VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/2.1",
+    interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
     transaction_id="txn-....-00001",
-    sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
-    ),
     mccs=MCCSConfiguration(
         station_configs=[StnConfiguration(1), StnConfiguration(2)],
         subarray_beam_configs=[
@@ -644,52 +579,46 @@ VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
             )
         ],
     ),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
         subarray=SubarrayConfiguration("science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             subarray_id=1,
+            frequency_band=1,
         ),
         lowcbf=LowCBFConfiguration(
-            {
-                "stations": StationsConfiguration(
-                    stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
-                    stn_beams=[
-                        StnBeamConfiguration(
-                            {
-                                "beam_id": 1,
-                                "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
-                                "boresight_dly_poly": "url",
-                            }
-                        )
-                    ],
-                ),
-                "timing_beams": TimingBeamsConfiguration(
-                    beams=[
-                        BeamsConfiguration(
-                            {
-                                "pst_beam_id": 13,
-                                "stn_beam_id": 1,
-                                "offset_dly_poly": "url",
-                                "stn_weights": [0.9, 1.0, 1.0, 0.9],
-                                "jones": "url",
-                                "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
-                                "dest_chans": [128, 256],
-                                "rfi_enable": [True, True, True],
-                                "rfi_static_chans": [1, 206, 997],
-                                "rfi_dynamic_chans": [242, 1342],
-                                "rfi_weighted": 0.87,
-                            }
-                        )
-                    ]
-                ),
-                "search_beams": "tbd",
-                "zooms": "tbd",
-            }
+            stations=StationsConfiguration(
+                stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+                stn_beams=[
+                    StnBeamConfiguration(1, [64, 65, 66, 67, 68, 68, 70, 71], "url")
+                ],
+            ),
+            timing_beams=TimingBeamsConfiguration(
+                beams=[
+                    BeamsConfiguration(
+                        pst_beam_id=13,
+                        stn_beam_id=1,
+                        offset_dly_poly="url",
+                        stn_weights=[0.9, 1.0, 1.0, 0.9],
+                        jones="url",
+                        dest_ip=["10.22.0.1:2345", "10.22.0.3:3456"],
+                        dest_chans=[128, 256],
+                        rfi_enable=[True, True, True],
+                        rfi_static_chans=[1, 206, 997],
+                        rfi_dynamic_chans=[242, 1342],
+                        rfi_weighted=0.87,
+                    )
+                ]
+            ),
+            search_beams="tbd",
+            zooms="tbd",
         ),
     ),
-    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
 
