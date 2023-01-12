@@ -29,8 +29,6 @@ class ReleaseResourcesRequestSchema(
     subarray_id = fields.Integer()
     release_all = fields.Boolean()
     dish = fields.Pluck(DishAllocationSchema, "receptor_ids", data_key="receptor_ids")
-    sdp_id = fields.String()
-    sdp_max_length = fields.Float()
 
     class Meta:  # pylint: disable=too-few-public-methods
         """
@@ -92,8 +90,6 @@ class ReleaseResourcesRequestSchema(
         subarray_id = data.get("subarray_id", None)
         release_all = data.get("release_all", False)
         dish_allocation = data.get("dish", None)
-        sdp_id = data.get("sdp_id", None)
-        sdp_max_length = data.get("sdp_max_length", None)
 
         return ReleaseResourcesRequest(
             interface=interface,
@@ -101,6 +97,4 @@ class ReleaseResourcesRequestSchema(
             subarray_id=subarray_id,
             release_all=release_all,
             dish_allocation=dish_allocation,
-            sdp_id=sdp_id,
-            sdp_max_length=sdp_max_length,
         )

@@ -11,7 +11,6 @@ import pytest
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
-from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
@@ -20,16 +19,6 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
-)
-from tests.unit.ska_tmc_cdm.schemas.central_node.test_release_resources import (
-    VALID_LOW_FULL_RELEASE_JSON,
-    VALID_LOW_FULL_RELEASE_JSON_NEW,
-    VALID_LOW_FULL_RELEASE_OBJECT,
-    VALID_LOW_FULL_RELEASE_OBJECT_NEW,
-    VALID_MID_PARTIAL_RELEASE_JSON,
-    VALID_MID_PARTIAL_RELEASE_JSON_NEW,
-    VALID_MID_PARTIAL_RELEASE_OBJECT,
-    VALID_MID_PARTIAL_RELEASE_OBJECT_NEW,
 )
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
@@ -52,26 +41,6 @@ TEST_PARAMETERS = [
     ),
     (ConfigureRequest, VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT),
     (ConfigureRequest, VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT),
-    (
-        ReleaseResourcesRequest,
-        VALID_MID_PARTIAL_RELEASE_JSON_NEW,
-        VALID_MID_PARTIAL_RELEASE_OBJECT_NEW,
-    ),
-    (
-        ReleaseResourcesRequest,
-        VALID_MID_PARTIAL_RELEASE_JSON,
-        VALID_MID_PARTIAL_RELEASE_OBJECT,
-    ),
-    (
-        ReleaseResourcesRequest,
-        VALID_LOW_FULL_RELEASE_JSON,
-        VALID_LOW_FULL_RELEASE_OBJECT,
-    ),
-    (
-        ReleaseResourcesRequest,
-        VALID_LOW_FULL_RELEASE_JSON_NEW,
-        VALID_LOW_FULL_RELEASE_OBJECT_NEW,
-    ),
 ]
 
 

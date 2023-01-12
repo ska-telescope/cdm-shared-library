@@ -17,15 +17,12 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
 
     def __init__(
         self,
-        *_,  # force non-keyword args
+        *_,  # force kwargs
         interface: str = None,
         transaction_id: str = None,
         subarray_id: int = None,
         release_all: bool = False,
         dish_allocation: Optional[DishAllocation] = None,
-        sdp_id: str = None,
-        sdp_max_length: float = None,
-        **kwargs,  # arbitary keyword-value pairs
     ):
         """
         Create a new ReleaseResourcesRequest object.
@@ -36,31 +33,21 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
         :param release_all: True to release all sub-array resources, False to
             release just those resources specified as other arguments
         :param dish_allocation: object holding the DISH resource allocation
-                                to release for this request.
-        # two new addational parameters added for expand JSON schema
-        :param sdp_id: string denoting id for science data processor in use.
-        :param sdp_max_length: float denoting max length required in seconds.
-
-        :Any other parameter is also captured by kwargs
+            to release for this request.
         """
-        # init existing keys
+        if release_all is not None and not isinstance(release_all, bool):
+            raise ValueError("release_all_mid must be a boolean")
+
+        if release_all is False and dish_allocation is None:
+            raise ValueError("Either release_all or dish_allocation must be defined")
+        if release_all:
+            dish_allocation = None
+
         self.interface = interface
         self.transaction_id = transaction_id
         self.subarray_id = subarray_id
         self.release_all = release_all
         self.dish = dish_allocation
-        self.sdp_id = sdp_id
-        self.sdp_max_length = sdp_max_length
-        # update new keywords-value pairs.
-        self.__dict__.update(kwargs)
-        # value errors
-        if self.release_all is not None and not isinstance(self.release_all, bool):
-            raise ValueError("release_all_mid must be a boolean")
-
-        if self.release_all is False and self.dish is None:
-            raise ValueError("Either release_all or dish_allocation must be defined")
-        if self.release_all is True:
-            self.dish = None
 
     def __eq__(self, other):
         if not isinstance(other, ReleaseResourcesRequest):
@@ -71,6 +58,4 @@ class ReleaseResourcesRequest:  # pylint: disable=too-few-public-methods
             and self.subarray_id == other.subarray_id
             and self.dish == other.dish
             and self.release_all == other.release_all
-            and self.sdp_id == other.sdp_id
-            and self.sdp_max_length == other.sdp_max_length
         )
