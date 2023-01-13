@@ -491,7 +491,7 @@ def test_marshall_beam_configuration_does_not_modify_original():
 
 def test_marshall_low_cbf_configuration_does_not_modify_original():
     """
-    Verify that serialising a StationsConfiguration does not change the object.
+    Verify that serialising a LowCBFConfiguration does not change the object.
     """
     config = LowCBFConfiguration(
         {

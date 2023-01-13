@@ -339,9 +339,9 @@ class LowCBFConfiguration:
         Create a new LowCBFConfiguration.
 
         :param stations: stations
-        :param timing_beams: timing_beams
-        :param search_beams: search_beams
-        :param zooms: zooms
+        :param timing_beams: PST beams subarray list
+        :param search_beams: PSS parameter list
+        :param zooms: zoom correlation parameter
         """
         self.stations = stations
         self.timing_beams = timing_beams
