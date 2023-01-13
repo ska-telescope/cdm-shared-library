@@ -255,6 +255,11 @@ def test_csp_configuration_equals():
         "timing_beams": TimingBeamsConfiguration(timing_beams),
         "search_beams": "",
         "zooms": "",
+        "scan_id": 987654321,
+        "unix_epoch_seconds": 1616971738,
+        "timestamp_ns": 987654321,
+        "packet_offset": 123456789,
+        "scan_seconds": 30,
     }
 
     alt_constructor_args = dict(
@@ -591,6 +596,11 @@ def test_low_cbf_configuration_equals():
         "timing_beams": TimingBeamsConfiguration(timing_beams),
         "search_beams": "",
         "zooms": "",
+        "scan_id": 987654321,
+        "unix_epoch_seconds": 1616971738,
+        "timestamp_ns": 987654321,
+        "packet_offset": 123456789,
+        "scan_seconds": 30,
     }
     config1 = LowCBFConfiguration(low_cbf)
     config2 = LowCBFConfiguration(low_cbf)
@@ -631,6 +641,11 @@ def test_tlow_cbf_configuration_not_equal_to_other_objects():
         "timing_beams": TimingBeamsConfiguration(timing_beams),
         "search_beams": "",
         "zooms": "",
+        "scan_id": 98,
+        "unix_epoch_seconds": 16,
+        "timestamp_ns": 98,
+        "packet_offset": 12,
+        "scan_seconds": 30,
     }
     config = LowCBFConfiguration(low_cbf)
     assert config != 1

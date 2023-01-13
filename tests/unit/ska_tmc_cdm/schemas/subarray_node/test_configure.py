@@ -616,7 +616,12 @@ VALID_LOW_CONFIGURE_JSON_PI17 = """
             ]
          },
          "search_beams":"tbd",
-         "zooms":"tbd"
+         "zooms":"tbd",
+         "scan_id":987654321,
+         "unix_epoch_seconds":1616971738,
+         "timestamp_ns":987654321,
+         "packet_offset":123456789,
+         "scan_seconds":30
       }
    },
    "tmc":{
@@ -686,6 +691,11 @@ VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
                 ),
                 "search_beams": "tbd",
                 "zooms": "tbd",
+                "scan_id": 987654321,
+                "unix_epoch_seconds": 1616971738,
+                "timestamp_ns": 987654321,
+                "packet_offset": 123456789,
+                "scan_seconds": 30,
             }
         ),
     ),

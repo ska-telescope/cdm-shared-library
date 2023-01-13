@@ -240,7 +240,12 @@ VALID_CSP_JSON_PI17 = """{
         ]
       },
       "search_beams": "tbd",
-      "zooms": "tbd"
+      "zooms": "tbd",
+      "scan_id":98,
+      "unix_epoch_seconds":16,
+      "timestamp_ns":98,
+      "packet_offset":12,
+      "scan_seconds": 30
     }
   }"""
 
@@ -291,6 +296,11 @@ CSP_CONFIGURATION_OBJECT_PI17 = CSPConfiguration(
             ),
             "search_beams": "tbd",
             "zooms": "tbd",
+            "scan_id": 987654321,
+            "unix_epoch_seconds": 1616971738,
+            "timestamp_ns": 987654321,
+            "packet_offset": 123456789,
+            "scan_seconds": 30,
         }
     ),
 )
@@ -390,6 +400,11 @@ def test_marshall_csp_configuration_does_not_modify_original():
                 },
                 "search_beams": "tbd",
                 "zooms": "tbd",
+                "scan_id": 987654321,
+                "unix_epoch_seconds": 1616971738,
+                "timestamp_ns": 987654321,
+                "packet_offset": 123456789,
+                "scan_seconds": 30,
             }
         ),
     )
@@ -579,6 +594,11 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
             },
             "search_beams": "tbd",
             "zooms": "tbd",
+            "scan_id": 987654321,
+            "unix_epoch_seconds": 1616971738,
+            "timestamp_ns": 987654321,
+            "packet_offset": 123456789,
+            "scan_seconds": 30,
         }
     )
     copied = copy.deepcopy(config)

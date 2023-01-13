@@ -141,6 +141,11 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
                 ),
                 "search_beams": "",
                 "zooms": "",
+                "scan_id": 987654321,
+                "unix_epoch_seconds": 1616971738,
+                "timestamp_ns": 987654321,
+                "packet_offset": 123456789,
+                "scan_seconds": 30,
             }
         ),
     ),
@@ -427,6 +432,11 @@ def test_configure_request_eq_for_low_pi17():
         "timing_beams": TimingBeamsConfiguration(timing_beams),
         "search_beams": "",
         "zooms": "",
+        "scan_id": 987654321,
+        "unix_epoch_seconds": 1616971738,
+        "timestamp_ns": 987654321,
+        "packet_offset": 123456789,
+        "scan_seconds": 30,
     }
 
     request_1 = ConfigureRequest(
@@ -492,6 +502,11 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
         "timing_beams": TimingBeamsConfiguration(timing_beams),
         "search_beams": "",
         "zooms": "",
+        "scan_id": 987654321,
+        "unix_epoch_seconds": 1616971738,
+        "timestamp_ns": 987654321,
+        "packet_offset": 123456789,
+        "scan_seconds": 30,
     }
 
     request = ConfigureRequest(

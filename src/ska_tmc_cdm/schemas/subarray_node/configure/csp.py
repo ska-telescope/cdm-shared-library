@@ -56,8 +56,8 @@ class SubarrayConfigurationSchema(Schema):
 
 @CODEC.register_mapping(CommonConfiguration)
 class CommonConfigurationSchema(Schema):
-    config_id = fields.String(data_key="config_id", required=True)
-    frequency_band = fields.String(data_key="frequency_band", required=True)
+    config_id = fields.String(data_key="config_id", required=False)
+    frequency_band = fields.String(data_key="frequency_band", required=False)
     subarray_id = fields.Integer(data_key="subarray_id", required=True)
     band_5_tuning = fields.List(fields.Float, data_key="band_5_tuning")
 
@@ -75,7 +75,7 @@ class CommonConfigurationSchema(Schema):
         """
         # Convert Python Enum to its string value
         copied = copy.deepcopy(commonuration)
-        if hasattr(copied, "frequency_band"):
+        if hasattr(copied, "frequency_band") and copied.frequency_band is not None:
             copied.frequency_band = commonuration.frequency_band.value
         return copied
 
@@ -100,10 +100,12 @@ class CommonConfigurationSchema(Schema):
         :param _: kwargs passed by Marshmallow
         :return: CommonConfiguration instance populated to match JSON
         """
-        config_id = data["config_id"]
-        frequency_band = data["frequency_band"]
-        frequency_band_enum = ReceiverBand(frequency_band)
-        subarray_id = data["subarray_id"]
+        config_id = data.get("config_id")
+        frequency_band = data.get("frequency_band")
+        frequency_band_enum = (
+            ReceiverBand(frequency_band) if frequency_band else frequency_band
+        )
+        subarray_id = data.get("subarray_id")
         band_5_tuning = data.get("band_5_tuning", None)
 
         return CommonConfiguration(
@@ -408,6 +410,11 @@ class LowCBFConfigurationSchema(ValidatingSchema):
     timing_beams = fields.Dict(keys=fields.String(), values=fields.List(fields.Dict))
     search_beams = fields.String()
     zooms = fields.String()
+    scan_id = fields.Integer()
+    unix_epoch_seconds = fields.Integer()
+    timestamp_ns = fields.Integer()
+    packet_offset = fields.Integer()
+    scan_seconds = fields.Integer()
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
@@ -422,12 +429,22 @@ class LowCBFConfigurationSchema(ValidatingSchema):
         timing_beams = data.get("timing_beams", None)
         search_beams = data.get("search_beams", None)
         zooms = data.get("zooms", None)
+        scan_id = data.get("scan_id", None)
+        unix_epoch_seconds = data.get("unix_epoch_seconds", None)
+        timestamp_ns = data.get("timestamp_ns", None)
+        packet_offset = data.get("packet_offset", None)
+        scan_seconds = data.get("scan_seconds", None)
 
         return LowCBFConfiguration(
             stations=stations,
             timing_beams=timing_beams,
             search_beams=search_beams,
             zooms=zooms,
+            scan_id=scan_id,
+            unix_epoch_seconds=unix_epoch_seconds,
+            timestamp_ns=timestamp_ns,
+            packet_offset=packet_offset,
+            scan_seconds=scan_seconds,
         )
 
     @post_dump
