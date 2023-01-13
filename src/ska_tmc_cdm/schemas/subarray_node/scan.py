@@ -8,6 +8,7 @@ from marshmallow import fields, post_dump, post_load
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
+from ska_tmc_cdm.schemas.subarray_node.configure import CSPConfigurationSchema
 
 __all__ = ["ScanRequestSchema"]
 
@@ -30,6 +31,7 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
 
     # holds numeric scan ID
     scan_id = fields.Integer()
+    csp = fields.Nested(CSPConfigurationSchema, data_key="csp")
 
     @post_load
     def create_scanrequest(self, data, **_):  # pylint: disable=no-self-use
@@ -43,9 +45,10 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
         interface = data["interface"]
         transaction_id = data.get("transaction_id", None)
         scan_id = data["scan_id"]
+        csp = data.get("csp")
 
         return ScanRequest(
-            interface=interface, transaction_id=transaction_id, scan_id=scan_id
+            interface=interface, transaction_id=transaction_id, scan_id=scan_id, csp=csp
         )
 
     @post_dump

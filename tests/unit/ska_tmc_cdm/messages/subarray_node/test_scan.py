@@ -2,30 +2,30 @@
 Unit tests for the ska_tmc_cdm.messages.subarraynode.scan module
 """
 
-from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    CommonConfiguration,
     LowCBFConfiguration,
-    CommonConfiguration
 )
-from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
-
+from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
 CSP_CONSTRUCTOR_ARGS = dict(
     common_config=CommonConfiguration(
         subarray_id=1,
     ),
-    cbf_config=LowCBFConfiguration(
+    cbf=LowCBFConfiguration(
         scan_id=987654321,
         unix_epoch_seconds=1616971738,
         timestamp_ns=987654321,
         packet_offset=123456789,
         scan_seconds=30,
-    )
+    ),
 )
 
 CONSTRUCTOR_ARGS = dict(
-    interface="interface", transaction_id="transaction ID", scan_id=123,
-    csp_config=CSP_CONSTRUCTOR_ARGS
+    interface="interface",
+    transaction_id="transaction ID",
+    scan_id=123,
+    csp=CSP_CONSTRUCTOR_ARGS,
 )
 
 
