@@ -4,9 +4,6 @@
 Validating JSON schema through CDM in Central Node
 ==================================================
 
-**Understanding the usefulness of validating through creation of Control Data Model (CDM) object over current approach of custom JSON parsing in Central Node**
-================================================================================================================================================================
-
 ‘ska-tmc-cdm’ validation/serialisation library contains message and
 schema classes for several commands of CentralNode , SubArrayNode of
 both mid and low telescope. The classes for message provide the way to

@@ -4,9 +4,6 @@
 Expand and Contract Design Pattern in CDM
 =========================================
 
-**Understanding expand and contract pattern and where to start**
-================================================================
-
 Every PI as we gradually evolve we expect schemas to keep changing as
 well, some scenarios like - commands may take new keywords in addition
 to / or replacing existing ones; there may be change in what kind of
