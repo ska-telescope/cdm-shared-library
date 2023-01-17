@@ -190,7 +190,7 @@ def test_codec_dumps_pi17(
     assert_json_is_equal(marshalled, expected)
 
 
-@pytest.mark.parametrize("msg_cls,json_str,expected", TEST_PARAMETERS)
+@pytest.mark.parametrize("msg_cls,json_str,expected", TEST_PARAMETERS_PI17)
 def test_codec_load_from_file_pi17(msg_cls, json_str, expected):
     """
     Verify that the codec loads JSON from file for all key objects.
