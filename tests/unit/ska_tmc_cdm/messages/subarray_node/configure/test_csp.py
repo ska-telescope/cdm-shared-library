@@ -113,7 +113,7 @@ def test_commonuration_not_equal_to_other_objects():
     assert config != 1
 
 
-def test_subarrayuration_equals():
+def test_subarray_configuration_equals():
     """
     Verify that SubarrayConfiguration objects are considered equal when all
     attributes are equal.
@@ -127,7 +127,7 @@ def test_subarrayuration_equals():
     assert config1 != SubarrayConfiguration("Test Subarray2")
 
 
-def test_subarrayuration_not_equal_to_other_objects():
+def test_subarray_configuration_not_equal_to_other_objects():
     """
     Verify that SubarrayConfiguration objects are not considered equal to objects
     of other types.
