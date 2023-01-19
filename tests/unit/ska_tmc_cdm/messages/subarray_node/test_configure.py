@@ -474,40 +474,6 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
     mccs_config = MCCSConfiguration(
         station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
-    stn_beam = {
-        "beam_id": 1,
-        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
-        "boresight_dly_poly": "url",
-    }
-    station = {
-        "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
-        "stn_beams": [StnBeamConfiguration(stn_beam)],
-    }
-    beams = {
-        "pst_beam_id": 13,
-        "stn_beam_id": 1,
-        "offset_dly_poly": "url",
-        "stn_weights": [0.9, 1.0, 1.0, 0.9],
-        "jones": "url",
-        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
-        "dest_chans": [128, 256],
-        "rfi_enable": [True, True, True],
-        "rfi_static_chans": [1, 206, 997],
-        "rfi_dynamic_chans": [242, 1342],
-        "rfi_weighted": 0.87,
-    }
-    timing_beams = {"beams": BeamsConfiguration(beams)}
-    low_cbf = {
-        "station": StationsConfiguration(station),
-        "timing_beams": TimingBeamsConfiguration(timing_beams),
-        "search_beams": "",
-        "zooms": "",
-        "scan_id": 987654321,
-        "unix_epoch_seconds": 1616971738,
-        "timestamp_ns": 987654321,
-        "packet_offset": 123456789,
-        "scan_seconds": 30,
-    }
 
     request = ConfigureRequest(
         interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
@@ -525,7 +491,38 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
                 config_id="sbi-mvp01-20200325-00001-science_A",
                 subarray_id=1,
             ),
-            lowcbf=LowCBFConfiguration(low_cbf),
+            lowcbf=LowCBFConfiguration(
+                stations=StationsConfiguration(
+                    stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+                    stn_beams=StnBeamConfiguration(
+                        beam_id=1,
+                        freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                        boresight_dly_poly="url",
+                    ),
+                ),
+                timing_beams=TimingBeamsConfiguration(
+                    beams=BeamsConfiguration(
+                        pst_beam_id=13,
+                        stn_beam_id=1,
+                        offset_dly_poly="url",
+                        stn_weights=[0.9, 1.0, 1.0, 0.9],
+                        jones="url",
+                        dest_ip=["10.22.0.1:2345", "10.22.0.3:3456"],
+                        dest_chans=[128, 256],
+                        rfi_enable=[True, True, True],
+                        rfi_static_chans=[1, 206, 997],
+                        rfi_dynamic_chans=[242, 1342],
+                        rfi_weighted=0.87,
+                    )
+                ),
+                search_beams="",
+                zooms="",
+                scan_id=987654321,
+                unix_epoch_seconds=1616971738,
+                timestamp_ns=987654321,
+                packet_offset=123456789,
+                scan_seconds=30,
+            ),
         ),
     )
     assert request != object
