@@ -22,7 +22,7 @@ from ska_tmc_cdm.schemas.subarray_node.configure import (
     CSPConfigurationSchema,
     FSPConfigurationSchema,
 )
-from ska_tmc_cdm.schemas.subarray_node.configure.csp import (  # TimingBeamsConfigurationSchema,; LowCBFConfigurationSchema,
+from ska_tmc_cdm.schemas.subarray_node.configure.csp import (
     BeamsConfigurationSchema,
     LowCBFConfigurationSchema,
     StationsConfigurationSchema,
@@ -411,7 +411,13 @@ def test_marshall_station_configuration_does_not_modify_original():
     """
     config = StationsConfiguration(
         stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
-        stn_beams=[StnBeamConfiguration(1, [64, 65, 66, 67, 68, 68, 70, 71], "url")],
+        stn_beams=[
+            StnBeamConfiguration(
+                beam_id=1,
+                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                boresight_dly_poly="url",
+            )
+        ],
     )
     copied = copy.deepcopy(config)
     StationsConfigurationSchema().dumps(config)
@@ -425,7 +431,9 @@ def test_marshall_station_beam_configuration_does_not_modify_original():
     """
     Verify that serialising a StationsConfiguration does not change the object.
     """
-    config = StnBeamConfiguration(1, [64, 65, 66, 67, 68, 68, 70, 71], "url")
+    config = StnBeamConfiguration(
+        beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
+    )
     copied = copy.deepcopy(config)
     StnBeamConfigurationSchema().dumps(config)
 
@@ -504,42 +512,38 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
     Verify that serialising a LowCBFConfiguration does not change the object.
     """
     config = LowCBFConfiguration(
-        {
-            "stations": {
-                "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
-                "stn_beams": [
-                    {
-                        "beam_id": 1,
-                        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
-                        "boresight_dly_poly": "url",
-                    }
-                ],
-            },
-            "timing_beams": {
-                "beams": [
-                    {
-                        "pst_beam_id": 13,
-                        "stn_beam_id": 1,
-                        "offset_dly_poly": "url",
-                        "stn_weights": [0.9, 1.0, 1.0, 0.9],
-                        "jones": "url",
-                        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
-                        "dest_chans": [128, 256],
-                        "rfi_enable": [True, True, True],
-                        "rfi_static_chans": [1, 206, 997],
-                        "rfi_dynamic_chans": [242, 1342],
-                        "rfi_weighted": 0.87,
-                    }
-                ]
-            },
-            "search_beams": "tbd",
-            "zooms": "tbd",
-            "scan_id": 987654321,
-            "unix_epoch_seconds": 1616971738,
-            "timestamp_ns": 987654321,
-            "packet_offset": 123456789,
-            "scan_seconds": 30,
-        }
+        stations=StationsConfiguration(
+            [[1, 0], [2, 0], [3, 0], [4, 0]],
+            StnBeamConfiguration(
+                beam_id=1,
+                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                boresight_dly_poly="url",
+            ),
+        ),
+        timing_beams=TimingBeamsConfiguration(
+            [
+                BeamsConfiguration(
+                    pst_beam_id=13,
+                    stn_beam_id=1,
+                    offset_dly_poly="url",
+                    stn_weights=[0.9, 1.0, 1.0, 0.9],
+                    jones="url",
+                    dest_ip=["10.22.0.1:2345", "10.22.0.3:3456"],
+                    dest_chans=[128, 256],
+                    rfi_enable=[True, True, True],
+                    rfi_static_chans=[1, 206, 997],
+                    rfi_dynamic_chans=[242, 1342],
+                    rfi_weighted=0.87,
+                )
+            ]
+        ),
+        search_beams="",
+        zooms="",
+        scan_id=987654321,
+        unix_epoch_seconds=1616971738,
+        timestamp_ns=987654321,
+        packet_offset=123456789,
+        scan_seconds=30,
     )
     copied = copy.deepcopy(config)
 

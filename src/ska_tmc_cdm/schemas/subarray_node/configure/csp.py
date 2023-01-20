@@ -238,8 +238,8 @@ class CBFConfigurationSchema(Schema):
 
 @CODEC.register_mapping(StnBeamConfiguration)
 class StnBeamConfigurationSchema(Schema):
-    beam_id = (fields.Integer(data_key="beam_id"),)
-    freq_ids = (fields.List(fields.Integer, data_key="stns"),)
+    beam_id = fields.Integer(data_key="beam_id")
+    freq_ids = fields.List(fields.Integer, data_key="stns")
     boresight_dly_poly = fields.String(data_key="boresight_dly_poly")
 
     @post_load
@@ -275,17 +275,17 @@ class StnBeamConfigurationSchema(Schema):
 
 @CODEC.register_mapping(BeamsConfiguration)
 class BeamsConfigurationSchema(Schema):
-    pst_beam_id = (fields.Integer(),)
-    stn_beam_id = (fields.Integer(data_key="stn_beam_id"),)
-    offset_dly_poly = fields.String(data_key="offset_dly_poly")
-    stn_weights = (fields.List(fields.Float, data_key="stn_weights"),)
-    jones = (fields.String(data_key="jones"),)
-    dest_ip = (fields.List(fields.String(), data_key="dest_ip"),)
-    dest_chans = (fields.List(fields.Integer, data_key="dest_chans"),)
-    rfi_enable = (fields.List(fields.Boolean, data_key="rfi_enable"),)
-    rfi_static_chans = (fields.List(fields.Integer, data_key="rfi_static_chans"),)
-    rfi_dynamic_chans = (fields.List(fields.Integer),)
-    rfi_weighted = (fields.List(fields.Float, data_key="rfi_weighted"),)
+    pst_beam_id = fields.Integer(data_key="pst_beam_id")
+    stn_beam_id = fields.Integer(data_key="stn_beam_id")
+    offset_dly_poly = fields.String(data_key="config_id")
+    stn_weights = fields.List(fields.Float, data_key="stn_weights")
+    jones = fields.String(data_key="jones")
+    dest_ip = fields.List(fields.String(), data_key="dest_ip")
+    dest_chans = fields.List(fields.Integer, data_key="dest_chans")
+    rfi_enable = fields.List(fields.Boolean, data_key="rfi_enable")
+    rfi_static_chans = fields.List(fields.Integer, data_key="rfi_static_chans")
+    rfi_dynamic_chans = fields.List(fields.Integer, data_key="rfi_dynamic_chans")
+    rfi_weighted = fields.Integer(data_key="rfi_weighted")
 
     @post_load
     def create(self, data, **_):
@@ -369,7 +369,7 @@ class TimingBeamsConfigurationSchema(Schema):
 
 @CODEC.register_mapping(StationsConfiguration)
 class StationsConfigurationSchema(Schema):
-    stns = (fields.List(fields.List(fields.Integer)),)
+    stns = fields.List(fields.List(fields.Integer))
     stn_beams = fields.List(fields.Nested(StnBeamConfigurationSchema))
 
     @post_load
@@ -401,14 +401,14 @@ class StationsConfigurationSchema(Schema):
 
 
 @CODEC.register_mapping(LowCBFConfiguration)
-class LowCBFConfigurationSchema(ValidatingSchema):
+class LowCBFConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.LowCBFConfiguration class
     """
 
     stations = fields.Dict(data_key="stations")
-    timing_beams = fields.Dict(keys=fields.String(), values=fields.List(fields.Dict))
-    search_beams = fields.String()
+    timing_beams = fields.Dict(data_key="timing_beams")
+    search_beams = fields.String(data_key="search_beams")
     zooms = fields.String()
     scan_id = fields.Integer()
     unix_epoch_seconds = fields.Integer()
@@ -478,12 +478,12 @@ class CSPConfigurationSchema(ValidatingSchema):
     subarray = fields.Nested(SubarrayConfigurationSchema, data_key="subarray")
     common = fields.Nested(CommonConfigurationSchema, data_key="common")
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
+    lowcbf = fields.Nested(LowCBFConfigurationSchema, data_key="lowcbf")
 
     # TODO: In future when csp Interface 2.2 will be used than these 2 parameter type will be                           # pylint: disable=W0511
     #  replaced with the respective class schema (PSSConfigurationSchema,PSTConfigurationSchema)
     pss_config = fields.Dict(data_key="pss")
     pst_config = fields.Dict(data_key="pst")
-    lowcbf = fields.Nested(LowCBFConfigurationSchema, data_key="lowcbf")
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
