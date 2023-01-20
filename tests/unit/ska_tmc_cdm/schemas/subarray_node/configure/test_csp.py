@@ -513,15 +513,17 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
     """
     config = LowCBFConfiguration(
         stations=StationsConfiguration(
-            [[1, 0], [2, 0], [3, 0], [4, 0]],
-            StnBeamConfiguration(
-                beam_id=1,
-                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                boresight_dly_poly="url",
-            ),
+            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stn_beams=[
+                StnBeamConfiguration(
+                    beam_id=1,
+                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                    boresight_dly_poly="url",
+                )
+            ],
         ),
         timing_beams=TimingBeamsConfiguration(
-            [
+            beams=[
                 BeamsConfiguration(
                     pst_beam_id=13,
                     stn_beam_id=1,

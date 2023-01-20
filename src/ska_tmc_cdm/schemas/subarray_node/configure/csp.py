@@ -290,13 +290,13 @@ class BeamsConfigurationSchema(Schema):
     @post_load
     def create(self, data, **_):
         """
-         Convert parsed JSON back into a StnBeamConfiguration object.
+         Convert parsed JSON back into a BeamsConfiguration object.
 
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
 
-        :return: StnBeamConfiguration instance populated to match JSON
-        :rtype: StnBeamConfiguration
+        :return: BeamsConfiguration instance populated to match JSON
+        :rtype: BeamsConfiguration
         """
         pst_beam_id = data.get("pst_beam_id", None)
         stn_beam_id = data.get("stn_beam_id", None)
