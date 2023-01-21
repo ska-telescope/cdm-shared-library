@@ -14,13 +14,17 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     Target,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    BeamsConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
+    StationsConfiguration,
+    StnBeamConfiguration,
     SubarrayConfiguration,
+    TimingBeamsConfiguration,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
@@ -370,33 +374,33 @@ VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
             subarray_id=1,
         ),
         lowcbf=LowCBFConfiguration(
-            stations={
-                "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
-                "stn_beams": [
-                    {
-                        "beam_id": 1,
-                        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
-                        "boresight_dly_poly": "url",
-                    }
+            stations=StationsConfiguration(
+                stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+                stn_beams=[
+                    StnBeamConfiguration(
+                        beam_id=1,
+                        freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                        boresight_dly_poly="url",
+                    )
                 ],
-            },
-            timing_beams={
-                "beams": [
-                    {
-                        "pst_beam_id": 13,
-                        "stn_beam_id": 1,
-                        "offset_dly_poly": "url",
-                        "stn_weights": [0.9, 1.0, 1.0, 0.9],
-                        "jones": "url",
-                        "dest_ip": ["10.22.0.1:2345", "10.22.0.3:3456"],
-                        "dest_chans": [128, 256],
-                        "rfi_enable": [True, True, True],
-                        "rfi_static_chans": [1, 206, 997],
-                        "rfi_dynamic_chans": [242, 1342],
-                        "rfi_weighted": 0.87,
-                    }
+            ),
+            timing_beams=TimingBeamsConfiguration(
+                beams=[
+                    BeamsConfiguration(
+                        pst_beam_id=13,
+                        stn_beam_id=1,
+                        offset_dly_poly="url",
+                        stn_weights=[0.9, 1.0, 1.0, 0.9],
+                        jones="url",
+                        dest_ip=["10.22.0.1:2345", "10.22.0.3:3456"],
+                        dest_chans=[128, 256],
+                        rfi_enable=[True, True, True],
+                        rfi_static_chans=[1, 206, 997],
+                        rfi_dynamic_chans=[242, 1342],
+                        rfi_weighted=0.87,
+                    )
                 ]
-            },
+            ),
             search_beams="tbd",
             zooms="tbd",
         ),
