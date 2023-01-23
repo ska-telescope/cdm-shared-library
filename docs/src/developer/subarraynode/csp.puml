@@ -61,6 +61,43 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 	        pst: dict
 
 		}
+
+		class LowCBFConfiguration {
+			stations: StationsConfiguration 
+			timing_beams: TimingBeamsConfiguration
+			search_beams: str
+			zooms: str
+		}
+
+		class StationsConfiguration {
+			stns: List[List[int]]
+        	stn_beams: List[StnBeamConfiguration]
+		}
+
+		class TimingBeamsConfiguration {
+			beams: List[BeamsConfiguration]
+		}
+		
+		class BeamsConfiguration {
+			pst_beam_id: int
+			stn_beam_id: int
+			offset_dly_poly: str
+			stn_weights: List[float]
+			jones: str
+			dest_ip: List[str]
+			dest_chans: List[int]
+			rfi_enable: List[bool]
+			rfi_static_chans: List[int]
+			rfi_dynamic_chans: List[int]
+			rfi_weighted: List[float]
+		}
+
+		class StnBeamConfiguration {
+			beam_id: int
+			freq_ids: List[int]
+			boresight_dly_poly: str
+		}
+
 		CBFConfiguration *-- "*" FSPConfiguration
 		CBFConfiguration *-- "1" VLBIConfiguration
 		CSPConfiguration *-- "1" CommonConfiguration
@@ -68,8 +105,11 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		CSPConfiguration *-- "1" CBFConfiguration
 		CSPConfiguration *-- "1" PSTConfiguration
 		CSPConfiguration *-- "1" PSSConfiguration
-
+		CSPConfiguration *-- "1" LowCBFConfiguration
+		LowCBFConfiguration *-- "1" StationsConfiguration
+		LowCBFConfiguration *-- "1" TimingBeamsConfiguration
+		TimingBeamsConfiguration *-- "*" BeamsConfiguration
+		StationsConfiguration *-- "*" StnBeamConfiguration
 	}
 }
-
 @enduml
