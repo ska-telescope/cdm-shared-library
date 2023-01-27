@@ -216,9 +216,7 @@ of a full CDM JSON object, the elements this maps to are:
             "rfi_weighted": 0.87
           }
         ]
-      },
-      "search_beams": "tbd",
-      "zooms": "tbd"
+      }
     }
   },
     ...
@@ -615,9 +613,7 @@ Example configuration JSON for LOW
             "rfi_weighted": 0.87
           }
         ]
-      },
-      "search_beams": "tbd",
-      "zooms": "tbd"
+      }
     }
   },
   "tmc": {

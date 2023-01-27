@@ -65,8 +65,6 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		class LowCBFConfiguration {
 			stations: StationsConfiguration 
 			timing_beams: TimingBeamsConfiguration
-			search_beams: str
-			zooms: str
 		}
 
 		class StationsConfiguration {

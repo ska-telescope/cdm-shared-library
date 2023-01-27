@@ -266,13 +266,6 @@ def test_csp_configuration_equals():
                     rfi_weighted=0.87,
                 )
             ),
-            search_beams="tbd",
-            zooms="tbd",
-            scan_id=987654321,
-            unix_epoch_seconds=1616971738,
-            timestamp_ns=987654321,
-            packet_offset=123456789,
-            scan_seconds=30,
         ),
     )
 
@@ -613,13 +606,6 @@ def test_low_cbf_configuration_equals():
                 rfi_weighted=0.87,
             )
         ),
-        search_beams="tbd",
-        zooms="tbd",
-        scan_id=987654321,
-        unix_epoch_seconds=1616971738,
-        timestamp_ns=987654321,
-        packet_offset=123456789,
-        scan_seconds=30,
     )
     config2 = LowCBFConfiguration(
         stations=StationsConfiguration(
@@ -645,16 +631,18 @@ def test_low_cbf_configuration_equals():
                 rfi_weighted=0.87,
             )
         ),
-        search_beams="tbd",
-        zooms="tbd",
-        scan_id=987654321,
-        unix_epoch_seconds=1616971738,
-        timestamp_ns=987654321,
-        packet_offset=123456789,
-        scan_seconds=30,
     )
     assert config1 == config2
-    assert config1 != LowCBFConfiguration(zooms="")
+    assert config1 != LowCBFConfiguration(
+        stations=StationsConfiguration(
+            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stn_beams=StnBeamConfiguration(
+                beam_id=1,
+                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                boresight_dly_poly="url",
+            ),
+        )
+    )
 
 
 def test_low_cbf_configuration_not_equal_to_other_objects():
@@ -687,12 +675,5 @@ def test_low_cbf_configuration_not_equal_to_other_objects():
                 rfi_weighted=0.87,
             )
         ),
-        search_beams="tbd",
-        zooms="tbd",
-        scan_id=987654321,
-        unix_epoch_seconds=1616971738,
-        timestamp_ns=987654321,
-        packet_offset=123456789,
-        scan_seconds=30,
     )
     assert config != 1

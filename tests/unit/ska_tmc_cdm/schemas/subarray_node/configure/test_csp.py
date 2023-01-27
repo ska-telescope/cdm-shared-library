@@ -238,14 +238,7 @@ VALID_CSP_JSON_PI17 = """{
             "rfi_weighted": 0.87
           }
         ]
-      },
-      "search_beams": "tbd",
-      "zooms": "tbd",
-      "scan_id":98,
-      "unix_epoch_seconds":16,
-      "timestamp_ns":98,
-      "packet_offset":12,
-      "scan_seconds": 30
+      }
     }
   }"""
 
@@ -483,13 +476,6 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
                 )
             ]
         ),
-        search_beams="tbd",
-        zooms="tbd",
-        scan_id=987654321,
-        unix_epoch_seconds=1616971738,
-        timestamp_ns=987654321,
-        packet_offset=123456789,
-        scan_seconds=30,
     )
     copied = copy.deepcopy(config)
 
@@ -497,6 +483,4 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
 
     assert config.stations == copied.stations
     assert config.timing_beams == copied.timing_beams
-    assert config.search_beams == copied.search_beams
-    assert config.zooms == copied.zooms
     assert config == copied

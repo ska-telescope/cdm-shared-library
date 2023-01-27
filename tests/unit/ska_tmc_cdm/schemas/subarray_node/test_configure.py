@@ -337,9 +337,7 @@ VALID_LOW_CONFIGURE_JSON_PI17 = """
             "rfi_weighted": 0.87
           }
         ]
-      },
-      "search_beams": "tbd",
-      "zooms": "tbd"
+      }
       }
     }
 }
@@ -401,8 +399,6 @@ VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
                     )
                 ]
             ),
-            search_beams="tbd",
-            zooms="tbd",
         ),
     ),
 )
@@ -753,8 +749,6 @@ def test_low_configure_configuration_not_equals():
                         )
                     ]
                 ),
-                search_beams="tbd",
-                zooms="tbd",
             ),
         ),
     )
@@ -814,8 +808,6 @@ def test_low_configure_configuration_not_equals():
                         )
                     ]
                 ),
-                search_beams="tbd",
-                zooms="tbd",
             ),
         ),
     )

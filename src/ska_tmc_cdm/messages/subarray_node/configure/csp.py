@@ -332,45 +332,21 @@ class LowCBFConfiguration:
         self,
         stations: StationsConfiguration = None,
         timing_beams: TimingBeamsConfiguration = None,
-        search_beams: str = None,
-        zooms: str = None,
-        scan_id: int = None,
-        unix_epoch_seconds: int = None,
-        timestamp_ns: int = None,
-        packet_offset: int = None,
-        scan_seconds: int = None,
     ) -> object:
         """
         Create a new LowCBFConfiguration.
 
         :param stations: stations
         :param timing_beams: PST beams subarray list
-        :param search_beams: PSS parameter list
-        :param zooms: zoom correlation parameter
         """
         self.stations = stations
         self.timing_beams = timing_beams
-        self.search_beams = search_beams
-        self.zooms = zooms
-        self.scan_id = scan_id
-        self.unix_epoch_seconds = unix_epoch_seconds
-        self.timestamp_ns = timestamp_ns
-        self.packet_offset = packet_offset
-        self.scan_seconds = scan_seconds
 
     def __eq__(self, other):
         if not isinstance(other, LowCBFConfiguration):
             return False
         return (
-            self.stations == other.stations
-            and self.timing_beams == other.timing_beams
-            and self.search_beams == other.search_beams
-            and self.zooms == other.zooms
-            and self.scan_id == other.scan_id
-            and self.unix_epoch_seconds == other.unix_epoch_seconds
-            and self.timestamp_ns == other.timestamp_ns
-            and self.packet_offset == other.packet_offset
-            and self.scan_seconds == other.scan_seconds
+            self.stations == other.stations and self.timing_beams == other.timing_beams
         )
 
 
