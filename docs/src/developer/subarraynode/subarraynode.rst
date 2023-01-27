@@ -624,4 +624,3 @@ Example configuration JSON for LOW
     "scan_duration": 10.0
   }
 }
-

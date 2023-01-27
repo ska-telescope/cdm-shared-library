@@ -483,8 +483,8 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
                 )
             ]
         ),
-        search_beams="",
-        zooms="",
+        search_beams="tbd",
+        zooms="tbd",
         scan_id=987654321,
         unix_epoch_seconds=1616971738,
         timestamp_ns=987654321,
