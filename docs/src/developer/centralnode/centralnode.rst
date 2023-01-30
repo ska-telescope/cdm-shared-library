@@ -218,7 +218,7 @@ Example PI 17 JSON input modelled by ``AssignResourcesRequest`` for LOW:
         "station_ids": [[1,2]],
         "channel_blocks": [3]
      },
-     "sdp": {
+    "sdp": {
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
     "execution_block": {
       "eb_id": "eb-mvp01-20200325-00001",
