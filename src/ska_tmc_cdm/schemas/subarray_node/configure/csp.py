@@ -280,7 +280,6 @@ class BeamsConfigurationSchema(Schema):
     offset_dly_poly = fields.String(data_key="offset_dly_poly")
     stn_weights = fields.List(fields.Float, data_key="stn_weights")
     jones = fields.String(data_key="jones")
-    dest_ip = fields.List(fields.String(), data_key="dest_ip")
     dest_chans = fields.List(fields.Integer, data_key="dest_chans")
     rfi_enable = fields.List(fields.Boolean, data_key="rfi_enable")
     rfi_static_chans = fields.List(fields.Integer, data_key="rfi_static_chans")
@@ -303,7 +302,6 @@ class BeamsConfigurationSchema(Schema):
         offset_dly_poly = data.get("offset_dly_poly", None)
         stn_weights = data.get("stn_weights", None)
         jones = data.get("jones", None)
-        dest_ip = data.get("dest_ip", None)
         dest_chans = data.get("dest_chans", None)
         rfi_enable = data.get("rfi_enable", None)
         rfi_static_chans = data.get("rfi_static_chans", None)
@@ -315,7 +313,6 @@ class BeamsConfigurationSchema(Schema):
             offset_dly_poly=offset_dly_poly,
             stn_weights=stn_weights,
             jones=jones,
-            dest_ip=dest_ip,
             dest_chans=dest_chans,
             rfi_enable=rfi_enable,
             rfi_static_chans=rfi_static_chans,

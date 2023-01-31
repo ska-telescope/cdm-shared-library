@@ -191,10 +191,6 @@ of a full CDM JSON object, the elements this maps to are:
               0.9
             ],
             "jones": "url",
-            "dest_ip": [
-              "10.22.0.1:2345",
-              "10.22.0.3:3456"
-            ],
             "dest_chans": [
               128,
               256
@@ -588,10 +584,6 @@ Example configuration JSON for LOW
               0.9
             ],
             "jones": "url",
-            "dest_ip": [
-              "10.22.0.1:2345",
-              "10.22.0.3:3456"
-            ],
             "dest_chans": [
               128,
               256

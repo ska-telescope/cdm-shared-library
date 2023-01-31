@@ -249,7 +249,6 @@ class BeamsConfiguration:
         offset_dly_poly: str = None,
         stn_weights: List[float] = None,
         jones: str = None,
-        dest_ip: List[str] = None,
         dest_chans: List[int] = None,
         rfi_enable: List[bool] = None,
         rfi_static_chans: List[int] = None,
@@ -264,7 +263,6 @@ class BeamsConfiguration:
         :param offset_dly_poly: offset_dly_poly
         :param stn_weights: stn_weights
         :param jones: jones
-        :param dest_ip: dest_ip
         :param dest_chans: dest_chans
         :param rfi_enable: rfi_enable
         :param rfi_static_chans: rfi_static_chans
@@ -276,7 +274,6 @@ class BeamsConfiguration:
         self.offset_dly_poly = offset_dly_poly
         self.stn_weights = stn_weights
         self.jones = jones
-        self.dest_ip = dest_ip
         self.dest_chans = dest_chans
         self.rfi_enable = rfi_enable
         self.rfi_static_chans = rfi_static_chans
@@ -292,7 +289,6 @@ class BeamsConfiguration:
             and self.offset_dly_poly == other.offset_dly_poly
             and self.stn_weights == other.stn_weights
             and self.jones == other.jones
-            and self.dest_ip == other.dest_ip
             and self.dest_chans == other.dest_chans
             and self.rfi_enable == other.rfi_enable
             and self.rfi_static_chans == other.rfi_static_chans

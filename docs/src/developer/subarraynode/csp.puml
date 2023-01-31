@@ -82,7 +82,6 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			offset_dly_poly: str
 			stn_weights: List[float]
 			jones: str
-			dest_ip: List[str]
 			dest_chans: List[int]
 			rfi_enable: List[bool]
 			rfi_static_chans: List[int]
