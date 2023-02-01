@@ -139,9 +139,80 @@ of a full CDM JSON object, the elements this maps to are:
     },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
+      "frequency_band": "1",
       "subarray_id": 1
     },
-    "lowcbf": {
+    "cbf": {
+      "fsp": [
+        {
+          "fsp_id": 1,
+          "function_mode": "CORR",
+          "frequency_slice_id": 1,
+          "integration_factor": 1,
+          "zoom_factor": 0,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
+          "output_link_map": [
+            [
+              0,
+              0
+            ],
+            [
+              200,
+              1
+            ]
+          ]
+        },
+        {
+          "fsp_id": 2,
+          "function_mode": "CORR",
+          "frequency_slice_id": 2,
+          "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 744,
+          "output_link_map": [
+            [
+              0,
+              4
+            ],
+            [
+              200,
+              5
+            ]
+          ],
+          "zoom_window_tuning": 650000
+        }
+      ],
+      "vlbi": {
+
+      }
+    },
+    "pss": {
+
+    },
+    "pst": {
+
+    },
+          "lowcbf": {
       "stations": {
         "stns": [
           [
@@ -212,8 +283,8 @@ of a full CDM JSON object, the elements this maps to are:
             "rfi_weighted": 0.87
           }
         ]
-      }
     }
+  }
   },
     ...
   }
@@ -531,8 +602,7 @@ Example configuration JSON for LOW
       "subarray_name": "science period 23"
     },
     "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "subarray_id": 1
+      "config_id": "sbi-mvp01-20200325-00001-science_A",  
     },
     "lowcbf": {
       "stations": {
@@ -605,10 +675,10 @@ Example configuration JSON for LOW
             "rfi_weighted": 0.87
           }
         ]
-      }
+      }     
     }
   },
   "tmc": {
     "scan_duration": 10.0
   }
-}
+ }

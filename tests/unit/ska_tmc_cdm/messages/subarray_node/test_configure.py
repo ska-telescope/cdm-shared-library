@@ -91,7 +91,7 @@ CONFIGURE_OBJECT_ARGS_PI16 = dict(
 )
 
 CONFIGURE_OBJECT_ARGS_PI7 = dict(
-    interface="https://schema.skao.int/ska-tmc-configure/2.1",
+    interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
     transaction_id="txn-....-00001",
     sdp=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"

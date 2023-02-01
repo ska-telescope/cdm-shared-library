@@ -13,7 +13,7 @@ from .mccs import MCCSConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 
-SCHEMA = "https://schema.skao.int/ska-tmc-configure/3.0"
+SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.1"
 
 
 class ConfigureRequest:  # pylint: disable=too-few-public-methods

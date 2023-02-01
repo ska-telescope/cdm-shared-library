@@ -58,12 +58,12 @@ class SubarrayConfigurationSchema(Schema):
 class CommonConfigurationSchema(Schema):
     config_id = fields.String(data_key="config_id", required=False)
     frequency_band = fields.String(data_key="frequency_band", required=False)
-    subarray_id = fields.Integer(data_key="subarray_id", required=True)
+    subarray_id = fields.Integer(data_key="subarray_id", required=False)
     band_5_tuning = fields.List(fields.Float, data_key="band_5_tuning")
 
     @pre_dump
     def convert(
-        self, commonuration: CommonConfiguration, **_
+        self, common_configuration: CommonConfiguration, **_
     ):  # pylint: disable=no-self-use
         """
         Process CommonConfiguration instance so that it is ready for conversion
@@ -74,9 +74,9 @@ class CommonConfigurationSchema(Schema):
         :return: CommonConfiguration instance populated to match JSON
         """
         # Convert Python Enum to its string value
-        copied = copy.deepcopy(commonuration)
+        copied = copy.deepcopy(common_configuration)
         if hasattr(copied, "frequency_band") and copied.frequency_band is not None:
-            copied.frequency_band = commonuration.frequency_band.value
+            copied.frequency_band = common_configuration.frequency_band.value
         return copied
 
     @post_dump
@@ -102,9 +102,7 @@ class CommonConfigurationSchema(Schema):
         """
         config_id = data.get("config_id")
         frequency_band = data.get("frequency_band")
-        frequency_band_enum = (
-            ReceiverBand(frequency_band) if frequency_band else frequency_band
-        )
+        frequency_band_enum = ReceiverBand(frequency_band)
         subarray_id = data.get("subarray_id")
         band_5_tuning = data.get("band_5_tuning", None)
 

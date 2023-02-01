@@ -253,7 +253,7 @@ class BeamsConfiguration:
         rfi_enable: List[bool] = None,
         rfi_static_chans: List[int] = None,
         rfi_dynamic_chans: List[int] = None,
-        rfi_weighted: List[float] = None,
+        rfi_weighted: float = None,
     ) -> object:
         """
         Create a new BeamsConfiguration.

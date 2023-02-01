@@ -86,7 +86,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			rfi_enable: List[bool]
 			rfi_static_chans: List[int]
 			rfi_dynamic_chans: List[int]
-			rfi_weighted: List[float]
+			rfi_weighted: float
 		}
 
 		class StnBeamConfiguration {

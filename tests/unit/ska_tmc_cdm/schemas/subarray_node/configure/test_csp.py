@@ -160,8 +160,7 @@ VALID_CSP_JSON_PI17 = """{
     },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "subarray_id": 1,
-       "frequency_band":"1"
+      "frequency_band":"1"
     },
     "lowcbf": {
       "stations": {
@@ -221,7 +220,7 @@ VALID_CSP_JSON_PI17 = """{
               true,
               true,
               true
-            ],
+           ],
             "rfi_static_chans": [
               1,
               206,
