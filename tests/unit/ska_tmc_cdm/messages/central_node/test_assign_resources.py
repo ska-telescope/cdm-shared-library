@@ -11,7 +11,12 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesResponse,
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
+from ska_tmc_cdm.messages.central_node.csp import (
+    CommonConfiguration,
+    CSPConfiguration,
+    LowCbfConfiguration,
+    ResourcesConfiguration,
+)
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
@@ -52,23 +57,17 @@ def test_assign_resources_request_eq():
     )
     csp_config = CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
-        common={"subarray_id": 1},
-        lowcbf={
-            "resources": [
-                {
-                    "device": "fsp_01",
-                    "shared": True,
-                    "fw_image": "pst",
-                    "fw_mode": "unused",
-                },
-                {
-                    "device": "p4_01",
-                    "shared": True,
-                    "fw_image": "p4.bin",
-                    "fw_mode": "p4",
-                },
+        common=CommonConfiguration(subarray_id=1),
+        lowcbf=LowCbfConfiguration(
+            resources=[
+                ResourcesConfiguration(
+                    device="fsp_01", shared=True, fw_image="pst", fw_mode="unused"
+                ),
+                ResourcesConfiguration(
+                    device="p4_01", shared=True, fw_image="p4.bin", fw_mode="p4"
+                ),
             ]
-        },
+        ),
     )
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
     request = AssignResourcesRequest(

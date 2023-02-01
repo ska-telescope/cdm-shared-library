@@ -134,10 +134,27 @@ package ska_tmc_cdm.messages.central_node {
 
         class CSPConfiguration {
             interface: str
-            common: Dict[str, int]
-            lowcbf: Dict[str, List[Dict]]
+            common: CommonConfiguration
+            lowcbf: LowCbfConfiguration
         }
+        
+        CSPConfiguration *-- "1" CommonConfiguration
+        CSPConfiguration *-- "1" LowCbfConfiguration
 
+        class CommonConfiguration {
+subarray_id: int
+}
+
+class LowCbfConfiguration {
+resources: List[ResourcesConfiguration]
+}
+LowCbfConfiguration *-- "*" ResourcesConfiguration 
+class ResourcesConfiguration {
+device: str
+shared: bool
+fw_image: str
+fw_mode: str
+}
         class AssignResourcesRequest {
             interface : str
             transaction_id : str

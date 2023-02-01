@@ -32,5 +32,4 @@ def test_validate_serialization_and_deserialization_CSPConfiguration_json_using_
 
     csp_configuration_object = CSPConfigurationSchema().loads(VALID_CSP_LOW_JSON)
     serialized_csp_config = CSPConfigurationSchema().dumps(csp_configuration_object)
-
     assert_json_is_equal(VALID_CSP_LOW_JSON, serialized_csp_config)

@@ -5,24 +5,54 @@ for the TMC CentralNode.AssignResources command.
 """
 from marshmallow import Schema, fields, post_dump, post_load
 
-from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
+from ska_tmc_cdm.messages.central_node.csp import (
+    CommonConfiguration,
+    CSPConfiguration,
+    LowCbfConfiguration,
+    ResourcesConfiguration,
+)
 from ska_tmc_cdm.schemas import CODEC
 
 __all__ = [
     "CSPConfigurationSchema",
+    "CommonConfigurationSchema",
+    "ResourcesConfigurationSchema",
+    "LowCbfConfigurationSchema",
 ]
 
 
-class Resources(Schema):
+@CODEC.register_mapping(CommonConfiguration)
+class CommonConfigurationSchema(Schema):
+    """
+    Marsmallow class for the common subarray id field
+    of CommonConfigurationSchema
+    """
+
+    subarray_id = fields.Integer(metadata={"require": True})
+
+
+@CODEC.register_mapping(ResourcesConfiguration)
+class ResourcesConfigurationSchema(Schema):
     """
     Marsmallow class for the resources field
-    of CSPConfigurationSchema
+    of ResourcesConfigurationSchema
     """
 
     device = fields.String(metadata={"require": True})
     shared = fields.Boolean(metadata={"require": True})
     fw_image = fields.String(metadata={"require": True})
     fw_mode = fields.String(metadata={"require": True})
+
+
+@CODEC.register_mapping(LowCbfConfiguration)
+class LowCbfConfigurationSchema(Schema):
+    """
+    Marsmallow class of LowCbfConfigurationSchema
+    """
+
+    resources = fields.List(
+        fields.Nested(ResourcesConfigurationSchema), metadata={"require": True}
+    )
 
 
 @CODEC.register_mapping(CSPConfiguration)
@@ -32,13 +62,11 @@ class CSPConfigurationSchema(Schema):
     """
 
     interface = fields.String(metadata={"require": True})
-    common = fields.Dict(
-        keys=fields.String(), values=fields.Int(), metadata={"require": True}
+    common = fields.Nested(
+        CommonConfigurationSchema, data_key="common", metadata={"require": True}
     )
-    lowcbf = fields.Dict(
-        keys=fields.String(),
-        values=fields.List(fields.Dict),
-        metadata={"require": True},
+    lowcbf = fields.Nested(
+        LowCbfConfigurationSchema, data_key="lowcbf", metadata={"require": True}
     )
 
     @post_dump
