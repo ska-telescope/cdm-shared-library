@@ -214,19 +214,10 @@ Example PI 17 JSON input modelled by ``AssignResourcesRequest`` for LOW:
     "transaction_id": "txn-....-00001",
     "subarray_id": 1,
     "mccs": {
-        "subarray_beam_ids": [
-            1
-        ],
-        "station_ids": [
-            [
-                1,
-                2
-            ]
-        ],
-        "channel_blocks": [
-            3
-        ]
-    },
+        "subarray_beam_ids": [1],
+        "station_ids": [[1,2]],
+        "channel_blocks": [3]
+     },
     "sdp": {
         "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
         "resources": {
@@ -369,7 +360,29 @@ Example PI 17 JSON input modelled by ``AssignResourcesRequest`` for LOW:
                 }
             }
         ]
+    },
+    "csp": {
+    "interface": "https://schema.skao.int/ska-low-csp-assignresources/2.0",
+    "common": {
+      "subarray_id": 1
+    },
+    "lowcbf": {
+      "resources": [
+        {
+          "device": "fsp_01",
+          "shared": true,
+          "fw_image": "pst",
+          "fw_mode": "unused"
+        },
+        {
+          "device": "p4_01",
+          "shared": true,
+          "fw_image": "p4.bin",
+          "fw_mode": "p4"
+        }
+      ]
     }
+   }
   }
 
 release_resources.py
