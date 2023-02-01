@@ -610,97 +610,166 @@ VALID_ASSIGN_RESOURCE_WITH_SDP_ALL_PARAMETERS_JSON_PI16 = """
 }
 }"""
 
-VALID_ASSIGN_RESOURCE_WITH_SDP_MINIMAL_PARAMETERS_JSON_PI16 = """
-{
-  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
-  "transaction_id": "txn-....-00001",
-  "subarray_id": 1,
-  "dish": {
-    "receptor_ids": [
-      "0001"
-    ]
-  },
-  "sdp": {
-    "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
-    "resources": {    
-        "receptors": ["SKA001", "SKA036", "SKA063", "SKA100"]
+VALID_ASSIGN_RESOURCE_WITH_SDP_MINIMAL_PARAMETERS_JSON_PI17 = """
+  {
+    "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.0",
+    "transaction_id": "txn-....-00001",
+    "subarray_id": 1,
+    "mccs": {
+        "subarray_beam_ids": [
+            1
+        ],
+        "station_ids": [
+            [
+                1,
+                2
+            ]
+        ],
+        "channel_blocks": [
+            3
+        ]
     },
-    "execution_block": {
-        "eb_id": "eb-mvp01-20220929-00000",
-        "max_length": 3600.0,
-        "context": {},
-        "beams": [{ "beam_id": "vis0", "function": "visibilities" }],
-        "scan_types": [{
-            "scan_type_id": ".default",
-            "beams": { "vis0": { "channels_id": "vis_channels", "polarisations_id": "all" } }
-        }, {
-            "scan_type_id": "science:target",
-            "derive_from": ".default", "beams": { "vis0": { "field_id": "science-target" } }
-        }, {
-            "scan_type_id": "flux:pks1934-638",
-            "derive_from": ".default", "beams": { "vis0": { "field_id": "pks1934-638" } }
-        }, {
-            "scan_type_id": "delay:TBD",
-            "derive_from": ".default", "beams": { "vis0": { "field_id": "delay-field-TBD" } }
-        }, {
-            "scan_type_id": "bandpass:pks1921-203",
-            "derive_from": ".default", "beams": { "vis0": { "field_id": "pks1921-203" } }
-        }, {
-            "scan_type_id": "gains:TBD",
-            "derive_from": ".default", "beams": { "vis0": { "field_id": "gains-field-TBD" } }
-        }, {
-            "scan_type_id": "polarisation:TBD",
-            "derive_from": ".default", "beams": { "vis0": { "field_id": "polarisation-field-TBD" } }
-        }],
-        "channels": [{
-            "channels_id": "vis_channels",
-            "spectral_windows": [{
-                "spectral_window_id": "fsp_1_channels",
-                "count": 14480, "start": 0, "stride": 1,
-                "freq_min": 950000000.0, "freq_max": 1170000000.0,
-                "link_map": [ [0, 0] ]
-            }]
-        }],
-        "polarisations": [{
-            "polarisations_id": "all",
-            "corr_type": ["XX", "XY", "YY", "YX"]
-        }],
-        "fields": [{
-            "field_id": "science-target",
-            "phase_dir": {
-                "ra": [-1], "dec": [-1],
-                "reference_time": "TBD", "reference_frame": "ICRF3"
+    "sdp": {
+        "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
+        "resources": {
+            "receptors": [
+                "SKA001",
+                "SKA002",
+                "SKA003",
+                "SKA004"
+            ]
+        },
+        "execution_block": {
+            "eb_id": "eb-test-20220916-00000",
+            "context": {},
+            "max_length": 3600,
+            "beams": [
+                {
+                    "beam_id": "vis0",
+                    "function": "visibilities"
+                }
+            ],
+            "scan_types": [
+                {
+                    "scan_type_id": ".default",
+                    "beams": {
+                        "vis0": {
+                            "channels_id": "vis_channels",
+                            "polarisations_id": "all"
+                        }
+                    }
+                },
+                {
+                    "scan_type_id": "target:a",
+                    "derive_from": ".default",
+                    "beams": {
+                        "vis0": {
+                            "field_id": "field_a"
+                        }
+                    }
+                },
+                {
+                    "scan_type_id": "calibration:b",
+                    "derive_from": ".default",
+                    "beams": {
+                        "vis0": {
+                            "field_id": "field_b"
+                        }
+                    }
+                }
+            ],
+            "channels": [
+                {
+                    "channels_id": "vis_channels",
+                    "spectral_windows": [
+                        {
+                            "spectral_window_id": "fsp_1_channels",
+                            "count": 4,
+                            "start": 0,
+                            "stride": 2,
+                            "freq_min": 350000000,
+                            "freq_max": 368000000,
+                            "link_map": [
+                                [
+                                    0,
+                                    0
+                                ],
+                                [
+                                    200,
+                                    1
+                                ],
+                                [
+                                    744,
+                                    2
+                                ],
+                                [
+                                    944,
+                                    3
+                                ]
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "polarisations": [
+                {
+                    "polarisations_id": "all",
+                    "corr_type": [
+                        "XX",
+                        "XY",
+                        "YX",
+                        "YY"
+                    ]
+                }
+            ],
+            "fields": [
+                {
+                    "field_id": "field_a",
+                    "phase_dir": {
+                        "ra": [
+                            123
+                        ],
+                        "dec": [
+                            -60
+                        ],
+                        "reference_time": "...",
+                        "reference_frame": "ICRF3"
+                    },
+                    "pointing_fqdn": "..."
+                },
+                {
+                    "field_id": "field_b",
+                    "phase_dir": {
+                        "ra": [
+                            123
+                        ],
+                        "dec": [
+                            -60
+                        ],
+                        "reference_time": "...",
+                        "reference_frame": "ICRF3"
+                    },
+                    "pointing_fqdn": "..."
+                }
+            ]
+        },
+        "processing_blocks": [
+            {
+                "pb_id": "pb-test-20220916-00000",
+                "script": {
+                    "kind": "realtime",
+                    "name": "test-receive-addresses",
+                    "version": "0.5.0"
+                },
+                "sbi_ids": [
+                    "sbi-test-20220916-00000"
+                ],
+                "parameters": {}
             }
-        },{
-            "field_id": "pks1934-638",
-            "phase_dir": {
-                "ra": [294.85426888], "dec": [-63.71267788],
-                "reference_time": "TBD", "reference_frame": "ICRF3"
-            }
-        },{
-            "field_id": "delay-field-TBD",
-            "phase_dir": {
-                "ra": [-1], "dec": [-1],
-                "reference_time": "TBD", "reference_frame": "ICRF3"
-            }
-        },{
-            "field_id": "pks1921-203",
-            "phase_dir": {
-                "ra": [291.21273125], "dec": [-29.23892167],
-                "reference_time": "TBD", "reference_frame": "ICRF3"
-            }
-        }]
-    },
-  "processing_blocks": [
-    {
-      "pb_id": "pb-test-20220916-00000",
-      "script": {"kind": "realtime", "name": "test-receive-addresses", "version": "0.5.0"},
-      "sbi_ids": ["sbi-test-20220916-00000"],
-      "parameters": {}
+        ]
     }
-]
-}
-}"""
+  }
+"""
 
 
 def low_invalidator_fn(o: AssignResourcesRequest):
@@ -810,13 +879,13 @@ def test_validate_serialization_and_deserialization_assign_resource_with_sdp_min
     Verifies that the Assign Resource schema marshal and Unmarshal works correctly
     """
     assign_resource_config = AssignResourcesRequestSchema().loads(
-        VALID_ASSIGN_RESOURCE_WITH_SDP_MINIMAL_PARAMETERS_JSON_PI16
+        VALID_ASSIGN_RESOURCE_WITH_SDP_MINIMAL_PARAMETERS_JSON_PI17
     )
     serialized_assign_resource_config = AssignResourcesRequestSchema().dumps(
         assign_resource_config
     )
 
     assert_json_is_equal(
-        VALID_ASSIGN_RESOURCE_WITH_SDP_MINIMAL_PARAMETERS_JSON_PI16,
+        VALID_ASSIGN_RESOURCE_WITH_SDP_MINIMAL_PARAMETERS_JSON_PI17,
         serialized_assign_resource_config,
     )

@@ -641,8 +641,7 @@ VALID_SDP_ALL_PARAMETERS_JSON_PI16 = """{
       "beams": [ {
          "beam_id": "vis0",
          "function": "visibilities"
-      } ],
-
+      }],
       "scan_types":[
          {
             "scan_type_id": ".default",
@@ -828,6 +827,143 @@ VALID_BEAM_VIS0_JSON_PI16 = """{
                   "channels_id": "vis_channels"
                }"""
 
+VALID_SDP_JSON_PI17 = """
+{
+    "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
+    "resources": {
+      "receptors": ["SKA001","SKA002","SKA003","SKA004"]
+    },
+    "execution_block": {
+      "eb_id": "eb-test-20220916-00000",
+      "context": {},
+      "max_length": 3600.0,
+      "beams": [
+        {
+          "beam_id": "vis0",
+          "function": "visibilities"
+        }
+      ],
+      "scan_types": [
+        {
+          "scan_type_id": ".default",
+          "beams": {
+            "vis0": {
+              "channels_id": "vis_channels",
+              "polarisations_id": "all"
+            }
+          }
+        },
+        {
+          "scan_type_id": "target:a",
+          "derive_from": ".default",
+          "beams": {
+            "vis0": {
+              "field_id": "field_a"
+            }
+          }
+        },
+        {
+          "scan_type_id": "calibration:b",
+          "derive_from": ".default",
+          "beams": {
+            "vis0": {
+              "field_id": "field_b"
+            }
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channels_id": "vis_channels",
+          "spectral_windows": [
+            {
+              "spectral_window_id": "fsp_1_channels",
+              "count": 4,
+              "start": 0,
+              "stride": 2,
+              "freq_min": 350000000.0,
+              "freq_max": 368000000.0,
+              "link_map": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  200,
+                  1
+                ],
+                [
+                  744,
+                  2
+                ],
+                [
+                  944,
+                  3
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "polarisations": [
+        {
+          "polarisations_id": "all",
+          "corr_type": [
+            "XX",
+            "XY",
+            "YX",
+            "YY"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "field_id": "field_a",
+          "phase_dir": {
+            "ra": [
+              123.0
+            ],
+            "dec": [
+              -60.0
+            ],
+            "reference_time": "...",
+            "reference_frame": "ICRF3"
+          },
+          "pointing_fqdn": "..."
+        },
+        {
+          "field_id": "field_b",
+          "phase_dir": {
+            "ra": [
+              123.0
+            ],
+            "dec": [
+              -60.0
+            ],
+            "reference_time": "...",
+            "reference_frame": "ICRF3"
+          },
+          "pointing_fqdn": "..."
+        }
+      ]
+    },
+    "processing_blocks": [
+      {
+        "pb_id": "pb-test-20220916-00000",
+        "script": {
+          "kind": "realtime",
+          "name": "test-receive-addresses",
+          "version": "0.5.0"
+        },
+        "sbi_ids": [
+          "sbi-test-20220916-00000"
+        ],
+        "parameters": {}
+      }
+    ]
+}
+"""
+
 
 def test_validate_serialization_and_deserialization_sdpconfiguration_all_parameters_using_schema_class():
     """
@@ -969,7 +1105,7 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_json_using_
     Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly
     """
 
-    sdp_configuration_object = SDPConfigurationSchema().loads(VALID_SDP_JSON_PI16)
+    sdp_configuration_object = SDPConfigurationSchema().loads(VALID_SDP_JSON_PI17)
     serialized_sdp_config = SDPConfigurationSchema().dumps(sdp_configuration_object)
 
-    assert_json_is_equal(VALID_SDP_JSON_PI16, serialized_sdp_config)
+    assert_json_is_equal(VALID_SDP_JSON_PI17, serialized_sdp_config)
