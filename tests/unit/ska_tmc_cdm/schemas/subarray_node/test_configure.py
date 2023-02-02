@@ -258,8 +258,7 @@ VALID_LOW_CONFIGURE_JSON_PI17 = """
       "subarray_name": "science period 23"
     },
     "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band":"1"
+      "config_id": "sbi-mvp01-20200325-00001-science_A"
     },
      "lowcbf": {
       "stations": {
@@ -363,7 +362,6 @@ VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
         subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
-            frequency_band=ReceiverBand.BAND_1,
         ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
@@ -716,10 +714,7 @@ def test_low_configure_configuration_not_equals():
         csp=CSPConfiguration(
             interface="https://schema.skao.int/ska-csp-configure/2.0",
             subarray=SubarrayConfiguration(subarray_name="science period 23"),
-            common=CommonConfiguration(
-                config_id="sbi-mvp01-20200325-00001-science_A",
-                frequency_band=ReceiverBand.BAND_1,
-            ),
+            common=CommonConfiguration(config_id="sbi-mvp01-20200325-00001-science_A"),
             lowcbf=LowCBFConfiguration(
                 stations=StationConfiguration(
                     stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
@@ -777,7 +772,6 @@ def test_low_configure_configuration_not_equals():
             subarray=SubarrayConfiguration(subarray_name="science period 23"),
             common=CommonConfiguration(
                 config_id="sbi-mvp01-20200325-00001-science_A",
-                frequency_band=ReceiverBand.BAND_1,
             ),
             lowcbf=LowCBFConfiguration(
                 stations=StationConfiguration(

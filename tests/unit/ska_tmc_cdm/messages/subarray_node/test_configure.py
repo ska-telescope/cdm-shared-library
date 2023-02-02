@@ -101,8 +101,6 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
         subarray=SubarrayConfiguration("science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
-            frequency_band=ReceiverBand.BAND_1,
-            subarray_id=1,
         ),
         lowcbf=LowCBFConfiguration(
             {

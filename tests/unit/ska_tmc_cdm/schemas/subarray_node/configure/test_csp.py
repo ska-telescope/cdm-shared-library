@@ -159,8 +159,7 @@ VALID_CSP_JSON_PI17 = """{
       "subarray_name": "science period 23"
     },
     "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band":"1"
+      "config_id": "sbi-mvp01-20200325-00001-science_A"
     },
     "lowcbf": {
       "stations": {

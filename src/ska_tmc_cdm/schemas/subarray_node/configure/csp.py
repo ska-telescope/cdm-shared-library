@@ -57,7 +57,7 @@ class SubarrayConfigurationSchema(Schema):
 @CODEC.register_mapping(CommonConfiguration)
 class CommonConfigurationSchema(Schema):
     config_id = fields.String(data_key="config_id", required=False)
-    frequency_band = fields.String(data_key="frequency_band", required=False)
+    frequency_band = fields.String(data_key="frequency_band")
     subarray_id = fields.Integer(data_key="subarray_id", required=False)
     band_5_tuning = fields.List(fields.Float, data_key="band_5_tuning")
 
@@ -102,13 +102,14 @@ class CommonConfigurationSchema(Schema):
         """
         config_id = data.get("config_id")
         frequency_band = data.get("frequency_band")
-        frequency_band_enum = ReceiverBand(frequency_band)
         subarray_id = data.get("subarray_id")
         band_5_tuning = data.get("band_5_tuning", None)
-
-        return CommonConfiguration(
-            config_id, frequency_band_enum, subarray_id, band_5_tuning
-        )
+        if frequency_band:
+            frequency_band_enum = ReceiverBand(frequency_band)
+            return CommonConfiguration(
+                config_id, frequency_band_enum, subarray_id, band_5_tuning
+            )
+        return CommonConfiguration(config_id, subarray_id, band_5_tuning)
 
 
 @CODEC.register_mapping(FSPConfiguration)

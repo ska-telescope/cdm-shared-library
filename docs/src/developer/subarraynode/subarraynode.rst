@@ -212,7 +212,7 @@ of a full CDM JSON object, the elements this maps to are:
     "pst": {
 
     },
-          "lowcbf": {
+  "lowcbf": {
       "stations": {
         "stns": [
           [

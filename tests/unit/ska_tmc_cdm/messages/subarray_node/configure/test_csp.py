@@ -79,7 +79,7 @@ CSP_CONFIGURATION_ARGS_PI16 = dict(
 )
 
 
-def test_commonuration_equals():
+def test_common_configuration_equals():
     """
     Verify that CommonConfiguration objects are considered equal when all
     attributes are equal.
@@ -100,7 +100,7 @@ def test_commonuration_equals():
     assert config1 != CommonConfiguration(config_id, frequency_band, 2)
 
 
-def test_commonuration_not_equal_to_other_objects():
+def test_common_configuration_not_equal_to_other_objects():
     """
     Verify that CommonConfiguration objects are not considered equal to objects
     of other types.
