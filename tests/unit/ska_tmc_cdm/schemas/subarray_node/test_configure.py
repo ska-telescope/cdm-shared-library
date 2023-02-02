@@ -156,7 +156,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
 
 VALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/3.0",
   "mccs": {
     "stations":[
       {
@@ -194,7 +194,7 @@ VALID_LOW_CONFIGURE_JSON = """
 """
 
 VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
+    interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
     mccs=MCCSConfiguration(
         station_configs=[StnConfiguration(1), StnConfiguration(2)],
         subarray_beam_configs=[
@@ -400,7 +400,7 @@ VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
 
 INVALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/3.0",
   "mccs": {
     "stations":[
       {

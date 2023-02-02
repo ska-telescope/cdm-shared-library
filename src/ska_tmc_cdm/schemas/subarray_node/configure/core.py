@@ -22,6 +22,7 @@ __all__ = [
 ]
 
 JsonTarget = collections.namedtuple("JsonTarget", "ra dec reference_frame target_name")
+SCHEMA_LOW = "https://schema.skao.int/ska-low-tmc-configure/3.0"
 
 
 class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -173,6 +174,8 @@ class ConfigureRequestSchema(
         :return: ConfigurationRequest instance populated to match JSON
         """
         interface = data.get("interface")
+        if "ska-tmc-configure" not in data.get("interface"):
+            interface = SCHEMA_LOW
         transaction_id = data.get("transaction_id", None)
         pointing = data.get("pointing", None)
         dish = data.get("dish", None)
