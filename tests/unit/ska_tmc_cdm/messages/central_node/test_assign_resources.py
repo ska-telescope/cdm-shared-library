@@ -15,7 +15,7 @@ from ska_tmc_cdm.messages.central_node.csp import (
     CommonConfiguration,
     CSPConfiguration,
     LowCbfConfiguration,
-    ResourcesConfiguration,
+    ResourceConfiguration,
 )
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import (
@@ -60,10 +60,10 @@ def test_assign_resources_request_eq():
         common=CommonConfiguration(subarray_id=1),
         lowcbf=LowCbfConfiguration(
             resources=[
-                ResourcesConfiguration(
+                ResourceConfiguration(
                     device="fsp_01", shared=True, fw_image="pst", fw_mode="unused"
                 ),
-                ResourcesConfiguration(
+                ResourceConfiguration(
                     device="p4_01", shared=True, fw_image="p4.bin", fw_mode="p4"
                 ),
             ]

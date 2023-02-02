@@ -7,7 +7,7 @@ from typing import List
 __all__ = [
     "CSPConfiguration",
     "CommonConfiguration",
-    "ResourcesConfiguration",
+    "ResourceConfiguration",
     "LowCbfConfiguration",
 ]
 
@@ -33,7 +33,7 @@ class CommonConfiguration:
         return self.subarray_id == other.subarray_id
 
 
-class ResourcesConfiguration:
+class ResourceConfiguration:
     """
     Class to contain keys
     for resources under lowcbf
@@ -48,7 +48,7 @@ class ResourcesConfiguration:
     ) -> object:
 
         """
-        Create a new ResourcesConfiguration object.
+        Create a new ResourceConfiguration object.
 
         :param device:
         :param shared:
@@ -61,7 +61,7 @@ class ResourcesConfiguration:
         self.fw_mode = fw_mode
 
     def __eq__(self, other):
-        if not isinstance(other, ResourcesConfiguration):
+        if not isinstance(other, ResourceConfiguration):
             return False
         return (
             self.device == other.device
@@ -78,13 +78,13 @@ class LowCbfConfiguration:
 
     def __init__(
         self,
-        resources: List[ResourcesConfiguration],
+        resources: List[ResourceConfiguration],
     ) -> object:
         """
         Create a new LowCbfConfiguration.
 
         :param resources: list of dictionaries
-        containing keys from ResourcesConfiguration
+        containing keys from ResourceConfiguration
         """
         self.resources = resources
 

@@ -5,7 +5,7 @@ from ska_tmc_cdm.messages.central_node.csp import (
     CommonConfiguration,
     CSPConfiguration,
     LowCbfConfiguration,
-    ResourcesConfiguration,
+    ResourceConfiguration,
 )
 
 # example valid interface
@@ -13,10 +13,10 @@ valid_iface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
 # example valid lowcbf
 valid_lowcbf = LowCbfConfiguration(
     resources=[
-        ResourcesConfiguration(
+        ResourceConfiguration(
             device="fsp_01", shared=True, fw_image="pst", fw_mode="unused"
         ),
-        ResourcesConfiguration(
+        ResourceConfiguration(
             device="p4_01", shared=True, fw_image="p4.bin", fw_mode="p4"
         ),
     ]

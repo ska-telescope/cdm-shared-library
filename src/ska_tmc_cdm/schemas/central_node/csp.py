@@ -9,14 +9,14 @@ from ska_tmc_cdm.messages.central_node.csp import (
     CommonConfiguration,
     CSPConfiguration,
     LowCbfConfiguration,
-    ResourcesConfiguration,
+    ResourceConfiguration,
 )
 from ska_tmc_cdm.schemas import CODEC
 
 __all__ = [
     "CSPConfigurationSchema",
     "CommonConfigurationSchema",
-    "ResourcesConfigurationSchema",
+    "ResourceConfigurationSchema",
     "LowCbfConfigurationSchema",
 ]
 
@@ -31,11 +31,11 @@ class CommonConfigurationSchema(Schema):
     subarray_id = fields.Integer(metadata={"require": True})
 
 
-@CODEC.register_mapping(ResourcesConfiguration)
-class ResourcesConfigurationSchema(Schema):
+@CODEC.register_mapping(ResourceConfiguration)
+class ResourceConfigurationSchema(Schema):
     """
     Marsmallow class for the resources field
-    of ResourcesConfigurationSchema
+    of ResourceConfigurationSchema
     """
 
     device = fields.String(metadata={"require": True})
@@ -51,7 +51,7 @@ class LowCbfConfigurationSchema(Schema):
     """
 
     resources = fields.List(
-        fields.Nested(ResourcesConfigurationSchema), metadata={"require": True}
+        fields.Nested(ResourceConfigurationSchema), metadata={"require": True}
     )
 
 
