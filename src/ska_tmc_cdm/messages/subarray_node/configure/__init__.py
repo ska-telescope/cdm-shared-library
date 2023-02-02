@@ -14,7 +14,6 @@ from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 
 SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.1"
-SCHEMA_LOW = "https://schema.skao.int/ska-low-tmc-configure/3.0"
 
 
 class ConfigureRequest:  # pylint: disable=too-few-public-methods

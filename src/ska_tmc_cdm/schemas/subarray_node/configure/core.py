@@ -9,7 +9,7 @@ from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
 
 import ska_tmc_cdm.messages.subarray_node.configure.core as configure_msgs
-from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA_LOW, ConfigureRequest
+from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 
 from ... import CODEC, shared
 from . import csp, mccs, sdp, tmc
@@ -173,8 +173,6 @@ class ConfigureRequestSchema(
         :return: ConfigurationRequest instance populated to match JSON
         """
         interface = data.get("interface")
-        if "ska-low-tmc-configure" in data.get("interface"):
-            interface = SCHEMA_LOW
         transaction_id = data.get("transaction_id", None)
         pointing = data.get("pointing", None)
         dish = data.get("dish", None)

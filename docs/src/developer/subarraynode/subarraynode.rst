@@ -129,7 +129,7 @@ of a full CDM JSON object, the elements this maps to are:
 
 .. code::
 
-  # JSON modelled specifically by csp.py
+  #Mid JSON specifically by csp.py
   {
     ...
     csp": {
@@ -212,7 +212,21 @@ of a full CDM JSON object, the elements this maps to are:
     "pst": {
 
     },
-  "lowcbf": {
+   },
+    ...
+  }
+
+  #Low JSON  specifically by csp.py
+    {
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+      "subarray_name": "science period 23"
+    },
+    "common": {
+      "config_id": "sbi-mvp01-20200325-00001-science_A",
+       
+    },
+    "lowcbf": {
       "stations": {
         "stns": [
           [
@@ -283,12 +297,10 @@ of a full CDM JSON object, the elements this maps to are:
             "rfi_weighted": 0.87
           }
         ]
+      },
+       
     }
   }
-  },
-    ...
-  }
-
 
 sdp.py
 ------
