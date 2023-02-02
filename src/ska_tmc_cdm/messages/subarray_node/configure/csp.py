@@ -16,9 +16,9 @@ __all__ = [
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
-    "TimingBeamsConfiguration",
-    "BeamsConfiguration",
-    "StationsConfiguration",
+    "TimingBeamConfiguration",
+    "BeamConfiguration",
+    "StationConfiguration",
     "StnBeamConfiguration",
 ]
 
@@ -212,7 +212,7 @@ class StnBeamConfiguration:
         )
 
 
-class StationsConfiguration:
+class StationConfiguration:
     """
     Class to hold Stations Configuration.
     """
@@ -223,7 +223,7 @@ class StationsConfiguration:
         stn_beams: List[StnBeamConfiguration] = None,
     ):
         """
-        Create a new StationsConfiguration.
+        Create a new StationConfiguration.
 
         :param stns: stns
         :param stn_beams: stn_beams
@@ -232,12 +232,12 @@ class StationsConfiguration:
         self.stn_beams = stn_beams
 
     def __eq__(self, other):
-        if not isinstance(other, StationsConfiguration):
+        if not isinstance(other, StationConfiguration):
             return False
         return self.stns == other.stns and self.stn_beams == other.stn_beams
 
 
-class BeamsConfiguration:
+class BeamConfiguration:
     """
     Class to hold Beams Configuration.
     """
@@ -256,7 +256,7 @@ class BeamsConfiguration:
         rfi_weighted: float = None,
     ) -> object:
         """
-        Create a new BeamsConfiguration.
+        Create a new BeamConfiguration.
 
         :param pst_beam_id: pst_beam_id
         :param stn_beam_id: stn_beam_id
@@ -281,7 +281,7 @@ class BeamsConfiguration:
         self.rfi_weighted = rfi_weighted
 
     def __eq__(self, other):
-        if not isinstance(other, BeamsConfiguration):
+        if not isinstance(other, BeamConfiguration):
             return False
         return (
             self.pst_beam_id == other.pst_beam_id
@@ -297,24 +297,24 @@ class BeamsConfiguration:
         )
 
 
-class TimingBeamsConfiguration:
+class TimingBeamConfiguration:
     """
     Class to hold Timing Beams Configuration.
     """
 
     def __init__(
         self,
-        beams: List[BeamsConfiguration] = None,
+        beams: List[BeamConfiguration] = None,
     ) -> object:
         """
-        Create a new TimingBeamsConfiguration.
+        Create a new TimingBeamConfiguration.
 
         :param beams: beams
         """
         self.beams = beams
 
     def __eq__(self, other):
-        if not isinstance(other, TimingBeamsConfiguration):
+        if not isinstance(other, TimingBeamConfiguration):
             return False
         return self.beams == other.beams
 
@@ -326,8 +326,8 @@ class LowCBFConfiguration:
 
     def __init__(
         self,
-        stations: StationsConfiguration = None,
-        timing_beams: TimingBeamsConfiguration = None,
+        stations: StationConfiguration = None,
+        timing_beams: TimingBeamConfiguration = None,
     ) -> object:
         """
         Create a new LowCBFConfiguration.

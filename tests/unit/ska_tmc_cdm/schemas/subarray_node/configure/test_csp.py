@@ -6,28 +6,28 @@ import inspect
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamsConfiguration,
+    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
-    StationsConfiguration,
+    StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamsConfiguration,
+    TimingBeamConfiguration,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure import (
     CSPConfigurationSchema,
     FSPConfigurationSchema,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure.csp import (
-    BeamsConfigurationSchema,
+    BeamConfigurationSchema,
     LowCBFConfigurationSchema,
-    StationsConfigurationSchema,
+    StationConfigurationSchema,
     StnBeamConfigurationSchema,
-    TimingBeamsConfigurationSchema,
+    TimingBeamConfigurationSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
 
@@ -339,9 +339,9 @@ def test_marshall_for_csp_configuration_pi17():
 
 def test_marshall_station_configuration_does_not_modify_original():
     """
-    Verify that serialising a StationsConfiguration does not change the object.
+    Verify that serialising a StationConfiguration does not change the object.
     """
-    config = StationsConfiguration(
+    config = StationConfiguration(
         stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
         stn_beams=[
             StnBeamConfiguration(
@@ -352,7 +352,7 @@ def test_marshall_station_configuration_does_not_modify_original():
         ],
     )
     copied = copy.deepcopy(config)
-    StationsConfigurationSchema().dumps(config)
+    StationConfigurationSchema().dumps(config)
 
     assert config.stns == copied.stns
     assert config.stn_beams == copied.stn_beams
@@ -361,7 +361,7 @@ def test_marshall_station_configuration_does_not_modify_original():
 
 def test_marshall_station_beam_configuration_does_not_modify_original():
     """
-    Verify that serialising a StationsConfiguration does not change the object.
+    Verify that serialising a StationConfiguration does not change the object.
     """
     config = StnBeamConfiguration(
         beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
@@ -377,11 +377,11 @@ def test_marshall_station_beam_configuration_does_not_modify_original():
 
 def test_marshall_timing_beam_configuration_does_not_modify_original():
     """
-    Verify that serialising a TimingBeamsConfiguration does not change the object.
+    Verify that serialising a TimingBeamConfiguration does not change the object.
     """
-    config = TimingBeamsConfiguration(
+    config = TimingBeamConfiguration(
         beams=[
-            BeamsConfiguration(
+            BeamConfiguration(
                 pst_beam_id=13,
                 stn_beam_id=1,
                 offset_dly_poly="url",
@@ -398,7 +398,7 @@ def test_marshall_timing_beam_configuration_does_not_modify_original():
 
     copied = copy.deepcopy(config)
 
-    TimingBeamsConfigurationSchema().dumps(config)
+    TimingBeamConfigurationSchema().dumps(config)
 
     assert config.beams == copied.beams
     assert config == copied
@@ -406,9 +406,9 @@ def test_marshall_timing_beam_configuration_does_not_modify_original():
 
 def test_marshall_beam_configuration_does_not_modify_original():
     """
-    Verify that serialising a StationsConfiguration does not change the object.
+    Verify that serialising a StationConfiguration does not change the object.
     """
-    config = BeamsConfiguration(
+    config = BeamConfiguration(
         pst_beam_id=13,
         stn_beam_id=1,
         offset_dly_poly="url",
@@ -421,7 +421,7 @@ def test_marshall_beam_configuration_does_not_modify_original():
         rfi_weighted=0.87,
     )
     copied = copy.deepcopy(config)
-    BeamsConfigurationSchema().dumps(config)
+    BeamConfigurationSchema().dumps(config)
 
     assert config.pst_beam_id == copied.pst_beam_id
     assert config.stn_beam_id == copied.stn_beam_id
@@ -441,7 +441,7 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
     Verify that serialising a LowCBFConfiguration does not change the object.
     """
     config = LowCBFConfiguration(
-        stations=StationsConfiguration(
+        stations=StationConfiguration(
             stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
             stn_beams=[
                 StnBeamConfiguration(
@@ -451,9 +451,9 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
                 )
             ],
         ),
-        timing_beams=TimingBeamsConfiguration(
+        timing_beams=TimingBeamConfiguration(
             beams=[
-                BeamsConfiguration(
+                BeamConfiguration(
                     pst_beam_id=13,
                     stn_beam_id=1,
                     offset_dly_poly="url",

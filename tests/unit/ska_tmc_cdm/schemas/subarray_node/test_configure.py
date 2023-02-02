@@ -14,17 +14,17 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     Target,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamsConfiguration,
+    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
-    StationsConfiguration,
+    StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamsConfiguration,
+    TimingBeamConfiguration,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
@@ -259,8 +259,7 @@ VALID_LOW_CONFIGURE_JSON_PI17 = """
     },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band":"1",
-      "subarray_id": 1
+      "frequency_band":"1"
     },
      "lowcbf": {
       "stations": {
@@ -365,10 +364,9 @@ VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_1,
-            subarray_id=1,
         ),
         lowcbf=LowCBFConfiguration(
-            stations=StationsConfiguration(
+            stations=StationConfiguration(
                 stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
                 stn_beams=[
                     StnBeamConfiguration(
@@ -378,9 +376,9 @@ VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
                     )
                 ],
             ),
-            timing_beams=TimingBeamsConfiguration(
+            timing_beams=TimingBeamConfiguration(
                 beams=[
-                    BeamsConfiguration(
+                    BeamConfiguration(
                         pst_beam_id=13,
                         stn_beam_id=1,
                         offset_dly_poly="url",
@@ -642,6 +640,13 @@ def low_invalidator(o: ConfigureRequest):
             VALID_NULL_JSON,
             None,
         ),
+        (
+            ConfigureRequestSchema,
+            VALID_LOW_CONFIGURE_OBJECT,
+            low_invalidator,  # no validation on MID
+            VALID_LOW_CONFIGURE_JSON,
+            INVALID_LOW_CONFIGURE_JSON,
+        ),
     ],
 )
 def test_configure_serialisation_and_validation(
@@ -714,10 +719,9 @@ def test_low_configure_configuration_not_equals():
             common=CommonConfiguration(
                 config_id="sbi-mvp01-20200325-00001-science_A",
                 frequency_band=ReceiverBand.BAND_1,
-                subarray_id=1,
             ),
             lowcbf=LowCBFConfiguration(
-                stations=StationsConfiguration(
+                stations=StationConfiguration(
                     stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
                     stn_beams=[
                         StnBeamConfiguration(
@@ -727,9 +731,9 @@ def test_low_configure_configuration_not_equals():
                         )
                     ],
                 ),
-                timing_beams=TimingBeamsConfiguration(
+                timing_beams=TimingBeamConfiguration(
                     beams=[
-                        BeamsConfiguration(
+                        BeamConfiguration(
                             pst_beam_id=13,
                             stn_beam_id=1,
                             offset_dly_poly="url",
@@ -774,10 +778,9 @@ def test_low_configure_configuration_not_equals():
             common=CommonConfiguration(
                 config_id="sbi-mvp01-20200325-00001-science_A",
                 frequency_band=ReceiverBand.BAND_1,
-                subarray_id=1,
             ),
             lowcbf=LowCBFConfiguration(
-                stations=StationsConfiguration(
+                stations=StationConfiguration(
                     stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
                     stn_beams=[
                         StnBeamConfiguration(
@@ -786,9 +789,9 @@ def test_low_configure_configuration_not_equals():
                         )
                     ],
                 ),
-                timing_beams=TimingBeamsConfiguration(
+                timing_beams=TimingBeamConfiguration(
                     beams=[
-                        BeamsConfiguration(
+                        BeamConfiguration(
                             stn_beam_id=1,
                             offset_dly_poly="url",
                             stn_weights=[0.9, 1.0, 1.0, 0.9],

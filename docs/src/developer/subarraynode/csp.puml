@@ -63,20 +63,20 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		}
 
 		class LowCBFConfiguration {
-			stations: StationsConfiguration 
-			timing_beams: TimingBeamsConfiguration
+			stations: StationConfiguration 
+			timing_beams: TimingBeamConfiguration
 		}
 
-		class StationsConfiguration {
+		class StationConfiguration {
 			stns: List[List[int]]
         	stn_beams: List[StnBeamConfiguration]
 		}
 
-		class TimingBeamsConfiguration {
-			beams: List[BeamsConfiguration]
+		class TimingBeamConfiguration {
+			beams: List[BeamConfiguration]
 		}
 		
-		class BeamsConfiguration {
+		class BeamConfiguration {
 			pst_beam_id: int
 			stn_beam_id: int
 			offset_dly_poly: str
@@ -103,10 +103,10 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		CSPConfiguration *-- "1" PSTConfiguration
 		CSPConfiguration *-- "1" PSSConfiguration
 		CSPConfiguration *-- "1" LowCBFConfiguration
-		LowCBFConfiguration *-- "1" StationsConfiguration
-		LowCBFConfiguration *-- "1" TimingBeamsConfiguration
-		TimingBeamsConfiguration *-- "*" BeamsConfiguration
-		StationsConfiguration *-- "*" StnBeamConfiguration
+		LowCBFConfiguration *-- "1" StationConfiguration
+		LowCBFConfiguration *-- "1" TimingBeamConfiguration
+		TimingBeamConfiguration *-- "*" BeamConfiguration
+		StationConfiguration *-- "*" StnBeamConfiguration
 	}
 }
 @enduml

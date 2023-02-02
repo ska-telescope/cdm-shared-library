@@ -14,17 +14,17 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     Target,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamsConfiguration,
+    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
-    StationsConfiguration,
+    StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamsConfiguration,
+    TimingBeamConfiguration,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
@@ -106,7 +106,7 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
         ),
         lowcbf=LowCBFConfiguration(
             {
-                "station": StationsConfiguration(
+                "station": StationConfiguration(
                     {
                         "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
                         "stn_beams": [
@@ -120,9 +120,9 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
                         ],
                     }
                 ),
-                "timing_beams": TimingBeamsConfiguration(
+                "timing_beams": TimingBeamConfiguration(
                     {
-                        "beams": BeamsConfiguration(
+                        "beams": BeamConfiguration(
                             {
                                 "pst_beam_id": 13,
                                 "stn_beam_id": 1,
@@ -417,10 +417,10 @@ def test_configure_request_eq_for_low_pi17():
         "rfi_dynamic_chans": [242, 1342],
         "rfi_weighted": 0.87,
     }
-    timing_beams = {"beams": BeamsConfiguration(beams)}
+    timing_beams = {"beams": BeamConfiguration(beams)}
     low_cbf = {
-        "station": StationsConfiguration(station),
-        "timing_beams": TimingBeamsConfiguration(timing_beams),
+        "station": StationConfiguration(station),
+        "timing_beams": TimingBeamConfiguration(timing_beams),
     }
 
     request_1 = ConfigureRequest(
@@ -474,7 +474,7 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
                 config_id="sbi-mvp01-20200325-00001-science_A",
             ),
             lowcbf=LowCBFConfiguration(
-                stations=StationsConfiguration(
+                stations=StationConfiguration(
                     stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
                     stn_beams=StnBeamConfiguration(
                         beam_id=1,
@@ -482,8 +482,8 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
                         boresight_dly_poly="url",
                     ),
                 ),
-                timing_beams=TimingBeamsConfiguration(
-                    beams=BeamsConfiguration(
+                timing_beams=TimingBeamConfiguration(
+                    beams=BeamConfiguration(
                         pst_beam_id=13,
                         stn_beam_id=1,
                         offset_dly_poly="url",

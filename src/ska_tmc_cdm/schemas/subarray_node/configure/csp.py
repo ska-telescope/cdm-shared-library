@@ -10,17 +10,17 @@ from marshmallow.validate import OneOf
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamsConfiguration,
+    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
-    StationsConfiguration,
+    StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamsConfiguration,
+    TimingBeamConfiguration,
 )
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
@@ -271,8 +271,8 @@ class StnBeamConfigurationSchema(Schema):
         return result
 
 
-@CODEC.register_mapping(BeamsConfiguration)
-class BeamsConfigurationSchema(Schema):
+@CODEC.register_mapping(BeamConfiguration)
+class BeamConfigurationSchema(Schema):
     pst_beam_id = fields.Integer(data_key="pst_beam_id")
     stn_beam_id = fields.Integer(data_key="stn_beam_id")
     offset_dly_poly = fields.String(data_key="offset_dly_poly")
@@ -287,13 +287,13 @@ class BeamsConfigurationSchema(Schema):
     @post_load
     def create(self, data, **_):
         """
-         Convert parsed JSON back into a BeamsConfiguration object.
+         Convert parsed JSON back into a BeamConfiguration object.
 
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
 
-        :return: BeamsConfiguration instance populated to match JSON
-        :rtype: BeamsConfiguration
+        :return: BeamConfiguration instance populated to match JSON
+        :rtype: BeamConfiguration
         """
         pst_beam_id = data.get("pst_beam_id", None)
         stn_beam_id = data.get("stn_beam_id", None)
@@ -305,7 +305,7 @@ class BeamsConfigurationSchema(Schema):
         rfi_static_chans = data.get("rfi_static_chans", None)
         rfi_dynamic_chans = data.get("rfi_dynamic_chans", None)
         rfi_weighted = data.get("rfi_weighted", None)
-        return BeamsConfiguration(
+        return BeamConfiguration(
             pst_beam_id=pst_beam_id,
             stn_beam_id=stn_beam_id,
             offset_dly_poly=offset_dly_poly,
@@ -331,23 +331,23 @@ class BeamsConfigurationSchema(Schema):
         return result
 
 
-@CODEC.register_mapping(TimingBeamsConfiguration)
-class TimingBeamsConfigurationSchema(Schema):
-    beams = fields.List(fields.Nested(BeamsConfigurationSchema))
+@CODEC.register_mapping(TimingBeamConfiguration)
+class TimingBeamConfigurationSchema(Schema):
+    beams = fields.List(fields.Nested(BeamConfigurationSchema))
 
     @post_load
     def create(self, data, **_):
         """
-         Convert parsed JSON back into a TimingBeamsConfiguration object.
+         Convert parsed JSON back into a TimingBeamConfiguration object.
 
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
 
-        :return: TimingBeamsConfiguration instance populated to match JSON
-        :rtype: TimingBeamsConfiguration
+        :return: TimingBeamConfiguration instance populated to match JSON
+        :rtype: TimingBeamConfiguration
         """
         beams = data.get("beams", None)
-        return TimingBeamsConfiguration(beams=beams)
+        return TimingBeamConfiguration(beams=beams)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -362,25 +362,25 @@ class TimingBeamsConfigurationSchema(Schema):
         return result
 
 
-@CODEC.register_mapping(StationsConfiguration)
-class StationsConfigurationSchema(Schema):
+@CODEC.register_mapping(StationConfiguration)
+class StationConfigurationSchema(Schema):
     stns = fields.List(fields.List(fields.Integer))
     stn_beams = fields.List(fields.Nested(StnBeamConfigurationSchema))
 
     @post_load
     def create(self, data, **_):
         """
-         Convert parsed JSON back into a StationsConfiguration object.
+         Convert parsed JSON back into a StationConfiguration object.
 
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
 
-        :return: StationsConfiguration instance populated to match JSON
-        :rtype: StationsConfiguration
+        :return: StationConfiguration instance populated to match JSON
+        :rtype: StationConfiguration
         """
         stns = data.get("stns", None)
         stn_beams = data.get("stn_beams", None)
-        return StationsConfiguration(stns=stns, stn_beams=stn_beams)
+        return StationConfiguration(stns=stns, stn_beams=stn_beams)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -401,10 +401,8 @@ class LowCBFConfigurationSchema(Schema):
     Marshmallow schema for the subarray_node.LowCBFConfiguration class
     """
 
-    stations = fields.Nested(StationsConfigurationSchema, data_key="stations")
-    timing_beams = fields.Nested(
-        TimingBeamsConfigurationSchema, data_key="timing_beams"
-    )
+    stations = fields.Nested(StationConfigurationSchema, data_key="stations")
+    timing_beams = fields.Nested(TimingBeamConfigurationSchema, data_key="timing_beams")
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
