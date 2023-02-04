@@ -146,10 +146,10 @@ subarray_id: int
 }
 
 class LowCbfConfiguration {
-resources: List[ResourcesConfiguration]
+resources: List[ResourceConfiguration]
 }
-LowCbfConfiguration *-- "*" ResourcesConfiguration 
-class ResourcesConfiguration {
+LowCbfConfiguration *-- "*" ResourceConfiguration 
+class ResourceConfiguration {
 device: str
 shared: bool
 fw_image: str
