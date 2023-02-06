@@ -99,7 +99,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		CBFConfiguration *-- "1" VLBIConfiguration
 		CSPConfiguration *-- "1" CommonConfiguration
 		CSPConfiguration *-- "1" SubarrayConfiguration
-		CSPConfiguration *-- "1" CBFConfiguration
+		CSPConfiguration *-- "0..1" CBFConfiguration
 		CSPConfiguration *-- "1" PSTConfiguration
 		CSPConfiguration *-- "1" PSSConfiguration
 		CSPConfiguration *-- "1" LowCBFConfiguration
