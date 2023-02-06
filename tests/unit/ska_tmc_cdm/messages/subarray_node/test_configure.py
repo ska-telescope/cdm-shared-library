@@ -120,20 +120,22 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
                 ),
                 "timing_beams": TimingBeamConfiguration(
                     {
-                        "beams": BeamConfiguration(
-                            {
-                                "pst_beam_id": 13,
-                                "stn_beam_id": 1,
-                                "offset_dly_poly": "url",
-                                "stn_weights": [0.9, 1.0, 1.0, 0.9],
-                                "jones": "url",
-                                "dest_chans": [128, 256],
-                                "rfi_enable": [True, True, True],
-                                "rfi_static_chans": [1, 206, 997],
-                                "rfi_dynamic_chans": [242, 1342],
-                                "rfi_weighted": 0.87,
-                            }
-                        )
+                        "beams": [
+                            BeamConfiguration(
+                                {
+                                    "pst_beam_id": 13,
+                                    "stn_beam_id": 1,
+                                    "offset_dly_poly": "url",
+                                    "stn_weights": [0.9, 1.0, 1.0, 0.9],
+                                    "jones": "url",
+                                    "dest_chans": [128, 256],
+                                    "rfi_enable": [True, True, True],
+                                    "rfi_static_chans": [1, 206, 997],
+                                    "rfi_dynamic_chans": [242, 1342],
+                                    "rfi_weighted": 0.87,
+                                }
+                            )
+                        ]
                     }
                 ),
             }
@@ -415,7 +417,7 @@ def test_configure_request_eq_for_low_pi17():
         "rfi_dynamic_chans": [242, 1342],
         "rfi_weighted": 0.87,
     }
-    timing_beams = {"beams": BeamConfiguration(beams)}
+    timing_beams = {"beams": [BeamConfiguration(beams)]}
     low_cbf = {
         "station": StationConfiguration(station),
         "timing_beams": TimingBeamConfiguration(timing_beams),
@@ -474,25 +476,29 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
             lowcbf=LowCBFConfiguration(
                 stations=StationConfiguration(
                     stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
-                    stn_beams=StnBeamConfiguration(
-                        beam_id=1,
-                        freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                        boresight_dly_poly="url",
-                    ),
+                    stn_beams=[
+                        StnBeamConfiguration(
+                            beam_id=1,
+                            freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                            boresight_dly_poly="url",
+                        )
+                    ],
                 ),
                 timing_beams=TimingBeamConfiguration(
-                    beams=BeamConfiguration(
-                        pst_beam_id=13,
-                        stn_beam_id=1,
-                        offset_dly_poly="url",
-                        stn_weights=[0.9, 1.0, 1.0, 0.9],
-                        jones="url",
-                        dest_chans=[128, 256],
-                        rfi_enable=[True, True, True],
-                        rfi_static_chans=[1, 206, 997],
-                        rfi_dynamic_chans=[242, 1342],
-                        rfi_weighted=0.87,
-                    )
+                    beams=[
+                        BeamConfiguration(
+                            pst_beam_id=13,
+                            stn_beam_id=1,
+                            offset_dly_poly="url",
+                            stn_weights=[0.9, 1.0, 1.0, 0.9],
+                            jones="url",
+                            dest_chans=[128, 256],
+                            rfi_enable=[True, True, True],
+                            rfi_static_chans=[1, 206, 997],
+                            rfi_dynamic_chans=[242, 1342],
+                            rfi_weighted=0.87,
+                        )
+                    ]
                 ),
             ),
         ),
