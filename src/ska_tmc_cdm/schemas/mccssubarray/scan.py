@@ -18,7 +18,7 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
     Create the Schema for ScanRequest
     """
 
-    interface = fields.Str(required=True)
+    interface = fields.String()
     scan_id = fields.Integer(required=True)
     start_time = fields.Float(required=True)
 
