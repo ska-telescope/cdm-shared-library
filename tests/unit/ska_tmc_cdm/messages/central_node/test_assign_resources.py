@@ -603,7 +603,29 @@ def test_low_assign_resources_request():
         execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignres/0.4",
     )
+    # a different low sdp object with identical value
+    test_low_sdp_config = SDPConfiguration(
+        resources=resource,
+        processing_blocks=[pb_config],
+        execution_block=execution_block,
+        interface="https://schema.skao.int/ska-sdp-assignres/0.4",
+    )
     low_csp_config = CSPConfiguration(
+        interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
+        common=CommonConfiguration(subarray_id=1),
+        lowcbf=LowCbfConfiguration(
+            resources=[
+                ResourceConfiguration(
+                    device="fsp_01", shared=True, fw_image="pst", fw_mode="unused"
+                ),
+                ResourceConfiguration(
+                    device="p4_01", shared=True, fw_image="p4.bin", fw_mode="p4"
+                ),
+            ]
+        ),
+    )
+    # a different low csp object with identical value
+    test_low_csp_config = CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
         common=CommonConfiguration(subarray_id=1),
         lowcbf=LowCbfConfiguration(
@@ -636,12 +658,22 @@ def test_low_assign_resources_request():
         mccs=MCCSAllocate(
             subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
         ),
-        sdp_config=low_sdp_config,
-        csp_config=low_csp_config,
+        sdp_config=test_low_sdp_config,
+        csp_config=test_low_csp_config,
     )
     assert request == request2
 
     # But is not considered equal
     # to any other object
-    assert request != 1 and request2 != 1
-    assert request != object() and request2 != object()
+    assert request != 1 and request2 != object()
+    # to any other AssignResourcesRequest object with different value
+    assert request != AssignResourcesRequest() and request2 != AssignResourcesRequest(
+        interface="https://schema.skao.int/ska-low-tmc-assignresources/3.0",
+        transaction_id="txn-....-00001",
+        subarray_id=1,
+        mccs=MCCSAllocate(
+            subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
+        ),
+        sdp_config=None,
+        csp_config=test_low_csp_config,
+    )

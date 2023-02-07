@@ -49,7 +49,6 @@ class ResourceConfiguration:
 
         """
         Create a new ResourceConfiguration object.
-
         :param device:
         :param shared:
         :param fw_image:
@@ -82,9 +81,8 @@ class LowCbfConfiguration:
     ) -> object:
         """
         Create a new LowCbfConfiguration.
-
-        :param resources: list of dictionaries
-        containing keys from ResourceConfiguration
+        :param resources: list of objects
+        containing fields from ResourceConfiguration
         """
         self.resources = resources
 
@@ -108,7 +106,6 @@ class CSPConfiguration:
 
         """
         Create a new CSPConfiguration object.
-
         :param interface:
         :param common:
         :param lowcbf:
