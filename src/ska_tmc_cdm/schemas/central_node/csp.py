@@ -30,6 +30,28 @@ class CommonConfigurationSchema(Schema):
 
     subarray_id = fields.Integer(metadata={"require": True})
 
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for Common configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_common_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a CSPConfiguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: CommonConfiguration object populated from data
+        """
+        return CommonConfiguration(**data)
+
 
 @CODEC.register_mapping(ResourceConfiguration)
 class ResourceConfigurationSchema(Schema):
@@ -43,6 +65,28 @@ class ResourceConfigurationSchema(Schema):
     fw_image = fields.String(metadata={"require": True})
     fw_mode = fields.String(metadata={"require": True})
 
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for Resource configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_resource_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a ResourceConfiguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: ResourceConfiguration object populated from data
+        """
+        return ResourceConfiguration(**data)
+
 
 @CODEC.register_mapping(LowCbfConfiguration)
 class LowCbfConfigurationSchema(Schema):
@@ -53,6 +97,28 @@ class LowCbfConfigurationSchema(Schema):
     resources = fields.List(
         fields.Nested(ResourceConfigurationSchema), metadata={"require": True}
     )
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for LowCbf configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
+
+    @post_load
+    def create_lowcbf_config(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Convert parsed JSON back into a LowCbfConfiguration object.
+
+        :param data: Marshmallow-provided dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+        :return: LowCbfConfiguration object populated from data
+        """
+        return LowCbfConfiguration(**data)
 
 
 @CODEC.register_mapping(CSPConfiguration)
@@ -76,7 +142,7 @@ class CSPConfigurationSchema(Schema):
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
-        :return: dict suitable for PB configuration
+        :return: dict suitable for CSP configuration
         """
         return {k: v for k, v in data.items() if v is not None}
 
