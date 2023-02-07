@@ -56,9 +56,9 @@ class SubarrayConfigurationSchema(Schema):
 
 @CODEC.register_mapping(CommonConfiguration)
 class CommonConfigurationSchema(Schema):
-    config_id = fields.String(data_key="config_id", required=False)
+    config_id = fields.String(data_key="config_id")
     frequency_band = fields.String(data_key="frequency_band")
-    subarray_id = fields.Integer(data_key="subarray_id", required=False)
+    subarray_id = fields.Integer(data_key="subarray_id")
     band_5_tuning = fields.List(fields.Float, data_key="band_5_tuning")
 
     @pre_dump
