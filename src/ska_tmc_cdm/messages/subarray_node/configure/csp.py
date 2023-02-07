@@ -151,7 +151,7 @@ class CommonConfiguration:
 
     def __init__(
         self,
-        config_id: str = None,
+        config_id: str,
         frequency_band: core.ReceiverBand = None,
         subarray_id: int = None,
         band_5_tuning: Optional[List[float]] = None,
