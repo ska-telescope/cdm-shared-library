@@ -6,6 +6,7 @@ Central Node message classes to/from a JSON representation.
 
 from marshmallow import Schema, fields, post_dump, post_load
 
+from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
@@ -543,3 +544,19 @@ class SDPConfigurationSchema(Schema):
         :return: SDPConfiguration object populated from data
         """
         return SDPConfiguration(**data)
+
+    def validate_json(self, data, process_fn=lambda x: x):
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param lambda function: use for converting list of tuples to list of list
+        :return:
+        """
+        # return early unless custom_validate is defined and True
+        if not self.context.get("custom_validate", False):
+            return
+
+        interface = data.get("interface", None)
+        if interface:
+            JsonSchema.validate_schema(interface, process_fn(data))

@@ -7,6 +7,7 @@ from datetime import timedelta
 
 from marshmallow import Schema, fields, post_load, pre_dump
 
+from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska_tmc_cdm.schemas import CODEC
 
@@ -52,3 +53,19 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
 
         tmc_config = TMCConfiguration(scan_duration=scan_duration)
         return tmc_config
+
+    def validate_json(self, data, process_fn=lambda x: x):
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param lambda function: use for converting list of tuples to list of list
+        :return:
+        """
+        # return early unless custom_validate is defined and True
+        if not self.context.get("custom_validate", False):
+            return
+
+        interface = data.get("interface", None)
+        if interface:
+            JsonSchema.validate_schema(interface, process_fn(data))

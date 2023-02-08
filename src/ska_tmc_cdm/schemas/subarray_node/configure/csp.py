@@ -8,6 +8,7 @@ import json
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 from marshmallow.validate import OneOf
 
+from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CBFConfiguration,
@@ -288,3 +289,19 @@ class CSPConfigurationSchema(ValidatingSchema):
 
         data = super().validate_on_dump(data)
         return data
+
+    def validate_json(self, data, process_fn=lambda x: x):
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param lambda function: use for converting list of tuples to list of list
+        :return:
+        """
+        # return early unless custom_validate is defined and True
+        if not self.context.get("custom_validate", False):
+            return
+
+        interface = data.get("interface", None)
+        if interface:
+            JsonSchema.validate_schema(interface, process_fn(data))
