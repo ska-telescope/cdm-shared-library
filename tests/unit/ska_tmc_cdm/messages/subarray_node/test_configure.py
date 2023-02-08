@@ -14,12 +14,17 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     Target,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
+    LowCBFConfiguration,
+    StationConfiguration,
+    StnBeamConfiguration,
     SubarrayConfiguration,
+    TimingBeamConfiguration,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
@@ -47,8 +52,8 @@ CONFIGURE_OBJECT_ARGS_PI16 = dict(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray_config=SubarrayConfiguration("science period 23"),
-        common_config=CommonConfiguration(
+        subarray=SubarrayConfiguration("science period 23"),
+        common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
@@ -85,6 +90,60 @@ CONFIGURE_OBJECT_ARGS_PI16 = dict(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
+CONFIGURE_OBJECT_ARGS_PI7 = dict(
+    interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
+    transaction_id="txn-....-00001",
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+    ),
+    csp=CSPConfiguration(
+        interface="https://schema.skao.int/ska-csp-configure/2.0",
+        subarray=SubarrayConfiguration("science period 23"),
+        common=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+        ),
+        lowcbf=LowCBFConfiguration(
+            {
+                "station": StationConfiguration(
+                    {
+                        "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
+                        "stn_beams": [
+                            StnBeamConfiguration(
+                                {
+                                    "beam_id": 1,
+                                    "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+                                    "boresight_dly_poly": "url",
+                                }
+                            )
+                        ],
+                    }
+                ),
+                "timing_beams": TimingBeamConfiguration(
+                    {
+                        "beams": [
+                            BeamConfiguration(
+                                {
+                                    "pst_beam_id": 13,
+                                    "stn_beam_id": 1,
+                                    "offset_dly_poly": "url",
+                                    "stn_weights": [0.9, 1.0, 1.0, 0.9],
+                                    "jones": "url",
+                                    "dest_chans": [128, 256],
+                                    "rfi_enable": [True, True, True],
+                                    "rfi_static_chans": [1, 206, 997],
+                                    "rfi_dynamic_chans": [242, 1342],
+                                    "rfi_weighted": 0.87,
+                                }
+                            )
+                        ]
+                    }
+                ),
+            }
+        ),
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+)
+
 
 def test_configure_request_eq():
     """
@@ -100,8 +159,8 @@ def test_configure_request_eq():
     sdp_config = SDPConfiguration(scan_type="science_A")
     csp_config = CSPConfiguration(
         interface="interface",
-        subarray_config=SubarrayConfiguration(subarray_name="subarray name"),
-        common_config=CommonConfiguration(
+        subarray=SubarrayConfiguration(subarray_name="subarray name"),
+        common=CommonConfiguration(
             config_id="config_id", frequency_band=ReceiverBand.BAND_1, subarray_id=1
         ),
         cbf_config=CBFConfiguration(
@@ -136,12 +195,12 @@ def test_configure_request_eq_for_low():
         station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
     request_1 = ConfigureRequest(
-        interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
+        interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A"),
     )
     request_2 = ConfigureRequest(
-        interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
+        interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A"),
     )
@@ -176,8 +235,8 @@ def test_configure_request_is_not_equal_to_other_objects():
     sdp_config = SDPConfiguration(scan_type="science_A")
     csp_config = CSPConfiguration(
         interface="interface",
-        subarray_config=SubarrayConfiguration(subarray_name="subarray name"),
-        common_config=CommonConfiguration(
+        subarray=SubarrayConfiguration(subarray_name="subarray name"),
+        common=CommonConfiguration(
             config_id="config_id", frequency_band=ReceiverBand.BAND_1, subarray_id=1
         ),
         cbf_config=CBFConfiguration(
@@ -222,7 +281,7 @@ def test_configure_request_is_not_equal_to_other_objects_for_low():
         station_configs=[station_config], subarray_beam_configs=[station_beam_config]
     )
     request = ConfigureRequest(
-        interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
+        interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
         mccs=mccs_config,
         sdp=SDPConfiguration(scan_type="science_A"),
     )
@@ -292,3 +351,157 @@ def test_configure_request_not_equal_to_other_objects_pi16():
     configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI16)
 
     assert configure_request_obj_1 != 1
+
+
+def test_configure_request_equals_pi17():
+    """
+    Verify that ConfigureRequest objects are considered equal when all
+    attributes are equal and not equal when there value differ.
+    """
+
+    configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI7)
+    configure_request_obj_2 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI7)
+
+    assert configure_request_obj_1 == configure_request_obj_2
+
+    alt_csp_configuration_csp_2_0_args = CONFIGURE_OBJECT_ARGS_PI7.copy()
+    alt_csp_configuration_csp_2_0_args[
+        "interface"
+    ] = "Changing interface value for creating object with different value"
+
+    configure_request_obj_3 = ConfigureRequest(**alt_csp_configuration_csp_2_0_args)
+
+    assert configure_request_obj_1 != configure_request_obj_3
+
+
+def test_configure_request_not_equal_to_other_objects_pi17():
+    """
+    Verify that ConfigureRequest objects are not considered equal to objects
+    of other types.
+    """
+    configure_request_obj_1 = ConfigureRequest(**CONFIGURE_OBJECT_ARGS_PI7)
+
+    assert configure_request_obj_1 != 1
+
+
+def test_configure_request_eq_for_low_pi17():
+    """
+    Verify that ConfigurationRequest objects for are considered equal
+    """
+    station_config = StnConfiguration(1)
+    target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
+    station_beam_config = SubarrayBeamConfiguration(
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
+    )
+    mccs_config = MCCSConfiguration(
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
+    )
+    stn_beam = {
+        "beam_id": 1,
+        "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
+        "boresight_dly_poly": "url",
+    }
+    station = {
+        "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
+        "stn_beams": [StnBeamConfiguration(stn_beam)],
+    }
+    beams = {
+        "pst_beam_id": 13,
+        "stn_beam_id": 1,
+        "offset_dly_poly": "url",
+        "stn_weights": [0.9, 1.0, 1.0, 0.9],
+        "jones": "url",
+        "dest_chans": [128, 256],
+        "rfi_enable": [True, True, True],
+        "rfi_static_chans": [1, 206, 997],
+        "rfi_dynamic_chans": [242, 1342],
+        "rfi_weighted": 0.87,
+    }
+    timing_beams = {"beams": [BeamConfiguration(beams)]}
+    low_cbf = {
+        "station": StationConfiguration(station),
+        "timing_beams": TimingBeamConfiguration(timing_beams),
+    }
+
+    request_1 = ConfigureRequest(
+        interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
+        transaction_id="txn-....-00001",
+        mccs=mccs_config,
+        sdp=SDPConfiguration(
+            interface="https://schema.skao.int/ska-sdp-configure/0.4",
+            scan_type="science_A",
+        ),
+        tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+        csp=CSPConfiguration(
+            interface="https://schema.skao.int/ska-csp-configure/2.0",
+            subarray=SubarrayConfiguration("science period 23"),
+            common=CommonConfiguration(
+                config_id="sbi-mvp01-20200325-00001-science_A",
+            ),
+            lowcbf=LowCBFConfiguration(low_cbf),
+        ),
+    )
+    request_2 = copy.deepcopy(request_1)
+    assert request_1 == request_2
+
+
+def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
+    """
+    Verify that  ConfigureRequest is not equal to other objects.
+    """
+    station_config = StnConfiguration(1)
+    target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
+    station_beam_config = SubarrayBeamConfiguration(
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
+    )
+    mccs_config = MCCSConfiguration(
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
+    )
+
+    request = ConfigureRequest(
+        interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
+        transaction_id="txn-....-00001",
+        mccs=mccs_config,
+        sdp=SDPConfiguration(
+            interface="https://schema.skao.int/ska-sdp-configure/0.4",
+            scan_type="science_A",
+        ),
+        tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+        csp=CSPConfiguration(
+            interface="https://schema.skao.int/ska-csp-configure/2.0",
+            subarray=SubarrayConfiguration("science period 23"),
+            common=CommonConfiguration(
+                config_id="sbi-mvp01-20200325-00001-science_A",
+            ),
+            lowcbf=LowCBFConfiguration(
+                stations=StationConfiguration(
+                    stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+                    stn_beams=[
+                        StnBeamConfiguration(
+                            beam_id=1,
+                            freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                            boresight_dly_poly="url",
+                        )
+                    ],
+                ),
+                timing_beams=TimingBeamConfiguration(
+                    beams=[
+                        BeamConfiguration(
+                            pst_beam_id=13,
+                            stn_beam_id=1,
+                            offset_dly_poly="url",
+                            stn_weights=[0.9, 1.0, 1.0, 0.9],
+                            jones="url",
+                            dest_chans=[128, 256],
+                            rfi_enable=[True, True, True],
+                            rfi_static_chans=[1, 206, 997],
+                            rfi_dynamic_chans=[242, 1342],
+                            rfi_weighted=0.87,
+                        )
+                    ]
+                ),
+            ),
+        ),
+    )
+    assert request != object
+    assert request is not None

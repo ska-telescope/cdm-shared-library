@@ -9,20 +9,25 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
+    LowCBFConfiguration,
     PSSConfiguration,
     PSTConfiguration,
+    StationConfiguration,
+    StnBeamConfiguration,
     SubarrayConfiguration,
+    TimingBeamConfiguration,
 )
 
 CONSTRUCTOR_ARGS = dict(
     interface="interface",
-    subarray_config=SubarrayConfiguration(subarray_name="subarray name"),
-    common_config=CommonConfiguration(
+    subarray=SubarrayConfiguration(subarray_name="subarray name"),
+    common=CommonConfiguration(
         config_id="config_id",
         frequency_band=ReceiverBand.BAND_1,
         subarray_id=1,
@@ -37,8 +42,8 @@ CONSTRUCTOR_ARGS = dict(
 
 CSP_CONFIGURATION_ARGS_PI16 = dict(
     interface="https://schema.skao.int/ska-csp-configure/2.0",
-    subarray_config=SubarrayConfiguration("science period 23"),
-    common_config=CommonConfiguration(
+    subarray=SubarrayConfiguration("science period 23"),
+    common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
         frequency_band=ReceiverBand.BAND_1,
         subarray_id=1,
@@ -225,8 +230,8 @@ def test_csp_configuration_equals():
 
     alt_constructor_args = dict(
         interface="foo",
-        subarray_config=SubarrayConfiguration(subarray_name="foo"),
-        common_config=CommonConfiguration(
+        subarray=SubarrayConfiguration(subarray_name="foo"),
+        common=CommonConfiguration(
             config_id="foo",
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
@@ -350,3 +355,315 @@ def test_number_of_channel_avg_mapping_tuples():
     channel_avg_map = list(zip(itertools.count(1, 744), 21 * [0]))
     with pytest.raises(ValueError):
         _ = fsp_constructor(channel_avg_map)
+
+
+def test_stn_beam_configuration_equals():
+    """
+    Verify that StnBeamConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    config1 = StnBeamConfiguration(
+        beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
+    )
+    config2 = StnBeamConfiguration(
+        beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
+    )
+    assert config1 == config2
+
+    assert config1 != StnBeamConfiguration(beam_id=1)
+
+
+def test_stn_beam_configuration_not_equal_to_other_objects():
+    """
+    Verify that StnBeamConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    config = StnBeamConfiguration(
+        beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
+    )
+    assert config != 1
+
+
+def test_station_configuration_equals():
+    """
+    Verify that StationConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+
+    config1 = StationConfiguration(
+        stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+        stn_beams=[
+            StnBeamConfiguration(
+                beam_id=1,
+                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                boresight_dly_poly="url",
+            )
+        ],
+    )
+    config2 = StationConfiguration(
+        stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+        stn_beams=[
+            StnBeamConfiguration(
+                beam_id=1,
+                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                boresight_dly_poly="url",
+            )
+        ],
+    )
+    assert config1 == config2
+
+    assert config1 != StationConfiguration(stns=[[1, 0], [2, 0], [3, 0], [4, 0]])
+
+
+def test_station_configuration_not_equal_to_other_objects():
+    """
+    Verify that StationConfiguration objects are not considered equal to objects
+    of other types.
+    """
+
+    config = StationConfiguration(
+        stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+        stn_beams=[
+            StnBeamConfiguration(
+                beam_id=1,
+                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                boresight_dly_poly="url",
+            )
+        ],
+    )
+    assert config != 1
+
+
+def test_beams_configuration_equals():
+    """
+    Verify that BeamConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+
+    config1 = BeamConfiguration(
+        pst_beam_id=13,
+        stn_beam_id=1,
+        offset_dly_poly="url",
+        stn_weights=[0.9, 1.0, 1.0, 0.9],
+        jones="url",
+        dest_chans=[128, 256],
+        rfi_enable=[True, True, True],
+        rfi_static_chans=[1, 206, 997],
+        rfi_dynamic_chans=[242, 1342],
+        rfi_weighted=0.87,
+    )
+    config2 = BeamConfiguration(
+        pst_beam_id=13,
+        stn_beam_id=1,
+        offset_dly_poly="url",
+        stn_weights=[0.9, 1.0, 1.0, 0.9],
+        jones="url",
+        dest_chans=[128, 256],
+        rfi_enable=[True, True, True],
+        rfi_static_chans=[1, 206, 997],
+        rfi_dynamic_chans=[242, 1342],
+        rfi_weighted=0.87,
+    )
+    assert config1 == config2
+    assert config1 != BeamConfiguration(pst_beam_id=13)
+
+
+def test_beams_configuration_not_equal_to_other_objects():
+    """
+    Verify that BeamConfiguration objects are not considered equal to objects
+    of other types.
+    """
+
+    config = BeamConfiguration(
+        pst_beam_id=13,
+        stn_beam_id=1,
+        offset_dly_poly="url",
+        stn_weights=[0.9, 1.0, 1.0, 0.9],
+        jones="url",
+        dest_chans=[128, 256],
+        rfi_enable=[True, True, True],
+        rfi_static_chans=[1, 206, 997],
+        rfi_dynamic_chans=[242, 1342],
+        rfi_weighted=0.87,
+    )
+    assert config != 1
+
+
+def test_timing_beams_configuration_equals():
+    """
+    Verify that TimingBeamConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+
+    config1 = TimingBeamConfiguration(
+        beams=[
+            BeamConfiguration(
+                pst_beam_id=13,
+                stn_beam_id=1,
+                offset_dly_poly="url",
+                stn_weights=[0.9, 1.0, 1.0, 0.9],
+                jones="url",
+                dest_chans=[128, 256],
+                rfi_enable=[True, True, True],
+                rfi_static_chans=[1, 206, 997],
+                rfi_dynamic_chans=[242, 1342],
+                rfi_weighted=0.87,
+            )
+        ]
+    )
+    config2 = TimingBeamConfiguration(
+        beams=[
+            BeamConfiguration(
+                pst_beam_id=13,
+                stn_beam_id=1,
+                offset_dly_poly="url",
+                stn_weights=[0.9, 1.0, 1.0, 0.9],
+                jones="url",
+                dest_chans=[128, 256],
+                rfi_enable=[True, True, True],
+                rfi_static_chans=[1, 206, 997],
+                rfi_dynamic_chans=[242, 1342],
+                rfi_weighted=0.87,
+            )
+        ]
+    )
+    assert config1 == config2
+    assert config1 != TimingBeamConfiguration(beams=[BeamConfiguration(pst_beam_id=13)])
+
+
+def test_timing_beams_configuration_not_equal_to_other_objects():
+    """
+    Verify that TimingBeamConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    config = TimingBeamConfiguration(
+        beams=[
+            BeamConfiguration(
+                pst_beam_id=13,
+                stn_beam_id=1,
+                offset_dly_poly="url",
+                stn_weights=[0.9, 1.0, 1.0, 0.9],
+                jones="url",
+                dest_chans=[128, 256],
+                rfi_enable=[True, True, True],
+                rfi_static_chans=[1, 206, 997],
+                rfi_dynamic_chans=[242, 1342],
+                rfi_weighted=0.87,
+            )
+        ]
+    )
+    assert config != 1
+
+
+def test_low_cbf_configuration_equals():
+    """
+    Verify that LowCBFConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+
+    config1 = LowCBFConfiguration(
+        stations=StationConfiguration(
+            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stn_beams=[
+                StnBeamConfiguration(
+                    beam_id=1,
+                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                    boresight_dly_poly="url",
+                )
+            ],
+        ),
+        timing_beams=TimingBeamConfiguration(
+            beams=[
+                BeamConfiguration(
+                    pst_beam_id=13,
+                    stn_beam_id=1,
+                    offset_dly_poly="url",
+                    stn_weights=[0.9, 1.0, 1.0, 0.9],
+                    jones="url",
+                    dest_chans=[128, 256],
+                    rfi_enable=[True, True, True],
+                    rfi_static_chans=[1, 206, 997],
+                    rfi_dynamic_chans=[242, 1342],
+                    rfi_weighted=0.87,
+                )
+            ]
+        ),
+    )
+    config2 = LowCBFConfiguration(
+        stations=StationConfiguration(
+            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stn_beams=[
+                StnBeamConfiguration(
+                    beam_id=1,
+                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                    boresight_dly_poly="url",
+                )
+            ],
+        ),
+        timing_beams=TimingBeamConfiguration(
+            beams=[
+                BeamConfiguration(
+                    pst_beam_id=13,
+                    stn_beam_id=1,
+                    offset_dly_poly="url",
+                    stn_weights=[0.9, 1.0, 1.0, 0.9],
+                    jones="url",
+                    dest_chans=[128, 256],
+                    rfi_enable=[True, True, True],
+                    rfi_static_chans=[1, 206, 997],
+                    rfi_dynamic_chans=[242, 1342],
+                    rfi_weighted=0.87,
+                )
+            ]
+        ),
+    )
+    assert config1 == config2
+    assert config1 != LowCBFConfiguration(
+        stations=StationConfiguration(
+            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stn_beams=[
+                StnBeamConfiguration(
+                    beam_id=1,
+                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                    boresight_dly_poly="url",
+                )
+            ],
+        )
+    )
+
+
+def test_low_cbf_configuration_not_equal_to_other_objects():
+    """
+    Verify that LowCBFConfiguration objects are not considered equal to objects
+    of other types.
+    """
+
+    config = LowCBFConfiguration(
+        stations=StationConfiguration(
+            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stn_beams=[
+                StnBeamConfiguration(
+                    beam_id=1,
+                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
+                    boresight_dly_poly="url",
+                )
+            ],
+        ),
+        timing_beams=TimingBeamConfiguration(
+            beams=[
+                BeamConfiguration(
+                    pst_beam_id=13,
+                    stn_beam_id=1,
+                    offset_dly_poly="url",
+                    stn_weights=[0.9, 1.0, 1.0, 0.9],
+                    jones="url",
+                    dest_chans=[128, 256],
+                    rfi_enable=[True, True, True],
+                    rfi_static_chans=[1, 206, 997],
+                    rfi_dynamic_chans=[242, 1342],
+                    rfi_weighted=0.87,
+                )
+            ]
+        ),
+    )
+    assert config != 1
