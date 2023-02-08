@@ -683,6 +683,8 @@ def test_configure_serialisation_and_validation_dish_and_null_values(
     utils.test_schema_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json, validate=False
     )
+
+
 def test_configure_serialisation_and_validation_pi17():
     """
     Verifies that the ConfigurationRequest schema marshals, unmarshals, and validates correctly.
