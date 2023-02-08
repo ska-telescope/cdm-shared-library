@@ -52,23 +52,26 @@ VALID_MID_MIXED_ARGS_OBJECT = ReleaseResourcesRequest(
 
 VALID_LOW_FULL_RELEASE_JSON = """
 {
-    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/3.0",
     "subarray_id": 1,
-    "release_all": true
+    "release_all": true,
+    "transaction_id": "txn-....-00001"
 }
 """
 
 VALID_LOW_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
-    interface="https://schema.skao.int/ska-low-tmc-releaseresources/2.0",
+    interface="https://schema.skao.int/ska-low-tmc-releaseresources/3.0",
     subarray_id=1,
     release_all=True,
+    transaction_id="txn-....-00001",
 )
 
 INVALID_LOW_FULL_RELEASE_JSON = """
 {
-    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/3.0",
     "subarray_id": -1,
-    "release_all": true
+    "release_all": true,
+    "transaction_id": "txn-....-00001"
 }
 """
 
