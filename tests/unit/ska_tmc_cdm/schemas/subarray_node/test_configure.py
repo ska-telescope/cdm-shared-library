@@ -36,13 +36,13 @@ from .. import utils
 VALID_MID_CONFIGURE_JSON = """
 {
   "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
-  "transaction_id": "12345",
+  "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
       "reference_frame": "ICRS",
-      "target_name": "M51",
-      "ra": "13:29:52.698",
-      "dec": "+47:11:42.93"
+      "target_name": "Polaris Australis",
+      "ra": "21:08:47.92",
+      "dec": "-88:57:22.9"
     }
   },
   "dish": {
@@ -85,7 +85,7 @@ VALID_MID_CONFIGURE_JSON = """
     }
   },
   "sdp": {
-    "interface": "https://schema.skao.int/ska-sdp-configure/0.3",
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
     "scan_type": "science_A"
   },
   "tmc": {
@@ -96,19 +96,18 @@ VALID_MID_CONFIGURE_JSON = """
 
 VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.1",
-    transaction_id="12345",
+    transaction_id="txn-....-00001",
     pointing=PointingConfiguration(
         Target(
-            ra="13:29:52.698",
-            dec="+47:11:42.93",
-            target_name="M51",
+            ra="21:08:47.92",
+            dec="-88:57:22.9",
+            target_name="Polaris Australis",
             reference_frame="icrs",
-            unit=("hourangle", "deg"),
         )
     ),
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.3", scan_type="science_A"
+        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
@@ -263,7 +262,6 @@ VALID_NULL_JSON = (
 )
 
 VALID_NULL_OBJECT = ConfigureRequest()
-
 
 VALID_MID_CONFIGURE_JSON_PI16 = """
 {
@@ -438,20 +436,6 @@ def low_invalidator(o: ConfigureRequest):
         ),  # no validation on MID
         (
             ConfigureRequestSchema,
-            VALID_MID_DISH_ONLY_OBJECT,
-            None,  # no validation on MID
-            VALID_MID_DISH_ONLY_JSON,
-            None,
-        ),  # no validation on MID
-        (
-            ConfigureRequestSchema,
-            VALID_NULL_OBJECT,
-            None,  # no validation for null object
-            VALID_NULL_JSON,
-            None,
-        ),  # no validation for null object
-        (
-            ConfigureRequestSchema,
             VALID_LOW_CONFIGURE_OBJECT,
             low_invalidator,  # no validation on MID
             VALID_LOW_CONFIGURE_JSON,
@@ -480,4 +464,34 @@ def test_configure_serialisation_and_validation_pi16():
         modifier_fn=None,
         valid_json=VALID_MID_CONFIGURE_JSON_PI16,
         invalid_json=None,
+    )
+
+
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    [
+        (
+            ConfigureRequestSchema,
+            VALID_MID_DISH_ONLY_OBJECT,
+            None,  # no validation on MID
+            VALID_MID_DISH_ONLY_JSON,
+            None,
+        ),  # no validation on MID
+        (
+            ConfigureRequestSchema,
+            VALID_NULL_OBJECT,
+            None,  # no validation for null object
+            VALID_NULL_JSON,
+            None,
+        ),  # no validation for null object
+    ],
+)
+def test_configure_serialisation_and_validation_dish_and_null_values(
+    schema_cls, instance, modifier_fn, valid_json, invalid_json
+):
+    """
+    Verifies that the schema marshals, unmarshals, and validates correctly.
+    """
+    utils.test_schema_serialisation_and_validation(
+        schema_cls, instance, modifier_fn, valid_json, invalid_json, validate=False
     )
