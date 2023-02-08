@@ -260,7 +260,8 @@ Example JSON that requests all sub-array resources be released for LOW:
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/2.0",
+    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/3.0",
     "subarray_id": 1,
-    "release_all": true
+    "release_all": true,
+    "transaction_id": "txn-....-00001"
   }
