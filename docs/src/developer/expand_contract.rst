@@ -54,7 +54,7 @@ value.
 
 .. code-block:: python
      
-     def \__init__(
+     def __init__(
           self,
           interface: str = None,
           transaction_id: str = None,
@@ -125,9 +125,9 @@ Finally the code snippet should look like:-
 
 .. code-block:: python
 
-     def \__init__(
+     def __init__(
           self,
-          \*_, # force non-keyword args
+          *_, # force non-keyword args
           interface: str = None,
           transaction_id: str = None,
           subarray_id: int = None,
@@ -135,7 +135,7 @@ Finally the code snippet should look like:-
           dish_allocation: Optional[DishAllocation] = None,
           sdp_id: str = None,
           sdp_max_length: float = None,
-          \**kwargs, # arbitary keyword-value pairs
+          **kwargs, # arbitary keyword-value pairs
           ):
           # init existing keys
           ...
@@ -155,7 +155,7 @@ Finally the code snippet should look like:-
 .. code-block:: python
 
      @post_load
-     def create_request(self, data, \**_):
+     def create_request(self, data, **_):
           return ReleaseResourcesRequest(**data, )
 
 

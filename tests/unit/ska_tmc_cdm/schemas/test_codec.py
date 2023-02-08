@@ -23,7 +23,9 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
+    VALID_LOW_CONFIGURE_JSON_PI17,
     VALID_LOW_CONFIGURE_OBJECT,
+    VALID_LOW_CONFIGURE_OBJECT_PI17,
     VALID_MID_CONFIGURE_JSON,
     VALID_MID_CONFIGURE_OBJECT,
 )
@@ -41,6 +43,9 @@ TEST_PARAMETERS = [
     ),
     (ConfigureRequest, VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT),
     (ConfigureRequest, VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT),
+]
+TEST_PARAMETERS_PI17 = [
+    (ConfigureRequest, VALID_LOW_CONFIGURE_JSON_PI17, VALID_LOW_CONFIGURE_OBJECT_PI17)
 ]
 
 
@@ -162,3 +167,37 @@ def test_schema_registration(message_cls):
     Verify that a schema is registered with the MarshmallowCodec.
     """
     assert message_cls in CODEC._schema  # pylint: disable=protected-access
+
+
+@pytest.mark.parametrize("msg_cls,json_str,expected", TEST_PARAMETERS_PI17)
+def test_codec_loads_pi17(msg_cls, json_str, expected):
+    """
+    Verify that the codec unmarshalls objects correctly.
+    """
+
+    unmarshalled = CODEC.loads(msg_cls, json_str, validate=False)
+    assert unmarshalled == expected
+
+
+@pytest.mark.parametrize("msg_cls,expected,instance", TEST_PARAMETERS_PI17)
+def test_codec_dumps_pi17(
+    msg_cls, expected, instance
+):  # pylint: disable=unused-argument
+    """
+    Verify that the codec unmarshalls objects correctly.
+    """
+    marshalled = CODEC.dumps(instance, validate=False)
+    assert_json_is_equal(marshalled, expected)
+
+
+@pytest.mark.parametrize("msg_cls,json_str,expected", TEST_PARAMETERS_PI17)
+def test_codec_load_from_file_pi17(msg_cls, json_str, expected):
+    """
+    Verify that the codec loads JSON from file for all key objects.
+    """
+    # mode='w' is required otherwise tempfile expects bytes
+    with tempfile.NamedTemporaryFile(mode="w") as f:
+        f.write(json_str)
+        f.flush()
+        unmarshalled = CODEC.load_from_file(msg_cls, f.name, validate=False)
+        assert unmarshalled == expected

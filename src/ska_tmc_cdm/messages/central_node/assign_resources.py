@@ -4,6 +4,7 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 
 from .common import DishAllocation
+from .csp import CSPConfiguration
 from .mccs import MCCSAllocate
 from .sdp import SDPConfiguration
 
@@ -21,6 +22,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int = None,
         dish_allocation: DishAllocation = None,
         sdp_config: SDPConfiguration = None,
+        csp_config: CSPConfiguration = None,
         mccs: MCCSAllocate = None,
         interface: str = None,
         transaction_id: str = None,
@@ -32,6 +34,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         :param dish_allocation: object holding the DISH resource allocation
             for this request.
         :param sdp_config: sdp configuration
+        :param csp_config: csp configuration
         :param mccs: MCCS subarray allocation
         :param interface: url string to determine JsonSchema version
         :param transaction_id: ID for tracking requests
@@ -41,6 +44,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         self.subarray_id = subarray_id
         self.dish = dish_allocation
         self.sdp_config = sdp_config
+        self.csp_config = csp_config
         self.mccs = mccs
         self.interface = interface
         self.transaction_id = transaction_id
@@ -68,7 +72,6 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         :param dish_allocation: object holding the DISH resource allocation
             for this request.
         :param sdp_config: sdp configuration
-
         :return: AssignResourcesRequest object
         """
         obj = cls.__new__(cls)
@@ -87,6 +90,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         subarray_id: int,
         mccs: MCCSAllocate,
         sdp_config: SDPConfiguration = None,
+        csp_config: CSPConfiguration = None,
         interface: str = None,
         transaction_id: str = None,
     ):
@@ -96,6 +100,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
         :param subarray_id: the numeric SubArray ID (1..16)
         :param mccs: MCCS subarray allocation
         :param sdp_config: SDP configuration
+        :param csp_config: CSP configuration
         :param interface: url string to determine JsonSchema version
 
         :return: AssignResourcesRequest object
@@ -104,6 +109,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             subarray_id=subarray_id,
             mccs=mccs,
             sdp_config=sdp_config,
+            csp_config=csp_config,
             interface=interface,
             transaction_id=transaction_id,
         )
@@ -115,6 +121,7 @@ class AssignResourcesRequest:  # pylint: disable=too-few-public-methods
             self.subarray_id == other.subarray_id
             and self.dish == other.dish
             and self.sdp_config == other.sdp_config
+            and self.csp_config == other.csp_config
             and self.mccs == other.mccs
             and self.interface == other.interface
             and self.transaction_id == other.transaction_id

@@ -14,6 +14,7 @@ from ska_tmc_cdm.schemas.central_node.common import (
     DishAllocationResponseSchema,
     DishAllocationSchema,
 )
+from ska_tmc_cdm.schemas.central_node.csp import CSPConfigurationSchema
 from ska_tmc_cdm.schemas.central_node.mccs import MCCSAllocateSchema
 from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
 
@@ -39,6 +40,7 @@ class AssignResourcesRequestSchema(
     subarray_id = fields.Integer(data_key="subarray_id")
     dish = fields.Nested(DishAllocationSchema)
     sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
+    csp_config = fields.Nested(CSPConfigurationSchema, data_key="csp")
     mccs = fields.Nested(MCCSAllocateSchema)
 
     class Meta:  # pylint: disable=too-few-public-methods
@@ -62,6 +64,7 @@ class AssignResourcesRequestSchema(
         subarray_id = data.get("subarray_id", None)
         dish_allocation = data.get("dish", None)
         sdp_config = data.get("sdp_config", None)
+        csp_config = data.get("csp_config", None)
         mccs = data.get("mccs", None)
 
         return AssignResourcesRequest(
@@ -69,6 +72,7 @@ class AssignResourcesRequestSchema(
             subarray_id=subarray_id,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
+            csp_config=csp_config,
             mccs=mccs,
             transaction_id=transaction_id,
         )
