@@ -29,7 +29,7 @@ VALID_MID_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
 )
 
 # mixed partial / full request, used to test which params are ignored
-VALID_MID_MIXED_ARGS_JSON ="""
+VALID_MID_MIXED_ARGS_JSON = """
 {
     "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "transaction_id": "txn-....-00001",
@@ -37,7 +37,7 @@ VALID_MID_MIXED_ARGS_JSON ="""
     "release_all": false,
     "receptor_ids": ["0001", "0002"]
 }
-""" 
+"""
 
 VALID_MID_MIXED_ARGS_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",

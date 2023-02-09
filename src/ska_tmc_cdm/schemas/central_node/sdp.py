@@ -4,7 +4,7 @@ Central Node message classes to/from a JSON representation.
 """
 
 
-from marshmallow import Schema, fields, post_dump, post_load
+from marshmallow import Schema, fields, post_dump, post_load, pre_load
 
 from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
 from ska_tmc_cdm.messages.central_node.sdp import (
@@ -544,6 +544,36 @@ class SDPConfigurationSchema(Schema):
         :return: SDPConfiguration object populated from data
         """
         return SDPConfiguration(**data)
+
+    @pre_load
+    def validate_schema(self, data, **_):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CSP configuration
+        """
+        self.validate_json(data)
+        return data
+
+    @post_dump
+    def filter_nulls_and_validate_schema(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas and
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        data = {k: v for k, v in data.items() if v is not None}
+
+        # ~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?
+        self.validate_json(data)
+        return data
 
     def validate_json(self, data, process_fn=lambda x: x):
         """

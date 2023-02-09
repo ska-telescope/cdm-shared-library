@@ -5,7 +5,7 @@ and data model classes to/from a JSON representation.
 import copy
 from datetime import timedelta
 
-from marshmallow import Schema, fields, post_load, pre_dump
+from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load
 
 from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
@@ -53,6 +53,36 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
 
         tmc_config = TMCConfiguration(scan_duration=scan_duration)
         return tmc_config
+
+    @pre_load
+    def validate_schema(self, data, **_):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CSP configuration
+        """
+        self.validate_json(data)
+        return data
+
+    @post_dump
+    def filter_nulls_and_validate_schema(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas and
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        data = {k: v for k, v in data.items() if v is not None}
+
+        # ~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?
+        self.validate_json(data)
+        return data
 
     def validate_json(self, data, process_fn=lambda x: x):
         """

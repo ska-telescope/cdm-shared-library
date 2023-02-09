@@ -5,7 +5,7 @@ SubArrayNode CSP configuration to/from JSON.
 import copy
 import json
 
-from marshmallow import Schema, fields, post_dump, post_load, pre_dump
+from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load
 from marshmallow.validate import OneOf
 
 from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
@@ -506,6 +506,36 @@ class CSPConfigurationSchema(ValidatingSchema):
         data = json.loads(json.dumps(data))
 
         data = super().validate_on_dump(data)
+        return data
+
+    @pre_load
+    def validate_schema(self, data, **_):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CSP configuration
+        """
+        self.validate_json(data)
+        return data
+
+    @post_dump
+    def filter_nulls_and_validate_schema(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas and
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        data = {k: v for k, v in data.items() if v is not None}
+
+        # ~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?
+        self.validate_json(data)
         return data
 
     def validate_json(self, data, process_fn=lambda x: x):

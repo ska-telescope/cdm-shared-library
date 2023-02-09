@@ -3,7 +3,7 @@ This module defines Marshmallow schemas that map the SDPConfiguration message
 classes to/from JSON.
 """
 
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_dump, post_load, pre_load
 
 from ska_tmc_cdm.jsonschema.json_schema import JsonSchema
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
@@ -30,6 +30,36 @@ class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: SDPConfiguration instance populated to match JSON
         """
         return SDPConfiguration(**data)
+
+    @pre_load
+    def validate_schema(self, data, **_):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CSP configuration
+        """
+        self.validate_json(data)
+        return data
+
+    @post_dump
+    def filter_nulls_and_validate_schema(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
+        """
+        validating the structure of JSON against schemas and
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        data = {k: v for k, v in data.items() if v is not None}
+
+        # ~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?
+        self.validate_json(data)
+        return data
 
     def validate_json(self, data, process_fn=lambda x: x):
         """
