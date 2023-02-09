@@ -29,11 +29,21 @@ VALID_MID_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
 )
 
 # mixed partial / full request, used to test which params are ignored
+VALID_MID_MIXED_ARGS_JSON ="""
+{
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
+    "transaction_id": "txn-....-00001",
+    "subarray_id": 1,
+    "release_all": false,
+    "receptor_ids": ["0001", "0002"]
+}
+""" 
+
 VALID_MID_MIXED_ARGS_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    release_all=True,
+    release_all=False,
     dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
 )
 
@@ -89,7 +99,7 @@ def low_invalidator_fn(o: ReleaseResourcesRequest):
             ReleaseResourcesRequestSchema,
             VALID_MID_MIXED_ARGS_OBJECT,
             None,  # no validation for MID
-            VALID_MID_FULL_RELEASE_JSON,  # expect partial spec to be ignored
+            VALID_MID_MIXED_ARGS_JSON,
             None,
         ),  # no validation for MID
         (

@@ -67,8 +67,6 @@ class ReleaseResourcesRequestSchema(
             # full release is allowed.
             if data["release_all"]:
                 del data["receptor_ids"]
-            else:
-                del data["release_all"]
 
         # Filter out  null values from JSON.
         data = {k: v for k, v in data.items() if v is not None}
