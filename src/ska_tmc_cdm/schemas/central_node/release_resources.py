@@ -106,7 +106,7 @@ class ReleaseResourcesRequestSchema(
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for CSP configuration
         """
-        if data.get("release_all") and data["release_all"] == False:
+        if data.get("release_all") and not data["release_all"]:
             temp_receptor_id = data["receptor_ids"]
             del data["receptor_ids"]
             # ~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?
@@ -129,7 +129,7 @@ class ReleaseResourcesRequestSchema(
         :return: dict suitable for SubArrayNode configuration
         """
         data = {k: v for k, v in data.items() if v is not None}
-        if data.get("release_all") and data["release_all"] == False:
+        if data.get("release_all") and not data["release_all"]:
             temp_receptor_id = data["receptor_ids"]
             del data["receptor_ids"]
             # ~ self.validate_json(data, lambda x: _convert_tuples_to_lists(x)) # Do we need this?

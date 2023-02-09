@@ -105,9 +105,9 @@ def low_invalidator_fn(o: ReleaseResourcesRequest):
         (
             ReleaseResourcesRequestSchema,
             VALID_LOW_FULL_RELEASE_OBJECT,
-            low_invalidator_fn,
+            None,  # TODO- replace None with low_invalidator_fn to the test  invalid case when low schemas are available in telemodel library
             VALID_LOW_FULL_RELEASE_JSON,
-            INVALID_LOW_FULL_RELEASE_JSON,
+            None,  # TODO- replace None with INVALID_LOW_FULL_RELEASE_JSON to test invalid case when low schemas are available in telemodel library
         ),
     ],
 )
