@@ -2,8 +2,6 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
-import json
-
 from marshmallow import Schema, fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
@@ -78,24 +76,16 @@ class AssignResourcesRequestSchema(
         )
 
     @post_dump
-    def validate_on_dump(self, data, **_):  # pylint: disable=arguments-differ
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
         """
-        Validating the structure of JSON against schemas and
         Filter out null values from JSON.
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
-        :return: dict suitable for SubArrayNode configuration
+        :return: dict suitable for CBF configuration
         """
-
-        # filter out nulls
-        data = {k: v for k, v in data.items() if v is not None}
-
-        # convert tuples to lists
-        data = json.loads(json.dumps(data))
-
-        data = super().validate_on_dump(data)
-        return data
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
 
 
 @CODEC.register_mapping(AssignResourcesResponse)
