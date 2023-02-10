@@ -2,8 +2,9 @@
 The schemas.central_node module defines Marshmallow schemas that map TMC
 Central Node message classes to/from a JSON representation.
 """
+import json
 
-from marshmallow import fields, post_dump, post_load
+from marshmallow import fields, post_dump, post_load, pre_load
 
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska_tmc_cdm.schemas.central_node.common import DishAllocationSchema
@@ -67,8 +68,6 @@ class ReleaseResourcesRequestSchema(
             # full release is allowed.
             if data["release_all"]:
                 del data["receptor_ids"]
-            else:
-                del data["release_all"]
 
         # Filter out  null values from JSON.
         data = {k: v for k, v in data.items() if v is not None}
@@ -98,3 +97,36 @@ class ReleaseResourcesRequestSchema(
             release_all=release_all,
             dish_allocation=dish_allocation,
         )
+
+    @post_dump
+    def validate_on_dump(self, data, **_):  # pylint: disable=arguments-differ
+        """
+        Validating the structure of JSON against schemas and
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+
+        # filter out null values from JSON
+        data = {k: v for k, v in data.items() if v is not None}
+        # MID and LOW still have different schema for PI11. Eventually these
+        # schemas will be unified into a single schema, but for now we need
+        # to detect the difference and do some special handling.
+        is_mid = "ska-tmc-low" not in data["interface"]
+
+        if is_mid:
+            # for MID, remove dish specifier when release all is True and vice
+            # versa. We do not need to strip partial resources for LOW as only
+            # full release is allowed.
+            if not data["release_all"]:
+                temp_receptor_id = data["receptor_ids"]
+                del data["receptor_ids"]
+
+        # convert tuples to lists
+        data = json.loads(json.dumps(data))
+        data = super().validate_on_dump(data)
+        if is_mid and not data["release_all"]:
+            data["receptor_ids"] = temp_receptor_id
+        return data

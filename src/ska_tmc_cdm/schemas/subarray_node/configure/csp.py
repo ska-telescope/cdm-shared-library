@@ -422,26 +422,6 @@ class LowCBFConfigurationSchema(Schema):
             timing_beams=timing_beams,
         )
 
-    @post_dump
-    def validate_on_dump(self, data, **_):  # pylint: disable=arguments-differ
-        """
-        Validating the structure of JSON against schemas and
-        Filter out null values from JSON.
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for SubArrayNode configuration
-        """
-
-        # filter out null values from JSON
-        data = {k: v for k, v in data.items() if v is not None}
-
-        # convert tuples to lists
-        data = json.loads(json.dumps(data))
-
-        # data = super().validate_on_dump(data)
-        return data
-
 
 @CODEC.register_mapping(CSPConfiguration)
 class CSPConfigurationSchema(ValidatingSchema):
