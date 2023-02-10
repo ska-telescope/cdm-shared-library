@@ -43,7 +43,7 @@ VALID_MID_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     subarray_id=1,
     transaction_id="txn-blah-blah-00001",
-    release_all=True
+    release_all=True,
 )
 
 # # mixed partial / full request, used to test which params are ignored
@@ -67,7 +67,7 @@ VALID_LOW_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-releaseresources/3.0",
     subarray_id=1,
     release_all=True,
-    transaction_id="txn-blah-blah-00001"
+    transaction_id="txn-blah-blah-00001",
 )
 
 INVALID_LOW_FULL_RELEASE_JSON = """

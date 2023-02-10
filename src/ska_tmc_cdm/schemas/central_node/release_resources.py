@@ -4,7 +4,7 @@ Central Node message classes to/from a JSON representation.
 """
 import json
 
-from marshmallow import fields, post_dump, post_load, pre_load
+from marshmallow import fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska_tmc_cdm.schemas.central_node.common import DishAllocationSchema
@@ -37,42 +37,6 @@ class ReleaseResourcesRequestSchema(
         """
 
         ordered = True
-
-    @post_dump
-    def filter_args(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Filter Marshmallow's JSON based on the value of release_all.
-
-        If release_all is True, other resource definitions should be stripped
-        from the request.
-        If release_all for MID set to False, the 'release_all' key
-        itself should be stripped.
-        If release_all_low for LOW set to False, the 'release_all_low' key
-        itself should be stripped.
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for request submission
-        """
-        # If release_all_mid is True, other resources should be stripped - and
-        # vice versa
-
-        # MID and LOW still have different schema for PI11. Eventually these
-        # schemas will be unified into a single schema, but for now we need
-        # to detect the difference and do some special handling.
-        is_mid = "ska-tmc-low" not in data["interface"]
-
-        if is_mid:
-            # for MID, remove dish specifier when release all is True and vice
-            # versa. We do not need to strip partial resources for LOW as only
-            # full release is allowed.
-            if data["release_all"]:
-                del data["receptor_ids"]
-
-        # Filter out  null values from JSON.
-        data = {k: v for k, v in data.items() if v is not None}
-
-        return data
 
     @post_load
     def create_request(self, data, **_):  # pylint: disable=no-self-use
@@ -120,6 +84,8 @@ class ReleaseResourcesRequestSchema(
             # for MID, remove dish specifier when release all is True and vice
             # versa. We do not need to strip partial resources for LOW as only
             # full release is allowed.
+            # TODO : - When the receptor Ids will be added into the telemodel library for                                # pylint: disable=W0511
+            #  MID release resource command when release_all = False  then we need to remove below if condition
             if not data["release_all"]:
                 temp_receptor_id = data["receptor_ids"]
                 del data["receptor_ids"]
@@ -127,6 +93,8 @@ class ReleaseResourcesRequestSchema(
         # convert tuples to lists
         data = json.loads(json.dumps(data))
         data = super().validate_on_dump(data)
+        # TODO : - When the receptor Ids will be added into the telemodel library for                                    # pylint: disable=W0511
+        #  MID release resource command when release_all = False  then we need to remove below if condition
         if is_mid and not data["release_all"]:
             data["receptor_ids"] = temp_receptor_id
         return data

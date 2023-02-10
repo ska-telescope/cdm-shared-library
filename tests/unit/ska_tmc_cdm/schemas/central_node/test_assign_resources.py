@@ -9,36 +9,34 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesResponse,
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.csp import (
     CommonConfiguration,
     CSPConfiguration,
     LowCbfConfiguration,
     ResourceConfiguration,
 )
+from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import (
-    Channel,
-    PbDependency,
-    ProcessingBlockConfiguration,
-    ScanType,
-    SDPConfiguration,
-    SDPWorkflow,
     BeamConfiguration,
+    Channel,
     ChannelConfiguration,
     EBScanType,
-    PhaseDir,
     EBScanTypeBeam,
     ExecutionBlockConfiguration,
     FieldConfiguration,
+    PbDependency,
     PolarisationConfiguration,
+    ProcessingBlockConfiguration,
+    ScanType,
     ScriptConfiguration,
+    SDPConfiguration,
+    SDPWorkflow,
 )
 from ska_tmc_cdm.schemas.central_node.assign_resources import (
     AssignResourcesRequestSchema,
     AssignResourcesResponseSchema,
 )
 from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
-from ska_tmc_cdm.utils import assert_json_is_equal
 
 from .. import utils
 
@@ -191,15 +189,15 @@ VALID_SDP_OBJECT = SDPConfiguration(
 )
 
 VALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
-        """
+    """
 {
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.0",
   "transaction_id":"txn-mvp01-20200325-00004",
   "subarray_id": 1,
   "dish": {"receptor_ids": ["0001", "0002"]},
   "sdp": """
-        + VALID_SDP_JSON
-        + """
+    + VALID_SDP_JSON
+    + """
 }
 """
 )
@@ -839,30 +837,30 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
 )
 
 VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
-        """
+    """
 {
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
   "dish": {"receptor_ids": ["0001"]},
   "sdp": """
-        + VALID_SDP_JSON_PI16
-        + """
+    + VALID_SDP_JSON_PI16
+    + """
 }
 """
 )
 
 
 INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
-        """
+    """
 {
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
   "dish": "foo",
   "sdp": """
-        + VALID_SDP_JSON_PI16
-        + """
+    + VALID_SDP_JSON_PI16
+    + """
 }
 """
 )
@@ -877,7 +875,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
 
 
 VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17 = (
-        """
+    """
 {
   "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.0",
   "transaction_id": "txn-....-00001",
@@ -896,7 +894,9 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17 = (
       3
     ]
   },
-    "sdp": """ + VALID_SDP_JSON_PI16 + """,
+    "sdp": """
+    + VALID_SDP_JSON_PI16
+    + """,
   "csp": {
     "interface": "https://schema.skao.int/ska-low-csp-assignresources/2.0",
     "common": {
@@ -921,7 +921,6 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17 = (
   }
 }
 """
-
 )
 
 VALID_LOW_CSP_OBJECT_PI17 = CSPConfiguration(
@@ -943,9 +942,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17 = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-assignresources/3.0",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    mccs=MCCSAllocate(
-        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
-    ),
+    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
     sdp_config=VALID_SDP_OBJECT_PI16,
     csp_config=VALID_LOW_CSP_OBJECT_PI17,
 )
@@ -965,66 +962,58 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
     "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
-                AssignResourcesRequestSchema,
-                VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-                low_invalidator_fn,
-                VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-                INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-                True,
+            AssignResourcesRequestSchema,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
+            low_invalidator_fn,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+            INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+            True,
         ),
         (
-                AssignResourcesRequestSchema,
-                VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
-                None,  # No validation for MID
-                VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
-                None,
-                False,
+            AssignResourcesRequestSchema,
+            VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
+            None,  # No validation for MID
+            VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+            None,
+            False,
         ),  # No validation for MID 2.0
         (
-                AssignResourcesResponseSchema,
-                VALID_MID_ASSIGNRESOURCESRESPONSE_OBJECT,
-                None,
-                VALID_MID_ASSIGNRESOURCESRESPONSE_JSON,
-                None,
-                False
+            AssignResourcesResponseSchema,
+            VALID_MID_ASSIGNRESOURCESRESPONSE_OBJECT,
+            None,
+            VALID_MID_ASSIGNRESOURCESRESPONSE_JSON,
+            None,
+            False,
+        ),
+        (SDPConfigurationSchema, VALID_SDP_OBJECT, None, VALID_SDP_JSON, None, True),
+        (
+            SDPConfigurationSchema,
+            VALID_SDP_OBJECT_PI16,
+            None,
+            VALID_SDP_JSON_PI16,
+            None,
+            True,
         ),
         (
-                SDPConfigurationSchema,
-                VALID_SDP_OBJECT,
-                None,
-                VALID_SDP_JSON,
-                None,
-                True
+            AssignResourcesRequestSchema,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
+            None,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
+            None,
+            False,
         ),
         (
-                SDPConfigurationSchema,
-                VALID_SDP_OBJECT_PI16,
-                None,
-                VALID_SDP_JSON_PI16,
-                None,
-                True
+            AssignResourcesRequestSchema,
+            VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
+            mid_invalidator_fn,
+            VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
+            INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
+            True,
         ),
-        (
-                AssignResourcesRequestSchema,
-                VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
-                None,
-                VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
-                None,
-                False,
-        ),
-        (
-                AssignResourcesRequestSchema,
-                VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
-                mid_invalidator_fn,
-                VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
-                INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
-                True,
-        ),
-
     ],
 )
 def test_assignresources_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
+    schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.

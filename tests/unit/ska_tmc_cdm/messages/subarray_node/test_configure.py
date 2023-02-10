@@ -505,5 +505,3 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
     )
     assert request != object
     assert request is not None
-
-

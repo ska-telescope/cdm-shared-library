@@ -35,7 +35,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
-from ska_tmc_cdm.utils import assert_json_is_equal
 
 from .. import utils
 
@@ -655,6 +654,3 @@ def test_configure_serialisation_and_validation(
     utils.test_schema_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
     )
-
-
-

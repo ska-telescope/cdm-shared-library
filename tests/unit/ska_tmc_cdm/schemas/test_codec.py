@@ -16,13 +16,13 @@ from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-    VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
-    VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
-    VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
-    VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
-    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17
+    VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+    VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
+    VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
+    VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
 )
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
@@ -39,29 +39,34 @@ TEST_PARAMETERS = [
         AssignResourcesRequest,
         VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
         VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
-        False
+        False,
     ),
     (
         AssignResourcesRequest,
         VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
         VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-        False
+        False,
     ),
     (
         AssignResourcesRequest,
         VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
         VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
-        False
+        False,
     ),
     (
         AssignResourcesRequest,
         VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
         VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
-        True
+        True,
     ),
     (ConfigureRequest, VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT, True),
     (ConfigureRequest, VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT, False),
-    (ConfigureRequest, VALID_LOW_CONFIGURE_JSON_PI17, VALID_LOW_CONFIGURE_OBJECT_PI17, False)
+    (
+        ConfigureRequest,
+        VALID_LOW_CONFIGURE_JSON_PI17,
+        VALID_LOW_CONFIGURE_OBJECT_PI17,
+        False,
+    ),
 ]
 
 
@@ -75,7 +80,9 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
 
 
 @pytest.mark.parametrize("msg_cls,expected,instance, is_validate", TEST_PARAMETERS)
-def test_codec_dumps(msg_cls, expected, instance, is_validate):  # pylint: disable=unused-argument
+def test_codec_dumps(
+    msg_cls, expected, instance, is_validate
+):  # pylint: disable=unused-argument
     """
     Verify that the codec unmarshalls objects correctly.
     """
@@ -183,5 +190,3 @@ def test_schema_registration(message_cls):
     Verify that a schema is registered with the MarshmallowCodec.
     """
     assert message_cls in CODEC._schema  # pylint: disable=protected-access
-
-
