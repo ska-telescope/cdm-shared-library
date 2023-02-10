@@ -19,7 +19,7 @@ __all__ = [
     "SubarrayBeamTargetSchema",
 ]
 
-from src.ska_tmc_cdm.schemas.shared import ValidatingSchema
+from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
 
 @CODEC.register_mapping(SubarrayBeamTarget)
