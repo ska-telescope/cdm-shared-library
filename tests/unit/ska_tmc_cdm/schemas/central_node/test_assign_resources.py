@@ -972,11 +972,11 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
         (
             AssignResourcesRequestSchema,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
-            None,  # No validation for MID
+            None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
             False,
-        ),  # No validation for MID 2.0
+        ),
         (
             AssignResourcesResponseSchema,
             VALID_MID_ASSIGNRESOURCESRESPONSE_OBJECT,

@@ -81,7 +81,7 @@ INVALID_MID_FULL_RELEASE_JSON = """
 
 
 def mid_invalidator_fn(o: ReleaseResourcesRequest):
-    # function to make a valid LOW AssignedResourcesRequest invalid
+    # function to make a valid MID AssignedResourcesRequest invalid
     o.subarray_id = -1
 
 
@@ -91,19 +91,19 @@ def mid_invalidator_fn(o: ReleaseResourcesRequest):
         (
             ReleaseResourcesRequestSchema,
             VALID_MID_FULL_RELEASE_OBJECT,
-            mid_invalidator_fn,  # no validation for MID
+            mid_invalidator_fn,
             VALID_MID_FULL_RELEASE_JSON,
             INVALID_MID_FULL_RELEASE_JSON,
             True,
-        ),  # no validation for MID
+        ),
         (
             ReleaseResourcesRequestSchema,
             VALID_MID_PARTIAL_RELEASE_OBJECT,
-            None,  # no validation for MID
+            None,
             VALID_MID_PARTIAL_RELEASE_JSON,
             None,
             True,
-        ),  # no validation for MID
+        ),
         (
             ReleaseResourcesRequestSchema,
             VALID_LOW_FULL_RELEASE_OBJECT,
