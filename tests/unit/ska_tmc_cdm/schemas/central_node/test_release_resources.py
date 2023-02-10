@@ -70,9 +70,9 @@ VALID_LOW_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
     transaction_id="txn-blah-blah-00001",
 )
 
-INVALID_LOW_FULL_RELEASE_JSON = """
+INVALID_MID_FULL_RELEASE_JSON = """
 {
-    "interface": "https://schema.skao.int/ska-low-tmc-releaseresources/3.0",
+    "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "subarray_id": -1,
     "release_all": true,
     "transaction_id": "txn-blah-blah-00001"
@@ -80,7 +80,7 @@ INVALID_LOW_FULL_RELEASE_JSON = """
 """
 
 
-def low_invalidator_fn(o: ReleaseResourcesRequest):
+def mid_invalidator_fn(o: ReleaseResourcesRequest):
     # function to make a valid LOW AssignedResourcesRequest invalid
     o.subarray_id = -1
 
@@ -91,9 +91,9 @@ def low_invalidator_fn(o: ReleaseResourcesRequest):
         (
             ReleaseResourcesRequestSchema,
             VALID_MID_FULL_RELEASE_OBJECT,
-            None,  # no validation for MID
+            mid_invalidator_fn,  # no validation for MID
             VALID_MID_FULL_RELEASE_JSON,
-            None,
+            INVALID_MID_FULL_RELEASE_JSON,
             True,
         ),  # no validation for MID
         (
