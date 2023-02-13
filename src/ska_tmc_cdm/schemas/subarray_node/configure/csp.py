@@ -109,7 +109,7 @@ class CommonConfigurationSchema(Schema):
             return CommonConfiguration(
                 config_id, frequency_band_enum, subarray_id, band_5_tuning
             )
-        return CommonConfiguration(config_id, subarray_id, band_5_tuning)
+        return CommonConfiguration(config_id)
 
 
 @CODEC.register_mapping(FSPConfiguration)

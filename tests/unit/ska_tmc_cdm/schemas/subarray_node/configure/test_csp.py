@@ -24,6 +24,7 @@ from ska_tmc_cdm.schemas.subarray_node.configure import (
 )
 from ska_tmc_cdm.schemas.subarray_node.configure.csp import (
     BeamConfigurationSchema,
+    CommonConfigurationSchema,
     LowCBFConfigurationSchema,
     StationConfigurationSchema,
     StnBeamConfigurationSchema,
@@ -473,4 +474,16 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
 
     assert config.stations == copied.stations
     assert config.timing_beams == copied.timing_beams
+    assert config == copied
+
+
+def test_marshall_common_configuration_does_not_modify_original():
+    """
+    Verify that serialising a CommonConfiguration does not change the object.
+    """
+    config = CommonConfiguration(config_id="sbi-mvp01-20200325-00001-science_A")
+    copied = copy.deepcopy(config)
+    CommonConfigurationSchema().dumps(config)
+
+    assert config.config_id == copied.config_id
     assert config == copied
