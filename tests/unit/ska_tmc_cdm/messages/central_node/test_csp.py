@@ -1,59 +1,62 @@
 """
 Unit tests for the CentralNode.AssignResources csp module.
 """
-from ska_tmc_cdm.messages.central_node.csp import (
-    CommonConfiguration,
-    CSPConfiguration,
-    LowCbfConfiguration,
-    ResourceConfiguration,
-)
 
-# example valid interface
-valid_iface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
-# example valid lowcbf
-valid_lowcbf = LowCbfConfiguration(
-    resources=[
-        ResourceConfiguration(
-            device="fsp_01", shared=True, fw_image="pst", fw_mode="unused"
-        ),
-        ResourceConfiguration(
-            device="p4_01", shared=True, fw_image="p4.bin", fw_mode="p4"
-        ),
-    ]
+
+from tests.unit.ska_tmc_cdm.builder_pattern.central_node.csp import CSPConfigurationBuilder, CommonConfigurationBuilder, LowCbfConfigurationBuilder, ResourceConfigurationBuilder
+
+
+interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
+lowcbf = (
+    LowCbfConfigurationBuilder()
+    .setresources(
+        resources=[
+            ResourceConfigurationBuilder()
+            .setdevice(device="fsp_01")
+            .setshared(shared=True)
+            .setfw_image(fw_image="pst")
+            .setfw_mode(fw_mode="unused")
+            .build(),
+            ResourceConfigurationBuilder()
+            .setdevice(device="p4_01")
+            .setshared(shared=True)
+            .setfw_image(fw_image="p4.bin")
+            .setfw_mode(fw_mode="p4")
+            .build(),
+        ]
+    )
+    .build()
 )
-# example valid common
-valid_comm = CommonConfiguration(subarray_id=1)
-# valid CSP with these inputs
-valid_obj = CSPConfiguration(
-    interface=valid_iface, lowcbf=valid_lowcbf, common=valid_comm
+common = CommonConfigurationBuilder().setsubarray_id(subarray_id=1).build()
+valid_obj = (
+    CSPConfigurationBuilder()
+    .setinterface(interface=interface)
+    .setcommon(common=common)
+    .setlowcbf(lowcbf=lowcbf)
+    .build()
 )
 
 
 def test_valid():
     """
-    Verify that CSP object is created when valid input
+    Verify that CSP object is crevalid_commated when valid input
     """
-
-    assert valid_obj.interface == valid_iface
-    assert valid_obj.common == valid_comm
-    assert valid_obj.lowcbf == valid_lowcbf
+    assert valid_obj.interface == interface
+    assert valid_obj.common == common
+    assert valid_obj.lowcbf == lowcbf
 
 
 def test_eq():
     """
     Verify that two different CSP objects of same values considered equal
     """
-    test_obj = CSPConfiguration(
-        interface=valid_iface, lowcbf=valid_lowcbf, common=valid_comm
+    valid_obj2 = (
+        CSPConfigurationBuilder()
+        .setinterface(interface=interface)
+        .setcommon(common=common)
+        .setlowcbf(lowcbf=lowcbf)
+        .build()
     )
-    assert test_obj == valid_obj
-    # however should be unequal for different value of interface
-    assert valid_obj != CSPConfiguration(
-        interface="2.0", lowcbf=valid_lowcbf, common=valid_comm
-    )
-    # however should be unequal from any other object
-    test_obj = CSPConfiguration(
-        interface=valid_iface, lowcbf=valid_lowcbf, common=valid_comm
-    )
-    assert test_obj != int(1)
-    assert test_obj != object
+    assert valid_obj == valid_obj2
+    assert valid_obj != int(1)
+    assert valid_obj != object
