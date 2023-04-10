@@ -22,6 +22,7 @@ VALID_MID_PARTIAL_RELEASE_JSON = """
 }
 """
 
+
 VALID_MID_PARTIAL_RELEASE_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     transaction_id="txn-blah-blah-00001",
@@ -35,15 +36,17 @@ VALID_MID_FULL_RELEASE_JSON = """
     "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "subarray_id": 1,
     "transaction_id": "txn-blah-blah-00001",
-    "release_all": true
+    "release_all": true,
+    "receptor_ids":[]        
 }
 """
-
+# added receptor id in both object and json
 VALID_MID_FULL_RELEASE_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     subarray_id=1,
     transaction_id="txn-blah-blah-00001",
     release_all=True,
+    dish_allocation=DishAllocation(receptor_ids=[]),
 )
 
 # # mixed partial / full request, used to test which params are ignored
@@ -75,7 +78,8 @@ INVALID_MID_FULL_RELEASE_JSON = """
     "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "subarray_id": -1,
     "release_all": true,
-    "transaction_id": "txn-blah-blah-00001"
+    "transaction_id": "txn-blah-blah-00001",
+    "receptor_ids" : []    
 }
 """
 
@@ -110,7 +114,7 @@ def mid_invalidator_fn(o: ReleaseResourcesRequest):
             None,
             VALID_LOW_FULL_RELEASE_JSON,
             None,
-            False,
+            True,
         ),
     ],
 )

@@ -78,23 +78,12 @@ class ReleaseResourcesRequestSchema(
         # MID and LOW still have different schema for PI11. Eventually these
         # schemas will be unified into a single schema, but for now we need
         # to detect the difference and do some special handling.
-        is_mid = "ska-tmc-low" not in data["interface"]
+        is_mid = "ska-tmc-releaseresources" in data["interface"]
 
-        if is_mid:
-            # for MID, remove dish specifier when release all is True and vice
-            # versa. We do not need to strip partial resources for LOW as only
-            # full release is allowed.
-            # TODO : - When the receptor Ids will be added into the telemodel library for                                # pylint: disable=W0511
-            #  MID release resource command when release_all = False  then we need to remove below if condition
-            if not data["release_all"]:
-                temp_receptor_id = data["receptor_ids"]
-                del data["receptor_ids"]
+        if is_mid and data["release_all"]:
+            data["receptor_ids"] = []
 
         # convert tuples to lists
         data = json.loads(json.dumps(data))
         data = super().validate_on_dump(data)
-        # TODO : - When the receptor Ids will be added into the telemodel library for                                    # pylint: disable=W0511
-        #  MID release resource command when release_all = False  then we need to remove below if condition
-        if is_mid and not data["release_all"]:
-            data["receptor_ids"] = temp_receptor_id
         return data
