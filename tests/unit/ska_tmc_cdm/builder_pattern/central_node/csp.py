@@ -1,7 +1,9 @@
-
-
-
-from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration, CommonConfiguration, LowCbfConfiguration, ResourceConfiguration
+from ska_tmc_cdm.messages.central_node.csp import (
+    CommonConfiguration,
+    CSPConfiguration,
+    LowCbfConfiguration,
+    ResourceConfiguration,
+)
 
 
 class CommonConfigurationBuilder:
@@ -14,10 +16,9 @@ class CommonConfigurationBuilder:
 
     def build(self):
         return self.common
-    
+
 
 class ResourceConfigurationBuilder:
-
     def __init__(self, resource=ResourceConfiguration()):
         self.resource = resource
 
@@ -39,7 +40,6 @@ class ResourceConfigurationBuilder:
 
     def build(self):
         return self.resource
-    
 
 
 class LowCbfConfigurationBuilder:

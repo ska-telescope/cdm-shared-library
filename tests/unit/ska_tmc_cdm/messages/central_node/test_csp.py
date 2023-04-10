@@ -3,8 +3,12 @@ Unit tests for the CentralNode.AssignResources csp module.
 """
 
 
-from tests.unit.ska_tmc_cdm.builder_pattern.central_node.csp import CSPConfigurationBuilder, CommonConfigurationBuilder, LowCbfConfigurationBuilder, ResourceConfigurationBuilder
-
+from tests.unit.ska_tmc_cdm.builder_pattern.central_node.csp import (
+    CommonConfigurationBuilder,
+    CSPConfigurationBuilder,
+    LowCbfConfigurationBuilder,
+    ResourceConfigurationBuilder,
+)
 
 interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
 lowcbf = (
