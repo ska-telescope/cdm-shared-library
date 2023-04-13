@@ -36,8 +36,7 @@ VALID_MID_FULL_RELEASE_JSON = """
     "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "subarray_id": 1,
     "transaction_id": "txn-blah-blah-00001",
-    "release_all": true,
-    "receptor_ids":[]        
+    "release_all": true       
 }
 """
 # added receptor id in both object and json
@@ -78,8 +77,7 @@ INVALID_MID_FULL_RELEASE_JSON = """
     "interface": "https://schema.skao.int/ska-tmc-releaseresources/2.1",
     "subarray_id": -1,
     "release_all": true,
-    "transaction_id": "txn-blah-blah-00001",
-    "receptor_ids" : []    
+    "transaction_id": "txn-blah-blah-00001"  
 }
 """
 

@@ -78,11 +78,6 @@ class ReleaseResourcesRequestSchema(
         # MID and LOW still have different schema for PI11. Eventually these
         # schemas will be unified into a single schema, but for now we need
         # to detect the difference and do some special handling.
-        is_mid = "ska-tmc-releaseresources" in data["interface"]
-
-        if is_mid and data["release_all"]:
-            data["receptor_ids"] = []
-
         # convert tuples to lists
         data = json.loads(json.dumps(data))
         data = super().validate_on_dump(data)
