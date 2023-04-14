@@ -6,10 +6,12 @@ Central Node message classes to/from a JSON representation.
 from marshmallow import Schema, fields, post_load
 
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
+from ska_tmc_cdm.schemas import CODEC
 
 __all__ = ["MCCSAllocateSchema"]
 
 
+@CODEC.register_mapping(MCCSAllocate)
 class MCCSAllocateSchema(Schema):
     """
     Marshmallow schema for the MCCSAllocate class.

@@ -44,6 +44,7 @@ __all__ = [
 ]
 
 
+@CODEC.register_mapping(Channel)
 class ChannelSchema(Schema):
     """
     Marshmallow schema for the SubBand class.
@@ -89,6 +90,7 @@ class ChannelSchema(Schema):
         )
 
 
+@CODEC.register_mapping(ScanType)
 class ScanTypeSchema(Schema):
     """
     Marshmallow schema for the ScanType class.
@@ -128,6 +130,7 @@ class ScanTypeSchema(Schema):
         return ScanType(scan_type_id, reference_frame, ra, dec, channels)
 
 
+@CODEC.register_mapping(SDPWorkflow)
 class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Represents the type of workflow being configured on the SDP
@@ -136,6 +139,17 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
     name = fields.String(data_key="name", required=True)
     kind = fields.String(data_key="kind", required=True)
     version = fields.String(data_key="version", required=True)
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
 
     @post_load
     def create_sdp_wf(self, data, **_):  # pylint: disable=no-self-use
@@ -152,6 +166,7 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
         return SDPWorkflow(name, kind, version)
 
 
+@CODEC.register_mapping(PbDependency)
 class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the PbDepedency class.
@@ -159,6 +174,17 @@ class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
 
     pb_id = fields.String(data_key="pb_id")
     kind = fields.List(fields.String())
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for PB configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
 
     @post_load
     def create_pb_dependency(self, data, **_):  # pylint: disable=no-self-use
@@ -174,6 +200,7 @@ class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
         return PbDependency(pb_id, kind)
 
 
+@CODEC.register_mapping(ScriptConfiguration)
 class ScriptConfigurationSchema(Schema):
     """
     Marshmallow schema for the ScriptConfiguration class.
@@ -206,6 +233,7 @@ class ScriptConfigurationSchema(Schema):
         return ScriptConfiguration(**data)
 
 
+@CODEC.register_mapping(ProcessingBlockConfiguration)
 class ProcessingBlockSchema(Schema):
     """
     Marshmallow schema for the ProcessingBlock class.
@@ -241,6 +269,7 @@ class ProcessingBlockSchema(Schema):
         return ProcessingBlockConfiguration(**data)
 
 
+@CODEC.register_mapping(BeamConfiguration)
 class BeamConfigurationSchema(Schema):
     """
     Marsmallow class for the BeamConfiguration class
@@ -275,6 +304,7 @@ class BeamConfigurationSchema(Schema):
         return BeamConfiguration(**data)
 
 
+@CODEC.register_mapping(ChannelConfiguration)
 class ChannelConfigurationSchema(Schema):
     """
     Marsmallow class for the ChannelConfiguration class
@@ -306,6 +336,7 @@ class ChannelConfigurationSchema(Schema):
         return ChannelConfiguration(**data)
 
 
+@CODEC.register_mapping(PolarisationConfiguration)
 class PolarisationConfigurationSchema(Schema):
     """
     Marsmallow class for the PolarisationConfiguration class
@@ -337,6 +368,7 @@ class PolarisationConfigurationSchema(Schema):
         return PolarisationConfiguration(**data)
 
 
+@CODEC.register_mapping(PhaseDir)
 class PhaseDirSchema(Schema):
     """
     Marsmallow class for the PhaseDir class
@@ -370,6 +402,7 @@ class PhaseDirSchema(Schema):
         return PhaseDir(**data)
 
 
+@CODEC.register_mapping(FieldConfiguration)
 class FieldConfigurationSchema(Schema):
     """
     Marsmallow class for the FieldConfiguration class
@@ -402,6 +435,7 @@ class FieldConfigurationSchema(Schema):
         return FieldConfiguration(**data)
 
 
+@CODEC.register_mapping(EBScanTypeBeam)
 class EBScanTypeBeamSchema(Schema):
     """
     Marsmallow class for the EBScanTypeBeam class
@@ -434,6 +468,7 @@ class EBScanTypeBeamSchema(Schema):
         return EBScanTypeBeam(**data)
 
 
+@CODEC.register_mapping(EBScanType)
 class EBScanTypeSchema(Schema):
     """
     Marsmallow class for the EBScanTypeBeam class
@@ -470,6 +505,7 @@ class EBScanTypeSchema(Schema):
         return EBScanType(**data)
 
 
+@CODEC.register_mapping(ExecutionBlockConfiguration)
 class ExecutionBlockConfigurationSchema(Schema):
     """
     Marsmallow class for the ExecutionBlockConfiguration class
