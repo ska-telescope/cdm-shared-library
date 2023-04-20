@@ -3,9 +3,6 @@ Unit tests for the CentralNode.mccs allocate module.
 """
 import copy
 
-from numpy import diff
-
-from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from tests.unit.ska_tmc_cdm.builder_pattern.central_node.mccs import MCCSAllocateBuilder
 
 
