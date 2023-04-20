@@ -3,7 +3,10 @@ Unit tests for the CentralNode.mccs allocate module.
 """
 import copy
 
+from numpy import diff
+
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
+from tests.unit.ska_tmc_cdm.builder_pattern.central_node.mccs import MCCSAllocateBuilder
 
 
 def test_mccs_allocate_eq():
@@ -11,10 +14,19 @@ def test_mccs_allocate_eq():
     Verify that two MCCSAllocate objects with the same allocated elements are
     considered equal.
     """
-    orig = MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3])
-
-    assert orig == MCCSAllocate(
-        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
+    mccs = (
+        MCCSAllocateBuilder()
+        .setsubarray_beam_ids(subarray_beam_ids=[1])
+        .setstation_ids(station_ids=[[1, 2]])
+        .setchannel_blocks(channel_blocks=[3])
+        .build()
+    )
+    assert mccs == (
+        MCCSAllocateBuilder()
+        .setsubarray_beam_ids(subarray_beam_ids=[1])
+        .setstation_ids(station_ids=[[1, 2]])
+        .setchannel_blocks(channel_blocks=[3])
+        .build()
     )
 
     alt_params = dict(
@@ -25,9 +37,9 @@ def test_mccs_allocate_eq():
         k,
         v,
     ) in alt_params.items():
-        o = copy.deepcopy(orig)
+        o = copy.deepcopy(mccs)
         setattr(o, k, v)
-        assert o != orig
+        assert o != mccs
 
 
 def test_mccs_allocate_eq_with_other_objects():
@@ -35,7 +47,12 @@ def test_mccs_allocate_eq_with_other_objects():
     Verify that a MCCSAllocate is considered unequal to objects of other
     types.
     """
-    o = MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3])
-
+    o = (
+        MCCSAllocateBuilder()
+        .setsubarray_beam_ids(subarray_beam_ids=[1])
+        .setstation_ids(station_ids=[[1, 2]])
+        .setchannel_blocks(channel_blocks=[3])
+        .build()
+    )
     assert o != 1
     assert o != object()
