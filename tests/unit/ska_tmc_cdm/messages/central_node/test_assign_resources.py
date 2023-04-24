@@ -33,6 +33,17 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     SDPConfiguration,
     SDPWorkflow,
 )
+from tests.unit.ska_tmc_cdm.builder_pattern.central_node.assign_resources import (
+    AssignResourcesRequestBuilder,
+)
+from tests.unit.ska_tmc_cdm.builder_pattern.central_node.mccs import MCCSAllocateBuilder
+from tests.unit.ska_tmc_cdm.builder_pattern.central_node.sdp import (
+    ChannelBuilder,
+    ProcessingBlockConfigurationBuilder,
+    ScanTypeBuilder,
+    SDPConfigurationBuilder,
+    SDPWorkflowBuilder,
+)
 
 
 def test_assign_resources_request_eq():
@@ -88,6 +99,86 @@ def test_assign_resources_request_eq():
         transaction_id="txn-mvp01-20200325-00001",
     )
 
+    # Using Builder Pattern
+    channel1 = (
+        ChannelBuilder()
+        .setcount(count=744)
+        .setstart(start=0)
+        .setstride(stride=2)
+        .setfreq_min(freq_min=0.35e9)
+        .setfreq_max(freq_max=1.05e9)
+        .setlink_map(link_map=[[0, 0], [200, 1], [744, 2], [944, 3]])
+        .setspectral_window_id(spectral_window_id="fsp_2_channels")
+        .build()
+    )
+    scan_type1 = (
+        ScanTypeBuilder()
+        .setscan_type_id(scan_type_id="science_A")
+        .setreference_frame(reference_frame="ICRS")
+        .setra(ra="02:42:40.771")
+        .setdec(dec="-00:00:47.84")
+        .setchannels(channels=[channel1])
+        .build()
+    )
+    workflow1 = (
+        SDPWorkflowBuilder()
+        .setname(name="vis_receive")
+        .setkind(kind="realtime")
+        .setversion(version="0.1.1")
+        .build()
+    )
+    pb1 = (
+        ProcessingBlockConfigurationBuilder()
+        .setpb_id(pb_id="pb-mvp01-20200325-00001")
+        .setworkflow(workflow=workflow1)
+        .setparameters(parameters={})
+        .setdependencies(dependencies=None)
+        .build()
+    )
+    sdp1 = (
+        SDPConfigurationBuilder()
+        .seteb_id(eb_id="sbi-mvp01-20200325-00001")
+        .setmax_length(max_length=100.0)
+        .setscan_types(scan_types=scan_type1)
+        .setprocessing_blocks(processing_blocks=pb1)
+        .build()
+    )
+    request1 = (
+        AssignResourcesRequestBuilder()
+        .setsubarray_id(subarray_id=1)
+        .setdish(dish=None)
+        .setsdp_config(sdp_config=sdp1)
+        .setinterface(interface="https://schema.skao.int/ska-tmc-assignresources/2.0")
+        .settransaction_id(transaction_id="txn-mvp01-20200325-00001")
+        .build()
+    )
+    request2 = (
+        AssignResourcesRequestBuilder()
+        .setsubarray_id(subarray_id=1)
+        .setdish(dish=None)
+        .setsdp_config(sdp_config=sdp1)
+        .setinterface(interface="https://schema.skao.int/ska-tmc-assignresources/2.0")
+        .settransaction_id(transaction_id="txn-mvp01-20200325-00001")
+        .build()
+    )
+
+    assert request1 == request2
+
+    assert request1 != AssignResourcesRequest(
+        1,
+        dish_allocation=dish_allocation,
+        sdp_config=None,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00002",
+    )
+    assert request2 != AssignResourcesRequest(
+        1,
+        dish_allocation=dish_allocation,
+        sdp_config=None,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00002",
+    )
+
 
 def test_assign_resources_request_mccs_eq():
     """
@@ -102,6 +193,29 @@ def test_assign_resources_request_mccs_eq():
     o = copy.deepcopy(mccs)
     o.subarray_beam_ids = [2]
     assert request != AssignResourcesRequest(subarray_id=1, mccs=o)
+
+    # Using Builder Pattern
+    mccs1 = (
+        MCCSAllocateBuilder()
+        .setsubarray_beam_ids(subarray_beam_ids=[1])
+        .setstation_ids(station_ids=[(1, 2)])
+        .setchannel_blocks(channel_blocks=[3])
+        .build()
+    )
+    request1 = (
+        AssignResourcesRequestBuilder()
+        .setsubarray_id(subarray_id=1)
+        .setmccs(mccs=mccs1)
+        .build()
+    )
+    request2 = (
+        AssignResourcesRequestBuilder()
+        .setsubarray_id(subarray_id=1)
+        .setmccs(mccs=mccs1)
+        .build()
+    )
+    assert request1 == request2
+    assert request1 != AssignResourcesRequest(subarray_id=2, mccs=mccs)
 
 
 def test_assign_resources_request_from_mccs():
@@ -177,6 +291,23 @@ def test_assign_resources_request_eq_mccs_with_other_objects():
     assert request != 1
     assert request != object()
 
+    # Using Builder Pattern
+    mccs = (
+        MCCSAllocateBuilder()
+        .setsubarray_beam_ids(subarray_beam_ids=[1])
+        .setstation_ids(station_ids=[(1, 2)])
+        .setchannel_blocks(channel_blocks=[3])
+        .build()
+    )
+    request1 = (
+        AssignResourcesRequestBuilder()
+        .setsubarray_id(subarray_id=1)
+        .setmccs(mccs=mccs)
+        .build()
+    )
+    assert request1 != 1
+    assert request1 != object()
+
 
 def test_assign_resources_response_eq():
     """
@@ -236,6 +367,43 @@ def test_assign_resources_request_for_low_eq():
         transaction_id="txn-mvp01-20200325-00001",
     )
     assert request != AssignResourcesRequest(
+        mccs=MCCSAllocate(
+            list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5], [1, 2, 3, 4, 5, 6]
+        ),
+        subarray_id=2,
+        interface="https://schema.skao.int/ska-low-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+    )
+    # Using Builder Pattern
+    mccs1 = (
+        MCCSAllocateBuilder()
+        .setsubarray_beam_ids(subarray_beam_ids=[1])
+        .setstation_ids(station_ids=[(1, 2)])
+        .setchannel_blocks(channel_blocks=[3])
+        .build()
+    )
+    request1 = (
+        AssignResourcesRequestBuilder()
+        .setsubarray_id(subarray_id=1)
+        .setmccs(mccs=mccs1)
+        .setinterface(
+            interface="https://schema.skao.int/" "ska-low-tmc-assignresources/2.0"
+        )
+        .build()
+    )
+    request2 = (
+        AssignResourcesRequestBuilder()
+        .setsubarray_id(subarray_id=1)
+        .setmccs(mccs=mccs1)
+        .setinterface(
+            interface="https://schema.skao.int/" "ska-low-tmc-assignresources/2.0"
+        )
+        .build()
+    )
+    print(request1.__dict__)
+    assert request1 == request2
+
+    assert request1 != AssignResourcesRequest(
         mccs=MCCSAllocate(
             list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5], [1, 2, 3, 4, 5, 6]
         ),
