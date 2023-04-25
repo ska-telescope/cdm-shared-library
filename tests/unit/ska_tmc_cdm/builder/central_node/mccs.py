@@ -1,5 +1,8 @@
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 
+"""
+Create a sdp block using builder pattern
+"""
 
 class MCCSAllocateBuilder:
     def __init__(
@@ -10,15 +13,15 @@ class MCCSAllocateBuilder:
     ):
         self.mccs = mccs
 
-    def setsubarray_beam_ids(self, subarray_beam_ids):
+    def set_subarray_beam_ids(self, subarray_beam_ids):
         self.mccs.subarray_beam_ids = subarray_beam_ids
         return self
 
-    def setstation_ids(self, station_ids):
+    def set_station_ids(self, station_ids):
         self.mccs.station_ids = station_ids
         return self
 
-    def setchannel_blocks(self, channel_blocks):
+    def set_channel_blocks(self, channel_blocks):
         self.mccs.channel_blocks = channel_blocks
         return self
 
