@@ -224,13 +224,22 @@ def workflow_conf(name=None, kind=None, version=None):
     return workflow1
 
 
-def processing_block(pb_id=None, workflow=None, parameters=None, dependencies=None):
+def processing_block(
+    pb_id=None,
+    workflow=None,
+    parameters=None,
+    dependencies=None,
+    sbi_ids=None,
+    script=None,
+):
     pb = (
         ProcessingBlockConfigurationBuilder()
         .set_pb_id(pb_id=pb_id)
         .set_workflow(workflow=workflow)
         .set_parameters(parameters=parameters)
         .set_dependencies(dependencies=dependencies)
+        .set_sbi_ids(sbi_ids=sbi_ids)
+        .set_script(script=script)
         .build()
     )
     return pb
@@ -261,7 +270,7 @@ def sdp(
 
 def assign_request(
     subarray_id=None,
-    dish=None,
+    dish_allocation=None,
     sdp_config=None,
     interface=None,
     transaction_id=None,
@@ -271,7 +280,7 @@ def assign_request(
     request = (
         AssignResourcesRequestBuilder()
         .set_subarray_id(subarray_id=subarray_id)
-        .set_dish(dish=dish)
+        .set_dish_allocation(dish_allocation=dish_allocation)
         .set_sdp_config(sdp_config=sdp_config)
         .set_csp_config(csp_config=csp)
         .set_interface(interface=interface)
@@ -339,7 +348,7 @@ def test_assign_resources_request_eq():
 
     request1 = assign_request(
         subarray_id=1,
-        dish=None,
+        dish_allocation=None,
         sdp_config=sdp1,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00001",
@@ -347,7 +356,7 @@ def test_assign_resources_request_eq():
 
     request2 = assign_request(
         subarray_id=1,
-        dish=None,
+        dish_allocation=None,
         sdp_config=sdp1,
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00001",
@@ -867,7 +876,7 @@ def test_low_assign_resources_request():
 
     request1 = assign_request(
         subarray_id=1,
-        dish=None,
+        dish_allocation=None,
         sdp_config=sdp1,
         interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00001",
@@ -875,7 +884,7 @@ def test_low_assign_resources_request():
 
     request2 = assign_request(
         subarray_id=1,
-        dish=None,
+        dish_allocation=None,
         sdp_config=sdp1,
         interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00001",

@@ -19,20 +19,15 @@ class CommonConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(
-        self,
-        common=CommonConfiguration(
-            subarray_id=int,
-        ),
-    ) -> object:
-        self.common = common
-        self.subarray_id = common.subarray_id
+    def __init__(self) -> object:
+        self.common = None
 
     def set_subarray_id(self, subarray_id):
-        self.common.subarray_id = subarray_id
+        self.subarray_id = subarray_id
         return self
 
     def build(self):
+        self.common = CommonConfiguration(self.subarray_id)
         return self.common
 
 
@@ -45,34 +40,32 @@ class ResourceConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(
-        self,
-        resource=ResourceConfiguration(
-            device=str,
-            shared=bool,
-            fw_image=str,
-            fw_mode=str,
-        ),
-    ) -> object:
-        self.resource = resource
+    def __init__(self) -> object:
+        self.resource = None
 
     def set_device(self, device):
-        self.resource.device = device
+        self.device = device
         return self
 
     def set_shared(self, shared):
-        self.resource.shared = shared
+        self.shared = shared
         return self
 
     def set_fw_image(self, fw_image):
-        self.resource.fw_image = fw_image
+        self.fw_image = fw_image
         return self
 
     def set_fw_mode(self, fw_mode):
-        self.resource.fw_mode = fw_mode
+        self.fw_mode = fw_mode
         return self
 
     def build(self):
+        self.resource = ResourceConfiguration(
+            self.device,
+            self.shared,
+            self.fw_image,
+            self.fw_mode,
+        )
         return self.resource
 
 
@@ -85,16 +78,15 @@ class LowCbfConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(
-        self, lowcbf=LowCbfConfiguration(resources=ResourceConfiguration())
-    ) -> object:
-        self.lowcbf = lowcbf
+    def __init__(self) -> object:
+        self.lowcbf = None
 
     def set_resources(self, resources):
-        self.lowcbf.resources = resources
+        self.resources = resources
         return self
 
     def build(self):
+        self.lowcbf = LowCbfConfiguration(self.resources)
         return self.lowcbf
 
 
@@ -107,20 +99,23 @@ class CSPConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(self, csp=CSPConfiguration()) -> object:
-        self.csp = csp
+    def __init__(self) -> object:
+        self.csp = None
 
     def set_interface(self, interface):
-        self.csp.interface = interface
+        self.interface = interface
         return self
 
     def set_common(self, common):
-        self.csp.common = common
+        self.common = common
         return self
 
     def set_lowcbf(self, lowcbf):
-        self.csp.lowcbf = lowcbf
+        self.lowcbf = lowcbf
         return self
 
     def build(self):
+        self.csp = CSPConfiguration(
+            interface=self.interface, common=self.common, lowcbf=self.lowcbf
+        )
         return self.csp
