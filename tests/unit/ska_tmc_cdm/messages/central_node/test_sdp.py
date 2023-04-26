@@ -271,15 +271,16 @@ def test_channel_equals():
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
         spectral_window_id="fsp_2_channels",
     )
-    assert channel1 == Channel(
-        744,
-        0,
-        2,
-        0.35e9,
-        1.05e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
-        "fsp_2_channels",
+    channel2 = channel_conf(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
+    assert channel1 == channel2
 
     assert channel1 != Channel(
         74,
