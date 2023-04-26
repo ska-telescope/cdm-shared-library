@@ -3,7 +3,7 @@ Unit tests for the CentralNode.mccs allocate module.
 """
 import copy
 
-from tests.unit.ska_tmc_cdm.builder_pattern.central_node.mccs import MCCSAllocateBuilder
+from tests.unit.ska_tmc_cdm.builder.central_node.mccs import MCCSAllocateBuilder
 
 
 def mccs_allocate(subarray_beam_ids, station_ids, channel_blocks):

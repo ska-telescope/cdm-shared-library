@@ -4,6 +4,7 @@ from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 Create a sdp block using builder pattern
 """
 
+
 class MCCSAllocateBuilder:
     def __init__(
         self,

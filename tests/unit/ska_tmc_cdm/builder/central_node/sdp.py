@@ -20,6 +20,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
 Create a sdp block using builder pattern
 """
 
+
 class ChannelBuilder:
     def __init__(
         self,

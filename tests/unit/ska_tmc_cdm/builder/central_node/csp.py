@@ -9,6 +9,7 @@ from ska_tmc_cdm.messages.central_node.csp import (
 Create a csp block using builder pattern
 """
 
+
 class CommonConfigurationBuilder:
     def __init__(self, common=CommonConfiguration()):
         self.common = common

@@ -4,6 +4,10 @@ _all__ = ["AssignResourcesRequestBuilder"]
 
 
 class AssignResourcesRequestBuilder:
+    """
+    Create a assign resource block using builder pattern
+    """
+
     def __init__(self, assign=AssignResourcesRequest()):
         self.assign = assign
 
