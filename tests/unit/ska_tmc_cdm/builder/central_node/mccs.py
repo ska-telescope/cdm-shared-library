@@ -1,7 +1,11 @@
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 
 """
-Create a sdp block using builder pattern
+MCCSAllocateBuilder is a test data builder for CDM MCCSAllocate objects.
+
+By default, MCCSAllocateBuilder will build an MCCSAllocate
+
+for low observation command.
 """
 
 
@@ -9,10 +13,13 @@ class MCCSAllocateBuilder:
     def __init__(
         self,
         mccs=MCCSAllocate(
-            subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
+            subarray_beam_ids=list(), station_ids=list(), channel_blocks=list(list())
         ),
-    ):
+    ) -> object:
         self.mccs = mccs
+        self.subarray_beam_ids = mccs.subarray_beam_ids
+        self.station_ids = mccs.station_ids
+        self.channel_block = mccs.channel_blocks
 
     def set_subarray_beam_ids(self, subarray_beam_ids):
         self.mccs.subarray_beam_ids = subarray_beam_ids

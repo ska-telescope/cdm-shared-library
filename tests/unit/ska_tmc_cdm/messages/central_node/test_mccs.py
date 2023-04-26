@@ -28,7 +28,6 @@ def test_mccs_allocate_eq():
     mccs1 = mccs_allocate(
         subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
     )
-
     assert mccs == mccs1
 
     alt_params = dict(

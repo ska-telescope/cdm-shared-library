@@ -22,18 +22,25 @@ Create a sdp block using builder pattern
 
 
 class ChannelBuilder:
+    """
+    ChannelBuilder is a test data builder for CDM Channel objects.
+
+    By default, ChannelBuilder will build an Channel
+
+    for low observation command.
+    """
+
     def __init__(
         self,
         channel=Channel(
-            count=None,
-            start=None,
-            stride=None,
-            freq_min=None,
-            freq_max=None,
-            link_map=None,
-            spectral_window_id=None,
+            count=int,
+            start=int,
+            stride=int,
+            freq_min=float,
+            freq_max=float,
+            link_map=list(list()),
         ),
-    ):
+    ) -> object:
         self.channel = channel
 
     def set_count(self, count):
@@ -69,14 +76,18 @@ class ChannelBuilder:
 
 
 class ScanTypeBuilder:
+    """
+    ScanTypeBuilder is a test data builder for CDM ScanType objects.
+
+    By default, ScanTypeBuilder will build an ScanType
+
+    for low observation command.
+    """
+
     def __init__(
         self,
         scan_type=ScanType(
-            scan_type_id=None,
-            reference_frame=None,
-            ra=None,
-            dec=None,
-            channels=[Channel, Channel],
+            scan_type_id=int, reference_frame=str, ra=str, dec=str, channels=list()
         ),
     ):
         self.scan_type = scan_type
@@ -106,7 +117,15 @@ class ScanTypeBuilder:
 
 
 class SDPWorkflowBuilder:
-    def __init__(self, work=SDPWorkflow(name=None, kind=None, version=None)):
+    """
+    SDPWorkflowBuilder is a test data builder for CDM SDPWorkflow objects.
+
+    By default, SDPWorkflowBuilder will build an SDPWorkflow
+
+    for low observation command.
+    """
+
+    def __init__(self, work=SDPWorkflow(name=str, kind=str, version=str)):
         self.work = work
 
     def set_name(self, name):
@@ -126,7 +145,15 @@ class SDPWorkflowBuilder:
 
 
 class PbDependencyBuilder:
-    def __init__(self, depend=PbDependency(pb_id=None, kind=None)):
+    """
+    PbDependencyBuilder is a test data builder for CDM PbDependency objects.
+
+    By default, PbDependencyBuilder will build an PbDependency
+
+    for low observation command.
+    """
+
+    def __init__(self, depend=PbDependency(pb_id=str, kind=list())):
         self.depend = depend
 
     def set_pb_id(self, pb_id):
@@ -142,7 +169,15 @@ class PbDependencyBuilder:
 
 
 class ScriptConfigurationBuilder:
-    def __init__(self, script=ScriptConfiguration(kind=None, name=None, version=None)):
+    """
+    ScriptConfigurationBuilder is a test data builder for CDM ScriptConfiguration objects.
+
+    By default, ScriptConfigurationBuilder will build an ScriptConfiguration
+
+    for low observation command.
+    """
+
+    def __init__(self, script=ScriptConfiguration()) -> object:
         self.script = script
 
     def set_kind(self, kind):
@@ -162,6 +197,14 @@ class ScriptConfigurationBuilder:
 
 
 class ProcessingBlockConfigurationBuilder:
+    """
+    ProcessingBlockConfigurationBuilder is a test data builder for CDM ProcessingBlockConfiguration objects.
+
+    By default, ProcessingBlockConfigurationBuilder will build an ProcessingBlockConfiguration
+
+    for low observation command.
+    """
+
     def __init__(self, process=ProcessingBlockConfiguration()):
         self.process = process
 
@@ -194,6 +237,14 @@ class ProcessingBlockConfigurationBuilder:
 
 
 class SDPConfigurationBuilder:
+    """
+    SDPConfigurationBuilder is a test data builder for CDM SDPConfiguration objects.
+
+    By default, SDPConfigurationBuilder will build an SDPConfiguration
+
+    for low observation command.
+    """
+
     def __init__(self, sdp=SDPConfiguration()):
         self.sdp = sdp
 
@@ -230,6 +281,14 @@ class SDPConfigurationBuilder:
 
 
 class BeamConfigurationBuilder:
+    """
+    BeamConfigurationBuilder is a test data builder for CDM BeamConfiguration objects.
+
+    By default, BeamConfigurationBuilder will build an BeamConfiguration
+
+    for low observation command.
+    """
+
     def __init__(self, beam=BeamConfiguration()):
         self.beam = beam
 
@@ -258,6 +317,14 @@ class BeamConfigurationBuilder:
 
 
 class ChannelConfigurationBuilder:
+    """
+    ChannelConfigurationBuilder is a test data builder for CDM ChannelConfiguration objects.
+
+    By default, ChannelConfigurationBuilder will build an ChannelConfiguration
+
+    for low observation command.
+    """
+
     def __init__(self, channel_conf=ChannelConfiguration()):
         self.channel_conf = channel_conf
 
@@ -274,6 +341,14 @@ class ChannelConfigurationBuilder:
 
 
 class PolarisationConfigurationBuilder:
+    """
+    PolarisationConfigurationBuilder is a test data builder for CDM PolarisationConfiguration objects.
+
+    By default, PolarisationConfigurationBuilder will build an PolarisationConfiguration
+
+    for low observation command.
+    """
+
     def __init__(self, polar=PolarisationConfiguration()):
         self.polar = polar
 
@@ -290,6 +365,14 @@ class PolarisationConfigurationBuilder:
 
 
 class PhaseDirBuilder:
+    """
+    PhaseDirBuilder is a test data builder for CDM PhaseDir objects.
+
+    By default, PhaseDirBuilder will build an PhaseDir
+
+    for low observation command.
+    """
+
     def __init__(self, phase=PhaseDir()):
         self.phase = phase
 
@@ -314,6 +397,14 @@ class PhaseDirBuilder:
 
 
 class FieldConfigurationBuilder:
+    """
+    FieldConfigurationBuilder is a test data builder for CDM FieldConfiguration objects.
+
+    By default, FieldConfigurationBuilder will build an FieldConfiguration
+
+    for low observation command.
+    """
+
     def __init__(self, field=FieldConfiguration()):
         self.field = field
 
@@ -334,6 +425,14 @@ class FieldConfigurationBuilder:
 
 
 class EBScanTypeBuilder:
+    """
+    EBScanTypeBuilder is a test data builder for CDM EBScanType objects.
+
+    By default, EBScanTypeBuilder will build an EBScanType
+
+    for low observation command.
+    """
+
     def __init__(self, ebscan=EBScanType()):
         self.ebscan = ebscan
 
@@ -354,6 +453,14 @@ class EBScanTypeBuilder:
 
 
 class EBScanTypeBeamBuilder:
+    """
+    EBScanTypeBeamBuilder is a test data builder for CDM EBScanTypeBeam objects.
+
+    By default, EBScanTypeBeamBuilder will build an EBScanTypeBeam
+
+    for low observation command.
+    """
+
     def __init__(self, ebscan_type=EBScanTypeBeam()):
         self.ebscan_type = ebscan_type
 
@@ -374,6 +481,14 @@ class EBScanTypeBeamBuilder:
 
 
 class ExecutionBlockConfigurationBuilder:
+    """
+    ExecutionBlockConfigurationBuilder is a test data builder for CDM ExecutionBlockConfiguration objects.
+
+    By default, ExecutionBlockConfigurationBuilder will build an ExecutionBlockConfiguration
+
+    for low observation command.
+    """
+
     def __init__(self, execution=ExecutionBlockConfiguration()):
         self.execution = execution
 

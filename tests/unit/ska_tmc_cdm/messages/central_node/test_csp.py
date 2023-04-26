@@ -2,7 +2,6 @@
 Unit tests for the CentralNode.AssignResources csp module.
 """
 
-
 from tests.unit.ska_tmc_cdm.builder.central_node.csp import (
     CommonConfigurationBuilder,
     CSPConfigurationBuilder,

@@ -5,10 +5,14 @@ _all__ = ["AssignResourcesRequestBuilder"]
 
 class AssignResourcesRequestBuilder:
     """
-    Create a assign resource block using builder pattern
+    AssignResourcesRequestBuilder is a test data builder for CDM AssignResourcesRequest objects.
+
+    By default, AssignResourcesRequestBuilder will build an AssignResourcesRequest
+
+    for low observation command.
     """
 
-    def __init__(self, assign=AssignResourcesRequest()):
+    def __init__(self, assign=AssignResourcesRequest()) -> object:
         self.assign = assign
 
     def set_subarray_id(self, subarray_id):

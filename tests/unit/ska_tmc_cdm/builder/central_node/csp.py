@@ -11,8 +11,22 @@ Create a csp block using builder pattern
 
 
 class CommonConfigurationBuilder:
-    def __init__(self, common=CommonConfiguration()):
+    """
+    CommonConfigurationBuilder is a test data builder for CDM CommonConfiguration objects.
+
+    By default, CommonConfigurationBuilder will build an CommonConfiguration
+
+    for low observation command.
+    """
+
+    def __init__(
+        self,
+        common=CommonConfiguration(
+            subarray_id=int,
+        ),
+    ) -> object:
         self.common = common
+        self.subarray_id = common.subarray_id
 
     def set_subarray_id(self, subarray_id):
         self.common.subarray_id = subarray_id
@@ -23,7 +37,23 @@ class CommonConfigurationBuilder:
 
 
 class ResourceConfigurationBuilder:
-    def __init__(self, resource=ResourceConfiguration()):
+    """
+    ResourceConfigurationBuilder is a test data builder for CDM ResourceConfiguration objects.
+
+    By default, ResourceConfigurationBuilder will build an ResourceConfiguration
+
+    for low observation command.
+    """
+
+    def __init__(
+        self,
+        resource=ResourceConfiguration(
+            device=str,
+            shared=bool,
+            fw_image=str,
+            fw_mode=str,
+        ),
+    ) -> object:
         self.resource = resource
 
     def set_device(self, device):
@@ -47,7 +77,17 @@ class ResourceConfigurationBuilder:
 
 
 class LowCbfConfigurationBuilder:
-    def __init__(self, lowcbf=LowCbfConfiguration(resources=[ResourceConfiguration])):
+    """
+    LowCbfConfigurationBuilder is a test data builder for CDM LowCbfConfiguration objects.
+
+    By default, LowCbfConfigurationBuilder will build an LowCbfConfiguration
+
+    for low observation command.
+    """
+
+    def __init__(
+        self, lowcbf=LowCbfConfiguration(resources=ResourceConfiguration())
+    ) -> object:
         self.lowcbf = lowcbf
 
     def set_resources(self, resources):
@@ -59,12 +99,15 @@ class LowCbfConfigurationBuilder:
 
 
 class CSPConfigurationBuilder:
-    def __init__(
-        self,
-        csp=CSPConfiguration(
-            interface=str, common=CommonConfiguration, lowcbf=LowCbfConfiguration
-        ),
-    ):
+    """
+    CSPConfigurationBuilder is a test data builder for CDM CSPConfiguration objects.
+
+    By default, CSPConfigurationBuilder will build an CSPConfiguration
+
+    for low observation command.
+    """
+
+    def __init__(self, csp=CSPConfiguration()) -> object:
         self.csp = csp
 
     def set_interface(self, interface):
