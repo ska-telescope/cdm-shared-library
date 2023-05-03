@@ -1,5 +1,9 @@
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
 
+from .csp import CSPConfigurationBuilder
+from .mccs import MCCSAllocateBuilder
+from .sdp import SDPConfigurationBuilder
+
 _all__ = ["AssignResourcesRequestBuilder"]
 
 
@@ -31,15 +35,19 @@ class AssignResourcesRequestBuilder:
         self.dish_allocation = dish_allocation
         return self
 
-    def set_sdp_config(self, sdp_config: object) -> "AssignResourcesRequestBuilder":
+    def set_sdp_config(
+        self, sdp_config: SDPConfigurationBuilder
+    ) -> "AssignResourcesRequestBuilder":
         self.sdp_config = sdp_config
         return self
 
-    def set_csp_config(self, csp_config: object) -> "AssignResourcesRequestBuilder":
+    def set_csp_config(
+        self, csp_config: CSPConfigurationBuilder
+    ) -> "AssignResourcesRequestBuilder":
         self.csp_config = csp_config
         return self
 
-    def set_mccs(self, mccs: object) -> "AssignResourcesRequestBuilder":
+    def set_mccs(self, mccs: MCCSAllocateBuilder) -> "AssignResourcesRequestBuilder":
         self.mccs = mccs
         return self
 

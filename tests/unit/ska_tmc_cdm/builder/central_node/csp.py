@@ -104,11 +104,15 @@ class CSPConfigurationBuilder:
         self.interface = interface
         return self
 
-    def set_common(self, common: object) -> "CSPConfigurationBuilder":
+    def set_common(
+        self, common: CommonConfigurationBuilder
+    ) -> "CSPConfigurationBuilder":
         self.common = common
         return self
 
-    def set_lowcbf(self, lowcbf: object) -> "CSPConfigurationBuilder":
+    def set_lowcbf(
+        self, lowcbf: LowCbfConfigurationBuilder
+    ) -> "CSPConfigurationBuilder":
         self.lowcbf = lowcbf
         return self
 

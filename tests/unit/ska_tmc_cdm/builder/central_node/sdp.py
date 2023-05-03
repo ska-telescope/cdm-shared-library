@@ -89,7 +89,7 @@ class ScanTypeBuilder:
         self.dec = None
         self.channels = None
 
-    def set_scan_type_id(self, scan_type_id: object) -> "ScanTypeBuilder":
+    def set_scan_type_id(self, scan_type_id: str) -> "ScanTypeBuilder":
         self.scan_type_id = scan_type_id
         return self
 
@@ -221,7 +221,9 @@ class ProcessingBlockConfigurationBuilder:
         self.pb_id = pb_id
         return self
 
-    def set_workflow(self, workflow: object) -> "ProcessingBlockConfigurationBuilder":
+    def set_workflow(
+        self, workflow: SDPWorkflowBuilder
+    ) -> "ProcessingBlockConfigurationBuilder":
         self.workflow = workflow
         return self
 
@@ -230,7 +232,7 @@ class ProcessingBlockConfigurationBuilder:
         return self
 
     def set_dependencies(
-        self, dependencies: object
+        self, dependencies: PbDependencyBuilder
     ) -> "ProcessingBlockConfigurationBuilder":
         self.dependencies = dependencies
         return self
@@ -239,7 +241,9 @@ class ProcessingBlockConfigurationBuilder:
         self.sbi_ids = sbi_ids
         return self
 
-    def set_script(self, script: object) -> "ProcessingBlockConfigurationBuilder":
+    def set_script(
+        self, script: ScriptConfigurationBuilder
+    ) -> "ProcessingBlockConfigurationBuilder":
         self.script = script
         return self
 
@@ -285,12 +289,14 @@ class SDPConfigurationBuilder:
         return self
 
     def set_processing_blocks(
-        self, processing_blocks: object
+        self, processing_blocks: ProcessingBlockConfigurationBuilder
     ) -> "SDPConfigurationBuilder":
         self.processing_blocks = processing_blocks
         return self
 
-    def set_execution_block(self, execution_block: object) -> "SDPConfigurationBuilder":
+    def set_execution_block(
+        self, execution_block: ExecutionBlockConfiguration
+    ) -> "SDPConfigurationBuilder":
         self.execution_block = execution_block
         return self
 
@@ -471,7 +477,7 @@ class FieldConfigurationBuilder:
         self.pointing_fqdn = pointing_fqdn
         return self
 
-    def set_phase_dir(self, phase_dir: object) -> "FieldConfigurationBuilder":
+    def set_phase_dir(self, phase_dir: PhaseDirBuilder) -> "FieldConfigurationBuilder":
         self.phase_dir = phase_dir
         return self
 
