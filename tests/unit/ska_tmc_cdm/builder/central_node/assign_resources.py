@@ -13,7 +13,6 @@ class AssignResourcesRequestBuilder:
     """
 
     def __init__(self):
-        self.assign = None
         self.subarry_id = None
         self.dish_allocation = None
         self.sdp_config = None
@@ -22,36 +21,40 @@ class AssignResourcesRequestBuilder:
         self.interface = None
         self.transaction_id = None
 
-    def set_subarray_id(self, subarray_id=int) -> "AssignResourcesRequestBuilder":
+    def set_subarray_id(self, subarray_id: int) -> "AssignResourcesRequestBuilder":
         self.subarray_id = subarray_id
         return self
 
-    def set_dish_allocation(self, dish_allocation) -> "AssignResourcesRequestBuilder":
+    def set_dish_allocation(
+        self, dish_allocation: object
+    ) -> "AssignResourcesRequestBuilder":
         self.dish_allocation = dish_allocation
         return self
 
-    def set_sdp_config(self, sdp_config) -> "AssignResourcesRequestBuilder":
+    def set_sdp_config(self, sdp_config: object) -> "AssignResourcesRequestBuilder":
         self.sdp_config = sdp_config
         return self
 
-    def set_csp_config(self, csp_config) -> "AssignResourcesRequestBuilder":
+    def set_csp_config(self, csp_config: object) -> "AssignResourcesRequestBuilder":
         self.csp_config = csp_config
         return self
 
-    def set_mccs(self, mccs) -> "AssignResourcesRequestBuilder":
+    def set_mccs(self, mccs: object) -> "AssignResourcesRequestBuilder":
         self.mccs = mccs
         return self
 
-    def set_interface(self, interface=str) -> "AssignResourcesRequestBuilder":
+    def set_interface(self, interface: str) -> "AssignResourcesRequestBuilder":
         self.interface = interface
         return self
 
-    def set_transaction_id(self, transaction_id=str) -> "AssignResourcesRequestBuilder":
+    def set_transaction_id(
+        self, transaction_id: str
+    ) -> "AssignResourcesRequestBuilder":
         self.transaction_id = transaction_id
         return self
 
     def build(self) -> AssignResourcesRequest:
-        self.assign = AssignResourcesRequest(
+        return AssignResourcesRequest(
             self.subarray_id,
             self.dish_allocation,
             self.sdp_config,
@@ -60,4 +63,3 @@ class AssignResourcesRequestBuilder:
             self.interface,
             self.transaction_id,
         )
-        return self.assign

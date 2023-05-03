@@ -7,14 +7,13 @@ from tests.unit.ska_tmc_cdm.builder.central_node.mccs import MCCSAllocateBuilder
 
 
 def mccs_allocate(subarray_beam_ids, station_ids, channel_blocks):
-    mccs = (
+    return (
         MCCSAllocateBuilder()
         .set_subarray_beam_ids(subarray_beam_ids=subarray_beam_ids)
         .set_station_ids(station_ids=station_ids)
         .set_channel_blocks(channel_blocks=channel_blocks)
         .build()
     )
-    return mccs
 
 
 def test_mccs_allocate_eq():

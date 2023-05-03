@@ -5,10 +5,6 @@ from ska_tmc_cdm.messages.central_node.csp import (
     ResourceConfiguration,
 )
 
-"""
-Create a csp block using builder pattern
-"""
-
 
 class CommonConfigurationBuilder:
     """
@@ -20,16 +16,14 @@ class CommonConfigurationBuilder:
     """
 
     def __init__(self) -> "CommonConfigurationBuilder":
-        self.common = None
         self.subarray_id = None
 
-    def set_subarray_id(self, subarray_id=int) -> "CommonConfigurationBuilder":
+    def set_subarray_id(self, subarray_id: int) -> "CommonConfigurationBuilder":
         self.subarray_id = subarray_id
         return self
 
     def build(self) -> CommonConfiguration:
-        self.common = CommonConfiguration(self.subarray_id)
-        return self.common
+        return CommonConfiguration(self.subarray_id)
 
 
 class ResourceConfigurationBuilder:
@@ -42,36 +36,34 @@ class ResourceConfigurationBuilder:
     """
 
     def __init__(self) -> "ResourceConfigurationBuilder":
-        self.resource = None
         self.device = None
         self.shared = None
         self.fw_image = None
         self.fw_mode = None
 
-    def set_device(self, device=str) -> "ResourceConfigurationBuilder":
+    def set_device(self, device: str) -> "ResourceConfigurationBuilder":
         self.device = device
         return self
 
-    def set_shared(self, shared=bool) -> "ResourceConfigurationBuilder":
+    def set_shared(self, shared: bool) -> "ResourceConfigurationBuilder":
         self.shared = shared
         return self
 
-    def set_fw_image(self, fw_image=str) -> "ResourceConfigurationBuilder":
+    def set_fw_image(self, fw_image: str) -> "ResourceConfigurationBuilder":
         self.fw_image = fw_image
         return self
 
-    def set_fw_mode(self, fw_mode=str) -> "ResourceConfigurationBuilder":
+    def set_fw_mode(self, fw_mode: str) -> "ResourceConfigurationBuilder":
         self.fw_mode = fw_mode
         return self
 
     def build(self) -> ResourceConfiguration:
-        self.resource = ResourceConfiguration(
+        return ResourceConfiguration(
             self.device,
             self.shared,
             self.fw_image,
             self.fw_mode,
         )
-        return self.resource
 
 
 class LowCbfConfigurationBuilder:
@@ -84,16 +76,14 @@ class LowCbfConfigurationBuilder:
     """
 
     def __init__(self) -> "LowCbfConfigurationBuilder":
-        self.lowcbf = None
         self.resources = None
 
-    def set_resources(self, resources=list) -> "LowCbfConfigurationBuilder":
+    def set_resources(self, resources: list) -> "LowCbfConfigurationBuilder":
         self.resources = resources
         return self
 
     def build(self) -> LowCbfConfiguration:
-        self.lowcbf = LowCbfConfiguration(self.resources)
-        return self.lowcbf
+        return LowCbfConfiguration(self.resources)
 
 
 class CSPConfigurationBuilder:
@@ -106,27 +96,25 @@ class CSPConfigurationBuilder:
     """
 
     def __init__(self) -> "CSPConfigurationBuilder":
-        self.csp = None
         self.interface = None
         self.common = None
         self.lowcbf = None
 
-    def set_interface(self, interface=str) -> "CSPConfigurationBuilder":
+    def set_interface(self, interface: str) -> "CSPConfigurationBuilder":
         self.interface = interface
         return self
 
-    def set_common(self, common) -> "CSPConfigurationBuilder":
+    def set_common(self, common: object) -> "CSPConfigurationBuilder":
         self.common = common
         return self
 
-    def set_lowcbf(self, lowcbf) -> "CSPConfigurationBuilder":
+    def set_lowcbf(self, lowcbf: object) -> "CSPConfigurationBuilder":
         self.lowcbf = lowcbf
         return self
 
     def build(self) -> CSPConfiguration:
-        self.csp = CSPConfiguration(
+        return CSPConfiguration(
             self.interface,
             self.common,
             self.lowcbf,
         )
-        return self.csp

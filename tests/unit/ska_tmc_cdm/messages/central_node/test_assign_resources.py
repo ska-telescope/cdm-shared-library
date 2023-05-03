@@ -11,19 +11,6 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
-from ska_tmc_cdm.messages.central_node.sdp import (
-    BeamConfiguration,
-    Channel,
-    ChannelConfiguration,
-    EBScanType,
-    ExecutionBlockConfiguration,
-    FieldConfiguration,
-    PhaseDir,
-    PolarisationConfiguration,
-    ProcessingBlockConfiguration,
-    ScriptConfiguration,
-    SDPConfiguration,
-)
 from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
 )
@@ -45,36 +32,42 @@ from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     PolarisationConfigurationBuilder,
     ProcessingBlockConfigurationBuilder,
     ScanTypeBuilder,
+    ScriptConfigurationBuilder,
     SDPConfigurationBuilder,
     SDPWorkflowBuilder,
 )
 
 
-def csp_conf(interface=None, common=None, lowcbf=None):
-    csp1 = (
+def csp_configuration(interface=None, common=None, lowcbf=None):
+    return (
         CSPConfigurationBuilder()
         .set_interface(interface=interface)
         .set_common(common=common)
         .set_lowcbf(lowcbf=lowcbf)
         .build()
     )
-    return csp1
 
 
-def common_1(subarray_id=None):
-    common1 = (
-        CommonConfigurationBuilder().set_subarray_id(subarray_id=subarray_id).build()
+def scripts(kind=None, name=None, version=None):
+    return (
+        ScriptConfigurationBuilder()
+        .set_kind(kind=kind)
+        .set_name(name=name)
+        .set_version(version=version)
+        .build()
     )
-    return common1
 
 
-def lowcbf_1(resources=None):
-    lowcbf1 = LowCbfConfigurationBuilder().set_resources(resources=resources).build()
-    return lowcbf1
+def common_configuration(subarray_id=None):
+    return CommonConfigurationBuilder().set_subarray_id(subarray_id=subarray_id).build()
 
 
-def resource_config(device=None, shared=None, fw_image=None, fw_mode=None):
-    resource = (
+def lowcbf_configuration(resources=None):
+    return LowCbfConfigurationBuilder().set_resources(resources=resources).build()
+
+
+def resource_configuration(device=None, shared=None, fw_image=None, fw_mode=None):
+    return (
         ResourceConfigurationBuilder()
         .set_device(device=device)
         .set_shared(shared=shared)
@@ -82,29 +75,26 @@ def resource_config(device=None, shared=None, fw_image=None, fw_mode=None):
         .set_fw_mode(fw_mode=fw_mode)
         .build()
     )
-    return resource
 
 
-def fields_config(field_id=None, pointing_fqdn=None, phase_dir=None):
-    fields1 = (
+def fields_configuration(field_id=None, pointing_fqdn=None, phase_dir=None):
+    return (
         FieldConfigurationBuilder()
         .set_field_id(field_id=field_id)
         .set_pointing_fqdn(pointing_fqdn=pointing_fqdn)
         .set_phase_dir(phase_dir=phase_dir)
         .build()
     )
-    return fields1
 
 
 def eb_scan(scan_type_id=None, beams=None, derive_from=None):
-    eb_scan_1 = (
+    return (
         EBScanTypeBuilder()
         .set_scan_type_id(scan_type_id=scan_type_id)
         .set_beams(beams=beams)
         .set_derive_from(derive_from=derive_from)
         .build()
     )
-    return eb_scan_1
 
 
 def execution(
@@ -117,7 +107,7 @@ def execution(
     fields=None,
     scan_types=None,
 ):
-    execution_1 = (
+    return (
         ExecutionBlockConfigurationBuilder()
         .set_eb_id(eb_id=eb_id)
         .set_max_length(max_length=max_length)
@@ -129,11 +119,10 @@ def execution(
         .set_scan_types(scan_types=scan_types)
         .build()
     )
-    return execution_1
 
 
 def phase_d(ra=None, dec=None, reference_time=None, reference_frame=None):
-    phase = (
+    return (
         PhaseDirBuilder()
         .set_ra(ra=ra)
         .set_dec(dec=dec)
@@ -141,21 +130,19 @@ def phase_d(ra=None, dec=None, reference_time=None, reference_frame=None):
         .set_reference_frame(reference_frame=reference_frame)
         .build()
     )
-    return phase
 
 
 def mccs_allocate_conf(subarray_beam_ids=None, station_ids=None, channel_blocks=None):
-    mccs = (
+    return (
         MCCSAllocateBuilder()
         .set_subarray_beam_ids(subarray_beam_ids=subarray_beam_ids)
         .set_station_ids(station_ids=station_ids)
         .set_channel_blocks(channel_blocks=channel_blocks)
         .build()
     )
-    return mccs
 
 
-def channel_conf(
+def channel_configuration(
     count=None,
     start=None,
     stride=None,
@@ -164,7 +151,7 @@ def channel_conf(
     link_map=None,
     spectral_window_id=None,
 ):
-    channel1 = (
+    return (
         ChannelBuilder()
         .set_count(count=count)
         .set_start(start=start)
@@ -175,33 +162,30 @@ def channel_conf(
         .set_spectral_window_id(spectral_window_id=spectral_window_id)
         .build()
     )
-    return channel1
 
 
 def polarization(polarisations_id=None, corr_type=None):
-    polar = (
+    return (
         PolarisationConfigurationBuilder()
         .set_polarisations_id(polarisations_id=polarisations_id)
         .set_corr_type(corr_type=corr_type)
         .build()
     )
-    return polar
 
 
-def channel_config(channels_id=None, spectral_windows=None):
-    channel_config1 = (
+def channel_configure(channels_id=None, spectral_windows=None):
+    return (
         ChannelConfigurationBuilder()
         .set_channels_id(channels_id=channels_id)
         .set_spectral_windows(spectral_windows=[spectral_windows])
         .build()
     )
-    return channel_config1
 
 
 def scan_type_conf(
     scan_type_id=None, reference_frame=None, ra=None, dec=None, channel=None
 ):
-    scan_type1 = (
+    return (
         ScanTypeBuilder()
         .set_scan_type_id(scan_type_id=scan_type_id)
         .set_reference_frame(reference_frame=reference_frame)
@@ -210,18 +194,16 @@ def scan_type_conf(
         .set_channels(channels=channel)
         .build()
     )
-    return scan_type1
 
 
 def workflow_conf(name=None, kind=None, version=None):
-    workflow1 = (
+    return (
         SDPWorkflowBuilder()
         .set_name(name=name)
         .set_kind(kind=kind)
         .set_version(version=version)
         .build()
     )
-    return workflow1
 
 
 def processing_block(
@@ -232,7 +214,7 @@ def processing_block(
     sbi_ids=None,
     script=None,
 ):
-    pb = (
+    return (
         ProcessingBlockConfigurationBuilder()
         .set_pb_id(pb_id=pb_id)
         .set_workflow(workflow=workflow)
@@ -242,7 +224,6 @@ def processing_block(
         .set_script(script=script)
         .build()
     )
-    return pb
 
 
 def sdp(
@@ -254,7 +235,7 @@ def sdp(
     resources=None,
     interface=None,
 ):
-    sdp1 = (
+    return (
         SDPConfigurationBuilder()
         .set_eb_id(eb_id=eb_id)
         .set_max_length(max_length=max_length)
@@ -265,7 +246,6 @@ def sdp(
         .set_interface(interface=interface)
         .build()
     )
-    return sdp1
 
 
 def assign_request(
@@ -277,7 +257,7 @@ def assign_request(
     mccs=None,
     csp=None,
 ):
-    request = (
+    return (
         AssignResourcesRequestBuilder()
         .set_subarray_id(subarray_id=subarray_id)
         .set_dish_allocation(dish_allocation=dish_allocation)
@@ -288,17 +268,16 @@ def assign_request(
         .set_mccs(mccs=mccs)
         .build()
     )
-    return request
 
 
-def beam_config(
+def beam_configuration(
     beam_id=None,
     function=None,
     search_beam_id=None,
     timing_beam_id=None,
     vlbi_beam_id=None,
 ):
-    beams = (
+    return (
         BeamConfigurationBuilder()
         .set_beam_id(beam_id=beam_id)
         .set_function(function=function)
@@ -307,7 +286,6 @@ def beam_config(
         .set_vlbi_beam_id(vlbi_beam_id=vlbi_beam_id)
         .build()
     )
-    return beams
 
 
 def test_assign_resources_request_eq():
@@ -315,8 +293,7 @@ def test_assign_resources_request_eq():
     Verify that two AssignResource request objects for the same sub-array and
     dish allocation are considered equal.
     """
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
-    channel1 = channel_conf(
+    channel1 = channel_configuration(
         count=744,
         start=0,
         stride=2,
@@ -362,22 +339,18 @@ def test_assign_resources_request_eq():
         transaction_id="txn-mvp01-20200325-00001",
     )
 
+    request3 = assign_request(
+        subarray_id=3,
+        dish_allocation=None,
+        sdp_config=sdp1,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00004",
+    )
+
     assert request1 == request2
 
-    assert request1 != AssignResourcesRequest(
-        1,
-        dish_allocation=dish_allocation,
-        sdp_config=None,
-        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
-        transaction_id="txn-mvp01-20200325-00002",
-    )
-    assert request2 != AssignResourcesRequest(
-        1,
-        dish_allocation=dish_allocation,
-        sdp_config=None,
-        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
-        transaction_id="txn-mvp01-20200325-00002",
-    )
+    assert request1 != request3
+    assert request2 != request3
 
 
 def test_assign_resources_request_mccs_eq():
@@ -509,16 +482,14 @@ def test_assign_resources_request_for_low_eq():
         mccs=mccs1,
         interface="https://schema.skao.int/" "ska-low-tmc-assignresources/2.0",
     )
+    request3 = assign_request(
+        subarray_id=2,
+        mccs=mccs1,
+        interface="https://schema.skao.int/" "ska-low-tmc-assignresources/4.0",
+    )
     assert request1 == request2
 
-    assert request1 != AssignResourcesRequest(
-        mccs=MCCSAllocate(
-            list(zip(itertools.count(1, 1), 1 * [2])), [3, 4, 5], [1, 2, 3, 4, 5, 6]
-        ),
-        subarray_id=2,
-        interface="https://schema.skao.int/ska-low-tmc-assignresources/2.0",
-        transaction_id="txn-mvp01-20200325-00001",
-    )
+    assert request1 != request3
 
 
 def test_assign_resources_if_no_subarray_id_argument():
@@ -544,25 +515,24 @@ def test_modified_assign_resources_request_eq():
     Verify that two AssignResource request objects for the same sub-array and
     dish allocation are considered equal.
     """
-    channel = Channel(
-        spectral_window_id="fsp_2_channels",
+    channel = channel_configuration(
         count=744,
         start=0,
         stride=2,
         freq_min=0.35e9,
-        freq_max=0.368e9,
+        freq_max=1.05e9,
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    scan_type = EBScanType(
+
+    scan_type = eb_scan(
         scan_type_id="science",
         beams={"vis0": {"field_id": "field_a"}},
         derive_from=".default",
     )
     sbi_ids = "sbi-mvp01-20200325-00001"
-    script = ScriptConfiguration(
-        kind="realtime", name="test-receive-addresses", version="0.5.0"
-    )
-    pb_config = ProcessingBlockConfiguration(
+    script = scripts(kind="realtime", name="test-receive-addresses", version="0.5.0")
+    pb_config = processing_block(
         pb_id="pb-mvp01-20200325-00003",
         parameters={
             "plasmaEnabled": True,
@@ -614,26 +584,24 @@ def test_modified_assign_resources_request_eq():
         sbi_ids=[sbi_ids],
         script=script,
     )
-    beams = BeamConfiguration(
-        beam_id="pss1", search_beam_id=1, function="pulsar search"
-    )
-    channels = ChannelConfiguration(
+    beams = beam_configuration(beam_id="vis0", function="visibilities")
+    channels = channel_configure(
         channels_id="vis_channels",
         spectral_windows=[channel],
     )
-    polarisation = PolarisationConfiguration(
+    polarisation = polarization(
         polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
     )
-    phase_dir = PhaseDir(
+    phase_dir = phase_d(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    fields = FieldConfiguration(
+    fields = fields_configuration(
         field_id="field_a",
         pointing_fqdn="low-tmc/telstate/0/pointing",
         phase_dir=phase_dir,
     )
 
-    execution_block = ExecutionBlockConfiguration(
+    execution_block = execution(
         eb_id="eb-mvp01-20200325-00001",
         max_length=100,
         context={},
@@ -648,7 +616,7 @@ def test_modified_assign_resources_request_eq():
         "receptors": ["FS4", "FS8"],
         "receive_nodes": 10,
     }
-    sdp_config = SDPConfiguration(
+    sdp_config = sdp(
         resources=resource,
         processing_blocks=[pb_config],
         execution_block=execution_block,
@@ -693,7 +661,7 @@ def test_modified_assign_resources_request_eq_with_other_objects():
     Verify that an AssignResources request object is not considered equal to
     objects of other types.
     """
-    channel = Channel(
+    channel = channel_configuration(
         spectral_window_id="fsp_2_channels",
         count=744,
         start=0,
@@ -702,16 +670,14 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         freq_max=0.368e9,
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
     )
-    scan_type = EBScanType(
+    scan_type = eb_scan(
         scan_type_id="science",
         beams={"vis0": {"field_id": "field_a"}},
         derive_from=".default",
     )
     sbi_ids = "sbi-mvp01-20200325-00001"
-    script = ScriptConfiguration(
-        kind="realtime", name="test-receive-addresses", version="0.5.0"
-    )
-    pb_config = ProcessingBlockConfiguration(
+    script = scripts(kind="realtime", name="test-receive-addresses", version="0.5.0")
+    pb_config = processing_block(
         pb_id="pb-mvp01-20200325-00003",
         parameters={
             "plasmaEnabled": True,
@@ -763,26 +729,26 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         sbi_ids=[sbi_ids],
         script=script,
     )
-    beams = BeamConfiguration(
+    beams = beam_configuration(
         beam_id="pss1", search_beam_id=1, function="pulsar search"
     )
-    channels = ChannelConfiguration(
+    channels = channel_configure(
         channels_id="vis_channels",
         spectral_windows=[channel],
     )
-    polarisation = PolarisationConfiguration(
+    polarisation = polarization(
         polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
     )
-    phase_dir = PhaseDir(
+    phase_dir = phase_d(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    fields = FieldConfiguration(
+    fields = fields_configuration(
         field_id="field_a",
         pointing_fqdn="low-tmc/telstate/0/pointing",
         phase_dir=phase_dir,
     )
 
-    execution_block = ExecutionBlockConfiguration(
+    execution_block = execution(
         eb_id="eb-mvp01-20200325-00001",
         max_length=100,
         context={},
@@ -797,7 +763,7 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         "receptors": ["FS4", "FS8"],
         "receive_nodes": 10,
     }
-    sdp_config = SDPConfiguration(
+    sdp_config = sdp(
         resources=resource,
         processing_blocks=[pb_config],
         execution_block=execution_block,
@@ -820,7 +786,7 @@ def test_low_assign_resources_request():
     Verify creation of Low AssignResources request objects
     with both sdp & csp blocks and check equality
     """
-    channel1 = channel_conf(
+    channel1 = channel_configuration(
         count=744,
         start=0,
         stride=2,
@@ -843,15 +809,17 @@ def test_low_assign_resources_request():
         parameters={},
         dependencies=None,
     )
-    beams = beam_config(beam_id="vis0", function="visibilities")
-    channels = channel_config(channels_id="vis_channels", spectral_windows=[channel1])
+    beams = beam_configuration(beam_id="vis0", function="visibilities")
+    channels = channel_configure(
+        channels_id="vis_channels", spectral_windows=[channel1]
+    )
     polarization_config = polarization(
         polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
     )
     phase = phase_d(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    field = fields_config(
+    field = fields_configuration(
         field_id="field_a",
         pointing_fqdn="low-tmc/telstate/0/pointing",
         phase_dir=phase,
