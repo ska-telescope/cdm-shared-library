@@ -10,7 +10,7 @@ for low observation command.
 
 
 class MCCSAllocateBuilder:
-    def __init__(self) ->  "MCCSAllocateBuilder":
+    def __init__(self) -> "MCCSAllocateBuilder":
         self.mccs = None
         self.subarray_beam_ids = None
         self.channel_blocks = None

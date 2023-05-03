@@ -107,8 +107,8 @@ class CSPConfigurationBuilder:
 
     def __init__(self) -> "CSPConfigurationBuilder":
         self.csp = None
-        self.interface = None 
-        self.common = None 
+        self.interface = None
+        self.common = None
         self.lowcbf = None
 
     def set_interface(self, interface=str) -> "CSPConfigurationBuilder":
@@ -125,8 +125,8 @@ class CSPConfigurationBuilder:
 
     def build(self) -> CSPConfiguration:
         self.csp = CSPConfiguration(
-            self.interface, 
-            self.common, 
+            self.interface,
+            self.common,
             self.lowcbf,
         )
         return self.csp

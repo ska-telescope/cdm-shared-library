@@ -63,7 +63,7 @@ class ChannelBuilder:
         self.link_map = link_map
         return self
 
-    def set_spectral_window_id(self, spectral_window_id=str)-> "ChannelBuilder":
+    def set_spectral_window_id(self, spectral_window_id=str) -> "ChannelBuilder":
         self.spectral_window_id = spectral_window_id
         return self
 
@@ -90,10 +90,10 @@ class ScanTypeBuilder:
 
     def __init__(self) -> "ScanTypeBuilder":
         self.scan_type = None
-        self.scan_type_id = None 
-        self.reference_frame = None 
-        self.ra = None 
-        self.dec = None 
+        self.scan_type_id = None
+        self.reference_frame = None
+        self.ra = None
+        self.dec = None
         self.channels = None
 
     def set_scan_type_id(self, scan_type_id) -> "ScanTypeBuilder":
@@ -112,7 +112,7 @@ class ScanTypeBuilder:
         self.dec = dec
         return self
 
-    def set_channels(self, channels=list)-> "ScanTypeBuilder":
+    def set_channels(self, channels=list) -> "ScanTypeBuilder":
         self.channels = channels
         return self
 
@@ -134,8 +134,8 @@ class SDPWorkflowBuilder:
 
     def __init__(self) -> "SDPWorkflowBuilder":
         self.work = None
-        self.name = None 
-        self.kind = None 
+        self.name = None
+        self.kind = None
         self.version = None
 
     def set_name(self, name=str) -> "SDPWorkflowBuilder":
@@ -256,7 +256,7 @@ class ProcessingBlockConfigurationBuilder:
         self.script = script
         return self
 
-    def build(self)  -> ProcessingBlockConfiguration:
+    def build(self) -> ProcessingBlockConfiguration:
         self.process = ProcessingBlockConfiguration(
             self.pb_id,
             self.workflow,
@@ -387,14 +387,16 @@ class ChannelConfigurationBuilder:
 
     def __init__(self) -> "ChannelConfigurationBuilder":
         self.channel_conf = None
-        self.channels_id = None 
+        self.channels_id = None
         self.spectral_windows = None
 
     def set_channels_id(self, channels_id=str) -> "ChannelConfigurationBuilder":
         self.channels_id = channels_id
         return self
 
-    def set_spectral_windows(self, spectral_windows=list) -> "ChannelConfigurationBuilder":
+    def set_spectral_windows(
+        self, spectral_windows=list
+    ) -> "ChannelConfigurationBuilder":
         self.spectral_windows = spectral_windows
         return self
 
@@ -419,7 +421,9 @@ class PolarisationConfigurationBuilder:
         self.polarisations_id = None
         self.corr_type = None
 
-    def set_polarisations_id(self, polarisations_id=str) -> "PolarisationConfigurationBuilder":
+    def set_polarisations_id(
+        self, polarisations_id=str
+    ) -> "PolarisationConfigurationBuilder":
         self.polarisations_id = polarisations_id
         return self
 
@@ -427,7 +431,7 @@ class PolarisationConfigurationBuilder:
         self.corr_type = corr_type
         return self
 
-    def build(self)  -> PolarisationConfiguration:
+    def build(self) -> PolarisationConfiguration:
         self.polar = PolarisationConfiguration(self.polarisations_id, self.corr_type)
         return self.polar
 
@@ -444,8 +448,8 @@ class PhaseDirBuilder:
     def __init__(self) -> "PhaseDirBuilder":
         self.phase = None
         self.ra = None
-        self.dec = None 
-        self.reference_time = None 
+        self.dec = None
+        self.reference_time = None
         self.reference_frame = None
 
     def set_ra(self, ra=list) -> "PhaseDirBuilder":
@@ -482,8 +486,8 @@ class FieldConfigurationBuilder:
 
     def __init__(self) -> "FieldConfigurationBuilder":
         self.field = None
-        self.field_id = None 
-        self.pointing_fqdn = None 
+        self.field_id = None
+        self.pointing_fqdn = None
         self.phase_dir = None
 
     def set_field_id(self, field_id=str) -> "FieldConfigurationBuilder":
@@ -516,8 +520,8 @@ class EBScanTypeBuilder:
 
     def __init__(self) -> "EBScanTypeBuilder":
         self.ebscan = None
-        self.scan_type_id = None 
-        self.beams = None 
+        self.scan_type_id = None
+        self.beams = None
         self.derive_from = None
 
     def set_scan_type_id(self, scan_type_id=str) -> "EBScanTypeBuilder":
@@ -611,7 +615,9 @@ class ExecutionBlockConfigurationBuilder:
         self.channels = channels
         return self
 
-    def set_polarisations(self, polarisations=list) -> "ExecutionBlockConfigurationBuilder":
+    def set_polarisations(
+        self, polarisations=list
+    ) -> "ExecutionBlockConfigurationBuilder":
         self.polarisations = polarisations
         return self
 
