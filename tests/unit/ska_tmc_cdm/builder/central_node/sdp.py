@@ -30,38 +30,44 @@ class ChannelBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "ChannelBuilder":
         self.channel = None
+        self.count = None
+        self.start = None
+        self.stride = None
+        self.freq_min = None
+        self.freq_max = None
+        self.link_map = None
 
-    def set_count(self, count):
+    def set_count(self, count=int) -> "ChannelBuilder":
         self.count = count
         return self
 
-    def set_start(self, start):
+    def set_start(self, start=int) -> "ChannelBuilder":
         self.start = start
         return self
 
-    def set_stride(self, stride):
+    def set_stride(self, stride=int) -> "ChannelBuilder":
         self.stride = stride
         return self
 
-    def set_freq_min(self, freq_min):
+    def set_freq_min(self, freq_min=float) -> "ChannelBuilder":
         self.freq_min = freq_min
         return self
 
-    def set_freq_max(self, freq_max):
+    def set_freq_max(self, freq_max=float) -> "ChannelBuilder":
         self.freq_max = freq_max
         return self
 
-    def set_link_map(self, link_map):
+    def set_link_map(self, link_map=list) -> "ChannelBuilder":
         self.link_map = link_map
         return self
 
-    def set_spectral_window_id(self, spectral_window_id):
+    def set_spectral_window_id(self, spectral_window_id=str)-> "ChannelBuilder":
         self.spectral_window_id = spectral_window_id
         return self
 
-    def build(self):
+    def build(self) -> Channel:
         self.channel = Channel(
             self.count,
             self.start,
@@ -82,30 +88,35 @@ class ScanTypeBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "ScanTypeBuilder":
         self.scan_type = None
+        self.scan_type_id = None 
+        self.reference_frame = None 
+        self.ra = None 
+        self.dec = None 
+        self.channels = None
 
-    def set_scan_type_id(self, scan_type_id):
+    def set_scan_type_id(self, scan_type_id) -> "ScanTypeBuilder":
         self.scan_type_id = scan_type_id
         return self
 
-    def set_reference_frame(self, reference_frame):
+    def set_reference_frame(self, reference_frame=str) -> "ScanTypeBuilder":
         self.reference_frame = reference_frame
         return self
 
-    def set_ra(self, ra):
+    def set_ra(self, ra=str) -> "ScanTypeBuilder":
         self.ra = ra
         return self
 
-    def set_dec(self, dec):
+    def set_dec(self, dec=str) -> "ScanTypeBuilder":
         self.dec = dec
         return self
 
-    def set_channels(self, channels):
+    def set_channels(self, channels=list)-> "ScanTypeBuilder":
         self.channels = channels
         return self
 
-    def build(self):
+    def build(self) -> ScanType:
         self.scan_type = ScanType(
             self.scan_type_id, self.reference_frame, self.ra, self.dec, self.channels
         )
@@ -121,22 +132,25 @@ class SDPWorkflowBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "SDPWorkflowBuilder":
         self.work = None
+        self.name = None 
+        self.kind = None 
+        self.version = None
 
-    def set_name(self, name):
+    def set_name(self, name=str) -> "SDPWorkflowBuilder":
         self.name = name
         return self
 
-    def set_kind(self, kind):
+    def set_kind(self, kind=str) -> "SDPWorkflowBuilder":
         self.kind = kind
         return self
 
-    def set_version(self, version):
+    def set_version(self, version=str) -> "SDPWorkflowBuilder":
         self.version = version
         return self
 
-    def build(self):
+    def build(self) -> SDPWorkflow:
         self.work = SDPWorkflow(self.name, self.kind, self.version)
         return self.work
 
@@ -150,18 +164,20 @@ class PbDependencyBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "PbDependencyBuilder":
         self.depend = None
+        self.pb_id = None
+        self.kind = None
 
-    def set_pb_id(self, pb_id):
+    def set_pb_id(self, pb_id=str) -> "PbDependencyBuilder":
         self.pb_id = pb_id
         return self
 
-    def set_kind(self, kind):
+    def set_kind(self, kind=list) -> "PbDependencyBuilder":
         self.kind = kind
         return self
 
-    def build(self):
+    def build(self) -> PbDependency:
         self.depend = PbDependency(self.pb_id, self.kind)
         return self.depend
 
@@ -175,24 +191,25 @@ class ScriptConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(
-        self,
-    ) -> object:
+    def __init__(self) -> "ScriptConfigurationBuilder":
         self.script = None
+        self.kind = None
+        self.name = None
+        self.version = None
 
-    def set_kind(self, kind):
+    def set_kind(self, kind) -> "ScriptConfigurationBuilder":
         self.kind = kind
         return self
 
-    def set_name(self, name):
+    def set_name(self, name) -> "ScriptConfigurationBuilder":
         self.name = name
         return self
 
-    def set_version(self, version):
+    def set_version(self, version) -> "ScriptConfigurationBuilder":
         self.version = version
         return self
 
-    def build(self):
+    def build(self) -> ScriptConfiguration:
         self.script = ScriptConfiguration(self.kind, self.name, self.version)
         return self.script
 
@@ -206,34 +223,40 @@ class ProcessingBlockConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "ProcessingBlockConfigurationBuilder":
         self.process = None
+        self.pb_id = None
+        self.workflow = None
+        self.parameters = None
+        self.dependencies = None
+        self.sbi_ids = None
+        self.script = None
 
-    def set_pb_id(self, pb_id):
+    def set_pb_id(self, pb_id=str) -> "ProcessingBlockConfigurationBuilder":
         self.pb_id = pb_id
         return self
 
-    def set_workflow(self, workflow):
+    def set_workflow(self, workflow) -> "ProcessingBlockConfigurationBuilder":
         self.workflow = workflow
         return self
 
-    def set_parameters(self, parameters):
+    def set_parameters(self, parameters=dict) -> "ProcessingBlockConfigurationBuilder":
         self.parameters = parameters
         return self
 
-    def set_dependencies(self, dependencies):
+    def set_dependencies(self, dependencies) -> "ProcessingBlockConfigurationBuilder":
         self.dependencies = dependencies
         return self
 
-    def set_sbi_ids(self, sbi_ids):
+    def set_sbi_ids(self, sbi_ids=list) -> "ProcessingBlockConfigurationBuilder":
         self.sbi_ids = sbi_ids
         return self
 
-    def set_script(self, script):
+    def set_script(self, script) -> "ProcessingBlockConfigurationBuilder":
         self.script = script
         return self
 
-    def build(self):
+    def build(self)  -> ProcessingBlockConfiguration:
         self.process = ProcessingBlockConfiguration(
             self.pb_id,
             self.workflow,
@@ -254,38 +277,45 @@ class SDPConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "SDPConfigurationBuilder":
         self.sdp = None
+        self.eb_id = None
+        self.max_length = None
+        self.scan_types = None
+        self.processing_blocks = None
+        self.execution_block = None
+        self.resources = None
+        self.interface = None
 
-    def set_eb_id(self, eb_id):
+    def set_eb_id(self, eb_id=str) -> "SDPConfigurationBuilder":
         self.eb_id = eb_id
         return self
 
-    def set_max_length(self, max_length):
+    def set_max_length(self, max_length=float) -> "SDPConfigurationBuilder":
         self.max_length = max_length
         return self
 
-    def set_scan_types(self, scan_types):
+    def set_scan_types(self, scan_types=list) -> "SDPConfigurationBuilder":
         self.scan_types = scan_types
         return self
 
-    def set_processing_blocks(self, processing_blocks):
+    def set_processing_blocks(self, processing_blocks) -> "SDPConfigurationBuilder":
         self.processing_blocks = processing_blocks
         return self
 
-    def set_execution_block(self, execution_block):
+    def set_execution_block(self, execution_block) -> "SDPConfigurationBuilder":
         self.execution_block = execution_block
         return self
 
-    def set_resources(self, resources):
+    def set_resources(self, resources=dict) -> "SDPConfigurationBuilder":
         self.resources = resources
         return self
 
-    def set_interface(self, interface):
+    def set_interface(self, interface=str) -> "SDPConfigurationBuilder":
         self.interface = interface
         return self
 
-    def build(self):
+    def build(self) -> SDPConfiguration:
         self.sdp = SDPConfiguration(
             self.eb_id,
             self.max_length,
@@ -307,30 +337,35 @@ class BeamConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "BeamConfigurationBuilder":
         self.beam = None
+        self.beam_id = None
+        self.function = None
+        self.search_beam_id = None
+        self.timing_beam_id = None
+        self.vlbi_beam_id = None
 
-    def set_beam_id(self, beam_id):
+    def set_beam_id(self, beam_id=str) -> "BeamConfigurationBuilder":
         self.beam_id = beam_id
         return self
 
-    def set_function(self, function):
+    def set_function(self, function=str) -> "BeamConfigurationBuilder":
         self.function = function
         return self
 
-    def set_search_beam_id(self, search_beam_id):
+    def set_search_beam_id(self, search_beam_id=int) -> "BeamConfigurationBuilder":
         self.search_beam_id = search_beam_id
         return self
 
-    def set_timing_beam_id(self, timing_beam_id):
+    def set_timing_beam_id(self, timing_beam_id=int) -> "BeamConfigurationBuilder":
         self.timing_beam_id = timing_beam_id
         return self
 
-    def set_vlbi_beam_id(self, vlbi_beam_id):
+    def set_vlbi_beam_id(self, vlbi_beam_id=int) -> "BeamConfigurationBuilder":
         self.vlbi_beam_id = vlbi_beam_id
         return self
 
-    def build(self):
+    def build(self) -> BeamConfiguration:
         self.beam = BeamConfiguration(
             self.beam_id,
             self.function,
@@ -350,18 +385,20 @@ class ChannelConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "ChannelConfigurationBuilder":
         self.channel_conf = None
+        self.channels_id = None 
+        self.spectral_windows = None
 
-    def set_channels_id(self, channels_id):
+    def set_channels_id(self, channels_id=str) -> "ChannelConfigurationBuilder":
         self.channels_id = channels_id
         return self
 
-    def set_spectral_windows(self, spectral_windows):
+    def set_spectral_windows(self, spectral_windows=list) -> "ChannelConfigurationBuilder":
         self.spectral_windows = spectral_windows
         return self
 
-    def build(self):
+    def build(self) -> ChannelConfiguration:
         self.channel_conf = ChannelConfiguration(
             self.channels_id, self.spectral_windows
         )
@@ -377,18 +414,20 @@ class PolarisationConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "PolarisationConfigurationBuilder":
         self.polar = None
+        self.polarisations_id = None
+        self.corr_type = None
 
-    def set_polarisations_id(self, polarisations_id):
+    def set_polarisations_id(self, polarisations_id=str) -> "PolarisationConfigurationBuilder":
         self.polarisations_id = polarisations_id
         return self
 
-    def set_corr_type(self, corr_type):
+    def set_corr_type(self, corr_type=list) -> "PolarisationConfigurationBuilder":
         self.corr_type = corr_type
         return self
 
-    def build(self):
+    def build(self)  -> PolarisationConfiguration:
         self.polar = PolarisationConfiguration(self.polarisations_id, self.corr_type)
         return self.polar
 
@@ -402,26 +441,30 @@ class PhaseDirBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "PhaseDirBuilder":
         self.phase = None
+        self.ra = None
+        self.dec = None 
+        self.reference_time = None 
+        self.reference_frame = None
 
-    def set_ra(self, ra):
+    def set_ra(self, ra=list) -> "PhaseDirBuilder":
         self.ra = ra
         return self
 
-    def set_dec(self, dec):
+    def set_dec(self, dec=list) -> "PhaseDirBuilder":
         self.dec = dec
         return self
 
-    def set_reference_time(self, reference_time):
+    def set_reference_time(self, reference_time=str) -> "PhaseDirBuilder":
         self.reference_time = reference_time
         return self
 
-    def set_reference_frame(self, reference_frame):
+    def set_reference_frame(self, reference_frame=str) -> "PhaseDirBuilder":
         self.reference_frame = reference_frame
         return self
 
-    def build(self):
+    def build(self) -> PhaseDir:
         self.phase = PhaseDir(
             self.ra, self.dec, self.reference_time, self.reference_frame
         )
@@ -437,22 +480,25 @@ class FieldConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "FieldConfigurationBuilder":
         self.field = None
+        self.field_id = None 
+        self.pointing_fqdn = None 
+        self.phase_dir = None
 
-    def set_field_id(self, field_id):
+    def set_field_id(self, field_id=str) -> "FieldConfigurationBuilder":
         self.field_id = field_id
         return self
 
-    def set_pointing_fqdn(self, pointing_fqdn):
+    def set_pointing_fqdn(self, pointing_fqdn=str) -> "FieldConfigurationBuilder":
         self.pointing_fqdn = pointing_fqdn
         return self
 
-    def set_phase_dir(self, phase_dir):
+    def set_phase_dir(self, phase_dir) -> "FieldConfigurationBuilder":
         self.phase_dir = phase_dir
         return self
 
-    def build(self):
+    def build(self) -> FieldConfiguration:
         self.field = FieldConfiguration(
             self.field_id, self.pointing_fqdn, self.phase_dir
         )
@@ -468,22 +514,25 @@ class EBScanTypeBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "EBScanTypeBuilder":
         self.ebscan = None
+        self.scan_type_id = None 
+        self.beams = None 
+        self.derive_from = None
 
-    def set_scan_type_id(self, scan_type_id):
+    def set_scan_type_id(self, scan_type_id=str) -> "EBScanTypeBuilder":
         self.scan_type_id = scan_type_id
         return self
 
-    def set_beams(self, beams):
+    def set_beams(self, beams=dict) -> "EBScanTypeBuilder":
         self.beams = beams
         return self
 
-    def set_derive_from(self, derive_from):
+    def set_derive_from(self, derive_from=str) -> "EBScanTypeBuilder":
         self.derive_from = derive_from
         return self
 
-    def build(self):
+    def build(self) -> EBScanType:
         self.ebscan = EBScanType(self.scan_type_id, self.beams, self.derive_from)
         return self.ebscan
 
@@ -497,22 +546,25 @@ class EBScanTypeBeamBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "EBScanTypeBeamBuilder":
         self.ebscan_type = None
+        self.field_id = None
+        self.channels_id = None
+        self.polarisations_id = None
 
-    def set_field_id(self, field_id):
+    def set_field_id(self, field_id=str) -> "EBScanTypeBeamBuilder":
         self.field_id = field_id
         return self
 
-    def set_channels_id(self, channels_id):
+    def set_channels_id(self, channels_id=str) -> "EBScanTypeBeamBuilder":
         self.channels_id = channels_id
         return self
 
-    def set_polarisations_id(self, polarisations_id):
+    def set_polarisations_id(self, polarisations_id=str) -> "EBScanTypeBeamBuilder":
         self.polarisations_id = polarisations_id
         return self
 
-    def build(self):
+    def build(self) -> EBScanTypeBeam:
         self.ebscan_type = EBScanTypeBeam(
             self.field_id, self.channels_id, self.polarisations_id
         )
@@ -528,42 +580,50 @@ class ExecutionBlockConfigurationBuilder:
     for low observation command.
     """
 
-    def __init__(self) -> object:
+    def __init__(self) -> "ExecutionBlockConfigurationBuilder":
         self.execution = None
+        self.eb_id = None
+        self.max_length = None
+        self.context = None
+        self.beams = None
+        self.channels = None
+        self.polarisations = None
+        self.fields = None
+        self.scan_types = None
 
-    def set_eb_id(self, eb_id):
+    def set_eb_id(self, eb_id=str) -> "ExecutionBlockConfigurationBuilder":
         self.eb_id = eb_id
         return self
 
-    def set_max_length(self, max_length):
+    def set_max_length(self, max_length=float):
         self.max_length = max_length
         return self
 
-    def set_context(self, context):
+    def set_context(self, context=dict) -> "ExecutionBlockConfigurationBuilder":
         self.context = context
         return self
 
-    def set_beams(self, beams):
+    def set_beams(self, beams=list) -> "ExecutionBlockConfigurationBuilder":
         self.beams = beams
         return self
 
-    def set_channels(self, channels):
+    def set_channels(self, channels=list) -> "ExecutionBlockConfigurationBuilder":
         self.channels = channels
         return self
 
-    def set_polarisations(self, polarisations):
+    def set_polarisations(self, polarisations=list) -> "ExecutionBlockConfigurationBuilder":
         self.polarisations = polarisations
         return self
 
-    def set_fields(self, fields):
+    def set_fields(self, fields=list) -> "ExecutionBlockConfigurationBuilder":
         self.fields = fields
         return self
 
-    def set_scan_types(self, scan_types):
+    def set_scan_types(self, scan_types=list) -> "ExecutionBlockConfigurationBuilder":
         self.scan_types = scan_types
         return self
 
-    def build(self):
+    def build(self) -> ExecutionBlockConfiguration:
         self.execution = ExecutionBlockConfiguration(
             self.eb_id,
             self.max_length,

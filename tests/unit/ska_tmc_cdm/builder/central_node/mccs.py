@@ -10,22 +10,25 @@ for low observation command.
 
 
 class MCCSAllocateBuilder:
-    def __init__(self) -> object:
+    def __init__(self) ->  "MCCSAllocateBuilder":
         self.mccs = None
+        self.subarray_beam_ids = None
+        self.channel_blocks = None
+        self.station_ids = None
 
-    def set_subarray_beam_ids(self, subarray_beam_ids):
+    def set_subarray_beam_ids(self, subarray_beam_ids=list) -> "MCCSAllocateBuilder":
         self.subarray_beam_ids = subarray_beam_ids
         return self
 
-    def set_station_ids(self, station_ids):
+    def set_station_ids(self, station_ids=list) -> "MCCSAllocateBuilder":
         self.station_ids = station_ids
         return self
 
-    def set_channel_blocks(self, channel_blocks):
+    def set_channel_blocks(self, channel_blocks=list) -> "MCCSAllocateBuilder":
         self.channel_blocks = channel_blocks
         return self
 
-    def build(self):
+    def build(self) -> MCCSAllocate:
         self.mccs = MCCSAllocate(
             subarray_beam_ids=self.subarray_beam_ids,
             station_ids=self.station_ids,
