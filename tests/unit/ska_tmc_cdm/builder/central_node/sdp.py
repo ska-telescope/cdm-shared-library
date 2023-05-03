@@ -222,7 +222,7 @@ class ProcessingBlockConfigurationBuilder:
         return self
 
     def set_workflow(
-        self, workflow: SDPWorkflowBuilder
+        self, workflow: SDPWorkflow
     ) -> "ProcessingBlockConfigurationBuilder":
         self.workflow = workflow
         return self
@@ -232,7 +232,7 @@ class ProcessingBlockConfigurationBuilder:
         return self
 
     def set_dependencies(
-        self, dependencies: PbDependencyBuilder
+        self, dependencies: PbDependency
     ) -> "ProcessingBlockConfigurationBuilder":
         self.dependencies = dependencies
         return self
@@ -242,7 +242,7 @@ class ProcessingBlockConfigurationBuilder:
         return self
 
     def set_script(
-        self, script: ScriptConfigurationBuilder
+        self, script: ScriptConfiguration
     ) -> "ProcessingBlockConfigurationBuilder":
         self.script = script
         return self
@@ -289,7 +289,7 @@ class SDPConfigurationBuilder:
         return self
 
     def set_processing_blocks(
-        self, processing_blocks: ProcessingBlockConfigurationBuilder
+        self, processing_blocks: ProcessingBlockConfiguration
     ) -> "SDPConfigurationBuilder":
         self.processing_blocks = processing_blocks
         return self
@@ -477,7 +477,7 @@ class FieldConfigurationBuilder:
         self.pointing_fqdn = pointing_fqdn
         return self
 
-    def set_phase_dir(self, phase_dir: PhaseDirBuilder) -> "FieldConfigurationBuilder":
+    def set_phase_dir(self, phase_dir: PhaseDir) -> "FieldConfigurationBuilder":
         self.phase_dir = phase_dir
         return self
 

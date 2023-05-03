@@ -6,7 +6,10 @@ import copy
 from tests.unit.ska_tmc_cdm.builder.central_node.mccs import MCCSAllocateBuilder
 
 
-def mccs_allocate(subarray_beam_ids, station_ids, channel_blocks):
+def mccs_allocate_builder(
+    subarray_beam_ids=None, station_ids=None, channel_blocks=None
+):
+    """This mccs allocate configuration builder is a test data builder for CDM mccs allocate configuration"""
     return (
         MCCSAllocateBuilder()
         .set_subarray_beam_ids(subarray_beam_ids=subarray_beam_ids)
@@ -21,10 +24,10 @@ def test_mccs_allocate_eq():
     Verify that two MCCSAllocate objects with the same allocated elements are
     considered equal.
     """
-    mccs = mccs_allocate(
+    mccs = mccs_allocate_builder(
         subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
     )
-    mccs1 = mccs_allocate(
+    mccs1 = mccs_allocate_builder(
         subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
     )
     assert mccs == mccs1
@@ -47,6 +50,8 @@ def test_mccs_allocate_eq_with_other_objects():
     Verify that a MCCSAllocate is considered unequal to objects of other
     types.
     """
-    o = mccs_allocate(subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3])
+    o = mccs_allocate_builder(
+        subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
+    )
     assert o != 1
     assert o != object()
