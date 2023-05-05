@@ -2,23 +2,243 @@
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 
-from ska_tmc_cdm.messages.central_node.sdp import (
-    BeamConfiguration,
-    Channel,
-    ChannelConfiguration,
-    EBScanType,
-    EBScanTypeBeam,
-    ExecutionBlockConfiguration,
-    FieldConfiguration,
-    PbDependency,
-    PhaseDir,
-    PolarisationConfiguration,
-    ProcessingBlockConfiguration,
-    ScanType,
-    ScriptConfiguration,
-    SDPConfiguration,
-    SDPWorkflow,
+from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
+    BeamConfigurationBuilder,
+    ChannelBuilder,
+    ChannelConfigurationBuilder,
+    EBScanTypeBeamBuilder,
+    EBScanTypeBuilder,
+    ExecutionBlockConfigurationBuilder,
+    FieldConfigurationBuilder,
+    PbDependencyBuilder,
+    PhaseDirBuilder,
+    PolarisationConfigurationBuilder,
+    ProcessingBlockConfigurationBuilder,
+    ScanTypeBuilder,
+    ScriptConfigurationBuilder,
+    SDPConfigurationBuilder,
+    SDPWorkflowBuilder,
 )
+
+
+def eb_scan_type_beam_builder(field_id=None, channels_id=None, polarisations_id=None):
+    """This eb scan type beam configuration builder is a test data builder for CDM eb scan type beam configuration"""
+    return (
+        EBScanTypeBeamBuilder()
+        .set_field_id(field_id=field_id)
+        .set_channels_id(channels_id=channels_id)
+        .set_polarisations_id(polarisations_id=polarisations_id)
+        .build()
+    )
+
+
+def execution_block_configuration_builder(
+    eb_id=None,
+    max_length=None,
+    context=None,
+    beams=None,
+    channels=None,
+    polarisations=None,
+    fields=None,
+    scan_types=None,
+):
+    """This execution block configuration builder is a test data builder for CDM execution block configuration"""
+    return (
+        ExecutionBlockConfigurationBuilder()
+        .set_eb_id(eb_id=eb_id)
+        .set_max_length(max_length=max_length)
+        .set_context(context=context)
+        .set_beams(beams=beams)
+        .set_channels(channels=channels)
+        .set_polarisations(polarisations=polarisations)
+        .set_fields(fields=fields)
+        .set_scan_types(scan_types=scan_types)
+        .build()
+    )
+
+
+def fields_configuration_builder(field_id=None, pointing_fqdn=None, phase_dir=None):
+    """This fields configuration builder is a test data builder for CDM fields configuration"""
+    return (
+        FieldConfigurationBuilder()
+        .set_field_id(field_id=field_id)
+        .set_pointing_fqdn(pointing_fqdn=pointing_fqdn)
+        .set_phase_dir(phase_dir=phase_dir)
+        .build()
+    )
+
+
+def beam_configuration_builder(
+    beam_id=None,
+    function=None,
+    search_beam_id=None,
+    timing_beam_id=None,
+    vlbi_beam_id=None,
+):
+    """This beam configuration builder is a test data builder for CDM beam configuration"""
+    return (
+        BeamConfigurationBuilder()
+        .set_beam_id(beam_id=beam_id)
+        .set_function(function=function)
+        .set_search_beam_id(search_beam_id=search_beam_id)
+        .set_timing_beam_id(timing_beam_id=timing_beam_id)
+        .set_vlbi_beam_id(vlbi_beam_id=vlbi_beam_id)
+        .build()
+    )
+
+
+def eb_scan_type_builder(scan_type_id=None, beams=None, derive_from=None):
+    """This eb scan type configuration builder is a test data builder for CDM eb scan type configuration"""
+    return (
+        EBScanTypeBuilder()
+        .set_scan_type_id(scan_type_id=scan_type_id)
+        .set_beams(beams=beams)
+        .set_derive_from(derive_from=derive_from)
+        .build()
+    )
+
+
+def phase_dir_configuration_builder(
+    ra=None, dec=None, reference_time=None, reference_frame=None
+):
+    """This phase dir configuration builder is a test data builder for CDM phase dir configuration"""
+    return (
+        PhaseDirBuilder()
+        .set_ra(ra=ra)
+        .set_dec(dec=dec)
+        .set_reference_time(reference_time=reference_time)
+        .set_reference_frame(reference_frame=reference_frame)
+        .build()
+    )
+
+
+def sdp_builder(
+    eb_id=None,
+    max_length=None,
+    scan_types=None,
+    processing_blocks=None,
+    execution_block=None,
+    resources=None,
+    interface=None,
+):
+    """This sdp configuration builder is a test data builder for CDM sdp configuration"""
+    return (
+        SDPConfigurationBuilder()
+        .set_eb_id(eb_id=eb_id)
+        .set_max_length(max_length=max_length)
+        .set_scan_types(scan_types=scan_types)
+        .set_processing_blocks(processing_blocks=processing_blocks)
+        .set_execution_block(execution_block=execution_block)
+        .set_resources(resources=resources)
+        .set_interface(interface=interface)
+        .build()
+    )
+
+
+def channel_builder(
+    count=None,
+    start=None,
+    stride=None,
+    freq_min=None,
+    freq_max=None,
+    link_map=None,
+    spectral_window_id=None,
+):
+    """This channel configuration builder is a test data builder for CDM channel configuration"""
+    return (
+        ChannelBuilder()
+        .set_count(count=count)
+        .set_start(start=start)
+        .set_stride(stride=stride)
+        .set_freq_min(freq_min=freq_min)
+        .set_freq_max(freq_max=freq_max)
+        .set_link_map(link_map=link_map)
+        .set_spectral_window_id(spectral_window_id=spectral_window_id)
+        .build()
+    )
+
+
+def scan_type_builder(
+    scan_type_id=None, reference_frame=None, ra=None, dec=None, channel=None
+):
+    """This scan type configuration builder is a test data builder for CDM scan type configuration"""
+    return (
+        ScanTypeBuilder()
+        .set_scan_type_id(scan_type_id=scan_type_id)
+        .set_reference_frame(reference_frame=reference_frame)
+        .set_ra(ra=ra)
+        .set_dec(dec=dec)
+        .set_channels(channels=channel)
+        .build()
+    )
+
+
+def workflow_configuration_builder(name=None, kind=None, version=None):
+    """This SDP workflow configuration builder is a test data builder for CDM SDP workflow configuration"""
+    return (
+        SDPWorkflowBuilder()
+        .set_name(name=name)
+        .set_kind(kind=kind)
+        .set_version(version=version)
+        .build()
+    )
+
+
+def pbdependency_builder(pb_id=None, kind=None):
+    """This PbDependency configuration builder is a test data builder for CDM PbDependency configuration"""
+    return PbDependencyBuilder().set_pb_id(pb_id=pb_id).set_kind(kind=kind).build()
+
+
+def processing_block_builder(
+    pb_id=None,
+    workflow=None,
+    parameters=None,
+    dependencies=None,
+    sbi_ids=None,
+    script=None,
+):
+    """This processing block configuration builder is a test data builder for CDM processing block configuration"""
+    return (
+        ProcessingBlockConfigurationBuilder()
+        .set_pb_id(pb_id=pb_id)
+        .set_workflow(workflow=workflow)
+        .set_parameters(parameters=parameters)
+        .set_dependencies(dependencies=dependencies)
+        .set_sbi_ids(sbi_ids=sbi_ids)
+        .set_script(script=script)
+        .build()
+    )
+
+
+def scripts_builder(kind=None, name=None, version=None):
+    """This scripts configuration builder is a test data builder for CDM scripts configuration"""
+    return (
+        ScriptConfigurationBuilder()
+        .set_kind(kind=kind)
+        .set_name(name=name)
+        .set_version(version=version)
+        .build()
+    )
+
+
+def channel_configuration_builder(channels_id=None, spectral_windows=None):
+    """This channel configuration builder is a test data builder for CDM channel configuration"""
+    return (
+        ChannelConfigurationBuilder()
+        .set_channels_id(channels_id=channels_id)
+        .set_spectral_windows(spectral_windows=[spectral_windows])
+        .build()
+    )
+
+
+def polarization_builder(polarisations_id=None, corr_type=None):
+    """This polarization configuration builder is a test data builder for CDM polarization configuration"""
+    return (
+        PolarisationConfigurationBuilder()
+        .set_polarisations_id(polarisations_id=polarisations_id)
+        .set_corr_type(corr_type=corr_type)
+        .build()
+    )
 
 
 def test_channel_equals():
@@ -31,55 +251,34 @@ def test_channel_equals():
      - freq_max
      - link_map
     """
-    channel1 = Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        2,
-        0.35e9,
-        1.05e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
+    channel1 = channel_builder(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    channel2 = Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        2,
-        0.35e9,
-        1.05e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
+    channel2 = channel_builder(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
     assert channel1 == channel2
 
-    assert channel1 != Channel(
-        "fsp_2_channels",
-        744,
-        2000,
-        2,
-        0.35e9,
-        1.05e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
-    )
-    assert channel1 != Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        1,
-        0.35e9,
-        1.05e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
-    )
-    assert channel1 != Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        2,
-        0.36e9,
-        1.04e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
-    )
-    assert channel1 != Channel(
-        "fsp_2_channels", 744, 0, 2, 0.35e9, 1.05e9, [[2000, 4], [2200, 5]]
+    assert channel1 != channel_builder(
+        count=743,
+        start=0,
+        stride=1,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [220, 1], [744, 2], [944, 3]],
+        spectral_window_id=None,
     )
 
 
@@ -88,55 +287,56 @@ def test_channel_not_equal_to_other_objects():
     Verify that Channel objects are not considered equal to objects of
     other types.
     """
-    channel = Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        2,
-        0.35e9,
-        1.05e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
+    channel1 = channel_builder(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    assert channel != 1
+    assert channel1 != 1
 
 
 def test_scan_type_equals():
     """
     Verify that ScanType objects are considered equal for the same passed parameter list
     """
-    channel_1 = Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        2,
-        0.35e9,
-        0.368e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
+    channel1 = channel_builder(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    channel_2 = Channel(
-        "fsp_2_channels", 744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]]
+    channel2 = channel_builder(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    scan_type1 = ScanType(
-        "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2]
+    scan_type1 = scan_type_builder(
+        scan_type_id="science_A",
+        reference_frame="ICRS",
+        ra="02:42:40.771",
+        dec="-00:00:47.84",
+        channel=[channel1, channel2],
     )
-    scan_type2 = ScanType(
-        "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2]
+    scan_type2 = scan_type_builder(
+        scan_type_id="science_A",
+        reference_frame="ICRS",
+        ra="02:42:40.771",
+        dec="-00:00:47.84",
+        channel=[channel1, channel2],
     )
 
     assert scan_type1 == scan_type2
-
-    assert scan_type1 != ScanType(
-        "calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1, channel_2]
-    )
-    assert scan_type1 != ScanType(
-        "science_A", "ICRS", "12:29:06.699", "-00:00:47.84", [channel_1, channel_2]
-    )
-    assert scan_type1 != ScanType(
-        "science_A", "ICRS", "02:42:40.771", "02:03:08.598", [channel_1, channel_2]
-    )
-    assert scan_type1 != ScanType(
-        "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel_1]
-    )
 
 
 def test_scan_type_not_equal_to_other_objects():
@@ -144,17 +344,23 @@ def test_scan_type_not_equal_to_other_objects():
     Verify that ScanType objects are not considered equal to objects of
     other types.
     """
-    channel = Channel(
-        "fsp_2_channels",
-        744,
-        0,
-        2,
-        0.35e9,
-        0.368e9,
-        [[0, 0], [200, 1], [744, 2], [944, 3]],
+    channel1 = channel_builder(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    scan_type = ScanType("science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel])
-    assert scan_type != 1
+    scan_type1 = scan_type_builder(
+        scan_type_id="science_A",
+        reference_frame="ICRS",
+        ra="02:42:40.771",
+        dec="-00:00:47.84",
+        channel=[channel1],
+    )
+    assert scan_type1 != 1
 
 
 def test_workflow_equals():
@@ -164,15 +370,15 @@ def test_workflow_equals():
      - the same kind
      - the same version
     """
-    workflow1 = SDPWorkflow(name="vis_receive", kind="realtime", version="0.1.0")
-    workflow2 = SDPWorkflow(name="vis_receive", kind="realtime", version="0.1.0")
-    assert workflow1 == workflow2
-
-    assert workflow1 != SDPWorkflow(
+    workflow1 = workflow_configuration_builder(
         name="vis_receive", kind="realtime", version="0.1.1"
     )
-    assert workflow2 != SDPWorkflow(
+    workflow2 = workflow_configuration_builder(
         name="vis_receive", kind="realtime", version="0.1.1"
+    )
+    assert workflow1 == workflow2
+    assert workflow1 != workflow_configuration_builder(
+        name="vis_receive", kind="realtime", version="0.0.1"
     )
 
 
@@ -181,8 +387,10 @@ def test_workflow_not_equal_to_other_objects():
     Verify that SDPWorkflow objects are not considered equal to objects of
     other types.
     """
-    workflow = SDPWorkflow(name="vis_receive", kind="realtime", version="0.1.0")
-    assert workflow != 1
+    workflow1 = workflow_configuration_builder(
+        name="vis_receive", kind="realtime", version="0.1.1"
+    )
+    assert workflow1 != 1
 
 
 def test_dependency_equals():
@@ -191,13 +399,12 @@ def test_dependency_equals():
      - the same PB ID
      - the same type
     """
-    dep1 = PbDependency("pb-mvp01-20200325-00001", ["visibilities"])
-    dep2 = PbDependency("pb-mvp01-20200325-00001", ["visibilities"])
+    dep1 = pbdependency_builder(pb_id="pb-mvp01-20200325-00001", kind=["visibilities"])
+    dep2 = pbdependency_builder(pb_id="pb-mvp01-20200325-00001", kind=["visibilities"])
 
     assert dep1 == dep2
 
-    assert dep1 != PbDependency("pb-mvp01-20200325-00001", ["calibration"])
-    assert dep1 != PbDependency("pb-mvp01-20200325-00003", ["calibration"])
+    assert dep1 != pbdependency_builder("pb-mvp01-20200325-00001", ["calibration"])
 
 
 def test_dependency_not_equal_to_other_objects():
@@ -205,31 +412,35 @@ def test_dependency_not_equal_to_other_objects():
     Verify that PBDependency objects are not considered equal to objects of
     other types.
     """
-    dep = PbDependency("pb-mvp01-20200325-00001", ["visibilities"])
-    assert dep != 1
+    dep1 = pbdependency_builder(pb_id="pb-mvp01-20200325-00001", kind=["visibilities"])
+    assert dep1 != 1
 
 
 def test_processing_block_equals():
     """
     Verify that ProcessingBlock objects are considered equal
     """
-    w_flow = SDPWorkflow("vis_receive", "realtime", "0.1.0")
-    dep = PbDependency("pb-mvp01-20200325-00001", ["visibilities"])
-    pb1 = ProcessingBlockConfiguration("pb-mvp01-20200325-00003", w_flow, {}, [dep])
-    pb2 = ProcessingBlockConfiguration("pb-mvp01-20200325-00003", w_flow, {}, [dep])
-
+    workflow1 = workflow_configuration_builder(
+        name="vis_receive", kind="realtime", version="0.1.1"
+    )
+    dep1 = pbdependency_builder(pb_id="pb-mvp01-20200325-00001", kind=["visibilities"])
+    pb1 = processing_block_builder(
+        pb_id="pb-mvp01-20200325-00001",
+        workflow=workflow1,
+        parameters={},
+        dependencies=[dep1],
+    )
+    pb2 = processing_block_builder(
+        pb_id="pb-mvp01-20200325-00001",
+        workflow=workflow1,
+        parameters={},
+        dependencies=[dep1],
+    )
     assert pb1 == pb2
 
-    assert pb1 != ProcessingBlockConfiguration(
-        "pb-mvp01-20200325-00001", w_flow, {}, [dep]
+    assert pb1 != processing_block_builder(
+        "pb-mvp01-20200325-00003", workflow1, None, [dep1]
     )
-    assert pb1 != ProcessingBlockConfiguration(
-        "pb-mvp01-20200325-00001", None, {}, [dep]
-    )
-    assert pb1 != ProcessingBlockConfiguration(
-        "pb-mvp01-20200325-00003", w_flow, None, [dep]
-    )
-    assert pb1 != ProcessingBlockConfiguration("pb-mvp01-20200325-00003", w_flow, {})
 
 
 def test_processing_block_not_equal_to_other_objects():
@@ -237,7 +448,16 @@ def test_processing_block_not_equal_to_other_objects():
     Verify that ProcessingBlock objects are not considered equal to objects of
     other types.
     """
-    p_block = ProcessingBlockConfiguration("pb-mvp01-20200325-00003", None, None, None)
+    workflow1 = workflow_configuration_builder(
+        name="vis_receive", kind="realtime", version="0.1.1"
+    )
+    dep1 = pbdependency_builder(pb_id="pb-mvp01-20200325-00001", kind=["visibilities"])
+    p_block = processing_block_builder(
+        pb_id="pb-mvp01-20200325-00001",
+        workflow=workflow1,
+        parameters={},
+        dependencies=[dep1],
+    )
     assert p_block != 1
 
 
@@ -245,50 +465,112 @@ def test_sdp_configuration_block_equals():
     """
     Verify that SDPConfiguration objects are considered equal
     """
-    channel = Channel(
-        744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+    channel1 = channel_builder(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    scan_type1 = ScanType(
-        "science_A", "ICRS", "02:42:40.771", "-00:00:47.84", [channel]
+    scan_type1 = scan_type_builder(
+        scan_type_id="science_A",
+        reference_frame="ICRS",
+        ra="02:42:40.771",
+        dec="-00:00:47.84",
+        channel=[channel1],
     )
-    scan_type2 = ScanType(
-        "calibration_B", "ICRS", "02:42:40.771", "-00:00:47.84", [channel]
+    scan_type2 = scan_type_builder(
+        scan_type_id="science_A",
+        reference_frame="ICRS",
+        ra="02:42:40.771",
+        dec="-00:00:47.84",
+        channel=[channel1],
     )
-
     scan_types = [scan_type1, scan_type2]
 
-    wf1 = SDPWorkflow("vis_receive", "realtime", "0.1.0")
-    wf2 = SDPWorkflow("test_realtime", "realtime", "0.1.0")
-    wf3 = SDPWorkflow("ical", "batch", "0.1.0")
-    wf4 = SDPWorkflow("dpreb", "batch", "0.1.0")
+    workflow1 = workflow_configuration_builder(
+        name="vis_receive", kind="realtime", version="0.1.1"
+    )
+    workflow2 = workflow_configuration_builder(
+        name="test_realtime", kind="realtime", version="0.1.0"
+    )
+    workflow3 = workflow_configuration_builder(
+        name="ical", kind="batch", version="0.1.0"
+    )
+    workflow4 = workflow_configuration_builder(
+        name="dpreb", kind="batch", version="0.1.0"
+    )
 
-    dep1 = PbDependency("pb-mvp01-20200325-00001", ["visibilities"])
-    dep2 = PbDependency("pb-mvp01-20200325-00003", ["calibration"])
+    dep1 = pbdependency_builder(pb_id="pb-mvp01-20200325-00001", kind=["visibilities"])
+    dep2 = pbdependency_builder(pb_id="pb-mvp01-20200325-00003", kind=["calibration"])
 
-    pb1 = ProcessingBlockConfiguration("pb-mvp01-20200325-00001", wf1, {})
-    pb2 = ProcessingBlockConfiguration("pb-mvp01-20200325-00002", wf2, {})
-    pb3 = ProcessingBlockConfiguration("pb-mvp01-20200325-00003", wf3, {}, [dep1])
-    pb4 = ProcessingBlockConfiguration("pb-mvp01-20200325-00004", wf4, {}, [dep2])
-
+    pb1 = processing_block_builder(
+        pb_id="pb-mvp01-20200325-00001",
+        workflow=workflow1,
+        parameters={},
+        dependencies=[dep1],
+    )
+    pb2 = processing_block_builder(
+        pb_id="pb-mvp01-20200325-00002",
+        workflow=workflow2,
+        parameters={},
+        dependencies=[dep2],
+    )
+    pb3 = processing_block_builder(
+        pb_id="pb-mvp01-20200325-00003",
+        workflow=workflow3,
+        parameters={},
+        dependencies=[dep1],
+    )
+    pb4 = processing_block_builder(
+        pb_id="pb-mvp01-20200325-00004",
+        workflow=workflow4,
+        parameters={},
+        dependencies=[dep2],
+    )
     processing_blocks = [pb1, pb2, pb3, pb4]
 
-    sdp1 = SDPConfiguration(
-        "sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks
+    sdp1 = sdp_builder(
+        eb_id="sbi-mvp01-20200325-00001",
+        max_length=100.0,
+        scan_types=scan_types,
+        processing_blocks=processing_blocks,
     )
-    sdp2 = SDPConfiguration(
-        "sbi-mvp01-20200325-00001", 100.0, scan_types, processing_blocks
+    sdp2 = sdp_builder(
+        eb_id="sbi-mvp01-20200325-00001",
+        max_length=100.0,
+        scan_types=scan_types,
+        processing_blocks=processing_blocks,
     )
 
     assert sdp1 == sdp2
 
-    assert sdp1 != SDPConfiguration(
-        "sbi-mvp01-20200325-00001", 0.0, scan_types, processing_blocks
+    assert sdp1 != sdp_builder(
+        eb_id="sbi-mvp01-20200325-00001",
+        max_length=1020.0,
+        scan_types=scan_types,
+        processing_blocks=processing_blocks,
     )
-    assert sdp1 != SDPConfiguration(
-        "sbi-mvp01-20200325-00001", 100.0, None, processing_blocks
+    assert sdp1 != sdp_builder(
+        eb_id="sbi-mvp01-20200325-00007",
+        max_length=100.0,
+        scan_types=scan_types,
+        processing_blocks=processing_blocks,
     )
-    assert sdp1 != SDPConfiguration("sbi-mvp01-20200325-00002", 100.0, scan_types, None)
-    assert sdp1 != SDPConfiguration(None, None, None, None)
+    assert sdp1 != sdp_builder(
+        eb_id="sbi-mvp01-20200325-00002",
+        max_length=100.0,
+        scan_types=scan_types,
+        processing_blocks=processing_blocks,
+    )
+    assert sdp1 != sdp_builder(
+        eb_id=None,
+        max_length=100.0,
+        scan_types=scan_types,
+        processing_blocks=processing_blocks,
+    )
 
 
 def test_sdp_configuration_not_equal_to_other_objects():
@@ -296,33 +578,42 @@ def test_sdp_configuration_not_equal_to_other_objects():
     Verify that SDPConfiguration objects are not considered equal to objects of
     other types.
     """
-    sdp = SDPConfiguration(None, None, None, None)
-    assert sdp != 1
+    sdp1 = sdp_builder(
+        eb_id="sbi-mvp01-20200325-00001",
+        max_length=100.0,
+        scan_types=None,
+        processing_blocks=None,
+    )
+    assert sdp1 != 1
 
 
 def test_sdp_modified_configuration_block_equals():
     """
     Verify that SDPConfiguration objects are considered equal
     """
-    channel = Channel(
-        spectral_window_id="fsp_2_channels",
+
+    channel1 = channel_builder(
         count=744,
         start=0,
         stride=2,
         freq_min=0.35e9,
-        freq_max=0.368e9,
+        freq_max=1.05e9,
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    scan_type = EBScanType(
-        scan_type_id="science",
-        beams={"vis0": {"field_id": "field_a"}},
+    channels1 = channel_configuration_builder(
+        channels_id="vis_channels", spectral_windows=[channel1]
+    )
+    eb_scan1 = eb_scan_type_builder(
+        scan_type_id="science_A",
+        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
         derive_from=".default",
     )
-    sbi_ids = "sbi-mvp01-20200325-00001"
-    script = ScriptConfiguration(
+    sbi_ids_1 = "sbi-mvp01-20200325-00001"
+    script1 = scripts_builder(
         kind="realtime", name="test-receive-addresses", version="0.5.0"
     )
-    pb_config = ProcessingBlockConfiguration(
+    pb1 = processing_block_builder(
         pb_id="pb-mvp01-20200325-00003",
         parameters={
             "plasmaEnabled": True,
@@ -360,7 +651,10 @@ def test_sdp_modified_configuration_block_equals():
                             "/mnt/data/output.ms",
                         ],
                         "volumeMounts": [
-                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {
+                                "name": "plasma-storage-volume",
+                                "mountPath": "/plasma",
+                            },
                             {"mountPath": "/mnt/data", "name": "receive-data"},
                         ],
                     },
@@ -371,69 +665,63 @@ def test_sdp_modified_configuration_block_equals():
                 ],
             },
         },
-        sbi_ids=[sbi_ids],
-        script=script,
+        sbi_ids=[sbi_ids_1],
+        script=script1,
     )
-    beams = BeamConfiguration(
-        beam_id="pss1", search_beam_id=1, function="pulsar search"
+    beams1 = beam_configuration_builder(
+        beam_id="pss1", function="pulsar search", search_beam_id=1
     )
-    channels = ChannelConfiguration(
-        channels_id="vis_channels",
-        spectral_windows=[channel],
-    )
-    polarisation = PolarisationConfiguration(
+    polarisation1 = polarization_builder(
         polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
     )
-    phase_dir = PhaseDir(
+    phase_dir1 = phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    fields = FieldConfiguration(
+    fields1 = fields_configuration_builder(
         field_id="field_a",
         pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
+        phase_dir=phase_dir1,
     )
-
-    execution_block = ExecutionBlockConfiguration(
+    execution_block1 = execution_block_configuration_builder(
         eb_id="eb-mvp01-20200325-00001",
-        max_length=100,
         context={},
-        beams=[beams],
-        channels=[channels],
-        polarisations=[polarisation],
-        fields=[fields],
-        scan_types=[scan_type],
+        max_length=100,
+        beams=[beams1],
+        channels=[channels1],
+        polarisations=[polarisation1],
+        fields=[fields1],
+        scan_types=[eb_scan1],
     )
-    resource = {
+    resource1 = {
         "csp_links": [1, 2, 3, 4],
         "receptors": ["FS4", "FS8"],
         "receive_nodes": 10,
     }
-
-    sdp1 = SDPConfiguration(
-        resources=resource,
-        processing_blocks=[pb_config],
-        execution_block=execution_block,
+    sdp3 = sdp_builder(
+        processing_blocks=[pb1],
+        resources=resource1,
+        execution_block=execution_block1,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.1",
     )
-    sdp2 = SDPConfiguration(
-        resources=resource,
-        processing_blocks=[pb_config],
-        execution_block=execution_block,
+    sdp4 = sdp_builder(
+        processing_blocks=[pb1],
+        resources=resource1,
+        execution_block=execution_block1,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.1",
     )
 
-    assert sdp1 == sdp2
+    assert sdp3 == sdp4
 
-    assert sdp1 != SDPConfiguration(
-        resources=resource,
-        processing_blocks=[pb_config],
-        execution_block=execution_block,
+    assert sdp3 != sdp_builder(
+        resources=resource1,
+        processing_blocks=[pb1],
+        execution_block=execution_block1,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
-    assert sdp2 != SDPConfiguration(
-        resources=resource,
-        processing_blocks=[pb_config],
-        execution_block=execution_block,
+    assert sdp4 != sdp_builder(
+        resources=resource1,
+        processing_blocks=[pb1],
+        execution_block=execution_block1,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
 
@@ -443,25 +731,26 @@ def test_sdp_modified_configuration_not_equal_to_other_objects():
     Verify that SDPConfiguration objects are not considered equal to objects of
     other types.
     """
-    channel = Channel(
-        spectral_window_id="fsp_2_channels",
+    channel1 = channel_builder(
         count=744,
         start=0,
         stride=2,
         freq_min=0.35e9,
-        freq_max=0.368e9,
+        freq_max=1.05e9,
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    scan_type = EBScanType(
-        scan_type_id="science",
-        beams={"vis0": {"field_id": "field_a"}},
+    eb_scan1 = eb_scan_type_builder(
+        scan_type_id="science_A",
+        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
         derive_from=".default",
     )
-    sbi_ids = "sbi-mvp01-20200325-00001"
-    script = ScriptConfiguration(
+    sbi_ids_1 = "sbi-mvp01-20200325-00001"
+    sbi_ids_1 = "sbi-mvp01-20200325-00001"
+    script1 = scripts_builder(
         kind="realtime", name="test-receive-addresses", version="0.5.0"
     )
-    pb_config = ProcessingBlockConfiguration(
+    pb1 = processing_block_builder(
         pb_id="pb-mvp01-20200325-00003",
         parameters={
             "plasmaEnabled": True,
@@ -499,7 +788,10 @@ def test_sdp_modified_configuration_not_equal_to_other_objects():
                             "/mnt/data/output.ms",
                         ],
                         "volumeMounts": [
-                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {
+                                "name": "plasma-storage-volume",
+                                "mountPath": "/plasma",
+                            },
                             {"mountPath": "/mnt/data", "name": "receive-data"},
                         ],
                     },
@@ -510,50 +802,48 @@ def test_sdp_modified_configuration_not_equal_to_other_objects():
                 ],
             },
         },
-        sbi_ids=[sbi_ids],
-        script=script,
+        sbi_ids=[sbi_ids_1],
+        script=script1,
     )
-    beams = BeamConfiguration(
-        beam_id="pss1", search_beam_id=1, function="pulsar search"
+    beams1 = beam_configuration_builder(
+        beam_id="pss1", function="pulsar search", search_beam_id=1
     )
-    channels = ChannelConfiguration(
-        channels_id="vis_channels",
-        spectral_windows=[channel],
+    channels1 = channel_configuration_builder(
+        channels_id="vis_channels", spectral_windows=[channel1]
     )
-    polarisation = PolarisationConfiguration(
+    polarisation1 = polarization_builder(
         polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
     )
-    phase_dir = PhaseDir(
+    phase_dir1 = phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    fields = FieldConfiguration(
+    fields1 = fields_configuration_builder(
         field_id="field_a",
         pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
+        phase_dir=phase_dir1,
     )
-
-    execution_block = ExecutionBlockConfiguration(
+    execution_block1 = execution_block_configuration_builder(
         eb_id="eb-mvp01-20200325-00001",
-        max_length=100,
         context={},
-        beams=[beams],
-        channels=[channels],
-        polarisations=[polarisation],
-        fields=[fields],
-        scan_types=[scan_type],
+        max_length=100,
+        beams=[beams1],
+        channels=[channels1],
+        polarisations=[polarisation1],
+        fields=[fields1],
+        scan_types=[eb_scan1],
     )
-    resource = {
+    resource1 = {
         "csp_links": [1, 2, 3, 4],
         "receptors": ["FS4", "FS8"],
         "receive_nodes": 10,
     }
-    sdp = SDPConfiguration(
-        resources=resource,
-        processing_blocks=[pb_config],
-        execution_block=execution_block,
-        interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
+    sdp1 = sdp_builder(
+        processing_blocks=[pb1],
+        resources=resource1,
+        execution_block=execution_block1,
+        interface="https://schema.skao.int/ska-sdp-assignresources/2.1",
     )
-    assert sdp != 1
+    assert sdp1 != 1
 
 
 def test_beam_equals():
@@ -563,21 +853,14 @@ def test_beam_equals():
      - the same Function
      - the same Search Beam ID
     """
-    beam1 = BeamConfiguration(
-        beam_id="pss1", search_beam_id=1, function="pulsar search"
+    beam1 = beam_configuration_builder(
+        beam_id="pss1", function="pulsar search", search_beam_id=1
     )
-    beam2 = BeamConfiguration(
-        beam_id="pss1", search_beam_id=1, function="pulsar search"
+    beam2 = beam_configuration_builder(
+        beam_id="pss1", function="pulsar search", search_beam_id=1
     )
 
     assert beam1 == beam2
-
-    assert beam1 != BeamConfiguration(
-        beam_id="pss1", search_beam_id=2, function="pulsar search"
-    )
-    assert beam2 != BeamConfiguration(
-        beam_id="pss1", search_beam_id=2, function="pulsar search"
-    )
 
 
 def test_beam_equals_not_equal_to_other_objects():
@@ -585,8 +868,10 @@ def test_beam_equals_not_equal_to_other_objects():
     Verify that Beam objects are not considered equal to objects of
     other types.
     """
-    beam = BeamConfiguration(beam_id="pss1", search_beam_id=1, function="pulsar search")
-    assert beam != 1
+    beam1 = beam_configuration_builder(
+        beam_id="pss1", function="pulsar search", search_beam_id=1
+    )
+    assert beam1 != 1
 
 
 def test_chanel_configuration_equals():
@@ -595,33 +880,31 @@ def test_chanel_configuration_equals():
      - the same Channels ID
      - the same Spectral Windows
     """
-    channel = Channel(
-        spectral_window_id="fsp_2_channels",
+    channel1 = channel_builder(
         count=744,
         start=0,
         stride=2,
         freq_min=0.35e9,
-        freq_max=0.368e9,
+        freq_max=1.05e9,
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    channels1 = ChannelConfiguration(
-        channels_id="vis_channels",
-        spectral_windows=[channel],
+    channels1 = channel_configuration_builder(
+        channels_id="vis_channels", spectral_windows=[channel1]
     )
-    channels2 = ChannelConfiguration(
-        channels_id="vis_channels",
-        spectral_windows=[channel],
+    channels2 = channel_configuration_builder(
+        channels_id="vis_channels", spectral_windows=[channel1]
     )
 
     assert channels1 == channels2
 
-    assert channels1 != ChannelConfiguration(
+    assert channels1 != channel_configuration_builder(
         channels_id="pulsar_channels",
-        spectral_windows=[channel],
+        spectral_windows=[channel1],
     )
-    assert channels2 != ChannelConfiguration(
+    assert channels2 != channel_configuration_builder(
         channels_id="pulsar_channels",
-        spectral_windows=[channel],
+        spectral_windows=[channel1],
     )
 
 
@@ -631,20 +914,19 @@ def test_chanel_configuration_equals_not_equal_to_other_objects():
     Verify that Channels Configuration objects are not considered equal to objects of
     other types.
     """
-    channel = Channel(
-        spectral_window_id="fsp_2_channels",
+    channel1 = channel_builder(
         count=744,
         start=0,
         stride=2,
         freq_min=0.35e9,
-        freq_max=0.368e9,
+        freq_max=1.05e9,
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    channels = ChannelConfiguration(
-        channels_id="pulsar_channels",
-        spectral_windows=[channel],
+    channels1 = channel_configuration_builder(
+        channels_id="vis_channels", spectral_windows=[channel1]
     )
-    assert channels != 1
+    assert channels1 != 1
 
 
 def test_polarisation_configuration_equals():
@@ -653,19 +935,19 @@ def test_polarisation_configuration_equals():
      - the same polarisation_id
      - the same corr_type
     """
-    polar1 = PolarisationConfiguration(
+    polar1 = polarization_builder(
         polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
     )
-    polar2 = PolarisationConfiguration(
+    polar2 = polarization_builder(
         polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
     )
 
     assert polar1 == polar2
 
-    assert polar1 != PolarisationConfiguration(
+    assert polar1 != polarization_builder(
         polarisations_id="all", corr_type=["XY", "XY", "YY", "YX"]
     )
-    assert polar2 != PolarisationConfiguration(
+    assert polar2 != polarization_builder(
         polarisations_id="all", corr_type=["XY", "XY", "YY", "YX"]
     )
 
@@ -676,10 +958,10 @@ def test_polarisation_configuration_equals_not_equal_to_other_objects():
     Verify that Polarisation Configuration objects are not considered equal to objects of
     other types.
     """
-    polar = PolarisationConfiguration(
+    polar1 = polarization_builder(
         polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
     )
-    assert polar != 1
+    assert polar1 != 1
 
 
 def test_phase_dir_equals():
@@ -690,19 +972,19 @@ def test_phase_dir_equals():
      - the same refrence_time
      - the same refrence_frame
     """
-    phasedir1 = PhaseDir(
+    phase_dir1 = phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    phasedir2 = PhaseDir(
+    phase_dir2 = phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
 
-    assert phasedir1 == phasedir2
+    assert phase_dir1 == phase_dir2
 
-    assert phasedir1 != PhaseDir(
+    assert phase_dir1 != phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF4"
     )
-    assert phasedir2 != PhaseDir(
+    assert phase_dir2 != phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF4"
     )
 
@@ -713,10 +995,10 @@ def test_phase_dir_equals_not_equal_to_other_objects():
     Verify that Phase Dir objects are not considered equal to objects of
     other types.
     """
-    phasedir = PhaseDir(
+    phase_dir1 = phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    assert phasedir != 1
+    assert phase_dir1 != 1
 
 
 def test_field_equals():
@@ -726,31 +1008,31 @@ def test_field_equals():
      - the same pointing_fqdn
      - the same phase_dir
     """
-    phase_dir = PhaseDir(
+    phase_dir1 = phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    field1 = FieldConfiguration(
+    fields1 = fields_configuration_builder(
         field_id="field_a",
         pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
+        phase_dir=phase_dir1,
     )
-    field2 = FieldConfiguration(
+    fields2 = fields_configuration_builder(
         field_id="field_a",
         pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
+        phase_dir=phase_dir1,
     )
 
-    assert field1 == field2
+    assert fields1 == fields2
 
-    assert field1 != FieldConfiguration(
+    assert fields1 != fields_configuration_builder(
         field_id="field_b",
         pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
+        phase_dir=phase_dir1,
     )
-    assert field2 != FieldConfiguration(
+    assert fields2 != fields_configuration_builder(
         field_id="field_b",
         pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
+        phase_dir=phase_dir1,
     )
 
 
@@ -760,15 +1042,15 @@ def test_field_equals_not_equal_to_other_objects():
     Verify that Field Configuration objects are not considered equal to objects of
     other types.
     """
-    phase_dir = PhaseDir(
+    phase_dir1 = phase_dir_configuration_builder(
         ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
     )
-    field = FieldConfiguration(
+    fields1 = fields_configuration_builder(
         field_id="field_a",
         pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
+        phase_dir=phase_dir1,
     )
-    assert field != 1
+    assert fields1 != 1
 
 
 def test_eb_scan_type_equals():
@@ -778,24 +1060,23 @@ def test_eb_scan_type_equals():
      - the same beams
      - the same derive_from
     """
-
-    eb_scan_type1 = EBScanType(
-        scan_type_id="science",
+    eb_scan1 = eb_scan_type_builder(
+        scan_type_id="science_A",
         beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
         derive_from=".default",
     )
-    eb_scan_type2 = EBScanType(
-        scan_type_id="science",
+    eb_scan2 = eb_scan_type_builder(
+        scan_type_id="science_A",
         beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
         derive_from=".default",
     )
-    assert eb_scan_type1 == eb_scan_type2
-    assert eb_scan_type1 != EBScanType(
+    assert eb_scan1 == eb_scan2
+    assert eb_scan1 != eb_scan_type_builder(
         scan_type_id="science",
         beams={"vis0": {"pss_field_1", "pulsar_channels", "all"}},
         derive_from=".default",
     )
-    assert eb_scan_type2 != EBScanType(
+    assert eb_scan2 != eb_scan_type_builder(
         scan_type_id="science",
         beams={"vis0": {"pss_field_1", "pulsar_channels", "all"}},
         derive_from=".default",
@@ -808,13 +1089,13 @@ def test_eb_scan_type_equals_not_equal_to_other_objects():
     Verify that EBScanType objects are not considered equal to objects of
     other types.
     """
-    eb_scan_type1 = EBScanType(
-        scan_type_id="science",
+    eb_scan1 = eb_scan_type_builder(
+        scan_type_id="science_A",
         beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
         derive_from=".default",
     )
 
-    assert eb_scan_type1 != 1
+    assert eb_scan1 != 1
 
 
 def test_eb_scan_type_beam_equals():
@@ -824,19 +1105,19 @@ def test_eb_scan_type_beam_equals():
      - the same channels_id
      - the same polarisations_id
     """
-    eb_scan_type_beam1 = EBScanTypeBeam(
+    eb_scan_type_beam1 = eb_scan_type_beam_builder(
         field_id="pss_field_0", channels_id="pulsar_channels", polarisations_id="all"
     )
-    eb_scan_type_beam2 = EBScanTypeBeam(
+    eb_scan_type_beam2 = eb_scan_type_beam_builder(
         field_id="pss_field_0", channels_id="pulsar_channels", polarisations_id="all"
     )
 
     assert eb_scan_type_beam1 == eb_scan_type_beam2
 
-    assert eb_scan_type_beam1 != EBScanTypeBeam(
+    assert eb_scan_type_beam1 != eb_scan_type_beam_builder(
         field_id="pss_field_1", channels_id="pulsar_channels", polarisations_id="all"
     )
-    assert eb_scan_type_beam2 != EBScanTypeBeam(
+    assert eb_scan_type_beam2 != eb_scan_type_beam_builder(
         field_id="pss_field_1", channels_id="pulsar_channels", polarisations_id="all"
     )
 
@@ -847,10 +1128,10 @@ def test_eb_scan_type_beam_equals_not_equal_to_other_objects():
     Verify that EBScanTypeBeam objects are not considered equal to objects of
     other types.
     """
-    eb_scan_type_beam = EBScanTypeBeam(
+    eb_scan_type_beam1 = eb_scan_type_beam_builder(
         field_id="pss_field_0", channels_id="pulsar_channels", polarisations_id="all"
     )
-    assert eb_scan_type_beam != 1
+    assert eb_scan_type_beam1 != 1
 
 
 def test_script_equals():
@@ -860,19 +1141,19 @@ def test_script_equals():
      - the same name
      - the same version
     """
-    script1 = ScriptConfiguration(
+    script1 = scripts_builder(
         kind="realtime", name="test-receive-addresses", version="0.5.0"
     )
-    script2 = ScriptConfiguration(
+    script2 = scripts_builder(
         kind="realtime", name="test-receive-addresses", version="0.5.0"
     )
 
     assert script1 == script2
 
-    assert script1 != ScriptConfiguration(
+    assert script1 != scripts_builder(
         kind="realtime", name="test-receive-addresses", version="0.5.1"
     )
-    assert script2 != ScriptConfiguration(
+    assert script2 != scripts_builder(
         kind="realtime", name="test-receive-addresses", version="0.5.1"
     )
 
@@ -883,21 +1164,21 @@ def test_scripts_equals_not_equal_to_other_objects():
     Verify that ScriptConfiguration  objects are not considered equal to objects of
     other types.
     """
-    script = ScriptConfiguration(
+    script1 = scripts_builder(
         kind="realtime", name="test-receive-addresses", version="0.5.0"
     )
-    assert script != 1
+    assert script1 != 1
 
 
 def test_pi_16_processing_block_equals():
     """
     Verify that PI16 ProcessingBlock objects are considered equal
     """
-    sbi_ids = "sbi-mvp01-20200325-00001"
-    script = ScriptConfiguration(
+    sbi_ids_1 = "sbi-mvp01-20200325-00001"
+    script1 = scripts_builder(
         kind="realtime", name="test-receive-addresses", version="0.5.0"
     )
-    pb1 = ProcessingBlockConfiguration(
+    pb1 = processing_block_builder(
         pb_id="pb-mvp01-20200325-00003",
         parameters={
             "plasmaEnabled": True,
@@ -935,7 +1216,10 @@ def test_pi_16_processing_block_equals():
                             "/mnt/data/output.ms",
                         ],
                         "volumeMounts": [
-                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {
+                                "name": "plasma-storage-volume",
+                                "mountPath": "/plasma",
+                            },
                             {"mountPath": "/mnt/data", "name": "receive-data"},
                         ],
                     },
@@ -946,10 +1230,10 @@ def test_pi_16_processing_block_equals():
                 ],
             },
         },
-        sbi_ids=[sbi_ids],
-        script=script,
+        sbi_ids=[sbi_ids_1],
+        script=script1,
     )
-    pb2 = ProcessingBlockConfiguration(
+    pb2 = processing_block_builder(
         pb_id="pb-mvp01-20200325-00003",
         parameters={
             "plasmaEnabled": True,
@@ -987,7 +1271,10 @@ def test_pi_16_processing_block_equals():
                             "/mnt/data/output.ms",
                         ],
                         "volumeMounts": [
-                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {
+                                "name": "plasma-storage-volume",
+                                "mountPath": "/plasma",
+                            },
                             {"mountPath": "/mnt/data", "name": "receive-data"},
                         ],
                     },
@@ -998,14 +1285,13 @@ def test_pi_16_processing_block_equals():
                 ],
             },
         },
-        sbi_ids=[sbi_ids],
-        script=script,
+        sbi_ids=[sbi_ids_1],
+        script=script1,
     )
 
     assert pb1 == pb2
 
-    assert pb1 != ProcessingBlockConfiguration(
-        pb_id="pb-mvp01-20200325-00001",
+    assert pb1 != processing_block_builder(
         parameters={
             "plasmaEnabled": True,
             "reception": {
@@ -1042,7 +1328,10 @@ def test_pi_16_processing_block_equals():
                             "/mnt/data/output.ms",
                         ],
                         "volumeMounts": [
-                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {
+                                "name": "plasma-storage-volume",
+                                "mountPath": "/plasma",
+                            },
                             {"mountPath": "/mnt/data", "name": "receive-data"},
                         ],
                     },
@@ -1053,12 +1342,11 @@ def test_pi_16_processing_block_equals():
                 ],
             },
         },
-        sbi_ids=[sbi_ids],
-        script=script,
+        sbi_ids=[sbi_ids_1],
+        script=script1,
     )
 
-    assert pb2 != ProcessingBlockConfiguration(
-        pb_id="pb-mvp01-20200325-00001",
+    assert pb2 != processing_block_builder(
         parameters={
             "plasmaEnabled": True,
             "reception": {
@@ -1095,7 +1383,10 @@ def test_pi_16_processing_block_equals():
                             "/mnt/data/output.ms",
                         ],
                         "volumeMounts": [
-                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {
+                                "name": "plasma-storage-volume",
+                                "mountPath": "/plasma",
+                            },
                             {"mountPath": "/mnt/data", "name": "receive-data"},
                         ],
                     },
@@ -1106,8 +1397,8 @@ def test_pi_16_processing_block_equals():
                 ],
             },
         },
-        sbi_ids=[sbi_ids],
-        script=script,
+        sbi_ids=[sbi_ids_1],
+        script=script1,
     )
 
 
@@ -1116,11 +1407,8 @@ def test_pi_16_processing_block_not_equal_to_other_objects():
     Verify that PI16 ProcessingBlock objects are not considered equal to objects of
     other types.
     """
-    sbi_ids = "sbi-mvp01-20200325-00001"
-    script = ScriptConfiguration(
-        kind="realtime", name="test-receive-addresses", version="0.5.0"
-    )
-    p_block = ProcessingBlockConfiguration(
+
+    p_block = processing_block_builder(
         pb_id="pb-mvp01-20200325-00003",
         parameters={
             "plasmaEnabled": True,
@@ -1158,7 +1446,10 @@ def test_pi_16_processing_block_not_equal_to_other_objects():
                             "/mnt/data/output.ms",
                         ],
                         "volumeMounts": [
-                            {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                            {
+                                "name": "plasma-storage-volume",
+                                "mountPath": "/plasma",
+                            },
                             {"mountPath": "/mnt/data", "name": "receive-data"},
                         ],
                     },
@@ -1169,10 +1460,9 @@ def test_pi_16_processing_block_not_equal_to_other_objects():
                 ],
             },
         },
-        sbi_ids=[sbi_ids],
-        script=script,
+        sbi_ids=None,
+        script=None,
     )
-
     assert p_block != 1
 
 
@@ -1188,80 +1478,78 @@ def test_execution_block_configuration_equals():
      - the same fields
      - the same scan_types
     """
-    channel = Channel(
-        spectral_window_id="fsp_2_channels",
+    channel1 = channel_builder(
         count=744,
         start=0,
         stride=2,
         freq_min=0.35e9,
-        freq_max=0.368e9,
+        freq_max=1.05e9,
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    beams = BeamConfiguration(
-        beam_id="pss1", search_beam_id=1, function="pulsar search"
+    channels1 = channel_configuration_builder(
+        channels_id="vis_channels", spectral_windows=[channel1]
     )
-    channels = ChannelConfiguration(
-        channels_id="vis_channels",
-        spectral_windows=[channel],
-    )
-    polarisation = PolarisationConfiguration(
-        polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
-    )
-    phase_dir = PhaseDir(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
-    )
-    fields = FieldConfiguration(
-        field_id="field_a",
-        pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
-    )
-    scan_type = EBScanType(
-        scan_type_id="science",
-        beams={"vis0": {"field_id": "field_a"}},
+    eb_scan1 = eb_scan_type_builder(
+        scan_type_id="science_A",
+        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
         derive_from=".default",
     )
-
-    execution_block1 = ExecutionBlockConfiguration(
-        eb_id="eb-mvp01-20200325-00001",
-        max_length=100,
-        context={},
-        beams=[beams],
-        channels=[channels],
-        polarisations=[polarisation],
-        fields=[fields],
-        scan_types=[scan_type],
+    beams1 = beam_configuration_builder(
+        beam_id="pss1", function="pulsar search", search_beam_id=1
     )
-    execution_block2 = ExecutionBlockConfiguration(
+    polarisation1 = polarization_builder(
+        polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
+    )
+    phase_dir1 = phase_dir_configuration_builder(
+        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+    )
+    fields1 = fields_configuration_builder(
+        field_id="field_a",
+        pointing_fqdn="low-tmc/telstate/0/pointing",
+        phase_dir=phase_dir1,
+    )
+    execution_block1 = execution_block_configuration_builder(
         eb_id="eb-mvp01-20200325-00001",
-        max_length=100,
         context={},
-        beams=[beams],
-        channels=[channels],
-        polarisations=[polarisation],
-        fields=[fields],
-        scan_types=[scan_type],
+        max_length=100,
+        beams=[beams1],
+        channels=[channels1],
+        polarisations=[polarisation1],
+        fields=[fields1],
+        scan_types=[eb_scan1],
+    )
+    execution_block2 = execution_block_configuration_builder(
+        eb_id="eb-mvp01-20200325-00001",
+        context={},
+        max_length=100,
+        beams=[beams1],
+        channels=[channels1],
+        polarisations=[polarisation1],
+        fields=[fields1],
+        scan_types=[eb_scan1],
     )
 
     assert execution_block1 == execution_block2
-    assert execution_block1 != ExecutionBlockConfiguration(
+    assert execution_block1 != execution_block_configuration_builder(
         eb_id="eb-mvp01-20200325-00003",
         max_length=100,
         context={},
-        beams=[beams],
-        channels=[channels],
-        polarisations=[polarisation],
-        fields=[fields],
-        scan_types=[scan_type],
+        beams=[beams1],
+        channels=[channels1],
+        polarisations=[polarisation1],
+        fields=[fields1],
+        scan_types=[eb_scan1],
     )
-    assert execution_block2 != ExecutionBlockConfiguration(
+    assert execution_block2 != execution_block_configuration_builder(
         eb_id="eb-mvp01-20200325-00003",
         max_length=100,
         context={},
-        beams=[beams],
-        channels=[channels],
-        polarisations=[polarisation],
-        fields=[fields],
-        scan_types=[scan_type],
+        beams=[beams1],
+        channels=[channels1],
+        polarisations=[polarisation1],
+        fields=[fields1],
+        scan_types=[eb_scan1],
     )
 
 
@@ -1270,48 +1558,45 @@ def test_execution_block_not_equal_to_other_objects():
     Verify that ExecutionBlockConfiguration  objects are not considered equal to objects of
     other types.
     """
-
-    channel = Channel(
-        spectral_window_id="fsp_2_channels",
+    channel1 = channel_builder(
         count=744,
         start=0,
         stride=2,
         freq_min=0.35e9,
-        freq_max=0.368e9,
+        freq_max=1.05e9,
         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
     )
-    beams = BeamConfiguration(
-        beam_id="pss1", search_beam_id=1, function="pulsar search"
+    channels1 = channel_configuration_builder(
+        channels_id="vis_channels", spectral_windows=[channel1]
     )
-    channels = ChannelConfiguration(
-        channels_id="vis_channels",
-        spectral_windows=[channel],
-    )
-    polarisation = PolarisationConfiguration(
-        polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
-    )
-    phase_dir = PhaseDir(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
-    )
-    fields = FieldConfiguration(
-        field_id="field_a",
-        pointing_fqdn="low-tmc/telstate/0/pointing",
-        phase_dir=phase_dir,
-    )
-    scan_type = EBScanType(
-        scan_type_id="science",
-        beams={"vis0": {"field_id": "field_a"}},
+    eb_scan1 = eb_scan_type_builder(
+        scan_type_id="science_A",
+        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
         derive_from=".default",
     )
-    execution_block = ExecutionBlockConfiguration(
-        eb_id="eb-mvp01-20200325-00001",
-        max_length=100,
-        context={},
-        beams=[beams],
-        channels=[channels],
-        polarisations=[polarisation],
-        fields=[fields],
-        scan_types=[scan_type],
+    beams1 = beam_configuration_builder(
+        beam_id="pss1", function="pulsar search", search_beam_id=1
     )
-
-    assert execution_block != 1
+    polarisation1 = polarization_builder(
+        polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
+    )
+    phase_dir1 = phase_dir_configuration_builder(
+        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+    )
+    fields1 = fields_configuration_builder(
+        field_id="field_a",
+        pointing_fqdn="low-tmc/telstate/0/pointing",
+        phase_dir=phase_dir1,
+    )
+    execution_block1 = execution_block_configuration_builder(
+        eb_id="eb-mvp01-20200325-00001",
+        context={},
+        max_length=100,
+        beams=[beams1],
+        channels=[channels1],
+        polarisations=[polarisation1],
+        fields=[fields1],
+        scan_types=[eb_scan1],
+    )
+    assert execution_block1 != 1
