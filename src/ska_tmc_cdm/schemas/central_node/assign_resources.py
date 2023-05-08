@@ -24,8 +24,6 @@ __all__ = [
     "AssignResourcesResponseSchema",
 ]
 
-from ...jsonschema.json_schema import JsonSchema
-
 
 @CODEC.register_mapping(AssignResourcesRequest)
 class AssignResourcesRequestSchema(

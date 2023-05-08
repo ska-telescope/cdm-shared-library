@@ -6,7 +6,7 @@ from datetime import timedelta
 from unittest import mock
 
 import pytest
-from ska_telmodel.telvalidation import schema as televalidation_schema
+from ska_telmodel.telvalidation import schema
 
 from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
@@ -647,9 +647,9 @@ def mid_invalidator(o: ConfigureRequest):
         ),
     ],
 )
-@mock.patch.object(televalidation_schema, "semantic_validate")
+@mock.patch.object(schema, "semantic_validate")
 def test_configure_serialisation_and_validation(
-    televalidation_schema,
+    televalidation_schema_mock,
     schema_cls,
     instance,
     modifier_fn,
@@ -660,7 +660,7 @@ def test_configure_serialisation_and_validation(
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    televalidation_schema.return_value = True
+    televalidation_schema_mock.return_value = True
     utils.test_schema_serialisation_and_validation(
         schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
     )
