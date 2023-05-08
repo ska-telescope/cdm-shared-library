@@ -4,6 +4,7 @@ using interface uri and validating the structure of JSON against these schemas.
 """
 
 from ska_telmodel import schema
+from ska_telmodel.telvalidation import schema as televalidation_schema
 
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
@@ -62,3 +63,27 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
                     raise SchemaNotFound(uri) from exc
             else:
                 raise JsonValidationError(uri, instance) from exc
+
+    @staticmethod
+    def semantic_validate_schema(instance: dict, uri: str) -> None:
+        """
+        Validate an instance dictionary under the given schema.
+
+        strictness can be set from 0-2. Values equal:
+
+          0: permissive warnings
+          1: permissive errors and strict warnings
+          2: strict errors
+
+        :param uri:  The schema to validate with
+        :param instance: The instance to validate
+        :param strictness: strictness level
+        :return: None, in case of valid data otherwise, it raises an exception.
+        """
+        # use default strictness defined by Telescope Model unless overridden
+        try:
+            return televalidation_schema.semantic_validate(
+                instance, uri, telmodel_validation=False
+            )
+        except Exception as exc:
+            raise exc

@@ -200,4 +200,6 @@ class ConfigureRequestSchema(
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
-        return {k: v for k, v in data.items() if v is not None}
+        result = {k: v for k, v in data.items() if v is not None}
+        self.semantic_validate_json(dict(result))
+        return result

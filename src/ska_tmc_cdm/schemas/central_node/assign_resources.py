@@ -24,6 +24,8 @@ __all__ = [
     "AssignResourcesResponseSchema",
 ]
 
+from ...jsonschema.json_schema import JsonSchema
+
 
 @CODEC.register_mapping(AssignResourcesRequest)
 class AssignResourcesRequestSchema(
@@ -85,6 +87,7 @@ class AssignResourcesRequestSchema(
         :return: dict suitable for CBF configuration
         """
         result = {k: v for k, v in data.items() if v is not None}
+        self.semantic_validate_json(dict(result))
         return result
 
 
