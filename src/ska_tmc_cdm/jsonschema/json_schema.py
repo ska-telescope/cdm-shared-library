@@ -68,16 +68,8 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
     def semantic_validate_schema(instance: dict, uri: str) -> None:
         """
         Validate an instance dictionary under the given schema.
-
-        strictness can be set from 0-2. Values equal:
-
-          0: permissive warnings
-          1: permissive errors and strict warnings
-          2: strict errors
-
         :param uri:  The schema to validate with
         :param instance: The instance to validate
-        :param strictness: strictness level
         :return: None, in case of valid data otherwise, it raises an exception.
         """
         # use default strictness defined by Telescope Model unless overridden
