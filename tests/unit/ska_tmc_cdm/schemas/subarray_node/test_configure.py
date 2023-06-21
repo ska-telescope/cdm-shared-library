@@ -3,9 +3,7 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
 from datetime import timedelta
-
 import pytest
-
 from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
@@ -396,7 +394,7 @@ VALID_MID_CONFIGURE_JSON = """
           "function_mode": "CORR",
           "frequency_slice_id": 2,
           "integration_factor": 1,
-          "zoom_factor": 1,
+          "zoom_factor": 0,
           "channel_averaging_map": [
             [
               0,
@@ -495,7 +493,7 @@ INVALID_MID_CONFIGURE_JSON = """
           "function_mode": "CORR",
           "frequency_slice_id": 2,
           "integration_factor": 1,
-          "zoom_factor": 1,
+          "zoom_factor": 0,
           "channel_averaging_map": [
             [
               0,
@@ -645,6 +643,7 @@ def mid_invalidator(o: ConfigureRequest):
         ),
     ],
 )
+
 def test_configure_serialisation_and_validation(
     schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
 ):

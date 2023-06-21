@@ -104,3 +104,7 @@ class ValidatingSchema(Schema):
             JsonSchema.validate_schema(
                 interface, process_fn(data), strictness=strictness
             )
+        
+    def semantic_validate_json(self, data, process_fn=lambda x: x, **_):
+        interface = data.get("interface", None)
+        JsonSchema.semantic_validate_schema(process_fn(data), interface)

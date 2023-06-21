@@ -3,7 +3,6 @@ Unit tests for ska_tmc_cdm.schemas module.
 """
 
 import pytest
-
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
     AssignResourcesResponse,
@@ -46,13 +45,13 @@ VALID_SDP_JSON = """{
   "max_length": 100.0,
   "scan_types": [
     {
-      "scan_type_id": "science_A",
+      "scan_poetry installtype_id": "science_A",
       "reference_frame": "ICRS",
       "ra": "02:42:40.771",
       "dec": "-00:00:47.84",
       "channels": [
         {
-          "count": 744,
+          "count": 14880,
           "start": 0,
           "stride": 2,
           "freq_min": 0.35e9,
@@ -60,7 +59,7 @@ VALID_SDP_JSON = """{
           "link_map": [[0, 0], [200, 1], [744, 2], [944, 3]]
         },
         {
-          "count": 744,
+          "count": 14880,
           "start": 2000,
           "stride": 1,
           "freq_min": 0.36e9,
@@ -76,7 +75,7 @@ VALID_SDP_JSON = """{
       "dec": "02:03:08.598",
       "channels": [
         {
-          "count": 744,
+          "count": 14880,
           "start": 0,
           "stride": 2,
           "freq_min": 0.35e9,
@@ -84,7 +83,7 @@ VALID_SDP_JSON = """{
           "link_map": [[0, 0], [200, 1], [744, 2], [944, 3]]
         },
         {
-          "count": 744,
+          "count": 14880,
           "start": 2000,
           "stride": 1,
           "freq_min": 0.36e9,
@@ -144,9 +143,9 @@ VALID_SDP_OBJECT = SDPConfiguration(
             "-00:00:47.84",
             [
                 Channel(
-                    744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+                    14880, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
                 ),
-                Channel(744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]]),
+                Channel(14880, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]]),
             ],
         ),
         ScanType(
@@ -156,9 +155,9 @@ VALID_SDP_OBJECT = SDPConfiguration(
             "02:03:08.598",
             [
                 Channel(
-                    744, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
+                    14880, 0, 2, 0.35e9, 0.368e9, [[0, 0], [200, 1], [744, 2], [944, 3]]
                 ),
-                Channel(744, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]]),
+                Channel(14880, 2000, 1, 0.36e9, 0.368e9, [[2000, 4], [2200, 5]]),
             ],
         ),
     ],
@@ -265,31 +264,6 @@ VALID_SDP_JSON_PI16 = """
                "beam_id":"vis0",
                "function":"visibilities"
             },
-            {
-               "beam_id":"pss1",
-               "search_beam_id":1,
-               "function":"pulsar search"
-            },
-            {
-               "beam_id":"pss2",
-               "search_beam_id":2,
-               "function":"pulsar search"
-            },
-            {
-               "beam_id":"pst1",
-               "timing_beam_id":1,
-               "function":"pulsar timing"
-            },
-            {
-               "beam_id":"pst2",
-               "timing_beam_id":2,
-               "function":"pulsar timing"
-            },
-            {
-               "beam_id":"vlbi1",
-               "vlbi_beam_id":1,
-               "function":"vlbi"
-            }
          ],
          "scan_types":[
             {
@@ -342,7 +316,7 @@ VALID_SDP_JSON_PI16 = """
                "spectral_windows":[
                   {
                      "spectral_window_id":"fsp_1_channels",
-                     "count":744,
+                     "count":14880,
                      "start":0,
                      "stride":2,
                      "freq_min":350000000.0,
@@ -366,42 +340,6 @@ VALID_SDP_JSON_PI16 = """
                         ]
                      ]
                   },
-                  {
-                     "spectral_window_id":"fsp_2_channels",
-                     "count":744,
-                     "start":2000,
-                     "stride":1,
-                     "freq_min":360000000.0,
-                     "freq_max":368000000.0,
-                     "link_map":[
-                        [
-                           2000,
-                           4
-                        ],
-                        [
-                           2200,
-                           5
-                        ]
-                     ]
-                  },
-                  {
-                     "spectral_window_id":"zoom_window_1",
-                     "count":744,
-                     "start":4000,
-                     "stride":1,
-                     "freq_min":360000000.0,
-                     "freq_max":361000000.0,
-                     "link_map":[
-                        [
-                           4000,
-                           6
-                        ],
-                        [
-                           4200,
-                           7
-                        ]
-                     ]
-                  }
                ]
             }
          ],
@@ -514,70 +452,7 @@ VALID_SDP_JSON_PI16 = """
             4
          ],
          "receptors":[
-            "FS4",
-            "FS8",
-            "FS16",
-            "FS17",
-            "FS22",
-            "FS23",
-            "FS30",
-            "FS31",
-            "FS32",
-            "FS33",
-            "FS36",
-            "FS52",
-            "FS56",
-            "FS57",
-            "FS59",
-            "FS62",
-            "FS66",
-            "FS69",
-            "FS70",
-            "FS72",
-            "FS73",
-            "FS78",
-            "FS80",
-            "FS88",
-            "FS89",
-            "FS90",
-            "FS91",
-            "FS98",
-            "FS108",
-            "FS111",
-            "FS132",
-            "FS144",
-            "FS146",
-            "FS158",
-            "FS165",
-            "FS167",
-            "FS176",
-            "FS183",
-            "FS193",
-            "FS200",
-            "FS345",
-            "FS346",
-            "FS347",
-            "FS348",
-            "FS349",
-            "FS350",
-            "FS351",
-            "FS352",
-            "FS353",
-            "FS354",
-            "FS355",
-            "FS356",
-            "FS429",
-            "FS430",
-            "FS431",
-            "FS432",
-            "FS433",
-            "FS434",
-            "FS465",
-            "FS466",
-            "FS467",
-            "FS468",
-            "FS469",
-            "FS470"
+            "0001"
          ],
          "receive_nodes":10
   }
@@ -591,27 +466,6 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
         context={},
         beams=[
             BeamConfiguration(beam_id="vis0", function="visibilities"),
-            BeamConfiguration(
-                beam_id="pss1",
-                search_beam_id=1,
-                function="pulsar search",
-            ),
-            BeamConfiguration(
-                beam_id="pss2",
-                search_beam_id=2,
-                function="pulsar search",
-            ),
-            BeamConfiguration(
-                beam_id="pst1",
-                timing_beam_id=1,
-                function="pulsar timing",
-            ),
-            BeamConfiguration(
-                beam_id="pst2",
-                timing_beam_id=2,
-                function="pulsar timing",
-            ),
-            BeamConfiguration(beam_id="vlbi1", vlbi_beam_id=1, function="vlbi"),
         ],
         scan_types=[
             EBScanType(
@@ -660,30 +514,12 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
                 spectral_windows=[
                     Channel(
                         spectral_window_id="fsp_1_channels",
-                        count=744,
+                        count=14880,
                         start=0,
                         stride=2,
                         freq_min=350000000.0,
                         freq_max=368000000.0,
                         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
-                    ),
-                    Channel(
-                        spectral_window_id="fsp_2_channels",
-                        count=744,
-                        start=2000,
-                        stride=1,
-                        freq_min=360000000.0,
-                        freq_max=368000000.0,
-                        link_map=[[2000, 4], [2200, 5]],
-                    ),
-                    Channel(
-                        spectral_window_id="zoom_window_1",
-                        count=744,
-                        start=4000,
-                        stride=1,
-                        freq_min=360000000.0,
-                        freq_max=361000000.0,
-                        link_map=[[4000, 6], [4200, 7]],
                     ),
                 ],
             )
@@ -767,70 +603,7 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
     resources={
         "csp_links": [1, 2, 3, 4],
         "receptors": [
-            "FS4",
-            "FS8",
-            "FS16",
-            "FS17",
-            "FS22",
-            "FS23",
-            "FS30",
-            "FS31",
-            "FS32",
-            "FS33",
-            "FS36",
-            "FS52",
-            "FS56",
-            "FS57",
-            "FS59",
-            "FS62",
-            "FS66",
-            "FS69",
-            "FS70",
-            "FS72",
-            "FS73",
-            "FS78",
-            "FS80",
-            "FS88",
-            "FS89",
-            "FS90",
-            "FS91",
-            "FS98",
-            "FS108",
-            "FS111",
-            "FS132",
-            "FS144",
-            "FS146",
-            "FS158",
-            "FS165",
-            "FS167",
-            "FS176",
-            "FS183",
-            "FS193",
-            "FS200",
-            "FS345",
-            "FS346",
-            "FS347",
-            "FS348",
-            "FS349",
-            "FS350",
-            "FS351",
-            "FS352",
-            "FS353",
-            "FS354",
-            "FS355",
-            "FS356",
-            "FS429",
-            "FS430",
-            "FS431",
-            "FS432",
-            "FS433",
-            "FS434",
-            "FS465",
-            "FS466",
-            "FS467",
-            "FS468",
-            "FS469",
-            "FS470",
+            "0001",
         ],
         "receive_nodes": 10,
     },
@@ -857,7 +630,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
-  "dish": "foo",
+  "dish": {"receptor_ids": ["0001"]},
   "sdp": """
     + VALID_SDP_JSON_PI16
     + """
@@ -1012,6 +785,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
         ),
     ],
 )
+
 def test_assignresources_serialisation_and_validation(
     schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
 ):
