@@ -5,9 +5,7 @@ import copy
 import functools
 import json
 import tempfile
-
 import pytest
-
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
@@ -97,11 +95,9 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     unmarshalled = CODEC.loads(msg_cls, json_str, validate=is_validate)
     assert unmarshalled == expected
 
-
 @pytest.mark.parametrize("msg_cls,expected,instance, is_validate", TEST_PARAMETERS)
 def test_codec_dumps(
-    msg_cls, expected, instance, is_validate
-):  # pylint: disable=unused-argument
+    msg_cls, expected, instance, is_validate):  # pylint: disable=unused-argument
     """
     Verify that the codec unmarshalls objects correctly.
     """

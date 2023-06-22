@@ -45,7 +45,7 @@ VALID_SDP_JSON = """{
   "max_length": 100.0,
   "scan_types": [
     {
-      "scan_poetry installtype_id": "science_A",
+      "scan_type_id": "science_A",
       "reference_frame": "ICRS",
       "ra": "02:42:40.771",
       "dec": "-00:00:47.84",
@@ -193,7 +193,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.0",
   "transaction_id":"txn-mvp01-20200325-00004",
   "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001", "0002"]},
+  "dish": {"receptor_ids": ["0001"]},
   "sdp": """
     + VALID_SDP_JSON
     + """
@@ -205,7 +205,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
     transaction_id="txn-mvp01-20200325-00004",
     subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+    dish_allocation=DishAllocation(receptor_ids=["0001"]),
     sdp_config=VALID_SDP_OBJECT,
 )
 
@@ -273,31 +273,7 @@ VALID_SDP_JSON_PI16 = """
                      "channels_id":"vis_channels",
                      "polarisations_id":"all"
                   },
-                  "pss1":{
-                     "field_id":"pss_field_0",
-                     "channels_id":"pulsar_channels",
-                     "polarisations_id":"all"
-                  },
-                  "pss2":{
-                     "field_id":"pss_field_1",
-                     "channels_id":"pulsar_channels",
-                     "polarisations_id":"all"
-                  },
-                  "pst1":{
-                     "field_id":"pst_field_0",
-                     "channels_id":"pulsar_channels",
-                     "polarisations_id":"all"
-                  },
-                  "pst2":{
-                     "field_id":"pst_field_1",
-                     "channels_id":"pulsar_channels",
-                     "polarisations_id":"all"
-                  },
-                  "vlbi":{
-                     "field_id":"vlbi_field",
-                     "channels_id":"vlbi_channels",
-                     "polarisations_id":"all"
-                  }
+                  
                }
             },
             {
@@ -451,11 +427,9 @@ VALID_SDP_JSON_PI16 = """
             3,
             4
          ],
-         "receptors":[
-            "0001"
-         ],
+         "receptors": ["0001","0002"],
          "receive_nodes":10
-  }
+  },
 }"""
 
 VALID_SDP_OBJECT_PI16 = SDPConfiguration(
@@ -475,32 +449,8 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
                         channels_id="vis_channels",
                         polarisations_id="all",
                     ),
-                    "pss1": EBScanTypeBeam(
-                        field_id="pss_field_0",
-                        channels_id="pulsar_channels",
-                        polarisations_id="all",
-                    ),
-                    "pss2": EBScanTypeBeam(
-                        field_id="pss_field_1",
-                        channels_id="pulsar_channels",
-                        polarisations_id="all",
-                    ),
-                    "pst1": EBScanTypeBeam(
-                        field_id="pst_field_0",
-                        channels_id="pulsar_channels",
-                        polarisations_id="all",
-                    ),
-                    "pst2": EBScanTypeBeam(
-                        field_id="pst_field_1",
-                        channels_id="pulsar_channels",
-                        polarisations_id="all",
-                    ),
-                    "vlbi": EBScanTypeBeam(
-                        field_id="vlbi_field",
-                        channels_id="vlbi_channels",
-                        polarisations_id="all",
-                    ),
-                },
+                    
+                }
             ),
             EBScanType(
                 scan_type_id="target:a",
@@ -602,9 +552,7 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
     ],
     resources={
         "csp_links": [1, 2, 3, 4],
-        "receptors": [
-            "0001",
-        ],
+        "receptors": ["0001","0002"],
         "receive_nodes": 10,
     },
 )
@@ -615,7 +563,9 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001"]},
+  "dish": {
+    "receptor_ids": ["0001","0002"]
+    },
   "sdp": """
     + VALID_SDP_JSON_PI16
     + """
@@ -630,7 +580,9 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001"]},
+  "dish": {
+    "receptor_ids": ["0001","0002"]
+    },
   "sdp": """
     + VALID_SDP_JSON_PI16
     + """
@@ -642,7 +594,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids=["0001"]),
+    dish_allocation=DishAllocation(receptor_ids = ["0001","0002"]),
     sdp_config=VALID_SDP_OBJECT_PI16,
 )
 

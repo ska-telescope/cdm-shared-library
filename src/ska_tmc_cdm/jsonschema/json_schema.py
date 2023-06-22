@@ -2,7 +2,7 @@
 The JSON Schema module contains methods for fetching version-specific JSON schemas
 using interface uri and validating the structure of JSON against these schemas.
 """
-
+from ska_telmodel.data import TMData
 from ska_telmodel import schema
 from ska_telmodel.telvalidation import semantic_validator as televalidation_schema
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
@@ -73,9 +73,10 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :return: None, in case of valid data otherwise, it raises an exception.
         """
         # use default strictness defined by Telescope Model unless overridden
+        tm_data = TMData()
         try:
             return televalidation_schema.semantic_validate(
-                instance, uri
+                config = instance, tm_data=tm_data, interface=uri, 
                 )
         except Exception as exc:
             raise exc

@@ -66,12 +66,12 @@ class AssignResourcesRequestSchema(
 
         return AssignResourcesRequest(
             interface=interface,
+            transaction_id=transaction_id,
             subarray_id=subarray_id,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
             csp_config=csp_config,
             mccs=mccs,
-            transaction_id=transaction_id,
         )
 
     @post_dump
