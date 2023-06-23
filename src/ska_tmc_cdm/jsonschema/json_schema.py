@@ -4,9 +4,11 @@ using interface uri and validating the structure of JSON against these schemas.
 """
 
 from ska_telmodel import schema
-from ska_telmodel.telvalidation import schema as televalidation_schema
+from ska_telmodel.telvalidation.semantic_validator import semantic_validate
 
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
+from ska_telmodel.data import TMData
+
 
 __all__ = ["JsonSchema"]
 
@@ -73,9 +75,11 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :return: None, in case of valid data otherwise, it raises an exception.
         """
         # use default strictness defined by Telescope Model unless overridden
+        tmdata = TMData()
         try:
-            return televalidation_schema.semantic_validate(
-                instance, uri, telmodel_validation=False
+            return semantic_validate(
+                config=instance, tm_data=tmdata, interface = uri
             )
         except Exception as exc:
-            raise exc
+            print(dir(exec))
+            raise JsonValidationError(uri, instance) from exc

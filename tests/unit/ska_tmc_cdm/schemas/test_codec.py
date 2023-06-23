@@ -8,8 +8,6 @@ import tempfile
 from unittest import mock
 
 import pytest
-from ska_telmodel.telvalidation import schema as televalidation_schema
-
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
@@ -100,15 +98,13 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     assert unmarshalled == expected
 
 
-@mock.patch.object(televalidation_schema, "semantic_validate")
 @pytest.mark.parametrize("msg_cls,expected,instance, is_validate", TEST_PARAMETERS)
 def test_codec_dumps(
-    televalidation_mock, msg_cls, expected, instance, is_validate
+    msg_cls, expected, instance, is_validate
 ):  # pylint: disable=unused-argument
     """
     Verify that the codec unmarshalls objects correctly.
     """
-    televalidation_mock.return_value = True
     marshalled = CODEC.dumps(instance, validate=is_validate)
     assert_json_is_equal(marshalled, expected)
 
