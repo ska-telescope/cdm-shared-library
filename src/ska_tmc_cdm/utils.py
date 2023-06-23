@@ -16,6 +16,7 @@ def assert_json_is_equal(json_a, json_b):
     # comparing the JSON objects themselves.
     a = json.loads(json_a)
     b = json.loads(json_b)
+   
     try:
         assert a == b
     except AssertionError as e:

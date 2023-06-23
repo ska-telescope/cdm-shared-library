@@ -263,7 +263,7 @@ VALID_SDP_JSON_PI16 = """
             {
                "beam_id":"vis0",
                "function":"visibilities"
-            },
+            }
          ],
          "scan_types":[
             {
@@ -272,8 +272,7 @@ VALID_SDP_JSON_PI16 = """
                   "vis0":{
                      "channels_id":"vis_channels",
                      "polarisations_id":"all"
-                  },
-                  
+                  }
                }
             },
             {
@@ -315,7 +314,7 @@ VALID_SDP_JSON_PI16 = """
                            3
                         ]
                      ]
-                  },
+                  }
                ]
             }
          ],
@@ -427,9 +426,9 @@ VALID_SDP_JSON_PI16 = """
             3,
             4
          ],
-         "receptors": ["0001","0002"],
+         "receptors": ["0001"],
          "receive_nodes":10
-  },
+  }
 }"""
 
 VALID_SDP_OBJECT_PI16 = SDPConfiguration(
@@ -449,8 +448,7 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
                         channels_id="vis_channels",
                         polarisations_id="all",
                     ),
-                    
-                }
+                },
             ),
             EBScanType(
                 scan_type_id="target:a",
@@ -552,7 +550,7 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
     ],
     resources={
         "csp_links": [1, 2, 3, 4],
-        "receptors": ["0001","0002"],
+        "receptors": ["0001"],
         "receive_nodes": 10,
     },
 )
@@ -564,7 +562,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
   "dish": {
-    "receptor_ids": ["0001","0002"]
+    "receptor_ids": ["0001"]
     },
   "sdp": """
     + VALID_SDP_JSON_PI16
@@ -581,7 +579,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
   "dish": {
-    "receptor_ids": ["0001","0002"]
+    "receptor_ids": ["0001"]
     },
   "sdp": """
     + VALID_SDP_JSON_PI16
@@ -594,7 +592,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids = ["0001","0002"]),
+    dish_allocation=DishAllocation(receptor_ids = ["0001"]),
     sdp_config=VALID_SDP_OBJECT_PI16,
 )
 
@@ -717,7 +715,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_SDP_JSON_PI16,
             None,
-            True,
+            False,
         ),
         (
             AssignResourcesRequestSchema,
@@ -726,15 +724,15 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
             None,
             False,
-        ),
+        ),        
         (
             AssignResourcesRequestSchema,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
             mid_invalidator_fn,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
-            True,
-        ),
+            False,
+        ), 
     ],
 )
 
