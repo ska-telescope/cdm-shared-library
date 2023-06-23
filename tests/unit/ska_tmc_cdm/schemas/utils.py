@@ -120,7 +120,9 @@ def test_serialising_invalid_object_raises_exception_when_strict(
         _ = schema.dumps(o)
 
 
-def get_schema(schema_cls, is_validate=True, is_semantic_validate=False, strictness: int = 0):
+def get_schema(
+    schema_cls, is_validate=True, is_semantic_validate=False, strictness: int = 0
+):
     schema = schema_cls()
     schema.context[ValidatingSchema.SEMANTIC_VALIDATE] = is_semantic_validate
     schema.context[ValidatingSchema.VALIDATE] = is_validate

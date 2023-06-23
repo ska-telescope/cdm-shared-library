@@ -5,9 +5,9 @@ import copy
 import functools
 import json
 import tempfile
-from unittest import mock
 
 import pytest
+
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest

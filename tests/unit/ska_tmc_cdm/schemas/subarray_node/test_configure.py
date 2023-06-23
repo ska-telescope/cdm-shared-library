@@ -3,7 +3,6 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
 from datetime import timedelta
-from unittest import mock
 
 import pytest
 

@@ -2,9 +2,9 @@
 Unit tests for ska_tmc_cdm.schemas module.
 """
 
-from unittest import mock
 
 import pytest
+
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
     AssignResourcesResponse,
