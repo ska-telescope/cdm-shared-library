@@ -23,6 +23,8 @@ __all__ = [
     "AssignResourcesRequestSchema",
     "AssignResourcesResponseSchema",
 ]
+
+
 @CODEC.register_mapping(AssignResourcesRequest)
 class AssignResourcesRequestSchema(
     ValidatingSchema
