@@ -2,9 +2,10 @@
 The JSON Schema module contains methods for fetching version-specific JSON schemas
 using interface uri and validating the structure of JSON against these schemas.
 """
-from ska_telmodel.data import TMData
 from ska_telmodel import schema
+from ska_telmodel.data import TMData
 from ska_telmodel.telvalidation import semantic_validator as televalidation_schema
+
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
 __all__ = ["JsonSchema"]
@@ -64,7 +65,7 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
                 raise JsonValidationError(uri, instance) from exc
 
     @staticmethod
-    def semantic_validate_schema(instance: dict, uri: str) -> None:
+    def semantic_validate_schema(instance: dict, uri: str, strictness=None) -> None:
         """
         Validate an instance dictionary under the given schema.
 
@@ -76,7 +77,17 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         tm_data = TMData()
         try:
             return televalidation_schema.semantic_validate(
-                config = instance, tm_data=tm_data, interface=uri, 
-                )
-        except Exception as exc:
-            raise exc
+                config=instance,
+                tm_data=tm_data,
+                interface=uri,
+            )
+        except ValueError as exc:
+            # Distinguish ValueErrors caused by schema not found from
+            # ValueErrors caused by invalid JSON.
+            try:
+                schema.schema_by_uri(uri)
+            except ValueError:
+                if strictness is not None and strictness > 1:
+                    raise SchemaNotFound(uri) from exc
+                else:
+                    raise JsonValidationError(uri, instance) from exc

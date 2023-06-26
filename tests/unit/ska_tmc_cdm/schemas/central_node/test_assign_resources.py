@@ -3,6 +3,7 @@ Unit tests for ska_tmc_cdm.schemas module.
 """
 
 import pytest
+
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
     AssignResourcesResponse,
@@ -592,7 +593,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids = ["0001"]),
+    dish_allocation=DishAllocation(receptor_ids=["0001"]),
     sdp_config=VALID_SDP_OBJECT_PI16,
 )
 
@@ -724,7 +725,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
             None,
             False,
-        ),        
+        ),
         (
             AssignResourcesRequestSchema,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
@@ -732,10 +733,9 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             False,
-        ), 
+        ),
     ],
 )
-
 def test_assignresources_serialisation_and_validation(
     schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
 ):

@@ -3,7 +3,9 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
 from datetime import timedelta
+
 import pytest
+
 from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
@@ -609,11 +611,40 @@ def mid_invalidator(o: ConfigureRequest):
             INVALID_MID_CONFIGURE_JSON,
             True,
         ),
-        
-        
+        (
+            ConfigureRequestSchema,
+            VALID_MID_DISH_ONLY_OBJECT,
+            None,  # no validation on MID
+            VALID_MID_DISH_ONLY_JSON,
+            None,
+            False,
+        ),
+        (
+            ConfigureRequestSchema,
+            VALID_NULL_OBJECT,
+            None,  # no validation for null object
+            VALID_NULL_JSON,
+            None,
+            False,
+        ),
+        (
+            ConfigureRequestSchema,
+            VALID_LOW_CONFIGURE_OBJECT,
+            low_invalidator,
+            VALID_LOW_CONFIGURE_JSON,
+            INVALID_LOW_CONFIGURE_JSON,
+            True,
+        ),
+        (
+            ConfigureRequestSchema,
+            VALID_LOW_CONFIGURE_OBJECT_PI17,
+            None,
+            VALID_LOW_CONFIGURE_JSON_PI17,
+            None,
+            False,
+        ),
     ],
 )
-
 def test_configure_serialisation_and_validation(
     schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
 ):
