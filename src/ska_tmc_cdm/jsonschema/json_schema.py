@@ -5,6 +5,7 @@ using interface uri and validating the structure of JSON against these schemas.
 from ska_telmodel import schema
 from ska_telmodel.data import TMData
 from ska_telmodel.telvalidation import semantic_validator as televalidation_schema
+from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
@@ -65,7 +66,7 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
                 raise JsonValidationError(uri, instance) from exc
 
     @staticmethod
-    def semantic_validate_schema(instance: dict, uri: str, strictness=None) -> None:
+    def semantic_validate_schema(instance: dict, uri: str) -> None:
         """
         Validate an instance dictionary under the given schema.
 
@@ -81,13 +82,6 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
                 tm_data=tm_data,
                 interface=uri,
             )
-        except ValueError as exc:
-            # Distinguish ValueErrors caused by schema not found from
-            # ValueErrors caused by invalid JSON.
-            try:
-                schema.schema_by_uri(uri)
-            except ValueError:
-                if strictness is not None and strictness > 1:
-                    raise SchemaNotFound(uri) from exc
-                else:
-                    raise JsonValidationError(uri, instance) from exc
+
+        except SchematicValidationError as exc:
+            raise exc

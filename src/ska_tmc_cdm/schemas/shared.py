@@ -53,6 +53,8 @@ class ValidatingSchema(Schema):
     # Marshmallow context key that holds Telescope Model strictness level
     VALIDATION_STRICTNESS = "TM schema strictness"
 
+    SEMANTIC_VALIDATE = "Run semantic validation"
+
     @pre_load
     def validate_on_load(self, data, process_fn=lambda x: x, **_):
         """
@@ -106,8 +108,20 @@ class ValidatingSchema(Schema):
             )
 
     def semantic_validate_json(self, data, process_fn=lambda x: x, **_):
-        strictness = self.context.get(self.VALIDATION_STRICTNESS, None)
+        """
+        Validate JSON using the Telescope Model schema.
+
+        The process_fn argument can be used to process semantically correct
+        but schematically invalid Python to something equivalent but valid,
+        e.g., to convert a list of Python tuples to a list of lists.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param process_fn: data processing function called before validation
+        :return:
+        """
+        semantic_validate = self.context.get(self.SEMANTIC_VALIDATE, False)
+        if not semantic_validate:
+            return
+
         interface = data.get("interface", None)
-        JsonSchema.semantic_validate_schema(
-            process_fn(data), interface, strictness=strictness
-        )
+        JsonSchema.semantic_validate_schema(process_fn(data), interface)

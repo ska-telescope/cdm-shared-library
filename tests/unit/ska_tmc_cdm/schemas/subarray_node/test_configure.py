@@ -5,6 +5,7 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 from datetime import timedelta
 
 import pytest
+from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
 from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
@@ -37,6 +38,161 @@ from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 
 from .. import utils
+
+NON_COMPLIANT_MID_CONFIGURE_OBJECT = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/2.1",
+    transaction_id="txn-....-00001",
+    pointing=PointingConfiguration(
+        Target(
+            ra="21:08:47.92",
+            dec="-88:57:22.9",
+            target_name="Polaris Australis",
+            reference_frame="icrs",
+        )
+    ),
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+    ),
+    csp=CSPConfiguration(
+        interface="https://schema.skao.int/ska-csp-configure/2.0",
+        subarray=SubarrayConfiguration("science period 23"),
+        common=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+            frequency_band=ReceiverBand.BAND_5A,
+            subarray_id=1,
+        ),
+        pss_config={},
+        pst_config={},
+        cbf_config=CBFConfiguration(
+            fsp_configs=[
+                FSPConfiguration(
+                    fsp_id=1,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
+                    integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
+                    output_link_map=[(0, 0), (200, 1)],
+                ),
+                FSPConfiguration(
+                    fsp_id=5,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
+                    integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=744,
+                    output_link_map=[(0, 4), (200, 5)],
+                    zoom_window_tuning=650000,
+                ),
+            ],
+            vlbi_config={},
+        ),
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+)
+
+NON_COMPLIANT_MID_CONFIGURE_JSON = """
+{
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
+  "transaction_id": "txn-....-00001",
+  "pointing": {
+    "target": {
+      "reference_frame": "ICRS",
+      "target_name": "Polaris Australis",
+      "ra": "21:08:47.92",
+      "dec": "-88:57:22.9"
+    }
+  },
+  "dish": {
+    "receiver_band": "1"
+  },
+  "csp": {
+    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+      "subarray_name": "science period 23"
+    },
+    "common": {
+      "config_id": "sbi-mvp01-20200325-00001-science_A",
+      "frequency_band": "5a",
+      "subarray_id": 1
+    },
+    "cbf": {
+      "fsp": [
+        {
+          "fsp_id": 1,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
+          "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
+          "output_link_map": [
+            [
+              0,
+              0
+            ],
+            [
+              200,
+              1
+            ]
+          ]
+        },
+        {
+          "fsp_id": 5,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
+          "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 744,
+          "output_link_map": [
+            [
+              0,
+              4
+            ],
+            [
+              200,
+              5
+            ]
+          ],
+          "zoom_window_tuning": 650000
+        } 
+      ],
+      "vlbi": {}
+    },
+    "pss": {},
+    "pst": {}
+  },
+  "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+    "scan_type": "science_A"
+  },
+  "tmc": {
+    "scan_duration": 10.0
+  }
+}
+"""
 
 VALID_LOW_CONFIGURE_JSON = """
 {
@@ -396,7 +552,7 @@ VALID_MID_CONFIGURE_JSON = """
           "function_mode": "CORR",
           "frequency_slice_id": 2,
           "integration_factor": 1,
-          "zoom_factor": 0,
+          "zoom_factor": 1,
           "channel_averaging_map": [
             [
               0,
@@ -495,7 +651,7 @@ INVALID_MID_CONFIGURE_JSON = """
           "function_mode": "CORR",
           "frequency_slice_id": 2,
           "integration_factor": 1,
-          "zoom_factor": 0,
+          "zoom_factor": 1,
           "channel_averaging_map": [
             [
               0,
@@ -576,7 +732,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     function_mode=FSPFunctionMode.CORR,
                     frequency_slice_id=2,
                     integration_factor=1,
-                    zoom_factor=0,
+                    zoom_factor=1,
                     channel_averaging_map=[(0, 2), (744, 0)],
                     channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
@@ -601,14 +757,24 @@ def mid_invalidator(o: ConfigureRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
     [
+        (
+            ConfigureRequestSchema,
+            NON_COMPLIANT_MID_CONFIGURE_OBJECT,
+            None,
+            NON_COMPLIANT_MID_CONFIGURE_JSON,
+            None,
+            True,
+            True,
+        ),
         (
             ConfigureRequestSchema,
             VALID_MID_CONFIGURE_OBJECT,
             mid_invalidator,
             VALID_MID_CONFIGURE_JSON,
             INVALID_MID_CONFIGURE_JSON,
+            True,
             True,
         ),
         (
@@ -618,6 +784,7 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_MID_DISH_ONLY_JSON,
             None,
             False,
+            False,
         ),
         (
             ConfigureRequestSchema,
@@ -625,6 +792,7 @@ def mid_invalidator(o: ConfigureRequest):
             None,  # no validation for null object
             VALID_NULL_JSON,
             None,
+            False,
             False,
         ),
         (
@@ -634,6 +802,7 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_LOW_CONFIGURE_JSON,
             INVALID_LOW_CONFIGURE_JSON,
             True,
+            False,
         ),
         (
             ConfigureRequestSchema,
@@ -642,15 +811,44 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_LOW_CONFIGURE_JSON_PI17,
             None,
             False,
+            False,
         ),
     ],
 )
 def test_configure_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
+    schema_cls,
+    instance,
+    modifier_fn,
+    valid_json,
+    invalid_json,
+    is_validate,
+    is_semantic_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
-    )
+    if should_raise_exception(is_semantic_validate):
+        with pytest.raises(SchematicValidationError):
+            utils.test_schema_serialisation_and_validation(
+                schema_cls,
+                instance,
+                modifier_fn,
+                valid_json,
+                invalid_json,
+                is_validate,
+                is_semantic_validate,
+            )
+    else:
+        utils.test_schema_serialisation_and_validation(
+            schema_cls,
+            instance,
+            modifier_fn,
+            valid_json,
+            invalid_json,
+            is_validate,
+            is_semantic_validate,
+        )
+
+
+def should_raise_exception(is_semantic_validate):
+    return is_semantic_validate
