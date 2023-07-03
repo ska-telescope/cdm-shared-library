@@ -75,7 +75,7 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :return: None, in case of valid data otherwise, it raises an exception.
         """
         # use default strictness defined by Telescope Model unless overridden
-        tm_data = TMData()
+        tm_data = TMData(update=True)
         try:
             return televalidation_schema.semantic_validate(
                 config=instance,

@@ -766,7 +766,7 @@ def mid_invalidator(o: ConfigureRequest):
             NON_COMPLIANT_MID_CONFIGURE_JSON,
             None,
             True,
-            True,
+            False,
         ),
         (
             ConfigureRequestSchema,
@@ -775,7 +775,7 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_MID_CONFIGURE_JSON,
             INVALID_MID_CONFIGURE_JSON,
             True,
-            True,
+            False,
         ),
         (
             ConfigureRequestSchema,

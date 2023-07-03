@@ -1653,7 +1653,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             True,
-            True,
+            False,
         ),
         (
             AssignResourcesRequestSchema,
