@@ -22,7 +22,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath("../../src"))
-autodoc_mock_imports = ["astropy", "marshmallow", "ska_telmodel"]
+autodoc_mock_imports = ["astropy", "marshmallow", "ska_telmodel", "sphinx"]
 
 
 def setup(app):
