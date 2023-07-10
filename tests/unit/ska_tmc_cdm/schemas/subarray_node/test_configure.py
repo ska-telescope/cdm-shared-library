@@ -757,7 +757,7 @@ def mid_invalidator(o: ConfigureRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate,raise_error",
     [
         (
             ConfigureRequestSchema,
@@ -766,7 +766,8 @@ def mid_invalidator(o: ConfigureRequest):
             NON_COMPLIANT_MID_CONFIGURE_JSON,
             None,
             True,
-            False,
+            True,
+            True,
         ),
         (
             ConfigureRequestSchema,
@@ -774,6 +775,7 @@ def mid_invalidator(o: ConfigureRequest):
             mid_invalidator,
             VALID_MID_CONFIGURE_JSON,
             INVALID_MID_CONFIGURE_JSON,
+            True,
             True,
             False,
         ),
@@ -784,6 +786,7 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_MID_DISH_ONLY_JSON,
             None,
             False,
+            True,
             False,
         ),
         (
@@ -793,6 +796,7 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_NULL_JSON,
             None,
             False,
+            True,
             False,
         ),
         (
@@ -803,6 +807,7 @@ def mid_invalidator(o: ConfigureRequest):
             INVALID_LOW_CONFIGURE_JSON,
             True,
             False,
+            False,
         ),
         (
             ConfigureRequestSchema,
@@ -810,6 +815,7 @@ def mid_invalidator(o: ConfigureRequest):
             None,
             VALID_LOW_CONFIGURE_JSON_PI17,
             None,
+            False,
             False,
             False,
         ),
@@ -823,11 +829,12 @@ def test_configure_serialisation_and_validation(
     invalid_json,
     is_validate,
     is_semantic_validate,
+    raise_error,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    if should_raise_exception(is_semantic_validate):
+    if raise_error:
         with pytest.raises(SchematicValidationError):
             utils.test_schema_serialisation_and_validation(
                 schema_cls,
@@ -848,7 +855,3 @@ def test_configure_serialisation_and_validation(
             is_validate,
             is_semantic_validate,
         )
-
-
-def should_raise_exception(is_semantic_validate):
-    return is_semantic_validate

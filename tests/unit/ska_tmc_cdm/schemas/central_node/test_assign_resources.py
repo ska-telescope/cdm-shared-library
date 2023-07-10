@@ -40,7 +40,7 @@ from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
 
 from .. import utils
 
-COMPLIANT_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
@@ -171,7 +171,7 @@ COMPLIANT_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
 )
 
 
-COMPLIANT_MID_ASSIGNRESOURCESREQUEST_JSON = """
+COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_JSON = """
 {
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
@@ -1590,7 +1590,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate,raise_error",
     [
         (
             AssignResourcesRequestSchema,
@@ -1600,6 +1600,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             True,
             False,
+            False,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1608,6 +1609,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
             False,
+            True,
             False,
         ),
         (
@@ -1617,6 +1619,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_MID_ASSIGNRESOURCESRESPONSE_JSON,
             None,
             False,
+            True,
             False,
         ),
         (
@@ -1626,6 +1629,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_SDP_JSON,
             None,
             True,
+            True,
             False,
         ),
         (
@@ -1634,6 +1638,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_SDP_JSON_PI16,
             None,
+            True,
             True,
             False,
         ),
@@ -1645,6 +1650,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             False,
             False,
+            False,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1652,16 +1658,18 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             mid_invalidator_fn,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
-            True,
             False,
+            True,
+            True,
         ),
         (
             AssignResourcesRequestSchema,
-            COMPLIANT_MID_ASSIGNRESOURCESREQUEST_OBJECT,
+            COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_OBJECT,
             None,
-            COMPLIANT_MID_ASSIGNRESOURCESREQUEST_JSON,
+            COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
             False,
+            True,
             False,
         ),
     ],
@@ -1674,13 +1682,13 @@ def test_assignresources_serialisation_and_validation(
     invalid_json,
     is_validate,
     is_semantic_validate,
+    raise_error,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    # pytest raise error, assert
 
-    if should_raise_exception(is_semantic_validate):
+    if raise_error:
         with pytest.raises(SchematicValidationError):
             utils.test_schema_serialisation_and_validation(
                 schema_cls,
@@ -1701,7 +1709,3 @@ def test_assignresources_serialisation_and_validation(
             is_validate,
             is_semantic_validate,
         )
-
-
-def should_raise_exception(is_semantic_validate):
-    return is_semantic_validate

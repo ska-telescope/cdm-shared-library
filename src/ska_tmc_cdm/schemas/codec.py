@@ -85,6 +85,8 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         schema_obj = schema_cls()
 
         schema_obj.context[ValidatingSchema.VALIDATE] = validate
+        schema_obj.context[ValidatingSchema.SEMANTIC_VALIDATE] = validate
+
         if strictness is not None:
             schema_obj.context[ValidatingSchema.VALIDATION_STRICTNESS] = strictness
 
@@ -106,6 +108,8 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         schema_obj = schema_cls()
 
         schema_obj.context[ValidatingSchema.VALIDATE] = validate
+        schema_obj.context[ValidatingSchema.SEMANTIC_VALIDATE] = validate
+
         if strictness is not None:
             schema_obj.context[ValidatingSchema.VALIDATION_STRICTNESS] = strictness
 

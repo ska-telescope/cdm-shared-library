@@ -50,10 +50,9 @@ class ValidatingSchema(Schema):
 
     # Marshmallow context key that holds Telescope Model validation toggle
     VALIDATE = "Run TM validation"
+    SEMANTIC_VALIDATE = "Run semantic validation"
     # Marshmallow context key that holds Telescope Model strictness level
     VALIDATION_STRICTNESS = "TM schema strictness"
-
-    SEMANTIC_VALIDATE = "Run semantic validation"
 
     @pre_load
     def validate_on_load(self, data, process_fn=lambda x: x, **_):

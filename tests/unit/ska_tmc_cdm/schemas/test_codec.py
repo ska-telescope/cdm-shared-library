@@ -7,6 +7,7 @@ import json
 import tempfile
 
 import pytest
+from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
@@ -47,11 +48,13 @@ TEST_PARAMETERS = [
         VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
         VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
         False,
+        False,
     ),
     (
         AssignResourcesRequest,
         VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
         VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
+        False,
         False,
     ),
     (
@@ -59,19 +62,34 @@ TEST_PARAMETERS = [
         VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
         VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
         False,
+        False,
     ),
     (
         AssignResourcesRequest,
         VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
         VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
         True,
+        True,
     ),
-    (ConfigureRequest, VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT, True),
-    (ConfigureRequest, VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT, False),
+    (
+        ConfigureRequest,
+        VALID_MID_CONFIGURE_JSON,
+        VALID_MID_CONFIGURE_OBJECT,
+        True,
+        False,
+    ),
+    (
+        ConfigureRequest,
+        VALID_LOW_CONFIGURE_JSON,
+        VALID_LOW_CONFIGURE_OBJECT,
+        False,
+        False,
+    ),
     (
         ConfigureRequest,
         VALID_LOW_CONFIGURE_JSON_PI17,
         VALID_LOW_CONFIGURE_OBJECT_PI17,
+        False,
         False,
     ),
     (
@@ -79,18 +97,22 @@ TEST_PARAMETERS = [
         VALID_MID_FULL_RELEASE_JSON,
         VALID_MID_FULL_RELEASE_OBJECT,
         True,
+        False,
     ),
     (
         ReleaseResourcesRequest,
         VALID_LOW_FULL_RELEASE_JSON,
         VALID_LOW_FULL_RELEASE_OBJECT,
         False,
+        False,
     ),
 ]
 
 
-@pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", TEST_PARAMETERS)
-def test_codec_loads(msg_cls, json_str, expected, is_validate):
+@pytest.mark.parametrize(
+    "msg_cls,json_str,expected, is_validate, raise_error", TEST_PARAMETERS
+)
+def test_codec_loads(msg_cls, json_str, expected, is_validate, raise_error):
     """
     Verify that the codec unmarshalls objects correctly.
     """
@@ -98,19 +120,28 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     assert unmarshalled == expected
 
 
-@pytest.mark.parametrize("msg_cls,expected,instance, is_validate", TEST_PARAMETERS)
+@pytest.mark.parametrize(
+    "msg_cls,expected,instance, is_validate, raise_error", TEST_PARAMETERS
+)
 def test_codec_dumps(
-    msg_cls, expected, instance, is_validate
+    msg_cls, expected, instance, is_validate, raise_error
 ):  # pylint: disable=unused-argument
     """
     Verify that the codec unmarshalls objects correctly.
     """
-    marshalled = CODEC.dumps(instance, validate=is_validate)
-    assert_json_is_equal(marshalled, expected)
+    if raise_error:
+        with pytest.raises(SchematicValidationError):
+            marshalled = CODEC.dumps(instance, validate=is_validate)
+            assert_json_is_equal(marshalled, expected)
+    else:
+        marshalled = CODEC.dumps(instance, validate=is_validate)
+        assert_json_is_equal(marshalled, expected)
 
 
-@pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", TEST_PARAMETERS)
-def test_codec_load_from_file(msg_cls, json_str, expected, is_validate):
+@pytest.mark.parametrize(
+    "msg_cls,json_str,expected, is_validate, raise_error", TEST_PARAMETERS
+)
+def test_codec_load_from_file(msg_cls, json_str, expected, is_validate, raise_error):
     """
     Verify that the codec loads JSON from file for all key objects.
     """
