@@ -113,6 +113,7 @@ TEST_PARAMETERS = [
     "msg_cls,json_str,expected, is_validate, raise_error", TEST_PARAMETERS
 )
 def test_codec_loads(msg_cls, json_str, expected, is_validate, raise_error):
+    # pylint: disable=unused-argument
     """
     Verify that the codec unmarshalls objects correctly.
     """
@@ -142,6 +143,7 @@ def test_codec_dumps(
     "msg_cls,json_str,expected, is_validate, raise_error", TEST_PARAMETERS
 )
 def test_codec_load_from_file(msg_cls, json_str, expected, is_validate, raise_error):
+    # pylint: disable=unused-argument
     """
     Verify that the codec loads JSON from file for all key objects.
     """
