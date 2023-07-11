@@ -40,7 +40,7 @@ from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
 
 from .. import utils
 
-COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
@@ -171,7 +171,7 @@ COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
 )
 
 
-COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_JSON = """
+VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = """
 {
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
@@ -359,317 +359,6 @@ COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_JSON = """
     }
 }
 """
-VALID_MID_ASSIGNRESOURCESREQUEST_COMPLIANT_JSON = """
-{
-    "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
-    "transaction_id": "txn-....-00001",
-    "subarray_id": 1,
-    "dish": {
-        "receptor_ids": ["0001"]
-    },
-    "sdp": {
-        "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
-        "execution_block": {
-            "eb_id": "eb-mvp01-20210623-00000",
-            "max_length": 100.0,
-            "context": {},
-            "beams": [{
-                "beam_id": "vis0",
-                "function": "visibilities"
-            }],
-            "scan_types": [{
-                "scan_type_id": ".default",
-                "beams": {
-                    "vis0": {
-                        "channels_id": "vis_channels",
-                        "polarisations_id": "all"
-                    },
-                    "pss1": {
-                        "field_id": "pss_field_0",
-                        "channels_id": "pulsar_channels",
-                        "polarisations_id": "all"
-                    },
-                    "pss2": {
-                        "field_id": "pss_field_1",
-                        "channels_id": "pulsar_channels",
-                        "polarisations_id": "all"
-                    },
-                    "pst1": {
-                        "field_id": "pst_field_0",
-                        "channels_id": "pulsar_channels",
-                        "polarisations_id": "all"
-                    },
-                    "pst2": {
-                        "field_id": "pst_field_1",
-                        "channels_id": "pulsar_channels",
-                        "polarisations_id": "all"
-                    },
-                    "vlbi": {
-                        "field_id": "vlbi_field",
-                        "channels_id": "vlbi_channels",
-                        "polarisations_id": "all"
-                    }
-                }
-            }, {
-                "scan_type_id": "target:a",
-                "derive_from": ".default",
-                "beams": {
-                    "vis0": {
-                        "field_id": "field_a"
-                    }
-                }
-            }],
-            "channels": [{
-                "channels_id": "vis_channels",
-                "spectral_windows": [{
-                    "spectral_window_id": "fsp_1_channels",
-                    "count": 14880,
-                    "start": 0,
-                    "stride": 2,
-                    "freq_min": 350000000.0,
-                    "freq_max": 368000000.0,
-                    "link_map": [
-                        [0, 0],
-                        [200, 1],
-                        [744, 2],
-                        [944, 3]
-                    ]
-                }]
-            }, {
-                "channels_id": "pulsar_channels",
-                "spectral_windows": [{
-                    "spectral_window_id": "pulsar_fsp_channels",
-                    "count": 14880,
-                    "start": 0,
-                    "freq_min": 350000000.0,
-                    "freq_max": 368000000.0
-                }]
-            }],
-            "polarisations": [{
-                "polarisations_id": "all",
-                "corr_type": ["XX", "XY", "YY", "YX"]
-            }],
-            "fields": [{
-                "field_id": "field_a",
-                "phase_dir": {
-                    "ra": [123, 0.1],
-                    "dec": [80, 0.1],
-                    "reference_time": "...",
-                    "reference_frame": "ICRF3"
-                },
-                "pointing_fqdn": "low-tmc/telstate/0/pointing"
-            }]
-        },
-        "processing_blocks": [{
-            "pb_id": "pb-mvp01-20210623-00000",
-            "sbi_ids": ["sbi-mvp01-20200325-00001"],
-            "script": {
-                "kind": "realtime",
-                "name": "vis_receive",
-                "version": "0.1.0"
-            },
-            "parameters": {}
-        }, {
-            "pb_id": "pb-mvp01-20210623-00001",
-            "sbi_ids": ["sbi-mvp01-20200325-00001"],
-            "script": {
-                "kind": "realtime",
-                "name": "test_realtime",
-                "version": "0.1.0"
-            },
-            "parameters": {}
-        }, {
-            "pb_id": "pb-mvp01-20210623-00002",
-            "sbi_ids": ["sbi-mvp01-20200325-00002"],
-            "script": {
-                "kind": "batch",
-                "name": "ical",
-                "version": "0.1.0"
-            },
-            "parameters": {},
-            "dependencies": [{
-                "pb_id": "pb-mvp01-20210623-00000",
-                "kind": ["visibilities"]
-            }]
-        }, {
-            "pb_id": "pb-mvp01-20210623-00003",
-            "sbi_ids": ["sbi-mvp01-20200325-00001", "sbi-mvp01-20200325-00002"],
-            "script": {
-                "kind": "batch",
-                "name": "dpreb",
-                "version": "0.1.0"
-            },
-            "parameters": {},
-            "dependencies": [{
-                "pb_id": "pb-mvp01-20210623-00002",
-                "kind": ["calibration"]
-            }]
-        }],
-        "resources": {
-            "csp_links": [1, 2, 3, 4],
-            "receptors": ["0001"],
-            "receive_nodes": 10
-        }
-    }
-}
-"""
-VALID_SDP_COMPLIANT_OBJECT = SDPConfiguration(
-    interface="https://schema.skao.int/ska-sdp-assignres/0.4",
-    execution_block=ExecutionBlockConfiguration(
-        eb_id="eb-mvp01-20210623-00000",
-        max_length=100.0,
-        context={},
-        beams=[
-            BeamConfiguration(beam_id="vis0", function="visibilities"),
-        ],
-        scan_types=[
-            EBScanType(
-                scan_type_id=".default",
-                beams={
-                    "vis0": EBScanTypeBeam(
-                        channels_id="vis_channels",
-                        polarisations_id="all",
-                    ),
-                    "pss1": EBScanTypeBeam(
-                        field_id="pss_field_0",
-                        channels_id="pulsar_channels",
-                        polarisations_id="all",
-                    ),
-                    "pss2": EBScanTypeBeam(
-                        field_id="pss_field_1",
-                        channels_id="pulsar_channels",
-                        polarisations_id="all",
-                    ),
-                    "pst1": EBScanTypeBeam(
-                        field_id="pst_field_0",
-                        channels_id="pulsar_channels",
-                        polarisations_id="all",
-                    ),
-                    "pst2": EBScanTypeBeam(
-                        field_id="pst_field_1",
-                        channels_id="pulsar_channels",
-                        polarisations_id="all",
-                    ),
-                    "vlbi": EBScanTypeBeam(
-                        field_id="vlbi_field",
-                        channels_id="vlbi_channels",
-                        polarisations_id="all",
-                    ),
-                },
-            ),
-            EBScanType(
-                scan_type_id="target:a",
-                derive_from=".default",
-                beams={"vis0": EBScanTypeBeam(field_id="field_a")},
-            ),
-        ],
-        channels=[
-            ChannelConfiguration(
-                channels_id="vis_channels",
-                spectral_windows=[
-                    Channel(
-                        spectral_window_id="fsp_1_channels",
-                        count=14880,
-                        start=0,
-                        stride=2,
-                        freq_min=350000000.0,
-                        freq_max=368000000.0,
-                        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
-                    ),
-                ],
-            )
-        ],
-        polarisations=[
-            PolarisationConfiguration(
-                polarisations_id="all",
-                corr_type=["XX", "XY", "YY", "YX"],
-            )
-        ],
-        fields=[
-            FieldConfiguration(
-                field_id="field_a",
-                phase_dir={
-                    "ra": [123, 0.1],
-                    "dec": [80, 0.1],
-                    "reference_time": "...",
-                    "reference_frame": "ICRF3",
-                },
-                pointing_fqdn="low-tmc/telstate/0/pointing",
-            )
-        ],
-    ),
-    processing_blocks=[
-        ProcessingBlockConfiguration(
-            pb_id="pb-mvp01-20210623-00000",
-            sbi_ids=["sbi-mvp01-20200325-00001"],
-            script=ScriptConfiguration(
-                kind="realtime",
-                name="vis_receive",
-                version="0.1.0",
-            ),
-            parameters={},
-        ),
-        ProcessingBlockConfiguration(
-            pb_id="pb-mvp01-20210623-00001",
-            sbi_ids=["sbi-mvp01-20200325-00001"],
-            script=ScriptConfiguration(
-                kind="realtime",
-                name="test_realtime",
-                version="0.1.0",
-            ),
-            parameters={},
-        ),
-        ProcessingBlockConfiguration(
-            pb_id="pb-mvp01-20210623-00002",
-            sbi_ids=["sbi-mvp01-20200325-00002"],
-            script=ScriptConfiguration(
-                kind="batch",
-                name="ical",
-                version="0.1.0",
-            ),
-            parameters={},
-            dependencies=[
-                PbDependency(
-                    pb_id="pb-mvp01-20210623-00000",
-                    kind=["visibilities"],
-                )
-            ],
-        ),
-        ProcessingBlockConfiguration(
-            pb_id="pb-mvp01-20210623-00003",
-            sbi_ids=[
-                "sbi-mvp01-20200325-00001",
-                "sbi-mvp01-20200325-00002",
-            ],
-            script=ScriptConfiguration(
-                kind="batch",
-                name="dpreb",
-                version="0.1.0",
-            ),
-            parameters={},
-            dependencies=[
-                PbDependency(
-                    pb_id="pb-mvp01-20210623-00002",
-                    kind=["calibration"],
-                )
-            ],
-        ),
-    ],
-    resources={
-        "csp_links": [1, 2, 3, 4],
-        "receptors": ["0001"],
-        "receive_nodes": 10,
-    },
-)
-
-
-VALID_MID_ASSIGNRESOURCESREQUEST_COMPLIANT_OBJECT = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
-    transaction_id="txn-mvp01-20200325-00004",
-    subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids=["0001"]),
-    sdp_config=VALID_SDP_COMPLIANT_OBJECT,
-)
 
 VALID_SDP_JSON = """{
   "interface": "https://schema.skao.int/ska-sdp-assignresources/2.0",
@@ -1467,7 +1156,7 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
     },
 )
 
-VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
+INVALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
     """
 {
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
@@ -1496,7 +1185,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
 """
 )
 
-VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
+INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
@@ -1590,7 +1279,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate,raise_error",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
     [
         (
             AssignResourcesRequestSchema,
@@ -1599,7 +1288,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             True,
-            False,
             False,
         ),
         (
@@ -1610,7 +1298,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             False,
             True,
-            False,
         ),
         (
             AssignResourcesResponseSchema,
@@ -1620,7 +1307,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             False,
             True,
-            False,
         ),
         (
             SDPConfigurationSchema,
@@ -1630,7 +1316,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             True,
             True,
-            False,
         ),
         (
             SDPConfigurationSchema,
@@ -1640,7 +1325,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             True,
             True,
-            False,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1650,27 +1334,15 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             False,
             False,
-            False,
         ),
         (
             AssignResourcesRequestSchema,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
-            mid_invalidator_fn,
+            None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
-            INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
-            False,
-            True,
-            True,
-        ),
-        (
-            AssignResourcesRequestSchema,
-            COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_OBJECT,
-            None,
-            COMPLIANCE_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
             False,
             True,
-            False,
         ),
     ],
 )
@@ -1682,24 +1354,49 @@ def test_assignresources_serialisation_and_validation(
     invalid_json,
     is_validate,
     is_semantic_validate,
-    raise_error,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
+    utils.test_schema_serialisation_and_validation(
+        schema_cls,
+        instance,
+        modifier_fn,
+        valid_json,
+        invalid_json,
+        is_validate,
+        is_semantic_validate,
+    )
 
-    if raise_error:
-        with pytest.raises(SchematicValidationError):
-            utils.test_schema_serialisation_and_validation(
-                schema_cls,
-                instance,
-                modifier_fn,
-                valid_json,
-                invalid_json,
-                is_validate,
-                is_semantic_validate,
-            )
-    else:
+
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
+    [
+        (
+            AssignResourcesRequestSchema,
+            INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
+            mid_invalidator_fn,
+            INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+            None,
+            False,
+            True,
+        ),
+    ],
+)
+def test_assignresources_serialisation_and_validation_invalid_json(
+    schema_cls,
+    instance,
+    modifier_fn,
+    valid_json,
+    invalid_json,
+    is_validate,
+    is_semantic_validate,
+):
+    """
+    Verifies that the schema marshals, unmarshals, and validates correctly
+    for invalid json and raise SchematicValidationError.
+    """
+    with pytest.raises(SchematicValidationError):
         utils.test_schema_serialisation_and_validation(
             schema_cls,
             instance,

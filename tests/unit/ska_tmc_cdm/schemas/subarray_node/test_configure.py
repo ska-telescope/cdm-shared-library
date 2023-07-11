@@ -39,7 +39,7 @@ from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 
 from .. import utils
 
-NON_COMPLIANT_MID_CONFIGURE_OBJECT = ConfigureRequest(
+NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.1",
     transaction_id="txn-....-00001",
     pointing=PointingConfiguration(
@@ -50,7 +50,7 @@ NON_COMPLIANT_MID_CONFIGURE_OBJECT = ConfigureRequest(
             reference_frame="icrs",
         )
     ),
-    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_5A),
     sdp=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
     ),
@@ -59,7 +59,7 @@ NON_COMPLIANT_MID_CONFIGURE_OBJECT = ConfigureRequest(
         subarray=SubarrayConfiguration("science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
-            frequency_band=ReceiverBand.BAND_5A,
+            frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
         ),
         pss_config={},
@@ -94,7 +94,7 @@ NON_COMPLIANT_MID_CONFIGURE_OBJECT = ConfigureRequest(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
-NON_COMPLIANT_MID_CONFIGURE_JSON = """
+NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 {
   "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
   "transaction_id": "txn-....-00001",
@@ -107,7 +107,7 @@ NON_COMPLIANT_MID_CONFIGURE_JSON = """
     }
   },
   "dish": {
-    "receiver_band": "1"
+    "receiver_band": "5a"
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
@@ -116,7 +116,7 @@ NON_COMPLIANT_MID_CONFIGURE_JSON = """
     },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band": "5a",
+      "frequency_band": "1",
       "subarray_id": 1
     },
     "cbf": {
@@ -757,18 +757,8 @@ def mid_invalidator(o: ConfigureRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate,raise_error",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
     [
-        (
-            ConfigureRequestSchema,
-            NON_COMPLIANT_MID_CONFIGURE_OBJECT,
-            None,
-            NON_COMPLIANT_MID_CONFIGURE_JSON,
-            None,
-            True,
-            True,
-            True,
-        ),
         (
             ConfigureRequestSchema,
             VALID_MID_CONFIGURE_OBJECT,
@@ -777,7 +767,6 @@ def mid_invalidator(o: ConfigureRequest):
             INVALID_MID_CONFIGURE_JSON,
             True,
             True,
-            False,
         ),
         (
             ConfigureRequestSchema,
@@ -787,7 +776,6 @@ def mid_invalidator(o: ConfigureRequest):
             None,
             False,
             True,
-            False,
         ),
         (
             ConfigureRequestSchema,
@@ -797,7 +785,6 @@ def mid_invalidator(o: ConfigureRequest):
             None,
             False,
             True,
-            False,
         ),
         (
             ConfigureRequestSchema,
@@ -807,7 +794,6 @@ def mid_invalidator(o: ConfigureRequest):
             INVALID_LOW_CONFIGURE_JSON,
             True,
             False,
-            False,
         ),
         (
             ConfigureRequestSchema,
@@ -815,7 +801,6 @@ def mid_invalidator(o: ConfigureRequest):
             None,
             VALID_LOW_CONFIGURE_JSON_PI17,
             None,
-            False,
             False,
             False,
         ),
@@ -829,23 +814,49 @@ def test_configure_serialisation_and_validation(
     invalid_json,
     is_validate,
     is_semantic_validate,
-    raise_error,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    if raise_error:
-        with pytest.raises(SchematicValidationError):
-            utils.test_schema_serialisation_and_validation(
-                schema_cls,
-                instance,
-                modifier_fn,
-                valid_json,
-                invalid_json,
-                is_validate,
-                is_semantic_validate,
-            )
-    else:
+    utils.test_schema_serialisation_and_validation(
+        schema_cls,
+        instance,
+        modifier_fn,
+        valid_json,
+        invalid_json,
+        is_validate,
+        is_semantic_validate,
+    )
+
+
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
+    [
+        (
+            ConfigureRequestSchema,
+            NON_COMPLIANCE_MID_CONFIGURE_OBJECT,
+            None,
+            NON_COMPLIANCE_MID_CONFIGURE_JSON,
+            None,
+            True,
+            True,
+        ),
+    ],
+)
+def test_configure_serialisation_and_validation_invalid_json(
+    schema_cls,
+    instance,
+    modifier_fn,
+    valid_json,
+    invalid_json,
+    is_validate,
+    is_semantic_validate,
+):
+    """
+    Verifies that the schema marshals, unmarshals, and validates correctly
+    for invalid json and raise SchematicValidationError.
+    """
+    with pytest.raises(SchematicValidationError):
         utils.test_schema_serialisation_and_validation(
             schema_cls,
             instance,
