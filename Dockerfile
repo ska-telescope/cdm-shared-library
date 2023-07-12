@@ -16,8 +16,6 @@ USER root
 # Copy poetry.lock* in case it doesn't exist in the repo
 COPY pyproject.toml poetry.lock* ./
 
-RUN poetry --version
-
 # Install runtime dependencies and the app
 RUN poetry export --format requirements.txt --output poetry-requirements.txt --without-hashes && \
     pip install -r poetry-requirements.txt && \
