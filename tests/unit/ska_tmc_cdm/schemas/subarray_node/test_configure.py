@@ -804,6 +804,15 @@ def mid_invalidator(o: ConfigureRequest):
             False,
             False,
         ),
+        (
+            ConfigureRequestSchema,
+            VALID_MID_CONFIGURE_OBJECT,
+            None,
+            VALID_MID_CONFIGURE_JSON,
+            None,
+            True,
+            True,
+        ),
     ],
 )
 def test_configure_serialisation_and_validation(
