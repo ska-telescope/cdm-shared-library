@@ -44,7 +44,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids=["0001"]),
+    dish_allocation=DishAllocation(receptor_ids=["SKA001"]),
     sdp_config=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-assignres/0.4",
         execution_block=ExecutionBlockConfiguration(
@@ -164,7 +164,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
         ],
         resources={
             "csp_links": [1, 2, 3, 4],
-            "receptors": ["0001"],
+            "receptors": ["SKA001"],
             "receive_nodes": 10,
         },
     ),
@@ -176,7 +176,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = """
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001"]},
+  "dish": {"receptor_ids": ["SKA001"]},
   "sdp": {
       "interface":"https://schema.skao.int/ska-sdp-assignres/0.4",
       "execution_block":{
@@ -352,7 +352,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = """
             4
          ],
          "receptors":[
-            "0001"
+            "SKA001"
          ],
          "receive_nodes":10
         }
@@ -1341,8 +1341,17 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
-            False,
             True,
+            True,
+        ),
+        (
+            AssignResourcesRequestSchema,
+            VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
+            None,
+            VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
+            None,
+            False,
+            False,
         ),
     ],
 )
@@ -1378,7 +1387,7 @@ def test_assignresources_serialisation_and_validation(
             mid_invalidator_fn,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            False,
+            True,
             True,
         ),
     ],
