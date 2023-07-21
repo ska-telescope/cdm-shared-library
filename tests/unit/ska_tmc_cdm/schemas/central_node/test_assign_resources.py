@@ -1279,7 +1279,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
             AssignResourcesRequestSchema,
@@ -1288,7 +1288,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             True,
-            False,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1297,7 +1296,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
             False,
-            True,
         ),
         (
             AssignResourcesResponseSchema,
@@ -1306,7 +1304,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_MID_ASSIGNRESOURCESRESPONSE_JSON,
             None,
             False,
-            True,
         ),
         (
             SDPConfigurationSchema,
@@ -1314,7 +1311,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_SDP_JSON,
             None,
-            True,
             True,
         ),
         (
@@ -1324,7 +1320,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_SDP_JSON_PI16,
             None,
             True,
-            True,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1333,7 +1328,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
             None,
             False,
-            False,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1342,7 +1336,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
             True,
-            True,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1350,7 +1343,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
-            False,
             False,
         ),
     ],
@@ -1362,7 +1354,6 @@ def test_assignresources_serialisation_and_validation(
     valid_json,
     invalid_json,
     is_validate,
-    is_semantic_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
@@ -1374,12 +1365,11 @@ def test_assignresources_serialisation_and_validation(
         valid_json,
         invalid_json,
         is_validate,
-        is_semantic_validate,
     )
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
             AssignResourcesRequestSchema,
@@ -1387,7 +1377,6 @@ def test_assignresources_serialisation_and_validation(
             mid_invalidator_fn,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            True,
             True,
         ),
     ],
@@ -1399,7 +1388,6 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     valid_json,
     invalid_json,
     is_validate,
-    is_semantic_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
@@ -1413,5 +1401,4 @@ def test_assignresources_serialisation_and_validation_invalid_json(
             valid_json,
             invalid_json,
             is_validate,
-            is_semantic_validate,
         )

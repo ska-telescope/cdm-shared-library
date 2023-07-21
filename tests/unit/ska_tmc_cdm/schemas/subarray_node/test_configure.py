@@ -757,7 +757,7 @@ def mid_invalidator(o: ConfigureRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
             ConfigureRequestSchema,
@@ -765,7 +765,6 @@ def mid_invalidator(o: ConfigureRequest):
             mid_invalidator,
             VALID_MID_CONFIGURE_JSON,
             INVALID_MID_CONFIGURE_JSON,
-            True,
             True,
         ),
         (
@@ -775,7 +774,6 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_MID_DISH_ONLY_JSON,
             None,
             False,
-            True,
         ),
         (
             ConfigureRequestSchema,
@@ -784,7 +782,6 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_NULL_JSON,
             None,
             False,
-            True,
         ),
         (
             ConfigureRequestSchema,
@@ -793,7 +790,6 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_LOW_CONFIGURE_JSON,
             INVALID_LOW_CONFIGURE_JSON,
             True,
-            False,
         ),
         (
             ConfigureRequestSchema,
@@ -802,7 +798,6 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_LOW_CONFIGURE_JSON_PI17,
             None,
             False,
-            False,
         ),
         (
             ConfigureRequestSchema,
@@ -810,7 +805,6 @@ def mid_invalidator(o: ConfigureRequest):
             None,
             VALID_MID_CONFIGURE_JSON,
             None,
-            True,
             True,
         ),
     ],
@@ -822,7 +816,6 @@ def test_configure_serialisation_and_validation(
     valid_json,
     invalid_json,
     is_validate,
-    is_semantic_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
@@ -834,12 +827,11 @@ def test_configure_serialisation_and_validation(
         valid_json,
         invalid_json,
         is_validate,
-        is_semantic_validate,
     )
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate,is_semantic_validate",
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
             ConfigureRequestSchema,
@@ -847,7 +839,6 @@ def test_configure_serialisation_and_validation(
             None,
             NON_COMPLIANCE_MID_CONFIGURE_JSON,
             None,
-            True,
             True,
         ),
     ],
@@ -859,7 +850,6 @@ def test_configure_serialisation_and_validation_invalid_json(
     valid_json,
     invalid_json,
     is_validate,
-    is_semantic_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
@@ -873,5 +863,4 @@ def test_configure_serialisation_and_validation_invalid_json(
             valid_json,
             invalid_json,
             is_validate,
-            is_semantic_validate,
         )

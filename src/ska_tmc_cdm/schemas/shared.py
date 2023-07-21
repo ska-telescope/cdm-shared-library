@@ -50,7 +50,7 @@ class ValidatingSchema(Schema):
 
     # Marshmallow context key that holds Telescope Model validation toggle
     VALIDATE = "Run TM validation"
-    SEMANTIC_VALIDATE = "Run semantic validation"
+
     # Marshmallow context key that holds Telescope Model strictness level
     VALIDATION_STRICTNESS = "TM schema strictness"
 
@@ -65,6 +65,7 @@ class ValidatingSchema(Schema):
         :return: dict suitable for object constructor.
         """
         self.validate_json(data, process_fn=process_fn)
+        self.semantic_validate_json(data, process_fn=process_fn)
         return data
 
     @post_dump
@@ -81,6 +82,7 @@ class ValidatingSchema(Schema):
         :return: dict suitable for writing as a JSON string
         """
         self.validate_json(data, process_fn=process_fn)
+        self.semantic_validate_json(data, process_fn=process_fn)
         return data
 
     def validate_json(self, data, process_fn):
@@ -118,9 +120,10 @@ class ValidatingSchema(Schema):
         :param process_fn: data processing function called before validation
         :return:
         """
-        semantic_validate = self.context.get(self.SEMANTIC_VALIDATE, False)
+        semantic_validate = self.context.get(self.VALIDATE, False)
         if not semantic_validate:
             return
 
         interface = data.get("interface", None)
-        JsonSchema.semantic_validate_schema(process_fn(data), interface)
+        if interface:
+            JsonSchema.semantic_validate_schema(process_fn(data), interface)

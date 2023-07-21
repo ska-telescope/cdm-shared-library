@@ -1,5 +1,5 @@
-ARG BUILD_IMAGE="artefact.skao.int/ska-tango-images-pytango-builder:9.3.32"
-ARG BASE_IMAGE="artefact.skao.int/ska-tango-images-pytango-runtime:9.3.22"
+ARG BUILD_IMAGE="artefact.skao.int/ska-tango-images-pytango-builder:9.4.1"
+ARG BASE_IMAGE="artefact.skao.int/ska-tango-images-pytango-runtime:9.4.1"
 ARG CAR_OCI_REGISTRY_HOST=artefact.skao.int
 
 # ignore DL3006: tag the version of an image explicitly

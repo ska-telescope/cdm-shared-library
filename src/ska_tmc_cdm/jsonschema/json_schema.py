@@ -74,8 +74,8 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :param instance: The instance to validate
         :return: None, in case of valid data otherwise, it raises an exception.
         """
-        # use default strictness defined by Telescope Model unless overridden
         tm_data = TMData(update=True)
+
         try:
             return televalidation_schema.semantic_validate(
                 config=instance,
@@ -84,4 +84,9 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
             )
 
         except SchematicValidationError as exc:
-            raise exc
+            try:
+                schema.schema_by_uri(uri)
+            except ValueError:
+                raise SchemaNotFound(uri) from exc
+            else:
+                raise exc
