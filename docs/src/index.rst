@@ -22,7 +22,7 @@
   developer/mccscontroller/mccscontroller
   client
   package/api
-  developer/example
+  developer/semantic_validation
 
 
 =========================
