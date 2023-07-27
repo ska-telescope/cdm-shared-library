@@ -157,9 +157,10 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
 
     # validation should occur regardless of strictness, but exceptions are
     # only raised when strictness=2
+
+    CODEC.dumps(invalid_data, strictness=0)
+    CODEC.dumps(invalid_data, strictness=1)
     with pytest.raises(SchemaNotFound):
-        CODEC.dumps(invalid_data, strictness=0)
-        CODEC.dumps(invalid_data, strictness=1)
         CODEC.dumps(invalid_data, strictness=2)
 
 

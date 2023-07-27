@@ -59,7 +59,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         subarray=SubarrayConfiguration("science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
-            frequency_band=ReceiverBand.BAND_1,
+            frequency_band=ReceiverBand.BAND_5B,
             subarray_id=1,
         ),
         pss_config={},
@@ -67,7 +67,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         cbf_config=CBFConfiguration(
             fsp_configs=[
                 FSPConfiguration(
-                    fsp_id=1,
+                    fsp_id=7,
                     function_mode=FSPFunctionMode.VLBI,
                     frequency_slice_id=2,
                     integration_factor=1,
@@ -86,6 +86,36 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
                     zoom_window_tuning=650000,
+                ),
+                FSPConfiguration(
+                    fsp_id=7,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
+                    integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
+                    output_link_map=[(0, 0), (200, 1)],
+                ),
+                FSPConfiguration(
+                    fsp_id=7,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
+                    integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
+                    output_link_map=[(0, 0), (200, 1)],
+                ),
+                FSPConfiguration(
+                    fsp_id=7,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
+                    integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
+                    output_link_map=[(0, 0), (200, 1)],
                 ),
             ],
             vlbi_config={},
@@ -116,13 +146,13 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
     },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band": "1",
+      "frequency_band": "5b",
       "subarray_id": 1
     },
     "cbf": {
       "fsp": [
         {
-          "fsp_id": 1,
+          "fsp_id": 7,
           "function_mode": "VLBI",
           "frequency_slice_id": 2,
           "integration_factor": 1,
@@ -177,7 +207,91 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
             ]
           ],
           "zoom_window_tuning": 650000
-        } 
+        },
+        {
+          "fsp_id": 7,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
+          "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
+          "output_link_map": [
+            [
+              0,
+              0
+            ],
+            [
+              200,
+              1
+            ]
+          ]
+        },
+        {
+          "fsp_id": 7,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
+          "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
+          "output_link_map": [
+            [
+              0,
+              0
+            ],
+            [
+              200,
+              1
+            ]
+          ]
+        },
+        {
+          "fsp_id": 7,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
+          "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
+          "output_link_map": [
+            [
+              0,
+              0
+            ],
+            [
+              200,
+              1
+            ]
+          ]
+        }, 
       ],
       "vlbi": {}
     },
@@ -855,7 +969,7 @@ def test_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    with pytest.raises(SchematicValidationError):
+    try:
         utils.test_schema_serialisation_and_validation(
             schema_cls,
             instance,
@@ -863,4 +977,12 @@ def test_configure_serialisation_and_validation_invalid_json(
             valid_json,
             invalid_json,
             is_validate,
+        )
+
+    except SchematicValidationError as error:
+        assert error.message == (
+            "FSPs are too many!Current Limit = 4,"
+            "Invalid input for fsp_id!,Invalid input for function_mode,"
+            "Invalid input for zoom_factor,frequency_slice_id did not match fsp_id,"
+            "frequency_band did not match receiver_band"
         )

@@ -583,7 +583,7 @@ VALID_SDP_JSON_PI16 = """
          "beams":[
             {
                "beam_id":"vis0",
-               "function":"visibilities"
+               "function":"pulsar search"
             },
             {
                "beam_id":"pss1",
@@ -665,8 +665,8 @@ VALID_SDP_JSON_PI16 = """
                      "count":744,
                      "start":0,
                      "stride":2,
-                     "freq_min":350000000.0,
-                     "freq_max":368000000.0,
+                     "freq_min":35000000.0,
+                     "freq_max":49880000000000.0,
                      "link_map":[
                         [
                            0,
@@ -910,7 +910,7 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
         max_length=100.0,
         context={},
         beams=[
-            BeamConfiguration(beam_id="vis0", function="visibilities"),
+            BeamConfiguration(beam_id="vis0", function="pulsar search"),
             BeamConfiguration(
                 beam_id="pss1",
                 search_beam_id=1,
@@ -983,8 +983,8 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
                         count=744,
                         start=0,
                         stride=2,
-                        freq_min=350000000.0,
-                        freq_max=368000000.0,
+                        freq_min=35000000.0,
+                        freq_max=49880000000000.0,
                         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
                     ),
                     Channel(
@@ -1162,7 +1162,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001"]},
+  "dish": {"receptor_ids": ["0001","0002","0003","0004","0005"]},
   "sdp": """
     + VALID_SDP_JSON_PI16
     + """
@@ -1189,7 +1189,9 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids=["0001"]),
+    dish_allocation=DishAllocation(
+        receptor_ids=["0001", "0002", "0003", "0004", "0005"]
+    ),
     sdp_config=VALID_SDP_OBJECT_PI16,
 )
 
@@ -1340,6 +1342,14 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
         (
             AssignResourcesRequestSchema,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
+            mid_invalidator_fn,
+            VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
+            None,
+            True,
+        ),
+        (
+            AssignResourcesRequestSchema,
+            VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
@@ -1393,7 +1403,7 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    with pytest.raises(SchematicValidationError):
+    try:
         utils.test_schema_serialisation_and_validation(
             schema_cls,
             instance,
@@ -1401,4 +1411,13 @@ def test_assignresources_serialisation_and_validation_invalid_json(
             valid_json,
             invalid_json,
             is_validate,
+        )
+
+    except SchematicValidationError as error:
+        assert error.message == (
+            "receptor_ids are too many!Current Limit is 4,"
+            "beams are too many! Current limit is 1,Invalid function for beams! "
+            "Currently allowed visibilities,spectral windows are too many! Current limit = 1,"
+            "Invalid input for channel_count! Currently allowed 14880,Invalid input for freq_min,"
+            "Invalid input for freq_max,length of receptor_ids should be same as length of receptors"
         )

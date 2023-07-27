@@ -90,3 +90,6 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
                 raise SchemaNotFound(uri) from exc
             else:
                 raise exc
+
+        except Exception as exc:
+            raise exc
