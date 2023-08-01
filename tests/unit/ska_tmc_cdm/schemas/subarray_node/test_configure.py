@@ -981,8 +981,9 @@ def test_configure_serialisation_and_validation_invalid_json(
 
     except SchematicValidationError as error:
         assert error.message == (
-            "FSPs are too many!Current Limit = 4,"
-            "Invalid input for fsp_id!,Invalid input for function_mode,"
-            "Invalid input for zoom_factor,frequency_slice_id did not match fsp_id,"
+            "Invalid input for receiver_band! Currently allowed [1,2],"
+            "FSPs are too many!Current Limit = 4,Invalid input for fsp_id!,"
+            "Invalid input for function_mode,Invalid input for zoom_factor,"
+            "frequency_slice_id did not match fsp_id,"
             "frequency_band did not match receiver_band"
         )
