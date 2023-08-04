@@ -85,7 +85,6 @@ class AssignResourcesRequestSchema(
         :return: dict suitable for CBF configuration
         """
 
-        self.context[ValidatingSchema.SEMANTIC_VALIDATE] = True
         return {k: v for k, v in data.items() if v is not None}
 
 

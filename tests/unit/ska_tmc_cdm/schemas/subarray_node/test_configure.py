@@ -7,6 +7,7 @@ from datetime import timedelta
 import pytest
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
+from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
 from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
@@ -35,6 +36,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
+from ska_tmc_cdm.schemas.mccssubarray.scan import ScanRequestSchema
 from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 
 from .. import utils
@@ -291,7 +293,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               1
             ]
           ]
-        }, 
+        } 
       ],
       "vlbi": {}
     },
@@ -859,6 +861,20 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
+SCAN_VALID_JSON = """
+{
+  "interface": "https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+  "scan_id":1,
+  "start_time": 0.0
+}
+"""
+
+SCAN_VALID_OBJECT = ScanRequest(
+    interface="https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+    scan_id=1,
+    start_time=0.0,
+)
+
 
 def low_invalidator(o: ConfigureRequest):
     # function to make a valid LOW ConfigureRequest invalid
@@ -918,6 +934,14 @@ def mid_invalidator(o: ConfigureRequest):
             VALID_MID_CONFIGURE_OBJECT,
             None,
             VALID_MID_CONFIGURE_JSON,
+            None,
+            True,
+        ),
+        (
+            ScanRequestSchema,
+            SCAN_VALID_OBJECT,
+            None,
+            SCAN_VALID_JSON,
             None,
             True,
         ),

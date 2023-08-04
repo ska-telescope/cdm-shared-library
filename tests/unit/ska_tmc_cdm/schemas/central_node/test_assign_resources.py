@@ -32,11 +32,13 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     SDPConfiguration,
     SDPWorkflow,
 )
+from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
 from ska_tmc_cdm.schemas.central_node.assign_resources import (
     AssignResourcesRequestSchema,
     AssignResourcesResponseSchema,
 )
 from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
+from ska_tmc_cdm.schemas.mccssubarray.scan import ScanRequestSchema
 
 from .. import utils
 
@@ -1269,6 +1271,20 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17 = AssignResourcesRequest(
     csp_config=VALID_LOW_CSP_OBJECT_PI17,
 )
 
+SCAN_VALID_JSON = """
+{
+  "interface": "https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+  "scan_id":1,
+  "start_time": 0.0
+}
+"""
+
+SCAN_VALID_OBJECT = ScanRequest(
+    interface="https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
+    scan_id=1,
+    start_time=0.0,
+)
+
 
 def low_invalidator_fn(o: AssignResourcesRequest):
     # function to make a valid LOW AssignedResourcesRequest invalid
@@ -1354,6 +1370,14 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
             False,
+        ),
+        (
+            ScanRequestSchema,
+            SCAN_VALID_OBJECT,
+            None,
+            SCAN_VALID_JSON,
+            None,
+            True,
         ),
     ],
 )

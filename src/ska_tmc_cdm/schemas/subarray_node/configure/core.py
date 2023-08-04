@@ -200,5 +200,4 @@ class ConfigureRequestSchema(
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for SubArrayNode configuration
         """
-        self.context[shared.ValidatingSchema.SEMANTIC_VALIDATE] = True
         return {k: v for k, v in data.items() if v is not None}
