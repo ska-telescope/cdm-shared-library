@@ -7,6 +7,7 @@ import json
 import tempfile
 
 import pytest
+from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
@@ -16,6 +17,7 @@ from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
+    INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
@@ -33,6 +35,7 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_release_resources import (
 )
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
+    NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON_PI17,
     VALID_LOW_CONFIGURE_OBJECT,
@@ -64,10 +67,20 @@ TEST_PARAMETERS = [
         AssignResourcesRequest,
         VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
         VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
+        False,
+    ),
+    (
+        ConfigureRequest,
+        VALID_MID_CONFIGURE_JSON,
+        VALID_MID_CONFIGURE_OBJECT,
         True,
     ),
-    (ConfigureRequest, VALID_MID_CONFIGURE_JSON, VALID_MID_CONFIGURE_OBJECT, True),
-    (ConfigureRequest, VALID_LOW_CONFIGURE_JSON, VALID_LOW_CONFIGURE_OBJECT, False),
+    (
+        ConfigureRequest,
+        VALID_LOW_CONFIGURE_JSON,
+        VALID_LOW_CONFIGURE_OBJECT,
+        False,
+    ),
     (
         ConfigureRequest,
         VALID_LOW_CONFIGURE_JSON_PI17,
@@ -135,6 +148,18 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     with pytest.raises(SchemaNotFound):
         CODEC.loads(ConfigureRequest, invalid_data, strictness=2)
 
+    invalid_json = json.loads(INVALID_MID_ASSIGNRESOURCESREQUEST_JSON)
+    invalid_json_assign_resources = json.dumps(invalid_json)
+
+    with pytest.raises(SchematicValidationError):
+        CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
+
+    invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
+    invalid_json_configure = json.dumps(invalid_json)
+
+    with pytest.raises(SchematicValidationError):
+        CODEC.loads(ConfigureRequest, invalid_json_configure)
+
 
 def test_codec_dumps_raises_exception_on_invalid_schema():
     """
@@ -147,6 +172,7 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
 
     # validation should occur regardless of strictness, but exceptions are
     # only raised when strictness=2
+
     CODEC.dumps(invalid_data, strictness=0)
     CODEC.dumps(invalid_data, strictness=1)
     with pytest.raises(SchemaNotFound):

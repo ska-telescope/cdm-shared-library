@@ -67,12 +67,12 @@ class AssignResourcesRequestSchema(
 
         return AssignResourcesRequest(
             interface=interface,
+            transaction_id=transaction_id,
             subarray_id=subarray_id,
             dish_allocation=dish_allocation,
             sdp_config=sdp_config,
             csp_config=csp_config,
             mccs=mccs,
-            transaction_id=transaction_id,
         )
 
     @post_dump
@@ -84,8 +84,8 @@ class AssignResourcesRequestSchema(
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for CBF configuration
         """
-        result = {k: v for k, v in data.items() if v is not None}
-        return result
+
+        return {k: v for k, v in data.items() if v is not None}
 
 
 @CODEC.register_mapping(AssignResourcesResponse)

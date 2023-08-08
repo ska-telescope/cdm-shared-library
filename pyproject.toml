@@ -33,7 +33,7 @@ marshmallow = "^3.18.0"
 marshmallow-oneofschema = "^3.0.1"
 astropy = "^5.1"
 marshmallow-enum = "^1.5.1"
-ska-telmodel = "^1.5.0"
+ska-telmodel = "^1.8.0"
 deepdiff = "^5.8.1"
 
 [tool.poetry.group.dev.dependencies]
@@ -46,6 +46,11 @@ pylint-junit = "^0.3.2"
 isort = "^5.10.1"
 black = "^22.8.0"
 flake8 = "^5.0.4"
+Sphinx = "^5.2.2"
+sphinx-rtd-theme = "^1.0.0"
+simpleeval = "^0.9.13"
+
+[tool.poetry.group.docs.dependencies]
 Sphinx = "^5.2.2"
 sphinx-rtd-theme = "^1.0.0"
 

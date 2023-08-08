@@ -1,7 +1,13 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.shared module.
 """
+import pytest
+
 import ska_tmc_cdm.schemas.shared as shared
+from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
+from ska_tmc_cdm.schemas.subarray_node.scan import ScanRequestSchema
+
+from . import utils
 
 
 def test_upper_cased_field_serialises_to_uppercase():
@@ -46,3 +52,52 @@ def test_upper_cased_field_deserialises_to_uppercase():
     """
     deserialised = shared.UpperCasedField().deserialize("FOO")
     assert deserialised == "foo"
+
+
+SCAN_VALID_MID_JSON = """
+{
+  "interface": "https://schema.skao.int/ska-tmc-scan/2.1",
+  "transaction_id": "txn-test-00001",
+  "scan_id": 1
+}
+"""
+
+SCAN_VALID_MID_OBJECT = ScanRequest(
+    interface="https://schema.skao.int/ska-tmc-scan/2.1",
+    transaction_id="txn-test-00001",
+    scan_id=1,
+)
+
+
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    [
+        (
+            ScanRequestSchema,
+            SCAN_VALID_MID_OBJECT,
+            None,
+            SCAN_VALID_MID_JSON,
+            None,
+            True,
+        ),
+    ],
+)
+def test_assignresources_serialisation_and_validation(
+    schema_cls,
+    instance,
+    modifier_fn,
+    valid_json,
+    invalid_json,
+    is_validate,
+):
+    """
+    Verifies that the schema marshals, unmarshals, and validates correctly.
+    """
+    utils.test_schema_serialisation_and_validation(
+        schema_cls,
+        instance,
+        modifier_fn,
+        valid_json,
+        invalid_json,
+        is_validate,
+    )
