@@ -3,6 +3,7 @@ The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import Dict, List
+from dataclasses import dataclass
 
 __all__ = [
     "SDPWorkflow",
@@ -23,83 +24,44 @@ __all__ = [
     "EBScanType",
 ]
 
-
+@dataclass
 class SDPWorkflow:  # pylint: disable=too-few-public-methods
     """
     Class to hold SDPWorkflows for ProcessingBlock
+
+    Create a new SDPWorkflow object.
+
+    :param name: The name of the processing script
+    :param kind: The kind of processing script
+    :param version: Version of the processing script
     """
+    name: str
+    kind: str
+    version: str
 
-    def __init__(self, name: str, kind: str, version: str) -> object:
-        """
-        Create a new SDPWorkflow object.
-
-        :param name: The name of the processing script
-        :param kind: The kind of processing script
-        :param version: Version of the processing script
-        """
-        self.name = name
-        self.kind = kind
-        self.version = version
-
-    def __eq__(self, other):
-        if not isinstance(other, SDPWorkflow):
-            return False
-        return (
-            self.name == other.name
-            and self.kind == other.kind
-            and self.version == other.version
-        )
-
-
+@dataclass
 class Channel:
     """
     Class to hold Channels for ScanType
+
+    Create a new Channel object.
+
+    :param count: Number of channels
+    :param start: First channel ID
+    :param stride: Distance between subsequent channel IDs
+    :param freq_min: Lower bound of first channel
+    :param freq_max: Upper bound of last channel
+    :param link_map: Channel map that specifies which network link is going to get used to send channels to SDP.
+                     Intended to allow SDP to optimise network and receive node configuration.
+    :param spectral_window_id: spectral_window_id
     """
-
-    def __init__(
-        self,
-        count: int,
-        start: int,
-        stride: int,
-        freq_min: float,
-        freq_max: float,
-        link_map: List[List],
-        spectral_window_id: str = None,
-    ) -> object:
-        """
-        Create a new Channel object.
-
-        :param count: Number of channels
-        :param start: First channel ID
-        :param stride: Distance between subsequent channel IDs
-        :param freq_min: Lower bound of first channel
-        :param freq_max: Upper bound of last channel
-        :param link_map: Channel map that specifies which network link is going to get used to send channels to SDP.
-                         Intended to allow SDP to optimise network and receive node configuration.
-        :param spectral_window_id: spectral_window_id
-        """
-
-        self.count = count
-        self.start = start
-        self.stride = stride
-        self.freq_min = freq_min
-        self.freq_max = freq_max
-        self.link_map = link_map
-        self.spectral_window_id = spectral_window_id
-
-    def __eq__(self, other):
-        if not isinstance(other, Channel):
-            return False
-        return (
-            self.count == other.count
-            and self.start == other.start
-            and self.stride == other.stride
-            and self.freq_min == other.freq_min
-            and self.freq_max == other.freq_max
-            and self.link_map == other.link_map
-            and self.spectral_window_id == other.spectral_window_id
-        )
-
+    count: int
+    start: int
+    stride: int
+    freq_min: float
+    freq_max: float
+    link_map: List[List]
+    spectral_window_id: str = None
 
 class ScanType:
     """
