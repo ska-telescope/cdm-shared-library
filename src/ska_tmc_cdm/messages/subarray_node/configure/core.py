@@ -5,13 +5,21 @@ structured request and response for the TMC SubArrayNode.Configure command.
 As configurations become more complex, they may be rehomed in a submodule of
 this package.
 """
+from dataclasses import InitVar, field
 from enum import Enum
+from typing import ClassVar
 
+from astropy import units as u
 from astropy.coordinates import SkyCoord
+from pydantic import ConfigDict
+from pydantic.dataclasses import dataclass
 
 __all__ = ["PointingConfiguration", "Target", "ReceiverBand", "DishConfiguration"]
 
 
+@dataclass(
+    config=ConfigDict(arbitrary_types_allowed=True)
+)  # Required because AstroPy types aren't Pydantic models
 class Target:
     """
     Target encapsulates source coordinates and source metadata.
@@ -20,14 +28,26 @@ class Target:
     non-ra/dec frames such as galactic are not supported.
     """
 
-    OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
+    ra: InitVar[str | int | float | u.Quantity]
+    dec: InitVar[str | int | float | u.Quantity]
+    target_name: str = ""
+    reference_frame: InitVar[str] = "icrs"
+    unit: InitVar[str | u.Unit | tuple[str | u.Unit, str | u.Unit]] = (
+        u.hourangle,
+        u.deg,
+    )
+    coord: SkyCoord = field(init=False)
 
-    #  pylint: disable=too-many-arguments
-    def __init__(
-        self, ra, dec, target_name="", reference_frame="icrs", unit=("hourangle", "deg")
+    OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
+
+    def __post_init__(
+        self,
+        ra: str | u.Quantity,
+        dec: str | u.Quantity,
+        reference_frame: str,
+        unit: u.Unit,
     ):
-        self.coord = SkyCoord(ra, dec, unit=unit, frame=reference_frame)
-        self.target_name = target_name
+        self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
 
     def __eq__(self, other):
         if not isinstance(other, Target):
@@ -61,19 +81,14 @@ class Target:
         return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
 
+@dataclass
 class PointingConfiguration:  # pylint: disable=too-few-public-methods
     """
     PointingConfiguration specifies where the subarray receptors are going to
     point.
     """
 
-    def __init__(self, target: Target):
-        self.target = target
-
-    def __eq__(self, other):
-        if not isinstance(other, PointingConfiguration):
-            return False
-        return self.target == other.target
+    target: Target
 
 
 class ReceiverBand(Enum):
@@ -87,16 +102,11 @@ class ReceiverBand(Enum):
     BAND_5B = "5b"
 
 
-class DishConfiguration:  # pylint: disable=too-few-public-methods
+@dataclass
+class DishConfiguration:
     """
     DishConfiguration specifies how SKA MID dishes in a sub-array should be
     configured. At the moment, this is limited to setting the receiver band.
     """
 
-    def __init__(self, receiver_band: ReceiverBand):
-        self.receiver_band = receiver_band
-
-    def __eq__(self, other):
-        if not isinstance(other, DishConfiguration):
-            return False
-        return self.receiver_band == other.receiver_band
+    receiver_band: ReceiverBand

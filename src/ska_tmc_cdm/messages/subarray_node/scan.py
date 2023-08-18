@@ -4,6 +4,8 @@ request for a TMC SubArrayNode.Scan command.
 """
 from typing import Optional
 
+from pydantic.dataclasses import dataclass
+
 __all__ = ["ScanRequest"]
 
 # The existence of LOW_SCHEMA is an accident dating from when we thought MID
@@ -15,35 +17,17 @@ LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-scan/2.0"
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-scan/2.1"
 
 
-class ScanRequest:  # pylint: disable=too-few-public-methods
+@dataclass(kw_only=True)
+class ScanRequest:
     """
     ScanRequest represents the JSON for a SubArrayNode.scan call.
+
+    :param interface: Interface URI. Defaults to
+        https://schema.skao.int/ska-tmc-scan/2.0
+    :param transaction_id: optional transaction ID
+    :param scan_id: integer scan ID
     """
 
-    def __init__(
-        self,
-        *,  # force kw-only args
-        interface: Optional[str] = MID_SCHEMA,
-        transaction_id: Optional[str] = None,
-        scan_id: int,
-    ):
-        """
-        Create a new ScanRequest.
-
-        :param interface: Interface URI. Defaults to
-            https://schema.skao.int/ska-tmc-scan/2.0
-        :param transaction_id: optional transaction ID
-        :param scan_id: integer scan ID
-        """
-        self.transaction_id = transaction_id
-        self.interface = interface
-        self.scan_id = scan_id
-
-    def __eq__(self, other):
-        if not isinstance(other, ScanRequest):
-            return False
-        return (
-            self.interface == other.interface
-            and self.transaction_id == other.transaction_id
-            and self.scan_id == other.scan_id
-        )
+    interface: str = MID_SCHEMA
+    transaction_id: Optional[str] = None
+    scan_id: int
