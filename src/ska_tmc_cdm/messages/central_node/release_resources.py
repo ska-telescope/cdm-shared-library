@@ -5,14 +5,14 @@ structured request and response for a TMC CentralNode.ReleaseResources call.
 from typing import Optional
 
 from pydantic import BaseModel, Field, StrictBool, model_validator
-from pydantic.dataclasses import dataclasses
+from pydantic.dataclasses import dataclass
 
 from .common import DishAllocation
 
 __all__ = ["ReleaseResourcesRequest"]
 
-
-class ReleaseResourcesRequest(BaseModel):
+@dataclass
+class ReleaseResourcesRequest:
     """
     ReleaseResourcesRequest is a Python representation of the structured
     request for a TMC CentralNode.ReleaseResources call.
