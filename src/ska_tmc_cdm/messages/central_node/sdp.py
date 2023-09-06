@@ -2,8 +2,8 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from typing import Dict, List
 from dataclasses import dataclass
+from typing import Dict, List
 
 __all__ = [
     "SDPWorkflow",
@@ -24,8 +24,9 @@ __all__ = [
     "EBScanType",
 ]
 
-from typing import Dict, List
 from dataclasses import dataclass
+from typing import Dict, List
+
 
 @dataclass
 class SDPWorkflow:
@@ -38,9 +39,11 @@ class SDPWorkflow:
     :param kind: The kind of processing script
     :param version: Version of the processing script
     """
+
     name: str
     kind: str
     version: str
+
 
 @dataclass
 class Channel:
@@ -58,6 +61,7 @@ class Channel:
                      Intended to allow SDP to optimize network and receive node configuration.
     :param spectral_window_id: spectral_window_id
     """
+
     count: int
     start: int
     stride: int
@@ -65,6 +69,7 @@ class Channel:
     freq_max: float
     link_map: List[List]
     spectral_window_id: str = None
+
 
 @dataclass
 class ScanType:
@@ -77,11 +82,13 @@ class ScanType:
     :param dec: Declination in degrees
     :param channels: Expected channel configuration.
     """
+
     scan_type_id: str
     reference_frame: str
     ra: str
     dec: str
     channels: List[Channel]
+
 
 @dataclass
 class PbDependency:
@@ -91,8 +98,10 @@ class PbDependency:
     :param pb_id: Unique identifier for this processing block
     :param kind: The kind of processing script (realtime or batch)
     """
+
     pb_id: str
     kind: List[str]
+
 
 @dataclass
 class ScriptConfiguration:
@@ -103,9 +112,11 @@ class ScriptConfiguration:
     :param kind: The kind of processing script
     :param version: Version of the processing script
     """
+
     kind: str = None
     name: str = None
     version: str = None
+
 
 @dataclass
 class ProcessingBlockConfiguration:
@@ -119,12 +130,14 @@ class ProcessingBlockConfiguration:
     :param sbi_ids: List of scheduling block ids
     :param script: Processing script description (dictionary for now)
     """
+
     pb_id: str = None
     workflow: SDPWorkflow = None
     parameters: Dict = None
     dependencies: List[PbDependency] = None
     sbi_ids: List = None
     script: ScriptConfiguration = None
+
 
 @dataclass
 class BeamConfiguration:
@@ -137,11 +150,13 @@ class BeamConfiguration:
     :param timing_beam_id: timing_beam_id
     :param vlbi_beam_id: vlbi_beam_id
     """
+
     beam_id: str = None
     function: str = None
     search_beam_id: int = None
     timing_beam_id: int = None
     vlbi_beam_id: int = None
+
 
 @dataclass
 class ChannelConfiguration:
@@ -151,8 +166,10 @@ class ChannelConfiguration:
     :param channels_id: channels_id
     :param spectral_windows: spectral_windows
     """
+
     channels_id: str = None
     spectral_windows: List[Channel] = None
+
 
 @dataclass
 class PolarisationConfiguration:
@@ -162,8 +179,10 @@ class PolarisationConfiguration:
     :param polarisations_id: Polarisation definitions id
     :param corr_type: corr_type
     """
+
     polarisations_id: str = None
     corr_type: List[str] = None
+
 
 @dataclass
 class PhaseDir:
@@ -175,10 +194,12 @@ class PhaseDir:
     :param reference_time: reference_time,
     :param reference_frame: Specification of the reference frame or system for a set of pointing coordinates (see ADR-49)
     """
+
     ra: List = None
     dec: List = None
     reference_time: str = None
     reference_frame: str = None
+
 
 @dataclass
 class FieldConfiguration:
@@ -189,9 +210,11 @@ class FieldConfiguration:
     :param pointing_fqdn: pointing_fqdn
     :param phase_dir: Phase direction
     """
+
     field_id: str = None
     pointing_fqdn: str = None
     phase_dir: PhaseDir = None
+
 
 @dataclass
 class EBScanTypeBeam:
@@ -202,9 +225,11 @@ class EBScanTypeBeam:
     :param channels_id: channels_id
     :param polarisations_id: polarisations_id
     """
+
     field_id: str = None
     channels_id: str = None
     polarisations_id: str = None
+
 
 @dataclass
 class EBScanType:
@@ -215,9 +240,11 @@ class EBScanType:
     :param beams: Beam parameters for the purpose of the Science Data Processor.
     :param derive_from: derive_from
     """
+
     scan_type_id: str = None
     beams: Dict[str, EBScanTypeBeam] = None
     derive_from: str = None
+
 
 @dataclass
 class ExecutionBlockConfiguration:
@@ -233,6 +260,7 @@ class ExecutionBlockConfiguration:
     :param fields: Fields / Targets
     :param scan_types: Scan types. Associates scans with per-beam fields & channel configurations
     """
+
     eb_id: str = None
     max_length: float = None
     context: Dict = None
@@ -241,6 +269,7 @@ class ExecutionBlockConfiguration:
     polarisations: List[PolarisationConfiguration] = None
     fields: List[FieldConfiguration] = None
     scan_types: List[EBScanType] = None
+
 
 @dataclass
 class SDPConfiguration:
@@ -255,6 +284,7 @@ class SDPConfiguration:
     :param interface: url string to determine JsonSchema version
     :param resources: resources
     """
+
     eb_id: str = None
     max_length: float = None
     scan_types: List[ScanType] = None

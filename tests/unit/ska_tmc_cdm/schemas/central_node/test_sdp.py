@@ -1060,7 +1060,6 @@ def test_validate_serialization_and_deserialization_channelconfiguration_using_s
 
 
 def test_validate_serialization_and_deserialization_polarisationconfiguration_using_schema_class():
-
     """
     Verifies that the PolarisationConfiguration schema marshal and Unmarshal works correctly
     """

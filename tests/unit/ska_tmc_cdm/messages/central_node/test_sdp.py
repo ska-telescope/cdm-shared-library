@@ -909,7 +909,6 @@ def test_chanel_configuration_equals():
 
 
 def test_chanel_configuration_equals_not_equal_to_other_objects():
-
     """
     Verify that Channels Configuration objects are not considered equal to objects of
     other types.
@@ -953,7 +952,6 @@ def test_polarisation_configuration_equals():
 
 
 def test_polarisation_configuration_equals_not_equal_to_other_objects():
-
     """
     Verify that Polarisation Configuration objects are not considered equal to objects of
     other types.
@@ -990,7 +988,6 @@ def test_phase_dir_equals():
 
 
 def test_phase_dir_equals_not_equal_to_other_objects():
-
     """
     Verify that Phase Dir objects are not considered equal to objects of
     other types.
@@ -1037,7 +1034,6 @@ def test_field_equals():
 
 
 def test_field_equals_not_equal_to_other_objects():
-
     """
     Verify that Field Configuration objects are not considered equal to objects of
     other types.
@@ -1084,7 +1080,6 @@ def test_eb_scan_type_equals():
 
 
 def test_eb_scan_type_equals_not_equal_to_other_objects():
-
     """
     Verify that EBScanType objects are not considered equal to objects of
     other types.
@@ -1123,7 +1118,6 @@ def test_eb_scan_type_beam_equals():
 
 
 def test_eb_scan_type_beam_equals_not_equal_to_other_objects():
-
     """
     Verify that EBScanTypeBeam objects are not considered equal to objects of
     other types.
@@ -1159,7 +1153,6 @@ def test_script_equals():
 
 
 def test_scripts_equals_not_equal_to_other_objects():
-
     """
     Verify that ScriptConfiguration  objects are not considered equal to objects of
     other types.
