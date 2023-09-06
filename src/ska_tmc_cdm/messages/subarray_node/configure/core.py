@@ -8,10 +8,13 @@ this package.
 from enum import Enum
 
 from astropy.coordinates import SkyCoord
+from astropy.units import Quantity, Unit
+from pydantic.dataclasses import dataclass
 
 __all__ = ["PointingConfiguration", "Target", "ReceiverBand", "DishConfiguration"]
 
 
+@dataclass
 class Target:
     """
     Target encapsulates source coordinates and source metadata.
@@ -19,6 +22,12 @@ class Target:
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
+
+    ra: Quantity
+    dec: Quantity
+    target_name: str
+    reference_frame: str
+    unit: Unit
 
     OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
 
@@ -61,19 +70,14 @@ class Target:
         return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
 
+@dataclass
 class PointingConfiguration:  # pylint: disable=too-few-public-methods
     """
     PointingConfiguration specifies where the subarray receptors are going to
     point.
     """
 
-    def __init__(self, target: Target):
-        self.target = target
-
-    def __eq__(self, other):
-        if not isinstance(other, PointingConfiguration):
-            return False
-        return self.target == other.target
+    target: Target
 
 
 class ReceiverBand(Enum):
@@ -87,16 +91,11 @@ class ReceiverBand(Enum):
     BAND_5B = "5b"
 
 
-class DishConfiguration:  # pylint: disable=too-few-public-methods
+@dataclass
+class DishConfiguration:
     """
     DishConfiguration specifies how SKA MID dishes in a sub-array should be
     configured. At the moment, this is limited to setting the receiver band.
     """
 
-    def __init__(self, receiver_band: ReceiverBand):
-        self.receiver_band = receiver_band
-
-    def __eq__(self, other):
-        if not isinstance(other, DishConfiguration):
-            return False
-        return self.receiver_band == other.receiver_band
+    receiver_band: ReceiverBand
