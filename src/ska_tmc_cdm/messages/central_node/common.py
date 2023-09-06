@@ -4,7 +4,6 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 from pydantic.dataclasses import dataclass
 
-
 __all__ = ["DishAllocation"]
 
 
@@ -17,4 +16,5 @@ class DishAllocation:
     :param receptor_ids: (optional) IDs of the receptors to add to this
     allocation
     """
+
     receptor_ids: frozenset[str] = frozenset()
