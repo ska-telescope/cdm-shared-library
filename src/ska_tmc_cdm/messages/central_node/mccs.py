@@ -8,8 +8,8 @@
 # See LICENSE.txt for more info.
 
 from typing import Sequence
-from pydantic.dataclasses import dataclass
 
+from pydantic.dataclasses import dataclass
 
 __all__ = ["MCCSAllocate"]
 

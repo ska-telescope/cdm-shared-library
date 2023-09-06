@@ -3,14 +3,16 @@ The release_resources module provides simple Python representations of the
 structured request and response for a TMC CentralNode.ReleaseResources call.
 """
 from typing import Optional
-from pydantic import BaseModel, StrictBool, model_validator
+
+from pydantic import BaseModel, Field, StrictBool, model_validator
+from pydantic.dataclasses import dataclasses
 
 from .common import DishAllocation
 
 __all__ = ["ReleaseResourcesRequest"]
 
 
-class ReleaseResourcesRequest(BaseModel):  # pylint: disable=too-few-public-methods
+class ReleaseResourcesRequest(BaseModel):
     """
     ReleaseResourcesRequest is a Python representation of the structured
     request for a TMC CentralNode.ReleaseResources call.
@@ -28,12 +30,12 @@ class ReleaseResourcesRequest(BaseModel):  # pylint: disable=too-few-public-meth
     transaction_id: str = None
     subarray_id: int = None
     release_all: StrictBool = False
-    dish_allocation: Optional[DishAllocation] = None
+    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
 
     @model_validator(mode="after")
-    def validate_release_all_xor_dish_allocation(self) -> "ReleaseResourcesRequest":
-        if self.release_all == bool(self.dish_allocation):
-            raise ValueError(
-                "Either 'release_all' or 'dish_allocation' must be defined"
-            )
+    def validate_release_all_ignores_dish_allocation(self) -> "ReleaseResourcesRequest":
+        if self.release_all is False and self.dish is None:
+            raise ValueError("Either release_all or dish_allocation must be defined")
+        if self.release_all:
+            self.dish = None
         return self

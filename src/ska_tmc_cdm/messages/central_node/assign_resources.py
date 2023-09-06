@@ -3,9 +3,9 @@ The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import Optional
-from pydantic import BaseModel, Field
+
+from pydantic import BaseModel, Field, model_validator
 from pydantic.dataclasses import dataclass
-from pydantic import model_validator
 
 from .common import DishAllocation
 from .csp import CSPConfiguration
@@ -15,7 +15,8 @@ from .sdp import SDPConfiguration
 __all__ = ["AssignResourcesRequest", "AssignResourcesResponse"]
 
 
-class AssignResourcesRequest(BaseModel):
+@dataclass
+class AssignResourcesRequest:
     """
     AssignResourcesRequest is a Python representation of the structured
     argument for a TMC CentralNode.AssignResourcesRequest request.
@@ -33,7 +34,7 @@ class AssignResourcesRequest(BaseModel):
     """
 
     subarray_id: Optional[int] = None
-    dish: Optional[DishAllocation] = Field(default=None, alias='dish_allocation')
+    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
     sdp_config: Optional[SDPConfiguration] = None
     csp_config: Optional[CSPConfiguration] = None
     mccs: Optional[MCCSAllocate] = None
@@ -99,4 +100,5 @@ class AssignResourcesResponse:
     AssignResourcesResponse is a Python representation of the structured
     response from a TMC CentralNode.AssignResources request.
     """
-    dish: Optional[DishAllocation] = Field(default=None, alias='dish_allocation')
+
+    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
