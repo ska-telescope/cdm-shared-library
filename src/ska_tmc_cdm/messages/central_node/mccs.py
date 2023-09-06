@@ -6,9 +6,6 @@
 #
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
-
-from typing import Sequence
-
 from pydantic.dataclasses import dataclass
 
 __all__ = ["MCCSAllocate"]

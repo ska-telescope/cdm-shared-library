@@ -7,7 +7,6 @@ command.
 __all__ = ["SDPConfiguration"]
 
 from dataclasses import KW_ONLY
-from typing import Optional
 
 from pydantic.dataclasses import dataclass
 

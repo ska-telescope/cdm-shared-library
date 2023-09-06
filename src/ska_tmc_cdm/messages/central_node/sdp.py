@@ -2,8 +2,7 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from dataclasses import dataclass
-from typing import Dict, List
+from pydantic.dataclasses import dataclass
 
 __all__ = [
     "SDPWorkflow",
@@ -23,9 +22,6 @@ __all__ = [
     "EBScanTypeBeam",
     "EBScanType",
 ]
-
-from dataclasses import dataclass
-from typing import Dict, List
 
 
 @dataclass
@@ -67,7 +63,7 @@ class Channel:
     stride: int
     freq_min: float
     freq_max: float
-    link_map: List[List]
+    link_map: list[list]
     spectral_window_id: str = None
 
 
@@ -87,7 +83,7 @@ class ScanType:
     reference_frame: str
     ra: str
     dec: str
-    channels: List[Channel]
+    channels: list[Channel]
 
 
 @dataclass
@@ -100,7 +96,7 @@ class PbDependency:
     """
 
     pb_id: str
-    kind: List[str]
+    kind: list[str]
 
 
 @dataclass
@@ -127,15 +123,15 @@ class ProcessingBlockConfiguration:
     :param workflow: Specification of the workflow to be executed along with configuration parameters for the workflow.
     :param parameters: Processing script parameters
     :param dependencies: Dependencies on other processing blocks
-    :param sbi_ids: List of scheduling block ids
+    :param sbi_ids: list of scheduling block ids
     :param script: Processing script description (dictionary for now)
     """
 
     pb_id: str = None
     workflow: SDPWorkflow = None
-    parameters: Dict = None
-    dependencies: List[PbDependency] = None
-    sbi_ids: List = None
+    parameters: dict = None
+    dependencies: list[PbDependency] = None
+    sbi_ids: list = None
     script: ScriptConfiguration = None
 
 
@@ -168,7 +164,7 @@ class ChannelConfiguration:
     """
 
     channels_id: str = None
-    spectral_windows: List[Channel] = None
+    spectral_windows: list[Channel] = None
 
 
 @dataclass
@@ -181,7 +177,7 @@ class PolarisationConfiguration:
     """
 
     polarisations_id: str = None
-    corr_type: List[str] = None
+    corr_type: list[str] = None
 
 
 @dataclass
@@ -195,8 +191,8 @@ class PhaseDir:
     :param reference_frame: Specification of the reference frame or system for a set of pointing coordinates (see ADR-49)
     """
 
-    ra: List = None
-    dec: List = None
+    ra: list = None
+    dec: list = None
     reference_time: str = None
     reference_frame: str = None
 
@@ -242,7 +238,7 @@ class EBScanType:
     """
 
     scan_type_id: str = None
-    beams: Dict[str, EBScanTypeBeam] = None
+    beams: dict[str, EBScanTypeBeam] = None
     derive_from: str = None
 
 
@@ -263,12 +259,12 @@ class ExecutionBlockConfiguration:
 
     eb_id: str = None
     max_length: float = None
-    context: Dict = None
-    beams: List[BeamConfiguration] = None
-    channels: List[ChannelConfiguration] = None
-    polarisations: List[PolarisationConfiguration] = None
-    fields: List[FieldConfiguration] = None
-    scan_types: List[EBScanType] = None
+    context: dict = None
+    beams: list[BeamConfiguration] = None
+    channels: list[ChannelConfiguration] = None
+    polarisations: list[PolarisationConfiguration] = None
+    fields: list[FieldConfiguration] = None
+    scan_types: list[EBScanType] = None
 
 
 @dataclass
@@ -287,8 +283,8 @@ class SDPConfiguration:
 
     eb_id: str = None
     max_length: float = None
-    scan_types: List[ScanType] = None
-    processing_blocks: List[ProcessingBlockConfiguration] = None
+    scan_types: list[ScanType] = None
+    processing_blocks: list[ProcessingBlockConfiguration] = None
     execution_block: ExecutionBlockConfiguration = None
-    resources: Dict = None
+    resources: dict = None
     interface: str = None

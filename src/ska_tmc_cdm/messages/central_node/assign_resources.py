@@ -4,7 +4,7 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import Optional
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import Field, model_validator
 from pydantic.dataclasses import dataclass
 
 from .common import DishAllocation
