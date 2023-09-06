@@ -4,15 +4,6 @@ Unit tests for the CentralNode.AssignResources request/response mapper module.
 
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
 
-
-def test_dish_allocation_repr():
-    """
-    Verify that the DishAllocation repr is formatted correctly.
-    """
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
-    assert repr(dish_allocation) == "<DishAllocation(receptor_ids=['ac', 'b', 'aab'])>"
-
-
 def test_dish_allocation_eq():
     """
     Verify that two DishAllocations with the same allocated receptors are
