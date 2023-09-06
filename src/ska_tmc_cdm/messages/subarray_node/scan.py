@@ -30,6 +30,6 @@ class ScanRequest:
     """
 
     _: KW_ONLY
-    interface: Optional[str] = MID_SCHEMA
+    interface: str = MID_SCHEMA
     transaction_id: Optional[str] = None
     scan_id: int
