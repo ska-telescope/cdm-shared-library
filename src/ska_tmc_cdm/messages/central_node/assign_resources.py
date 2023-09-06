@@ -2,7 +2,10 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
+from typing import Optional
+from pydantic import BaseModel, Field
 from pydantic.dataclasses import dataclass
+from pydantic import model_validator
 
 from .common import DishAllocation
 from .csp import CSPConfiguration
@@ -12,8 +15,7 @@ from .sdp import SDPConfiguration
 __all__ = ["AssignResourcesRequest", "AssignResourcesResponse"]
 
 
-@dataclass
-class AssignResourcesRequest:
+class AssignResourcesRequest(BaseModel):
     """
     AssignResourcesRequest is a Python representation of the structured
     argument for a TMC CentralNode.AssignResourcesRequest request.
@@ -30,13 +32,13 @@ class AssignResourcesRequest:
     :raises ValueError: if mccs is allocated with dish and sdp_config
     """
 
-    subarray_id: int = None
-    dish_allocation: DishAllocation = None
-    sdp_config: SDPConfiguration = None
-    csp_config: CSPConfiguration = None
-    mccs: MCCSAllocate = None
-    interface: str = None
-    transaction_id: str = None
+    subarray_id: Optional[int] = None
+    dish: Optional[DishAllocation] = Field(default=None, alias='dish_allocation')
+    sdp_config: Optional[SDPConfiguration] = None
+    csp_config: Optional[CSPConfiguration] = None
+    mccs: Optional[MCCSAllocate] = None
+    interface: Optional[str] = None
+    transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
     def validate_exclusive_fields(self) -> "AssignResourcesRequest":
@@ -97,17 +99,4 @@ class AssignResourcesResponse:
     AssignResourcesResponse is a Python representation of the structured
     response from a TMC CentralNode.AssignResources request.
     """
-
-    def __init__(self, dish_allocation: DishAllocation = None):
-        """
-        Create a new AssignResourcesRequest response object.
-
-        :param dish_allocation: a DishAllocation corresponding to the
-            successfully allocated dishes
-        """
-        self.dish = dish_allocation
-
-    def __eq__(self, other):
-        if not isinstance(other, AssignResourcesResponse):
-            return False
-        return self.dish == other.dish
+    dish: Optional[DishAllocation] = Field(default=None, alias='dish_allocation')
