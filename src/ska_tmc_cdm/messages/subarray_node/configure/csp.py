@@ -63,7 +63,7 @@ class FSPConfiguration:
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)
     zoom_factor: int = Field(ge=0, le=6)
-    channel_averaging_map: List[Tuple] = Field(default_factory=list, max_items=20)
+    channel_averaging_map: List[Tuple] = Field(default_factory=list, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?
     output_link_map: List[Tuple] = Field(default_factory=list)
     channel_offset: Optional[int] = (None,)
