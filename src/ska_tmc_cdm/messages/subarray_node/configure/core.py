@@ -5,16 +5,21 @@ structured request and response for the TMC SubArrayNode.Configure command.
 As configurations become more complex, they may be rehomed in a submodule of
 this package.
 """
+from dataclasses import InitVar
 from enum import Enum
+from typing import ClassVar, Optional, Union
 
+from astropy import units as u
 from astropy.coordinates import SkyCoord
-from astropy.units import Quantity, Unit
+from pydantic import ConfigDict, model_validator
 from pydantic.dataclasses import dataclass
 
 __all__ = ["PointingConfiguration", "Target", "ReceiverBand", "DishConfiguration"]
 
 
-@dataclass
+@dataclass(
+    config=ConfigDict(arbitrary_types_allowed=True)
+)  # Required because AstroPy types aren't Pydantic models
 class Target:
     """
     Target encapsulates source coordinates and source metadata.
@@ -23,20 +28,23 @@ class Target:
     non-ra/dec frames such as galactic are not supported.
     """
 
-    ra: Quantity
-    dec: Quantity
-    target_name: str
-    reference_frame: str
-    unit: Unit
+    ra: InitVar[str | u.Quantity]
+    dec: InitVar[str | u.Quantity]
+    target_name: str = ""
+    reference_frame: InitVar[str] = ("icrs",)
+    unit: InitVar[Unit] = (u.hourangle, u.deg)
+    coord: Optional[SkyCoord] = None
 
-    OFFSET_MARGIN_IN_RAD = 6e-17  # Arbitrary small number
+    OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
 
-    #  pylint: disable=too-many-arguments
-    def __init__(
-        self, ra, dec, target_name="", reference_frame="icrs", unit=("hourangle", "deg")
+    def __post_init__(
+        self,
+        ra: str | u.Quantity,
+        dec: str | u.Quantity,
+        reference_frame: str,
+        unit: u.Unit,
     ):
-        self.coord = SkyCoord(ra, dec, unit=unit, frame=reference_frame)
-        self.target_name = target_name
+        self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
 
     def __eq__(self, other):
         if not isinstance(other, Target):
