@@ -1,4 +1,7 @@
+from pathlib import Path
+
 import pytest
+from vcr import VCR
 
 from ska_tmc_cdm.messages.subarray_node.assigned_resources import (
     AssignedResources,
@@ -10,6 +13,13 @@ from ska_tmc_cdm.schemas.subarray_node.assigned_resources import (
 )
 
 from .. import utils
+
+HERE = Path(__file__).parent.resolve()
+
+vcrpy = VCR(
+    cassette_library_dir=str(HERE / "canned_http_responses"),
+    path_transformer=VCR.ensure_suffix(".yaml"),
+)
 
 VALID_MCCSALLOCATION_JSON = """
 {
@@ -75,6 +85,7 @@ def invalidate_assignresources(o: AssignedResources):
         ),  # no validation on MCCSAllocation subschema
     ],
 )
+@vcrpy.use_cassette
 def test_releaseresources_serialisation_and_validation(
     schema_cls, instance, modifier_fn, valid_json, invalid_json
 ):

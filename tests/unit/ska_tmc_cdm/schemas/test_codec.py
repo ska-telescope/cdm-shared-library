@@ -5,9 +5,11 @@ import copy
 import functools
 import json
 import tempfile
+from pathlib import Path
 
 import pytest
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
+from vcr import VCR
 
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
@@ -42,6 +44,13 @@ from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     VALID_LOW_CONFIGURE_OBJECT_PI17,
     VALID_MID_CONFIGURE_JSON,
     VALID_MID_CONFIGURE_OBJECT,
+)
+
+HERE = Path(__file__).parent.resolve()
+
+vcrpy = VCR(
+    cassette_library_dir=str(HERE / "canned_http_responses"),
+    path_transformer=VCR.ensure_suffix(".yaml"),
 )
 
 TEST_PARAMETERS = [
@@ -102,6 +111,7 @@ TEST_PARAMETERS = [
 ]
 
 
+@vcrpy.use_cassette
 @pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", TEST_PARAMETERS)
 def test_codec_loads(msg_cls, json_str, expected, is_validate):
     """
@@ -111,6 +121,7 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     assert unmarshalled == expected
 
 
+@vcrpy.use_cassette
 @pytest.mark.parametrize("msg_cls,expected,instance, is_validate", TEST_PARAMETERS)
 def test_codec_dumps(
     msg_cls, expected, instance, is_validate
@@ -122,6 +133,7 @@ def test_codec_dumps(
     assert_json_is_equal(marshalled, expected)
 
 
+@vcrpy.use_cassette
 @pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", TEST_PARAMETERS)
 def test_codec_load_from_file(msg_cls, json_str, expected, is_validate):
     """
@@ -135,6 +147,7 @@ def test_codec_load_from_file(msg_cls, json_str, expected, is_validate):
         assert unmarshalled == expected
 
 
+@vcrpy.use_cassette
 def test_codec_loads_raises_exception_on_invalid_schema():
     """
     Verify that loading data that references an invalid schema raises
@@ -161,6 +174,7 @@ def test_codec_loads_raises_exception_on_invalid_schema():
         CODEC.loads(ConfigureRequest, invalid_json_configure)
 
 
+@vcrpy.use_cassette
 def test_codec_dumps_raises_exception_on_invalid_schema():
     """
     Verify that dumping data that references an invalid schema raises
@@ -179,6 +193,7 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
         CODEC.dumps(invalid_data, strictness=2)
 
 
+@vcrpy.use_cassette
 def test_loads_invalid_json_with_validation_enabled():
     """
     Verify that the strictness argument is respected when loading invalid
@@ -199,6 +214,7 @@ def test_loads_invalid_json_with_validation_enabled():
         test_call(strictness=2)
 
 
+@vcrpy.use_cassette
 @pytest.mark.parametrize("strictness", [0, 1, 2])
 def test_loads_invalid_json_with_validation_disabled(strictness):
     """
@@ -214,6 +230,7 @@ def test_loads_invalid_json_with_validation_disabled(strictness):
     assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
 
 
+@vcrpy.use_cassette
 @pytest.mark.parametrize(
     "message_cls",
     [
