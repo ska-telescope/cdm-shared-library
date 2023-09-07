@@ -5,7 +5,7 @@ The repository for the SKA Control Data Model.
 
 This project contains the code for the SKA Control Data Model, which provides
 Python/JSON serialisation for the command arguments for various TMC interfaces
-with other subsystems. 
+with other subsystems.
 
 This library can marshal JSON for the following Tango devices.
 
@@ -34,6 +34,7 @@ git submodule update --recursive --remote
 git submodule update --init --recursive
 ```
 
+
 Install all dependencies using Poetry:
 First go to the poetry shell, It opens the poetry virtual environment and then run poetry install command
 
@@ -61,15 +62,37 @@ Execute the unit tests and lint the project with:
 make python-test && make python-lint
 ```
 
+
 Format the Python code:
 
 ```
 make python-format
 ```
 
+## Testing
+
+You can execute unit tests with
+
+```
+make python-test
+```
+
+**Note:** These unit tests rely on a local copy of the telescope model data downloaded
+to `tests/fixtures/tmdata/`. In the event that the telescope model is
+modified and you need a later version of the data, update the version specified as
+`TMDATA_VERSION` in the `Makefile` and run
+
+```shell
+rm -r tests/fixtures/tmdata/
+make tests/fixtures/tmdata/
+```
+
+to delete the old data and download a fresh copy of the new version.
+
+
 ## Release a new version
 
-See SKAO instructions [here](https://developer.skao.int/en/latest/tools/software-package-release-procedure.html#software-package-release-procedure) 
+See SKAO instructions [here](https://developer.skao.int/en/latest/tools/software-package-release-procedure.html#software-package-release-procedure)
 
 
 ## Documentation
