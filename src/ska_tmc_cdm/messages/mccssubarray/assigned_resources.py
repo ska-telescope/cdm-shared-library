@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-#
+from dataclasses import field
+
+from pydantic.dataclasses import dataclass
+
 # This file is part of the CDM library
 #
 # Distributed under the terms of the GPL license.
@@ -7,10 +10,6 @@
 __all__ = ["AssignedResources"]
 
 SCHEMA = "https://schema.skao.int/ska-low-mccs-assignedresources/2.0"
-
-from dataclasses import field
-
-from pydantic.dataclasses import dataclass
 
 
 @dataclass

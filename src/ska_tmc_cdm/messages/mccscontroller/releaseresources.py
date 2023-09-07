@@ -9,6 +9,7 @@ from pydantic.dataclasses import dataclass
 SCHEMA = "https://schema.skao.int/ska-low-mccs-releaseresources/2.0"
 
 
+@dataclass
 class ReleaseResourcesRequest:
     """
     ReleaseResourcesRequest is the object representation of the JSON argument

@@ -59,7 +59,7 @@ class FSPConfiguration:
     """
 
     fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
-    function_mode: FSPFunctionMode
+    function_mode: FSPFunctionMode = Field()
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)
     zoom_factor: int = Field(ge=0, le=6)
