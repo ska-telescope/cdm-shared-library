@@ -5,7 +5,7 @@ structured request and response for the TMC SubArrayNode.Configure command.
 As configurations become more complex, they may be rehomed in a submodule of
 this package.
 """
-from dataclasses import InitVar
+from dataclasses import InitVar, field
 from enum import Enum
 from typing import ClassVar, Optional, Union
 
@@ -32,8 +32,8 @@ class Target:
     dec: InitVar[str | u.Quantity]
     target_name: str = ""
     reference_frame: InitVar[str] = ("icrs",)
-    unit: InitVar[Unit] = (u.hourangle, u.deg)
-    coord: Optional[SkyCoord] = None
+    unit: InitVar[u.Unit] = (u.hourangle, u.deg)
+    coord: SkyCoord = field(init=False)
 
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
 
