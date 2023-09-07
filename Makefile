@@ -19,7 +19,9 @@ PYTHON_SWITCHES_FOR_PYLINT = --disable=C,R
 
 # resolve various conflicts with Black formatting
 PYTHON_SWITCHES_FOR_FLAKE8 = --max-line-length=88 \
-                             --extend-ignore=E501,W291,W503
+							 --exclude=tests/fixtures/ska-telmodel/ \
+							 --extend-ignore=E501,W291,W503 \
+							 --ignore
 
 # include makefile to pick up the standard Make targets from the submodule
 -include .make/base.mk

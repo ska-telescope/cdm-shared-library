@@ -27,12 +27,14 @@ First, clone this repository with:
 git clone --recurse-submodules git@gitlab.com:ska-telescope/ska-tmc-cdm.git
 ```
 
+<div id="submodule-refresh">
 To refresh the GitLab Submodule, execute below commands:
 
 ```
 git submodule update --recursive --remote
 git submodule update --init --recursive
 ```
+</div>
 
 Install all dependencies using Poetry:
 First go to the poetry shell, It opens the poetry virtual environment and then run poetry install command
@@ -61,11 +63,25 @@ Execute the unit tests and lint the project with:
 make python-test && make python-lint
 ```
 
+
 Format the Python code:
 
 ```
 make python-format
 ```
+
+## Testing
+
+You can execute unit tests with
+
+```
+make python-test
+```
+
+**Note:** These unit tests rely on a local copy of the telescope model data loaded as a git
+submodule in `tests/fixtures/ska-telmodel/`. In the event that the telescope model is
+modified and you need to refresh these fixtures, you can update the submodules as
+[detailed above.](#submodule-refresh)
 
 ## Release a new version
 
