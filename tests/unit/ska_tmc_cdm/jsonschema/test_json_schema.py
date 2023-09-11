@@ -3,12 +3,10 @@ Unit tests for the ska_tmc_cdm.jsonschema.json_schema module.
 """
 import copy
 import json
-from pathlib import Path
 
 import pytest
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 from ska_telmodel.tmc.examples import LOW_TMC_RELEASERESOURCES_1_0 as VALID_JSON
-from vcr import VCR
 
 from ska_tmc_cdm.jsonschema.json_schema import (
     JsonSchema,
@@ -20,17 +18,10 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
 )
 
-HERE = Path(__file__).parent.resolve()
 INVALID_JSON = copy.deepcopy(VALID_JSON)
 INVALID_JSON["release_all"] = "foo"
 
-vcrpy = VCR(
-    cassette_library_dir=str(HERE / "canned_http_responses"),
-    path_transformer=VCR.ensure_suffix(".yaml"),
-)
 
-
-@vcrpy.use_cassette
 def test_schema_validation_with_valid_json():
     """
     Verify schema validation with test valid json
@@ -39,7 +30,6 @@ def test_schema_validation_with_valid_json():
     json_schema_obj.validate_schema(uri=VALID_JSON["interface"], instance=VALID_JSON)
 
 
-@vcrpy.use_cassette
 def test_schema_validation_with_invalid_json():
     """
     Verify schema validation where interface uri is specified with wrong
@@ -52,7 +42,6 @@ def test_schema_validation_with_invalid_json():
         )
 
 
-@vcrpy.use_cassette
 def test_schema_with_invalid_schema_uri():
     """
     Verify schema with invalid uri raise exception
@@ -63,7 +52,6 @@ def test_schema_with_invalid_schema_uri():
         json_schema_obj.get_schema_by_uri(uri="https://foo.com/badschema/1.0")
 
 
-@vcrpy.use_cassette
 def test_semantic_validation_with_valid_json():
     """
     Verify semantic validation with test valid json
@@ -75,7 +63,6 @@ def test_semantic_validation_with_valid_json():
     )
 
 
-@vcrpy.use_cassette
 def test_semantic_validation_with_invalid_json():
     """
     Verify semantic validation with test invalid json

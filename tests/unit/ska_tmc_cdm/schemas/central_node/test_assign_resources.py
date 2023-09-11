@@ -1,11 +1,8 @@
 """
 Unit tests for ska_tmc_cdm.schemas module.
 """
-from pathlib import Path
-
 import pytest
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
-from vcr import VCR
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
@@ -44,13 +41,6 @@ from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
 from ska_tmc_cdm.schemas.mccssubarray.scan import ScanRequestSchema
 
 from .. import utils
-
-HERE = Path(__file__).parent.resolve()
-
-vcrpy = VCR(
-    cassette_library_dir=str(HERE / "canned_http_responses"),
-    path_transformer=VCR.ensure_suffix(".yaml"),
-)
 
 VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
@@ -1391,7 +1381,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
         ),
     ],
 )
-@vcrpy.use_cassette
 def test_assignresources_serialisation_and_validation(
     schema_cls,
     instance,
@@ -1426,7 +1415,6 @@ def test_assignresources_serialisation_and_validation(
         ),
     ],
 )
-@vcrpy.use_cassette
 def test_assignresources_serialisation_and_validation_invalid_json(
     schema_cls,
     instance,

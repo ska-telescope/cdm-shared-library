@@ -3,11 +3,9 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
 from datetime import timedelta
-from pathlib import Path
 
 import pytest
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
-from vcr import VCR
 
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
 from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
@@ -42,13 +40,6 @@ from ska_tmc_cdm.schemas.mccssubarray.scan import ScanRequestSchema
 from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 
 from .. import utils
-
-HERE = Path(__file__).parent.resolve()
-
-vcrpy = VCR(
-    cassette_library_dir=str(HERE / "canned_http_responses"),
-    path_transformer=VCR.ensure_suffix(".yaml"),
-)
 
 NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.1",
@@ -956,7 +947,6 @@ def mid_invalidator(o: ConfigureRequest):
         ),
     ],
 )
-@vcrpy.use_cassette
 def test_configure_serialisation_and_validation(
     schema_cls,
     instance,
@@ -991,7 +981,6 @@ def test_configure_serialisation_and_validation(
         ),
     ],
 )
-@vcrpy.use_cassette
 def test_configure_serialisation_and_validation_invalid_json(
     schema_cls,
     instance,
