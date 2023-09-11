@@ -1,0 +1,265 @@
+---
+# https://gitlab.com/ska-telescope/ska-mid-dish-manager/-/blob/main/src/ska_mid_dish_manager/dish_manager.py
+
+- class:
+  meta:
+    attributes:
+      - name: achievedPointing
+        data_format: SPECTRUM
+        data_type: DevDouble
+        max_dim_x: 3
+        writable: READ
+      - name: achievedTargetLock
+        data_format: SCALAR
+        data_type: DevBoolean
+        writable: READ
+      - name: attenuationPolH
+        data_format: SCALAR
+        data_type: DevFloat
+        writable: READ_WRITE
+      - name: attenuationPolV
+        data_format: SCALAR
+        data_type: DevFloat
+        writable: READ_WRITE
+      - name: azimuthOverWrap
+        data_format: SCALAR
+        data_type: DevBoolean
+        writable: READ
+      - name: band1PointingModelParams
+        data_format: SPECTRUM
+        data_type: DevFloat
+        max_dim_x: 5
+        writable: READ_WRITE
+      - name: band2PointingModelParams
+        data_format: SPECTRUM
+        data_type: DevFloat
+        max_dim_x: 5
+        writable: READ_WRITE
+      - name: band3PointingModelParams
+        data_format: SPECTRUM
+        data_type: DevFloat
+        max_dim_x: 5
+        writable: READ_WRITE
+      - name: band4PointingModelParams
+        data_format: SPECTRUM
+        data_type: DevFloat
+        max_dim_x: 5
+        writable: READ_WRITE
+      - name: band5aPointingModelParams
+        data_format: SPECTRUM
+        data_type: DevFloat
+        max_dim_x: 5
+        writable: READ_WRITE
+      - name: band5bPointingModelParams
+        data_format: SPECTRUM
+        data_type: DevFloat
+        max_dim_x: 5
+        writable: READ_WRITE
+      - name: band1SamplerFrequency
+        data_format: SCALAR
+        data_type: DevDouble
+        writable: WRITE
+      - name: band2SamplerFrequency
+        data_format: SCALAR
+        data_type: DevDouble
+        writable: WRITE
+      - name: band3SamplerFrequency
+        data_format: SCALAR
+        data_type: DevDouble
+        writable: WRITE
+      - name: band4SamplerFrequency
+        data_format: SCALAR
+        data_type: DevDouble
+        writable: WRITE
+      - name: band5aSamplerFrequency
+        data_format: SCALAR
+        data_type: DevDouble
+        writable: WRITE
+      - name: band5bSamplerFrequency
+        data_format: SCALAR
+        data_type: DevDouble
+        writable: WRITE
+      - name: capturing
+        data_format: SCALAR
+        data_type: DevBoolean
+        writable: READ
+      - name: configuredBand
+        data_format: SCALAR
+        data_type: DevEnum
+        enum_labels:
+          - NONE
+          - B1
+          - B2 
+          - B3 
+          - B4 
+          - B5a 
+          - B5b
+        writable: READ
+      - name: configureTargetLock
+        data_format: SPECTRUM
+        data_type: DevDouble
+        max_dim_x: 2
+        writable: WRITE
+      - name: desiredPointing
+        data_format: SPECTRUM
+        data_type: DevDouble
+        max_dim_x: 3
+        writable: READ_WRITE
+      - name: dishMode
+        data_format: SCALAR
+        data_type: DevEnum
+        enum_labels:
+          - 'OFF'
+          - STARTUP
+          - SHUTDOWN
+          - STANDBY_LP
+          - STANDBY_FP
+          - MAINTENANCE
+          - STOW
+          - CONFIG
+          - OPERATE
+        writable: READ
+      - name: dshMaxShortTermPower
+        data_format: SCALAR
+        data_type: DevDouble
+        writable: WRITE
+      - name: dshPowerCurtailment
+        data_format: SCALAR
+        data_type: DevBoolean
+        writable: READ_WRITE
+      - name: frequencyResponse
+        data_format: IMAGE
+        data_type: DevDouble  # PyTango error: DevEncoded data type allowed only for SCALAR attribute
+        writable: READ
+      - name: noiseDiodeConfig
+        data_format: SPECTRUM
+        data_type: DevFloat
+        writable: WRITE
+      - name: pointingBufferSize
+        data_format: SCALAR
+        data_type: DevLong64  # PyTango error: Data type (DevInt) is not supported
+        writable: READ
+      - name: pointingState
+        data_format: SCALAR
+        data_type: DevEnum
+        enum_labels:
+          - READY
+          - SLEW 
+          - TRACK
+          - SCAN
+          - UNKNOWN
+        writable: READ
+      - name: polyTrack
+        data_format: SPECTRUM
+        data_type: DevDouble
+        max_dim_x: 9
+        writable: WRITE
+      - name: powerState
+        data_format: SCALAR
+        data_type: DevEnum
+        enum_labels:
+          - 'OFF'
+          - UPS
+          - LOW 
+          - FULL
+        writable: READ
+      - name: programTrackTable
+        data_format: SPECTRUM
+        data_type: DevDouble
+        max_dim_x: 150
+        writable: READ_WRITE
+      - name: trackInterpolationMode
+        data_format: SCALAR
+        data_type: DevEnum
+        enum_labels:
+          - NEWTON
+          - SPLINE
+        writable: READ_WRITE
+      - name: synchronised
+        data_format: SCALAR
+        data_type: DevBoolean
+        writable: READ
+      - name: trackProgramMode
+        data_format: SCALAR
+        data_type: DevEnum
+        enum_labels:
+          - TABLEA
+          - TABLEB
+          - POLY
+        writable: READ_WRITE
+      - name: trackTableLoadMode
+        data_format: SCALAR
+        data_type: DevEnum
+        enum_labels:
+          - ADD
+          - NEW
+        writable: READ_WRITE
+      - name: usageStatus
+        data_format: SCALAR
+        data_type: DevEnum
+        enum_labels:
+          - BUSY
+          - ANY
+          - IDLE
+          - ACTIVE
+        writable: READ
+    commands:
+      - name: ConfigureBand1
+        dtype_in: DevString
+        dtype_out: DevVoid
+      - name: ConfigureBand2
+        dtype_in: DevString
+        dtype_out: DevVoid
+      - name: ConfigureBand3
+        dtype_in: DevString
+        dtype_out: DevVoid
+      - name: ConfigureBand4
+        dtype_in: DevString
+        dtype_out: DevVoid
+      - name: ConfigureBand5a
+        dtype_in: DevString
+        dtype_out: DevVoid
+      - name: ConfigureBand5b
+        dtype_in: DevString
+        dtype_out: DevVoid
+      - name: FlushCommandQueue
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: Scan
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: SetMaintenanceMode
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: SetOperateMode
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: SetStandbyFPMode
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: SetStandbyLPMode
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: SetStowMode
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: Slew
+        dtype_in: DevVarDoubleArray
+        dtype_out: DevVoid
+      - name: StartCapture
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: StopCapture
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: Synchronise
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: Track
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+      - name: TrackStop
+        dtype_in: DevVoid
+        dtype_out: DevVoid
+    properties:
+      - name: ReceptorNumber

@@ -1,0 +1,15 @@
+{
+  "static_rfi_mask": [
+    {
+      "description": "Interferer 1",
+      "freq_start": "100.0",
+      "freq_stop": "101.0"
+    },
+    { "description": "Interferer 2",
+      "freq_start": "200.0",
+      "freq_stop": "201.0"
+
+    }
+  ]
+}
+

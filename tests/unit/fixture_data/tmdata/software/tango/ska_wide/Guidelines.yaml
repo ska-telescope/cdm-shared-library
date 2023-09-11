@@ -1,0 +1,31 @@
+# SKA Wide specification as described in the SKA Tango developers guide.
+# https://jira.skatelescope.org/secure/attachment/15798/000-000000-011_Rev01_SKA1TANGODevelopersGuideline.pdf
+# Appendix B, 10.2
+
+- class:
+  meta:
+    attributes:
+    - name: State # Lowercase `s` in the developers guide
+    - name: healthState
+    - name: adminMode
+
+    # These are optional:
+    # - name: obsState
+    # - name: obsMode
+    # - name: simulationMode
+    # - name: testMode
+    # - name: controlMode
+    # - name: configurationProgress
+    # - name: xxxProgress
+
+    - name: versionId
+
+    # These are TBD, leaving them out for now
+    # - name: buildState
+    # - name: serialNr<H/W xxx>
+
+    commands:
+    - name: GetVersionInfo
+
+    properties:
+     - name: SkaLevel
