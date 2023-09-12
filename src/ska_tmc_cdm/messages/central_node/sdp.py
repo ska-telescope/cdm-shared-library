@@ -2,7 +2,10 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
+from dataclasses import field
+
 from pydantic.dataclasses import dataclass
+
 
 __all__ = [
     "SDPWorkflow",
@@ -129,9 +132,9 @@ class ProcessingBlockConfiguration:
 
     pb_id: str = None
     workflow: SDPWorkflow = None
-    parameters: dict = None
-    dependencies: list[PbDependency] = None
-    sbi_ids: list = None
+    parameters: dict = field(default_factory=dict)
+    dependencies: list[PbDependency] = field(default_factory=list)
+    sbi_ids: list[str] = field(default_factory=list)
     script: ScriptConfiguration = None
 
 
@@ -164,7 +167,7 @@ class ChannelConfiguration:
     """
 
     channels_id: str = None
-    spectral_windows: list[Channel] = None
+    spectral_windows: list[Channel] = field(default_factory=list)
 
 
 @dataclass
@@ -177,7 +180,7 @@ class PolarisationConfiguration:
     """
 
     polarisations_id: str = None
-    corr_type: list[str] = None
+    corr_type: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -238,7 +241,7 @@ class EBScanType:
     """
 
     scan_type_id: str = None
-    beams: dict[str, EBScanTypeBeam] = None
+    beams: dict[str, EBScanTypeBeam] = field(default_factory=dict)
     derive_from: str = None
 
 
@@ -259,12 +262,12 @@ class ExecutionBlockConfiguration:
 
     eb_id: str = None
     max_length: float = None
-    context: dict = None
-    beams: list[BeamConfiguration] = None
-    channels: list[ChannelConfiguration] = None
-    polarisations: list[PolarisationConfiguration] = None
-    fields: list[FieldConfiguration] = None
-    scan_types: list[EBScanType] = None
+    context: dict = field(default_factory=dict)
+    beams: list[BeamConfiguration] = field(default_factory=list)
+    channels: list[ChannelConfiguration] = field(default_factory=list)
+    polarisations: list[PolarisationConfiguration] = field(default_factory=list)
+    fields: list[FieldConfiguration] = field(default_factory=list)
+    scan_types: list[EBScanType] = field(default_factory=list)
 
 
 @dataclass
@@ -283,8 +286,8 @@ class SDPConfiguration:
 
     eb_id: str = None
     max_length: float = None
-    scan_types: list[ScanType] = None
-    processing_blocks: list[ProcessingBlockConfiguration] = None
+    scan_types: list[ScanType] = field(default_factory=list)
+    processing_blocks: list[ProcessingBlockConfiguration] = field(default_factory=list)
     execution_block: ExecutionBlockConfiguration = None
-    resources: dict = None
+    resources: dict = field(default_factory=dict)
     interface: str = None
