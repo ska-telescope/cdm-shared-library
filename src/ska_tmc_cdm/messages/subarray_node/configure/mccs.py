@@ -36,7 +36,7 @@ class SubarrayBeamTarget:
     target_name: str
     reference_frame: str
 
-
+@dataclass
 class StnConfiguration:
     """A class to hold station configuration configuration
 
@@ -46,7 +46,7 @@ class StnConfiguration:
 
     station_id: int
 
-
+@dataclass
 class SubarrayBeamConfiguration:
     """A class to hold subarray_beam configuration attributes
 
@@ -74,7 +74,7 @@ class SubarrayBeamConfiguration:
     antenna_weights: List[float]
     phase_centre: List[float]
 
-
+@dataclass
 class MCCSConfiguration:
     """
     Class to hold all subarray configuration.

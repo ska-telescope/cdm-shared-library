@@ -105,11 +105,11 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
         lowcbf=LowCBFConfiguration(
             {
                 "station": StationConfiguration(
-                    {
+                    **{
                         "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
                         "stn_beams": [
                             StnBeamConfiguration(
-                                {
+                                **{
                                     "beam_id": 1,
                                     "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
                                     "boresight_dly_poly": "url",
@@ -119,10 +119,10 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
                     }
                 ),
                 "timing_beams": TimingBeamConfiguration(
-                    {
+                    **{
                         "beams": [
                             BeamConfiguration(
-                                {
+                                **{
                                     "pst_beam_id": 13,
                                     "stn_beam_id": 1,
                                     "offset_dly_poly": "url",
