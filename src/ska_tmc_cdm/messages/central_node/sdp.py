@@ -7,7 +7,6 @@ from typing import Optional
 
 from pydantic.dataclasses import dataclass
 
-
 __all__ = [
     "SDPWorkflow",
     "SDPConfiguration",
@@ -68,7 +67,7 @@ class Channel:
     freq_min: float
     freq_max: float
     link_map: list[list]
-    spectral_window_id: str = None
+    spectral_window_id: Optional[str] = None
 
 
 @dataclass
