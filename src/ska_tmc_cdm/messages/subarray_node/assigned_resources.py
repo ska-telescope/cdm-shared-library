@@ -2,8 +2,6 @@
 TMC Assigned Resources
 """
 
-
-from dataclasses import KW_ONLY
 from typing import Optional
 
 from pydantic.dataclasses import dataclass
@@ -39,7 +37,7 @@ class MCCSAllocation:
         return not (self.subarray_beam_ids or self.station_ids or self.channel_blocks)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AssignedResources:
     """
     AssignedResources models the structured JSON returned when the
@@ -49,7 +47,6 @@ class AssignedResources:
     :param mccs: the MCCSAllocation describing the allocated resources
     """
 
-    _: KW_ONLY
     interface: Optional[str] = SCHEMA
     mccs: MCCSAllocation
 

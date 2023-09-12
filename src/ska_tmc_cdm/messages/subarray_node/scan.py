@@ -2,7 +2,6 @@
 The scan module defines simple Python representations of the structured
 request for a TMC SubArrayNode.Scan command.
 """
-from dataclasses import KW_ONLY
 from typing import Optional
 
 from pydantic.dataclasses import dataclass
@@ -18,7 +17,7 @@ LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-scan/2.0"
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-scan/2.1"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ScanRequest:
     """
     ScanRequest represents the JSON for a SubArrayNode.scan call.
@@ -29,7 +28,6 @@ class ScanRequest:
     :param scan_id: integer scan ID
     """
 
-    _: KW_ONLY
     interface: str = MID_SCHEMA
     transaction_id: Optional[str] = None
     scan_id: int

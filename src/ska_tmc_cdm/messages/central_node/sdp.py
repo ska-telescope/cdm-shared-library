@@ -3,6 +3,7 @@ The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
 from dataclasses import field
+from typing import Optional
 
 from pydantic.dataclasses import dataclass
 

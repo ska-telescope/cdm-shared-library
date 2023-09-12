@@ -4,7 +4,6 @@ aspects of MCCS configuration that may be specified in a SubArray.configure
 command.
 """
 
-from dataclasses import KW_ONLY
 from typing import List
 
 from pydantic.dataclasses import dataclass
@@ -36,6 +35,7 @@ class SubarrayBeamTarget:
     target_name: str
     reference_frame: str
 
+
 @dataclass
 class StnConfiguration:
     """A class to hold station configuration configuration
@@ -45,6 +45,7 @@ class StnConfiguration:
     """
 
     station_id: int
+
 
 @dataclass
 class SubarrayBeamConfiguration:
@@ -74,7 +75,8 @@ class SubarrayBeamConfiguration:
     antenna_weights: List[float]
     phase_centre: List[float]
 
-@dataclass
+
+@dataclass(kw_only=True)
 class MCCSConfiguration:
     """
     Class to hold all subarray configuration.
@@ -85,6 +87,5 @@ class MCCSConfiguration:
     :type subarray_beam_configs: List[SubarrayBeamConfiguration]
     """
 
-    _: KW_ONLY
     station_configs: List[StnConfiguration]
     subarray_beam_configs: List[SubarrayBeamConfiguration]

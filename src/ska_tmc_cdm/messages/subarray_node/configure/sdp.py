@@ -6,20 +6,17 @@ command.
 
 __all__ = ["SDPConfiguration"]
 
-from dataclasses import KW_ONLY
-
 from pydantic.dataclasses import dataclass
 
 SCHEMA = "https://schema.skao.int/ska-sdp-configure/0.3"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SDPConfiguration:
     """
     Message class to hold SDP configuration aspect of a
     TMC SubArrayNode.Configure call.
     """
 
-    _: KW_ONLY
     interface: str = SCHEMA
     scan_type: str

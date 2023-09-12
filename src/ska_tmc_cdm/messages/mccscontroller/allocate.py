@@ -2,7 +2,7 @@
 The allocate module defines a Python object model for the structured JSON
 given in an MCCSController.Allocate call.
 """
-from dataclasses import KW_ONLY, field
+from dataclasses import field
 from typing import Optional
 
 from pydantic.dataclasses import dataclass
@@ -12,7 +12,7 @@ __all__ = ["AllocateRequest"]
 SCHEMA = "https://schema.skao.int/ska-low-mccs-assignresources/2.0"
 
 
-@dataclass
+@dataclass(kw_only=True)
 class AllocateRequest:
     """
     AssignResourcesRequest is the object representation of the JSON argument
@@ -25,7 +25,6 @@ class AllocateRequest:
     :param interface: the JSON schema this object claims to be compliant with
     """
 
-    _: KW_ONLY
     interface: Optional[str] = SCHEMA
     subarray_id: int
     subarray_beam_ids: list[int] = field(default_factory=list)

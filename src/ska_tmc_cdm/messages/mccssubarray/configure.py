@@ -2,8 +2,6 @@
 The mccssubarray.configure module contains a Python object model for the
 various structured bits of JSON given in an MCCSSubarray.Configure call.
 """
-from dataclasses import KW_ONLY
-
 from pydantic.dataclasses import dataclass
 
 __all__ = ["ConfigureRequest", "StationConfiguration", "SubarrayBeamConfiguration"]
@@ -21,7 +19,7 @@ class StationConfiguration:
     station_id: int
 
 
-@dataclass
+@dataclass(kw_only=True)
 class SubarrayBeamConfiguration:
     """A class to hold subarray beam configuration attributes
 
@@ -34,7 +32,6 @@ class SubarrayBeamConfiguration:
     :param phase_centre: phase centre of subarray beam
     """
 
-    _: KW_ONLY
     subarray_beam_id: int
     station_ids: list[int]
     update_rate: float
@@ -44,7 +41,7 @@ class SubarrayBeamConfiguration:
     phase_centre: list[float]
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ConfigureRequest:
     """
     Class to hold all subarray configuration.
@@ -53,7 +50,6 @@ class ConfigureRequest:
     :param subarray_beams: a list of subarray beam configurations
     """
 
-    _: KW_ONLY
     interface: str = SCHEMA
     stations: list[StationConfiguration]
     subarray_beams: list[SubarrayBeamConfiguration]
