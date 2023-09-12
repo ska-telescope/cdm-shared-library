@@ -1,0 +1,9 @@
+{
+  "static_rfi_mask": [
+    {
+      "description": "What is this?",
+      "freq_start": 0.0,
+      "freq_stop": 0.0
+    }
+  ]
+}

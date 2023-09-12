@@ -61,11 +61,30 @@ Execute the unit tests and lint the project with:
 make python-test && make python-lint
 ```
 
+
 Format the Python code:
 
 ```
 make python-format
 ```
+
+## Testing
+
+You can execute unit tests with
+
+```
+make python-test
+```
+
+**Note:** These unit tests rely on a local copy of the telescope model data. In the event that the telescope
+model is updated and you need to refresh these fixtures, run:
+
+
+```
+poetry run ska-telmodel cp -UR "" tests/unit/fixture_data/tmdata
+```
+
+
 
 ## Release a new version
 
