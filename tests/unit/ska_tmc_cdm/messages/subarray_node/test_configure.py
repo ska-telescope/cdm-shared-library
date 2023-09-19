@@ -154,7 +154,7 @@ def test_configure_request_eq():
       - their CSP configuration is the same
     """
     transaction_id = "transaction_id"
-    pointing_config = PointingConfiguration(Target(1, 1))
+    pointing_config = PointingConfiguration(Target("01:00:00.0", "01:00:00.0"))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration(scan_type="science_A")
     csp_config = CSPConfiguration(
@@ -230,7 +230,7 @@ def test_configure_request_is_not_equal_to_other_objects():
     """
     Verify that ConfigureRequest is not equal to other objects.
     """
-    pointing_config = PointingConfiguration(Target(1, 1))
+    pointing_config = PointingConfiguration(Target("01:00:00.0", "01:00:00.0"))
     dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
     sdp_config = SDPConfiguration(scan_type="science_A")
     csp_config = CSPConfiguration(
@@ -403,7 +403,7 @@ def test_configure_request_eq_for_low_pi17():
     }
     station = {
         "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
-        "stn_beams": [StnBeamConfiguration(stn_beam)],
+        "stn_beams": [StnBeamConfiguration(**stn_beam)],
     }
     beams = {
         "pst_beam_id": 13,
@@ -417,10 +417,10 @@ def test_configure_request_eq_for_low_pi17():
         "rfi_dynamic_chans": [242, 1342],
         "rfi_weighted": 0.87,
     }
-    timing_beams = {"beams": [BeamConfiguration(beams)]}
+    timing_beams = {"beams": [BeamConfiguration(**beams)]}
     low_cbf = {
-        "station": StationConfiguration(station),
-        "timing_beams": TimingBeamConfiguration(timing_beams),
+        "station": StationConfiguration(**station),
+        "timing_beams": TimingBeamConfiguration(**timing_beams),
     }
 
     request_1 = ConfigureRequest(

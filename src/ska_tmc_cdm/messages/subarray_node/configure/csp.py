@@ -66,8 +66,8 @@ class FSPConfiguration:
     channel_averaging_map: List[Tuple] = Field(default_factory=list, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?
     output_link_map: List[Tuple] = Field(default_factory=list)
-    channel_offset: Optional[int] = (None,)
-    zoom_window_tuning: Optional[int] = (None,)
+    channel_offset: Optional[int] = None
+    zoom_window_tuning: Optional[int] = None
 
 
 @dataclass
@@ -228,8 +228,8 @@ class CSPConfiguration:
     subarray: Optional[SubarrayConfiguration] = None
     common: Optional[CommonConfiguration] = None
     cbf_config: Optional[CBFConfiguration] = None
-    # TODO: In future when csp Interface 2.2 will be used than type of pst_config and pss_config # pylint: disable=W0511
-    #  parameter will be replaced with the respective class(PSTConfiguration,PSSConfiguration)
-    pst_config: Optional[dict] = None
-    pss_config: Optional[dict] = None
+    # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config # pylint: disable=W0511
+    # should not accept dict types as inputs.
+    pst_config: Optional[PSTConfiguration | dict] = None
+    pss_config: Optional[PSSConfiguration | dict] = None
     lowcbf: Optional[LowCBFConfiguration] = None

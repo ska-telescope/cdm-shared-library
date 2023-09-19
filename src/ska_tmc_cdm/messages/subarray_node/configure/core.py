@@ -28,11 +28,14 @@ class Target:
     non-ra/dec frames such as galactic are not supported.
     """
 
-    ra: InitVar[str | u.Quantity]
-    dec: InitVar[str | u.Quantity]
+    ra: InitVar[str | int | float | u.Quantity]
+    dec: InitVar[str | int | float | u.Quantity]
     target_name: str = ""
-    reference_frame: InitVar[str] = ("icrs",)
-    unit: InitVar[u.Unit] = (u.hourangle, u.deg)
+    reference_frame: InitVar[str] = "icrs"
+    unit: InitVar[str | u.Unit | tuple[str | u.Unit, str | u.Unit]] = (
+        u.hourangle,
+        u.deg,
+    )
     coord: SkyCoord = field(init=False)
 
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
