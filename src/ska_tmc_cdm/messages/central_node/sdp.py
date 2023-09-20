@@ -61,12 +61,13 @@ class Channel:
     :param spectral_window_id: spectral_window_id
     """
 
+    # TODO: double-check what's optional here:
     count: int
     start: int
-    stride: int
+    stride: Optional[int]
     freq_min: float
     freq_max: float
-    link_map: list[list]
+    link_map: Optional[list[list]]
     spectral_window_id: Optional[str] = None
 
 
@@ -269,7 +270,9 @@ class ExecutionBlockConfiguration:
     channels: list[ChannelConfiguration] = field(default_factory=list)
     polarisations: list[PolarisationConfiguration] = field(default_factory=list)
     fields: list[FieldConfiguration] = field(default_factory=list)
-    scan_types: list[EBScanType] = field(default_factory=list)
+    scan_types: Optional[
+        list[EBScanType]
+    ] = None  # FIXME: `field(default_factory=list)`?
 
 
 @dataclass

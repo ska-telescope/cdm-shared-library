@@ -63,9 +63,10 @@ class FSPConfiguration:
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)
     zoom_factor: int = Field(ge=0, le=6)
-    channel_averaging_map: List[Tuple] = Field(default_factory=list, max_length=20)
+    # FIXME: should be Field(default_factory=list, max_length=20)?
+    channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?
-    output_link_map: List[Tuple] = Field(default_factory=list)
+    output_link_map: Optional[List[Tuple]] = None  # FIXME: Field(default_factory=list)?
     channel_offset: Optional[int] = None
     zoom_window_tuning: Optional[int] = None
 
@@ -196,7 +197,7 @@ class CBFConfiguration:
     fsp_configs: List[FSPConfiguration]
     # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter # pylint: disable=W0511
     #  will be replaced with the respective class(VLBIConfiguration)
-    vlbi_config: Optional[dict] = (None,)
+    vlbi_config: Optional[dict] = None
 
 
 @dataclass
