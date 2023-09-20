@@ -133,8 +133,10 @@ class ProcessingBlockConfiguration:
     pb_id: str = None
     workflow: SDPWorkflow = None
     parameters: dict = field(default_factory=dict)
-    dependencies: list[PbDependency] = field(default_factory=list)
-    sbi_ids: list[str] = field(default_factory=list)
+    # FIXME: should probably be `field(default_factory=list)` not `None`
+    dependencies: Optional[list[PbDependency]] = None
+    # FIXME: should probably be `field(default_factory=list)` not `None`
+    sbi_ids: Optional[list[str]] = None
     script: ScriptConfiguration = None
 
 
@@ -286,8 +288,10 @@ class SDPConfiguration:
 
     eb_id: str = None
     max_length: float = None
-    scan_types: list[ScanType] = field(default_factory=list)
+    # FIXME: should probably be `field(default_factory=list)` not `None`
+    scan_types: Optional[list[ScanType]] = None
     processing_blocks: list[ProcessingBlockConfiguration] = field(default_factory=list)
     execution_block: ExecutionBlockConfiguration = None
-    resources: dict = field(default_factory=dict)
-    interface: str = None
+    # FIXME: should probably be `field(default_factory=dict)` not `None`
+    resources: Optional[dict] = None
+    interface: Optional[str] = None
