@@ -10,17 +10,14 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesResponse,
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
     ChannelConfiguration,
     EBScanType,
-    EBScanTypeBeam,
     ExecutionBlockConfiguration,
     FieldConfiguration,
-    PbDependency,
     PhaseDir,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,

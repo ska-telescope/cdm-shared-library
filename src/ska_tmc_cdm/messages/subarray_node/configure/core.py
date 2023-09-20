@@ -7,11 +7,11 @@ this package.
 """
 from dataclasses import InitVar, field
 from enum import Enum
-from typing import ClassVar, Optional, Union
+from typing import ClassVar
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
-from pydantic import ConfigDict, model_validator
+from pydantic import ConfigDict
 from pydantic.dataclasses import dataclass
 
 __all__ = ["PointingConfiguration", "Target", "ReceiverBand", "DishConfiguration"]
