@@ -27,14 +27,15 @@ First, clone this repository with:
 git clone --recurse-submodules git@gitlab.com:ska-telescope/ska-tmc-cdm.git
 ```
 
-<div id="submodule-refresh">
+<span id="submodule-refresh">
 To refresh the GitLab Submodule, execute below commands:
+</span>
 
 ```
 git submodule update --recursive --remote
 git submodule update --init --recursive
 ```
-</div>
+
 
 Install all dependencies using Poetry:
 First go to the poetry shell, It opens the poetry virtual environment and then run poetry install command
