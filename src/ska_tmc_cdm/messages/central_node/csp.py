@@ -2,7 +2,7 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from typing import List
+from typing import Optional
 
 from pydantic.dataclasses import dataclass
 
@@ -22,7 +22,7 @@ class CommonConfiguration:
     :param subarray_id: Low csp assign resource subarray ID
     """
 
-    subarray_id: int = None
+    subarray_id: Optional[int] = None
 
 
 @dataclass
@@ -32,10 +32,10 @@ class ResourceConfiguration:
     for resources under lowcbf
     """
 
-    device: str = None
-    shared: bool = None
-    fw_image: str = None
-    fw_mode: str = None
+    device: Optional[str] = None
+    shared: Optional[bool] = None
+    fw_image: Optional[str] = None
+    fw_mode: Optional[str] = None
 
 
 @dataclass
@@ -48,7 +48,7 @@ class LowCbfConfiguration:
     :param resources: list of objects containing fields from ResourceConfiguration
     """
 
-    resources: List[ResourceConfiguration]
+    resources: list[ResourceConfiguration]
 
 
 @dataclass
@@ -57,6 +57,6 @@ class CSPConfiguration:
     Class to get CSP Configuration
     """
 
-    interface: str = None
-    common: CommonConfiguration = None
-    lowcbf: LowCbfConfiguration = None
+    interface: Optional[str] = None
+    common: Optional[CommonConfiguration] = None
+    lowcbf: Optional[LowCbfConfiguration] = None

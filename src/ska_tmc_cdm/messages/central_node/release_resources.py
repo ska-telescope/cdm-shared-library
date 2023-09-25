@@ -12,7 +12,7 @@ from .common import DishAllocation
 __all__ = ["ReleaseResourcesRequest"]
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ReleaseResourcesRequest:
     """
     ReleaseResourcesRequest is a Python representation of the structured
@@ -27,9 +27,9 @@ class ReleaseResourcesRequest:
     to release for this request.
     """
 
-    interface: str = None
-    transaction_id: str = None
-    subarray_id: int = None
+    interface: Optional[str] = None
+    transaction_id: Optional[str] = None
+    subarray_id: Optional[int] = None
     release_all: StrictBool = False
     dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
 
