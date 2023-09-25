@@ -69,8 +69,13 @@ class AssignResourcesRequest:
         :param sdp_config: sdp configuration
         :return: AssignResourcesRequest object
         """
-        # pylint: disable=unused-argument
-        return cls(**locals())
+        return cls(
+            subarray_id=subarray_id,
+            dish_allocation=dish_allocation,
+            sdp_config=sdp_config,
+            interface=interface,
+            transaction_id=transaction_id,
+        )
 
     @classmethod
     def from_mccs(
@@ -93,8 +98,14 @@ class AssignResourcesRequest:
 
         :return: AssignResourcesRequest object
         """
-        # pylint: disable=unused-argument
-        return cls(**locals())
+        return cls(
+            subarray_id=subarray_id,
+            mccs=mccs,
+            sdp_config=sdp_config,
+            csp_config=csp_config,
+            interface=interface,
+            transaction_id=transaction_id,
+        )
 
 
 @dataclass
