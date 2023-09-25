@@ -131,14 +131,15 @@ class ProcessingBlockConfiguration:
     :param script: Processing script description (dictionary for now)
     """
 
-    pb_id: str = None
-    workflow: SDPWorkflow = None
-    parameters: dict = field(default_factory=dict)
+    pb_id: Optional[str] = None
+    workflow: Optional[SDPWorkflow] = None
+    # FIXME: should probably be `field(default_factory=dict)` not `None`
+    parameters: Optional[dict] = None
     # FIXME: should probably be `field(default_factory=list)` not `None`
     dependencies: Optional[list[PbDependency]] = None
     # FIXME: should probably be `field(default_factory=list)` not `None`
     sbi_ids: Optional[list[str]] = None
-    script: ScriptConfiguration = None
+    script: Optional[ScriptConfiguration] = None
 
 
 @dataclass
@@ -153,11 +154,11 @@ class BeamConfiguration:
     :param vlbi_beam_id: vlbi_beam_id
     """
 
-    beam_id: str = None
-    function: str = None
-    search_beam_id: int = None
-    timing_beam_id: int = None
-    vlbi_beam_id: int = None
+    beam_id: Optional[str] = None
+    function: Optional[str] = None
+    search_beam_id: Optional[int] = None
+    timing_beam_id: Optional[int] = None
+    vlbi_beam_id: Optional[int] = None
 
 
 @dataclass
@@ -169,7 +170,7 @@ class ChannelConfiguration:
     :param spectral_windows: spectral_windows
     """
 
-    channels_id: str = None
+    channels_id: Optional[str] = None
     spectral_windows: list[Channel] = field(default_factory=list)
 
 
@@ -182,7 +183,7 @@ class PolarisationConfiguration:
     :param corr_type: corr_type
     """
 
-    polarisations_id: str = None
+    polarisations_id: Optional[str] = None
     corr_type: list[str] = field(default_factory=list)
 
 
@@ -197,10 +198,10 @@ class PhaseDir:
     :param reference_frame: Specification of the reference frame or system for a set of pointing coordinates (see ADR-49)
     """
 
-    ra: list = None
-    dec: list = None
-    reference_time: str = None
-    reference_frame: str = None
+    ra: Optional[list] = None
+    dec: Optional[list] = None
+    reference_time: Optional[str] = None
+    reference_frame: Optional[str] = None
 
 
 @dataclass
@@ -213,9 +214,9 @@ class FieldConfiguration:
     :param phase_dir: Phase direction
     """
 
-    field_id: str = None
-    pointing_fqdn: str = None
-    phase_dir: PhaseDir = None
+    field_id: Optional[str] = None
+    pointing_fqdn: Optional[str] = None
+    phase_dir: Optional[PhaseDir] = None
 
 
 @dataclass
@@ -228,9 +229,9 @@ class EBScanTypeBeam:
     :param polarisations_id: polarisations_id
     """
 
-    field_id: str = None
-    channels_id: str = None
-    polarisations_id: str = None
+    field_id: Optional[str] = None
+    channels_id: Optional[str] = None
+    polarisations_id: Optional[str] = None
 
 
 @dataclass
@@ -243,9 +244,9 @@ class EBScanType:
     :param derive_from: derive_from
     """
 
-    scan_type_id: str = None
+    scan_type_id: Optional[str] = None
     beams: dict[str, EBScanTypeBeam] = field(default_factory=dict)
-    derive_from: str = None
+    derive_from: Optional[str] = None
 
 
 @dataclass
@@ -263,16 +264,15 @@ class ExecutionBlockConfiguration:
     :param scan_types: Scan types. Associates scans with per-beam fields & channel configurations
     """
 
-    eb_id: str = None
-    max_length: float = None
+    eb_id: Optional[str] = None
+    max_length: Optional[float] = None
     context: dict = field(default_factory=dict)
-    beams: list[BeamConfiguration] = field(default_factory=list)
-    channels: list[ChannelConfiguration] = field(default_factory=list)
-    polarisations: list[PolarisationConfiguration] = field(default_factory=list)
-    fields: list[FieldConfiguration] = field(default_factory=list)
-    scan_types: Optional[
-        list[EBScanType]
-    ] = None  # FIXME: `field(default_factory=list)`?
+    # FIXME: should these all be `field(default_factory=list)` instead of `None`?
+    beams: Optional[list[BeamConfiguration]] = None
+    channels: Optional[list[ChannelConfiguration]] = None
+    polarisations: Optional[list[PolarisationConfiguration]] = None
+    fields: Optional[list[FieldConfiguration]] = None
+    scan_types: Optional[list[EBScanType]] = None
 
 
 @dataclass
@@ -289,12 +289,13 @@ class SDPConfiguration:
     :param resources: resources
     """
 
-    eb_id: str = None
-    max_length: float = None
+    eb_id: Optional[str] = None
+    max_length: Optional[float] = None
     # FIXME: should probably be `field(default_factory=list)` not `None`
     scan_types: Optional[list[ScanType]] = None
-    processing_blocks: list[ProcessingBlockConfiguration] = field(default_factory=list)
-    execution_block: ExecutionBlockConfiguration = None
+    # FIXME: should probably be `field(default_factory=list)` not `None`
+    processing_blocks: Optional[list[ProcessingBlockConfiguration]] = None
+    execution_block: Optional[ExecutionBlockConfiguration] = None
     # FIXME: should probably be `field(default_factory=dict)` not `None`
     resources: Optional[dict] = None
     interface: Optional[str] = None
