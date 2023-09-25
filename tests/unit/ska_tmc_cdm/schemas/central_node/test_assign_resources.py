@@ -25,7 +25,6 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ExecutionBlockConfiguration,
     FieldConfiguration,
     PbDependency,
-    PhaseDir,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
     ScanType,
@@ -98,12 +97,12 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
             fields=[
                 FieldConfiguration(
                     field_id="field_a",
-                    phase_dir=PhaseDir(
-                        ra=[123, 0.1],
-                        dec=[80, 0.1],
-                        reference_time="...",
-                        reference_frame="ICRF3",
-                    ),
+                    phase_dir={
+                        "ra": [123, 0.1],
+                        "dec": [80, 0.1],
+                        "reference_time": "...",
+                        "reference_frame": "ICRF3",
+                    },
                     pointing_fqdn="low-tmc/telstate/0/pointing",
                 )
             ],
@@ -1020,12 +1019,12 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
         fields=[
             FieldConfiguration(
                 field_id="field_a",
-                phase_dir=PhaseDir(
-                    ra=[123, 0.1],
-                    dec=[80, 0.1],
-                    reference_time="...",
-                    reference_frame="ICRF3",
-                ),
+                phase_dir={
+                    "ra": [123, 0.1],
+                    "dec": [80, 0.1],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
                 pointing_fqdn="low-tmc/telstate/0/pointing",
             )
         ],

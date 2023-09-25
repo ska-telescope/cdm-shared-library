@@ -40,6 +40,7 @@ def test_schema_serialisation_and_validation(
 
     # not all schema have validation, such as TMC MID at time of writing
     if modifier_fn is not None:
+
         test_serialising_invalid_object_raises_exception_when_strict(
             schema_cls,
             instance,
