@@ -3,20 +3,13 @@ Unit tests for the CentralNode.mccs allocate module.
 """
 import copy
 
-from tests.unit.ska_tmc_cdm.builder.central_node.mccs import MCCSAllocateBuilder
+from polyfactory.factories import DataclassFactory
+
+from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 
 
-def mccs_allocate_builder(
-    subarray_beam_ids=None, station_ids=None, channel_blocks=None
-):
-    """This mccs allocate configuration builder is a test data builder for CDM mccs allocate configuration"""
-    return (
-        MCCSAllocateBuilder()
-        .set_subarray_beam_ids(subarray_beam_ids=subarray_beam_ids)
-        .set_station_ids(station_ids=station_ids)
-        .set_channel_blocks(channel_blocks=channel_blocks)
-        .build()
-    )
+class MCCSAllocateFactory(DataclassFactory[MCCSAllocate]):
+    __model__ = MCCSAllocate
 
 
 def test_mccs_allocate_eq():
@@ -24,11 +17,11 @@ def test_mccs_allocate_eq():
     Verify that two MCCSAllocate objects with the same allocated elements are
     considered equal.
     """
-    mccs = mccs_allocate_builder(
-        subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
-    )
-    mccs1 = mccs_allocate_builder(
-        subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
+    mccs = MCCSAllocateFactory.build()
+    mccs1 = MCCSAllocateFactory.build(
+        subarray_beam_ids=mccs.subarray_beam_ids,
+        station_ids=mccs.station_ids,
+        channel_blocks=mccs.channel_blocks,
     )
     assert mccs == mccs1
 
@@ -50,8 +43,6 @@ def test_mccs_allocate_eq_with_other_objects():
     Verify that a MCCSAllocate is considered unequal to objects of other
     types.
     """
-    o = mccs_allocate_builder(
-        subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
-    )
+    o = MCCSAllocateFactory.build()
     assert o != 1
     assert o != object()

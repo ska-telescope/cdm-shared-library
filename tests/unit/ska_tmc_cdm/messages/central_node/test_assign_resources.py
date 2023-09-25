@@ -1,8 +1,6 @@
 """
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
-import itertools
-
 import pytest
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
@@ -14,7 +12,7 @@ from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
 )
 
-from .test_mccs import mccs_allocate_builder
+from .test_mccs import MCCSAllocateFactory
 from .test_sdp import (
     beam_configuration_builder,
     channel_builder,
@@ -127,9 +125,7 @@ def test_assign_resources_request_mccs_eq():
     Verify that two AssignResource request objects for the same sub-array and
     mccs allocation are considered equal.
     """
-    mccs1 = mccs_allocate_builder(
-        subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
-    )
+    mccs1 = MCCSAllocateFactory.build()
     request1 = assign_request_builder(subarray_id=1, mccs=mccs1)
     request2 = assign_request_builder(subarray_id=1, mccs=mccs1)
     assert request1 == request2
@@ -141,21 +137,12 @@ def test_assign_resources_request_from_mccs():
     Verify that two AssignResource request objects for the same sub-array and
     mccs allocation are considered equal.
     """
-    mccs_allocate = mccs_allocate_builder(
-        subarray_beam_ids=[1, 2, 3, 4, 5, 6],
-        station_ids=list(zip(itertools.count(1, 1), 1 * [2])),
-        channel_blocks=[1, 2, 3, 4, 5],
-    )
-
+    mccs_allocate = MCCSAllocateFactory.build()
     request = AssignResourcesRequest.from_mccs(subarray_id=1, mccs=mccs_allocate)
 
     expected = assign_request_builder(
         subarray_id=1,
-        mccs=mccs_allocate_builder(
-            subarray_beam_ids=[1, 2, 3, 4, 5, 6],
-            station_ids=list(zip(itertools.count(1, 1), 1 * [2])),
-            channel_blocks=[1, 2, 3, 4, 5],
-        ),
+        mccs=mccs_allocate,
     )
     assert request == expected
 
@@ -174,11 +161,7 @@ def test_assign_resources_request_dish_and_mccs_fail():
     """
     Verify that mccs & dish cannot be allocated together
     """
-    mccs_allocate = mccs_allocate_builder(
-        subarray_beam_ids=[1, 2, 3, 4, 5, 6],
-        station_ids=list(zip(itertools.count(1, 1), 1 * [2])),
-        channel_blocks=[1, 2, 3, 4, 5],
-    )
+    mccs_allocate = MCCSAllocateFactory.build()
 
     with pytest.raises(ValueError):
         dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
@@ -203,9 +186,7 @@ def test_assign_resources_request_eq_mccs_with_other_objects():
     Verify that an AssignResources request object is not considered equal to
     objects of other types.
     """
-    mccs = mccs_allocate_builder(
-        subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
-    )
+    mccs = MCCSAllocateFactory.build()
     request1 = assign_request_builder(subarray_id=1, mccs=mccs)
     assert request1 != 1
     assert request1 != object()
@@ -241,9 +222,7 @@ def test_assign_resources_request_for_low_eq():
     Verify that two AssignResource request objects for the same sub-array and
     mccs allocation are considered equal.
     """
-    mccs1 = mccs_allocate_builder(
-        subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
-    )
+    mccs1 = MCCSAllocateFactory.build()
     request1 = assign_request_builder(
         subarray_id=1,
         mccs=mccs1,
@@ -268,11 +247,7 @@ def test_assign_resources_if_no_subarray_id_argument():
     """
     Verify that the boolean release_all_mid argument is required.
     """
-    mccs = mccs_allocate_builder(
-        subarray_beam_ids=[1, 2, 3, 4, 5, 6],
-        station_ids=list(zip(itertools.count(1, 1), 1 * [2])),
-        channel_blocks=[1, 2, 3, 4, 5],
-    )
+    mccs = MCCSAllocateFactory.build()
     dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
 
     with pytest.raises(ValueError):
