@@ -32,8 +32,8 @@ To refresh the GitLab Submodule, execute below commands:
 </span>
 
 ```
-git submodule update --recursive --remote
-git submodule update --init --recursive
+git submodule update --remote
+git submodule update --init
 ```
 
 

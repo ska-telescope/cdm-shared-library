@@ -1,6 +1,8 @@
 [submodule ".make"]
 	path = .make
 	url = https://gitlab.com/ska-telescope/sdi/ska-cicd-makefile.git
+	fetchRecurseSubmodules = true
 [submodule "tests/fixtures/ska-telmodel"]
 	path = tests/fixtures/ska-telmodel
 	url = https://gitlab.com/ska-telescope/ska-telmodel.git
+	fetchRecurseSubmodules = false
