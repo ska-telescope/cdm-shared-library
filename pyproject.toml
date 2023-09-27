@@ -54,6 +54,9 @@ simpleeval = "^0.9.13"
 Sphinx = "^5.2.2"
 sphinx-rtd-theme = "^1.0.0"
 
+[tool.pytest.ini_options]
+addopts = "--ignore tests/fixtures/"
+
 [tool.coverage.run]
 parallel = true
 branch = true
@@ -61,6 +64,7 @@ data_file = ".coverage/.coverage"
 
 [tool.isort]
 profile = "black"
+skip = ["tests/fixtures/"]
 line_length = 88
 
 [tool.black]
@@ -81,8 +85,7 @@ exclude = '''
     | build
     | dist
   )/
-  | foo.py           # also separately exclude a file named foo.py in
-                     # the root of the project
+  | tests/fixtures/
 )
 '''
 
