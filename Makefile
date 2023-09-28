@@ -6,8 +6,8 @@
 #
 CAR_OCI_REGISTRY_HOST ?= artefact.skao.int
 CAR_OCI_REGISTRY_USERNAME ?= ska-telescope
-PROJECT_NAME = ska-tmc-cdm
-TMDATA_VERSION = 1.8.2
+PROJECT_NAME := ska-tmc-cdm
+TMDATA_VERSION := $(shell python -c 'from importlib.metadata import version; print(version("ska_telmodel"))')
 
 OCI_IMAGE_BUILD_CONTEXT = $(PWD)
 
