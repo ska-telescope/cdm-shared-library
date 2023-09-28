@@ -2,243 +2,70 @@
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 
-from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
-    BeamConfigurationBuilder,
-    ChannelBuilder,
-    ChannelConfigurationBuilder,
-    EBScanTypeBeamBuilder,
-    EBScanTypeBuilder,
-    ExecutionBlockConfigurationBuilder,
-    FieldConfigurationBuilder,
-    PbDependencyBuilder,
-    PhaseDirBuilder,
-    PolarisationConfigurationBuilder,
-    ProcessingBlockConfigurationBuilder,
-    ScanTypeBuilder,
-    ScriptConfigurationBuilder,
-    SDPConfigurationBuilder,
-    SDPWorkflowBuilder,
+from ska_tmc_cdm.messages.central_node.sdp import (
+    BeamConfiguration,
+    Channel,
+    ChannelConfiguration,
+    EBScanType,
+    EBScanTypeBeam,
+    ExecutionBlockConfiguration,
+    FieldConfiguration,
+    PbDependency,
+    PhaseDir,
+    PolarisationConfiguration,
+    ProcessingBlockConfiguration,
+    ScanType,
+    ScriptConfiguration,
+    SDPConfiguration,
+    SDPWorkflow,
 )
 
+from polyfactory.factories import DataclassFactory
 
-def eb_scan_type_beam_builder(field_id=None, channels_id=None, polarisations_id=None):
-    """This eb scan type beam configuration builder is a test data builder for CDM eb scan type beam configuration"""
-    return (
-        EBScanTypeBeamBuilder()
-        .set_field_id(field_id=field_id)
-        .set_channels_id(channels_id=channels_id)
-        .set_polarisations_id(polarisations_id=polarisations_id)
-        .build()
-    )
+class BeamConfigurationFactory(DataclassFactory[BeamConfiguration]):
+    __model__ = BeamConfiguration
 
+class ChannelFactory(DataclassFactory[Channel]):
+    __model__ = Channel
 
-def execution_block_configuration_builder(
-    eb_id=None,
-    max_length=None,
-    context=None,
-    beams=None,
-    channels=None,
-    polarisations=None,
-    fields=None,
-    scan_types=None,
-):
-    """This execution block configuration builder is a test data builder for CDM execution block configuration"""
-    return (
-        ExecutionBlockConfigurationBuilder()
-        .set_eb_id(eb_id=eb_id)
-        .set_max_length(max_length=max_length)
-        .set_context(context=context)
-        .set_beams(beams=beams)
-        .set_channels(channels=channels)
-        .set_polarisations(polarisations=polarisations)
-        .set_fields(fields=fields)
-        .set_scan_types(scan_types=scan_types)
-        .build()
-    )
+class ChannelConfigurationFactory(DataclassFactory[ChannelConfiguration]):
+    __model__ = ChannelConfiguration
 
+class EBScanTypeFactory(DataclassFactory[EBScanType]):
+    __model__ = EBScanType
 
-def fields_configuration_builder(field_id=None, pointing_fqdn=None, phase_dir=None):
-    """This fields configuration builder is a test data builder for CDM fields configuration"""
-    return (
-        FieldConfigurationBuilder()
-        .set_field_id(field_id=field_id)
-        .set_pointing_fqdn(pointing_fqdn=pointing_fqdn)
-        .set_phase_dir(phase_dir=phase_dir)
-        .build()
-    )
+class EBScanTypeBeamFactory(DataclassFactory[EBScanTypeBeam]):
+    __model__ = EBScanTypeBeam
 
+class ExecutionBlockConfigurationFactory(DataclassFactory[ExecutionBlockConfiguration]):
+    __model__ = ExecutionBlockConfiguration
 
-def beam_configuration_builder(
-    beam_id=None,
-    function=None,
-    search_beam_id=None,
-    timing_beam_id=None,
-    vlbi_beam_id=None,
-):
-    """This beam configuration builder is a test data builder for CDM beam configuration"""
-    return (
-        BeamConfigurationBuilder()
-        .set_beam_id(beam_id=beam_id)
-        .set_function(function=function)
-        .set_search_beam_id(search_beam_id=search_beam_id)
-        .set_timing_beam_id(timing_beam_id=timing_beam_id)
-        .set_vlbi_beam_id(vlbi_beam_id=vlbi_beam_id)
-        .build()
-    )
+class FieldConfigurationFactory(DataclassFactory[FieldConfiguration]):
+    __model__ = FieldConfiguration
 
+class PbDependencyFactory(DataclassFactory[PbDependency]):
+    __model__ = PbDependency
 
-def eb_scan_type_builder(scan_type_id=None, beams=None, derive_from=None):
-    """This eb scan type configuration builder is a test data builder for CDM eb scan type configuration"""
-    return (
-        EBScanTypeBuilder()
-        .set_scan_type_id(scan_type_id=scan_type_id)
-        .set_beams(beams=beams)
-        .set_derive_from(derive_from=derive_from)
-        .build()
-    )
+class PhaseDirFactory(DataclassFactory[PhaseDir]):
+    __model__ = PhaseDir
 
+class PolarisationConfigurationFactory(DataclassFactory[PolarisationConfiguration]):
+    __model__ = PolarisationConfiguration
 
-def phase_dir_configuration_builder(
-    ra=None, dec=None, reference_time=None, reference_frame=None
-):
-    """This phase dir configuration builder is a test data builder for CDM phase dir configuration"""
-    return (
-        PhaseDirBuilder()
-        .set_ra(ra=ra)
-        .set_dec(dec=dec)
-        .set_reference_time(reference_time=reference_time)
-        .set_reference_frame(reference_frame=reference_frame)
-        .build()
-    )
+class ProcessingBlockConfigurationFactory(DataclassFactory[ProcessingBlockConfiguration]):
+    __model__ = ProcessingBlockConfiguration
 
+class ScanTypeFactory(DataclassFactory[ScanType]):
+    __model__ = ScanType
 
-def sdp_builder(
-    eb_id=None,
-    max_length=None,
-    scan_types=None,
-    processing_blocks=None,
-    execution_block=None,
-    resources=None,
-    interface=None,
-):
-    """This sdp configuration builder is a test data builder for CDM sdp configuration"""
-    return (
-        SDPConfigurationBuilder()
-        .set_eb_id(eb_id=eb_id)
-        .set_max_length(max_length=max_length)
-        .set_scan_types(scan_types=scan_types)
-        .set_processing_blocks(processing_blocks=processing_blocks)
-        .set_execution_block(execution_block=execution_block)
-        .set_resources(resources=resources)
-        .set_interface(interface=interface)
-        .build()
-    )
+class ScriptConfigurationFactory(DataclassFactory[ScriptConfiguration]):
+    __model__ = ScriptConfiguration
 
+class SDPConfigurationFactory(DataclassFactory[SDPConfiguration]):
+    __model__ = SDPConfiguration
 
-def channel_builder(
-    count=None,
-    start=None,
-    stride=None,
-    freq_min=None,
-    freq_max=None,
-    link_map=None,
-    spectral_window_id=None,
-):
-    """This channel configuration builder is a test data builder for CDM channel configuration"""
-    return (
-        ChannelBuilder()
-        .set_count(count=count)
-        .set_start(start=start)
-        .set_stride(stride=stride)
-        .set_freq_min(freq_min=freq_min)
-        .set_freq_max(freq_max=freq_max)
-        .set_link_map(link_map=link_map)
-        .set_spectral_window_id(spectral_window_id=spectral_window_id)
-        .build()
-    )
-
-
-def scan_type_builder(
-    scan_type_id=None, reference_frame=None, ra=None, dec=None, channel=None
-):
-    """This scan type configuration builder is a test data builder for CDM scan type configuration"""
-    return (
-        ScanTypeBuilder()
-        .set_scan_type_id(scan_type_id=scan_type_id)
-        .set_reference_frame(reference_frame=reference_frame)
-        .set_ra(ra=ra)
-        .set_dec(dec=dec)
-        .set_channels(channels=channel)
-        .build()
-    )
-
-
-def workflow_configuration_builder(name=None, kind=None, version=None):
-    """This SDP workflow configuration builder is a test data builder for CDM SDP workflow configuration"""
-    return (
-        SDPWorkflowBuilder()
-        .set_name(name=name)
-        .set_kind(kind=kind)
-        .set_version(version=version)
-        .build()
-    )
-
-
-def pbdependency_builder(pb_id=None, kind=None):
-    """This PbDependency configuration builder is a test data builder for CDM PbDependency configuration"""
-    return PbDependencyBuilder().set_pb_id(pb_id=pb_id).set_kind(kind=kind).build()
-
-
-def processing_block_builder(
-    pb_id=None,
-    workflow=None,
-    parameters=None,
-    dependencies=None,
-    sbi_ids=None,
-    script=None,
-):
-    """This processing block configuration builder is a test data builder for CDM processing block configuration"""
-    return (
-        ProcessingBlockConfigurationBuilder()
-        .set_pb_id(pb_id=pb_id)
-        .set_workflow(workflow=workflow)
-        .set_parameters(parameters=parameters)
-        .set_dependencies(dependencies=dependencies)
-        .set_sbi_ids(sbi_ids=sbi_ids)
-        .set_script(script=script)
-        .build()
-    )
-
-
-def scripts_builder(kind=None, name=None, version=None):
-    """This scripts configuration builder is a test data builder for CDM scripts configuration"""
-    return (
-        ScriptConfigurationBuilder()
-        .set_kind(kind=kind)
-        .set_name(name=name)
-        .set_version(version=version)
-        .build()
-    )
-
-
-def channel_configuration_builder(channels_id=None, spectral_windows=None):
-    """This channel configuration builder is a test data builder for CDM channel configuration"""
-    return (
-        ChannelConfigurationBuilder()
-        .set_channels_id(channels_id=channels_id)
-        .set_spectral_windows(spectral_windows=spectral_windows)
-        .build()
-    )
-
-
-def polarization_builder(polarisations_id=None, corr_type=None):
-    """This polarization configuration builder is a test data builder for CDM polarization configuration"""
-    return (
-        PolarisationConfigurationBuilder()
-        .set_polarisations_id(polarisations_id=polarisations_id)
-        .set_corr_type(corr_type=corr_type)
-        .build()
-    )
+class SDPWorkflowFactory(DataclassFactory[SDPWorkflow]):
+    __model__ = SDPWorkflow
 
 
 def test_channel_equals():
@@ -250,36 +77,21 @@ def test_channel_equals():
      - freq_min
      - freq_max
      - link_map
+     - spectral_window_id
     """
-    channel1 = channel_builder(
-        count=744,
-        start=0,
-        stride=2,
-        freq_min=0.35e9,
-        freq_max=1.05e9,
-        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
-        spectral_window_id="fsp_2_channels",
-    )
-    channel2 = channel_builder(
-        count=744,
-        start=0,
-        stride=2,
-        freq_min=0.35e9,
-        freq_max=1.05e9,
-        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
-        spectral_window_id="fsp_2_channels",
+    channel1 = ChannelFactory.build()
+    channel2 = ChannelFactory.build(
+        count=channel1.count,
+        start=channel1.start,
+        stride=channel1.stride,
+        freq_min=channel1.freq_min,
+        freq_max=channel1.freq_max,
+        link_map=channel1.link_map,
+        spectral_window_id=channel1.spectral_window_id,
     )
     assert channel1 == channel2
 
-    assert channel1 != channel_builder(
-        count=743,
-        start=0,
-        stride=1,
-        freq_min=0.35e9,
-        freq_max=1.05e9,
-        link_map=[[0, 0], [220, 1], [744, 2], [944, 3]],
-        spectral_window_id=None,
-    )
+    assert channel1 != ChannelFactory.build()
 
 
 def test_channel_not_equal_to_other_objects():
@@ -287,15 +99,7 @@ def test_channel_not_equal_to_other_objects():
     Verify that Channel objects are not considered equal to objects of
     other types.
     """
-    channel1 = channel_builder(
-        count=744,
-        start=0,
-        stride=2,
-        freq_min=0.35e9,
-        freq_max=1.05e9,
-        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
-        spectral_window_id="fsp_2_channels",
-    )
+    channel1 = ChannelFactory.build()
     assert channel1 != 1
 
 
@@ -303,24 +107,8 @@ def test_scan_type_equals():
     """
     Verify that ScanType objects are considered equal for the same passed parameter list
     """
-    channel1 = channel_builder(
-        count=744,
-        start=0,
-        stride=2,
-        freq_min=0.35e9,
-        freq_max=1.05e9,
-        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
-        spectral_window_id="fsp_2_channels",
-    )
-    channel2 = channel_builder(
-        count=744,
-        start=0,
-        stride=2,
-        freq_min=0.35e9,
-        freq_max=1.05e9,
-        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
-        spectral_window_id="fsp_2_channels",
-    )
+    channel1 = ChannelFactory.build()
+    channel2 =
     scan_type1 = scan_type_builder(
         scan_type_id="science_A",
         reference_frame="ICRS",

@@ -12,6 +12,8 @@ from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
 )
 
+from polyfactory.factories import DataclassFactory
+
 from .test_mccs import MCCSAllocateFactory
 from .test_sdp import (
     beam_configuration_builder,
@@ -28,6 +30,10 @@ from .test_sdp import (
     sdp_builder,
     workflow_configuration_builder,
 )
+
+
+class MCCSAllocateFactory(DataclassFactory[MCCSAllocate]):
+    __model__ = MCCSAllocate
 
 
 def assign_request_builder(
