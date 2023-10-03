@@ -2,6 +2,11 @@
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 
+from typing import NamedTuple
+
+import pytest
+
+from ska_tmc_cdm.messages.central_node.sdp import PhaseDir
 from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     BeamConfigurationBuilder,
     ChannelBuilder,
@@ -976,29 +981,79 @@ def test_polarisation_configuration_equals_not_equal_to_other_objects():
     assert polar1 != 1
 
 
-def test_phase_dir_equals():
+class PhaseDirCase(NamedTuple):
+    equal: bool
+    pd1: PhaseDir
+    pd2: PhaseDir
+
+
+PHASEDIR_CASES = (
+    PhaseDirCase(
+        equal=True,
+        pd1=phase_dir_configuration_builder(
+            ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+        ),
+        pd2=phase_dir_configuration_builder(
+            ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+        ),
+    ),
+    PhaseDirCase(
+        equal=True,
+        pd1=phase_dir_configuration_builder(
+            ra=[188.73658333333333],
+            dec=[12.582438888888891],
+            reference_time="...",
+            reference_frame="ICRF3",
+        ),
+        pd2=phase_dir_configuration_builder(
+            ra=[188.73658333333333],
+            dec=[12.582438888888893],  # Very slightly different dec
+            reference_time="...",
+            reference_frame="ICRF3",
+        ),
+    ),
+    PhaseDirCase(
+        equal=False,
+        pd1=phase_dir_configuration_builder(
+            ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+        ),
+        pd2=phase_dir_configuration_builder(
+            ra=[123, 0.1],
+            dec=[123, 0.1],
+            reference_time="...",
+            reference_frame="ICRF4",  # Different frame
+        ),
+    ),
+    PhaseDirCase(
+        equal=False,
+        pd1=phase_dir_configuration_builder(
+            ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+        ),
+        pd2=phase_dir_configuration_builder(
+            ra=[123, 1.1],  # Different RA
+            dec=[123, 0.1],
+            reference_time="...",
+            reference_frame="ICRF3",
+        ),
+    ),
+)
+
+
+@pytest.mark.parametrize("expected_equal,phase_dir1,phase_dir2", PHASEDIR_CASES)
+def test_phase_dir_equals(
+    expected_equal: bool, phase_dir1: PhaseDir, phase_dir2: PhaseDir
+):
     """
     Verify that Phase Dir objects are considered equal when they have:
-     - the same ra
-     - the same dec
+     - (almost) the same ra
+     - (almost) the same dec (we use math.isclose() to allow for floating point math imprecision)
      - the same refrence_time
      - the same refrence_frame
     """
-    phase_dir1 = phase_dir_configuration_builder(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
-    )
-    phase_dir2 = phase_dir_configuration_builder(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
-    )
-
-    assert phase_dir1 == phase_dir2
-
-    assert phase_dir1 != phase_dir_configuration_builder(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF4"
-    )
-    assert phase_dir2 != phase_dir_configuration_builder(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF4"
-    )
+    if expected_equal:
+        assert phase_dir1 == phase_dir2
+    else:
+        assert phase_dir1 != phase_dir2
 
 
 def test_phase_dir_equals_not_equal_to_other_objects():
