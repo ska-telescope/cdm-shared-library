@@ -2,6 +2,7 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
+import math
 from dataclasses import field
 from typing import Optional
 
@@ -198,10 +199,25 @@ class PhaseDir:
     :param reference_frame: Specification of the reference frame or system for a set of pointing coordinates (see ADR-49)
     """
 
-    ra: Optional[list] = None
-    dec: Optional[list] = None
+    ra: Optional[list[float]] = None
+    dec: Optional[list[float]] = None
     reference_time: Optional[str] = None
     reference_frame: Optional[str] = None
+
+    @staticmethod
+    def _floatlist_eq(list_a: list[float], list_b: list[float]) -> bool:
+        tol = 1e-15
+        return all((math.isclose(x, y, abs_tol=tol) for x, y in zip(list_a, list_b)))
+
+    def __eq__(self, other):
+        if not isinstance(other, PhaseDir):
+            return False
+        return (
+            self.reference_frame == other.reference_frame
+            and self.reference_time == other.reference_time
+            and self._floatlist_eq(self.ra, other.ra)
+            and self._floatlist_eq(self.dec, other.dec)
+        )
 
 
 @dataclass
