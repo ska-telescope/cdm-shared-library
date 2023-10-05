@@ -2,6 +2,11 @@
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 
+from typing import NamedTuple
+
+import pytest
+
+from ska_tmc_cdm.messages.central_node.sdp import PhaseDir
 from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     BeamConfigurationBuilder,
     ChannelBuilder,
@@ -226,7 +231,7 @@ def channel_configuration_builder(channels_id=None, spectral_windows=None):
     return (
         ChannelConfigurationBuilder()
         .set_channels_id(channels_id=channels_id)
-        .set_spectral_windows(spectral_windows=[spectral_windows])
+        .set_spectral_windows(spectral_windows=spectral_windows)
         .build()
     )
 
@@ -606,7 +611,13 @@ def test_sdp_modified_configuration_block_equals():
     )
     eb_scan1 = eb_scan_type_builder(
         scan_type_id="science_A",
-        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
+        beams={
+            "vis0": {
+                "field_id": "pss_field_0",
+                "channels_id": "pulsar_channels",
+                "polarisations_id": "all",
+            }
+        },
         derive_from=".default",
     )
     sbi_ids_1 = "sbi-mvp01-20200325-00001"
@@ -742,7 +753,13 @@ def test_sdp_modified_configuration_not_equal_to_other_objects():
     )
     eb_scan1 = eb_scan_type_builder(
         scan_type_id="science_A",
-        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
+        beams={
+            "vis0": {
+                "field_id": "pss_field_0",
+                "channels_id": "pulsar_channels",
+                "polarisations_id": "all",
+            }
+        },
         derive_from=".default",
     )
     sbi_ids_1 = "sbi-mvp01-20200325-00001"
@@ -964,29 +981,79 @@ def test_polarisation_configuration_equals_not_equal_to_other_objects():
     assert polar1 != 1
 
 
-def test_phase_dir_equals():
+class PhaseDirCase(NamedTuple):
+    equal: bool
+    pd1: PhaseDir
+    pd2: PhaseDir
+
+
+PHASEDIR_CASES = (
+    PhaseDirCase(
+        equal=True,
+        pd1=phase_dir_configuration_builder(
+            ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+        ),
+        pd2=phase_dir_configuration_builder(
+            ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+        ),
+    ),
+    PhaseDirCase(
+        equal=True,
+        pd1=phase_dir_configuration_builder(
+            ra=[188.73658333333333],
+            dec=[12.582438888888891],
+            reference_time="...",
+            reference_frame="ICRF3",
+        ),
+        pd2=phase_dir_configuration_builder(
+            ra=[188.73658333333333],
+            dec=[12.582438888888893],  # Very slightly different dec
+            reference_time="...",
+            reference_frame="ICRF3",
+        ),
+    ),
+    PhaseDirCase(
+        equal=False,
+        pd1=phase_dir_configuration_builder(
+            ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+        ),
+        pd2=phase_dir_configuration_builder(
+            ra=[123, 0.1],
+            dec=[123, 0.1],
+            reference_time="...",
+            reference_frame="ICRF4",  # Different frame
+        ),
+    ),
+    PhaseDirCase(
+        equal=False,
+        pd1=phase_dir_configuration_builder(
+            ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+        ),
+        pd2=phase_dir_configuration_builder(
+            ra=[123, 1.1],  # Different RA
+            dec=[123, 0.1],
+            reference_time="...",
+            reference_frame="ICRF3",
+        ),
+    ),
+)
+
+
+@pytest.mark.parametrize("expected_equal,phase_dir1,phase_dir2", PHASEDIR_CASES)
+def test_phase_dir_equals(
+    expected_equal: bool, phase_dir1: PhaseDir, phase_dir2: PhaseDir
+):
     """
     Verify that Phase Dir objects are considered equal when they have:
-     - the same ra
-     - the same dec
+     - (almost) the same ra
+     - (almost) the same dec (we use math.isclose() to allow for floating point math imprecision)
      - the same refrence_time
      - the same refrence_frame
     """
-    phase_dir1 = phase_dir_configuration_builder(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
-    )
-    phase_dir2 = phase_dir_configuration_builder(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
-    )
-
-    assert phase_dir1 == phase_dir2
-
-    assert phase_dir1 != phase_dir_configuration_builder(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF4"
-    )
-    assert phase_dir2 != phase_dir_configuration_builder(
-        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF4"
-    )
+    if expected_equal:
+        assert phase_dir1 == phase_dir2
+    else:
+        assert phase_dir1 != phase_dir2
 
 
 def test_phase_dir_equals_not_equal_to_other_objects():
@@ -1060,25 +1127,39 @@ def test_eb_scan_type_equals():
      - the same beams
      - the same derive_from
     """
+    beams0 = {
+        "vis0": {
+            "field_id": "pss_field_0",
+            "channels_id": "pulsar_channels",
+            "polarisations_id": "all",
+        }
+    }
+    beams1 = {
+        "vis0": {
+            "field_id": "pss_field_1",
+            "channels_id": "pulsar_channels",
+            "polarisations_id": "all",
+        }
+    }
     eb_scan1 = eb_scan_type_builder(
         scan_type_id="science_A",
-        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
+        beams=beams0,
         derive_from=".default",
     )
     eb_scan2 = eb_scan_type_builder(
         scan_type_id="science_A",
-        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
+        beams=beams0,
         derive_from=".default",
     )
     assert eb_scan1 == eb_scan2
     assert eb_scan1 != eb_scan_type_builder(
         scan_type_id="science",
-        beams={"vis0": {"pss_field_1", "pulsar_channels", "all"}},
+        beams=beams1,
         derive_from=".default",
     )
     assert eb_scan2 != eb_scan_type_builder(
         scan_type_id="science",
-        beams={"vis0": {"pss_field_1", "pulsar_channels", "all"}},
+        beams=beams1,
         derive_from=".default",
     )
 
@@ -1091,7 +1172,13 @@ def test_eb_scan_type_equals_not_equal_to_other_objects():
     """
     eb_scan1 = eb_scan_type_builder(
         scan_type_id="science_A",
-        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
+        beams={
+            "vis0": {
+                "field_id": "pss_field_0",
+                "channels_id": "pulsar_channels",
+                "polarisations_id": "all",
+            }
+        },
         derive_from=".default",
     )
 
@@ -1492,7 +1579,13 @@ def test_execution_block_configuration_equals():
     )
     eb_scan1 = eb_scan_type_builder(
         scan_type_id="science_A",
-        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
+        beams={
+            "vis0": {
+                "field_id": "pss_field_0",
+                "channels_id": "pulsar_channels",
+                "polarisations_id": "all",
+            }
+        },
         derive_from=".default",
     )
     beams1 = beam_configuration_builder(
@@ -1572,7 +1665,13 @@ def test_execution_block_not_equal_to_other_objects():
     )
     eb_scan1 = eb_scan_type_builder(
         scan_type_id="science_A",
-        beams={"vis0": {"pss_field_0", "pulsar_channels", "all"}},
+        beams={
+            "vis0": {
+                "field_id": "pss_field_0",
+                "channels_id": "pulsar_channels",
+                "polarisations_id": "all",
+            }
+        },
         derive_from=".default",
     )
     beams1 = beam_configuration_builder(

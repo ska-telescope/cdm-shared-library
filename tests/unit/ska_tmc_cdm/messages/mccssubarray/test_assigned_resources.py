@@ -12,7 +12,7 @@ def test_assignresourcesrequest_object_equality():
     constructor_args = dict(
         interface="https://schema.skao.int/ska-low-mccs-assignedresources/2.0",
         subarray_beam_ids=[1],
-        station_ids=[1, 2],
+        station_ids=[[1, 2]],
         channel_blocks=[3],
     )
     request = AssignedResources(**constructor_args)
@@ -25,7 +25,7 @@ def test_assignresourcesrequest_object_equality():
     different_args = dict(
         interface="https://schema.skao.int/ska-low-mccs-assignedresources/99.0",
         subarray_beam_ids=[2],
-        station_ids=[1, 2, 3],
+        station_ids=[[1, 2, 3]],
         channel_blocks=[4],
     )
     for k, v in different_args.items():
@@ -42,7 +42,7 @@ def test_assignresourcesrequest_equality_with_other_objects():
     constructor_args = dict(
         interface="https://schema.skao.int/ska-low-mccs-assignedresources/2.0",
         subarray_beam_ids=[1],
-        station_ids=[1, 2],
+        station_ids=[[1, 2]],
         channel_blocks=[3],
     )
     request = AssignedResources(**constructor_args)

@@ -88,8 +88,8 @@ def test_assign_resources_request_eq():
     sdp1 = sdp_builder(
         eb_id="sbi-mvp01-20200325-00001",
         max_length=100.0,
-        scan_types=scan_type1,
-        processing_blocks=pb1,
+        scan_types=[scan_type1],
+        processing_blocks=[pb1],
     )
 
     request1 = assign_request_builder(
@@ -602,6 +602,11 @@ def test_low_assign_resources_request():
         pointing_fqdn="low-tmc/telstate/0/pointing",
         phase_dir=phase,
     )
+    eb_scan_type = eb_scan_type_builder(
+        scan_type_id="science",
+        beams={"vis0": {"field_id": "field_a"}},
+        derive_from=".default",
+    )
     execution_block = execution_block_configuration_builder(
         eb_id="eb-test-20220916-00000",
         context={},
@@ -610,13 +615,13 @@ def test_low_assign_resources_request():
         channels=[channels],
         polarisations=[polarization_config],
         fields=[field],
-        scan_types=[scan_type1],
+        scan_types=[eb_scan_type],
     )
     sdp1 = sdp_builder(
         eb_id="sbi-mvp01-20200325-00001",
         max_length=100.0,
-        scan_types=scan_type1,
-        processing_blocks=pb1,
+        scan_types=[scan_type1],
+        processing_blocks=[pb1],
         execution_block=execution_block,
     )
 

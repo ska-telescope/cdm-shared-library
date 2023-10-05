@@ -105,11 +105,11 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
         lowcbf=LowCBFConfiguration(
             {
                 "station": StationConfiguration(
-                    {
+                    **{
                         "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
                         "stn_beams": [
                             StnBeamConfiguration(
-                                {
+                                **{
                                     "beam_id": 1,
                                     "freq_ids": [64, 65, 66, 67, 68, 68, 70, 71],
                                     "boresight_dly_poly": "url",
@@ -119,10 +119,10 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
                     }
                 ),
                 "timing_beams": TimingBeamConfiguration(
-                    {
+                    **{
                         "beams": [
                             BeamConfiguration(
-                                {
+                                **{
                                     "pst_beam_id": 13,
                                     "stn_beam_id": 1,
                                     "offset_dly_poly": "url",
@@ -403,7 +403,7 @@ def test_configure_request_eq_for_low_pi17():
     }
     station = {
         "stns": [[1, 0], [2, 0], [3, 0], [4, 0]],
-        "stn_beams": [StnBeamConfiguration(stn_beam)],
+        "stn_beams": [StnBeamConfiguration(**stn_beam)],
     }
     beams = {
         "pst_beam_id": 13,
@@ -417,10 +417,10 @@ def test_configure_request_eq_for_low_pi17():
         "rfi_dynamic_chans": [242, 1342],
         "rfi_weighted": 0.87,
     }
-    timing_beams = {"beams": [BeamConfiguration(beams)]}
+    timing_beams = {"beams": [BeamConfiguration(**beams)]}
     low_cbf = {
-        "station": StationConfiguration(station),
-        "timing_beams": TimingBeamConfiguration(timing_beams),
+        "station": StationConfiguration(**station),
+        "timing_beams": TimingBeamConfiguration(**timing_beams),
     }
 
     request_1 = ConfigureRequest(
