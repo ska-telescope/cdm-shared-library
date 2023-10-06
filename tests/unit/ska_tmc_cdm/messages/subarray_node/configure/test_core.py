@@ -1,6 +1,11 @@
 """
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.common module.
 """
+
+from typing import NamedTuple, Optional
+
+import pytest
+
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     PointingConfiguration,
@@ -20,7 +25,47 @@ def test_target_defaults():
     assert target_1 == target_2
 
 
-def test_target_eq():
+TARGET_EQ_CASES = (
+    (
+        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
+        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
+        True,
+    ),
+    (
+        Target(ra=1, dec=1),
+        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
+        False,
+    ),
+    (
+        Target(ra=1, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(ra=1, dec=1),
+        False,
+    ),
+    (
+        Target(ra=1, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(ra=1, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        True,
+    ),
+    (
+        Target(ra=1, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(
+            ra=1,
+            dec=1,
+            ca_offset_arcsec=-1.10000000000000000000000001,
+            ie_offset_arcsec=1.09999999999999999999999999,
+        ),
+        True,
+    ),
+    (
+        Target(ra=1, dec=1),
+        object(),
+        False,
+    ),
+)
+
+
+@pytest.mark.parametrize(("targetA, targetB, expected_equal"), TARGET_EQ_CASES)
+def test_target_eq(targetA, targetB, expected_equal):
     """
     Verify that Target objects are considered equal when:
 
@@ -28,26 +73,60 @@ def test_target_eq():
       - they point to the same place on the sky
       - they use the same co-ordinate reference frame
       - they use the same co-ordinate units
+      - they have the same offset parameters
     """
-    target_1 = Target(
-        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
-    )
-    target_2 = Target(
-        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
-    )
-    target_3 = Target(ra=1, dec=1)
-    assert target_1 == target_2
-    assert target_1 != target_3
+    if expected_equal:
+        assert targetA == targetB
+    else:
+        assert targetA != targetB
 
 
-def test_target_is_not_equal_to_other_objects():
-    """
-    Verify that Target objects are considered unequal to other objects.
-    """
-    target = Target(
-        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
-    )
-    assert target != object
+class ValidationCase(NamedTuple):
+    args: dict
+    expected_error: Optional[Exception]
+
+
+TARGET_VALIDATION_CASES = (
+    ValidationCase(
+        args={},
+        expected_error=ValueError,
+    ),
+    ValidationCase(
+        args={"ra": 10, "dec": -50},
+        expected_error=None,
+    ),
+    ValidationCase(
+        args={
+            "ra": 1,
+            "dec": 2,
+            "target_name": "a source",
+            "reference_frame": "fk5",
+            "unit": "deg",
+        },
+        expected_error=False,
+    ),
+    ValidationCase(
+        args={"ca_offset_arcsec": -1, "ie_offset_arcsec": 1},
+        expected_error=None,
+    ),
+    ValidationCase(
+        args={"ra": None, "dec": None, "ca_offset_arcsec": 0, "ie_offset_arcsec": 0},
+        expected_error=ValueError,
+    ),
+    ValidationCase(
+        args={"ra": 5, "dec": None},
+        expected_error=TypeError,
+    ),
+)
+
+
+@pytest.mark.parametrize(("args, expected_error"), TARGET_VALIDATION_CASES)
+def test_target_validation(args, expected_error):
+    if expected_error:
+        with pytest.raises(expected_error):
+            Target(**args)
+    else:
+        Target(**args)
 
 
 def test_target_repr():
@@ -61,7 +140,7 @@ def test_target_repr():
         reference_frame="icrs",
         unit=("deg", "arcsec"),
     )
-    expected = "<Target(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'))>"
+    expected = "Target(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'), ca_offset_arcsec=0.0, ie_offset_arcsec=0.0)"
     assert expected == repr(target)
 
 

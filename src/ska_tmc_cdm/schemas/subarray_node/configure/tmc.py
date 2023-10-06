@@ -5,7 +5,7 @@ and data model classes to/from a JSON representation.
 import copy
 from datetime import timedelta
 
-from marshmallow import Schema, fields, post_load, pre_dump
+from marshmallow import Schema, fields, post_dump, post_load, pre_dump
 
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska_tmc_cdm.schemas import CODEC
@@ -20,6 +20,7 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     scan_duration = fields.Float()
+    partial_configuration = fields.Boolean()
 
     @pre_dump
     def convert_scan_duration_timedelta_to_float(
@@ -33,9 +34,25 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: float converted
         """
         copied = copy.deepcopy(data)
-        in_secs = data.scan_duration.total_seconds()
-        copied.scan_duration = in_secs
+        if data.scan_duration:
+            in_secs = data.scan_duration.total_seconds()
+            copied.scan_duration = in_secs
         return copied
+
+    @post_dump
+    def omit_false_partial_configuration(self, data, **_):
+        """
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict output for JSON serialization
+        """
+        # For compatibility, if partial_configuration=False (the default value)
+        # then we omit it from the output. ~2023-10-6
+        # Revisit this choice in future?
+        if data["partial_configuration"] is False:
+            del data["partial_configuration"]
+
+        return data
 
     @post_load
     def convert_scan_duration_number_to_timedelta(
@@ -48,7 +65,11 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: TMCConfiguration instance populated to match JSON
         """
-        scan_duration = timedelta(seconds=data.get("scan_duration"))
+        scan_duration = data.get("scan_duration")
+        scan_duration_td = timedelta(seconds=scan_duration)
+        partial_configuration = data.get("partial_configuration", False)
 
-        tmc_config = TMCConfiguration(scan_duration=scan_duration)
+        tmc_config = TMCConfiguration(
+            scan_duration=scan_duration_td, partial_configuration=partial_configuration
+        )
         return tmc_config

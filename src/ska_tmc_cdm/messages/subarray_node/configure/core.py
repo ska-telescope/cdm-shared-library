@@ -5,13 +5,14 @@ structured request and response for the TMC SubArrayNode.Configure command.
 As configurations become more complex, they may be rehomed in a submodule of
 this package.
 """
+import math
 from dataclasses import InitVar, field
 from enum import Enum
-from typing import ClassVar
+from typing import ClassVar, Optional, Union
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
-from pydantic import ConfigDict
+from pydantic import ConfigDict, model_validator
 from pydantic.dataclasses import dataclass
 
 __all__ = ["PointingConfiguration", "Target", "ReceiverBand", "DishConfiguration"]
@@ -28,15 +29,17 @@ class Target:
     non-ra/dec frames such as galactic are not supported.
     """
 
-    ra: InitVar[str | int | float | u.Quantity]
-    dec: InitVar[str | int | float | u.Quantity]
+    ra: InitVar[Optional[Union[str, int, float, u.Quantity]]] = None
+    dec: InitVar[Optional[Union[str, int, float, u.Quantity]]] = None
     target_name: str = ""
     reference_frame: InitVar[str] = "icrs"
     unit: InitVar[str | u.Unit | tuple[str | u.Unit, str | u.Unit]] = (
         u.hourangle,
         u.deg,
     )
-    coord: SkyCoord = field(init=False)
+    ca_offset_arcsec: float = 0.0
+    ie_offset_arcsec: float = 0.0
+    coord: Optional[SkyCoord] = field(init=False)
 
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
 
@@ -47,7 +50,19 @@ class Target:
         reference_frame: str,
         unit: u.Unit,
     ):
-        self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
+        if ra is None and dec is None:
+            self.coord = None
+        else:
+            self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
+
+    @model_validator(mode="after")
+    def coord_or_offsets_required(self) -> "Target":
+        if self.coord is None:
+            if not (self.ca_offset_arcsec or self.ie_offset_arcsec):
+                raise ValueError(
+                    "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
+                )
+        return self
 
     def __eq__(self, other):
         if not isinstance(other, Target):
@@ -57,9 +72,18 @@ class Target:
         # due to floating point arithmetic when comparing targets
         # defined in different ways.
         sep = self.coord.separation(other.coord)
-
         return (
             self.target_name == other.target_name
+            and math.isclose(
+                self.ca_offset_arcsec,
+                other.ca_offset_arcsec,
+                abs_tol=self.OFFSET_MARGIN_IN_RAD,
+            )
+            and math.isclose(
+                self.ie_offset_arcsec,
+                other.ie_offset_arcsec,
+                abs_tol=self.OFFSET_MARGIN_IN_RAD,
+            )
             and self.coord.frame.name == other.coord.frame.name
             and sep.radian < self.OFFSET_MARGIN_IN_RAD
         )
@@ -70,8 +94,14 @@ class Target:
         units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
         reference_frame = self.coord.frame.name
         target_name = self.target_name
-        return "<Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r})>".format(
-            raw_ra, raw_dec, target_name, reference_frame, units
+        return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
+            raw_ra,
+            raw_dec,
+            target_name,
+            reference_frame,
+            units,
+            self.ca_offset_arcsec,
+            self.ie_offset_arcsec,
         )
 
     def __str__(self):

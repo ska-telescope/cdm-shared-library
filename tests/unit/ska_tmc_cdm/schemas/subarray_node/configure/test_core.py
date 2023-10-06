@@ -2,6 +2,9 @@
 Unit tests for the ska_tmc_cdm.subarray_node.configure.common module.
 """
 import copy
+from typing import NamedTuple
+
+import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
@@ -14,6 +17,12 @@ from ska_tmc_cdm.schemas.subarray_node.configure import (
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
 
+
+class Case(NamedTuple):
+    target: Target
+    json: str
+
+
 VALID_TARGET_JSON = """
 {
   "ra": "12:34:56.78",
@@ -23,15 +32,52 @@ VALID_TARGET_JSON = """
 }
 """
 
+OFFSET_TARGET_JSON = """
+{
+  "ra": "12:34:56.78",
+  "dec": "+12:34:56.78",
+  "reference_frame": "ICRS",
+  "target_name": "NGC123",
+  "ca_offset_arcsec": 25.0,
+  "ie_offset_arcsec": -25.0
+}
+"""
+
 VALID_DISH_CONFIGURATION_JSON = '{"receiver_band": "5a"}'
 
+TEST_CASES = (
+    Case(
+        Target(ra="12h34m56.78s", dec="+12d34m56.78s", target_name="NGC123"),
+        VALID_TARGET_JSON,
+    ),
+    Case(
+        Target(
+            ra="12h34m56.78s",
+            dec="+12d34m56.78s",
+            target_name="NGC123",
+            ca_offset_arcsec=0,  # Zero offsets omitted from output....
+            ie_offset_arcsec=0,
+        ),
+        VALID_TARGET_JSON,
+    ),
+    Case(
+        Target(
+            ra="12h34m56.78s",
+            dec="+12d34m56.78s",
+            target_name="NGC123",
+            ca_offset_arcsec=25.0,
+            ie_offset_arcsec=-25.0,
+        ),
+        OFFSET_TARGET_JSON,
+    ),
+)
 
-def test_marshall_target_to_json():
+
+@pytest.mark.parametrize("target,expected", TEST_CASES)
+def test_marshall_target_to_json(target, expected):
     """
     Verify that PointingConfiguration Target is marshalled to JSON correctly.
     """
-    target = Target(ra="12h34m56.78s", dec="+12d34m56.78s", target_name="NGC123")
-    expected = VALID_TARGET_JSON
     json_str = TargetSchema().dumps(target)
     assert_json_is_equal(json_str, expected)
 

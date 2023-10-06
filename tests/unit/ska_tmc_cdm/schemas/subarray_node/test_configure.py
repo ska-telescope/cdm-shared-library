@@ -2,6 +2,7 @@
 Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
+import json
 from datetime import timedelta
 
 import pytest
@@ -41,8 +42,34 @@ from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 
 from .. import utils
 
+PARTIAL_CONFIGURATION_OFFSET_OBJECT = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/2.2",
+    transaction_id="txn-....-00001",
+    pointing=PointingConfiguration(
+        Target(
+            ca_offset_arcsec=-5.0,
+            ie_offset_arcsec=5.0,
+        )
+    ),
+    tmc=TMCConfiguration(partial_configuration=True),
+)
+
+PARTIAL_CONFIGURATION_OFFSET_JSON = json.dumps(
+    {
+        "interface": "https://schema.skao.int/ska-tmc-configure/2.2",
+        "transaction_id": "txn-....-00002",
+        "pointing": {
+            "target": {
+                "ca_offset_arcsec": -5.0,
+                "ie_offset_arcsec": 5.0,
+            }
+        },
+        "tmc": {"partial_configuration": True},
+    }
+)
+
 NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/2.1",
+    interface="https://schema.skao.int/ska-tmc-configure/2.2",
     transaction_id="txn-....-00001",
     pointing=PointingConfiguration(
         Target(
@@ -293,7 +320,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               1
             ]
           ]
-        } 
+        }
       ],
       "vlbi": {}
     },
@@ -344,7 +371,7 @@ VALID_LOW_CONFIGURE_JSON = """
     ]
   },
   "tmc": {
-    "scan_duration": 10.0 
+    "scan_duration": 10.0
   }
 }
 """
@@ -402,7 +429,7 @@ VALID_LOW_CONFIGURE_JSON_PI17 = """
     ]
   },
   "tmc": {
-    "scan_duration": 10.0 
+    "scan_duration": 10.0
   },
   "sdp": {
      "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
@@ -889,6 +916,14 @@ def mid_invalidator(o: ConfigureRequest):
 @pytest.mark.parametrize(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
+        (
+            ConfigureRequestSchema,
+            PARTIAL_CONFIGURATION_OFFSET_OBJECT,
+            mid_invalidator,
+            VALID_MID_CONFIGURE_JSON,
+            INVALID_MID_CONFIGURE_JSON,
+            True,
+        ),
         (
             ConfigureRequestSchema,
             VALID_MID_CONFIGURE_OBJECT,
