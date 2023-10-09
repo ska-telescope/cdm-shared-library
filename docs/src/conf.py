@@ -20,6 +20,7 @@
 
 import os
 import sys
+from importlib import metadata
 
 sys.path.insert(0, os.path.abspath("../../src"))
 autodoc_mock_imports = ["astropy", "marshmallow", "ska_telmodel"]
@@ -75,7 +76,7 @@ author = "Marco Bartolini"
 # built documents.
 #
 # The short X.Y.Z version.
-version = "0.1.0"
+version = metadata.version("ska_tmc_cdm")
 # The full version, including alpha/beta/rc pre-release tags.
 release = "0.1.0-beta"
 
