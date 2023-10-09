@@ -1309,21 +1309,23 @@ files = [
 
 [[package]]
 name = "ska-telmodel"
-version = "1.8.0"
+version = "1.8.2"
 description = "SKA telescope model library"
 optional = false
 python-versions = ">=3.10.0,<4.0.0"
 files = [
-    {file = "ska_telmodel-1.8.0-py3-none-any.whl", hash = "sha256:958624fc8faa17ec9ae7364f0106b00509419d4bbb3a54fc63b5b6983fe2d2a2"},
-    {file = "ska_telmodel-1.8.0.tar.gz", hash = "sha256:ebb4502210072ad2262c5a710fccbca5b493443f484c5d0c9dc4a39fe02db57a"},
+    {file = "ska_telmodel-1.8.2-py3-none-any.whl", hash = "sha256:96a20bdfe1c9c15a60b0679e6f66b6ded3a9a2a8a0043a47b676bfea5712c4a5"},
+    {file = "ska_telmodel-1.8.2.tar.gz", hash = "sha256:31f620c60fdd84f27c13100f7efda90d3441439e76ab4313cc364b1b7ff50973"},
 ]
 
 [package.dependencies]
 appdirs = ">=1.4.4,<2.0.0"
+astropy = ">=5.2.2,<6.0.0"
 docopt = ">=0.6.2,<0.7.0"
 python-gitlab = ">=3.8.0,<4.0.0"
 pyyaml = ">=6.0,<7.0"
 schema = ">=0.7.5,<0.8.0"
+simpleeval = ">=0.9.13,<0.10.0"
 toolz = ">=0.12.0,<0.13.0"
 
 [package.source]
