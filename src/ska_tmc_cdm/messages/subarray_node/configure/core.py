@@ -67,12 +67,12 @@ class Target:
     def __eq__(self, other):
         if not isinstance(other, Target):
             return False
+        # Either both are None or both defined...
+        if bool(self.coord) != bool(other.coord):
+            return False
 
-        # Please replace this with a  more elegant way of dealing with differences
-        # due to floating point arithmetic when comparing targets
-        # defined in different ways.
-        sep = self.coord.separation(other.coord)
-        return (
+        # Common checks:
+        name_and_offsets_matching = (
             self.target_name == other.target_name
             and math.isclose(
                 self.ca_offset_arcsec,
@@ -84,25 +84,40 @@ class Target:
                 other.ie_offset_arcsec,
                 abs_tol=self.OFFSET_MARGIN_IN_RAD,
             )
-            and self.coord.frame.name == other.coord.frame.name
-            and sep.radian < self.OFFSET_MARGIN_IN_RAD
         )
+        if not name_and_offsets_matching:
+            return False
+
+        # Please replace this with a more elegant way of dealing with differences
+        # comparing targets with different properties...
+        if self.coord is not None:
+            sep = self.coord.separation(other.coord)
+            return (
+                self.coord.frame.name == other.coord.frame.name
+                and sep.radian < self.OFFSET_MARGIN_IN_RAD
+            )
+        return True
 
     def __repr__(self):
-        raw_ra = self.coord.ra.value
-        raw_dec = self.coord.dec.value
-        units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
-        reference_frame = self.coord.frame.name
-        target_name = self.target_name
-        return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
-            raw_ra,
-            raw_dec,
-            target_name,
-            reference_frame,
-            units,
-            self.ca_offset_arcsec,
-            self.ie_offset_arcsec,
-        )
+        if self.coord is None:
+            return "Target(target_name={!r}, ca_offset_arcsect={!r}, ie_offset_arcsec={!r})".format(
+                self.target_name, self.ca_offset_arcsec, self.ie_offset_arcsec
+            )
+        else:
+            raw_ra = self.coord.ra.value
+            raw_dec = self.coord.dec.value
+            units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
+            reference_frame = self.coord.frame.name
+            target_name = self.target_name
+            return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
+                raw_ra,
+                raw_dec,
+                target_name,
+                reference_frame,
+                units,
+                self.ca_offset_arcsec,
+                self.ie_offset_arcsec,
+            )
 
     def __str__(self):
         reference_frame = self.coord.frame.name

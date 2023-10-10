@@ -103,16 +103,12 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: Target instance populated to match JSON
         """
-        target_name = data["target_name"]
-        hms = data["ra"]
-        dms = data["dec"]
 
-        reference_frame = data["reference_frame"]
         target = configure_msgs.Target(
-            hms,
-            dms,
-            reference_frame=reference_frame,
-            target_name=target_name,
+            data.get("ra"),
+            data.get("dec"),
+            reference_frame=data.get("reference_frame", ""),
+            target_name=data.get("target_name", ""),
             unit=("hourangle", "deg"),
             ca_offset_arcsec=data.get("ca_offset_arcsec", 0.0),
             ie_offset_arcsec=data.get("ie_offset_arcsec", 0.0),

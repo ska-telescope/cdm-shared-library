@@ -68,10 +68,13 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: TMCConfiguration instance populated to match JSON
         """
         scan_duration = data.get("scan_duration")
-        scan_duration_td = timedelta(seconds=scan_duration)
-        partial_configuration = data.get("partial_configuration", False)
+        if scan_duration:
+            scan_duration_td = timedelta(seconds=scan_duration)
+        else:
+            scan_duration_td = None
 
         tmc_config = TMCConfiguration(
-            scan_duration=scan_duration_td, partial_configuration=partial_configuration
+            scan_duration=scan_duration_td,
+            partial_configuration=data.get("partial_configuration", False),
         )
         return tmc_config

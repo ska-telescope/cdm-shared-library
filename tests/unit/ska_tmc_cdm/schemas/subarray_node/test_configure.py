@@ -44,7 +44,7 @@ from .. import utils
 
 PARTIAL_CONFIGURATION_OFFSET_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.2",
-    transaction_id="txn-....-00001",
+    transaction_id="txn-....-00002",
     pointing=PointingConfiguration(
         Target(
             ca_offset_arcsec=-5.0,
@@ -920,7 +920,7 @@ def mid_invalidator(o: ConfigureRequest):
             ConfigureRequestSchema,
             PARTIAL_CONFIGURATION_OFFSET_OBJECT,
             mid_invalidator,
-            VALID_MID_CONFIGURE_JSON,
+            PARTIAL_CONFIGURATION_OFFSET_JSON,
             INVALID_MID_CONFIGURE_JSON,
             True,
         ),

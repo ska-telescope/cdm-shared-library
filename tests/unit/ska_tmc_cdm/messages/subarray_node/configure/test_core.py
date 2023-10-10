@@ -32,6 +32,21 @@ TARGET_EQ_CASES = (
         True,
     ),
     (
+        Target(ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        True,
+    ),
+    (
+        Target(target_name="target A", ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(target_name="target B", ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        False,
+    ),
+    (
+        Target(ra=2, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        False,
+    ),
+    (
         Target(ra=1, dec=1),
         Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
         False,
