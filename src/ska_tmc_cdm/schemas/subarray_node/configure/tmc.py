@@ -40,7 +40,7 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         return copied
 
     @post_dump
-    def omit_false_partial_configuration(self, data, **_):
+    def omit_default_values_from_configuration(self, data, **_):
         """
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
@@ -51,6 +51,8 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         # Revisit this choice in future?
         if data["partial_configuration"] is False:
             del data["partial_configuration"]
+        if data["scan_duration"] is None:
+            del data["scan_duration"]
 
         return data
 

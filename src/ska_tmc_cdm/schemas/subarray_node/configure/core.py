@@ -69,17 +69,29 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         return sexagesimal
 
     @post_dump
-    def omit_zero_offsets(self, data, **_):  # pylint: disable=no-self-use
+    def omit_optional_fields_with_default_values(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
-        If offset values are zero, don't bother sending them in JSON.
+        Don't bother sending JSON fields with null/empty/default values.
 
         :param data: Marshmallow-provided dict containing parsed object values
         :param _: kwargs passed by Marshmallow
         :return: dict suitable for JSON serialization as a Target
         """
+        if data["ra"] is None and data["dec"] is None:
+            del data["ra"]
+            del data["dec"]
+            del data["reference_frame"]
+
+        # If offset values are zero, omit them:
         for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
             if data[field_name] == 0.0:
                 del data[field_name]
+
+        if data["target_name"] == "":
+            del data["target_name"]
+
         return data
 
     @post_load
