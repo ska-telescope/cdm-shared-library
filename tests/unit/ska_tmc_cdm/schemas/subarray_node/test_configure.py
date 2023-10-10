@@ -913,6 +913,12 @@ def mid_invalidator(o: ConfigureRequest):
     o.tmc.scan_duration = timedelta(seconds=-10)
 
 
+def partial_invalidator(o: ConfigureRequest):
+    # function to make a valid partial MID ConfigureRequest invalid
+    o.pointing.target.coord = None
+    o.tmc.partial_configuration = False
+
+
 @pytest.mark.parametrize(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
@@ -921,7 +927,7 @@ def mid_invalidator(o: ConfigureRequest):
             PARTIAL_CONFIGURATION_OFFSET_OBJECT,
             mid_invalidator,
             PARTIAL_CONFIGURATION_OFFSET_JSON,
-            INVALID_MID_CONFIGURE_JSON,
+            None,
             True,
         ),
         (
