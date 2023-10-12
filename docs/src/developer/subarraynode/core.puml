@@ -7,14 +7,16 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 
 		class Target {
 			coord : astropy.SkyCoord
-			target_name : str
+			target_name : str = ""
+			ca_offset_arcsec: float = 0
+			ie_offset_arcsec: float = 0
 		}
 
 		class PointingConfiguration
 		PointingConfiguration *-- "1" Target
 
 		class DishConfiguration {
-            receiver_band : ReceiverBand
+			receiver_band : ReceiverBand
 		}
 
 		enum ReceiverBand {
