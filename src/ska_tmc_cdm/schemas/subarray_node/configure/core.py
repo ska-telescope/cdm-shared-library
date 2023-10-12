@@ -21,7 +21,9 @@ __all__ = [
     "TargetSchema",
 ]
 
-JsonTarget = collections.namedtuple("JsonTarget", "ra dec reference_frame target_name")
+JsonTarget = collections.namedtuple(
+    "JsonTarget", "ra dec reference_frame target_name ca_offset_arcsec ie_offset_arcsec"
+)
 
 
 class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
@@ -33,6 +35,8 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
     dec = fields.String()
     reference_frame = shared.UpperCasedField(data_key="reference_frame")
     target_name = fields.String()
+    ca_offset_arcsec = fields.Float()
+    ie_offset_arcsec = fields.Float()
 
     @pre_dump
     def convert_to_icrs(
@@ -47,16 +51,48 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: SexagesimalTarget with ICRS ra/dec expressed in hms/dms
         """
         # All pointing coordinates are in ICRS
-        icrs_coord = target.coord.transform_to("icrs")
-        hms, dms = icrs_coord.to_string("hmsdms", sep=":").split(" ")
+        if target.coord is None:
+            hms, dms, reference_frame = None, None, None
+        else:
+            icrs_coord = target.coord.transform_to("icrs")
+            reference_frame = icrs_coord.frame.name
+            hms, dms = icrs_coord.to_string("hmsdms", sep=":").split(" ")
         sexagesimal = JsonTarget(
             ra=hms,
             dec=dms,
-            reference_frame=icrs_coord.frame.name,
+            reference_frame=reference_frame,
             target_name=target.target_name,
+            ca_offset_arcsec=target.ca_offset_arcsec,
+            ie_offset_arcsec=target.ie_offset_arcsec,
         )
 
         return sexagesimal
+
+    @post_dump
+    def omit_optional_fields_with_default_values(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
+        """
+        Don't bother sending JSON fields with null/empty/default values.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for JSON serialization as a Target
+        """
+        if data["ra"] is None and data["dec"] is None:
+            del data["ra"]
+            del data["dec"]
+            del data["reference_frame"]
+
+        # If offset values are zero, omit them:
+        for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
+            if data[field_name] == 0.0:
+                del data[field_name]
+
+        if data["target_name"] == "":
+            del data["target_name"]
+
+        return data
 
     @post_load
     def create_target(self, data, **_):  # pylint: disable=no-self-use
@@ -67,16 +103,15 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         :param _: kwargs passed by Marshmallow
         :return: Target instance populated to match JSON
         """
-        target_name = data["target_name"]
-        hms = data["ra"]
-        dms = data["dec"]
-        reference_frame = data["reference_frame"]
+
         target = configure_msgs.Target(
-            hms,
-            dms,
-            reference_frame=reference_frame,
-            target_name=target_name,
+            data.get("ra"),
+            data.get("dec"),
+            reference_frame=data.get("reference_frame", ""),
+            target_name=data.get("target_name", ""),
             unit=("hourangle", "deg"),
+            ca_offset_arcsec=data.get("ca_offset_arcsec", 0.0),
+            ie_offset_arcsec=data.get("ie_offset_arcsec", 0.0),
         )
         return target
 

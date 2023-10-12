@@ -2,13 +2,16 @@
 hide empty members
 
 package ska_tmc_cdm.messages.subarray_node.configure {
-    package tmc.py <<Rectangle>> {
+	package tmc.py <<Rectangle>> {
 
-        class TMCConfiguration {
-            scan_duration : datetime.timedelta
-        }
+		class TMCConfiguration {
+			scan_duration : datetime.timedelta = None
+			partial_configuration: bool = False
 
-    }
+
+		}
+
+	}
 }
 
 @enduml

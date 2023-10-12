@@ -19,7 +19,7 @@ __all__ = ["JsonSchema"]
 # version as the library version:
 TELMODEL_LIB_VERSION = version("ska_telmodel")
 CAR_TELMODEL_SOURCE = (
-    f"car://gitlab.com/ska-telescope/ska-telmodel?{TELMODEL_LIB_VERSION}#tmdata"
+    f"car://gitlab.com/ska-telescope/ska-telmodel?{TELMODEL_LIB_VERSION}#tmdata",
 )
 
 
@@ -74,7 +74,7 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
                 if strictness is not None and strictness > 1:
                     raise SchemaNotFound(uri) from exc
             else:
-                raise JsonValidationError(uri, instance) from exc
+                raise JsonValidationError(exc, uri, instance) from exc
 
     @staticmethod
     def semantic_validate_schema(instance: dict, uri: str) -> None:
@@ -85,8 +85,10 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :param instance: The instance to validate
         :return: None, in case of valid data otherwise, it raises an exception.
         """
-        data_source = environ.get("SKA_TELMODEL_SOURCES") or CAR_TELMODEL_SOURCE
-        tm_data = TMData(source_uris=(data_source,), update=True)
+        data_source = (
+            environ.get("SKA_TELMODEL_SOURCES").split(",") or CAR_TELMODEL_SOURCE
+        )
+        tm_data = TMData(source_uris=data_source, update=True)
         try:
             return televalidation_schema.semantic_validate(
                 config=instance,

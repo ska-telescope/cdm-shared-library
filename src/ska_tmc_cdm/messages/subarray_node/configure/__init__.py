@@ -7,6 +7,7 @@ __all__ = ["ConfigureRequest"]
 
 from typing import Optional
 
+from pydantic import model_validator
 from pydantic.dataclasses import dataclass
 
 from .core import DishConfiguration, PointingConfiguration
@@ -34,8 +35,19 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     interface: Optional[str] = SCHEMA
     transaction_id: Optional[str] = None
 
-    def __post_init__(self):
+    @model_validator(mode="after")
+    def partial_configuration_validation(self) -> "ConfigureRequest":
+        if self.dish and self.tmc and not self.tmc.partial_configuration:
+            if not self.pointing.target.coord:
+                raise ValueError(
+                    "ra and dec for a Target() should be defined for non-partial configuration"
+                )
+        return self
+
+    @model_validator(mode="after")
+    def mccs_or_dish_validation(self) -> "ConfigureRequest":
         if self.mccs is not None and (self.dish is not None):
             raise ValueError(
                 "Can't allocate dish, csp and sdp in the same call as mccs"
             )
+        return self

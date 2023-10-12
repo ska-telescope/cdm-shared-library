@@ -5,6 +5,7 @@ import copy
 from datetime import timedelta
 
 import pytest
+from pydantic import ValidationError
 
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
@@ -505,3 +506,44 @@ def test_configure_request_is_not_equal_to_other_objects_for_low_pi17():
     )
     assert request != object
     assert request is not None
+
+
+def test_configure_partial_configuration():
+    """
+    Verify that a non-partial Mid ConfigureRequest requires the correct fields
+    """
+    dish_config = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
+    pointing_config = PointingConfiguration(
+        Target(ca_offset_arcsec=5.0, ie_offset_arcsec=5.0)
+    )
+    valid_partial_request = ConfigureRequest(
+        pointing=pointing_config,
+        tmc=TMCConfiguration(partial_configuration=True),
+        dish=dish_config,
+    )
+    assert valid_partial_request is not None
+
+    # scan_duration should be required for non-partial ConfigureRequest
+    with pytest.raises(ValidationError):
+        ConfigureRequest(
+            dish=dish_config,
+            pointing=PointingConfiguration(
+                Target(
+                    ra="21:08:47.92",
+                    dec="-88:57:22.9",
+                    target_name="Polaris Australis",
+                    reference_frame="icrs",
+                )
+            ),
+            tmc=TMCConfiguration(partial_configuration=False),
+        )
+
+    # ra and dec should be required for non-partial ConfigureRequest
+    with pytest.raises(ValueError):
+        ConfigureRequest(
+            dish=dish_config,
+            pointing=pointing_config,
+            tmc=TMCConfiguration(
+                scan_duration=timedelta(10.0), partial_configuration=False
+            ),
+        )
