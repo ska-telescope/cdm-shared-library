@@ -17,6 +17,8 @@ from pydantic.dataclasses import dataclass
 
 __all__ = ["PointingConfiguration", "Target", "ReceiverBand", "DishConfiguration"]
 
+UnitStr = Union[str, u.Unit]
+
 
 @dataclass(
     config=ConfigDict(arbitrary_types_allowed=True)
@@ -33,7 +35,7 @@ class Target:
     dec: InitVar[Optional[Union[str, int, float, u.Quantity]]] = None
     target_name: str = ""
     reference_frame: InitVar[str] = "icrs"
-    unit: InitVar[str | u.Unit | tuple[str | u.Unit, str | u.Unit]] = (
+    unit: InitVar[Union[UnitStr, tuple[UnitStr, UnitStr]]] = (
         u.hourangle,
         u.deg,
     )
@@ -45,8 +47,8 @@ class Target:
 
     def __post_init__(
         self,
-        ra: str | u.Quantity,
-        dec: str | u.Quantity,
+        ra: Union[str, u.Quantity],
+        dec: Union[str, u.Quantity],
         reference_frame: str,
         unit: u.Unit,
     ):
