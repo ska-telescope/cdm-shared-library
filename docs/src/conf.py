@@ -27,7 +27,7 @@ sys.path.insert(0, os.path.abspath("../../src"))
 with open("../../pyproject.toml", "rb") as fh:
     pyproject = tomli.load(fh)
 
-autodoc_mock_imports = ["astropy", "marshmallow", "ska_telmodel"]
+autodoc_mock_imports = ["marshmallow", "ska_telmodel"]
 
 
 def setup(app):
