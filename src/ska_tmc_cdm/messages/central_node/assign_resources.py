@@ -23,7 +23,7 @@ class AssignResourcesRequest:
 
     :param subarray_id: the numeric SubArray ID (1..16)
     :param dish_allocation: object holding the DISH resource allocation
-        for this request.
+    for this request.
     :param sdp_config: sdp configuration
     :param csp_config: csp configuration
     :param mccs: MCCS subarray allocation
@@ -65,7 +65,7 @@ class AssignResourcesRequest:
         Create a new AssignResourcesRequest object.
         :param subarray_id: the numeric SubArray ID (1..16)
         :param dish_allocation: object holding the DISH resource allocation
-            for this request.
+        for this request.
         :param sdp_config: sdp configuration
         :return: AssignResourcesRequest object
         """
