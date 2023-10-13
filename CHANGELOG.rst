@@ -5,10 +5,17 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
-[Unreleased]
-************
+[8.0.0]
+*******
 
 Added
 -----
 
-* Empty Python project directory structure
+* Support for TMC.partial_configuration and Target offset parameters.
+
+Changed
+-------
+
+* All classes in ska_tmc_cdm.messages are now Python dataclasses with
+  Pydantic valdiation. This will enforce runtime type-checking that may
+  break callers passing invalid types.
