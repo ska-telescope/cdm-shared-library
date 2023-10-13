@@ -8,7 +8,7 @@ this package.
 import math
 from dataclasses import InitVar, field
 from enum import Enum
-from typing import ClassVar, Optional, Union
+from typing import ClassVar, Optional
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
@@ -17,7 +17,7 @@ from pydantic.dataclasses import dataclass
 
 __all__ = ["PointingConfiguration", "Target", "ReceiverBand", "DishConfiguration"]
 
-UnitStr = Union[str, u.Unit]
+UnitStr = str | u.Unit
 
 
 @dataclass(
@@ -31,11 +31,11 @@ class Target:
     non-ra/dec frames such as galactic are not supported.
     """
 
-    ra: InitVar[Optional[Union[str, int, float, u.Quantity]]] = None
-    dec: InitVar[Optional[Union[str, int, float, u.Quantity]]] = None
+    ra: InitVar[Optional[str | int | float | u.Quantity]] = None
+    dec: InitVar[Optional[str | int | float | u.Quantity]] = None
     target_name: str = ""
     reference_frame: InitVar[str] = "icrs"
-    unit: InitVar[Union[UnitStr, tuple[UnitStr, UnitStr]]] = (
+    unit: InitVar[UnitStr | tuple[UnitStr, UnitStr]] = (
         u.hourangle,
         u.deg,
     )
@@ -47,8 +47,8 @@ class Target:
 
     def __post_init__(
         self,
-        ra: Union[str, u.Quantity],
-        dec: Union[str, u.Quantity],
+        ra: str | u.Quantity,
+        dec: str | u.Quantity,
         reference_frame: str,
         unit: u.Unit,
     ):
