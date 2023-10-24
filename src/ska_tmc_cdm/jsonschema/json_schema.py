@@ -85,10 +85,11 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         :param instance: The instance to validate
         :return: None, in case of valid data otherwise, it raises an exception.
         """
-        data_source = (
-            environ.get("SKA_TELMODEL_SOURCES").split(",") or CAR_TELMODEL_SOURCE
-        )
-        tm_data = TMData(source_uris=data_source, update=True)
+        if env_var_sources := environ.get("SKA_TELMODEL_SOURCES"):
+            data_sources = env_var_sources.split(",")
+        else:
+            data_sources = CAR_TELMODEL_SOURCE
+        tm_data = TMData(source_uris=data_sources, update=True)
         try:
             return televalidation_schema.semantic_validate(
                 config=instance,
