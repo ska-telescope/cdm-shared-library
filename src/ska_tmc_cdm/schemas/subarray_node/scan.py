@@ -30,6 +30,8 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
 
     # holds numeric scan ID
     scan_id = fields.Integer()
+    # holds numeric SubArray ID
+    subarray_id = fields.Integer(required=False)
 
     @post_load
     def create_scanrequest(self, data, **_):  # pylint: disable=no-self-use
@@ -43,9 +45,13 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
         interface = data["interface"]
         transaction_id = data.get("transaction_id", None)
         scan_id = data["scan_id"]
+        subarray_id = data.get("subarray_id", None)
 
         return ScanRequest(
-            interface=interface, transaction_id=transaction_id, scan_id=scan_id
+            interface=interface,
+            transaction_id=transaction_id,
+            scan_id=scan_id,
+            subarray_id=subarray_id,
         )
 
     @post_dump

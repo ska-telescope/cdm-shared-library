@@ -20,7 +20,8 @@ COPY pyproject.toml poetry.lock* ./
 RUN poetry export --format requirements.txt --output poetry-requirements.txt --without-hashes && \
     pip install -r poetry-requirements.txt && \
     rm poetry-requirements.txt && \
-    pip install .
+    pip install . \
+    pip install ska_telmodel-1.9.1-py3-none-any.whl --force-reinstall
 
 USER tango
 

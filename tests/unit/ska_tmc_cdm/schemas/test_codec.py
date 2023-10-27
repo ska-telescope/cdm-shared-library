@@ -20,8 +20,10 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
@@ -55,7 +57,7 @@ TEST_PARAMETERS = [
         AssignResourcesRequest,
         VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
         VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-        False,
+        True,
     ),
     (
         AssignResourcesRequest,
@@ -65,9 +67,15 @@ TEST_PARAMETERS = [
     ),
     (
         AssignResourcesRequest,
+        VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
+        VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20,
+        True,
+    ),
+    (
+        AssignResourcesRequest,
         VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
         VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
-        False,
+        True,
     ),
     (
         ConfigureRequest,
@@ -79,7 +87,7 @@ TEST_PARAMETERS = [
         ConfigureRequest,
         VALID_LOW_CONFIGURE_JSON,
         VALID_LOW_CONFIGURE_OBJECT,
-        False,
+        True,
     ),
     (
         ConfigureRequest,
