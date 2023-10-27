@@ -5,7 +5,7 @@ Unit tests for the ska_tmc_cdm.messages.subarraynode.scan module
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
 CONSTRUCTOR_ARGS = dict(
-    interface="interface", transaction_id="transaction ID", scan_id=123
+    interface="interface", transaction_id="transaction ID", scan_id=123, subarray_id=1
 )
 
 

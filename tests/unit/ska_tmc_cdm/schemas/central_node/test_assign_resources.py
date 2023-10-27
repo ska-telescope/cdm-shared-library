@@ -184,8 +184,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = """
       "execution_block":{
          "eb_id":"eb-mvp01-20210623-00000",
          "max_length":100.0,
-         "context":{
-         },
+         "context":{},
          "beams":[
             {
                "beam_id":"vis0",
@@ -1158,6 +1157,514 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
     },
 )
 
+VALID_SDP_JSON_PI20 = """
+{
+    "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
+    "resources": {
+      "receptors": [
+        "SKA001",
+        "SKA002",
+        "SKA003",
+        "SKA004"
+      ]
+    },
+    "execution_block": {
+      "eb_id": "eb-test-20220916-00000",
+      "context": {
+      },
+      "max_length": 3600.0,
+      "beams": [
+        {
+          "beam_id": "vis0",
+          "function": "visibilities"
+        }
+      ],
+      "scan_types": [
+        {
+          "scan_type_id": ".default",
+          "beams": {
+            "vis0": {
+              "channels_id": "vis_channels",
+              "polarisations_id": "all"
+            }
+          }
+        },
+        {
+          "scan_type_id": "target:a",
+          "derive_from": ".default",
+          "beams": {
+            "vis0": {
+              "field_id": "field_a"
+            }
+          }
+        },
+        {
+          "scan_type_id": "calibration:b",
+          "derive_from": ".default",
+          "beams": {
+            "vis0": {
+              "field_id": "field_b"
+            }
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channels_id": "vis_channels",
+          "spectral_windows": [
+            {
+              "spectral_window_id": "fsp_1_channels",
+              "count": 4,
+              "start": 0,
+              "stride": 2,
+              "freq_min": 350000000.0,
+              "freq_max": 368000000.0,
+              "link_map": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  200,
+                  1
+                ],
+                [
+                  744,
+                  2
+                ],
+                [
+                  944,
+                  3
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "polarisations": [
+        {
+          "polarisations_id": "all",
+          "corr_type": [
+            "XX",
+            "XY",
+            "YX",
+            "YY"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "field_id": "field_a",
+          "phase_dir": {
+            "ra": [
+              123.0
+            ],
+            "dec": [
+              -60.0
+            ],
+            "reference_time": "...",
+            "reference_frame": "ICRF3"
+          },
+          "pointing_fqdn": "..."
+        },
+        {
+          "field_id": "field_b",
+          "phase_dir": {
+            "ra": [
+              123.0
+            ],
+            "dec": [
+              -60.0
+            ],
+            "reference_time": "...",
+            "reference_frame": "ICRF3"
+          },
+          "pointing_fqdn": "..."
+        }
+      ]
+    },
+    "processing_blocks": [
+      {
+        "pb_id": "pb-test-20220916-00000",
+        "script": {
+          "kind": "realtime",
+          "name": "test-receive-addresses",
+          "version": "0.5.0"
+        },
+        "sbi_ids": [
+          "sbi-test-20220916-00000"
+        ],
+        "parameters": {}
+      }
+    ]
+  }
+"""
+
+VALID_SDP_OBJECT_PI20 = SDPConfiguration(
+    interface="https://schema.skao.int/ska-sdp-assignres/0.4",
+    execution_block=ExecutionBlockConfiguration(
+        eb_id="eb-test-20220916-00000",
+        max_length=3600.0,
+        context={},
+        beams=[BeamConfiguration(beam_id="vis0", function="visibilities")],
+        scan_types=[
+            EBScanType(
+                scan_type_id=".default",
+                beams={
+                    "vis0": EBScanTypeBeam(
+                        channels_id="vis_channels",
+                        polarisations_id="all",
+                    )
+                },
+            ),
+            EBScanType(
+                scan_type_id="target:a",
+                derive_from=".default",
+                beams={"vis0": EBScanTypeBeam(field_id="field_a")},
+            ),
+            EBScanType(
+                scan_type_id="calibration:b",
+                derive_from=".default",
+                beams={"vis0": EBScanTypeBeam(field_id="field_b")},
+            ),
+        ],
+        channels=[
+            ChannelConfiguration(
+                channels_id="vis_channels",
+                spectral_windows=[
+                    Channel(
+                        spectral_window_id="fsp_1_channels",
+                        count=4,
+                        start=0,
+                        stride=2,
+                        freq_min=350000000.0,
+                        freq_max=368000000.0,
+                        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+                    )
+                ],
+            )
+        ],
+        polarisations=[
+            PolarisationConfiguration(
+                polarisations_id="all",
+                corr_type=["XX", "XY", "YX", "YY"],
+            )
+        ],
+        fields=[
+            FieldConfiguration(
+                field_id="field_a",
+                phase_dir={
+                    "ra": [123],
+                    "dec": [-60],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
+                pointing_fqdn="...",
+            ),
+            FieldConfiguration(
+                field_id="field_b",
+                phase_dir={
+                    "ra": [123.0],
+                    "dec": [-60.0],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
+                pointing_fqdn="...",
+            ),
+        ],
+    ),
+    processing_blocks=[
+        ProcessingBlockConfiguration(
+            pb_id="pb-test-20220916-00000",
+            sbi_ids=["sbi-test-20220916-00000"],
+            script=ScriptConfiguration(
+                kind="realtime",
+                name="test-receive-addresses",
+                version="0.5.0",
+            ),
+            parameters={},
+        )
+    ],
+    resources={
+        "receptors": ["SKA001", "SKA002", "SKA003", "SKA004"],
+    },
+)
+
+INVALID_SDP_OBJECT_PI20 = SDPConfiguration(
+    interface="https://schema.skao.int/ska-sdp-assignres/0.4",
+    execution_block=ExecutionBlockConfiguration(
+        eb_id="eb-test-20220916-00000",
+        max_length=3600.0,
+        context={},
+        beams=[
+            BeamConfiguration(beam_id="vis0", function="pulsar search"),
+            BeamConfiguration(beam_id="vis0", function="vlbi"),
+        ],
+        scan_types=[
+            EBScanType(
+                scan_type_id=".default",
+                beams={
+                    "vis0": EBScanTypeBeam(
+                        channels_id="vis_channels",
+                        polarisations_id="all",
+                    )
+                },
+            ),
+            EBScanType(
+                scan_type_id="target:a",
+                derive_from=".default",
+                beams={"vis0": EBScanTypeBeam(field_id="field_a")},
+            ),
+            EBScanType(
+                scan_type_id="calibration:b",
+                derive_from=".default",
+                beams={"vis0": EBScanTypeBeam(field_id="field_b")},
+            ),
+        ],
+        channels=[
+            ChannelConfiguration(
+                channels_id="vis_channels",
+                spectral_windows=[
+                    Channel(
+                        spectral_window_id="fsp_1_channels",
+                        count=4,
+                        start=0,
+                        stride=2,
+                        freq_min=350000000.0,
+                        freq_max=368000000.0,
+                        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+                    ),
+                    Channel(
+                        spectral_window_id="fsp_2_channels",
+                        count=4,
+                        start=0,
+                        stride=2,
+                        freq_min=350000000.0,
+                        freq_max=368000000.0,
+                        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+                    ),
+                ],
+            )
+        ],
+        polarisations=[
+            PolarisationConfiguration(
+                polarisations_id="all",
+                corr_type=["XX", "XY", "YX", "YY"],
+            )
+        ],
+        fields=[
+            FieldConfiguration(
+                field_id="field_a",
+                phase_dir={
+                    "ra": [123],
+                    "dec": [-60],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
+                pointing_fqdn="...",
+            ),
+            FieldConfiguration(
+                field_id="field_b",
+                phase_dir={
+                    "ra": [123.0],
+                    "dec": [-60.0],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
+                pointing_fqdn="...",
+            ),
+        ],
+    ),
+    processing_blocks=[
+        ProcessingBlockConfiguration(
+            pb_id="pb-test-20220916-00000",
+            sbi_ids=["sbi-test-20220916-00000"],
+            script=ScriptConfiguration(
+                kind="realtime",
+                name="test-receive-addresses",
+                version="0.5.0",
+            ),
+            parameters={},
+        )
+    ],
+    resources={
+        "receptors": ["SKA001", "SKA002", "SKA003", "SKA004"],
+    },
+)
+
+INVALID_SDP_JSON_PI20 = """{
+    "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
+    "resources": {
+      "receptors": [
+        "SKA001",
+        "SKA002",
+        "SKA003",
+        "SKA004"
+      ]
+    },
+    "execution_block": {
+      "eb_id": "eb-test-20220916-00000",
+      "context": {},
+      "max_length": 3600.0,
+      "beams": [
+        {
+          "beam_id": "vis0",
+          "function": "pulsar search"
+        },
+         {
+          "beam_id": "vis0",
+          "function": "vlbi"
+        }
+      ],
+      "scan_types": [
+        {
+          "scan_type_id": ".default",
+          "beams": {
+            "vis0": {
+              "channels_id": "vis_channels",
+              "polarisations_id": "all"
+            }
+          }
+        },
+        {
+          "scan_type_id": "target:a",
+          "derive_from": ".default",
+          "beams": {
+            "vis0": {
+              "field_id": "field_a"
+            }
+          }
+        },
+        {
+          "scan_type_id": "calibration:b",
+          "derive_from": ".default",
+          "beams": {
+            "vis0": {
+              "field_id": "field_b"
+            }
+          }
+        }
+      ],
+      "channels": [
+        {
+          "channels_id": "vis_channels",
+          "spectral_windows": [
+            {
+              "spectral_window_id": "fsp_1_channels",
+              "count": 4,
+              "start": 0,
+              "stride": 2,
+              "freq_min": 350000000.0,
+              "freq_max": 368000000.0,
+              "link_map": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  200,
+                  1
+                ],
+                [
+                  744,
+                  2
+                ],
+                [
+                  944,
+                  3
+                ]
+              ]
+            },
+              {
+              "spectral_window_id": "fsp_2_channels",
+              "count": 4,
+              "start": 0,
+              "stride": 2,
+              "freq_min": 350000000.0,
+              "freq_max": 368000000.0,
+              "link_map": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  200,
+                  1
+                ],
+                [
+                  744,
+                  2
+                ],
+                [
+                  944,
+                  3
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "polarisations": [
+        {
+          "polarisations_id": "all",
+          "corr_type": [
+            "XX",
+            "XY",
+            "YX",
+            "YY"
+          ]
+        }
+      ],
+      "fields": [
+        {
+          "field_id": "field_a",
+          "phase_dir": {
+            "ra": [
+              123.0
+            ],
+            "dec": [
+              -60.0
+            ],
+            "reference_time": "...",
+            "reference_frame": "ICRF3"
+          },
+          "pointing_fqdn": "..."
+        },
+        {
+          "field_id": "field_b",
+          "phase_dir": {
+            "ra": [
+              123.0
+            ],
+            "dec": [
+              -60.0
+            ],
+            "reference_time": "...",
+            "reference_frame": "ICRF3"
+          },
+          "pointing_fqdn": "..."
+        }
+      ]
+    },
+    "processing_blocks": [
+      {
+        "pb_id": "pb-test-20220916-00000",
+        "script": {
+          "kind": "realtime",
+          "name": "test-receive-addresses",
+          "version": "0.5.0"
+        },
+        "sbi_ids": [
+          "sbi-test-20220916-00000"
+        ],
+        "parameters": {
+        }
+      }
+    ]
+  }
+
+"""
+
 INVALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
     """
 {
@@ -1197,6 +1704,40 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     sdp_config=VALID_SDP_OBJECT_PI16,
 )
 
+INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20 = (
+    """
+{
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+  "transaction_id": "txn-....-00001",
+  "subarray_id": 1,
+  "mccs": {
+    "subarray_beam_ids": [
+      1
+    ],
+    "station_ids": [
+      [
+        1,
+        2
+      ]
+    ],
+    "channel_blocks": [
+      3
+    ]
+  },
+   "sdp": """
+    + INVALID_SDP_JSON_PI20
+    + """
+}
+"""
+)
+
+
+INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+    transaction_id="txn-....-00001",
+    subarray_id="1",
+    sdp_config=VALID_SDP_OBJECT_PI20,
+)
 
 VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17 = (
     """
@@ -1247,6 +1788,49 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17 = (
 """
 )
 
+VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20 = (
+    """
+{
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+  "transaction_id": "txn-....-00001",
+  "subarray_id": 1,
+  "mccs": {
+    "subarray_beam_ids": [
+      1
+    ],
+    "station_ids": [
+      [
+        1,
+        2
+      ]
+    ],
+    "channel_blocks": [
+      3
+    ]
+  },
+ "sdp": """
+    + VALID_SDP_JSON_PI20
+    + """
+}
+"""
+)
+
+VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20 = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+    transaction_id="txn-....-00001",
+    subarray_id=1,
+    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
+    sdp_config=VALID_SDP_OBJECT_PI20,
+)
+
+INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20 = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+    transaction_id="txn-....-00001",
+    subarray_id="1",
+    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
+    sdp_config=INVALID_SDP_OBJECT_PI20,
+)
+
 VALID_LOW_CSP_OBJECT_PI17 = CSPConfiguration(
     interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
     common=CommonConfiguration(subarray_id=1),
@@ -1289,6 +1873,11 @@ SCAN_VALID_OBJECT = ScanRequest(
 def low_invalidator_fn(o: AssignResourcesRequest):
     # function to make a valid LOW AssignedResourcesRequest invalid
     o.mccs.subarray_beam_ids = [1, 2, 3]
+
+
+def low_tmc_invalidator_fn(o: AssignResourcesRequest):
+    # function to make a validLOW AssignedResourcesRequest invalid
+    o.sdp_config.execution_block.beams[0].function = "vis"
 
 
 def mid_invalidator_fn(o: AssignResourcesRequest):
@@ -1340,12 +1929,36 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             True,
         ),
         (
+            SDPConfigurationSchema,
+            VALID_SDP_OBJECT_PI20,
+            None,
+            VALID_SDP_JSON_PI20,
+            None,
+            True,
+        ),
+        (
             AssignResourcesRequestSchema,
             VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
             None,
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
             None,
             False,
+        ),
+        (
+            AssignResourcesRequestSchema,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20,
+            None,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
+            None,
+            False,
+        ),
+        (
+            AssignResourcesRequestSchema,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20,
+            low_tmc_invalidator_fn,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
+            None,
+            True,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1444,4 +2057,47 @@ def test_assignresources_serialisation_and_validation_invalid_json(
             "Currently allowed visibilities,spectral windows are too many! Current limit = 1,"
             "Invalid input for channel_count! Currently allowed 14880,Invalid input for freq_min,"
             "Invalid input for freq_max,length of receptor_ids should be same as length of receptors"
+        )
+
+
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    [
+        (
+            AssignResourcesRequestSchema,
+            INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20,
+            low_tmc_invalidator_fn,
+            INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
+            None,
+            True,
+        ),
+    ],
+)
+def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
+    schema_cls,
+    instance,
+    modifier_fn,
+    valid_json,
+    invalid_json,
+    is_validate,
+):
+    """
+    Verifies that the schema marshals, unmarshals, and validates correctly
+    for invalid json and raise SchematicValidationError for TMC LOW.
+    """
+    try:
+        utils.test_schema_serialisation_and_validation(
+            schema_cls,
+            instance,
+            modifier_fn,
+            valid_json,
+            invalid_json,
+            is_validate,
+        )
+
+    except SchematicValidationError as error:
+        assert error.message == (
+            "beams are too many! Current limit is 1,"
+            "Invalid function for beams! Currently allowed visibilities,"
+            "spectral windows are too many! Current limit = 1"
         )

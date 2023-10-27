@@ -37,6 +37,32 @@ VALID_LOW_OBJECT = ScanRequest(
     scan_id=1,
 )
 
+VALID_LOW_JSON_PI20 = """
+{   
+    "interface": "https://schema.skao.int/ska-low-tmc-scan/4.0",
+    "transaction_id": "txn-test-00001",
+    "scan_id": 1,
+    "subarray_id":1
+}
+"""
+
+VALID_LOW_OBJECT_PI20 = ScanRequest(
+    interface="https://schema.skao.int/ska-low-tmc-scan/4.0",
+    transaction_id="txn-test-00001",
+    scan_id=1,
+    subarray_id=1,
+)
+
+INVALID_LOW_JSON_PI20 = """
+{   
+    "interface": "https://schema.skao.int/ska-low-tmc-scan/4.0",
+    "transaction_id": "txn-test-00001",
+    "scan_id": 1.23,
+    "subarray_id":"1"
+
+}
+"""
+
 INVALID_LOW_JSON = """
 {   
     "interface": "https://schema.skao.int/ska-low-tmc-scan/2.0",
@@ -62,6 +88,13 @@ INVALID_LOW_JSON = """
             None,  # schema does not impose any constraints so nothing to test
             VALID_LOW_JSON,
             INVALID_LOW_JSON,
+        ),
+        (
+            ScanRequestSchema,
+            VALID_LOW_OBJECT_PI20,
+            None,  # schema does not impose any constraints so nothing to test
+            VALID_LOW_JSON_PI20,
+            INVALID_LOW_JSON_PI20,
         ),
     ],
 )

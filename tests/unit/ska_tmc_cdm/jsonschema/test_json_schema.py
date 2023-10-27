@@ -15,6 +15,7 @@ from ska_tmc_cdm.jsonschema.json_schema import (
 )
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
 )
 
@@ -73,3 +74,14 @@ def test_semantic_validation_with_invalid_json():
         json_schema_obj.semantic_validate_schema(
             instance=MID_INVALID_JSON, uri=MID_INVALID_JSON["interface"]
         )
+
+
+def test_semantic_validation_low_tmc_assign_with_valid_json():
+    """
+    Verify semantic validation with test valid json
+    """
+    LOW_ASSIGN_VALID_JSON = json.loads(VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20)
+    json_schema_obj = JsonSchema()
+    json_schema_obj.semantic_validate_schema(
+        instance=LOW_ASSIGN_VALID_JSON, uri=LOW_ASSIGN_VALID_JSON["interface"]
+    )
