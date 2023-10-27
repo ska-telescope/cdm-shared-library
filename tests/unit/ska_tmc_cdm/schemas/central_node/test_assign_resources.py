@@ -9,12 +9,6 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesResponse,
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.csp import (
-    CommonConfiguration,
-    CSPConfiguration,
-    LowCbfConfiguration,
-    ResourceConfiguration,
-)
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
@@ -531,37 +525,6 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     sdp_config=VALID_SDP_OBJECT,
 )
 
-VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """
-{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/2.0",
-  "transaction_id":"txn-mvp01-20200325-00004",
-  "subarray_id": 1,
-  "mccs": {
-    "subarray_beam_ids": [1],
-    "station_ids": [[1, 2]],
-    "channel_blocks": [1, 2, 3, 4, 5]
-  }
-}
-"""
-
-VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-low-tmc-assignresources/2.0",
-    transaction_id="txn-mvp01-20200325-00004",
-    subarray_id=1,
-    mccs=MCCSAllocate(
-        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[1, 2, 3, 4, 5]
-    ),
-)
-
-INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/999999.0",
-  "subarray_id": 1,
-  "mccs": {
-    "subarray_beam_ids": [1, 2, 3],
-    "station_ids": [[1, 2]],
-    "channel_blocks": [1, 2, 3, 4, 5]
-  }
-}"""
 
 VALID_MID_ASSIGNRESOURCESRESPONSE_JSON = """
 {
@@ -1704,7 +1667,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     sdp_config=VALID_SDP_OBJECT_PI16,
 )
 
-INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20 = (
+INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
     """
 {
   "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.1",
@@ -1739,56 +1702,8 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     sdp_config=VALID_SDP_OBJECT_PI20,
 )
 
-VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17 = (
-    """
-{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.0",
-  "transaction_id": "txn-....-00001",
-  "subarray_id": 1,
-  "mccs": {
-    "subarray_beam_ids": [
-      1
-    ],
-    "station_ids": [
-      [
-        1,
-        2
-      ]
-    ],
-    "channel_blocks": [
-      3
-    ]
-  },
-    "sdp": """
-    + VALID_SDP_JSON_PI16
-    + """,
-  "csp": {
-    "interface": "https://schema.skao.int/ska-low-csp-assignresources/2.0",
-    "common": {
-      "subarray_id": 1
-    },
-    "lowcbf": {
-      "resources": [
-        {
-          "device": "fsp_01",
-          "shared": true,
-          "fw_image": "pst",
-          "fw_mode": "unused"
-        },
-        {
-          "device": "p4_01",
-          "shared": true,
-          "fw_image": "p4.bin",
-          "fw_mode": "p4"
-        }
-      ]
-    }
-  }
-}
-"""
-)
 
-VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20 = (
+VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
     """
 {
   "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.1",
@@ -1815,7 +1730,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20 = (
 """
 )
 
-VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20 = AssignResourcesRequest(
+VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-assignresources/3.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
@@ -1823,7 +1738,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20 = AssignResourcesRequest(
     sdp_config=VALID_SDP_OBJECT_PI20,
 )
 
-INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20 = AssignResourcesRequest(
+INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-assignresources/3.1",
     transaction_id="txn-....-00001",
     subarray_id="1",
@@ -1831,29 +1746,6 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20 = AssignResourcesRequest(
     sdp_config=INVALID_SDP_OBJECT_PI20,
 )
 
-VALID_LOW_CSP_OBJECT_PI17 = CSPConfiguration(
-    interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
-    common=CommonConfiguration(subarray_id=1),
-    lowcbf=LowCbfConfiguration(
-        resources=[
-            ResourceConfiguration(
-                device="fsp_01", shared=True, fw_image="pst", fw_mode="unused"
-            ),
-            ResourceConfiguration(
-                device="p4_01", shared=True, fw_image="p4.bin", fw_mode="p4"
-            ),
-        ]
-    ),
-)
-
-VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17 = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-low-tmc-assignresources/3.0",
-    transaction_id="txn-....-00001",
-    subarray_id=1,
-    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
-    sdp_config=VALID_SDP_OBJECT_PI16,
-    csp_config=VALID_LOW_CSP_OBJECT_PI17,
-)
 
 SCAN_VALID_JSON = """
 {
@@ -1888,14 +1780,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
 @pytest.mark.parametrize(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
-        (
-            AssignResourcesRequestSchema,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-            low_invalidator_fn,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-            INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-            True,
-        ),
         (
             AssignResourcesRequestSchema,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
@@ -1938,25 +1822,9 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
         ),
         (
             AssignResourcesRequestSchema,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
-            None,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
-            None,
-            False,
-        ),
-        (
-            AssignResourcesRequestSchema,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20,
-            None,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
-            None,
-            False,
-        ),
-        (
-            AssignResourcesRequestSchema,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
             low_tmc_invalidator_fn,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
             True,
         ),
@@ -2065,9 +1933,9 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     [
         (
             AssignResourcesRequestSchema,
-            INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI20,
+            INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
             low_tmc_invalidator_fn,
-            INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI20,
+            INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
             True,
         ),
