@@ -130,9 +130,7 @@ class ValidatingSchema(Schema):
             if (
                 interface
                 and "ska-tmc-assignresources" in interface
-                and "low" not in interface
                 or interface
                 and "ska-tmc-configure" in interface
-                and "low" not in interface
             ):
                 JsonSchema.semantic_validate_schema(process_fn(data), interface)

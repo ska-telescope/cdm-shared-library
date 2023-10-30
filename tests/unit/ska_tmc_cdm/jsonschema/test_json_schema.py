@@ -14,8 +14,14 @@ from ska_tmc_cdm.jsonschema.json_schema import (
     SchemaNotFound,
 )
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
+    INVALID_LOW_ASSIGN_JSON_PI19,
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+    VALID_LOW_ASSIGN_JSON_PI19,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
+)
+from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
+    INVALID_LOW_CONFIGURE_JSON_PI19,
+    VALID_LOW_CONFIGURE_JSON_PI19,
 )
 
 INVALID_JSON = copy.deepcopy(VALID_JSON)
@@ -72,4 +78,51 @@ def test_semantic_validation_with_invalid_json():
     with pytest.raises(SchematicValidationError):
         json_schema_obj.semantic_validate_schema(
             instance=MID_INVALID_JSON, uri=MID_INVALID_JSON["interface"]
+        )
+
+
+def test_semantic_validation_low_tmc_assign_with_valid_json():
+    """
+    Verify semantic validation with test valid json
+    """
+    LOW_ASSIGN_VALID_JSON = json.loads(VALID_LOW_ASSIGN_JSON_PI19)
+    json_schema_obj = JsonSchema()
+    json_schema_obj.semantic_validate_schema(
+        instance=LOW_ASSIGN_VALID_JSON, uri=LOW_ASSIGN_VALID_JSON["interface"]
+    )
+
+
+def test_semantic_validation_low_tmc_assign_with_invalid_json():
+    """
+    Verify semantic validation with test invalid json
+    """
+    LOW_ASSIGN_INVALID_JSON = json.loads(INVALID_LOW_ASSIGN_JSON_PI19)
+    json_schema_obj = JsonSchema()
+    with pytest.raises(SchematicValidationError):
+        json_schema_obj.semantic_validate_schema(
+            instance=LOW_ASSIGN_INVALID_JSON, uri=LOW_ASSIGN_INVALID_JSON["interface"]
+        )
+
+
+def test_semantic_validation_low_tmc_configure_with_valid_json():
+    """
+    Verify semantic validation with test invalid json
+    """
+    LOW_CONFIGURE_VALID_JSON = json.loads(VALID_LOW_CONFIGURE_JSON_PI19)
+    json_schema_obj = JsonSchema()
+    json_schema_obj.semantic_validate_schema(
+        instance=LOW_CONFIGURE_VALID_JSON, uri=LOW_CONFIGURE_VALID_JSON["interface"]
+    )
+
+
+def test_semantic_validation_low_tmc_configure_with_invalid_json():
+    """
+    Verify semantic validation with test invalid json
+    """
+    LOW_CONFIGURE_INVALID_JSON = json.loads(INVALID_LOW_CONFIGURE_JSON_PI19)
+    json_schema_obj = JsonSchema()
+    with pytest.raises(SchematicValidationError):
+        json_schema_obj.semantic_validate_schema(
+            instance=LOW_CONFIGURE_INVALID_JSON,
+            uri=LOW_CONFIGURE_INVALID_JSON["interface"],
         )
