@@ -22,6 +22,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     StnBeamConfiguration,
     SubarrayConfiguration,
     TimingBeamConfiguration,
+    VisConfiguration,
+    VisFspConfiguration,
 )
 
 CONSTRUCTOR_ARGS = dict(
@@ -363,14 +365,24 @@ def test_stn_beam_configuration_equals():
     attributes are equal.
     """
     config1 = StnBeamConfiguration(
-        beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
+        stn_beam_id=1,
+        freq_ids=[400],
+        host=[[0, "192.168.1.00"]],
+        port=[[0, 9000, 1]],
+        mac=[[0, "02-03-04-0a-0b-0c"]],
+        integration_ms=849,
     )
     config2 = StnBeamConfiguration(
-        beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
+        stn_beam_id=1,
+        freq_ids=[400],
+        host=[[0, "192.168.1.00"]],
+        port=[[0, 9000, 1]],
+        mac=[[0, "02-03-04-0a-0b-0c"]],
+        integration_ms=849,
     )
     assert config1 == config2
 
-    assert config1 != StnBeamConfiguration(beam_id=1)
+    assert config1 != StnBeamConfiguration(stn_beam_id=1)
 
 
 def test_stn_beam_configuration_not_equal_to_other_objects():
@@ -379,7 +391,12 @@ def test_stn_beam_configuration_not_equal_to_other_objects():
     of other types.
     """
     config = StnBeamConfiguration(
-        beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
+        stn_beam_id=1,
+        freq_ids=[400],
+        host=[[0, "192.168.1.00"]],
+        port=[[0, 9000, 1]],
+        mac=[[0, "02-03-04-0a-0b-0c"]],
+        integration_ms=849,
     )
     assert config != 1
 
@@ -391,28 +408,36 @@ def test_station_configuration_equals():
     """
 
     config1 = StationConfiguration(
-        stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
         stn_beams=[
             StnBeamConfiguration(
-                beam_id=1,
-                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                boresight_dly_poly="url",
+                stn_beam_id=1,
+                freq_ids=[400],
+                host=[[0, "192.168.1.00"]],
+                port=[[0, 9000, 1]],
+                mac=[[0, "02-03-04-0a-0b-0c"]],
+                integration_ms=849,
             )
         ],
     )
     config2 = StationConfiguration(
-        stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
         stn_beams=[
             StnBeamConfiguration(
-                beam_id=1,
-                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                boresight_dly_poly="url",
+                stn_beam_id=1,
+                freq_ids=[400],
+                host=[[0, "192.168.1.00"]],
+                port=[[0, 9000, 1]],
+                mac=[[0, "02-03-04-0a-0b-0c"]],
+                integration_ms=849,
             )
         ],
     )
     assert config1 == config2
 
-    assert config1 != StationConfiguration(stns=[[1, 0], [2, 0], [3, 0], [4, 0]])
+    assert config1 != StationConfiguration(
+        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]]
+    )
 
 
 def test_station_configuration_not_equal_to_other_objects():
@@ -422,12 +447,15 @@ def test_station_configuration_not_equal_to_other_objects():
     """
 
     config = StationConfiguration(
-        stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
         stn_beams=[
             StnBeamConfiguration(
-                beam_id=1,
-                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                boresight_dly_poly="url",
+                stn_beam_id=1,
+                freq_ids=[400],
+                host=[[0, "192.168.1.00"]],
+                port=[[0, 9000, 1]],
+                mac=[[0, "02-03-04-0a-0b-0c"]],
+                integration_ms=849,
             )
         ],
     )
@@ -555,6 +583,82 @@ def test_timing_beams_configuration_not_equal_to_other_objects():
     assert config != 1
 
 
+def test_vis_fsp_configuration_equals():
+    """
+    Verify that VisFspConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    config1 = VisFspConfiguration(function_mode="vis", fsp_ids=[1])
+    config2 = VisFspConfiguration(function_mode="vis", fsp_ids=[1])
+    assert config1 == config2
+
+    assert config1 != VisFspConfiguration(function_mode="vis")
+
+
+def test_vis_fsp_configuration_not_equal_to_other_objects():
+    """
+    Verify that VisFspConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    config = VisFspConfiguration(function_mode="vis", fsp_ids=[1])
+    assert config != 1
+
+
+def test_vis_configuration_equals():
+    """
+    Verify that VisConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    config1 = VisConfiguration(
+        fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+        stn_beams=[
+            StnBeamConfiguration(
+                stn_beam_id=1,
+                freq_ids=[400],
+                host=[[0, "192.168.1.00"]],
+                port=[[0, 9000, 1]],
+                mac=[[0, "02-03-04-0a-0b-0c"]],
+                integration_ms=849,
+            )
+        ],
+    )
+    config2 = VisConfiguration(
+        fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+        stn_beams=[
+            StnBeamConfiguration(
+                stn_beam_id=1,
+                freq_ids=[400],
+                host=[[0, "192.168.1.00"]],
+                port=[[0, 9000, 1]],
+                mac=[[0, "02-03-04-0a-0b-0c"]],
+                integration_ms=849,
+            )
+        ],
+    )
+    assert config1 == config2
+
+
+def test_vis_configuration_not_equal_to_other_objects():
+    """
+    Verify that VisConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+    config = VisConfiguration(
+        fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+        stn_beams=[
+            StnBeamConfiguration(
+                stn_beam_id=1,
+                freq_ids=[400],
+                host=[[0, "192.168.1.00"]],
+                port=[[0, 9000, 1]],
+                mac=[[0, "02-03-04-0a-0b-0c"]],
+                integration_ms=849,
+            )
+        ],
+    )
+    assert config != 1
+
+
 def test_low_cbf_configuration_equals():
     """
     Verify that LowCBFConfiguration objects are considered equal when all
@@ -563,69 +667,72 @@ def test_low_cbf_configuration_equals():
 
     config1 = LowCBFConfiguration(
         stations=StationConfiguration(
-            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
             stn_beams=[
                 StnBeamConfiguration(
-                    beam_id=1,
-                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                    boresight_dly_poly="url",
+                    stn_beam_id=1,
+                    freq_ids=[400],
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
             ],
         ),
-        timing_beams=TimingBeamConfiguration(
-            beams=[
-                BeamConfiguration(
-                    pst_beam_id=13,
+        vis=VisConfiguration(
+            fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+            stn_beams=[
+                StnBeamConfiguration(
                     stn_beam_id=1,
-                    offset_dly_poly="url",
-                    stn_weights=[0.9, 1.0, 1.0, 0.9],
-                    jones="url",
-                    dest_chans=[128, 256],
-                    rfi_enable=[True, True, True],
-                    rfi_static_chans=[1, 206, 997],
-                    rfi_dynamic_chans=[242, 1342],
-                    rfi_weighted=0.87,
+                    freq_ids=[400],
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
-            ]
+            ],
         ),
     )
     config2 = LowCBFConfiguration(
         stations=StationConfiguration(
-            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
             stn_beams=[
                 StnBeamConfiguration(
-                    beam_id=1,
-                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                    boresight_dly_poly="url",
+                    stn_beam_id=1,
+                    freq_ids=[400],
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
             ],
         ),
-        timing_beams=TimingBeamConfiguration(
-            beams=[
-                BeamConfiguration(
-                    pst_beam_id=13,
+        vis=VisConfiguration(
+            fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+            stn_beams=[
+                StnBeamConfiguration(
                     stn_beam_id=1,
-                    offset_dly_poly="url",
-                    stn_weights=[0.9, 1.0, 1.0, 0.9],
-                    jones="url",
-                    dest_chans=[128, 256],
-                    rfi_enable=[True, True, True],
-                    rfi_static_chans=[1, 206, 997],
-                    rfi_dynamic_chans=[242, 1342],
-                    rfi_weighted=0.87,
+                    freq_ids=[400],
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
-            ]
+            ],
         ),
     )
     assert config1 == config2
     assert config1 != LowCBFConfiguration(
         stations=StationConfiguration(
-            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
             stn_beams=[
                 StnBeamConfiguration(
-                    beam_id=1,
-                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                    boresight_dly_poly="url",
+                    stn_beam_id=1,
+                    freq_ids=[400],
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
             ],
         )
@@ -640,30 +747,30 @@ def test_low_cbf_configuration_not_equal_to_other_objects():
 
     config = LowCBFConfiguration(
         stations=StationConfiguration(
-            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
             stn_beams=[
                 StnBeamConfiguration(
-                    beam_id=1,
-                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                    boresight_dly_poly="url",
+                    stn_beam_id=1,
+                    freq_ids=[400],
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
             ],
         ),
-        timing_beams=TimingBeamConfiguration(
-            beams=[
-                BeamConfiguration(
-                    pst_beam_id=13,
+        vis=VisConfiguration(
+            fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+            stn_beams=[
+                StnBeamConfiguration(
                     stn_beam_id=1,
-                    offset_dly_poly="url",
-                    stn_weights=[0.9, 1.0, 1.0, 0.9],
-                    jones="url",
-                    dest_chans=[128, 256],
-                    rfi_enable=[True, True, True],
-                    rfi_static_chans=[1, 206, 997],
-                    rfi_dynamic_chans=[242, 1342],
-                    rfi_weighted=0.87,
+                    freq_ids=[400],
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
-            ]
+            ],
         ),
     )
     assert config != 1

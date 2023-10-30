@@ -9,12 +9,6 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesResponse,
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.csp import (
-    CommonConfiguration,
-    CSPConfiguration,
-    LowCbfConfiguration,
-    ResourceConfiguration,
-)
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
@@ -184,8 +178,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = """
       "execution_block":{
          "eb_id":"eb-mvp01-20210623-00000",
          "max_length":100.0,
-         "context":{
-         },
+         "context":{},
          "beams":[
             {
                "beam_id":"vis0",
@@ -532,37 +525,6 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     sdp_config=VALID_SDP_OBJECT,
 )
 
-VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """
-{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/2.0",
-  "transaction_id":"txn-mvp01-20200325-00004",
-  "subarray_id": 1,
-  "mccs": {
-    "subarray_beam_ids": [1],
-    "station_ids": [[1, 2]],
-    "channel_blocks": [1, 2, 3, 4, 5]
-  }
-}
-"""
-
-VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-low-tmc-assignresources/2.0",
-    transaction_id="txn-mvp01-20200325-00004",
-    subarray_id=1,
-    mccs=MCCSAllocate(
-        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[1, 2, 3, 4, 5]
-    ),
-)
-
-INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = """{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/999999.0",
-  "subarray_id": 1,
-  "mccs": {
-    "subarray_beam_ids": [1, 2, 3],
-    "station_ids": [[1, 2]],
-    "channel_blocks": [1, 2, 3, 4, 5]
-  }
-}"""
 
 VALID_MID_ASSIGNRESOURCESRESPONSE_JSON = """
 {
@@ -1158,115 +1120,8 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
     },
 )
 
-INVALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
-    """
+VALID_SDP_JSON_PI20 = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
-  "transaction_id":"txn-....-00001",
-  "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001","0002","0003","0004","0005"]},
-  "sdp": """
-    + VALID_SDP_JSON_PI16
-    + """
-}
-"""
-)
-
-
-INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
-    """
-{
-  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
-  "transaction_id":"txn-....-00001",
-  "subarray_id": 1,
-  "dish": "foo",
-  "sdp": """
-    + VALID_SDP_JSON_PI16
-    + """
-}
-"""
-)
-
-INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
-    transaction_id="txn-....-00001",
-    subarray_id=1,
-    dish_allocation=DishAllocation(
-        receptor_ids=["0001", "0002", "0003", "0004", "0005"]
-    ),
-    sdp_config=VALID_SDP_OBJECT_PI16,
-)
-
-
-VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17 = (
-    """
-{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.0",
-  "transaction_id": "txn-....-00001",
-  "subarray_id": 1,
-  "mccs": {
-    "subarray_beam_ids": [
-      1
-    ],
-    "station_ids": [
-      [
-        1,
-        2
-      ]
-    ],
-    "channel_blocks": [
-      3
-    ]
-  },
-    "sdp": """
-    + VALID_SDP_JSON_PI16
-    + """,
-  "csp": {
-    "interface": "https://schema.skao.int/ska-low-csp-assignresources/2.0",
-    "common": {
-      "subarray_id": 1
-    },
-    "lowcbf": {
-      "resources": [
-        {
-          "device": "fsp_01",
-          "shared": true,
-          "fw_image": "pst",
-          "fw_mode": "unused"
-        },
-        {
-          "device": "p4_01",
-          "shared": true,
-          "fw_image": "p4.bin",
-          "fw_mode": "p4"
-        }
-      ]
-    }
-  }
-}
-"""
-)
-
-VALID_LOW_ASSIGN_JSON_PI19 = """
-{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.1",
-  "transaction_id": "txn-....-00001",
-  "subarray_id": 1,
-  "mccs": {
-    "subarray_beam_ids": [
-      1
-    ],
-    "station_ids": [
-      [
-        1,
-        2
-      ]
-    ],
-    "channel_blocks": [
-      3
-    ]
-  },
-  "sdp": {
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
     "resources": {
       "receptors": [
@@ -1402,34 +1257,205 @@ VALID_LOW_ASSIGN_JSON_PI19 = """
         "sbi_ids": [
           "sbi-test-20220916-00000"
         ],
-        "parameters": {
-        }
-        }
+        "parameters": {}
+      }
     ]
   }
-}
 """
 
-INVALID_LOW_ASSIGN_JSON_PI19 = """
-{
-  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.1",
-  "transaction_id": "txn-....-00001",
-  "subarray_id": 1,
-  "mccs": {
-    "subarray_beam_ids": [
-      1
+VALID_SDP_OBJECT_PI20 = SDPConfiguration(
+    interface="https://schema.skao.int/ska-sdp-assignres/0.4",
+    execution_block=ExecutionBlockConfiguration(
+        eb_id="eb-test-20220916-00000",
+        max_length=3600.0,
+        context={},
+        beams=[BeamConfiguration(beam_id="vis0", function="visibilities")],
+        scan_types=[
+            EBScanType(
+                scan_type_id=".default",
+                beams={
+                    "vis0": EBScanTypeBeam(
+                        channels_id="vis_channels",
+                        polarisations_id="all",
+                    )
+                },
+            ),
+            EBScanType(
+                scan_type_id="target:a",
+                derive_from=".default",
+                beams={"vis0": EBScanTypeBeam(field_id="field_a")},
+            ),
+            EBScanType(
+                scan_type_id="calibration:b",
+                derive_from=".default",
+                beams={"vis0": EBScanTypeBeam(field_id="field_b")},
+            ),
+        ],
+        channels=[
+            ChannelConfiguration(
+                channels_id="vis_channels",
+                spectral_windows=[
+                    Channel(
+                        spectral_window_id="fsp_1_channels",
+                        count=4,
+                        start=0,
+                        stride=2,
+                        freq_min=350000000.0,
+                        freq_max=368000000.0,
+                        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+                    )
+                ],
+            )
+        ],
+        polarisations=[
+            PolarisationConfiguration(
+                polarisations_id="all",
+                corr_type=["XX", "XY", "YX", "YY"],
+            )
+        ],
+        fields=[
+            FieldConfiguration(
+                field_id="field_a",
+                phase_dir={
+                    "ra": [123],
+                    "dec": [-60],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
+                pointing_fqdn="...",
+            ),
+            FieldConfiguration(
+                field_id="field_b",
+                phase_dir={
+                    "ra": [123.0],
+                    "dec": [-60.0],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
+                pointing_fqdn="...",
+            ),
+        ],
+    ),
+    processing_blocks=[
+        ProcessingBlockConfiguration(
+            pb_id="pb-test-20220916-00000",
+            sbi_ids=["sbi-test-20220916-00000"],
+            script=ScriptConfiguration(
+                kind="realtime",
+                name="test-receive-addresses",
+                version="0.5.0",
+            ),
+            parameters={},
+        )
     ],
-    "station_ids": [
-      [
-        1,
-        2
-      ]
+    resources={
+        "receptors": ["SKA001", "SKA002", "SKA003", "SKA004"],
+    },
+)
+
+INVALID_SDP_OBJECT_PI20 = SDPConfiguration(
+    interface="https://schema.skao.int/ska-sdp-assignres/0.4",
+    execution_block=ExecutionBlockConfiguration(
+        eb_id="eb-test-20220916-00000",
+        max_length=3600.0,
+        context={},
+        beams=[
+            BeamConfiguration(beam_id="vis0", function="pulsar search"),
+            BeamConfiguration(beam_id="vis0", function="vlbi"),
+        ],
+        scan_types=[
+            EBScanType(
+                scan_type_id=".default",
+                beams={
+                    "vis0": EBScanTypeBeam(
+                        channels_id="vis_channels",
+                        polarisations_id="all",
+                    )
+                },
+            ),
+            EBScanType(
+                scan_type_id="target:a",
+                derive_from=".default",
+                beams={"vis0": EBScanTypeBeam(field_id="field_a")},
+            ),
+            EBScanType(
+                scan_type_id="calibration:b",
+                derive_from=".default",
+                beams={"vis0": EBScanTypeBeam(field_id="field_b")},
+            ),
+        ],
+        channels=[
+            ChannelConfiguration(
+                channels_id="vis_channels",
+                spectral_windows=[
+                    Channel(
+                        spectral_window_id="fsp_1_channels",
+                        count=4,
+                        start=0,
+                        stride=2,
+                        freq_min=350000000.0,
+                        freq_max=368000000.0,
+                        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+                    ),
+                    Channel(
+                        spectral_window_id="fsp_2_channels",
+                        count=4,
+                        start=0,
+                        stride=2,
+                        freq_min=350000000.0,
+                        freq_max=368000000.0,
+                        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+                    ),
+                ],
+            )
+        ],
+        polarisations=[
+            PolarisationConfiguration(
+                polarisations_id="all",
+                corr_type=["XX", "XY", "YX", "YY"],
+            )
+        ],
+        fields=[
+            FieldConfiguration(
+                field_id="field_a",
+                phase_dir={
+                    "ra": [123],
+                    "dec": [-60],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
+                pointing_fqdn="...",
+            ),
+            FieldConfiguration(
+                field_id="field_b",
+                phase_dir={
+                    "ra": [123.0],
+                    "dec": [-60.0],
+                    "reference_time": "...",
+                    "reference_frame": "ICRF3",
+                },
+                pointing_fqdn="...",
+            ),
+        ],
+    ),
+    processing_blocks=[
+        ProcessingBlockConfiguration(
+            pb_id="pb-test-20220916-00000",
+            sbi_ids=["sbi-test-20220916-00000"],
+            script=ScriptConfiguration(
+                kind="realtime",
+                name="test-receive-addresses",
+                version="0.5.0",
+            ),
+            parameters={},
+        )
     ],
-    "channel_blocks": [
-      3
-    ]
-  },
-  "sdp": {
+    resources={
+        "receptors": ["SKA001", "SKA002", "SKA003", "SKA004"],
+    },
+)
+
+INVALID_SDP_JSON_PI20 = """{
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
     "resources": {
       "receptors": [
@@ -1441,17 +1467,16 @@ INVALID_LOW_ASSIGN_JSON_PI19 = """
     },
     "execution_block": {
       "eb_id": "eb-test-20220916-00000",
-      "context": {
-      },
+      "context": {},
       "max_length": 3600.0,
       "beams": [
         {
           "beam_id": "vis0",
-          "function": "asdf"
+          "function": "pulsar search"
         },
-        {
-          "beam_id": "vis1",
-          "function": "visilities"
+         {
+          "beam_id": "vis0",
+          "function": "vlbi"
         }
       ],
       "scan_types": [
@@ -1513,8 +1538,8 @@ INVALID_LOW_ASSIGN_JSON_PI19 = """
                 ]
               ]
             },
-            {
-              "spectral_window_id": "fsp_1_channels",
+              {
+              "spectral_window_id": "fsp_2_channels",
               "count": 4,
               "start": 0,
               "stride": 2,
@@ -1600,32 +1625,126 @@ INVALID_LOW_ASSIGN_JSON_PI19 = """
       }
     ]
   }
-}
 """
 
-VALID_LOW_CSP_OBJECT_PI17 = CSPConfiguration(
-    interface="https://schema.skao.int/ska-low-csp-assignresources/2.0",
-    common=CommonConfiguration(subarray_id=1),
-    lowcbf=LowCbfConfiguration(
-        resources=[
-            ResourceConfiguration(
-                device="fsp_01", shared=True, fw_image="pst", fw_mode="unused"
-            ),
-            ResourceConfiguration(
-                device="p4_01", shared=True, fw_image="p4.bin", fw_mode="p4"
-            ),
-        ]
-    ),
+INVALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
+    """
+{
+  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
+  "transaction_id":"txn-....-00001",
+  "subarray_id": 1,
+  "dish": {"receptor_ids": ["0001","0002","0003","0004","0005"]},
+  "sdp": """
+    + VALID_SDP_JSON_PI16
+    + """
+}
+"""
 )
 
-VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17 = AssignResourcesRequest(
-    interface="https://schema.skao.int/ska-low-tmc-assignresources/3.0",
+
+INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
+    """
+{
+  "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
+  "transaction_id":"txn-....-00001",
+  "subarray_id": 1,
+  "dish": "foo",
+  "sdp": """
+    + VALID_SDP_JSON_PI16
+    + """
+}
+"""
+)
+
+INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-tmc-assignresources/2.1",
+    transaction_id="txn-....-00001",
+    subarray_id=1,
+    dish_allocation=DishAllocation(
+        receptor_ids=["0001", "0002", "0003", "0004", "0005"]
+    ),
+    sdp_config=VALID_SDP_OBJECT_PI16,
+)
+
+INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
+    """
+{
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+  "transaction_id": "txn-....-00001",
+  "subarray_id": 1,
+  "mccs": {
+    "subarray_beam_ids": [
+      1
+    ],
+    "station_ids": [
+      [
+        1,
+        2
+      ]
+    ],
+    "channel_blocks": [
+      3
+    ]
+  },
+   "sdp": """
+    + INVALID_SDP_JSON_PI20
+    + """
+}
+"""
+)
+
+
+INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+    transaction_id="txn-....-00001",
+    subarray_id="1",
+    sdp_config=VALID_SDP_OBJECT_PI20,
+)
+
+
+VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
+    """
+{
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+  "transaction_id": "txn-....-00001",
+  "subarray_id": 1,
+  "mccs": {
+    "subarray_beam_ids": [
+      1
+    ],
+    "station_ids": [
+      [
+        1,
+        2
+      ]
+    ],
+    "channel_blocks": [
+      3
+    ]
+  },
+ "sdp": """
+    + VALID_SDP_JSON_PI20
+    + """
+}
+"""
+)
+
+VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/3.1",
     transaction_id="txn-....-00001",
     subarray_id=1,
     mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
-    sdp_config=VALID_SDP_OBJECT_PI16,
-    csp_config=VALID_LOW_CSP_OBJECT_PI17,
+    sdp_config=VALID_SDP_OBJECT_PI20,
 )
+
+INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/3.1",
+    transaction_id="txn-....-00001",
+    subarray_id="1",
+    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
+    sdp_config=INVALID_SDP_OBJECT_PI20,
+)
+
 
 SCAN_VALID_JSON = """
 {
@@ -1647,6 +1766,11 @@ def low_invalidator_fn(o: AssignResourcesRequest):
     o.mccs.subarray_beam_ids = [1, 2, 3]
 
 
+def low_tmc_invalidator_fn(o: AssignResourcesRequest):
+    # function to make a validLOW AssignedResourcesRequest invalid
+    o.sdp_config.execution_block.beams[0].function = "vis"
+
+
 def mid_invalidator_fn(o: AssignResourcesRequest):
     # function to make a valid MID AssignResourcesRequest invalid
     o.sdp_config.max_length = 10
@@ -1655,14 +1779,6 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
 @pytest.mark.parametrize(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
-        (
-            AssignResourcesRequestSchema,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-            low_invalidator_fn,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-            INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-            True,
-        ),
         (
             AssignResourcesRequestSchema,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
@@ -1696,12 +1812,20 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             True,
         ),
         (
+            SDPConfigurationSchema,
+            VALID_SDP_OBJECT_PI20,
+            None,
+            VALID_SDP_JSON_PI20,
+            None,
+            True,
+        ),
+        (
             AssignResourcesRequestSchema,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
+            low_tmc_invalidator_fn,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
-            None,
-            False,
+            True,
         ),
         (
             AssignResourcesRequestSchema,
@@ -1800,4 +1924,47 @@ def test_assignresources_serialisation_and_validation_invalid_json(
             "Currently allowed visibilities,spectral windows are too many! Current limit = 1,"
             "Invalid input for channel_count! Currently allowed 14880,Invalid input for freq_min,"
             "Invalid input for freq_max,length of receptor_ids should be same as length of receptors"
+        )
+
+
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    [
+        (
+            AssignResourcesRequestSchema,
+            INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
+            low_tmc_invalidator_fn,
+            INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+            None,
+            True,
+        ),
+    ],
+)
+def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
+    schema_cls,
+    instance,
+    modifier_fn,
+    valid_json,
+    invalid_json,
+    is_validate,
+):
+    """
+    Verifies that the schema marshals, unmarshals, and validates correctly
+    for invalid json and raise SchematicValidationError for TMC LOW.
+    """
+    try:
+        utils.test_schema_serialisation_and_validation(
+            schema_cls,
+            instance,
+            modifier_fn,
+            valid_json,
+            invalid_json,
+            is_validate,
+        )
+
+    except SchematicValidationError as error:
+        assert error.message == (
+            "beams are too many! Current limit is 1,"
+            "Invalid function for beams! Currently allowed visibilities,"
+            "spectral windows are too many! Current limit = 1"
         )

@@ -25,9 +25,11 @@ class ScanRequest:
     :param interface: Interface URI. Defaults to
         https://schema.skao.int/ska-tmc-scan/2.0
     :param transaction_id: optional transaction ID
+    :param subarray_id: the numeric SubArray ID
     :param scan_id: integer scan ID
     """
 
     interface: str = MID_SCHEMA
     transaction_id: Optional[str] = None
+    subarray_id: Optional[int] = None
     scan_id: int

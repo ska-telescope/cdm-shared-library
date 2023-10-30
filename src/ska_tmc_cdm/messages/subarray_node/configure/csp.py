@@ -23,6 +23,8 @@ __all__ = [
     "BeamConfiguration",
     "StationConfiguration",
     "StnBeamConfiguration",
+    "VisFspConfiguration",
+    "VisConfiguration",
 ]
 
 
@@ -104,14 +106,20 @@ class StnBeamConfiguration:
     """
     Class to hold Stations Beam Configuration.
 
-    :param beam_id: beam_id
+    :param stn_beam_id: stn_beam_id
     :param freq_ids: freq_ids
-    :param boresight_dly_poly: boresight_dly_poly
+    :param host: host
+    :param port: port
+    :param mac: mac
+    :param integration_ms: integration_ms
     """
 
-    beam_id: Optional[int] = None
+    stn_beam_id: Optional[int] = None
     freq_ids: Optional[List[int]] = None
-    boresight_dly_poly: Optional[str] = None
+    host: Optional[List[tuple]] = None
+    port: Optional[List[tuple]] = None
+    mac: Optional[List[tuple]] = None
+    integration_ms: Optional[int] = None
 
 
 @dataclass
@@ -168,6 +176,32 @@ class TimingBeamConfiguration:
 
 
 @dataclass
+class VisFspConfiguration:
+    """
+    Class to hold Vis FSP Configuration.
+
+    :param function_mode: function_mode
+    :param fsp_ids: fsp_ids
+    """
+
+    function_mode: Optional[str] = None
+    fsp_ids: Optional[List[int]] = None
+
+
+@dataclass
+class VisConfiguration:
+    """
+    Class to hold Vis Configuration.
+
+    :param fsp: fsp
+    :param stn_beams: stn_beams
+    """
+
+    fsp: Optional[VisFspConfiguration] = None
+    stn_beams: Optional[List[StnBeamConfiguration]] = None
+
+
+@dataclass
 class LowCBFConfiguration:
     """
     Class to hold Low CBF Configuration.
@@ -177,7 +211,7 @@ class LowCBFConfiguration:
     """
 
     stations: Optional[StationConfiguration] = None
-    timing_beams: Optional[TimingBeamConfiguration] = None
+    vis: Optional[VisConfiguration] = None
 
 
 @dataclass

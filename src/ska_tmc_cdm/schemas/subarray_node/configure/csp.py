@@ -21,6 +21,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     StnBeamConfiguration,
     SubarrayConfiguration,
     TimingBeamConfiguration,
+    VisConfiguration,
+    VisFspConfiguration,
 )
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
@@ -237,9 +239,14 @@ class CBFConfigurationSchema(Schema):
 
 @CODEC.register_mapping(StnBeamConfiguration)
 class StnBeamConfigurationSchema(Schema):
-    beam_id = fields.Integer(data_key="beam_id")
+    stn_beam_id = fields.Integer(data_key="stn_beam_id")
     freq_ids = fields.List(fields.Integer, data_key="freq_ids")
-    boresight_dly_poly = fields.String(data_key="boresight_dly_poly")
+    host = fields.List(fields.Tuple((fields.Integer, fields.String)), data_key="host")
+    port = fields.List(
+        fields.Tuple((fields.Integer, fields.Integer, fields.Integer)), data_key="port"
+    )
+    mac = fields.List(fields.Tuple((fields.Integer, fields.String)), data_key="mac")
+    integration_ms = fields.Integer(data_key="integration_ms")
 
     @post_load
     def create(self, data, **_):
@@ -252,11 +259,20 @@ class StnBeamConfigurationSchema(Schema):
         :return: StnBeamConfiguration instance populated to match JSON
         :rtype: StnBeamConfiguration
         """
-        beam_id = data.get("beam_id", None)
+        stn_beam_id = data.get("stn_beam_id", None)
         freq_ids = data.get("freq_ids", None)
-        boresight_dly_poly = data.get("boresight_dly_poly", None)
+        host = data.get("host", None)
+        port = data.get("port", None)
+        mac = data.get("mac", None)
+        integration_ms = data.get("integration_ms", None)
+
         return StnBeamConfiguration(
-            beam_id=beam_id, freq_ids=freq_ids, boresight_dly_poly=boresight_dly_poly
+            stn_beam_id=stn_beam_id,
+            freq_ids=freq_ids,
+            host=host,
+            port=port,
+            mac=mac,
+            integration_ms=integration_ms,
         )
 
     @post_dump
@@ -318,6 +334,72 @@ class BeamConfigurationSchema(Schema):
             rfi_dynamic_chans=rfi_dynamic_chans,
             rfi_weighted=rfi_weighted,
         )
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CBF configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
+
+@CODEC.register_mapping(VisFspConfiguration)
+class VisFspConfigurationSchema(Schema):
+    function_mode = fields.String(data_key="function_mode")
+    fsp_ids = fields.List(fields.Integer, data_key="fsp_ids")
+
+    @post_load
+    def create(self, data, **_):
+        """
+         Convert parsed JSON back into a VisFspConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+
+        :return: VisFspConfiguration instance populated to match JSON
+        :rtype: VisFspConfiguration
+        """
+        function_mode = data.get("function_mode", None)
+        fsp_ids = data.get("fsp_ids", None)
+        return VisFspConfiguration(function_mode=function_mode, fsp_ids=fsp_ids)
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CBF configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
+
+@CODEC.register_mapping(VisConfiguration)
+class VisConfigurationSchema(Schema):
+    fsp = fields.Nested(VisFspConfigurationSchema)
+    stn_beams = fields.List(fields.Nested(StnBeamConfigurationSchema))
+
+    @post_load
+    def create(self, data, **_):
+        """
+         Convert parsed JSON back into a VisConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+
+        :return: VisConfiguration instance populated to match JSON
+        :rtype: VisConfiguration
+        """
+        fsp = data.get("fsp", None)
+        stn_beams = data.get("stn_beams", None)
+        return VisConfiguration(fsp=fsp, stn_beams=stn_beams)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -403,7 +485,7 @@ class LowCBFConfigurationSchema(Schema):
     """
 
     stations = fields.Nested(StationConfigurationSchema, data_key="stations")
-    timing_beams = fields.Nested(TimingBeamConfigurationSchema, data_key="timing_beams")
+    vis = fields.Nested(VisConfigurationSchema, data_key="vis")
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
@@ -415,11 +497,11 @@ class LowCBFConfigurationSchema(Schema):
         :return: LowCBFConfiguration instance populated to match JSON
         """
         stations = data.get("stations", None)
-        timing_beams = data.get("timing_beams", None)
+        vis = data.get("vis", None)
 
         return LowCBFConfiguration(
             stations=stations,
-            timing_beams=timing_beams,
+            vis=vis,
         )
 
 
