@@ -17,6 +17,7 @@ from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
+    INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
@@ -35,9 +36,7 @@ from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
-    VALID_LOW_CONFIGURE_JSON_PI20,
     VALID_LOW_CONFIGURE_OBJECT,
-    VALID_LOW_CONFIGURE_OBJECT_PI20,
     VALID_MID_CONFIGURE_JSON,
     VALID_MID_CONFIGURE_OBJECT,
 )
@@ -71,12 +70,6 @@ TEST_PARAMETERS = [
         ConfigureRequest,
         VALID_LOW_CONFIGURE_JSON,
         VALID_LOW_CONFIGURE_OBJECT,
-        False,
-    ),
-    (
-        ConfigureRequest,
-        VALID_LOW_CONFIGURE_JSON_PI20,
-        VALID_LOW_CONFIGURE_OBJECT_PI20,
         True,
     ),
     (
@@ -147,6 +140,18 @@ def test_codec_loads_raises_exception_on_invalid_schema():
         CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
 
     invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
+    invalid_json_configure = json.dumps(invalid_json)
+
+    with pytest.raises(SchematicValidationError):
+        CODEC.loads(ConfigureRequest, invalid_json_configure)
+
+    invalid_json = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
+    invalid_json_assign_resources = json.dumps(invalid_json)
+
+    with pytest.raises(SchematicValidationError):
+        CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
+
+    invalid_json = json.loads(INVALID_LOW_CONFIGURE_JSON)
     invalid_json_configure = json.dumps(invalid_json)
 
     with pytest.raises(SchematicValidationError):

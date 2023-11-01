@@ -20,8 +20,8 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
 )
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
-    INVALID_LOW_CONFIGURE_JSON_PI20,
-    VALID_LOW_CONFIGURE_JSON_PI20,
+    INVALID_LOW_CONFIGURE_JSON,
+    VALID_LOW_CONFIGURE_JSON,
 )
 
 INVALID_JSON = copy.deepcopy(VALID_JSON)
@@ -108,7 +108,7 @@ def test_semantic_validation_low_tmc_configure_with_valid_json():
     """
     Verify semantic validation with test low configure valid json
     """
-    LOW_CONFIGURE_VALID_JSON = json.loads(VALID_LOW_CONFIGURE_JSON_PI20)
+    LOW_CONFIGURE_VALID_JSON = json.loads(VALID_LOW_CONFIGURE_JSON)
     json_schema_obj = JsonSchema()
     json_schema_obj.semantic_validate_schema(
         instance=LOW_CONFIGURE_VALID_JSON, uri=LOW_CONFIGURE_VALID_JSON["interface"]
@@ -119,7 +119,7 @@ def test_semantic_validation_low_tmc_configure_with_invalid_json():
     """
     Verify semantic validation with test low configure invalid json
     """
-    LOW_CONFIGURE_INVALID_JSON = json.loads(INVALID_LOW_CONFIGURE_JSON_PI20)
+    LOW_CONFIGURE_INVALID_JSON = json.loads(INVALID_LOW_CONFIGURE_JSON)
     json_schema_obj = JsonSchema()
     with pytest.raises(SchematicValidationError):
         json_schema_obj.semantic_validate_schema(

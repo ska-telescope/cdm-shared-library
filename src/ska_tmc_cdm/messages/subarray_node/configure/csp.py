@@ -116,9 +116,9 @@ class StnBeamConfiguration:
 
     stn_beam_id: Optional[int] = None
     freq_ids: Optional[List[int]] = None
-    host: Optional[List[tuple]] = None
-    port: Optional[List[tuple]] = None
-    mac: Optional[List[tuple]] = None
+    host: Optional[List[Tuple[int, str]]] = None
+    port: Optional[List[Tuple[int, int, int]]] = None
+    mac: Optional[List[Tuple[int, str]]] = None
     integration_ms: Optional[int] = None
 
 
@@ -207,7 +207,7 @@ class LowCBFConfiguration:
     Class to hold Low CBF Configuration.
 
     :param stations: stations
-    :param timing_beams: PST beams subarray list
+    :param vis: vis
     """
 
     stations: Optional[StationConfiguration] = None
