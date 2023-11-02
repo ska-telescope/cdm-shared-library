@@ -22,9 +22,9 @@ class ReleaseResourcesRequest:
     :param transaction_id: ID for tracking requests
     :param subarray_id: the numeric SubArray ID (1..16)
     :param release_all: True to release all sub-array resources, False to
-    release just those resources specified as other arguments
+        release just those resources specified as other arguments
     :param dish_allocation: object holding the DISH resource allocation
-    to release for this request.
+        to release for this request.
     """
 
     interface: Optional[str] = None

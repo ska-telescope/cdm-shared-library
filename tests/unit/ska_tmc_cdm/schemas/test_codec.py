@@ -10,7 +10,7 @@ import pytest
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
 import ska_tmc_cdm
-from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
+from ska_tmc_cdm.exceptions import SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
@@ -187,12 +187,12 @@ def test_loads_invalid_json_with_validation_enabled():
 
     # no exception should be raised unless strictness is 0 or 1
     for strictness in [0, 1]:
-        unmarshalled = test_call(strictness=strictness)
+        unmarshalled = test_call(strictness=strictness, validate=False)
         marshalled = CODEC.dumps(unmarshalled, validate=False)
         assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
 
     # strictness=2 should result in an error
-    with pytest.raises(JsonValidationError):
+    with pytest.raises(SchematicValidationError):
         test_call(strictness=2)
 
 

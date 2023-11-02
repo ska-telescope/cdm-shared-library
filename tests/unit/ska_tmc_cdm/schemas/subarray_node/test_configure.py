@@ -1042,9 +1042,9 @@ def partial_invalidator(o: ConfigureRequest):
         (
             ConfigureRequestSchema,
             VALID_LOW_CONFIGURE_OBJECT,
-            low_invalidator,
+            None,
             VALID_LOW_CONFIGURE_JSON,
-            INVALID_LOW_CONFIGURE_JSON,
+            None,
             True,
         ),
         (
@@ -1137,7 +1137,7 @@ def test_configure_serialisation_and_validation_invalid_json(
         (
             ConfigureRequestSchema,
             INVALID_LOW_CONFIGURE_OBJECT,
-            None,
+            low_invalidator,
             INVALID_LOW_CONFIGURE_JSON,
             None,
             True,

@@ -14,7 +14,7 @@ class DishAllocation:
     AssignResources request and response.
 
     :param receptor_ids: (optional) IDs of the receptors to add to this
-    allocation
+        allocation
     """
 
     receptor_ids: frozenset[str] = frozenset()
