@@ -1915,7 +1915,8 @@ def test_assignresources_serialisation_and_validation_invalid_json(
             "beams are too many! Current limit is 1,Invalid function for beams! "
             "Currently allowed visibilities,spectral windows are too many! Current limit = 1,"
             "Invalid input for channel_count! Currently allowed 14880,Invalid input for freq_min,"
-            "Invalid input for freq_max,length of receptor_ids should be same as length of receptors"
+            "Invalid input for freq_max,length of receptor_ids should be same as length of receptors,"
+            "receptor_ids did not match receptors"
         )
 
 

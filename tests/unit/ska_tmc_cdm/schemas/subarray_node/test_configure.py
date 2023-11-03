@@ -955,7 +955,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
             ),
             vis=VisConfiguration(
                 fsp=VisFspConfiguration(
-                    function_mode="abcd", fsp_ids=[1, 2, 3, 4, 5, 6, 7]
+                    function_mode="abcd", fsp_ids=[1, 2, 2, 4, 5, 6, 7]
                 ),
                 stn_beams=[
                     StnBeamConfiguration(
@@ -1170,5 +1170,6 @@ def test_low_configure_serialisation_and_validation_invalid_json(
         assert error.message == (
             "stations are too many! Current limit is 6,"
             "Invalid input for function mode! Currently allowed vis,"
+            "The fsp_ids should all be distinct,"
             "fsp_ids are too many!Current Limit is 6"
         )
