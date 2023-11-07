@@ -42,7 +42,7 @@ CONSTRUCTOR_ARGS = dict(
     pst_config=None,
 )
 
-CSP_CONFIGURATION_ARGS_PI20 = dict(
+CSP_CONFIGURATION_ARGS = dict(
     interface="https://schema.skao.int/ska-low-csp-configure/0.0",
     common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
@@ -260,12 +260,12 @@ def test_csp_configuration_objects_are_equal_pi16():
     attributes are equal.
     """
 
-    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI20)
-    csp_obj_2 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI20)
+    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS)
+    csp_obj_2 = CSPConfiguration(**CSP_CONFIGURATION_ARGS)
 
     assert csp_obj_1 == csp_obj_2
 
-    alt_csp_configuration_csp_2_0_args = CSP_CONFIGURATION_ARGS_PI20.copy()
+    alt_csp_configuration_csp_2_0_args = CSP_CONFIGURATION_ARGS.copy()
     alt_csp_configuration_csp_2_0_args[
         "interface"
     ] = "Changing interface value for creating object with different value"
@@ -280,7 +280,7 @@ def test_csp_configuration_not_equal_to_other_objects_pi16():
     Verify that CSPConfiguration objects are not considered equal to objects
     of other types.
     """
-    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI20)
+    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS)
 
     assert csp_obj_1 != 1
 
