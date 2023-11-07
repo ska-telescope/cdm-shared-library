@@ -1821,6 +1821,22 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
         ),
         (
             AssignResourcesRequestSchema,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
+            None,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+            None,
+            True,
+        ),
+        (
+            AssignResourcesRequestSchema,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
+            None,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+            None,
+            False,
+        ),
+        (
+            AssignResourcesRequestSchema,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,

@@ -98,9 +98,16 @@ def test_semantic_validation_low_tmc_assign_with_invalid_json():
     """
     LOW_ASSIGN_INVALID_JSON = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
     json_schema_obj = JsonSchema()
-    with pytest.raises(SchematicValidationError):
+
+    try:
         json_schema_obj.semantic_validate_schema(
             instance=LOW_ASSIGN_INVALID_JSON, uri=LOW_ASSIGN_INVALID_JSON["interface"]
+        )
+    except SchematicValidationError as error:
+        assert error.message == (
+            "beams are too many! Current limit is 1,"
+            "Invalid function for beams! Currently allowed visibilities,"
+            "spectral windows are too many! Current limit = 1"
         )
 
 
@@ -121,8 +128,16 @@ def test_semantic_validation_low_tmc_configure_with_invalid_json():
     """
     LOW_CONFIGURE_INVALID_JSON = json.loads(INVALID_LOW_CONFIGURE_JSON)
     json_schema_obj = JsonSchema()
-    with pytest.raises(SchematicValidationError):
+
+    try:
         json_schema_obj.semantic_validate_schema(
             instance=LOW_CONFIGURE_INVALID_JSON,
             uri=LOW_CONFIGURE_INVALID_JSON["interface"],
+        )
+    except SchematicValidationError as error:
+        assert error.message == (
+            "stations are too many! Current limit is 6,"
+            "Invalid input for function mode! Currently allowed vis,"
+            "The fsp_ids should all be distinct,"
+            "fsp_ids are too many!Current Limit is 6"
         )

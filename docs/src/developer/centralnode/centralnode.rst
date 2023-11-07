@@ -205,7 +205,7 @@ Example JSON response modelled by ``AssignResourcesResponse`` for MID:
   }
 
 
-Example PI 17 JSON input modelled by ``AssignResourcesRequest`` for LOW:
+Example JSON input modelled by ``AssignResourcesRequest`` for LOW:
 
 .. code-block:: JSON
 
@@ -214,35 +214,9 @@ Example PI 17 JSON input modelled by ``AssignResourcesRequest`` for LOW:
    "transaction_id": "txn-....-00001",
    "subarray_id": 1,
    "mccs": {
-      "interface": "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0",
-      "subarray_beams": [
-         {
-         "subarray_beam_id": 1,
-         "apertures": [
-            {
-               "station_id": 1,
-               "aperture_id": "AP001.01"
-            },
-            {
-               "station_id": 1,
-               "aperture_id": "AP001.02"
-            },
-            {
-               "station_id": 2,
-               "aperture_id": "AP002.01"
-            },
-            {
-               "station_id": 2,
-               "aperture_id": "AP002.02"
-            },
-            {
-               "station_id": 3,
-               "aperture_id": "AP003.01"
-            }
-         ],
-         "number_of_channels": 32
-         }
-      ]
+      "subarray_beam_ids": [1],
+      "station_ids": [[1,2]],
+      "channel_blocks": [3]
    },
    "sdp": {
       "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",

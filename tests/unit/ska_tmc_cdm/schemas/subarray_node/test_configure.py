@@ -155,7 +155,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
 
 NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.2",
   "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
@@ -801,26 +801,19 @@ INVALID_LOW_CONFIGURE_JSON = """
     "stations":[
       {
         "station_id": 1
-      },
-      {
-        "station_id": 2
       }
     ],
     "subarray_beams": [
       {
-        "subarray_beam_id":1,
+        "subarray_beam_id":-1,
         "station_ids": [1,2],
-        "channels": [
-          [0, 8, 1, 1],
-          [8, 8, 2, 1],
-          [24, 16, 2, 1]
-        ],
-        "update_rate": 0.0,
+        "channels": [[1,2]],
+        "update_rate": 1.0,
         "target": {
-          "reference_frame": "horizon",
-          "target_name": "DriftScan",
-          "az": 180.0,
-          "el": 45.0
+              "reference_frame": "horizon",
+              "target_name": "DriftScan",
+              "az": 180.0,
+              "el": 45.0
         },
         "antenna_weights": [1.0, 1.0, 1.0],
         "phase_centre": [0.0, 0.0]
@@ -881,7 +874,7 @@ INVALID_LOW_CONFIGURE_JSON = """
         "fsp": {
           "function_mode": "abcd",
           "fsp_ids": [
-            1, 2, 3, 4, 5, 6, 7
+            1, 2, 2, 4, 5, 6, 7
           ]
         },
         "stn_beams": [
@@ -922,13 +915,13 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-low-tmc-configure/3.1",
     transaction_id="txn-....-00001",
     mccs=MCCSConfiguration(
-        station_configs=[StnConfiguration(1), StnConfiguration(2)],
+        station_configs=[StnConfiguration(1)],
         subarray_beam_configs=[
             SubarrayBeamConfiguration(
                 subarray_beam_id=1,
                 station_ids=[1, 2],
-                channels=[[0, 8, 1, 1], [8, 8, 2, 1], [24, 16, 2, 1]],
-                update_rate=0.0,
+                channels=[[1, 2]],
+                update_rate=1.0,
                 target=SubarrayBeamTarget(180.0, 45.0, "DriftScan", "horizon"),
                 antenna_weights=[1.0, 1.0, 1.0],
                 phase_centre=[0.0, 0.0],
