@@ -87,9 +87,10 @@ def test_semantic_validation_low_tmc_assign_with_valid_json():
     """
     LOW_ASSIGN_VALID_JSON = json.loads(VALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
     json_schema_obj = JsonSchema()
-    assert json_schema_obj.semantic_validate_schema(
+    result = json_schema_obj.semantic_validate_schema(
         instance=LOW_ASSIGN_VALID_JSON, uri=LOW_ASSIGN_VALID_JSON["interface"]
-    ), True
+    )
+    assert result
 
 
 def test_semantic_validation_low_tmc_assign_with_invalid_json():
@@ -117,9 +118,10 @@ def test_semantic_validation_low_tmc_configure_with_valid_json():
     """
     LOW_CONFIGURE_VALID_JSON = json.loads(VALID_LOW_CONFIGURE_JSON)
     json_schema_obj = JsonSchema()
-    assert json_schema_obj.semantic_validate_schema(
+    result = json_schema_obj.semantic_validate_schema(
         instance=LOW_CONFIGURE_VALID_JSON, uri=LOW_CONFIGURE_VALID_JSON["interface"]
-    ), True
+    )
+    assert result
 
 
 def test_semantic_validation_low_tmc_configure_with_invalid_json():
