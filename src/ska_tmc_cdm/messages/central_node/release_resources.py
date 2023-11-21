@@ -13,6 +13,7 @@ __all__ = ["ReleaseResourcesRequest"]
 
 SCHEMA = "https://schema.skao.int/ska-tmc-releaseresources/2.1"
 
+
 @dataclass(kw_only=True)
 class ReleaseResourcesRequest:
     """

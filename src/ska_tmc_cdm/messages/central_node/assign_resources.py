@@ -16,6 +16,7 @@ __all__ = ["AssignResourcesRequest", "AssignResourcesResponse"]
 
 SCHEMA = "https://schema.skao.int/ska-tmc-assignresources/2.1"
 
+
 @dataclass
 class AssignResourcesRequest:
     """
