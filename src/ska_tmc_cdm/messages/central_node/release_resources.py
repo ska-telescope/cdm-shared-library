@@ -11,6 +11,7 @@ from .common import DishAllocation
 
 __all__ = ["ReleaseResourcesRequest"]
 
+SCHEMA = "https://schema.skao.int/ska-tmc-releaseresources/2.1"
 
 @dataclass(kw_only=True)
 class ReleaseResourcesRequest:
@@ -27,7 +28,7 @@ class ReleaseResourcesRequest:
     to release for this request.
     """
 
-    interface: Optional[str] = None
+    interface: Optional[str] = SCHEMA
     transaction_id: Optional[str] = None
     subarray_id: Optional[int] = None
     release_all: StrictBool = False

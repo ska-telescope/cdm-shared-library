@@ -16,8 +16,7 @@ from .mccs import MCCSConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 
-SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.1"
-
+SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.2"
 
 @dataclass
 class ConfigureRequest:  # pylint: disable=too-few-public-methods
@@ -48,6 +47,6 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     def mccs_or_dish_validation(self) -> "ConfigureRequest":
         if self.mccs is not None and (self.dish is not None):
             raise ValueError(
-                "Can't allocate dish, csp and sdp in the same call as mccs"
+                "Can't allocate dish in the same call as mccs"
             )
         return self

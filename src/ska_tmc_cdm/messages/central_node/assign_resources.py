@@ -14,6 +14,7 @@ from .sdp import SDPConfiguration
 
 __all__ = ["AssignResourcesRequest", "AssignResourcesResponse"]
 
+SCHEMA = "https://schema.skao.int/ska-tmc-assignresources/2.1"
 
 @dataclass
 class AssignResourcesRequest:
@@ -39,7 +40,7 @@ class AssignResourcesRequest:
     sdp_config: Optional[SDPConfiguration] = None
     csp_config: Optional[CSPConfiguration] = None
     mccs: Optional[MCCSAllocate] = None
-    interface: Optional[str] = None
+    interface: Optional[str] = SCHEMA
     transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
