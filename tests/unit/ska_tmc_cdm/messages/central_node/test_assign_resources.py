@@ -55,6 +55,14 @@ def assign_request_builder(
     )
 
 
+def test_assign_resources_request_has_interface_set_on_creation():
+    """
+    Verify that an empty assign resources request has an interface set
+    """
+    request = AssignResourcesRequest
+    assert request.interface is not None
+
+
 def test_assign_resources_request_eq():
     """
     Verify that two AssignResource request objects for the same sub-array and

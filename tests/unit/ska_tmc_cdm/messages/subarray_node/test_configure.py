@@ -146,9 +146,17 @@ CONFIGURE_OBJECT_ARGS_PI7 = dict(
 )
 
 
+def test_configure_request_has_interface_set_on_creation():
+    """
+    Verify that a ConfigureRequest request has an interface set on creation
+    """
+    request = ConfigureRequest()
+    assert request.interface is not None
+
+
 def test_configure_request_eq():
     """
-    Verify that ConfigurationRequest objects are considered equal when:
+    Verify that ConfigureRequest objects are considered equal when:
       - they point to the same target
       - they set the same receiver band
       - their SDP configuration is the same
