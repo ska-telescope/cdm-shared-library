@@ -9,7 +9,7 @@ This project adheres to `Semantic Versioning <http://semver.org/>`_.
 *******
 
 * Added PI-20 low schema support.
-  Added symantic validation support for PI-20 low schema.
+  Added semantic validation support for PI-20 low schema.
 
 [8.0.1]
 *******
