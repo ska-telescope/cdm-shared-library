@@ -7,9 +7,9 @@ remove VLBIConfiguration
 remove PSTConfiguration
 remove PSSConfiguration
 
+set separator none 
 package ska_tmc_cdm.messages.subarray_node.configure {
-	package csp.py <<Rectangle>> {
-
+	package csp <<Rectangle>> {
 	    class SubarrayConfiguration {
 	        subarray_name: str
 	    }
@@ -24,18 +24,6 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 	    class CBFConfiguration {
             vlbi: dict
 	    }
-
-	    class PSTConfiguration {
-
-	    }
-
-        class PSSConfiguration {
-
-        }
-
-        class VLBIConfiguration {
-
-        }
 
 		enum FSPFunctionMode {
 			CORR
@@ -64,49 +52,43 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 
 		class LowCBFConfiguration {
 			stations: StationConfiguration 
-			timing_beams: TimingBeamConfiguration
+			vis: VisConfiguration
 		}
 
 		class StationConfiguration {
 			stns: List[List[int]]
         	stn_beams: List[StnBeamConfiguration]
 		}
-
-		class TimingBeamConfiguration {
-			beams: List[BeamConfiguration]
-		}
 		
-		class BeamConfiguration {
-			pst_beam_id: int
+		class StnBeamConfiguration {
 			stn_beam_id: int
-			offset_dly_poly: str
-			stn_weights: List[float]
-			jones: str
-			dest_chans: List[int]
-			rfi_enable: List[bool]
-			rfi_static_chans: List[int]
-			rfi_dynamic_chans: List[int]
-			rfi_weighted: float
+			freq_ids: List[int]
+			host: [List[Tuple[int, str]]]
+			port: [List[Tuple[int, int, int]]]
+			mac: [List[Tuple[int, str]]]
+			integration_ms: [int]
 		}
 
-		class StnBeamConfiguration {
-			beam_id: int
-			freq_ids: List[int]
-			boresight_dly_poly: str
+		class VisConfiguration {
+			fsp: VisFspConfiguration
+			stn_beams: List[StnBeamConfiguration]
+		}
+
+		class VisFspConfiguration {
+			function_mode: [str]
+			fsp_ids: [List[int]]
 		}
 
 		CBFConfiguration *-- "*" FSPConfiguration
-		CBFConfiguration *-- "1" VLBIConfiguration
 		CSPConfiguration *-- "1" CommonConfiguration
 		CSPConfiguration *-- "1" SubarrayConfiguration
 		CSPConfiguration *-- "0..1" CBFConfiguration
-		CSPConfiguration *-- "1" PSTConfiguration
-		CSPConfiguration *-- "1" PSSConfiguration
 		CSPConfiguration *-- "1" LowCBFConfiguration
 		LowCBFConfiguration *-- "1" StationConfiguration
-		LowCBFConfiguration *-- "1" TimingBeamConfiguration
-		TimingBeamConfiguration *-- "*" BeamConfiguration
+		LowCBFConfiguration *-- "1" VisConfiguration
+		VisConfiguration *-- "1" VisFspConfiguration
+		VisConfiguration *-- "*" StnBeamConfiguration
 		StationConfiguration *-- "*" StnBeamConfiguration
-	}
+	}	
 }
 @enduml

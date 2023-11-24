@@ -6,7 +6,6 @@ import inspect
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
@@ -16,18 +15,19 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamConfiguration,
+    VisConfiguration,
+    VisFspConfiguration,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure import (
     CSPConfigurationSchema,
     FSPConfigurationSchema,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure.csp import (
-    BeamConfigurationSchema,
     LowCBFConfigurationSchema,
     StationConfigurationSchema,
     StnBeamConfigurationSchema,
-    TimingBeamConfigurationSchema,
+    VisConfigurationSchema,
+    VisFspConfigurationSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
 
@@ -153,11 +153,8 @@ CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     ),
 )
 
-VALID_CSP_JSON_PI17 = """{
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
+VALID_LOW_CSP_JSON_PI20 = """{
+    "interface": "https://schema.skao.int/ska-low-csp-configure/0.0",
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A"
     },
@@ -166,70 +163,68 @@ VALID_CSP_JSON_PI17 = """{
         "stns": [
           [
             1,
-            0
+            1
           ],
           [
             2,
-            0
+            1
           ],
           [
             3,
-            0
+            1
           ],
           [
             4,
-            0
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            6,
+            1
           ]
         ],
         "stn_beams": [
           {
-            "beam_id": 1,
+            "stn_beam_id": 1,
             "freq_ids": [
-              64,
-              65,
-              66,
-              67,
-              68,
-              68,
-              70,
-              71
-            ],
-            "boresight_dly_poly": "url"
+              400
+            ]
           }
         ]
       },
-      "timing_beams": {
-        "beams": [
+      "vis": {
+        "fsp": {
+          "function_mode": "vis",
+          "fsp_ids": [
+            1
+          ]
+        },
+        "stn_beams": [
           {
-            "pst_beam_id": 13,
             "stn_beam_id": 1,
-            "offset_dly_poly": "url",
-            "stn_weights": [
-              0.9,
-              1.0,
-              1.0,
-              0.9
+            "host": [
+              [
+                0,
+                "192.168.1.00"
+              ]
             ],
-            "jones": "url",
-            "dest_chans": [
-              128,
-              256
+            "port": [
+              [
+                0,
+                9000,
+                1
+              ]
             ],
-            "rfi_enable": [
-              true,
-              true,
-              true
-           ],
-            "rfi_static_chans": [
-              1,
-              206,
-              997
+            "mac": [
+              [
+                0,
+                "02-03-04-0a-0b-0c"
+              ]
             ],
-            "rfi_dynamic_chans": [
-              242,
-              1342
-            ],
-            "rfi_weighted": 0.87
+            "integration_ms": 849
           }
         ]
       }
@@ -327,13 +322,13 @@ def test_marshall_for_csp_configuration_pi16():
     )
 
 
-def test_marshall_for_csp_configuration_pi17():
+def test_marshall_for_low_csp_configuration_pi20():
     """
     Verify that serialising a CSPConfiguration does not change the object.
     """
-    csp_configuration_object = CSPConfigurationSchema().loads(VALID_CSP_JSON_PI17)
+    csp_configuration_object = CSPConfigurationSchema().loads(VALID_LOW_CSP_JSON_PI20)
     serialized_csp_config = CSPConfigurationSchema().dumps(csp_configuration_object)
-    assert_json_is_equal(VALID_CSP_JSON_PI17, serialized_csp_config)
+    assert_json_is_equal(VALID_LOW_CSP_JSON_PI20, serialized_csp_config)
 
 
 def test_marshall_station_configuration_does_not_modify_original():
@@ -341,12 +336,15 @@ def test_marshall_station_configuration_does_not_modify_original():
     Verify that serialising a StationConfiguration does not change the object.
     """
     config = StationConfiguration(
-        stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
         stn_beams=[
             StnBeamConfiguration(
-                beam_id=1,
-                freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                boresight_dly_poly="url",
+                stn_beam_id=1,
+                freq_ids=[400],
+                host=[[0, "192.168.1.00"]],
+                port=[[0, 9000, 1]],
+                mac=[[0, "02-03-04-0a-0b-0c"]],
+                integration_ms=849,
             )
         ],
     )
@@ -363,75 +361,64 @@ def test_marshall_station_beam_configuration_does_not_modify_original():
     Verify that serialising a StationConfiguration does not change the object.
     """
     config = StnBeamConfiguration(
-        beam_id=1, freq_ids=[64, 65, 66, 67, 68, 68, 70, 71], boresight_dly_poly="url"
+        stn_beam_id=1,
+        freq_ids=[400],
+        host=[[0, "192.168.1.00"]],
+        port=[[0, 9000, 1]],
+        mac=[[0, "02-03-04-0a-0b-0c"]],
+        integration_ms=849,
     )
     copied = copy.deepcopy(config)
     StnBeamConfigurationSchema().dumps(config)
 
-    assert config.beam_id == copied.beam_id
-    assert config.freq_ids == copied.freq_ids
-    assert config.boresight_dly_poly == copied.boresight_dly_poly
-    assert config == copied
-
-
-def test_marshall_timing_beam_configuration_does_not_modify_original():
-    """
-    Verify that serialising a TimingBeamConfiguration does not change the object.
-    """
-    config = TimingBeamConfiguration(
-        beams=[
-            BeamConfiguration(
-                pst_beam_id=13,
-                stn_beam_id=1,
-                offset_dly_poly="url",
-                stn_weights=[0.9, 1.0, 1.0, 0.9],
-                jones="url",
-                dest_chans=[128, 256],
-                rfi_enable=[True, True, True],
-                rfi_static_chans=[1, 206, 997],
-                rfi_dynamic_chans=[242, 1342],
-                rfi_weighted=0.87,
-            )
-        ]
-    )
-
-    copied = copy.deepcopy(config)
-
-    TimingBeamConfigurationSchema().dumps(config)
-
-    assert config.beams == copied.beams
-    assert config == copied
-
-
-def test_marshall_beam_configuration_does_not_modify_original():
-    """
-    Verify that serialising a StationConfiguration does not change the object.
-    """
-    config = BeamConfiguration(
-        pst_beam_id=13,
-        stn_beam_id=1,
-        offset_dly_poly="url",
-        stn_weights=[0.9, 1.0, 1.0, 0.9],
-        jones="url",
-        dest_chans=[128, 256],
-        rfi_enable=[True, True, True],
-        rfi_static_chans=[1, 206, 997],
-        rfi_dynamic_chans=[242, 1342],
-        rfi_weighted=0.87,
-    )
-    copied = copy.deepcopy(config)
-    BeamConfigurationSchema().dumps(config)
-
-    assert config.pst_beam_id == copied.pst_beam_id
     assert config.stn_beam_id == copied.stn_beam_id
-    assert config.offset_dly_poly == copied.offset_dly_poly
-    assert config.stn_weights == copied.stn_weights
-    assert config.jones == copied.jones
-    assert config.dest_chans == copied.dest_chans
-    assert config.rfi_enable == copied.rfi_enable
-    assert config.rfi_static_chans == copied.rfi_static_chans
-    assert config.rfi_dynamic_chans == copied.rfi_dynamic_chans
-    assert config.rfi_weighted == copied.rfi_weighted
+    assert config.freq_ids == copied.freq_ids
+    assert config.host == copied.host
+    assert config.port == copied.port
+    assert config.mac == copied.mac
+    assert config.integration_ms == copied.integration_ms
+    assert config == copied
+
+
+def test_marshall_vis_configuration_does_not_modify_original():
+    """
+    Verify that serialising a VisConfiguration does not change the object.
+    """
+    config = VisConfiguration(
+        fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+        stn_beams=[
+            StnBeamConfiguration(
+                stn_beam_id=1,
+                freq_ids=[400],
+                host=[[0, "192.168.1.00"]],
+                port=[[0, 9000, 1]],
+                mac=[[0, "02-03-04-0a-0b-0c"]],
+                integration_ms=849,
+            )
+        ],
+    )
+
+    copied = copy.deepcopy(config)
+
+    VisConfigurationSchema().dumps(config)
+
+    assert config.fsp == copied.fsp
+    assert config.stn_beams == copied.stn_beams
+    assert config == copied
+
+
+def test_marshall_vis_fsp_configuration_does_not_modify_original():
+    """
+    Verify that serialising a VisFspConfiguration does not change the object.
+    """
+    config = VisFspConfiguration(function_mode="vis", fsp_ids=[1])
+
+    copied = copy.deepcopy(config)
+
+    VisFspConfigurationSchema().dumps(config)
+
+    assert config.function_mode == copied.function_mode
+    assert config.fsp_ids == copied.fsp_ids
     assert config == copied
 
 
@@ -441,30 +428,29 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
     """
     config = LowCBFConfiguration(
         stations=StationConfiguration(
-            stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
             stn_beams=[
                 StnBeamConfiguration(
-                    beam_id=1,
-                    freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                    boresight_dly_poly="url",
+                    stn_beam_id=1,
+                    freq_ids=[400],
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
             ],
         ),
-        timing_beams=TimingBeamConfiguration(
-            beams=[
-                BeamConfiguration(
-                    pst_beam_id=13,
+        vis=VisConfiguration(
+            fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+            stn_beams=[
+                StnBeamConfiguration(
                     stn_beam_id=1,
-                    offset_dly_poly="url",
-                    stn_weights=[0.9, 1.0, 1.0, 0.9],
-                    jones="url",
-                    dest_chans=[128, 256],
-                    rfi_enable=[True, True, True],
-                    rfi_static_chans=[1, 206, 997],
-                    rfi_dynamic_chans=[242, 1342],
-                    rfi_weighted=0.87,
+                    host=[[0, "192.168.1.00"]],
+                    port=[[0, 9000, 1]],
+                    mac=[[0, "02-03-04-0a-0b-0c"]],
+                    integration_ms=849,
                 )
-            ]
+            ],
         ),
     )
     copied = copy.deepcopy(config)
@@ -472,5 +458,5 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
     LowCBFConfigurationSchema().dumps(config)
 
     assert config.stations == copied.stations
-    assert config.timing_beams == copied.timing_beams
+    assert config.vis == config.vis
     assert config == copied

@@ -1,11 +1,13 @@
 @startuml
 hide empty members
 
+set separator none 
 package ska_tmc_cdm.messages.subarray_node {
 	package scan.py <<Rectangle>> {
 		class ScanRequest {
 			interface : str
 			transaction_id: str
+			subarray_id: int
             scan_id : int
 	  	}
 		note top of ScanRequest

@@ -1,7 +1,7 @@
 
-====================================
-Semantic Validation of Mid Telescope
-====================================
+============================================
+Semantic Validation of Mid & Low Telescope
+============================================
 
 
 Semantic Validation

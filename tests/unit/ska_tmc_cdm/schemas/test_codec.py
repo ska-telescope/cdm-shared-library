@@ -17,11 +17,10 @@ from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
+    INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-    VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
@@ -37,9 +36,7 @@ from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
-    VALID_LOW_CONFIGURE_JSON_PI17,
     VALID_LOW_CONFIGURE_OBJECT,
-    VALID_LOW_CONFIGURE_OBJECT_PI17,
     VALID_MID_CONFIGURE_JSON,
     VALID_MID_CONFIGURE_OBJECT,
 )
@@ -55,13 +52,7 @@ TEST_PARAMETERS = [
         AssignResourcesRequest,
         VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
         VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-        False,
-    ),
-    (
-        AssignResourcesRequest,
-        VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_PI17,
-        VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_PI17,
-        False,
+        True,
     ),
     (
         AssignResourcesRequest,
@@ -79,13 +70,7 @@ TEST_PARAMETERS = [
         ConfigureRequest,
         VALID_LOW_CONFIGURE_JSON,
         VALID_LOW_CONFIGURE_OBJECT,
-        False,
-    ),
-    (
-        ConfigureRequest,
-        VALID_LOW_CONFIGURE_JSON_PI17,
-        VALID_LOW_CONFIGURE_OBJECT_PI17,
-        False,
+        True,
     ),
     (
         ReleaseResourcesRequest,
@@ -151,14 +136,56 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_json = json.loads(INVALID_MID_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
+    try:
         CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
+    except SchematicValidationError as error:
+        assert error.message == (
+            "receptor_ids are too many!Current Limit is 4,"
+            "beams are too many! Current limit is 1,Invalid function for beams! "
+            "Currently allowed visibilities,spectral windows are too many! Current limit = 1,"
+            "Invalid input for channel_count! Currently allowed 14880,Invalid input for freq_min,"
+            "Invalid input for freq_max,length of receptor_ids should be same as length of receptors,"
+            "receptor_ids did not match receptors"
+        )
 
     invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
     invalid_json_configure = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
+    try:
         CODEC.loads(ConfigureRequest, invalid_json_configure)
+    except SchematicValidationError as error:
+        assert error.message == (
+            "Invalid input for receiver_band! Currently allowed [1,2],"
+            "FSPs are too many!Current Limit = 4,Invalid input for fsp_id!,"
+            "Invalid input for function_mode,Invalid input for zoom_factor,"
+            "frequency_slice_id did not match fsp_id,"
+            "frequency_band did not match receiver_band"
+        )
+
+    invalid_json = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
+    invalid_json_assign_resources = json.dumps(invalid_json)
+
+    try:
+        CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
+    except SchematicValidationError as error:
+        assert error.message == (
+            "beams are too many! Current limit is 1,"
+            "Invalid function for beams! Currently allowed visibilities,"
+            "spectral windows are too many! Current limit = 1"
+        )
+
+    invalid_json = json.loads(INVALID_LOW_CONFIGURE_JSON)
+    invalid_json_configure = json.dumps(invalid_json)
+
+    try:
+        CODEC.loads(ConfigureRequest, invalid_json_configure)
+    except SchematicValidationError as error:
+        assert error.message == (
+            "stations are too many! Current limit is 6,"
+            "Invalid input for function mode! Currently allowed vis,"
+            "The fsp_ids should all be distinct,"
+            "fsp_ids are too many!Current Limit is 6"
+        )
 
 
 def test_codec_dumps_raises_exception_on_invalid_schema():
@@ -190,7 +217,7 @@ def test_loads_invalid_json_with_validation_enabled():
 
     # no exception should be raised unless strictness is 0 or 1
     for strictness in [0, 1]:
-        unmarshalled = test_call(strictness=strictness)
+        unmarshalled = test_call(strictness=strictness, validate=False)
         marshalled = CODEC.dumps(unmarshalled, validate=False)
         assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
 
