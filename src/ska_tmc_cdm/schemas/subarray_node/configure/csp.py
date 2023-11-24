@@ -10,7 +10,6 @@ from marshmallow.validate import OneOf
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
@@ -20,7 +19,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamConfiguration,
     VisConfiguration,
     VisFspConfiguration,
 )
@@ -288,66 +286,6 @@ class StnBeamConfigurationSchema(Schema):
         return result
 
 
-@CODEC.register_mapping(BeamConfiguration)
-class BeamConfigurationSchema(Schema):
-    pst_beam_id = fields.Integer(data_key="pst_beam_id")
-    stn_beam_id = fields.Integer(data_key="stn_beam_id")
-    offset_dly_poly = fields.String(data_key="offset_dly_poly")
-    stn_weights = fields.List(fields.Float, data_key="stn_weights")
-    jones = fields.String(data_key="jones")
-    dest_chans = fields.List(fields.Integer, data_key="dest_chans")
-    rfi_enable = fields.List(fields.Boolean, data_key="rfi_enable")
-    rfi_static_chans = fields.List(fields.Integer, data_key="rfi_static_chans")
-    rfi_dynamic_chans = fields.List(fields.Integer, data_key="rfi_dynamic_chans")
-    rfi_weighted = fields.Float(data_key="rfi_weighted")
-
-    @post_load
-    def create(self, data, **_):
-        """
-         Convert parsed JSON back into a BeamConfiguration object.
-
-        :param data: dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-
-        :return: BeamConfiguration instance populated to match JSON
-        :rtype: BeamConfiguration
-        """
-        pst_beam_id = data.get("pst_beam_id", None)
-        stn_beam_id = data.get("stn_beam_id", None)
-        offset_dly_poly = data.get("offset_dly_poly", None)
-        stn_weights = data.get("stn_weights", None)
-        jones = data.get("jones", None)
-        dest_chans = data.get("dest_chans", None)
-        rfi_enable = data.get("rfi_enable", None)
-        rfi_static_chans = data.get("rfi_static_chans", None)
-        rfi_dynamic_chans = data.get("rfi_dynamic_chans", None)
-        rfi_weighted = data.get("rfi_weighted", None)
-        return BeamConfiguration(
-            pst_beam_id=pst_beam_id,
-            stn_beam_id=stn_beam_id,
-            offset_dly_poly=offset_dly_poly,
-            stn_weights=stn_weights,
-            jones=jones,
-            dest_chans=dest_chans,
-            rfi_enable=rfi_enable,
-            rfi_static_chans=rfi_static_chans,
-            rfi_dynamic_chans=rfi_dynamic_chans,
-            rfi_weighted=rfi_weighted,
-        )
-
-    @post_dump
-    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Filter out null values from JSON.
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for CBF configuration
-        """
-        result = {k: v for k, v in data.items() if v is not None}
-        return result
-
-
 @CODEC.register_mapping(VisFspConfiguration)
 class VisFspConfigurationSchema(Schema):
     function_mode = fields.String(data_key="function_mode")
@@ -400,37 +338,6 @@ class VisConfigurationSchema(Schema):
         fsp = data.get("fsp", None)
         stn_beams = data.get("stn_beams", None)
         return VisConfiguration(fsp=fsp, stn_beams=stn_beams)
-
-    @post_dump
-    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Filter out null values from JSON.
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for CBF configuration
-        """
-        result = {k: v for k, v in data.items() if v is not None}
-        return result
-
-
-@CODEC.register_mapping(TimingBeamConfiguration)
-class TimingBeamConfigurationSchema(Schema):
-    beams = fields.List(fields.Nested(BeamConfigurationSchema))
-
-    @post_load
-    def create(self, data, **_):
-        """
-         Convert parsed JSON back into a TimingBeamConfiguration object.
-
-        :param data: dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-
-        :return: TimingBeamConfiguration instance populated to match JSON
-        :rtype: TimingBeamConfiguration
-        """
-        beams = data.get("beams", None)
-        return TimingBeamConfiguration(beams=beams)
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use

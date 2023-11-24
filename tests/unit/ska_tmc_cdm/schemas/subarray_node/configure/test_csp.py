@@ -6,7 +6,6 @@ import inspect
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
@@ -16,7 +15,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamConfiguration,
     VisConfiguration,
     VisFspConfiguration,
 )
@@ -25,11 +23,9 @@ from ska_tmc_cdm.schemas.subarray_node.configure import (
     FSPConfigurationSchema,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure.csp import (
-    BeamConfigurationSchema,
     LowCBFConfigurationSchema,
     StationConfigurationSchema,
     StnBeamConfigurationSchema,
-    TimingBeamConfigurationSchema,
     VisConfigurationSchema,
     VisFspConfigurationSchema,
 )
@@ -157,7 +153,7 @@ CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     ),
 )
 
-VALID_CSP_JSON_PI20 = """{
+VALID_LOW_CSP_JSON_PI20 = """{
     "interface": "https://schema.skao.int/ska-low-csp-configure/0.0",
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A"
@@ -326,13 +322,13 @@ def test_marshall_for_csp_configuration_pi16():
     )
 
 
-def test_marshall_for_csp_configuration_pi20():
+def test_marshall_for_low_csp_configuration_pi20():
     """
     Verify that serialising a CSPConfiguration does not change the object.
     """
-    csp_configuration_object = CSPConfigurationSchema().loads(VALID_CSP_JSON_PI20)
+    csp_configuration_object = CSPConfigurationSchema().loads(VALID_LOW_CSP_JSON_PI20)
     serialized_csp_config = CSPConfigurationSchema().dumps(csp_configuration_object)
-    assert_json_is_equal(VALID_CSP_JSON_PI20, serialized_csp_config)
+    assert_json_is_equal(VALID_LOW_CSP_JSON_PI20, serialized_csp_config)
 
 
 def test_marshall_station_configuration_does_not_modify_original():
@@ -423,67 +419,6 @@ def test_marshall_vis_fsp_configuration_does_not_modify_original():
 
     assert config.function_mode == copied.function_mode
     assert config.fsp_ids == copied.fsp_ids
-    assert config == copied
-
-
-def test_marshall_timing_beam_configuration_does_not_modify_original():
-    """
-    Verify that serialising a TimingBeamConfiguration does not change the object.
-    """
-    config = TimingBeamConfiguration(
-        beams=[
-            BeamConfiguration(
-                pst_beam_id=13,
-                stn_beam_id=1,
-                offset_dly_poly="url",
-                stn_weights=[0.9, 1.0, 1.0, 0.9],
-                jones="url",
-                dest_chans=[128, 256],
-                rfi_enable=[True, True, True],
-                rfi_static_chans=[1, 206, 997],
-                rfi_dynamic_chans=[242, 1342],
-                rfi_weighted=0.87,
-            )
-        ]
-    )
-
-    copied = copy.deepcopy(config)
-
-    TimingBeamConfigurationSchema().dumps(config)
-
-    assert config.beams == copied.beams
-    assert config == copied
-
-
-def test_marshall_beam_configuration_does_not_modify_original():
-    """
-    Verify that serialising a StationConfiguration does not change the object.
-    """
-    config = BeamConfiguration(
-        pst_beam_id=13,
-        stn_beam_id=1,
-        offset_dly_poly="url",
-        stn_weights=[0.9, 1.0, 1.0, 0.9],
-        jones="url",
-        dest_chans=[128, 256],
-        rfi_enable=[True, True, True],
-        rfi_static_chans=[1, 206, 997],
-        rfi_dynamic_chans=[242, 1342],
-        rfi_weighted=0.87,
-    )
-    copied = copy.deepcopy(config)
-    BeamConfigurationSchema().dumps(config)
-
-    assert config.pst_beam_id == copied.pst_beam_id
-    assert config.stn_beam_id == copied.stn_beam_id
-    assert config.offset_dly_poly == copied.offset_dly_poly
-    assert config.stn_weights == copied.stn_weights
-    assert config.jones == copied.jones
-    assert config.dest_chans == copied.dest_chans
-    assert config.rfi_enable == copied.rfi_enable
-    assert config.rfi_static_chans == copied.rfi_static_chans
-    assert config.rfi_dynamic_chans == copied.rfi_dynamic_chans
-    assert config.rfi_weighted == copied.rfi_weighted
     assert config == copied
 
 

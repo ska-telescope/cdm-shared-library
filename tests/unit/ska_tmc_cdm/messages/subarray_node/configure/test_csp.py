@@ -9,7 +9,6 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
@@ -21,7 +20,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamConfiguration,
     VisConfiguration,
     VisFspConfiguration,
 )
@@ -42,7 +40,46 @@ CONSTRUCTOR_ARGS = dict(
     pst_config=None,
 )
 
-CSP_CONFIGURATION_ARGS = dict(
+CSP_CONFIGURATION_ARGS_PI16 = dict(
+    interface="https://schema.skao.int/ska-csp-configure/2.0",
+    subarray=SubarrayConfiguration("science period 23"),
+    common=CommonConfiguration(
+        config_id="sbi-mvp01-20200325-00001-science_A",
+        frequency_band=ReceiverBand.BAND_1,
+        subarray_id=1,
+    ),
+    pss_config={},
+    pst_config={},
+    cbf_config=CBFConfiguration(
+        fsp_configs=[
+            FSPConfiguration(
+                fsp_id=1,
+                function_mode=FSPFunctionMode.CORR,
+                frequency_slice_id=1,
+                integration_factor=1,
+                zoom_factor=0,
+                channel_averaging_map=[(0, 2), (744, 0)],
+                channel_offset=0,
+                output_link_map=[(0, 0), (200, 1)],
+            ),
+            FSPConfiguration(
+                fsp_id=2,
+                function_mode=FSPFunctionMode.CORR,
+                frequency_slice_id=2,
+                integration_factor=1,
+                zoom_factor=1,
+                channel_averaging_map=[(0, 2), (744, 0)],
+                channel_offset=744,
+                output_link_map=[(0, 4), (200, 5)],
+                zoom_window_tuning=650000,
+            ),
+        ],
+        vlbi_config={},
+    ),
+)
+
+
+CSP_LOW_CONFIGURATION_ARGS = dict(
     interface="https://schema.skao.int/ska-low-csp-configure/0.0",
     common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
@@ -260,12 +297,12 @@ def test_csp_configuration_objects_are_equal_pi16():
     attributes are equal.
     """
 
-    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS)
-    csp_obj_2 = CSPConfiguration(**CSP_CONFIGURATION_ARGS)
+    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI16)
+    csp_obj_2 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI16)
 
     assert csp_obj_1 == csp_obj_2
 
-    alt_csp_configuration_csp_2_0_args = CSP_CONFIGURATION_ARGS.copy()
+    alt_csp_configuration_csp_2_0_args = CSP_CONFIGURATION_ARGS_PI16.copy()
     alt_csp_configuration_csp_2_0_args[
         "interface"
     ] = "Changing interface value for creating object with different value"
@@ -280,7 +317,38 @@ def test_csp_configuration_not_equal_to_other_objects_pi16():
     Verify that CSPConfiguration objects are not considered equal to objects
     of other types.
     """
-    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS)
+    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI16)
+
+    assert csp_obj_1 != 1
+
+
+def test_csp_configuration_objects_are_equal_for_low():
+    """
+    Verify that CSPConfiguration objects are considered equal when all
+    attributes are equal.
+    """
+
+    csp_obj_1 = CSPConfiguration(**CSP_LOW_CONFIGURATION_ARGS)
+    csp_obj_2 = CSPConfiguration(**CSP_LOW_CONFIGURATION_ARGS)
+
+    assert csp_obj_1 == csp_obj_2
+
+    alt_csp_configuration_csp_2_0_args = CSP_LOW_CONFIGURATION_ARGS.copy()
+    alt_csp_configuration_csp_2_0_args[
+        "interface"
+    ] = "Changing interface value for creating object with different value"
+
+    csp_obj_3 = CSPConfiguration(**alt_csp_configuration_csp_2_0_args)
+
+    assert csp_obj_1 != csp_obj_3
+
+
+def test_csp_configuration_not_equal_to_other_objects_for_low():
+    """
+    Verify that CSPConfiguration objects are not considered equal to objects
+    of other types.
+    """
+    csp_obj_1 = CSPConfiguration(**CSP_LOW_CONFIGURATION_ARGS)
 
     assert csp_obj_1 != 1
 
@@ -450,127 +518,6 @@ def test_station_configuration_not_equal_to_other_objects():
                 integration_ms=849,
             )
         ],
-    )
-    assert config != 1
-
-
-def test_beams_configuration_equals():
-    """
-    Verify that BeamConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-
-    config1 = BeamConfiguration(
-        pst_beam_id=13,
-        stn_beam_id=1,
-        offset_dly_poly="url",
-        stn_weights=[0.9, 1.0, 1.0, 0.9],
-        jones="url",
-        dest_chans=[128, 256],
-        rfi_enable=[True, True, True],
-        rfi_static_chans=[1, 206, 997],
-        rfi_dynamic_chans=[242, 1342],
-        rfi_weighted=0.87,
-    )
-    config2 = BeamConfiguration(
-        pst_beam_id=13,
-        stn_beam_id=1,
-        offset_dly_poly="url",
-        stn_weights=[0.9, 1.0, 1.0, 0.9],
-        jones="url",
-        dest_chans=[128, 256],
-        rfi_enable=[True, True, True],
-        rfi_static_chans=[1, 206, 997],
-        rfi_dynamic_chans=[242, 1342],
-        rfi_weighted=0.87,
-    )
-    assert config1 == config2
-    assert config1 != BeamConfiguration(pst_beam_id=13)
-
-
-def test_beams_configuration_not_equal_to_other_objects():
-    """
-    Verify that BeamConfiguration objects are not considered equal to objects
-    of other types.
-    """
-
-    config = BeamConfiguration(
-        pst_beam_id=13,
-        stn_beam_id=1,
-        offset_dly_poly="url",
-        stn_weights=[0.9, 1.0, 1.0, 0.9],
-        jones="url",
-        dest_chans=[128, 256],
-        rfi_enable=[True, True, True],
-        rfi_static_chans=[1, 206, 997],
-        rfi_dynamic_chans=[242, 1342],
-        rfi_weighted=0.87,
-    )
-    assert config != 1
-
-
-def test_timing_beams_configuration_equals():
-    """
-    Verify that TimingBeamConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-
-    config1 = TimingBeamConfiguration(
-        beams=[
-            BeamConfiguration(
-                pst_beam_id=13,
-                stn_beam_id=1,
-                offset_dly_poly="url",
-                stn_weights=[0.9, 1.0, 1.0, 0.9],
-                jones="url",
-                dest_chans=[128, 256],
-                rfi_enable=[True, True, True],
-                rfi_static_chans=[1, 206, 997],
-                rfi_dynamic_chans=[242, 1342],
-                rfi_weighted=0.87,
-            )
-        ]
-    )
-    config2 = TimingBeamConfiguration(
-        beams=[
-            BeamConfiguration(
-                pst_beam_id=13,
-                stn_beam_id=1,
-                offset_dly_poly="url",
-                stn_weights=[0.9, 1.0, 1.0, 0.9],
-                jones="url",
-                dest_chans=[128, 256],
-                rfi_enable=[True, True, True],
-                rfi_static_chans=[1, 206, 997],
-                rfi_dynamic_chans=[242, 1342],
-                rfi_weighted=0.87,
-            )
-        ]
-    )
-    assert config1 == config2
-    assert config1 != TimingBeamConfiguration(beams=[BeamConfiguration(pst_beam_id=13)])
-
-
-def test_timing_beams_configuration_not_equal_to_other_objects():
-    """
-    Verify that TimingBeamConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    config = TimingBeamConfiguration(
-        beams=[
-            BeamConfiguration(
-                pst_beam_id=13,
-                stn_beam_id=1,
-                offset_dly_poly="url",
-                stn_weights=[0.9, 1.0, 1.0, 0.9],
-                jones="url",
-                dest_chans=[128, 256],
-                rfi_enable=[True, True, True],
-                rfi_static_chans=[1, 206, 997],
-                rfi_dynamic_chans=[242, 1342],
-                rfi_weighted=0.87,
-            )
-        ]
     )
     assert config != 1
 

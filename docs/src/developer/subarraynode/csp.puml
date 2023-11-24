@@ -86,7 +86,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		CSPConfiguration *-- "1" LowCBFConfiguration
 		LowCBFConfiguration *-- "1" StationConfiguration
 		LowCBFConfiguration *-- "1" VisConfiguration
-		VisConfiguration *-- "*" VisFspConfiguration
+		VisConfiguration *-- "1" VisFspConfiguration
 		VisConfiguration *-- "*" StnBeamConfiguration
 		StationConfiguration *-- "*" StnBeamConfiguration
 	}	

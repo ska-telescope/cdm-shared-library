@@ -19,8 +19,6 @@ __all__ = [
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
-    "TimingBeamConfiguration",
-    "BeamConfiguration",
     "StationConfiguration",
     "StnBeamConfiguration",
     "VisFspConfiguration",
@@ -133,46 +131,6 @@ class StationConfiguration:
 
     stns: Optional[List[List[int]]] = None
     stn_beams: Optional[List[StnBeamConfiguration]] = None
-
-
-@dataclass
-class BeamConfiguration:
-    """
-    Class to hold Beams Configuration.
-
-    :param pst_beam_id: pst_beam_id
-    :param stn_beam_id: stn_beam_id
-    :param offset_dly_poly: offset_dly_poly
-    :param stn_weights: stn_weights
-    :param jones: jones
-    :param dest_chans: dest_chans
-    :param rfi_enable: rfi_enable
-    :param rfi_static_chans: rfi_static_chans
-    :param rfi_dynamic_chans: rfi_dynamic_chans
-    :param rfi_weighted: rfi_weighted
-    """
-
-    pst_beam_id: Optional[int] = None
-    stn_beam_id: Optional[int] = None
-    offset_dly_poly: Optional[str] = None
-    stn_weights: Optional[List[float]] = None
-    jones: Optional[str] = None
-    dest_chans: Optional[List[int]] = None
-    rfi_enable: Optional[List[bool]] = None
-    rfi_static_chans: Optional[List[int]] = None
-    rfi_dynamic_chans: Optional[List[int]] = None
-    rfi_weighted: Optional[float] = None
-
-
-@dataclass
-class TimingBeamConfiguration:
-    """
-    Class to hold Timing Beams Configuration.
-
-    :param beams: beams
-    """
-
-    beams: Optional[List[BeamConfiguration]] = None
 
 
 @dataclass

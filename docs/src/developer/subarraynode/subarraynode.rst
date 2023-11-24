@@ -416,8 +416,17 @@ scan.py
 The ``scan.py`` module models the argument for the ``SubArrayNode.scan()`` command.
 Below is an example JSON command argument that this code can model.
 
+
 .. code-block:: JSON
 
+  // For MID
+  {
+    "interface": "https://schema.skao.int/ska-tmc-scan/2.1",
+    "transaction_id": "txn-12345",
+    "scan_id": 2
+  }
+
+  // For LOW
   {
     "interface": "https://schema.skao.int/ska-low-tmc-scan/4.0",
     "transaction_id": "txn-....-00001",

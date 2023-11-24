@@ -536,7 +536,7 @@ VALID_MID_ASSIGNRESOURCESRESPONSE_OBJECT = AssignResourcesResponse(
     dish_allocation=DishAllocation(["0001", "0002"])
 )
 
-VALID_SDP_JSON_PI16 = """
+VALID_MID_SDP_JSON_PI16 = """
 {
       "interface":"https://schema.skao.int/ska-sdp-assignres/0.4",
       "execution_block":{
@@ -867,7 +867,7 @@ VALID_SDP_JSON_PI16 = """
   }
 }"""
 
-VALID_SDP_OBJECT_PI16 = SDPConfiguration(
+VALID_MID_SDP_OBJECT_PI16 = SDPConfiguration(
     interface="https://schema.skao.int/ska-sdp-assignres/0.4",
     execution_block=ExecutionBlockConfiguration(
         eb_id="eb-mvp01-20210623-00000",
@@ -1120,7 +1120,7 @@ VALID_SDP_OBJECT_PI16 = SDPConfiguration(
     },
 )
 
-VALID_SDP_JSON_PI20 = """
+VALID_LOW_SDP_JSON = """
 {
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
     "resources": {
@@ -1263,7 +1263,7 @@ VALID_SDP_JSON_PI20 = """
   }
 """
 
-VALID_SDP_OBJECT_PI20 = SDPConfiguration(
+VALID_LOW_SDP_OBJECT = SDPConfiguration(
     interface="https://schema.skao.int/ska-sdp-assignres/0.4",
     execution_block=ExecutionBlockConfiguration(
         eb_id="eb-test-20220916-00000",
@@ -1353,7 +1353,7 @@ VALID_SDP_OBJECT_PI20 = SDPConfiguration(
     },
 )
 
-INVALID_SDP_OBJECT_PI20 = SDPConfiguration(
+INVALID_LOW_SDP_OBJECT = SDPConfiguration(
     interface="https://schema.skao.int/ska-sdp-assignres/0.4",
     execution_block=ExecutionBlockConfiguration(
         eb_id="eb-test-20220916-00000",
@@ -1455,7 +1455,7 @@ INVALID_SDP_OBJECT_PI20 = SDPConfiguration(
     },
 )
 
-INVALID_SDP_JSON_PI20 = """{
+INVALID_LOW_SDP_JSON = """{
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
     "resources": {
       "receptors": [
@@ -1635,7 +1635,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
   "subarray_id": 1,
   "dish": {"receptor_ids": ["0001","0002","0003","0004","0005"]},
   "sdp": """
-    + VALID_SDP_JSON_PI16
+    + VALID_MID_SDP_JSON_PI16
     + """
 }
 """
@@ -1650,7 +1650,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = (
   "subarray_id": 1,
   "dish": "foo",
   "sdp": """
-    + VALID_SDP_JSON_PI16
+    + VALID_MID_SDP_JSON_PI16
     + """
 }
 """
@@ -1663,7 +1663,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     dish_allocation=DishAllocation(
         receptor_ids=["0001", "0002", "0003", "0004", "0005"]
     ),
-    sdp_config=VALID_SDP_OBJECT_PI16,
+    sdp_config=VALID_MID_SDP_OBJECT_PI16,
 )
 
 INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
@@ -1687,7 +1687,7 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
     ]
   },
    "sdp": """
-    + INVALID_SDP_JSON_PI20
+    + INVALID_LOW_SDP_JSON
     + """
 }
 """
@@ -1715,7 +1715,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
     ]
   },
  "sdp": """
-    + VALID_SDP_JSON_PI20
+    + VALID_LOW_SDP_JSON
     + """
 }
 """
@@ -1726,7 +1726,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     transaction_id="txn-....-00001",
     subarray_id=1,
     mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
-    sdp_config=VALID_SDP_OBJECT_PI20,
+    sdp_config=VALID_LOW_SDP_OBJECT,
 )
 
 INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
@@ -1734,7 +1734,7 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     transaction_id="txn-....-00001",
     subarray_id="1",
     mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
-    sdp_config=INVALID_SDP_OBJECT_PI20,
+    sdp_config=INVALID_LOW_SDP_OBJECT,
 )
 
 
@@ -1797,17 +1797,17 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
         ),
         (
             SDPConfigurationSchema,
-            VALID_SDP_OBJECT_PI16,
+            VALID_MID_SDP_OBJECT_PI16,
             None,
-            VALID_SDP_JSON_PI16,
+            VALID_MID_SDP_JSON_PI16,
             None,
             True,
         ),
         (
             SDPConfigurationSchema,
-            VALID_SDP_OBJECT_PI20,
+            VALID_LOW_SDP_OBJECT,
             None,
-            VALID_SDP_JSON_PI20,
+            VALID_LOW_SDP_JSON,
             None,
             True,
         ),

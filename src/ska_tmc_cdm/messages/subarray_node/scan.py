@@ -13,7 +13,7 @@ __all__ = ["ScanRequest"]
 # schema. LOW_SCHEMA will eventually be phased out and replaced by MID_SCHEMA,
 # which will become the single schema for SubArrayNode.Scan and probably be
 # renamed SCHEMA rather than SCHEMA at that point.
-LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-scan/2.0"
+LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-scan/4.0"
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-scan/2.1"
 
 
