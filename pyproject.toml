@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ska-tmc-cdm"
-version = "8.0.1"
+version = "8.1.0"
 description = "SKA Control Data Model serialisation library"
 authors = ["Team Buttons"]
 license = "BSD-3-Clause"

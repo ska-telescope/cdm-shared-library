@@ -5,6 +5,12 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
+[8.1.0]
+*******
+
+* Added PI-20 low schema support.
+  Added symantic validation support for PI-20 low schema.
+
 [8.0.1]
 *******
 
