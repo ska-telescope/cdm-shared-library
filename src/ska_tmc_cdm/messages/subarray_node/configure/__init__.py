@@ -33,7 +33,7 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     csp: Optional[CSPConfiguration] = None
     mccs: Optional[MCCSConfiguration] = None
     tmc: Optional[TMCConfiguration] = None
-    interface: Optional[str] = None
+    interface: str = None
     transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
