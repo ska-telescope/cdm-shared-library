@@ -9,7 +9,7 @@ import pytest
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
-from ska_tmc_cdm.messages.subarray_node.configure import SCHEMA, ConfigureRequest
+from ska_tmc_cdm.messages.subarray_node.configure import MID_SCHEMA, ConfigureRequest
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     PointingConfiguration,
@@ -515,7 +515,7 @@ VALID_MID_DISH_ONLY_JSON = (
     """
 {
     "interface": """
-    + f'"{SCHEMA}"'
+    + f'"{MID_SCHEMA}"'
     + """,
     "dish": {
         "receiver_band": "1"
@@ -532,13 +532,13 @@ VALID_NULL_JSON = (
     """
 {
     "interface": """
-    + f'"{SCHEMA}"'
+    + f'"{MID_SCHEMA}"'
     + """
 }
 """
 )
 
-VALID_NULL_OBJECT = ConfigureRequest()
+VALID_NULL_OBJECT = ConfigureRequest(interface=MID_SCHEMA)
 
 VALID_MID_CONFIGURE_JSON = """
 {

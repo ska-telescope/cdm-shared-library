@@ -7,7 +7,11 @@ from datetime import timedelta
 import pytest
 from pydantic import ValidationError
 
-from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
+from ska_tmc_cdm.messages.subarray_node.configure import (
+    LOW_SCHEMA,
+    MID_SCHEMA,
+    ConfigureRequest,
+)
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     PointingConfiguration,
@@ -130,9 +134,46 @@ CONFIGURE_LOW_OBJECT_ARGS = dict(
 )
 
 
+def test_empty_configure_request_fails():
+    """
+    Verify that an empty ConfigureRequest without dish, mccs or interface set throws a ValueError
+    """
+    with pytest.raises(ValueError):
+        _ = ConfigureRequest()
+
+
+def test_configure_request_with_mccs_has_low_interface_set_on_creation():
+    """
+    Verify that ConfigureRequest with valid MCCSConfiguration has a LOW Schema set on creation
+    """
+    station_config = StnConfiguration(1)
+    target = SubarrayBeamTarget(180.0, 45.0, "DriftScan", "HORIZON")
+    station_beam_config = SubarrayBeamConfiguration(
+        1, [1, 2], [[1, 2, 3, 4, 5, 6]], 1.0, target, [1.0, 1.0, 1.0], [0.0, 0.0]
+    )
+    mccs_config = MCCSConfiguration(
+        station_configs=[station_config], subarray_beam_configs=[station_beam_config]
+    )
+    request = ConfigureRequest(
+        mccs=mccs_config,
+    )
+    assert request.interface is not None
+    assert request.interface == LOW_SCHEMA
+
+
+def test_configure_request_with_dish_has_mid_interface_set_on_creation():
+    """
+    Verify that ConfigureRequest with valid DishConfiguration has a MID Schema set on creation
+    """
+    config_1 = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
+    request = ConfigureRequest(dish=config_1)
+    assert request.interface is not None
+    assert request.interface == MID_SCHEMA
+
+
 def test_configure_request_eq():
     """
-    Verify that ConfigurationRequest objects are considered equal when:
+    Verify that ConfigureRequest objects are considered equal when:
       - they point to the same target
       - they set the same receiver band
       - their SDP configuration is the same

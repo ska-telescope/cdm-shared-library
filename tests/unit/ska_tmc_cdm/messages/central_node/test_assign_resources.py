@@ -6,6 +6,8 @@ import itertools
 import pytest
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
+    LOW_SCHEMA,
+    MID_SCHEMA,
     AssignResourcesRequest,
     AssignResourcesResponse,
 )
@@ -51,6 +53,43 @@ def assign_request_builder(
         .set_mccs(mccs=mccs)
         .build()
     )
+
+
+@pytest.mark.parametrize(
+    "assign_request, expected_interface",
+    (
+        (
+            assign_request_builder(
+                1, dish_allocation=DishAllocation(receptor_ids=["SKA001"])
+            ),
+            MID_SCHEMA,
+        ),
+        (
+            assign_request_builder(
+                1,
+                interface="foo",
+                dish_allocation=DishAllocation(receptor_ids=["SKA001"]),
+            ),
+            "foo",
+        ),
+        (
+            assign_request_builder(
+                1,
+                mccs=mccs_allocate_builder(
+                    subarray_beam_ids=[1], station_ids=[[1, 2]], channel_blocks=[3]
+                ),
+            ),
+            LOW_SCHEMA,
+        ),
+    ),
+)
+def test_assign_resources_request_has_interface_set_on_creation(
+    assign_request, expected_interface
+):
+    """
+    Verify that the interface is set correctly if not provided
+    """
+    assert assign_request.interface == expected_interface
 
 
 def test_assign_resources_request_eq():
@@ -418,7 +457,12 @@ def test_modified_assign_resources_request_eq():
         interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
         transaction_id="txn-mvp01-20200325-00002",
     )
-    assert request != assign_request_builder(1, dish_allocation=None, sdp_config=None)
+    assert request != assign_request_builder(
+        1,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        dish_allocation=None,
+        sdp_config=None,
+    )
     assert request != assign_request_builder(
         1,
         dish_allocation=None,

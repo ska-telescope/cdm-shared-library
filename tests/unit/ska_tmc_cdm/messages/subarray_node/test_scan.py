@@ -1,8 +1,9 @@
 """
 Unit tests for the ska_tmc_cdm.messages.subarraynode.scan module
 """
+import pytest
 
-from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
+from ska_tmc_cdm.messages.subarray_node.scan import LOW_SCHEMA, MID_SCHEMA, ScanRequest
 
 CONSTRUCTOR_ARGS = dict(
     interface="interface", transaction_id="transaction ID", scan_id=123, subarray_id=1
@@ -33,3 +34,18 @@ def test_scanrequest_not_equal_to_other_objects():
     request = ScanRequest(**CONSTRUCTOR_ARGS)
     assert request != 1
     assert request != object()
+
+
+@pytest.mark.parametrize(
+    "scan_request, expected_interface",
+    (
+        (ScanRequest(interface="test-interface", scan_id=1), "test-interface"),
+        (ScanRequest(scan_id=1, subarray_id=1), LOW_SCHEMA),
+        (ScanRequest(scan_id=1), MID_SCHEMA),
+    ),
+)
+def test_scanrequest_default_interface(scan_request, expected_interface):
+    """
+    Verify that ScanRequest object gets the correct default interface
+    """
+    assert scan_request.interface == expected_interface

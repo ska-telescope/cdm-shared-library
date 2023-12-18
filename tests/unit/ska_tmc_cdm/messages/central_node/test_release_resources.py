@@ -8,6 +8,11 @@ from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 
 
+def test_release_resources_request_has_interface_set_on_creation():
+    request = ReleaseResourcesRequest(release_all=True)
+    assert request.interface is not None
+
+
 def test_release_resources_request_eq():
     """
     Verify that two ReleaseResource requests for the same sub-array and

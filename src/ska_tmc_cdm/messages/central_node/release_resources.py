@@ -11,6 +11,8 @@ from .common import DishAllocation
 
 __all__ = ["ReleaseResourcesRequest"]
 
+SCHEMA = "https://schema.skao.int/ska-tmc-releaseresources/2.1"
+
 
 @dataclass(kw_only=True)
 class ReleaseResourcesRequest:
@@ -18,7 +20,8 @@ class ReleaseResourcesRequest:
     ReleaseResourcesRequest is a Python representation of the structured
     request for a TMC CentralNode.ReleaseResources call.
 
-    :param interface: url string to determine JsonSchema version
+    :param interface: url string to determine JsonSchema version, defaults to
+        https://schema.skao.int/ska-tmc-releaseresources/2.1 if not set
     :param transaction_id: ID for tracking requests
     :param subarray_id: the numeric SubArray ID (1..16)
     :param release_all: True to release all sub-array resources, False to
@@ -27,7 +30,7 @@ class ReleaseResourcesRequest:
     to release for this request.
     """
 
-    interface: Optional[str] = None
+    interface: Optional[str] = SCHEMA
     transaction_id: Optional[str] = None
     subarray_id: Optional[int] = None
     release_all: StrictBool = False
