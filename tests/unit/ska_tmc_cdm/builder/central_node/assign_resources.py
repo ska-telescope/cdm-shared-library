@@ -1,6 +1,5 @@
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import SDPConfiguration
 
@@ -20,7 +19,6 @@ class AssignResourcesRequestBuilder:
         self.subarry_id = None
         self.dish_allocation = None
         self.sdp_config = None
-        self.csp_config = None
         self.mccs = None
         self.interface = None
         self.transaction_id = None
@@ -39,12 +37,6 @@ class AssignResourcesRequestBuilder:
         self, sdp_config: SDPConfiguration
     ) -> "AssignResourcesRequestBuilder":
         self.sdp_config = sdp_config
-        return self
-
-    def set_csp_config(
-        self, csp_config: CSPConfiguration
-    ) -> "AssignResourcesRequestBuilder":
-        self.csp_config = csp_config
         return self
 
     def set_mccs(self, mccs: MCCSAllocate) -> "AssignResourcesRequestBuilder":
@@ -66,7 +58,6 @@ class AssignResourcesRequestBuilder:
             self.subarray_id,
             self.dish_allocation,
             self.sdp_config,
-            self.csp_config,
             self.mccs,
             self.interface,
             self.transaction_id,

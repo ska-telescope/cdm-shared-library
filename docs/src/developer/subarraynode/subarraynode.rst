@@ -217,90 +217,84 @@ of a full CDM JSON object, the elements this maps to are:
   }
 
   #Low JSON  specifically by csp.py
-    {
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
-    "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-       
-    },
-    "lowcbf": {
-      "stations": {
-        "stns": [
-          [
-            1,
-            0
-          ],
-          [
-            2,
-            0
-          ],
-          [
-            3,
-            0
-          ],
-          [
-            4,
-            0
-          ]
-        ],
-        "stn_beams": [
-          {
-            "beam_id": 1,
-            "freq_ids": [
-              64,
-              65,
-              66,
-              67,
-              68,
-              68,
-              70,
-              71
-            ],
-            "boresight_dly_poly": "url"
-          }
-        ]
+  
+    "csp": {
+      "interface": "https://schema.skao.int/ska-low-csp-configure/0.0",
+      "common": {
+        "config_id": "sbi-mvp01-20200325-00001-science_A"
       },
-      "timing_beams": {
-        "beams": [
-          {
-            "pst_beam_id": 13,
-            "stn_beam_id": 1,
-            "offset_dly_poly": "url",
-            "stn_weights": [
-              0.9,
-              1.0,
-              1.0,
-              0.9
-            ],
-            "jones": "url",
-            "dest_chans": [
-              128,
-              256
-            ],
-            "rfi_enable": [
-              true,
-              true,
-              true
-            ],
-            "rfi_static_chans": [
+      "lowcbf": {
+        "stations": {
+          "stns": [
+            [
               1,
-              206,
-              997
+              1
             ],
-            "rfi_dynamic_chans": [
-              242,
-              1342
+            [
+              2,
+              1
             ],
-            "rfi_weighted": 0.87
-          }
-        ]
-      },
-       
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              5,
+              1
+            ],
+            [
+              6,
+              1
+            ]
+          ],
+          "stn_beams": [
+            {
+              "stn_beam_id": 1,
+              "freq_ids": [
+                400
+              ]
+            }
+          ]
+        },
+        "vis": {
+          "fsp": {
+            "function_mode": "vis",
+            "fsp_ids": [
+              1
+            ]
+          },
+          "stn_beams": [
+            {
+              "stn_beam_id": 1,
+              "host": [
+                [
+                  0,
+                  "192.168.1.00"
+                ]
+              ],
+              "port": [
+                [
+                  0,
+                  9000,
+                  1
+                ]
+              ],
+              "mac": [
+                [
+                  0,
+                  "02-03-04-0a-0b-0c"
+                ]
+              ],
+              "integration_ms": 849
+            }
+          ]
+        }
+      }
     }
-  }
 
 sdp.py
 ------
@@ -422,12 +416,22 @@ scan.py
 The ``scan.py`` module models the argument for the ``SubArrayNode.scan()`` command.
 Below is an example JSON command argument that this code can model.
 
+
 .. code-block:: JSON
 
+  // For MID
   {
     "interface": "https://schema.skao.int/ska-tmc-scan/2.1",
     "transaction_id": "txn-12345",
     "scan_id": 2
+  }
+
+  // For LOW
+  {
+    "interface": "https://schema.skao.int/ska-low-tmc-scan/4.0",
+    "transaction_id": "txn-....-00001",
+    "subarray_id": 1,
+    "scan_id": 1
   }
 
 
@@ -547,150 +551,145 @@ Example configuration JSON for LOW
 .. code-block:: JSON
 
     {
-  "interface": "https://schema.skao.int/ska-low-tmc-configure/3.0",
-  "transaction_id": "txn-....-00001",
-  "mccs": {
-    "stations": [
-      {
-        "station_id": 1
-      },
-      {
-        "station_id": 2
-      }
-    ],
-    "subarray_beams": [
-      {
-        "subarray_beam_id": 1,
-        "station_ids": [
-          1,
-          2
-        ],
-        "update_rate": 0.0,
-        "channels": [
-          [
-            0,
-            8,
-            1,
-            1
-          ],
-          [
-            8,
-            8,
-            2,
-            1
-          ],
-          [
-            24,
-            16,
-            2,
-            1
-          ]
-        ],
-        "antenna_weights": [
-          1.0,
-          1.0,
-          1.0
-        ],
-        "phase_centre": [
-          0.0,
-          0.0
-        ],
-        "target": {
-          "reference_frame": "HORIZON",
-          "target_name": "DriftScan",
-          "az": 180.0,
-          "el": 45.0
-        }
-      }
-    ]
-  },
-  "sdp": {
-    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
-    "scan_type": "science_A"
-  },
-  "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
-    "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",  
-    },
-    "lowcbf": {
-      "stations": {
-        "stns": [
-          [
-            1,
-            0
-          ],
-          [
-            2,
-            0
-          ],
-          [
-            3,
-            0
-          ],
-          [
-            4,
-            0
-          ]
-        ],
-        "stn_beams": [
+      "interface": "https://schema.skao.int/ska-low-tmc-configure/3.1",
+      "transaction_id": "txn-....-00001",
+      "mccs": {
+        "stations": [
           {
-            "beam_id": 1,
-            "freq_ids": [
-              64,
-              65,
-              66,
-              67,
-              68,
-              68,
-              70,
-              71
-            ],
-            "boresight_dly_poly": "url"
+            "station_id": 1
+          },
+          {
+            "station_id": 2
           }
-        ]
-      },
-      "timing_beams": {
-        "beams": [
+        ],
+        "subarray_beams": [
           {
-            "pst_beam_id": 13,
-            "stn_beam_id": 1,
-            "offset_dly_poly": "url",
-            "stn_weights": [
-              0.9,
-              1.0,
-              1.0,
-              0.9
-            ],
-            "jones": "url",
-            "dest_chans": [
-              128,
-              256
-            ],
-            "rfi_enable": [
-              true,
-              true,
-              true
-            ],
-            "rfi_static_chans": [
+            "subarray_beam_id": 1,
+          "station_ids": [
+            1,
+            2
+          ],
+          "update_rate": 0.0,
+          "channels": [
+            [
+              0,
+              8,
               1,
-              206,
-              997
+              1
             ],
-            "rfi_dynamic_chans": [
-              242,
-              1342
+            [
+              8,
+              8,
+              2,
+              1
             ],
-            "rfi_weighted": 0.87
+            [
+              24,
+              16,
+              2,
+              1
+            ]
+          ],
+          "antenna_weights": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "phase_centre": [
+            0.0,
+            0.0
+          ],
+          "target": {
+            "reference_frame": "HORIZON",
+            "target_name": "DriftScan",
+            "az": 180.0,
+            "el": 45.0
           }
-        ]
-      }     
+        }
+      ]
+    },
+    "sdp": {
+        "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+        "scan_type": "science_A"
+      },
+      "csp": {
+        "interface": "https://schema.skao.int/ska-low-csp-configure/0.0",
+        "common": {
+          "config_id": "sbi-mvp01-20200325-00001-science_A"
+        },
+        "lowcbf": {
+          "stations": {
+            "stns": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                3,
+                1
+              ],
+              [
+                4,
+                1
+              ],
+              [
+                5,
+                1
+              ],
+              [
+                6,
+                1
+              ]
+            ],
+            "stn_beams": [
+              {
+                "stn_beam_id": 1,
+                "freq_ids": [
+                  400
+                ]
+              }
+            ]
+          },
+          "vis": {
+            "fsp": {
+              "function_mode": "vis",
+              "fsp_ids": [
+                1
+              ]
+            },
+            "stn_beams": [
+              {
+                "stn_beam_id": 1,
+                "host": [
+                  [
+                    0,
+                    "192.168.1.00"
+                  ]
+                ],
+                "port": [
+                  [
+                    0,
+                    9000,
+                    1
+                  ]
+                ],
+                "mac": [
+                  [
+                    0,
+                    "02-03-04-0a-0b-0c"
+                  ]
+                ],
+                "integration_ms": 849
+              }
+            ]
+          }
+        }
+      },
+      "tmc": {
+        "scan_duration": 10.0
+        }
     }
-  },
-  "tmc": {
-    "scan_duration": 10.0
-  }
- }

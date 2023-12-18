@@ -17,7 +17,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     Target,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    BeamConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
@@ -27,7 +26,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
-    TimingBeamConfiguration,
+    VisConfiguration,
+    VisFspConfiguration,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
@@ -155,7 +155,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
 
 NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.2",
   "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
@@ -339,7 +339,8 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 
 VALID_LOW_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/3.1",
+  "transaction_id": "txn-....-00001",
   "mccs": {
     "stations":[
       {
@@ -369,6 +370,87 @@ VALID_LOW_CONFIGURE_JSON = """
         "phase_centre": [0.0, 0.0]
       }
     ]
+  },
+  "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+    "scan_type": "science_A"
+  },
+  "csp": {
+    "interface": "https://schema.skao.int/ska-low-csp-configure/0.0",
+    "common": {
+      "config_id": "sbi-mvp01-20200325-00001-science_A"
+    },
+    "lowcbf": {
+      "stations": {
+        "stns": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            6,
+            1
+          ]
+        ],
+        "stn_beams": [
+          {
+            "stn_beam_id": 1,
+            "freq_ids": [
+              400
+            ]
+          }
+        ]
+      },
+      "vis": {
+        "fsp": {
+          "function_mode": "vis",
+          "fsp_ids": [
+            1
+          ]
+        },
+        "stn_beams": [
+          {
+            "stn_beam_id": 1,
+            "host": [
+              [
+                0,
+                "192.168.1.00"
+              ]
+            ],
+            "port": [
+              [
+                0,
+                9000,
+                1
+              ]
+            ],
+            "mac": [
+              [
+                0,
+                "02-03-04-0a-0b-0c"
+              ]
+            ],
+            "integration_ms": 849
+          }
+        ]
+      }
+    }
   },
   "tmc": {
     "scan_duration": 10.0
@@ -377,7 +459,8 @@ VALID_LOW_CONFIGURE_JSON = """
 """
 
 VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-low-tmc-configure/2.0",
+    interface="https://schema.skao.int/ska-low-tmc-configure/3.1",
+    transaction_id="txn-....-00001",
     mccs=MCCSConfiguration(
         station_configs=[StnConfiguration(1), StnConfiguration(2)],
         subarray_beam_configs=[
@@ -392,219 +475,41 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
             )
         ],
     ),
-    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
-)
-
-VALID_LOW_CONFIGURE_JSON_PI17 = """
-{
-  "interface": "https://schema.skao.int/ska-low-tmc-configure/3.0",
-  "mccs": {
-    "stations":[
-      {
-        "station_id": 1
-      },
-      {
-        "station_id": 2
-      }
-    ],
-    "subarray_beams": [
-      {
-        "subarray_beam_id":1,
-        "station_ids": [1,2],
-        "channels": [
-          [0, 8, 1, 1],
-          [8, 8, 2, 1],
-          [24, 16, 2, 1]
-        ],
-        "update_rate": 0.0,
-        "target": {
-          "reference_frame": "horizon",
-          "target_name": "DriftScan",
-          "az": 180.0,
-          "el": 45.0
-        },
-        "antenna_weights": [1.0, 1.0, 1.0],
-        "phase_centre": [0.0, 0.0]
-      }
-    ]
-  },
-  "tmc": {
-    "scan_duration": 10.0
-  },
-  "sdp": {
-     "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
-     "scan_type": "science_A"
- },
-   "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
-    "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A"
-    },
-     "lowcbf": {
-      "stations": {
-        "stns": [
-          [
-            1,
-            0
-          ],
-          [
-            2,
-            0
-          ],
-          [
-            3,
-            0
-          ],
-          [
-            4,
-            0
-          ]
-        ],
-           "stn_beams": [
-          {
-            "beam_id": 1,
-            "freq_ids": [
-              64,
-              65,
-              66,
-              67,
-              68,
-              68,
-              70,
-              71
-            ],
-            "boresight_dly_poly": "url"
-          }
-        ]
-      },
-      "timing_beams": {
-        "beams": [
-          {
-            "pst_beam_id": 13,
-            "stn_beam_id": 1,
-            "offset_dly_poly": "url",
-            "stn_weights": [
-              0.9,
-              1.0,
-              1.0,
-              0.9
-            ],
-            "jones": "url",
-            "dest_chans": [
-              128,
-              256
-            ],
-            "rfi_enable": [
-              true,
-              true,
-              true
-            ],
-            "rfi_static_chans": [
-              1,
-              206,
-              997
-            ],
-            "rfi_dynamic_chans": [
-              242,
-              1342
-            ],
-            "rfi_weighted": 0.87
-          }
-        ]
-      }
-      }
-    }
-}
-"""
-
-VALID_LOW_CONFIGURE_OBJECT_PI17 = ConfigureRequest(
-    interface="https://schema.skao.int/ska-low-tmc-configure/3.0",
-    mccs=MCCSConfiguration(
-        station_configs=[StnConfiguration(1), StnConfiguration(2)],
-        subarray_beam_configs=[
-            SubarrayBeamConfiguration(
-                subarray_beam_id=1,
-                station_ids=[1, 2],
-                channels=[[0, 8, 1, 1], [8, 8, 2, 1], [24, 16, 2, 1]],
-                update_rate=0.0,
-                target=SubarrayBeamTarget(180.0, 45.0, "DriftScan", "horizon"),
-                antenna_weights=[1.0, 1.0, 1.0],
-                phase_centre=[0.0, 0.0],
-            )
-        ],
-    ),
-    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
     sdp=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
     ),
     csp=CSPConfiguration(
-        interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray=SubarrayConfiguration(subarray_name="science period 23"),
+        interface="https://schema.skao.int/ska-low-csp-configure/0.0",
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
         ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
-                stns=[[1, 0], [2, 0], [3, 0], [4, 0]],
+                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
                 stn_beams=[
                     StnBeamConfiguration(
-                        beam_id=1,
-                        freq_ids=[64, 65, 66, 67, 68, 68, 70, 71],
-                        boresight_dly_poly="url",
+                        stn_beam_id=1,
+                        freq_ids=[400],
                     )
                 ],
             ),
-            timing_beams=TimingBeamConfiguration(
-                beams=[
-                    BeamConfiguration(
-                        pst_beam_id=13,
+            vis=VisConfiguration(
+                fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
+                stn_beams=[
+                    StnBeamConfiguration(
                         stn_beam_id=1,
-                        offset_dly_poly="url",
-                        stn_weights=[0.9, 1.0, 1.0, 0.9],
-                        jones="url",
-                        dest_chans=[128, 256],
-                        rfi_enable=[True, True, True],
-                        rfi_static_chans=[1, 206, 997],
-                        rfi_dynamic_chans=[242, 1342],
-                        rfi_weighted=0.87,
+                        host=[[0, "192.168.1.00"]],
+                        port=[[0, 9000, 1]],
+                        mac=[[0, "02-03-04-0a-0b-0c"]],
+                        integration_ms=849,
                     )
-                ]
+                ],
             ),
         ),
     ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
-INVALID_LOW_CONFIGURE_JSON = """
-{
-  "interface": "https://schema.skao.int/ska-low-tmc-configure/2.0",
-  "mccs": {
-    "stations":[
-      {
-        "station_id": 1
-      }
-    ],
-    "subarray_beams": [
-      {
-        "subarray_beam_id":-1,
-        "station_ids": [1,2],
-        "channels": [[1,2]],
-        "update_rate": 1.0,
-        "target": {
-              "reference_frame": "horizon",
-              "target_name": "DriftScan",
-              "az": 180.0,
-              "el": 45.0
-        },
-        "antenna_weights": [1.0, 1.0, 1.0],
-        "phase_centre": [0.0, 0.0]
-      }
-    ]
-  }
-}
-"""
 
 VALID_MID_DISH_ONLY_JSON = (
     """
@@ -888,6 +793,179 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
+INVALID_LOW_CONFIGURE_JSON = """
+{
+  "interface": "https://schema.skao.int/ska-low-tmc-configure/3.1",
+  "transaction_id": "txn-....-00001",
+  "mccs": {
+    "stations":[
+      {
+        "station_id": 1
+      }
+    ],
+    "subarray_beams": [
+      {
+        "subarray_beam_id":-1,
+        "station_ids": [1,2],
+        "channels": [[1,2]],
+        "update_rate": 1.0,
+        "target": {
+              "reference_frame": "horizon",
+              "target_name": "DriftScan",
+              "az": 180.0,
+              "el": 45.0
+        },
+        "antenna_weights": [1.0, 1.0, 1.0],
+        "phase_centre": [0.0, 0.0]
+      }
+    ]
+  },
+  "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+    "scan_type": "science_A"
+  },
+  "csp": {
+    "interface": "https://schema.skao.int/ska-low-csp-configure/0.0",
+    "common": {
+      "config_id": "sbi-mvp01-20200325-00001-science_A"
+    },
+    "lowcbf": {
+      "stations": {
+        "stns": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            6,
+            1
+          ],
+          [
+            7,
+            1
+          ]
+        ],
+        "stn_beams": [
+          {
+            "stn_beam_id": 1,
+            "freq_ids": [
+              400
+            ]
+          }
+        ]
+      },
+      "vis": {
+        "fsp": {
+          "function_mode": "abcd",
+          "fsp_ids": [
+            1, 2, 2, 4, 5, 6, 7
+          ]
+        },
+        "stn_beams": [
+          {
+            "stn_beam_id": 1,
+            "host": [
+              [
+                0,
+                "192.168.1.00"
+              ]
+            ],
+            "port": [
+              [
+                0,
+                9000,
+                1
+              ]
+            ],
+            "mac": [
+              [
+                0,
+                "02-03-04-0a-0b-0c"
+              ]
+            ],
+            "integration_ms": 849
+          }
+        ]
+      }
+    }
+  },
+  "tmc": {
+    "scan_duration": 10.0
+  }
+}
+"""
+
+INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
+    interface="https://schema.skao.int/ska-low-tmc-configure/3.1",
+    transaction_id="txn-....-00001",
+    mccs=MCCSConfiguration(
+        station_configs=[StnConfiguration(1)],
+        subarray_beam_configs=[
+            SubarrayBeamConfiguration(
+                subarray_beam_id=1,
+                station_ids=[1, 2],
+                channels=[[1, 2]],
+                update_rate=1.0,
+                target=SubarrayBeamTarget(180.0, 45.0, "DriftScan", "horizon"),
+                antenna_weights=[1.0, 1.0, 1.0],
+                phase_centre=[0.0, 0.0],
+            )
+        ],
+    ),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+    ),
+    csp=CSPConfiguration(
+        interface="https://schema.skao.int/ska-low-csp-configure/0.0",
+        common=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+        ),
+        lowcbf=LowCBFConfiguration(
+            stations=StationConfiguration(
+                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1]],
+                stn_beams=[
+                    StnBeamConfiguration(
+                        stn_beam_id=1,
+                        freq_ids=[400],
+                    )
+                ],
+            ),
+            vis=VisConfiguration(
+                fsp=VisFspConfiguration(
+                    function_mode="abcd", fsp_ids=[1, 2, 2, 4, 5, 6, 7]
+                ),
+                stn_beams=[
+                    StnBeamConfiguration(
+                        stn_beam_id=1,
+                        host=[[0, "192.168.1.00"]],
+                        port=[[0, 9000, 1]],
+                        mac=[[0, "02-03-04-0a-0b-0c"]],
+                        integration_ms=849,
+                    )
+                ],
+            ),
+        ),
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+)
+
+
 SCAN_VALID_JSON = """
 {
   "interface": "https://schema.skatelescope.org/ska-low-mccs-scan/1.0",
@@ -957,18 +1035,10 @@ def partial_invalidator(o: ConfigureRequest):
         (
             ConfigureRequestSchema,
             VALID_LOW_CONFIGURE_OBJECT,
-            low_invalidator,
+            None,
             VALID_LOW_CONFIGURE_JSON,
-            INVALID_LOW_CONFIGURE_JSON,
+            None,
             True,
-        ),
-        (
-            ConfigureRequestSchema,
-            VALID_LOW_CONFIGURE_OBJECT_PI17,
-            None,
-            VALID_LOW_CONFIGURE_JSON_PI17,
-            None,
-            False,
         ),
         (
             ConfigureRequestSchema,
@@ -1051,4 +1121,48 @@ def test_configure_serialisation_and_validation_invalid_json(
             "Invalid input for function_mode,Invalid input for zoom_factor,"
             "frequency_slice_id did not match fsp_id,"
             "frequency_band did not match receiver_band"
+        )
+
+
+@pytest.mark.parametrize(
+    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    [
+        (
+            ConfigureRequestSchema,
+            INVALID_LOW_CONFIGURE_OBJECT,
+            low_invalidator,
+            INVALID_LOW_CONFIGURE_JSON,
+            None,
+            True,
+        ),
+    ],
+)
+def test_low_configure_serialisation_and_validation_invalid_json(
+    schema_cls,
+    instance,
+    modifier_fn,
+    valid_json,
+    invalid_json,
+    is_validate,
+):
+    """
+    Verifies that the schema marshals, unmarshals, and validates correctly
+    for invalid json and raise SchematicValidationError.
+    """
+    try:
+        utils.test_schema_serialisation_and_validation(
+            schema_cls,
+            instance,
+            modifier_fn,
+            valid_json,
+            invalid_json,
+            is_validate,
+        )
+
+    except SchematicValidationError as error:
+        assert error.message == (
+            "stations are too many! Current limit is 6,"
+            "Invalid input for function mode! Currently allowed vis,"
+            "The fsp_ids should all be distinct,"
+            "fsp_ids are too many!Current Limit is 6"
         )

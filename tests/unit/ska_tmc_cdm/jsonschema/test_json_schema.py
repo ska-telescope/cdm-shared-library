@@ -14,8 +14,14 @@ from ska_tmc_cdm.jsonschema.json_schema import (
     SchemaNotFound,
 )
 from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
+    INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+    VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
+)
+from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
+    INVALID_LOW_CONFIGURE_JSON,
+    VALID_LOW_CONFIGURE_JSON,
 )
 
 INVALID_JSON = copy.deepcopy(VALID_JSON)
@@ -72,4 +78,68 @@ def test_semantic_validation_with_invalid_json():
     with pytest.raises(SchematicValidationError):
         json_schema_obj.semantic_validate_schema(
             instance=MID_INVALID_JSON, uri=MID_INVALID_JSON["interface"]
+        )
+
+
+def test_semantic_validation_low_tmc_assign_with_valid_json():
+    """
+    Verify semantic validation with test low assign resources valid json
+    """
+    LOW_ASSIGN_VALID_JSON = json.loads(VALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
+    json_schema_obj = JsonSchema()
+    result = json_schema_obj.semantic_validate_schema(
+        instance=LOW_ASSIGN_VALID_JSON, uri=LOW_ASSIGN_VALID_JSON["interface"]
+    )
+    assert result
+
+
+def test_semantic_validation_low_tmc_assign_with_invalid_json():
+    """
+    Verify semantic validation with test low assign resources invalid json
+    """
+    LOW_ASSIGN_INVALID_JSON = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
+    json_schema_obj = JsonSchema()
+
+    try:
+        json_schema_obj.semantic_validate_schema(
+            instance=LOW_ASSIGN_INVALID_JSON, uri=LOW_ASSIGN_INVALID_JSON["interface"]
+        )
+    except SchematicValidationError as error:
+        assert error.message == (
+            "beams are too many! Current limit is 1,"
+            "Invalid function for beams! Currently allowed visibilities,"
+            "spectral windows are too many! Current limit = 1"
+        )
+
+
+def test_semantic_validation_low_tmc_configure_with_valid_json():
+    """
+    Verify semantic validation with test low configure valid json
+    """
+    LOW_CONFIGURE_VALID_JSON = json.loads(VALID_LOW_CONFIGURE_JSON)
+    json_schema_obj = JsonSchema()
+    result = json_schema_obj.semantic_validate_schema(
+        instance=LOW_CONFIGURE_VALID_JSON, uri=LOW_CONFIGURE_VALID_JSON["interface"]
+    )
+    assert result
+
+
+def test_semantic_validation_low_tmc_configure_with_invalid_json():
+    """
+    Verify semantic validation with test low configure invalid json
+    """
+    LOW_CONFIGURE_INVALID_JSON = json.loads(INVALID_LOW_CONFIGURE_JSON)
+    json_schema_obj = JsonSchema()
+
+    try:
+        json_schema_obj.semantic_validate_schema(
+            instance=LOW_CONFIGURE_INVALID_JSON,
+            uri=LOW_CONFIGURE_INVALID_JSON["interface"],
+        )
+    except SchematicValidationError as error:
+        assert error.message == (
+            "stations are too many! Current limit is 6,"
+            "Invalid input for function mode! Currently allowed vis,"
+            "The fsp_ids should all be distinct,"
+            "fsp_ids are too many!Current Limit is 6"
         )

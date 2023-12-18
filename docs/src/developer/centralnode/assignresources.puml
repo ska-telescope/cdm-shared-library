@@ -1,6 +1,7 @@
 @startuml
 hide empty members
 
+set separator none
 package ska_tmc_cdm.messages.central_node {
     package assign_resources.py <<Rectangle>> {
         class DishAllocation {
@@ -132,29 +133,7 @@ package ska_tmc_cdm.messages.central_node {
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
         SDPConfiguration *-- "1" ExecutionBlockConfiguration
 
-        class CSPConfiguration {
-            interface: str
-            common: CommonConfiguration
-            lowcbf: LowCbfConfiguration
-        }
-        
-        CSPConfiguration *-- "1" CommonConfiguration
-        CSPConfiguration *-- "1" LowCbfConfiguration
-
-        class CommonConfiguration {
-subarray_id: int
-}
-
-class LowCbfConfiguration {
-resources: List[ResourceConfiguration]
-}
-LowCbfConfiguration *-- "*" ResourceConfiguration 
-class ResourceConfiguration {
-device: str
-shared: bool
-fw_image: str
-fw_mode: str
-}
+     
         class AssignResourcesRequest {
             interface : str
             transaction_id : str
@@ -164,7 +143,6 @@ fw_mode: str
         AssignResourcesRequest *-- "1" DishAllocation
         AssignResourcesRequest *-- "1" MCCSAllocate
         AssignResourcesRequest *-- "1" SDPConfiguration
-        AssignResourcesRequest *-- "1" CSPConfiguration
 
         class AssignResourcesResponse
         AssignResourcesResponse *-- "1" DishAllocation

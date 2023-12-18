@@ -8,7 +8,6 @@ from pydantic import Field, model_validator
 from pydantic.dataclasses import dataclass
 
 from .common import DishAllocation
-from .csp import CSPConfiguration
 from .mccs import MCCSAllocate
 from .sdp import SDPConfiguration
 
@@ -27,7 +26,6 @@ class AssignResourcesRequest:
     :param dish_allocation: object holding the DISH resource allocation
     for this request.
     :param sdp_config: sdp configuration
-    :param csp_config: csp configuration
     :param mccs: MCCS subarray allocation
     :param interface: url string to determine JsonSchema version
     :param transaction_id: ID for tracking requests
@@ -39,7 +37,6 @@ class AssignResourcesRequest:
     # FIXME: Do we really need this dish/dish_allocation inconsistency?
     dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
     sdp_config: Optional[SDPConfiguration] = None
-    csp_config: Optional[CSPConfiguration] = None
     mccs: Optional[MCCSAllocate] = None
     interface: str = SCHEMA
     transaction_id: Optional[str] = None
@@ -85,7 +82,6 @@ class AssignResourcesRequest:
         subarray_id: int,
         mccs: MCCSAllocate,
         sdp_config: SDPConfiguration = None,
-        csp_config: CSPConfiguration = None,
         interface: str = None,
         transaction_id: str = None,
     ):
@@ -95,7 +91,6 @@ class AssignResourcesRequest:
         :param subarray_id: the numeric SubArray ID (1..16)
         :param mccs: MCCS subarray allocation
         :param sdp_config: SDP configuration
-        :param csp_config: CSP configuration
         :param interface: url string to determine JsonSchema version
 
         :return: AssignResourcesRequest object
@@ -104,7 +99,6 @@ class AssignResourcesRequest:
             subarray_id=subarray_id,
             mccs=mccs,
             sdp_config=sdp_config,
-            csp_config=csp_config,
             interface=interface,
             transaction_id=transaction_id,
         )

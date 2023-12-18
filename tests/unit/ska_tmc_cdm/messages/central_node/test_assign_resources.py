@@ -39,7 +39,6 @@ def assign_request_builder(
     interface=None,
     transaction_id=None,
     mccs=None,
-    csp=None,
 ):
     """This assign request configuration builder is a test data builder for CDM assign request configuration"""
     return (
@@ -47,7 +46,6 @@ def assign_request_builder(
         .set_subarray_id(subarray_id=subarray_id)
         .set_dish_allocation(dish_allocation=dish_allocation)
         .set_sdp_config(sdp_config=sdp_config)
-        .set_csp_config(csp_config=csp)
         .set_interface(interface=interface)
         .set_transaction_id(transaction_id=transaction_id)
         .set_mccs(mccs=mccs)

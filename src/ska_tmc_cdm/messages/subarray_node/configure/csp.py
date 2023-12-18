@@ -19,10 +19,10 @@ __all__ = [
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
-    "TimingBeamConfiguration",
-    "BeamConfiguration",
     "StationConfiguration",
     "StnBeamConfiguration",
+    "VisFspConfiguration",
+    "VisConfiguration",
 ]
 
 
@@ -104,14 +104,20 @@ class StnBeamConfiguration:
     """
     Class to hold Stations Beam Configuration.
 
-    :param beam_id: beam_id
+    :param stn_beam_id: stn_beam_id
     :param freq_ids: freq_ids
-    :param boresight_dly_poly: boresight_dly_poly
+    :param host: host
+    :param port: port
+    :param mac: mac
+    :param integration_ms: integration_ms
     """
 
-    beam_id: Optional[int] = None
+    stn_beam_id: Optional[int] = None
     freq_ids: Optional[List[int]] = None
-    boresight_dly_poly: Optional[str] = None
+    host: Optional[List[Tuple[int, str]]] = None
+    port: Optional[List[Tuple[int, int, int]]] = None
+    mac: Optional[List[Tuple[int, str]]] = None
+    integration_ms: Optional[int] = None
 
 
 @dataclass
@@ -128,43 +134,29 @@ class StationConfiguration:
 
 
 @dataclass
-class BeamConfiguration:
+class VisFspConfiguration:
     """
-    Class to hold Beams Configuration.
+    Class to hold Vis FSP Configuration.
 
-    :param pst_beam_id: pst_beam_id
-    :param stn_beam_id: stn_beam_id
-    :param offset_dly_poly: offset_dly_poly
-    :param stn_weights: stn_weights
-    :param jones: jones
-    :param dest_chans: dest_chans
-    :param rfi_enable: rfi_enable
-    :param rfi_static_chans: rfi_static_chans
-    :param rfi_dynamic_chans: rfi_dynamic_chans
-    :param rfi_weighted: rfi_weighted
+    :param function_mode: function_mode
+    :param fsp_ids: fsp_ids
     """
 
-    pst_beam_id: Optional[int] = None
-    stn_beam_id: Optional[int] = None
-    offset_dly_poly: Optional[str] = None
-    stn_weights: Optional[List[float]] = None
-    jones: Optional[str] = None
-    dest_chans: Optional[List[int]] = None
-    rfi_enable: Optional[List[bool]] = None
-    rfi_static_chans: Optional[List[int]] = None
-    rfi_dynamic_chans: Optional[List[int]] = None
-    rfi_weighted: Optional[float] = None
+    function_mode: Optional[str] = None
+    fsp_ids: Optional[List[int]] = None
 
 
 @dataclass
-class TimingBeamConfiguration:
+class VisConfiguration:
     """
-    Class to hold Timing Beams Configuration.
+    Class to hold Vis Configuration.
 
-    :param beams: beams
+    :param fsp: fsp
+    :param stn_beams: stn_beams
     """
 
-    beams: Optional[List[BeamConfiguration]] = None
+    fsp: Optional[VisFspConfiguration] = None
+    stn_beams: Optional[List[StnBeamConfiguration]] = None
 
 
 @dataclass
@@ -173,11 +165,11 @@ class LowCBFConfiguration:
     Class to hold Low CBF Configuration.
 
     :param stations: stations
-    :param timing_beams: PST beams subarray list
+    :param vis: vis
     """
 
     stations: Optional[StationConfiguration] = None
-    timing_beams: Optional[TimingBeamConfiguration] = None
+    vis: Optional[VisConfiguration] = None
 
 
 @dataclass
