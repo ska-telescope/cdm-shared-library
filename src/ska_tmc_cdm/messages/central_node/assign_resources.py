@@ -25,10 +25,12 @@ class AssignResourcesRequest:
 
     :param subarray_id: the numeric SubArray ID (1..16)
     :param dish_allocation: object holding the DISH resource allocation
-    for this request.
+        for this request.
     :param sdp_config: sdp configuration
     :param mccs: MCCS subarray allocation
-    :param interface: url string to determine JsonSchema version
+    :param interface: url string to determine JsonSchema version, defaults to
+        https://schema.skao.int/ska-tmc-assignresources/2.1 for Mid and
+        https://schema.skao.int/ska-low-tmc-assignresources/3.2 for Low if not set
     :param transaction_id: ID for tracking requests
 
     :raises ValueError: if mccs is allocated with dish and sdp_config

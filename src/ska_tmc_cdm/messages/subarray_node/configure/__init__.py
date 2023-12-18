@@ -21,10 +21,21 @@ LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-configure/3.1"
 
 
 @dataclass
-class ConfigureRequest:  # pylint: disable=too-few-public-methods
+class ConfigureRequest:
     """
     ConfigureRequest encapsulates the arguments required for the TMC
     SubArrayNode.Configure() command.
+
+    :param pointing: Pointing configuration
+    :param dish: Dish configuration
+    :param sdp: SDP configuration
+    :param csp: CSP configuration
+    :param mccs: MCCS configuration
+    :param tmc: TMCS configuration
+    :param interface: Interface URI. Defaults to
+        https://schema.skao.int/ska-tmc-configure/2.2 for Mid and
+        https://schema.skao.int/ska-low-tmc-configure/3.1 for Low
+    :param transaction_id: Optional transaction ID
     """
 
     pointing: Optional[PointingConfiguration] = None

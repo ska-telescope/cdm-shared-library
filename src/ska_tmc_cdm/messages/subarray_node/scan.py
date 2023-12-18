@@ -23,7 +23,8 @@ class ScanRequest:
     ScanRequest represents the JSON for a SubArrayNode.scan call.
 
     :param interface: Interface URI. Defaults to
-        https://schema.skao.int/ska-tmc-scan/2.0
+        https://schema.skao.int/ska-tmc-scan/2.1 for Mid and
+        https://schema.skao.int/ska-low-tmc-scan/4.0 for Low
     :param transaction_id: optional transaction ID
     :param subarray_id: the numeric SubArray ID
     :param scan_id: integer scan ID

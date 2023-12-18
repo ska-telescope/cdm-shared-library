@@ -20,7 +20,8 @@ class ReleaseResourcesRequest:
     ReleaseResourcesRequest is a Python representation of the structured
     request for a TMC CentralNode.ReleaseResources call.
 
-    :param interface: url string to determine JsonSchema version
+    :param interface: url string to determine JsonSchema version, defaults to
+        https://schema.skao.int/ska-tmc-releaseresources/2.1 if not set
     :param transaction_id: ID for tracking requests
     :param subarray_id: the numeric SubArray ID (1..16)
     :param release_all: True to release all sub-array resources, False to

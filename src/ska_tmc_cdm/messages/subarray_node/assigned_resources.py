@@ -43,7 +43,8 @@ class AssignedResources:
     AssignedResources models the structured JSON returned when the
     MCCSSubarray.assigned_resources Tango attribute is read.
 
-    :param interface: JSON schema this instance conforms to
+    :param interface: JSON schema this instance conforms to, defaults to
+        https://schema.skao.int/ska-low-tmc-assignedresources/2.0 if not set
     :param mccs: the MCCSAllocation describing the allocated resources
     """
 
