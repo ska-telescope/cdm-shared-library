@@ -29,7 +29,7 @@ class ReleaseResourcesRequest:
     to release for this request.
     """
 
-    interface: str = SCHEMA
+    interface: Optional[str] = SCHEMA
     transaction_id: Optional[str] = None
     subarray_id: Optional[int] = None
     release_all: StrictBool = False

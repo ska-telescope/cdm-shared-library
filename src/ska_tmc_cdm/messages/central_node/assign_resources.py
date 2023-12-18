@@ -13,7 +13,8 @@ from .sdp import SDPConfiguration
 
 __all__ = ["AssignResourcesRequest", "AssignResourcesResponse"]
 
-SCHEMA = "https://schema.skao.int/ska-tmc-assignresources/2.1"
+MID_SCHEMA = "https://schema.skao.int/ska-tmc-assignresources/2.1"
+LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-assignresources/3.2"
 
 
 @dataclass
@@ -38,7 +39,7 @@ class AssignResourcesRequest:
     dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
     sdp_config: Optional[SDPConfiguration] = None
     mccs: Optional[MCCSAllocate] = None
-    interface: str = SCHEMA
+    interface: Optional[str] = None
     transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
@@ -49,6 +50,17 @@ class AssignResourcesRequest:
             raise ValueError("subarray_id must be defined for MID request")
         if self.mccs is not None and self.dish is not None:
             raise ValueError("Can't allocate dish in the same call as mccs")
+        if self.mccs is None and self.dish is None and self.interface is None:
+            raise ValueError("mccs, dish or interface kwarg must be set")
+        return self
+
+    @model_validator(mode="after")
+    def set_default_schema(self) -> "AssignResourcesRequest":
+        if self.interface is None:
+            if self.mccs is not None:
+                self.interface = LOW_SCHEMA
+            else:
+                self.interface = MID_SCHEMA
         return self
 
     @classmethod

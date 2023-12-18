@@ -33,7 +33,7 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
     csp: Optional[CSPConfiguration] = None
     mccs: Optional[MCCSConfiguration] = None
     tmc: Optional[TMCConfiguration] = None
-    interface: str = None
+    interface: Optional[str] = None
     transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
@@ -51,8 +51,13 @@ class ConfigureRequest:  # pylint: disable=too-few-public-methods
             raise ValueError("Can't allocate dish in the same call as mccs")
         if self.mccs is None and self.dish is None and self.interface is None:
             raise ValueError("mccs, dish or interface kwarg must be set")
-        elif self.mccs is not None and (self.interface is None):
-            self.interface = LOW_SCHEMA
-        elif self.dish is not None and (self.interface is None):
-            self.interface = MID_SCHEMA
+        return self
+
+    @model_validator(mode="after")
+    def set_default_schema(self) -> "ConfigureRequest":
+        if self.interface is None:
+            if self.mccs is not None:
+                self.interface = LOW_SCHEMA
+            else:
+                self.interface = MID_SCHEMA
         return self
