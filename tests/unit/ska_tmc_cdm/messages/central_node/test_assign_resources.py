@@ -684,3 +684,137 @@ def test_low_assign_resources_request():
     )
     assert request1 == request2
     assert request1 != 1 and request2 != object()
+
+
+def test_mid_assign_resource_eq():
+    """
+    Verify that two AssignResource request objects for the same sub-array and
+    dish allocation are considered equal.
+    """
+    dish_allocation = DishAllocation(receptor_ids=["SKA001"])
+
+    request1 = assign_request_builder(
+        subarray_id=1,
+        dish_allocation=dish_allocation,
+        sdp_config=None,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+    )
+
+    request2 = assign_request_builder(
+        subarray_id=1,
+        dish_allocation=dish_allocation,
+        sdp_config=None,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+    )
+
+    request3 = assign_request_builder(
+        subarray_id=2,
+        dish_allocation=dish_allocation,
+        sdp_config=None,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+    )
+
+    assert request1 == request2
+    assert request1 != request3
+
+
+def test_mid_assign_resources_request():
+    """
+    Verify creation of Mid AssignResources request objects
+    with both sdp & csp blocks and check equality
+    """
+    channel1 = channel_builder(
+        count=744,
+        start=0,
+        stride=2,
+        freq_min=0.35e9,
+        freq_max=1.05e9,
+        link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
+        spectral_window_id="fsp_2_channels",
+    )
+
+    workflow1 = workflow_configuration_builder(
+        name="vis_receive", kind="realtime", version="0.1.1"
+    )
+    pb1 = processing_block_builder(
+        pb_id="pb-mvp01-20200325-00001",
+        workflow=workflow1,
+        parameters={},
+        dependencies=None,
+    )
+
+    dish_allocation = DishAllocation(receptor_ids=["SKA001"])
+
+    scan_type1 = scan_type_builder(
+        scan_type_id="science_A",
+        reference_frame="ICRS",
+        ra="02:42:40.771",
+        dec="-00:00:47.84",
+        channel=[channel1],
+    )
+
+    phase = phase_dir_configuration_builder(
+        ra=[123, 0.1], dec=[123, 0.1], reference_time="...", reference_frame="ICRF3"
+    )
+
+    field = fields_configuration_builder(
+        field_id="field_a",
+        pointing_fqdn="mid-tmc/telstate/0/pointing",
+        phase_dir=phase,
+    )
+
+    eb_scan_type = eb_scan_type_builder(
+        scan_type_id="science",
+        beams={"vis0": {"field_id": "field_a"}},
+        derive_from=".default",
+    )
+
+    beams = beam_configuration_builder(beam_id="vis0", function="visibilities")
+    channels = channel_configuration_builder(
+        channels_id="vis_channels", spectral_windows=[channel1]
+    )
+    polarization_config = polarization_builder(
+        polarisations_id="all", corr_type=["XX", "XY", "YY", "YX"]
+    )
+
+    execution_block = execution_block_configuration_builder(
+        eb_id="eb-test-20220916-00000",
+        context={},
+        max_length=3600,
+        beams=[beams],
+        channels=[channels],
+        polarisations=[polarization_config],
+        fields=[field],
+        scan_types=[eb_scan_type],
+    )
+
+    sdp1 = sdp_builder(
+        eb_id="sbi-mvp01-20200325-00001",
+        max_length=100.0,
+        scan_types=[scan_type1],
+        processing_blocks=[pb1],
+        execution_block=execution_block,
+    )
+    request1 = assign_request_builder(
+        subarray_id=1,
+        dish_allocation=dish_allocation,
+        sdp_config=sdp1,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+        mccs=None,
+    )
+
+    request2 = assign_request_builder(
+        subarray_id=1,
+        dish_allocation=dish_allocation,
+        sdp_config=sdp1,
+        interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
+        transaction_id="txn-mvp01-20200325-00001",
+        mccs=None,
+    )
+
+    assert request1 == request2
+    assert request1 != 1 and request2 != object()
