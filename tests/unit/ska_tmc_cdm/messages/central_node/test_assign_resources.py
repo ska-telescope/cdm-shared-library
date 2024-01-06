@@ -11,11 +11,11 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
     AssignResourcesResponse,
 )
-from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
 )
 
+from .test_common import dish_allocation_builder
 from .test_mccs import mccs_allocate_builder
 from .test_sdp import (
     beam_configuration_builder,
@@ -60,7 +60,10 @@ def assign_request_builder(
     (
         (
             assign_request_builder(
-                1, dish_allocation=DishAllocation(receptor_ids=["SKA001"])
+                1,
+                dish_allocation=dish_allocation_builder(
+                    receptor_ids=frozenset(["SKA001"])
+                ),
             ),
             MID_SCHEMA,
         ),
@@ -68,7 +71,9 @@ def assign_request_builder(
             assign_request_builder(
                 1,
                 interface="foo",
-                dish_allocation=DishAllocation(receptor_ids=["SKA001"]),
+                dish_allocation=dish_allocation_builder(
+                    receptor_ids=frozenset(["SKA001"])
+                ),
             ),
             "foo",
         ),
@@ -202,7 +207,9 @@ def test_assign_resources_request_from_dish():
     Verify that two AssignResource request objects for the same sub-array and
     dish allocation are considered equal.
     """
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+    dish_allocation = dish_allocation_builder(
+        receptor_ids=frozenset(["ac", "b", "aab"])
+    )
     request = AssignResourcesRequest.from_dish(1, dish_allocation=dish_allocation)
     assert request == assign_request_builder(1, dish_allocation=dish_allocation)
 
@@ -218,7 +225,9 @@ def test_assign_resources_request_dish_and_mccs_fail():
     )
 
     with pytest.raises(ValueError):
-        dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+        dish_allocation = dish_allocation_builder(
+            receptor_ids=frozenset(["ac", "b", "aab"])
+        )
         assign_request_builder(dish_allocation=dish_allocation, mccs=mccs_allocate)
 
 
@@ -227,7 +236,9 @@ def test_assign_resources_request_eq_with_other_objects():
     Verify that an AssignResources request object is not considered equal to
     objects of other types.
     """
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+    dish_allocation = dish_allocation_builder(
+        receptor_ids=frozenset(["ac", "b", "aab"])
+    )
     request = assign_request_builder(
         1, dish_allocation=dish_allocation, sdp_config=None
     )
@@ -253,12 +264,16 @@ def test_assign_resources_response_eq():
     Verify that two AssignResource response objects with the same successful
     dish allocation are considered equal.
     """
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
-    unequal_allocation = DishAllocation(receptor_ids=["b", "aab"])
+    dish_allocation = dish_allocation_builder(
+        receptor_ids=frozenset(["ac", "b", "aab"])
+    )
+    unequal_allocation = dish_allocation_builder(receptor_ids=frozenset(["b", "aab"]))
     response = AssignResourcesResponse(dish_allocation=dish_allocation)
 
     assert response == AssignResourcesResponse(dish_allocation=dish_allocation)
-    assert response != AssignResourcesResponse(dish_allocation=DishAllocation())
+    assert response != AssignResourcesResponse(
+        dish_allocation=dish_allocation_builder(receptor_ids=frozenset())
+    )
     assert response != AssignResourcesResponse(dish_allocation=unequal_allocation)
 
 
@@ -267,7 +282,9 @@ def test_assign_resources_response_eq_with_other_objects():
     Verify that an AssignResourcesRequest response object is not considered equal to
     objects of other types.
     """
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+    dish_allocation = dish_allocation_builder(
+        receptor_ids=frozenset(["ac", "b", "aab"])
+    )
     response = AssignResourcesResponse(dish_allocation=dish_allocation)
     assert response != 1
     assert response != object()
@@ -310,7 +327,9 @@ def test_assign_resources_if_no_subarray_id_argument():
         station_ids=list(zip(itertools.count(1, 1), 1 * [2])),
         channel_blocks=[1, 2, 3, 4, 5],
     )
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+    dish_allocation = dish_allocation_builder(
+        receptor_ids=frozenset(["ac", "b", "aab"])
+    )
 
     with pytest.raises(ValueError):
         _ = assign_request_builder(mccs=mccs)
@@ -433,7 +452,9 @@ def test_modified_assign_resources_request_eq():
         execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+    dish_allocation = dish_allocation_builder(
+        receptor_ids=frozenset(["ac", "b", "aab"])
+    )
     request = assign_request_builder(
         1,
         dish_allocation=dish_allocation,
@@ -587,7 +608,9 @@ def test_modified_assign_resources_request_eq_with_other_objects():
         execution_block=execution_block,
         interface="https://schema.skao.int/ska-sdp-assignresources/2.0",
     )
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
+    dish_allocation = dish_allocation_builder(
+        receptor_ids=frozenset(["ac", "b", "aab"])
+    )
     request = assign_request_builder(
         1,
         dish_allocation=dish_allocation,
@@ -691,7 +714,7 @@ def test_mid_assign_resource_eq():
     Verify that two AssignResource request objects for the same sub-array and
     dish allocation are considered equal.
     """
-    dish_allocation = DishAllocation(receptor_ids=["SKA001"])
+    dish_allocation = dish_allocation_builder(receptor_ids=frozenset(["SKA001"]))
 
     request1 = assign_request_builder(
         subarray_id=1,
@@ -746,7 +769,7 @@ def test_mid_assign_resources_request():
         dependencies=None,
     )
 
-    dish_allocation = DishAllocation(receptor_ids=["SKA001"])
+    dish_allocation = dish_allocation_builder(receptor_ids=frozenset(["SKA001"]))
 
     scan_type1 = scan_type_builder(
         scan_type_id="science_A",
