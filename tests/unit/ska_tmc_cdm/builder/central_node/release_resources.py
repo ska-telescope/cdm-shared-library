@@ -18,12 +18,13 @@ class ReleaseResourcesRequestBuilder:
         self.release_all = None
         self.dish_allocation = None
 
-
     def set_interface(self, interface: str) -> "ReleaseResourcesRequestBuilder":
         self.interface = interface
         return self
 
-    def set_transaction_id(self, transaction_id: str) -> "ReleaseResourcesRequestBuilder":
+    def set_transaction_id(
+        self, transaction_id: str
+    ) -> "ReleaseResourcesRequestBuilder":
         self.transaction_id = transaction_id
         return self
 
@@ -35,16 +36,17 @@ class ReleaseResourcesRequestBuilder:
         self.release_all = release_all
         return self
 
-    def set_dish_allocation(self, dish_allocation: DishAllocation) -> "ReleaseResourcesRequestBuilder":
+    def set_dish_allocation(
+        self, dish_allocation: DishAllocation
+    ) -> "ReleaseResourcesRequestBuilder":
         self.dish_allocation = dish_allocation
         return self
 
     def build(self) -> ReleaseResourcesRequest:
         return ReleaseResourcesRequest(
-            interface = self.interface,
-            transaction_id = self.transaction_id,
-            subarray_id = self.subarray_id,
-            release_all = self.release_all,
-            dish_allocation = self.dish_allocation,
+            interface=self.interface,
+            transaction_id=self.transaction_id,
+            subarray_id=self.subarray_id,
+            release_all=self.release_all,
+            dish_allocation=self.dish_allocation,
         )
-

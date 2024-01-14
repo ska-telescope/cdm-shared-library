@@ -5,8 +5,13 @@ module.
 import pytest
 
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from tests.unit.ska_tmc_cdm.builder.central_node.release_resources import ReleaseResourcesRequestBuilder
-from tests.unit.ska_tmc_cdm.messages.central_node.test_common import dish_allocation_builder
+from tests.unit.ska_tmc_cdm.builder.central_node.release_resources import (
+    ReleaseResourcesRequestBuilder,
+)
+from tests.unit.ska_tmc_cdm.messages.central_node.test_common import (
+    dish_allocation_builder,
+)
+
 
 def release_resources_request_builder(
     transaction_id=None,
@@ -24,7 +29,9 @@ def release_resources_request_builder(
         .build()
     )
 
+
 interface = "https://schema.skao.int/ska-tmc-releaseresources/2.1"
+
 
 def test_release_resources_request_has_interface_set_on_creation():
     request = ReleaseResourcesRequestBuilder().set_interface(interface=interface)
@@ -39,7 +46,7 @@ def test_release_resources_request_eq():
     dish_allocation = dish_allocation_builder(
         receptor_ids=frozenset(["ac", "b", "aab"])
     )
-    request =release_resources_request_builder(
+    request = release_resources_request_builder(
         subarray_id=1,
         dish_allocation=dish_allocation,
         release_all=False,
@@ -47,10 +54,12 @@ def test_release_resources_request_eq():
     )
 
     assert request == release_resources_request_builder(
-       subarray_id=1, dish_allocation=dish_allocation, transaction_id="txn-mvp01-20200325-00001"
+        subarray_id=1,
+        dish_allocation=dish_allocation,
+        transaction_id="txn-mvp01-20200325-00001",
     )
     assert request != release_resources_request_builder(
-       subarray_id=1, dish_allocation=DishAllocation(), transaction_id="tma1"
+        subarray_id=1, dish_allocation=DishAllocation(), transaction_id="tma1"
     )
     assert request != release_resources_request_builder(
         subarray_id=2, dish_allocation=dish_allocation, transaction_id="tma1"
@@ -89,7 +98,9 @@ def test_release_resources_request_eq_with_other_objects():
     dish_allocation = dish_allocation_builder(
         receptor_ids=frozenset(["ac", "b", "aab"])
     )
-    request = release_resources_request_builder(subarray_id=1, dish_allocation=dish_allocation)
+    request = release_resources_request_builder(
+        subarray_id=1, dish_allocation=dish_allocation
+    )
     assert request != 1
     assert request != object()
 
@@ -119,9 +130,7 @@ def test_deallocate_resources_enforces_boolean_release_all_argument():
     with pytest.raises(ValueError):
         _ = release_resources_request_builder(subarray_id=1, release_all=1)
 
-    dish_allocation = dish_allocation_builder(
-        receptor_ids=frozenset(["0001", "0002"])
-    )
+    dish_allocation = dish_allocation_builder(receptor_ids=frozenset(["0001", "0002"]))
     with pytest.raises(ValueError):
         _ = release_resources_request_builder(
             subarray_id=1, release_all=1, dish_allocation=dish_allocation
