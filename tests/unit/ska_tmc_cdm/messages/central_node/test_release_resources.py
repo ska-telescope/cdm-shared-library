@@ -94,16 +94,18 @@ def test_release_resources_request_eq(
     request = release_resources_request_builder(
         subarray_id=1,
         dish_allocation=dish_allocation,
-        release_all=False,
+        release_all=release_all,
         transaction_id="txn-mvp01-20200325-00001",
     )
 
-    assert (request == release_resources_request_builder(
-        subarray_id=subarray_id,
-        dish_allocation=dish_allocation,
-        transaction_id=transaction_id,
-    )) == expected
-
+    assert (
+        request
+        == release_resources_request_builder(
+            subarray_id=subarray_id,
+            dish_allocation=dish_allocation,
+            transaction_id=transaction_id,
+        )
+    ) == expected
 
 
 def test_release_resources_request_eq_for_low():
