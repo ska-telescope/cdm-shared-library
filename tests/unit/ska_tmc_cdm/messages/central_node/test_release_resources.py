@@ -4,7 +4,6 @@ module.
 """
 import pytest
 
-from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from tests.unit.ska_tmc_cdm.builder.central_node.release_resources import (
     ReleaseResourcesRequestBuilder,
 )
@@ -38,14 +37,60 @@ def test_release_resources_request_has_interface_set_on_creation():
     assert request.interface is not None
 
 
-def test_release_resources_request_eq():
+@pytest.mark.parametrize(
+    "subarray_id, dish_allocation, release_all, transaction_id, expected",
+    [
+        (
+            1,
+            dish_allocation_builder(receptor_ids=frozenset(["ac", "b", "aab"])),
+            False,
+            "txn-mvp01-20200325-00001",
+            True,
+        ),
+        (
+            1,
+            dish_allocation_builder(receptor_ids=frozenset(["ac", "b", "aab"])),
+            False,
+            "tma1",
+            False,
+        ),
+        (
+            2,
+            dish_allocation_builder(receptor_ids=frozenset(["ac", "b", "aab"])),
+            False,
+            "tma1",
+            False,
+        ),
+        (
+            1,
+            dish_allocation_builder(receptor_ids=frozenset(["ac", "b", "aab"])),
+            True,
+            "tma1",
+            False,
+        ),
+        (
+            1,
+            dish_allocation_builder(receptor_ids=frozenset(["ac", "b", "aab"])),
+            False,
+            "blah",
+            False,
+        ),
+        (
+            1,
+            dish_allocation_builder(receptor_ids=frozenset(["ac", "b", "aab"])),
+            False,
+            None,
+            False,
+        ),
+    ],
+)
+def test_release_resources_request_eq(
+    subarray_id, dish_allocation, release_all, transaction_id, expected
+):
     """
     Verify that two ReleaseResource requests for the same sub-array and
     dish allocation are considered equal.
     """
-    dish_allocation = dish_allocation_builder(
-        receptor_ids=frozenset(["ac", "b", "aab"])
-    )
     request = release_resources_request_builder(
         subarray_id=1,
         dish_allocation=dish_allocation,
@@ -53,29 +98,12 @@ def test_release_resources_request_eq():
         transaction_id="txn-mvp01-20200325-00001",
     )
 
-    assert request == release_resources_request_builder(
-        subarray_id=1,
+    assert (request == release_resources_request_builder(
+        subarray_id=subarray_id,
         dish_allocation=dish_allocation,
-        transaction_id="txn-mvp01-20200325-00001",
-    )
-    assert request != release_resources_request_builder(
-        subarray_id=1, dish_allocation=DishAllocation(), transaction_id="tma1"
-    )
-    assert request != release_resources_request_builder(
-        subarray_id=2, dish_allocation=dish_allocation, transaction_id="tma1"
-    )
-    assert request != release_resources_request_builder(
-        subarray_id=1,
-        dish_allocation=dish_allocation,
-        release_all=True,
-        transaction_id="tma1",
-    )
-    assert request != release_resources_request_builder(
-        subarray_id=1, dish_allocation=dish_allocation, transaction_id="blah"
-    )
-    assert request != release_resources_request_builder(
-        subarray_id=1, dish_allocation=dish_allocation
-    )
+        transaction_id=transaction_id,
+    )) == expected
+
 
 
 def test_release_resources_request_eq_for_low():
