@@ -15,7 +15,7 @@ from tests.unit.ska_tmc_cdm.messages.central_node.test_common import (
 def release_resources_request_builder(
     transaction_id=None,
     subarray_id=None,
-    release_all=False,
+    release_all=True,
     dish_allocation=None,
 ):
     """ReleaseResourcesRequestBuilder is a test data builder for CDM ReleaseResourcesRequest objects."""
@@ -43,9 +43,16 @@ def test_release_resources_request_has_interface_set_on_creation():
         (
             1,
             dish_allocation_builder(receptor_ids=frozenset(["ac", "b", "aab"])),
-            False,
+            True,
             "txn-mvp01-20200325-00001",
             True,
+        ),
+        (
+            2,
+            dish_allocation_builder(receptor_ids=frozenset(["ac", "b", "aab"])),
+            True,
+            "txn-mvp01-20200325-00001",
+            False,
         ),
         (
             1,
@@ -108,18 +115,6 @@ def test_release_resources_request_eq(
     ) == expected
 
 
-def test_release_resources_request_eq_for_low():
-    """
-    Verify that two ReleaseResource requests for the same sub-array
-    are considered equal.
-    """
-
-    request = release_resources_request_builder(subarray_id=1, release_all=True)
-
-    assert request == release_resources_request_builder(subarray_id=1, release_all=True)
-    assert request != release_resources_request_builder(subarray_id=2, release_all=True)
-
-
 def test_release_resources_request_eq_with_other_objects():
     """
     Verify that a ReleaseResources request object is not considered equal to
@@ -136,15 +131,6 @@ def test_release_resources_request_eq_with_other_objects():
 
 
 def test_deallocate_resources_must_define_resources_if_not_releasing_all():
-    """
-    Verify that resource argument(s) must be set if the command is not a
-    command to release all sub-array resources.
-    """
-    with pytest.raises(ValueError):
-        _ = release_resources_request_builder(subarray_id=1, release_all=False)
-
-
-def test_deallocate_resources_if_not_releasing_all_in_low():
     """
     Verify that resource argument(s) must be set if the command is not a
     command to release all sub-array resources.
