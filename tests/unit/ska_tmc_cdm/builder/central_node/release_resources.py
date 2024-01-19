@@ -1,5 +1,3 @@
-from typing_extensions import Self
-
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
 
@@ -22,30 +20,34 @@ class ReleaseResourcesRequestBuilder:
       to release for this request.
     """
 
-    def __init__(self) -> Self:
+    def __init__(self) -> "ReleaseResourcesRequestBuilder":
         self.interface = None
         self.transaction_id = None
         self.subarray_id = None
         self.release_all = None
         self.dish_allocation = None
 
-    def set_interface(self, interface: str) -> Self:
+    def set_interface(self, interface: str) -> "ReleaseResourcesRequestBuilder":
         self.interface = interface
         return self
 
-    def set_transaction_id(self, transaction_id: str) -> Self:
+    def set_transaction_id(
+        self, transaction_id: str
+    ) -> "ReleaseResourcesRequestBuilder":
         self.transaction_id = transaction_id
         return self
 
-    def set_subarray_id(self, subarray_id: int) -> Self:
+    def set_subarray_id(self, subarray_id: int) -> "ReleaseResourcesRequestBuilder":
         self.subarray_id = subarray_id
         return self
 
-    def set_release_all(self, release_all: bool) -> Self:
+    def set_release_all(self, release_all: bool) -> "ReleaseResourcesRequestBuilder":
         self.release_all = release_all
         return self
 
-    def set_dish_allocation(self, dish_allocation: DishAllocation) -> Self:
+    def set_dish_allocation(
+        self, dish_allocation: DishAllocation
+    ) -> "ReleaseResourcesRequestBuilder":
         self.dish_allocation = dish_allocation
         return self
 
