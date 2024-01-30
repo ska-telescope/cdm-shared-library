@@ -132,5 +132,6 @@ class ValidatingSchema(Schema):
                 or "ska-tmc-configure" in interface
                 or "ska-low-tmc-assignresources" in interface
                 or "ska-low-tmc-configure" in interface
+                or "ska-oso-pdm-sbd" in interface
             ):
                 JsonSchema.semantic_validate_schema(process_fn(data), interface)
