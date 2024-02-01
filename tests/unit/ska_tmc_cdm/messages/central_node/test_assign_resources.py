@@ -15,9 +15,9 @@ from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
 )
 
-from ...builder.central_node.common import DishAllocateBuilder
-from ...builder.central_node.mccs import MCCSAllocateBuilder
-from ...builder.central_node.sdp import (
+from tests.unit.ska_tmc_cdm.builder.central_node.common import DishAllocateBuilder
+from tests.unit.ska_tmc_cdm.builder.central_node.mccs import MCCSAllocateBuilder
+from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     BeamConfigurationBuilder,
     ChannelBuilder,
     ChannelConfigurationBuilder,
