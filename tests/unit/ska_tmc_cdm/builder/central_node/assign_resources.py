@@ -16,7 +16,7 @@ class AssignResourcesRequestBuilder:
     """
 
     def __init__(self):
-        self.subarry_id = None
+        self.subarray_id = None
         self.dish_allocation = None
         self.sdp_config = None
         self.mccs = None
