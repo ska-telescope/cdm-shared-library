@@ -5,6 +5,16 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
+
+[8.2.0]
+*******
+
+* Updated version of telmodel which has semantic valdiation for SBD.
+  Added new rule, next line support and modified frequency min max ranges in 
+  existing semantic validation test-cases.
+  Added default schema to AssignResourcesRequest, ReleaseResourcesRequest and 
+  ConfigureRequest.
+
 [8.1.0]
 *******
 
