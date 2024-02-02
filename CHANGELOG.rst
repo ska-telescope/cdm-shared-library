@@ -9,8 +9,9 @@ This project adheres to `Semantic Versioning <http://semver.org/>`_.
 [8.2.0]
 *******
 
-* Given support of telmodel which has updated semantic valdiation for SBD.
-  Updated existing semantic validation test-cases.
+* Updated version of telmodel which has semantic valdiation for SBD.
+  Added new rule, next line support and modified frequency min max ranges in 
+  existing semantic validation test-cases.
 
 [8.1.0]
 *******
