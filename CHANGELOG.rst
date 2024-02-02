@@ -5,6 +5,13 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
+
+[8.2.0]
+*******
+
+* Given support of telmodel which has updated semantic valdiation for SBD.
+  Updated existing semantic validation test-cases.
+
 [8.1.0]
 *******
 
