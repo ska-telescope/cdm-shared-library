@@ -918,7 +918,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
         station_configs=[StnConfiguration(1)],
         subarray_beam_configs=[
             SubarrayBeamConfiguration(
-                subarray_beam_id=-1,
+                subarray_beam_id=1,
                 station_ids=[1, 2],
                 channels=[[1, 2]],
                 update_rate=1.0,

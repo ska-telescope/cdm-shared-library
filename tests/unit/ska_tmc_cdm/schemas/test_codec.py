@@ -147,6 +147,7 @@ def test_codec_loads_raises_exception_on_invalid_schema():
             "Invalid input for channel_count! Currently allowed 14880\n"
             "Invalid input for freq_min\n"
             "Invalid input for freq_max\n"
+            "freq_min should be less than freq_max\n"
             "length of receptor_ids should be same as length of receptors\n"
             "receptor_ids did not match receptors"
         )
