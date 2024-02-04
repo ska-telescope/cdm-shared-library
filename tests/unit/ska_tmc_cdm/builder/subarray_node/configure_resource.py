@@ -29,7 +29,7 @@ class ConfigureRequestBuilder:
     ) -> "ConfigureRequestBuilder":
         """
         Set pointing configuration
-        :param: pointing: PointingConfiguration
+        :param: pointing: PointingConfiguration instance
         """
         self.pointing = pointing
         return self
@@ -37,7 +37,7 @@ class ConfigureRequestBuilder:
     def set_dish(self, dish: DishConfiguration) -> "ConfigureRequestBuilder":
         """
         Set dish configuration
-        :param: dish: DishConfiguration
+        :param: dish: DishConfiguration instance
         """
         self.dish = dish
         return self
@@ -45,7 +45,7 @@ class ConfigureRequestBuilder:
     def set_sdp(self, sdp: SDPConfiguration) -> "ConfigureRequestBuilder":
         """
         Set sdp configuration
-        :param: sdp: SDPConfiguration
+        :param: sdp: SDPConfiguration instance
         """
         self.sdp = sdp
         return self
@@ -53,7 +53,7 @@ class ConfigureRequestBuilder:
     def set_csp(self, csp: CSPConfiguration) -> "ConfigureRequestBuilder":
         """
         Set csp configuration
-        :param: csp: CSPConfiguration
+        :param: csp: CSPConfiguration instance
         """
         self.csp = csp
         return self
@@ -61,7 +61,7 @@ class ConfigureRequestBuilder:
     def set_mccs(self, mccs: MCCSConfiguration) -> "ConfigureRequestBuilder":
         """
         Set mccs configuration
-        :param: mccs: MCCSConfiguration
+        :param: mccs: MCCSConfiguration instance
         """
         self.mccs = mccs
         return self
@@ -69,7 +69,7 @@ class ConfigureRequestBuilder:
     def set_tmc(self, tmc: TMCConfiguration) -> "ConfigureRequestBuilder":
         """
         Set tmc configuration
-        :param: tmc: TMCConfiguration
+        :param: tmc: TMCConfiguration instance
         :raises ValueError: if tmc is allocated with dish and sdp
         """
         self.tmc = tmc

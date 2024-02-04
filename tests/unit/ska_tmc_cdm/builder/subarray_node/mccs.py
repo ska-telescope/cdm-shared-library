@@ -105,7 +105,7 @@ class SubarrayBeamConfigurationBuilder:
     ) -> "SubarrayBeamConfigurationBuilder":
         """
         Set station ids
-        :param: station_ids: station ids
+        :param: station_ids: list of station ids
         """
         self.station_ids = station_ids
         return self
@@ -115,7 +115,7 @@ class SubarrayBeamConfigurationBuilder:
     ) -> "SubarrayBeamConfigurationBuilder":
         """
         Set channels
-        :param: channels: channels
+        :param: channels: list of channel list
         """
         self.channels = channels
         return self
@@ -133,7 +133,7 @@ class SubarrayBeamConfigurationBuilder:
     ) -> "SubarrayBeamConfigurationBuilder":
         """
         Set target
-        :param: target: target
+        :param: target: SubarrayBeamTarget Instance
         """
         self.target = target
         return self
@@ -143,7 +143,7 @@ class SubarrayBeamConfigurationBuilder:
     ) -> "SubarrayBeamConfigurationBuilder":
         """
         Set antenna weights
-        :param: antenna_weights: antenna weights
+        :param: antenna_weights: list of antenna weights
         """
         self.antenna_weights = antenna_weights
         return self
@@ -153,7 +153,7 @@ class SubarrayBeamConfigurationBuilder:
     ) -> "SubarrayBeamConfigurationBuilder":
         """
         Set phase centre
-        :param: phase_centre: phase centre
+        :param: phase_centre: list of phase centre
         """
         self.phase_centre = phase_centre
         return self

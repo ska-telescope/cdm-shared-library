@@ -91,7 +91,7 @@ class TargetBuilder:
         Build or create a Target instance.
         :return: A Target instance with the specified configurations.
         """
-        # Assuming direct instantiation handles conversion/validation
+
         return Target(
             ra=self.ra,
             dec=self.dec,
