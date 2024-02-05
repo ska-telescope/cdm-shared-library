@@ -559,7 +559,7 @@ class ExecutionBlockConfigurationBuilder:
     def __init__(self) -> "ExecutionBlockConfigurationBuilder":
         self.eb_id = None
         self.max_length = None
-        self.context = None
+        self.context = {}
         self.beams = None
         self.channels = None
         self.polarisations = None

@@ -271,9 +271,7 @@ def test_low_assign_resources_request(
     execution_block = (
         ExecutionBlockConfigurationBuilder()
         .set_eb_id(eb_id="eb-mvp01-20200325-00001")
-        .set_context(context={})
         .set_max_length(max_length=100)
-        .set_context(context={})
         .set_beams(beams=[beams])
         .set_channels(channels=[channels])
         .set_polarisations(polarisations=[polarisatrion_config])
@@ -336,7 +334,6 @@ def test_mid_assign_resources_request(
     execution_block = (
         ExecutionBlockConfigurationBuilder()
         .set_eb_id(eb_id="eb-mvp01-20200325-00001")
-        .set_context(context={})
         .set_max_length(max_length=3600)
         .set_beams(beams=[beams])
         .set_channels(channels=[channels])
