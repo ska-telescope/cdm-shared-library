@@ -134,7 +134,6 @@ def processing_block(workflow):
         ProcessingBlockConfigurationBuilder()
         .set_pb_id(pb_id="pb-mvp01-20200325-00001")
         .set_workflow(workflow=workflow)
-        .set_parameters(parameters={})
         .build()
     )
 

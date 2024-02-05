@@ -5,21 +5,15 @@ import itertools
 
 import pytest
 
-from ska_tmc_cdm.messages.central_node.assign_resources import (
-    LOW_SCHEMA,
-    MID_SCHEMA,
-    AssignResourcesRequest,
-    AssignResourcesResponse,
-)
+from ska_tmc_cdm.messages.central_node.assign_resources import LOW_SCHEMA, MID_SCHEMA
 from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
+    AssignResourcesResponseBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.common import DishAllocateBuilder
 from tests.unit.ska_tmc_cdm.builder.central_node.mccs import MCCSAllocateBuilder
 from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     ExecutionBlockConfigurationBuilder,
-    ProcessingBlockConfigurationBuilder,
-    ScriptConfigurationBuilder,
     SDPConfigurationBuilder,
 )
 
@@ -74,90 +68,6 @@ def test_assign_resources_request_has_interface_set_on_creation(
     assert assign_request.interface == expected_interface
 
 
-def test_assign_resources_request_mccs_eq():
-    """
-    Verify that two AssignResource request objects for the same sub-array and
-    mccs allocation are considered equal.
-    """
-    mccs1 = (
-        MCCSAllocateBuilder()
-        .set_subarray_beam_ids(subarray_beam_ids=[1])
-        .set_station_ids(station_ids=[[1, 2]])
-        .set_channel_blocks(channel_blocks=[3])
-        .build()
-    )
-    request1 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_mccs(mccs=mccs1)
-        .build()
-    )
-    request2 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_mccs(mccs=mccs1)
-        .build()
-    )
-    assert request1 == request2
-    assert (
-        request1
-        != AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=2)
-        .set_mccs(mccs=mccs1)
-        .build()
-    )
-
-
-def test_assign_resources_request_from_mccs():
-    """
-    Verify that two AssignResource request objects for the same sub-array and
-    mccs allocation are considered equal.
-    """
-    mccs_allocate = (
-        MCCSAllocateBuilder()
-        .set_subarray_beam_ids(subarray_beam_ids=[1, 2, 3, 4, 5, 6])
-        .set_station_ids(station_ids=list(zip(itertools.count(1, 1), 1 * [2])))
-        .set_channel_blocks(channel_blocks=[1, 2, 3, 4, 5])
-        .build()
-    )
-
-    request = AssignResourcesRequest.from_mccs(subarray_id=1, mccs=mccs_allocate)
-
-    expected = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_mccs(
-            mccs=MCCSAllocateBuilder()
-            .set_subarray_beam_ids(subarray_beam_ids=[1, 2, 3, 4, 5, 6])
-            .set_station_ids(station_ids=list(zip(itertools.count(1, 1), 1 * [2])))
-            .set_channel_blocks(channel_blocks=[1, 2, 3, 4, 5])
-            .build()
-        )
-        .build()
-    )
-    assert request == expected
-
-
-def test_assign_resources_request_from_dish():
-    """
-    Verify that two AssignResource request objects for the same sub-array and
-    dish allocation are considered equal.
-    """
-    dish_allocation = (
-        DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-        .build()
-    )
-    request = AssignResourcesRequest.from_dish(1, dish_allocation=dish_allocation)
-    assert (
-        request
-        == AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .build()
-    )
-
-
 def test_assign_resources_request_dish_and_mccs_fail():
     """
     Verify that mccs & dish cannot be allocated together
@@ -181,48 +91,6 @@ def test_assign_resources_request_dish_and_mccs_fail():
         ).set_mccs(mccs=mccs_allocate).build()
 
 
-def test_assign_resources_request_eq_with_other_objects():
-    """
-    Verify that an AssignResources request object is not considered equal to
-    objects of other types.
-    """
-    dish_allocation = (
-        DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-        .build()
-    )
-    request = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .build()
-    )
-    assert request != 1
-    assert request != object()
-
-
-def test_assign_resources_request_eq_mccs_with_other_objects():
-    """
-    Verify that an AssignResources request object is not considered equal to
-    objects of other types.
-    """
-    mccs = (
-        MCCSAllocateBuilder()
-        .set_subarray_beam_ids(subarray_beam_ids=[1])
-        .set_station_ids(station_ids=[[1, 2]])
-        .set_channel_blocks(channel_blocks=[3])
-        .build()
-    )
-    request1 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_mccs(mccs=mccs)
-        .build()
-    )
-    assert request1 != 1
-    assert request1 != object()
-
-
 def test_assign_resources_response_eq():
     """
     Verify that two AssignResource response objects with the same successful
@@ -238,73 +106,26 @@ def test_assign_resources_response_eq():
         .set_receptor_ids(receptor_ids=frozenset(["b", "aab"]))
         .build()
     )
-    response = AssignResourcesResponse(dish_allocation=dish_allocation)
 
-    assert response == AssignResourcesResponse(dish_allocation=dish_allocation)
-    assert response != AssignResourcesResponse(
-        dish_allocation=DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset())
+    response = (
+        AssignResourcesResponseBuilder()
+        .set_dish(dish_allocation=dish_allocation)
         .build()
     )
-    assert response != AssignResourcesResponse(dish_allocation=unequal_allocation)
-
-
-def test_assign_resources_response_eq_with_other_objects():
-    """
-    Verify that an AssignResourcesResponse object is not considered equal to
-    objects of other types.
-    """
-    dish_allocation = (
-        DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
+    assert (
+        response
+        == AssignResourcesResponseBuilder()
+        .set_dish(dish_allocation=dish_allocation)
         .build()
     )
-    response = AssignResourcesResponse(dish_allocation=dish_allocation)
-    assert response != 1
+    assert (
+        response
+        != AssignResourcesResponseBuilder()
+        .set_dish(dish_allocation=unequal_allocation)
+        .build()
+    )
     assert response != object()
-
-
-def test_assign_resources_request_for_low_eq():
-    """
-    Verify that two AssignResource request objects for the same sub-array and
-    mccs allocation are considered equal.
-    """
-    mccs1 = (
-        MCCSAllocateBuilder()
-        .set_subarray_beam_ids(subarray_beam_ids=[1])
-        .set_station_ids(station_ids=[[1, 2]])
-        .set_channel_blocks(channel_blocks=[3])
-        .build()
-    )
-    request1 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_mccs(mccs=mccs1)
-        .set_interface(
-            interface="https://schema.skao.int/ska-low-tmc-assignresources/2.0"
-        )
-        .build()
-    )
-    request2 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_mccs(mccs=mccs1)
-        .set_interface(
-            interface="https://schema.skao.int/ska-low-tmc-assignresources/2.0"
-        )
-        .build()
-    )
-    request3 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=2)
-        .set_mccs(mccs=mccs1)
-        .set_interface(
-            interface="https://schema.skao.int/ska-low-tmc-assignresources/4.0"
-        )
-        .build()
-    )
-    assert request1 == request2
-    assert request1 != request3
+    assert response != 1
 
 
 def test_assign_resources_if_no_subarray_id_argument():
@@ -335,192 +156,102 @@ def test_assign_resources_if_no_subarray_id_argument():
         )
 
 
-def test_modified_assign_resources_request_eq(
-    eb_scan_type,
-    beams,
-    channels,
-    polarisatrion_config,
-    field_config,
-    processing_block_parameters,
-):
+@pytest.mark.parametrize(
+    "object1, object2, is_equal",
+    [
+        (  # MCCS
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build()
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build()
+            )
+            .build(),
+            True,
+        ),
+        (
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build(),
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=2)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build(),
+            )
+            .build(),
+            False,
+        ),
+        (  # Dish
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_dish_allocation(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_dish_allocation(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            True,
+        ),
+        (
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_dish_allocation(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_dish_allocation(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(receptor_ids=frozenset(["b", "aab"]))
+                .build()
+            )
+            .build(),
+            False,
+        ),
+    ],
+)
+def test_assign_resource_eq_check(object1, object2, is_equal):
     """
-    Verify that two AssignResource request objects for the same sub-array and
-    dish allocation are considered equal.
+    Verify  object  of Assign Resource with same Dish and MCCS properties are equal
+    And with different properties are different and also check equality with different object
     """
-
-    sbi_ids = "sbi-mvp01-20200325-00001"
-
-    script = (
-        ScriptConfigurationBuilder()
-        .set_kind(kind="realtime")
-        .set_name(name="test-receive-addresses")
-        .set_version(version="0.5.0")
-        .build()
-    )
-
-    pb_config = (
-        ProcessingBlockConfigurationBuilder()
-        .set_pb_id(pb_id="pb-mvp01-20200325-00003")
-        .set_parameters(parameters=processing_block_parameters)
-        .set_sbi_ids(sbi_ids=[sbi_ids])
-        .set_script(script=script)
-        .build()
-    )
-
-    execution_block = (
-        ExecutionBlockConfigurationBuilder()
-        .set_eb_id(eb_id="eb-mvp01-20200325-00001")
-        .set_max_length(max_length=100)
-        .set_context(context={})
-        .set_beams(beams=[beams])
-        .set_channels(channels=[channels])
-        .set_polarisations(polarisations=[polarisatrion_config])
-        .set_fields(fields=[field_config])
-        .set_scan_types(scan_types=[eb_scan_type])
-        .build()
-    )
-
-    resource = {
-        "csp_links": [1, 2, 3, 4],
-        "receptors": ["FS4", "FS8"],
-        "receive_nodes": 10,
-    }
-
-    sdp_config = (
-        SDPConfigurationBuilder()
-        .set_processing_blocks(processing_blocks=[pb_config])
-        .set_execution_block(execution_block=execution_block)
-        .set_resources(resources=resource)
-        .set_interface(interface="https://schema.skao.int/ska-sdp-assignresources/2.0")
-        .build()
-    )
-
-    dish_allocation = (
-        DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-        .build()
-    )
-
-    request = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .set_sdp_config(sdp_config=sdp_config)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.1")
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-
-    assert (
-        request
-        == AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .set_sdp_config(sdp_config=sdp_config)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.1")
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-
-    assert (
-        request
-        != AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.1")
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-    assert (
-        request
-        != AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.1")
-        .build()
-    )
-    assert (
-        request
-        != AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_sdp_config(sdp_config=sdp_config)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.1")
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-
-
-def test_modified_assign_resources_request_eq_with_other_objects(
-    eb_scan_type,
-    beams,
-    channels,
-    polarisatrion_config,
-    field_config,
-    processing_block_parameters,
-):
-    """
-    Verify that an AssignResources request object is not considered equal to
-    objects of other types.
-    """
-
-    sbi_ids = "sbi-mvp01-20200325-00001"
-
-    script = (
-        ScriptConfigurationBuilder()
-        .set_kind(kind="realtime")
-        .set_name(name="test-receive-addresses")
-        .set_version(version="0.5.0")
-        .build()
-    )
-    pb_config = (
-        ProcessingBlockConfigurationBuilder()
-        .set_pb_id(pb_id="pb-mvp01-20200325-00003")
-        .set_parameters(parameters=processing_block_parameters)
-        .set_sbi_ids(sbi_ids=[sbi_ids])
-        .set_script(script=script)
-        .build()
-    )
-
-    execution_block = (
-        ExecutionBlockConfigurationBuilder()
-        .set_eb_id(eb_id="eb-mvp01-20200325-00001")
-        .set_max_length(max_length=100)
-        .set_context(context={})
-        .set_beams(beams=[beams])
-        .set_channels(channels=[channels])
-        .set_polarisations(polarisations=[polarisatrion_config])
-        .set_fields(fields=[field_config])
-        .set_scan_types(scan_types=[eb_scan_type])
-        .build()
-    )
-    resource = {
-        "csp_links": [1, 2, 3, 4],
-        "receptors": ["FS4", "FS8"],
-        "receive_nodes": 10,
-    }
-    sdp_config = (
-        SDPConfigurationBuilder()
-        .set_processing_blocks(processing_blocks=[pb_config])
-        .set_execution_block(execution_block=execution_block)
-        .set_resources(resources=resource)
-        .set_interface(interface="https://schema.skao.int/ska-sdp-assignresources/2.0")
-        .build()
-    )
-    dish_allocation = (
-        DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-        .build()
-    )
-    request = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .set_sdp_config(sdp_config=sdp_config)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.1")
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-    assert request != 1
-    assert request != object()
+    assert (object1 == object2) == is_equal
+    assert object1 != object()
 
 
 def test_low_assign_resources_request(
@@ -534,7 +265,7 @@ def test_low_assign_resources_request(
 ):
     """
     Verify creation of Low AssignResources request objects
-    with both sdp & csp blocks and check equality
+    with both sdp block and check equality
     """
 
     execution_block = (
@@ -582,48 +313,6 @@ def test_low_assign_resources_request(
     assert request1 != 1 and request2 != object()
 
 
-def test_mid_assign_resource_eq():
-    """
-    Verify that two AssignResource request objects for the same sub-array and
-    dish allocation are considered equal.
-    """
-
-    dish_allocation = (
-        DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset(["SKA001"]))
-        .build()
-    )
-
-    request1 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.0")
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-
-    request2 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.0")
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-
-    request3 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=2)
-        .set_dish_allocation(dish_allocation=dish_allocation)
-        .set_interface(interface="https://schema.skao.int/ska-tmc-assignresources/2.0")
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-    assert request1 == request2
-    assert request1 != request3
-
-
 def test_mid_assign_resources_request(
     eb_scan_type,
     scan_type,
@@ -635,7 +324,7 @@ def test_mid_assign_resources_request(
 ):
     """
     Verify creation of Mid AssignResources request objects
-    with both sdp & csp blocks and check equality
+    with sdp block and equality check
     """
 
     dish_allocation = (

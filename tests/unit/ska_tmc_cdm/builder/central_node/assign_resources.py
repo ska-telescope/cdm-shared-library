@@ -1,4 +1,7 @@
-from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
+from ska_tmc_cdm.messages.central_node.assign_resources import (
+    AssignResourcesRequest,
+    AssignResourcesResponse,
+)
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import SDPConfiguration
@@ -89,3 +92,28 @@ class AssignResourcesRequestBuilder:
             self.interface,
             self.transaction_id,
         )
+
+
+class AssignResourcesResponseBuilder:
+    """
+    AssignResourcesResponseBuilder is a test data builder for CDM AssignResourcesResponse objects.
+    """
+
+    def __init__(self):
+        self.dish_allocation = None
+
+    def set_dish(
+        self, dish_allocation: DishAllocation
+    ) -> "AssignResourcesResponseBuilder":
+        """
+        Set dish allocation
+        :param: dish: Dish Allocation instance
+        """
+        self.dish_allocation = dish_allocation
+        return self
+
+    def build(self) -> AssignResourcesResponse:
+        """
+        Builds or creates instance of CDM Assign Resource Response
+        """
+        return AssignResourcesResponse(dish_allocation=self.dish_allocation)

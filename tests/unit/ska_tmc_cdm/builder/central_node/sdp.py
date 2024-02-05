@@ -214,7 +214,7 @@ class ProcessingBlockConfigurationBuilder:
     def __init__(self) -> "ProcessingBlockConfigurationBuilder":
         self.pb_id = None
         self.workflow = None
-        self.parameters = None
+        self.parameters = {}
         self.dependencies = None
         self.sbi_ids = None
         self.script = None
