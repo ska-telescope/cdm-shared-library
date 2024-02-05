@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pytest
 
+pytest_plugins = ["tests.fixtures.builder_pattern.configure_resource"]
+
 HERE = Path(__file__).parent.resolve()
 
 
