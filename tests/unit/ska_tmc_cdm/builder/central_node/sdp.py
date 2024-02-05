@@ -1,3 +1,5 @@
+from typing import List
+
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
@@ -289,7 +291,7 @@ class SDPConfigurationBuilder:
         return self
 
     def set_processing_blocks(
-        self, processing_blocks: ProcessingBlockConfiguration
+        self, processing_blocks: List[ProcessingBlockConfiguration]
     ) -> "SDPConfigurationBuilder":
         self.processing_blocks = processing_blocks
         return self
