@@ -3,7 +3,9 @@ Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.tmc module.
 """
 import pytest
 
-from tests.unit.ska_tmc_cdm.builder.subarray_node.tmc import TMCConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.tmc import (
+    TMCConfigurationBuilder,
+)
 
 
 @pytest.mark.parametrize(

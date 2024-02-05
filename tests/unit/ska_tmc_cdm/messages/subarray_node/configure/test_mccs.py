@@ -3,7 +3,7 @@ Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.mccs module.
 """
 import pytest
 
-from tests.unit.ska_tmc_cdm.builder.subarray_node.mccs import (
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import (
     MCCSConfigurationBuilder,
     StnConfigurationBuilder,
     SubarrayBeamConfigurationBuilder,

@@ -7,7 +7,7 @@ from typing import NamedTuple, Optional, Type
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
-from tests.unit.ska_tmc_cdm.builder.subarray_node.core import (
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
     DishConfigurationBuilder,
     PointingConfigurationBuilder,
     TargetBuilder,

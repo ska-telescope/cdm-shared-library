@@ -12,14 +12,16 @@ from ska_tmc_cdm.messages.subarray_node.configure import (
     MID_SCHEMA,
     ConfigureRequest,
 )
-from tests.unit.ska_tmc_cdm.builder.subarray_node.configure_resource import (
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.__init__ import (
     ConfigureRequestBuilder,
 )
-from tests.unit.ska_tmc_cdm.builder.subarray_node.core import (
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
     PointingConfigurationBuilder,
     TargetBuilder,
 )
-from tests.unit.ska_tmc_cdm.builder.subarray_node.tmc import TMCConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.tmc import (
+    TMCConfigurationBuilder,
+)
 
 
 def test_empty_configure_request_fails():
@@ -83,7 +85,6 @@ def test_configure_request_eq(dish_config, sdp_config, csp_config):
 def test_mccs_configure_request_eq(mccs_config):
     """
     Verify that ConfigurationRequest objects for are considered equal when:
-      - they point to the same target
       - their MCCS configuration is the same
     """
 

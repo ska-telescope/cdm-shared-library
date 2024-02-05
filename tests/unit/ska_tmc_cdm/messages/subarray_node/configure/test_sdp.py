@@ -3,7 +3,9 @@ Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.sdp module.
 """
 import pytest
 
-from tests.unit.ska_tmc_cdm.builder.subarray_node.sdp import SDPConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.sdp import (
+    SDPConfigurationBuilder,
+)
 
 
 @pytest.mark.parametrize(

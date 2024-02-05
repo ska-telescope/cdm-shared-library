@@ -4,10 +4,10 @@ from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand, DishConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode, CSPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import StnConfiguration, SubarrayBeamTarget, SubarrayBeamConfiguration, MCCSConfiguration
-from tests.unit.ska_tmc_cdm.builder.subarray_node.core import DishConfigurationBuilder
-from tests.unit.ska_tmc_cdm.builder.subarray_node.csp import CSPConfigurationBuilder, SubarrayConfigurationBuilder, CommonConfigurationBuilder, CBFConfigurationBuilder, FSPConfigurationBuilder
-from tests.unit.ska_tmc_cdm.builder.subarray_node.mccs import StnConfigurationBuilder, SubarrayBeamTargetBuilder, SubarrayBeamConfigurationBuilder, MCCSConfigurationBuilder
-from tests.unit.ska_tmc_cdm.builder.subarray_node.sdp import SDPConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import DishConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import CSPConfigurationBuilder, SubarrayConfigurationBuilder, CommonConfigurationBuilder, CBFConfigurationBuilder, FSPConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import StnConfigurationBuilder, SubarrayBeamTargetBuilder, SubarrayBeamConfigurationBuilder, MCCSConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.sdp import SDPConfigurationBuilder
 
 
 @pytest.fixture(scope="module")
