@@ -106,8 +106,8 @@ def test_semantic_validation_low_tmc_assign_with_invalid_json():
         )
     except SchematicValidationError as error:
         assert error.message == (
-            "beams are too many! Current limit is 1,"
-            "Invalid function for beams! Currently allowed visibilities,"
+            "beams are too many! Current limit is 1\n"
+            "Invalid function for beams! Currently allowed visibilities\n"
             "spectral windows are too many! Current limit = 1"
         )
 
@@ -138,8 +138,8 @@ def test_semantic_validation_low_tmc_configure_with_invalid_json():
         )
     except SchematicValidationError as error:
         assert error.message == (
-            "stations are too many! Current limit is 6,"
-            "Invalid input for function mode! Currently allowed vis,"
-            "The fsp_ids should all be distinct,"
+            "stations are too many! Current limit is 6\n"
+            "Invalid input for function mode! Currently allowed vis\n"
+            "The fsp_ids should all be distinct\n"
             "fsp_ids are too many!Current Limit is 6"
         )

@@ -1116,10 +1116,12 @@ def test_configure_serialisation_and_validation_invalid_json(
 
     except SchematicValidationError as error:
         assert error.message == (
-            "Invalid input for receiver_band! Currently allowed [1,2],"
-            "FSPs are too many!Current Limit = 4,Invalid input for fsp_id!,"
-            "Invalid input for function_mode,Invalid input for zoom_factor,"
-            "frequency_slice_id did not match fsp_id,"
+            "Invalid input for receiver_band! Currently allowed [1,2]\n"
+            "FSPs are too many!Current Limit = 4\n"
+            "Invalid input for fsp_id!\n"
+            "Invalid input for function_mode\n"
+            "Invalid input for zoom_factor\n"
+            "frequency_slice_id did not match fsp_id\n"
             "frequency_band did not match receiver_band"
         )
 
@@ -1161,8 +1163,8 @@ def test_low_configure_serialisation_and_validation_invalid_json(
 
     except SchematicValidationError as error:
         assert error.message == (
-            "stations are too many! Current limit is 6,"
-            "Invalid input for function mode! Currently allowed vis,"
-            "The fsp_ids should all be distinct,"
+            "stations are too many! Current limit is 6\n"
+            "Invalid input for function mode! Currently allowed vis\n"
+            "The fsp_ids should all be distinct\n"
             "fsp_ids are too many!Current Limit is 6"
         )

@@ -662,7 +662,7 @@ INVALID_SDP_OBJECT = SDPConfiguration(
                         count=4,
                         start=0,
                         stride=2,
-                        freq_min=35000000.0,
+                        freq_min=500000000000000.0,
                         freq_max=49880000000000.0,
                         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
                     ),
@@ -671,8 +671,8 @@ INVALID_SDP_OBJECT = SDPConfiguration(
                         count=4,
                         start=0,
                         stride=2,
-                        freq_min=360000000.0,
-                        freq_max=368000000.0,
+                        freq_min=50000000000000.0,
+                        freq_max=49880000000000.0,
                         link_map=[[0, 0], [200, 1], [744, 2], [944, 3]],
                     ),
                 ],
@@ -786,7 +786,7 @@ INVALID_SDP_JSON = """{
               "count": 4,
               "start": 0,
               "stride": 2,
-              "freq_min": 35000000.0,
+              "freq_min": 500000000000000.0,
               "freq_max": 49880000000000.0,
               "link_map": [
                 [
@@ -812,8 +812,8 @@ INVALID_SDP_JSON = """{
               "count": 4,
               "start": 0,
               "stride": 2,
-              "freq_min": 360000000.0,
-              "freq_max": 368000000.0,
+              "freq_min": 50000000000000.0,
+              "freq_max": 49880000000000.0,
               "link_map": [
                 [
                   0,
@@ -1180,11 +1180,15 @@ def test_assignresources_serialisation_and_validation_invalid_json(
 
     except SchematicValidationError as error:
         assert error.message == (
-            "receptor_ids are too many!Current Limit is 4,"
-            "beams are too many! Current limit is 1,Invalid function for beams! "
-            "Currently allowed visibilities,spectral windows are too many! Current limit = 1,"
-            "Invalid input for channel_count! Currently allowed 14880,Invalid input for freq_min,"
-            "Invalid input for freq_max,length of receptor_ids should be same as length of receptors,"
+            "receptor_ids are too many!Current Limit is 4\n"
+            "beams are too many! Current limit is 1\n"
+            "Invalid function for beams! Currently allowed visibilities\n"
+            "spectral windows are too many! Current limit = 1\n"
+            "Invalid input for channel_count! Currently allowed 14880\n"
+            "Invalid input for freq_min\n"
+            "Invalid input for freq_max\n"
+            "freq_min should be less than freq_max\n"
+            "length of receptor_ids should be same as length of receptors\n"
             "receptor_ids did not match receptors"
         )
 
@@ -1226,7 +1230,7 @@ def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
 
     except SchematicValidationError as error:
         assert error.message == (
-            "beams are too many! Current limit is 1,"
-            "Invalid function for beams! Currently allowed visibilities,"
+            "beams are too many! Current limit is 1\n"
+            "Invalid function for beams! Currently allowed visibilities\n"
             "spectral windows are too many! Current limit = 1"
         )
