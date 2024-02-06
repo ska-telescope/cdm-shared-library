@@ -2,714 +2,814 @@
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
 import copy
-import functools
 import itertools
 
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
-from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    CBFConfiguration,
-    CommonConfiguration,
-    CSPConfiguration,
-    FSPConfiguration,
-    FSPFunctionMode,
-    LowCBFConfiguration,
-    PSSConfiguration,
-    PSTConfiguration,
-    StationConfiguration,
-    StnBeamConfiguration,
-    SubarrayConfiguration,
-    VisConfiguration,
-    VisFspConfiguration,
-)
-
-CONSTRUCTOR_ARGS = dict(
-    interface="interface",
-    subarray=SubarrayConfiguration(subarray_name="subarray name"),
-    common=CommonConfiguration(
-        config_id="config_id",
-        frequency_band=ReceiverBand.BAND_1,
-        subarray_id=1,
-        band_5_tuning=[5.85, 7.25],
-    ),
-    cbf_config=CBFConfiguration(
-        fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)]
-    ),
-    pss_config=None,
-    pst_config=None,
-)
-
-CSP_CONFIGURATION_ARGS_PI16 = dict(
-    interface="https://schema.skao.int/ska-csp-configure/2.0",
-    subarray=SubarrayConfiguration("science period 23"),
-    common=CommonConfiguration(
-        config_id="sbi-mvp01-20200325-00001-science_A",
-        frequency_band=ReceiverBand.BAND_1,
-        subarray_id=1,
-    ),
-    pss_config={},
-    pst_config={},
-    cbf_config=CBFConfiguration(
-        fsp_configs=[
-            FSPConfiguration(
-                fsp_id=1,
-                function_mode=FSPFunctionMode.CORR,
-                frequency_slice_id=1,
-                integration_factor=1,
-                zoom_factor=0,
-                channel_averaging_map=[(0, 2), (744, 0)],
-                channel_offset=0,
-                output_link_map=[(0, 0), (200, 1)],
-            ),
-            FSPConfiguration(
-                fsp_id=2,
-                function_mode=FSPFunctionMode.CORR,
-                frequency_slice_id=2,
-                integration_factor=1,
-                zoom_factor=1,
-                channel_averaging_map=[(0, 2), (744, 0)],
-                channel_offset=744,
-                output_link_map=[(0, 4), (200, 5)],
-                zoom_window_tuning=650000,
-            ),
-        ],
-        vlbi_config={},
-    ),
+from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
+    CBFConfigurationBuilder,
+    CommonConfigurationBuilder,
+    CSPConfigurationBuilder,
+    FSPConfigurationBuilder,
+    LowCBFConfigurationBuilder,
+    StationConfigurationBuilder,
+    StnBeamConfigurationBuilder,
+    SubarrayConfigurationBuilder,
+    VisConfigurationBuilder,
+    VisFspConfigurationBuilder,
 )
 
 
-CSP_LOW_CONFIGURATION_ARGS = dict(
-    interface="https://schema.skao.int/ska-low-csp-configure/0.0",
-    common=CommonConfiguration(
-        config_id="sbi-mvp01-20200325-00001-science_A",
-    ),
-    lowcbf=LowCBFConfiguration(
-        stations=StationConfiguration(
-            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                )
-            ],
+@pytest.mark.parametrize(
+    "common_config_a, common_config_b, is_equal",
+    [
+        # Case when both configurations are identical
+        (
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(1)
+            .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(1)
+            .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            True,
         ),
-        vis=VisConfiguration(
-            fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
+        # Different frequency band
+        (
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(1)
+            .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_2)
+            .set_subarray_id(1)
+            .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            False,
         ),
-    ),
+        # Different subarray ID
+        (
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(1)
+            .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(2)  # Different subarray ID
+            .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            False,
+        ),
+        # Missing band_5_tuning in second configuration
+        (
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(1)
+            .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(1)
+            # No band_5_tuning set for second configuration
+            .build(),
+            False,
+        ),
+    ],
 )
-
-
-def test_common_configuration_equals():
+def test_common_configuration_equality(common_config_a, common_config_b, is_equal):
     """
-    Verify that CommonConfiguration objects are considered equal when all
-    attributes are equal.
+    Verify that CommonConfiguration objects are equal when they have the same values
+    ,not equal when any attribute differs and not equal to other objects.
     """
-    config_id = "sbi-mvp01-20200325-00001-science_A"
-    frequency_band = ReceiverBand.BAND_1
-    subarray_id = 1
-    band_5_tuning = [5.85, 7.25]
-
-    config1 = CommonConfiguration(config_id, frequency_band, subarray_id, band_5_tuning)
-    config2 = CommonConfiguration(config_id, frequency_band, subarray_id, band_5_tuning)
-    assert config1 == config2
-
-    assert config1 != CommonConfiguration(
-        config_id, ReceiverBand.BAND_2, subarray_id, band_5_tuning
-    )
-    assert config1 != CommonConfiguration(config_id, frequency_band, 2, band_5_tuning)
-    assert config1 != CommonConfiguration(config_id, frequency_band, 2)
+    assert (common_config_a == common_config_b) == is_equal
+    assert common_config_a != 1
+    assert common_config_a != object
 
 
-def test_common_configuration_not_equal_to_other_objects():
-    """
-    Verify that CommonConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    config_id = "sbi-mvp01-20200325-00001-science_A"
-    frequency_band = ReceiverBand.BAND_1
-    subarray_id = 1
-    band_5_tuning = [5.85, 7.25]
-    config = CommonConfiguration(config_id, frequency_band, subarray_id, band_5_tuning)
-    assert config != 1
-
-
-def test_subarray_configuration_equals():
-    """
-    Verify that SubarrayConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-    subarray_name = "Test Subarray"
-
-    config1 = SubarrayConfiguration(subarray_name)
-    config2 = SubarrayConfiguration(subarray_name)
-    assert config1 == config2
-
-    assert config1 != SubarrayConfiguration("Test Subarray2")
-
-
-def test_subarray_configuration_not_equal_to_other_objects():
-    """
-    Verify that SubarrayConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    subarray_name = "Test Subarray"
-    config = SubarrayConfiguration(subarray_name)
-    assert config != 1
-
-
-def test_cbf_configuration_equals():
-    """
-    Verify that CBFConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-    fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-
-    config1 = CBFConfiguration([fsp])
-    config2 = CBFConfiguration([fsp])
-    assert config1 == config2
-
-    assert config1 != CBFConfiguration([fsp, fsp])
-
-
-def test_cbf_configuration_not_equal_to_other_objects():
-    """
-    Verify that CBFConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    fsp = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-    config = CBFConfiguration([fsp])
-    assert config != 1
-
-
-def test_fsp_configuration_equals():
-    """
-    Verify that FSPConfigurations are considered equal when all attributes are
-    equal.
-    """
-    fsp_id = 1
-    mode = FSPFunctionMode.CORR
-    slice_id = 1
-    zoom_factor = 0
-    channel_avg_map = list(zip(itertools.count(1, 744), 20 * [0]))
-    integration_factor = 10
-
-    config1 = FSPConfiguration(
-        fsp_id, mode, slice_id, integration_factor, zoom_factor, channel_avg_map
-    )
-    config2 = FSPConfiguration(
-        fsp_id, mode, slice_id, integration_factor, zoom_factor, channel_avg_map
-    )
-    assert config1 == config2
-
-    assert config1 != FSPConfiguration(
-        2, mode, slice_id, integration_factor, zoom_factor, channel_avg_map
-    )
-    assert config1 != FSPConfiguration(
-        fsp_id,
-        FSPFunctionMode.PSS_BF,
-        slice_id,
-        integration_factor,
-        zoom_factor,
-        channel_avg_map,
-    )
-    assert config1 != FSPConfiguration(
-        fsp_id, mode, 2, integration_factor, zoom_factor, channel_avg_map
-    )
-    assert config1 != FSPConfiguration(
-        fsp_id, mode, slice_id, 2, zoom_factor, channel_avg_map
-    )
-    assert config1 != FSPConfiguration(
-        fsp_id, mode, slice_id, integration_factor, 1, channel_avg_map
-    )
-    assert config1 != FSPConfiguration(
-        fsp_id,
-        mode,
-        slice_id,
-        integration_factor,
-        zoom_factor,
-        list(zip(itertools.count(1, 744), 20 * [1])),
-    )
-
-
-def test_fsp_configuration_not_equal_to_other_objects():
-    """
-    Verify that FSPConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-    assert config != 1
-
-
-def test_csp_configuration_equals():
-    """
-    Verify that CSPConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-    o = CSPConfiguration(**CONSTRUCTOR_ARGS)
-    assert o == copy.deepcopy(o)
-
-    alt_constructor_args = dict(
-        interface="foo",
-        subarray=SubarrayConfiguration(subarray_name="foo"),
-        common=CommonConfiguration(
-            config_id="foo",
-            frequency_band=ReceiverBand.BAND_1,
-            subarray_id=1,
-            band_5_tuning=[5.85, 7.25],
+@pytest.mark.parametrize(
+    "subarray_config_a, subarray_config_b, is_equal",
+    [
+        # Case when both configurations have the same subarray name
+        (
+            SubarrayConfigurationBuilder().set_subarray_name("Test Subarray").build(),
+            SubarrayConfigurationBuilder().set_subarray_name("Test Subarray").build(),
+            True,
         ),
-        cbf_config=CBFConfiguration(
-            fsp_configs=[FSPConfiguration(2, FSPFunctionMode.CORR, 1, 10, 0)]
+        # Case when configurations have different subarray names
+        (
+            SubarrayConfigurationBuilder().set_subarray_name("Test Subarray").build(),
+            SubarrayConfigurationBuilder().set_subarray_name("Test Subarray2").build(),
+            False,
         ),
-        pss_config=PSSConfiguration(),
-        pst_config=PSTConfiguration(),
-    )
-
-    for k, v in alt_constructor_args.items():
-        alt_args = dict(CONSTRUCTOR_ARGS)
-        alt_args[k] = v
-        other = CSPConfiguration(**alt_args)
-        assert o != other
-
-
-def test_csp_configuration_not_equal_to_other_objects():
+    ],
+)
+def test_subarray_configuration_equality(
+    subarray_config_a, subarray_config_b, is_equal
+):
     """
-    Verify that CSPConfiguration objects are not considered equal to objects
-    of other types.
+    Verify that SubarrayConfiguration objects are equal when they have the same subarray name
+    and not equal when subarray names differ.
     """
-    o = CSPConfiguration(**CONSTRUCTOR_ARGS)
-    assert o != 1
+    assert (subarray_config_a == subarray_config_b) == is_equal
+    assert subarray_config_a != 1
+    assert subarray_config_b != object
 
 
-def test_csp_configuration_objects_are_equal_pi16():
-    """
-    Verify that CSPConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-
-    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI16)
-    csp_obj_2 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI16)
-
-    assert csp_obj_1 == csp_obj_2
-
-    alt_csp_configuration_csp_2_0_args = CSP_CONFIGURATION_ARGS_PI16.copy()
-    alt_csp_configuration_csp_2_0_args[
-        "interface"
-    ] = "Changing interface value for creating object with different value"
-
-    csp_obj_3 = CSPConfiguration(**alt_csp_configuration_csp_2_0_args)
-
-    assert csp_obj_1 != csp_obj_3
-
-
-def test_csp_configuration_not_equal_to_other_objects_pi16():
-    """
-    Verify that CSPConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    csp_obj_1 = CSPConfiguration(**CSP_CONFIGURATION_ARGS_PI16)
-
-    assert csp_obj_1 != 1
-
-
-def test_csp_configuration_objects_are_equal_for_low():
-    """
-    Verify that CSPConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-
-    csp_obj_1 = CSPConfiguration(**CSP_LOW_CONFIGURATION_ARGS)
-    csp_obj_2 = CSPConfiguration(**CSP_LOW_CONFIGURATION_ARGS)
-
-    assert csp_obj_1 == csp_obj_2
-
-    alt_csp_configuration_csp_2_0_args = CSP_LOW_CONFIGURATION_ARGS.copy()
-    alt_csp_configuration_csp_2_0_args[
-        "interface"
-    ] = "Changing interface value for creating object with different value"
-
-    csp_obj_3 = CSPConfiguration(**alt_csp_configuration_csp_2_0_args)
-
-    assert csp_obj_1 != csp_obj_3
-
-
-def test_csp_configuration_not_equal_to_other_objects_for_low():
-    """
-    Verify that CSPConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    csp_obj_1 = CSPConfiguration(**CSP_LOW_CONFIGURATION_ARGS)
-
-    assert csp_obj_1 != 1
-
-
-def test_fsp_id_range():
-    """
-    Verify that fsp id is in the range of 1 to 27
-    """
-    fsp_id = 0
-    with pytest.raises(ValueError):
-        _ = FSPConfiguration(fsp_id, FSPFunctionMode.CORR, 1, 140, 0)
-    fsp_id = 28
-    with pytest.raises(ValueError):
-        _ = FSPConfiguration(fsp_id, FSPFunctionMode.CORR, 1, 140, 0)
-
-
-def test_fsp_slice_id_range():
-    """
-    Verify that fsp slice id is in the range of 1 to 26
-    """
-    fsp_slice_id = 0
-    with pytest.raises(ValueError):
-        _ = FSPConfiguration(1, FSPFunctionMode.CORR, fsp_slice_id, 140, 0)
-    fsp_slice_id = 27
-    with pytest.raises(ValueError):
-        _ = FSPConfiguration(1, FSPFunctionMode.CORR, fsp_slice_id, 140, 0)
-
-
-def test_zoom_factor_range():
-    """
-    Verify that zoom_factor is in the range of 0 to 6
-    """
-    zoom_factor = -1
-    with pytest.raises(ValueError):
-        _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, zoom_factor)
-    zoom_factor = 7
-    with pytest.raises(ValueError):
-        _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 140, zoom_factor)
-
-
-def test_integration_factor_range():
-    """
-    Verify that integration factor is within range 1..10
-    """
-    _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 1, 0)
-    _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-    with pytest.raises(ValueError):
-        _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 0, 0)
-    with pytest.raises(ValueError):
-        _ = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 11, 0)
-
-
-def test_number_of_channel_avg_mapping_tuples():
-    """
-    Verify that FSPConfiguration fails if there are an invalid number of
-    entries in the channel average mapping argument.
-    Since this test was originally written we allow fewer than 20 entries
-    """
-    # create a partially applied sn.FSPConfiguration constructor to save having
-    # to type the arguments each time
-    fsp_constructor = functools.partial(
-        FSPConfiguration, 1, FSPFunctionMode.CORR, 1, 140, 0
-    )
-
-    # test for 21 tuples
-    channel_avg_map = list(zip(itertools.count(1, 744), 21 * [0]))
-    with pytest.raises(ValueError):
-        _ = fsp_constructor(channel_avg_map)
-
-
-def test_stn_beam_configuration_equals():
-    """
-    Verify that StnBeamConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-    config1 = StnBeamConfiguration(
-        stn_beam_id=1,
-        freq_ids=[400],
-        host=[[0, "192.168.1.00"]],
-        port=[[0, 9000, 1]],
-        mac=[[0, "02-03-04-0a-0b-0c"]],
-        integration_ms=849,
-    )
-    config2 = StnBeamConfiguration(
-        stn_beam_id=1,
-        freq_ids=[400],
-        host=[[0, "192.168.1.00"]],
-        port=[[0, 9000, 1]],
-        mac=[[0, "02-03-04-0a-0b-0c"]],
-        integration_ms=849,
-    )
-    assert config1 == config2
-
-    assert config1 != StnBeamConfiguration(stn_beam_id=1)
-
-
-def test_stn_beam_configuration_not_equal_to_other_objects():
-    """
-    Verify that StnBeamConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    config = StnBeamConfiguration(
-        stn_beam_id=1,
-        freq_ids=[400],
-        host=[[0, "192.168.1.00"]],
-        port=[[0, 9000, 1]],
-        mac=[[0, "02-03-04-0a-0b-0c"]],
-        integration_ms=849,
-    )
-    assert config != 1
-
-
-def test_station_configuration_equals():
-    """
-    Verify that StationConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-
-    config1 = StationConfiguration(
-        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-        stn_beams=[
-            StnBeamConfiguration(
-                stn_beam_id=1,
-                freq_ids=[400],
-                host=[[0, "192.168.1.00"]],
-                port=[[0, 9000, 1]],
-                mac=[[0, "02-03-04-0a-0b-0c"]],
-                integration_ms=849,
+@pytest.mark.parametrize(
+    "cbf_config_a, cbf_config_b, is_equal",
+    [
+        # Case when both configurations have the same FSP configuration
+        (
+            CBFConfigurationBuilder()
+            .set_fsp_config(
+                [
+                    FSPConfigurationBuilder()
+                    .set_fsp_id(1)
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
+                    .set_integration_factor(10)
+                    .set_zoom_factor(0)
+                    .build()
+                ]
             )
-        ],
-    )
-    config2 = StationConfiguration(
-        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-        stn_beams=[
-            StnBeamConfiguration(
-                stn_beam_id=1,
-                freq_ids=[400],
-                host=[[0, "192.168.1.00"]],
-                port=[[0, 9000, 1]],
-                mac=[[0, "02-03-04-0a-0b-0c"]],
-                integration_ms=849,
+            .build(),
+            CBFConfigurationBuilder()
+            .set_fsp_config(
+                [
+                    FSPConfigurationBuilder()
+                    .set_fsp_id(1)
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
+                    .set_integration_factor(10)
+                    .set_zoom_factor(0)
+                    .build()
+                ]
             )
-        ],
-    )
-    assert config1 == config2
-
-    assert config1 != StationConfiguration(
-        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]]
-    )
-
-
-def test_station_configuration_not_equal_to_other_objects():
-    """
-    Verify that StationConfiguration objects are not considered equal to objects
-    of other types.
-    """
-
-    config = StationConfiguration(
-        stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-        stn_beams=[
-            StnBeamConfiguration(
-                stn_beam_id=1,
-                freq_ids=[400],
-                host=[[0, "192.168.1.00"]],
-                port=[[0, 9000, 1]],
-                mac=[[0, "02-03-04-0a-0b-0c"]],
-                integration_ms=849,
-            )
-        ],
-    )
-    assert config != 1
-
-
-def test_vis_fsp_configuration_equals():
-    """
-    Verify that VisFspConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-    config1 = VisFspConfiguration(function_mode="vis", fsp_ids=[1])
-    config2 = VisFspConfiguration(function_mode="vis", fsp_ids=[1])
-    assert config1 == config2
-
-    assert config1 != VisFspConfiguration(function_mode="vis")
-
-
-def test_vis_fsp_configuration_not_equal_to_other_objects():
-    """
-    Verify that VisFspConfiguration objects are not considered equal to objects
-    of other types.
-    """
-    config = VisFspConfiguration(function_mode="vis", fsp_ids=[1])
-    assert config != 1
-
-
-def test_vis_configuration_equals():
-    """
-    Verify that VisConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-    config1 = VisConfiguration(
-        fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
-        stn_beams=[
-            StnBeamConfiguration(
-                stn_beam_id=1,
-                freq_ids=[400],
-                host=[[0, "192.168.1.00"]],
-                port=[[0, 9000, 1]],
-                mac=[[0, "02-03-04-0a-0b-0c"]],
-                integration_ms=849,
-            )
-        ],
-    )
-    config2 = VisConfiguration(
-        fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
-        stn_beams=[
-            StnBeamConfiguration(
-                stn_beam_id=1,
-                freq_ids=[400],
-                host=[[0, "192.168.1.00"]],
-                port=[[0, 9000, 1]],
-                mac=[[0, "02-03-04-0a-0b-0c"]],
-                integration_ms=849,
-            )
-        ],
-    )
-    assert config1 == config2
-
-
-def test_vis_configuration_not_equal_to_other_objects():
-    """
-    Verify that VisConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-    config = VisConfiguration(
-        fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
-        stn_beams=[
-            StnBeamConfiguration(
-                stn_beam_id=1,
-                freq_ids=[400],
-                host=[[0, "192.168.1.00"]],
-                port=[[0, 9000, 1]],
-                mac=[[0, "02-03-04-0a-0b-0c"]],
-                integration_ms=849,
-            )
-        ],
-    )
-    assert config != 1
-
-
-def test_low_cbf_configuration_equals():
-    """
-    Verify that LowCBFConfiguration objects are considered equal when all
-    attributes are equal.
-    """
-
-    config1 = LowCBFConfiguration(
-        stations=StationConfiguration(
-            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
+            .build(),
+            True,
         ),
-        vis=VisConfiguration(
-            fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
+        # Case when configurations have different FSP configurations
+        (
+            CBFConfigurationBuilder()
+            .set_fsp_config(
+                [
+                    FSPConfigurationBuilder()
+                    .set_fsp_id(1)
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
+                    .set_integration_factor(10)
+                    .set_zoom_factor(0)
+                    .build()
+                ]
+            )
+            .build(),
+            CBFConfigurationBuilder()
+            .set_fsp_config(
+                [
+                    FSPConfigurationBuilder()
+                    .set_fsp_id(1)
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
+                    .set_integration_factor(10)
+                    .set_zoom_factor(0)
+                    .build(),
+                    FSPConfigurationBuilder()
+                    .set_fsp_id(2)  # Different FSP ID
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
+                    .set_integration_factor(10)
+                    .set_zoom_factor(0)
+                    .build(),
+                ]
+            )
+            .build(),
+            False,
         ),
+    ],
+)
+def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
+    """
+    Verify that CBFConfiguration objects are equal when they have the same FSP configurations
+    and not equal when FSP configurations differ.
+    """
+    assert (cbf_config_a == cbf_config_b) == is_equal
+    assert cbf_config_a != 1
+    assert cbf_config_b != object()
+
+
+@pytest.mark.parametrize(
+    "fsp_config_a, fsp_config_b, is_equal",
+    [
+        # both configurations are the same
+        (
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_channel_averaging_map(list(zip(itertools.count(1, 744), 20 * [0])))
+            .build(),
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_channel_averaging_map(list(zip(itertools.count(1, 744), 20 * [0])))
+            .build(),
+            True,
+        ),
+        # Cases when one attribute differs, making configurations not equal
+        (
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .build(),
+            FSPConfigurationBuilder()
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_fsp_id(2)  # Different FSP ID
+            .build(),
+            False,
+        ),
+        (
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .build(),
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)  # Different function mode
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .build(),
+            False,
+        ),
+        (
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_frequency_slice_id(1)
+            .build(),
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)  # Different function mode
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_frequency_slice_id(2)  # Different frequency slice ID
+            .build(),
+            False,
+        ),
+        (
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
+            .set_zoom_factor(0)
+            .set_integration_factor(10)
+            .build(),
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
+            .set_zoom_factor(0)
+            .set_integration_factor(2)  # Different integration factor
+            .build(),
+            False,
+        ),
+        (
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .build(),
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(1)  # Different zoom factor
+            .build(),
+            False,
+        ),
+        (
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_channel_averaging_map(list(zip(itertools.count(1, 744), 20 * [0])))
+            .build(),
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)  # Different function mode
+            .set_frequency_slice_id(1)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [1]))
+            )  # Different channel averaging map
+            .build(),
+            False,
+        ),
+    ],
+)
+def test_fsp_configuration_equality(fsp_config_a, fsp_config_b, is_equal):
+    """
+    Verify that FSPConfiguration objects are equal when they have the same values
+    and not equal when any attribute differs.
+    """
+    assert (fsp_config_a == fsp_config_b) == is_equal
+    assert fsp_config_a != 1
+    assert fsp_config_a != object()
+
+
+@pytest.mark.parametrize(
+    "fsp_id, expected_exception",
+    [
+        (0, ValueError),  # fsp_id below the valid range
+        (28, ValueError),  # fsp_id above the valid range
+        (1, None),  # Valid lower boundary
+        (27, None),  # Valid upper boundary
+    ],
+)
+def test_fsp_id_range_with_builder(fsp_id, expected_exception):
+    """
+    Verify that fsp id is in the range of 1 to 27 using the FSPConfigurationBuilder.
+    """
+    if expected_exception:
+        with pytest.raises(expected_exception):
+            FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
+                FSPFunctionMode.CORR
+            ).set_frequency_slice_id(1).set_integration_factor(10).set_zoom_factor(
+                0
+            ).build()
+    else:
+        try:
+            FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
+                FSPFunctionMode.CORR
+            ).set_frequency_slice_id(1).set_integration_factor(10).set_zoom_factor(
+                0
+            ).build()
+        except ValueError:
+            pytest.fail(f"FSP ID {fsp_id} raised ValueError unexpectedly.")
+
+
+@pytest.mark.parametrize(
+    "zoom_factor, expected_exception",
+    [
+        (-1, ValueError),  # Invalid zoom_factor below range
+        (7, ValueError),  # Invalid zoom_factor above range
+        (0, None),  # Valid zoom_factor at lower bound
+        (6, None),  # Valid zoom_factor at upper bound
+    ],
+)
+def test_fsp_zoom_factor_range(zoom_factor, expected_exception):
+    builder = (
+        FSPConfigurationBuilder()
+        .set_fsp_id(1)
+        .set_function_mode(FSPFunctionMode.CORR)
+        .set_frequency_slice_id(1)
+        .set_integration_factor(10)
     )
-    config2 = LowCBFConfiguration(
-        stations=StationConfiguration(
-            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
-        ),
-        vis=VisConfiguration(
-            fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
-        ),
+    if expected_exception:
+        with pytest.raises(expected_exception):
+            builder.set_zoom_factor(zoom_factor).build()
+    else:
+        config = builder.set_zoom_factor(zoom_factor).build()
+        assert (
+            config.zoom_factor == zoom_factor
+        )  # Verifies the zoom_factor is set as expected
+
+
+@pytest.mark.parametrize(
+    "integration_factor, expected_exception",
+    [
+        (1, None),  # Valid integration_factor at lower bound
+        (10, None),  # Valid integration_factor at upper bound
+        (0, ValueError),  # Invalid integration_factor below range
+        (11, ValueError),  # Invalid integration_factor above range
+    ],
+)
+def test_fsp_integration_factor_range(integration_factor, expected_exception):
+    builder = (
+        FSPConfigurationBuilder()
+        .set_fsp_id(1)
+        .set_function_mode(FSPFunctionMode.CORR)
+        .set_frequency_slice_id(1)
+        .set_zoom_factor(0)
     )
-    assert config1 == config2
-    assert config1 != LowCBFConfiguration(
-        stations=StationConfiguration(
-            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
+    if expected_exception:
+        with pytest.raises(expected_exception):
+            builder.set_integration_factor(integration_factor).build()
+    else:
+        config = builder.set_integration_factor(integration_factor).build()
+        assert (
+            config.integration_factor == integration_factor
+        )  # Verifies the integration_factor is set as expected
+
+
+@pytest.mark.parametrize(
+    "channel_avg_map_length, expected_exception",
+    [
+        (20, None),  # Assuming 20 entries are valid
+        (21, ValueError),  # Invalid number of entries, assuming more than 20 is invalid
+    ],
+)
+def test_fsp_configuration_channel_avg_map_length(
+    channel_avg_map_length, expected_exception
+):
+    channel_avg_map = list(zip(itertools.count(1, 744), [0] * channel_avg_map_length))
+    builder = (
+        FSPConfigurationBuilder()
+        .set_fsp_id(1)
+        .set_function_mode(FSPFunctionMode.CORR)
+        .set_frequency_slice_id(1)
+        .set_integration_factor(10)
+        .set_zoom_factor(0)
+        .set_channel_averaging_map(channel_avg_map)
+    )
+
+    if expected_exception:
+        with pytest.raises(expected_exception):
+            builder.build()
+    else:
+        config = builder.build()
+        assert len(config.channel_averaging_map) == channel_avg_map_length
+
+
+@pytest.mark.parametrize(
+    "stn_beam_config_a, stn_beam_config_b, is_equal",
+    [
+        # Case where both configurations are the same
+        (
+            StnBeamConfigurationBuilder()
+            .set_stn_beam_id(1)
+            .set_freq_ids([400])
+            .set_host([(0, "192.168.1.00")])
+            .set_port([(0, 9000, 1)])
+            .set_mac([(0, "02-03-04-0a-0b-0c")])
+            .set_integration_ms(849)
+            .build(),
+            StnBeamConfigurationBuilder()
+            .set_stn_beam_id(1)
+            .set_freq_ids([400])
+            .set_host([(0, "192.168.1.00")])
+            .set_port([(0, 9000, 1)])
+            .set_mac([(0, "02-03-04-0a-0b-0c")])
+            .set_integration_ms(849)
+            .build(),
+            True,
+        ),
+        # Case where configurations are different
+        (
+            StnBeamConfigurationBuilder()
+            .set_stn_beam_id(1)
+            .set_freq_ids([400])
+            .set_host([(0, "192.168.1.00")])
+            .set_port([(0, 9000, 1)])
+            .set_mac([(0, "02-03-04-0a-0b-0c")])
+            .set_integration_ms(849)
+            .build(),
+            StnBeamConfigurationBuilder()
+            .set_stn_beam_id(2)  # Different stn_beam_id
+            .build(),
+            False,
+        ),
+    ],
+)
+def test_stn_beam_configuration_equality(
+    stn_beam_config_a, stn_beam_config_b, is_equal
+):
+    """
+    Verify that StnBeamConfiguration objects are equal when they have the same values
+    and not equal when any attribute differs.
+    """
+    assert (stn_beam_config_a == stn_beam_config_b) == is_equal
+    assert stn_beam_config_a != 1
+    assert stn_beam_config_b != object
+
+
+@pytest.mark.parametrize(
+    "station_config_a, station_config_b, is_equal",
+    [
+        # Case where both configurations are the same
+        (
+            StationConfigurationBuilder()
+            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
+            .set_stn_beams(
+                [
+                    StnBeamConfigurationBuilder()
+                    .set_stn_beam_id(1)
+                    .set_freq_ids([400])
+                    .set_host([(0, "192.168.1.00")])
+                    .set_port([(0, 9000, 1)])
+                    .set_mac([(0, "02-03-04-0a-0b-0c")])
+                    .set_integration_ms(849)
+                    .build()
+                ]
+            )
+            .build(),
+            StationConfigurationBuilder()
+            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
+            .set_stn_beams(
+                [
+                    StnBeamConfigurationBuilder()
+                    .set_stn_beam_id(1)
+                    .set_freq_ids([400])
+                    .set_host([(0, "192.168.1.00")])
+                    .set_port([(0, 9000, 1)])
+                    .set_mac([(0, "02-03-04-0a-0b-0c")])
+                    .set_integration_ms(849)
+                    .build()
+                ]
+            )
+            .build(),
+            True,
+        ),
+        # Case where configurations are different due to missing stn_beams
+        (
+            StationConfigurationBuilder()
+            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
+            .set_stn_beams(
+                [
+                    StnBeamConfigurationBuilder()
+                    .set_stn_beam_id(1)
+                    .set_freq_ids([400])
+                    .set_host([(0, "192.168.1.00")])
+                    .set_port([(0, 9000, 1)])
+                    .set_mac([(0, "02-03-04-0a-0b-0c")])
+                    .set_integration_ms(849)
+                    .build()
+                ]
+            )
+            .build(),
+            StationConfigurationBuilder()
+            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
+            .build(),
+            False,
+        ),
+    ],
+)
+def test_station_configuration_equality(station_config_a, station_config_b, is_equal):
+    """
+    Verify that StationConfiguration objects are equal when they have the same values
+    and not equal when any attribute differs.
+    """
+    assert (station_config_a == station_config_b) == is_equal
+    assert station_config_a != 1
+    assert station_config_b != object
+
+
+@pytest.mark.parametrize(
+    "vis_fsp_config_a, vis_fsp_config_b, is_equal",
+    [
+        # Case where both configurations are the same
+        (
+            VisFspConfigurationBuilder()
+            .set_function_mode("vis")
+            .set_fsp_ids([1])
+            .build(),
+            VisFspConfigurationBuilder()
+            .set_function_mode("vis")
+            .set_fsp_ids([1])
+            .build(),
+            True,
+        ),
+        # Case where configurations are different due to missing fsp_ids in the second instance
+        (
+            VisFspConfigurationBuilder()
+            .set_function_mode("vis")
+            .set_fsp_ids([1])
+            .build(),
+            VisFspConfigurationBuilder()
+            .set_function_mode("vis")
+            .build(),  # Omitting set_fsp_ids to simulate difference
+            False,
+        ),
+    ],
+)
+def test_vis_fsp_configuration_equality(vis_fsp_config_a, vis_fsp_config_b, is_equal):
+    """
+    Verify that VisFspConfiguration objects are equal when they have the same values
+    and not equal when any attribute differs.
+    """
+    assert (vis_fsp_config_a == vis_fsp_config_b) == is_equal
+    assert (
+        vis_fsp_config_a != 1
+    )  # Additional check to ensure VisFspConfiguration objects are not equal to objects of other types.
+    assert vis_fsp_config_b != object
+
+
+@pytest.mark.parametrize(
+    "vis_config_a, vis_config_b, is_equal",
+    [
+        (
+            VisConfigurationBuilder()
+            .set_fsp(
+                VisFspConfigurationBuilder()
+                .set_function_mode("vis")
+                .set_fsp_ids([1])
+                .build()
+            )
+            .set_stn_beam(
+                [
+                    StnBeamConfigurationBuilder()
+                    .set_stn_beam_id(1)
+                    .set_freq_ids([400])
+                    .set_host([(0, "192.168.1.00")])
+                    .set_port([(0, 9000, 1)])
+                    .set_mac([(0, "02-03-04-0a-0b-0c")])
+                    .set_integration_ms(849)
+                    .build()
+                ]
+            )
+            .build(),
+            VisConfigurationBuilder()
+            .set_fsp(
+                VisFspConfigurationBuilder()
+                .set_function_mode("vis")
+                .set_fsp_ids([1])
+                .build()
+            )
+            .set_stn_beam(
+                [
+                    StnBeamConfigurationBuilder()
+                    .set_stn_beam_id(1)
+                    .set_freq_ids([400])
+                    .set_host([(0, "192.168.1.00")])
+                    .set_port([(0, 9000, 1)])
+                    .set_mac([(0, "02-03-04-0a-0b-0c")])
+                    .set_integration_ms(849)
+                    .build()
+                ]
+            )
+            .build(),
+            True,
         )
-    )
-
-
-def test_low_cbf_configuration_not_equal_to_other_objects():
+    ],
+)
+def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
     """
-    Verify that LowCBFConfiguration objects are not considered equal to objects
-    of other types.
+    Verify that VisConfiguration objects are equal when they have the same values
+    and not equal when any attribute differs.
+    """
+    assert (vis_config_a == vis_config_b) == is_equal
+    assert (
+        vis_config_a != 1
+    )  # Additional check to ensure VisConfiguration objects are not equal to objects of other types.
+    assert vis_config_b != object
+
+
+@pytest.mark.parametrize(
+    "low_cbf_config_a, low_cbf_config_b, is_equal",
+    [
+        # Case where both LowCBFConfiguration objects are exactly the same
+        (
+            LowCBFConfigurationBuilder()
+            .set_stations(
+                StationConfigurationBuilder()
+                .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
+                .set_stn_beams(
+                    [
+                        StnBeamConfigurationBuilder()
+                        .set_stn_beam_id(1)
+                        .set_freq_ids([400])
+                        .set_host([(0, "192.168.1.00")])
+                        .set_port([(0, 9000, 1)])
+                        .set_mac([(0, "02-03-04-0a-0b-0c")])
+                        .set_integration_ms(849)
+                        .build()
+                    ]
+                )
+                .build()
+            )
+            .set_vis(
+                VisConfigurationBuilder()
+                .set_fsp(
+                    VisFspConfigurationBuilder()
+                    .set_function_mode("vis")
+                    .set_fsp_ids([1])
+                    .build()
+                )
+                .set_stn_beam(
+                    [
+                        StnBeamConfigurationBuilder()
+                        .set_stn_beam_id(1)
+                        .set_freq_ids([400])
+                        .set_host([(0, "192.168.1.00")])
+                        .set_port([(0, 9000, 1)])
+                        .set_mac([(0, "02-03-04-0a-0b-0c")])
+                        .set_integration_ms(849)
+                        .build()
+                    ]
+                )
+                .build()
+            )
+            .build(),
+            LowCBFConfigurationBuilder()
+            .set_stations(
+                StationConfigurationBuilder()
+                .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
+                .set_stn_beams(
+                    [
+                        StnBeamConfigurationBuilder()
+                        .set_stn_beam_id(1)
+                        .set_freq_ids([400])
+                        .set_host([(0, "192.168.1.00")])
+                        .set_port([(0, 9000, 1)])
+                        .set_mac([(0, "02-03-04-0a-0b-0c")])
+                        .set_integration_ms(849)
+                        .build()
+                    ]
+                )
+                .build()
+            )
+            .set_vis(
+                VisConfigurationBuilder()
+                .set_fsp(
+                    VisFspConfigurationBuilder()
+                    .set_function_mode("vis")
+                    .set_fsp_ids([1])
+                    .build()
+                )
+                .set_stn_beam(
+                    [
+                        StnBeamConfigurationBuilder()
+                        .set_stn_beam_id(1)
+                        .set_freq_ids([400])
+                        .set_host([(0, "192.168.1.00")])
+                        .set_port([(0, 9000, 1)])
+                        .set_mac([(0, "02-03-04-0a-0b-0c")])
+                        .set_integration_ms(849)
+                        .build()
+                    ]
+                )
+                .build()
+            )
+            .build(),
+            True,
+        ),
+    ],
+)
+def test_low_cbf_configuration_equality(low_cbf_config_a, low_cbf_config_b, is_equal):
+    """
+    Verify that LowCBFConfiguration objects are equal when they have the same values
+    and not equal when any attribute differs.
+    """
+    assert (low_cbf_config_a == low_cbf_config_b) == is_equal
+    assert low_cbf_config_a != 1
+    assert low_cbf_config_b != object()
+
+
+def test_csp_configuration_equality(csp_config, low_csp_config):
+    """
+    Verify that CSPConfiguration objects are equal when all they have the same values
+    and not equal when any attribute differs.
     """
 
-    config = LowCBFConfiguration(
-        stations=StationConfiguration(
-            stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
-        ),
-        vis=VisConfiguration(
-            fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
-        ),
-    )
-    assert config != 1
+    csp_config_invalid = CSPConfigurationBuilder().set_interface("foo").build()
+    csp_config_b = copy.deepcopy(csp_config)
+    assert csp_config == csp_config_b  # comparing same instance created using deepcopy
+    assert csp_config != csp_config_invalid  # comparing with invalid instance
+    assert csp_config != 1  # comparing with other instance
+
+    assert low_csp_config == copy.deepcopy(
+        low_csp_config
+    )  # comparing same instance created using deepcopy
+    assert low_csp_config != csp_config_invalid  # comparing with invalid instance
+    assert low_csp_config != 1  # comparing with other instance
+
+    assert csp_config != low_csp_config  # comparing mid with low
+    assert csp_config != object  # comparing with object
+    assert low_csp_config != object  # comparing with object

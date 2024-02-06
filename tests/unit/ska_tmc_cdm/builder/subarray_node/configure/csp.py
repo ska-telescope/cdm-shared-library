@@ -507,7 +507,9 @@ class VisConfigurationBuilder:
         self.fsp = fsp
         return self
 
-    def set_stn_beam(self, stn_beam: StnBeamConfiguration) -> "VisConfigurationBuilder":
+    def set_stn_beam(
+        self, stn_beams: List[StnBeamConfiguration]
+    ) -> "VisConfigurationBuilder":
         """
         Set the station beam configuration to the visibility configuration.
 
@@ -515,7 +517,7 @@ class VisConfigurationBuilder:
         :return: An instance of VisConfigurationBuilder with the added station beam configuration.
         """
 
-        self.stn_beams = stn_beam
+        self.stn_beams = stn_beams
         return self
 
     def build(self) -> VisConfiguration:

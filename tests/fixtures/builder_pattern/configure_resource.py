@@ -5,7 +5,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand, Dish
 from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode, CSPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import StnConfiguration, SubarrayBeamTarget, SubarrayBeamConfiguration, MCCSConfiguration
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import DishConfigurationBuilder
-from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import CSPConfigurationBuilder, SubarrayConfigurationBuilder, CommonConfigurationBuilder, CBFConfigurationBuilder, FSPConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import CSPConfigurationBuilder, SubarrayConfigurationBuilder, CommonConfigurationBuilder, CBFConfigurationBuilder, \
+    FSPConfigurationBuilder, StnBeamConfigurationBuilder, VisFspConfigurationBuilder, VisConfigurationBuilder, StationConfigurationBuilder, LowCBFConfigurationBuilder
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import StnConfigurationBuilder, SubarrayBeamTargetBuilder, SubarrayBeamConfigurationBuilder, MCCSConfigurationBuilder
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.sdp import SDPConfigurationBuilder
 
@@ -87,7 +88,7 @@ def sdp_config() -> SDPConfiguration:
 @pytest.fixture(scope="module")
 def csp_config() -> CSPConfiguration:
     """
-    Provides CDM CSP Configuration instance through Builder class with predefined values
+    Provides Mid CDM CSP Configuration instance through Builder class with predefined values
     """
     return (
         CSPConfigurationBuilder()
@@ -121,3 +122,56 @@ def csp_config() -> CSPConfiguration:
         )
         .build()
     )
+
+
+@pytest.fixture(scope="module")
+def low_csp_config() ->CSPConfiguration:
+    """
+    Provides Low CDM CSP Configuration instance through Builder class with predefined values
+    """
+    return (CSPConfigurationBuilder()
+            .set_interface("https://schema.skao.int/ska-low-csp-configure/0.0")
+            .set_common(common=CommonConfigurationBuilder()
+                .set_config_id("sbi-mvp01-20200325-00001-science_A")
+                .set_frequency_band(ReceiverBand.BAND_1)
+                .set_subarray_id(1)
+                .set_band_5_tuning([5.85, 7.25])
+                .build())
+            .set_lowcbf(lowcbf=LowCBFConfigurationBuilder()
+                .set_stations(
+                    StationConfigurationBuilder()
+                        .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
+                        .set_stn_beams(
+                           [ StnBeamConfigurationBuilder()
+                                .set_stn_beam_id(1)
+                                .set_freq_ids([400])
+                            .set_host([(0, "192.168.1.00")])
+                            .set_port([(0, 9000, 1)])
+                            .set_mac([(0, "02-03-04-0a-0b-0c")])
+                                .set_integration_ms(849)
+                                .build()]
+                        )
+                        .build()
+                )
+                .set_vis(
+                    VisConfigurationBuilder()
+                        .set_fsp(
+                            VisFspConfigurationBuilder()
+                                .set_function_mode("vis")
+                                .set_fsp_ids([1])
+                                .build()
+                        )
+                        .set_stn_beam(
+                            [StnBeamConfigurationBuilder()
+                                .set_stn_beam_id(1)
+                                .set_freq_ids([400])
+                            .set_host([(0, "192.168.1.00")])
+                            .set_port([(0, 9000, 1)])
+                            .set_mac([(0, "02-03-04-0a-0b-0c")])
+                                .set_integration_ms(849)
+                                .build()]
+                        )
+                        .build())
+                    .build())
+
+            .build())

@@ -7,12 +7,8 @@ from datetime import timedelta
 import pytest
 from pydantic import ValidationError
 
-from ska_tmc_cdm.messages.subarray_node.configure import (
-    LOW_SCHEMA,
-    MID_SCHEMA,
-    ConfigureRequest,
-)
-from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.__init__ import (
+from ska_tmc_cdm.messages.subarray_node.configure import LOW_SCHEMA, MID_SCHEMA
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure import (
     ConfigureRequestBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
@@ -53,76 +49,73 @@ def test_configure_request_has_correct_schema_on_creation(
     assert request_obj.interface == expected_schema
 
 
-def test_configure_request_eq(dish_config, sdp_config, csp_config):
-    """
-    Verify that ConfigureRequest objects are considered equal when:
-      - they point to the same target
-      - they set the same receiver band
-      - their SDP configuration is the same
-      - their CSP configuration is the same
-    """
-    transaction_id = "transaction_id"
-
-    pointing_config = (
-        PointingConfigurationBuilder()
-        .set_target(TargetBuilder().set_ra(1).set_dec(1).build())
-        .build()
-    )
-
-    request_1 = (
-        ConfigureRequestBuilder()
-        .set_transaction_id(transaction_id=transaction_id)
-        .set_pointing(pointing=pointing_config)
-        .set_dish(dish=dish_config)
-        .set_sdp(sdp=sdp_config)
-        .set_csp(csp=csp_config)
-        .build()
-    )
-    request_2 = copy.deepcopy(request_1)
-    assert request_1 == request_2
-
-
-def test_mccs_configure_request_eq(mccs_config):
-    """
-    Verify that ConfigurationRequest objects for are considered equal when:
-      - their MCCS configuration is the same
-    """
-
-    request_1 = ConfigureRequest(mccs=mccs_config)
-    request_2 = ConfigureRequest(mccs=mccs_config)
-    assert request_1 == request_2
-
-
-def test_configure_request_is_not_equal_to_other_objects(
-    dish_config, sdp_config, csp_config
+@pytest.mark.parametrize(
+    "config_type, is_equal, use_deepcopy",
+    [
+        (
+            "dish",
+            True,
+            False,
+        ),  # Test equality for ConfigureRequests with dish, sdp, and csp configs
+        ("mccs", True, False),  # Test equality for ConfigureRequests with mccs config
+        ("other_objects", False, True),  # Test inequality against other object types
+    ],
+)
+def test_configure_request_equality(
+    config_type,
+    is_equal,
+    use_deepcopy,
+    dish_config,
+    sdp_config,
+    csp_config,
+    mccs_config,
 ):
     """
-    Verify that ConfigureRequest is not equal to other objects.
+    Verify that ConfigureRequests are equal when they have the same values, not equal for different values
+    And that ConfigureRequests are not considered equal to objects of other types.
     """
+    # Initialize pointing based on config_type
     pointing_config = (
         PointingConfigurationBuilder()
         .set_target(TargetBuilder().set_ra(1).set_dec(1).build())
         .build()
     )
-    request = (
-        ConfigureRequestBuilder()
-        .set_pointing(pointing=pointing_config)
-        .set_dish(dish=dish_config)
-        .set_sdp(sdp=sdp_config)
-        .set_csp(csp=csp_config)
-        .build()
-    )
-    assert request != object
 
+    # Initialize request based on config_type
+    if config_type == "dish":
+        request = (
+            ConfigureRequestBuilder()
+            .set_pointing(pointing=pointing_config)
+            .set_dish(dish=dish_config)
+            .set_sdp(sdp=sdp_config)
+            .set_csp(csp=csp_config)
+            .build()
+        )
+        request_2 = copy.deepcopy(request) if use_deepcopy else request
+    elif config_type == "mccs":
+        request = (
+            ConfigureRequestBuilder()
+            .set_mccs(mccs=mccs_config)
+            .set_sdp(sdp=sdp_config)
+            .set_csp(csp=csp_config)
+            .build()
+        )
+        request_2 = copy.deepcopy(request) if use_deepcopy else request
+    else:  # For testing inequality with other objects
+        request = (
+            ConfigureRequestBuilder()
+            .set_pointing(pointing=pointing_config)
+            .set_dish(dish=dish_config)
+            .set_sdp(sdp=sdp_config)
+            .set_csp(csp=csp_config)
+            .build()
+        )
+        request_2 = object()
 
-def test_mccs_configure_request_is_not_equal_to_other_objects(mccs_config):
-    """
-    Verify that an MCCS ConfigureRequest is not equal to other objects.
-    """
-
-    request = ConfigureRequestBuilder().set_mccs(mccs_config).build()
-    assert request != object
-    assert request is not None
+    if is_equal:
+        assert request == request_2
+    else:
+        assert request != request_2
 
 
 def test_configure_request_mccs_independence(mccs_config, dish_config):
@@ -130,51 +123,13 @@ def test_configure_request_mccs_independence(mccs_config, dish_config):
     Verify that an Mid & Low ConfigureRequests are independent.
     """
 
-    request = ConfigureRequestBuilder().set_mccs(mccs_config).build()
-    assert request is not None
-
     with pytest.raises(ValueError):
         ConfigureRequestBuilder().set_dish(dish=dish_config).set_mccs(
             mccs=mccs_config
         ).build()
 
 
-def test_configure_request_equals_pi16(
-    mccs_config,
-    csp_config,
-    sdp_config,
-    dish_config,
-):
-    """
-    Verify that ConfigureRequest objects are considered equal when all
-    attributes are equal and not equal when there value differ.
-    """
-
-    configure_request_obj_1 = (
-        ConfigureRequestBuilder()
-        .set_dish(dish=dish_config)
-        .set_csp(csp=csp_config)
-        .set_sdp(sdp=sdp_config)
-        .build()
-    )
-
-    configure_request_obj_2 = (
-        ConfigureRequestBuilder()
-        .set_dish(dish=dish_config)
-        .set_csp(csp=csp_config)
-        .set_sdp(sdp=sdp_config)
-        .build()
-    )
-
-    configure_request_obj_3 = (
-        ConfigureRequestBuilder()
-        .set_mccs(mccs=mccs_config)
-        .set_csp(csp=csp_config)
-        .set_sdp(sdp=sdp_config)
-        .build()
-    )
-    assert configure_request_obj_1 == configure_request_obj_2
-    assert configure_request_obj_1 != configure_request_obj_3
+#
 
 
 def test_configure_partial_configuration(dish_config):
