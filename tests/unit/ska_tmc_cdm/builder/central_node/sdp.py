@@ -1,3 +1,5 @@
+from typing import List
+
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
@@ -212,7 +214,7 @@ class ProcessingBlockConfigurationBuilder:
     def __init__(self) -> "ProcessingBlockConfigurationBuilder":
         self.pb_id = None
         self.workflow = None
-        self.parameters = None
+        self.parameters = {}
         self.dependencies = None
         self.sbi_ids = None
         self.script = None
@@ -289,7 +291,7 @@ class SDPConfigurationBuilder:
         return self
 
     def set_processing_blocks(
-        self, processing_blocks: ProcessingBlockConfiguration
+        self, processing_blocks: List[ProcessingBlockConfiguration]
     ) -> "SDPConfigurationBuilder":
         self.processing_blocks = processing_blocks
         return self
@@ -557,7 +559,7 @@ class ExecutionBlockConfigurationBuilder:
     def __init__(self) -> "ExecutionBlockConfigurationBuilder":
         self.eb_id = None
         self.max_length = None
-        self.context = None
+        self.context = {}
         self.beams = None
         self.channels = None
         self.polarisations = None

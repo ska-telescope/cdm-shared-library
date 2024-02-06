@@ -10,14 +10,6 @@ class ReleaseResourcesRequestBuilder:
 
     for TMC Observation Command
 
-    :param interface: url string to determine JsonSchema version, defaults to
-      https://schema.skao.int/ska-tmc-releaseresources/2.1 if not set
-    :param transaction_id: ID for tracking requests
-    :param subarray_id: the numeric SubArray ID (1..16)
-    :param release_all: True to release all sub-array resources, False to
-      release just those resources specified as other arguments
-    :param dish_allocation: object holding the DISH resource allocation
-      to release for this request.
     """
 
     def __init__(self) -> "ReleaseResourcesRequestBuilder":
