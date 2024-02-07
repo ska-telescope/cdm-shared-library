@@ -33,7 +33,7 @@ class ReleaseResourcesRequest:
     interface: Optional[str] = SCHEMA
     transaction_id: Optional[str] = None
     subarray_id: Optional[int] = None
-    release_all: StrictBool = True
+    release_all: StrictBool = False
     dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
 
     @model_validator(mode="after")
