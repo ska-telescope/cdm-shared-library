@@ -252,15 +252,15 @@ class CBFConfigurationBuilder:
         self.vlbi_config = None
 
     def set_fsp_config(
-        self, fsp_config: List[FSPConfiguration]
+        self, fsp_configs: List[FSPConfiguration]
     ) -> "CBFConfigurationBuilder":
         """
          Set Frequency Slice Processor (FSP) configuration.
 
-        :param fsp_config: An FSPConfiguration instance to add to the CBF configuration.
+        :param fsp_configs: List of  FSPConfiguration instance to add to the CBF configuration.
         :return: An instance of CBFConfigurationBuilder with the added FSP configuration.
         """
-        self.fsp_configs = fsp_config
+        self.fsp_configs = fsp_configs
         return self
 
     def set_vlbi_config(self, vlbi_config: dict) -> "CBFConfigurationBuilder":
@@ -513,7 +513,7 @@ class VisConfigurationBuilder:
         """
         Set the station beam configuration to the visibility configuration.
 
-        :param stn_beam: A StnBeamConfiguration instance to be added to the visibility configuration.
+        :param stn_beams: list of StnBeamConfiguration instance to be added to the visibility configuration.
         :return: An instance of VisConfigurationBuilder with the added station beam configuration.
         """
 

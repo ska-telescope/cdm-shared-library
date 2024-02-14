@@ -1,9 +1,9 @@
-from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
+from ska_tmc_cdm.messages.subarray_node.configure.sdp import SCHEMA, SDPConfiguration
 
 
 class SDPConfigurationBuilder:
     def __init__(self):
-        self.interface = "https://schema.skao.int/ska-sdp-configure/0.3"
+        self.interface = SCHEMA
         self.scan_type = None
 
     def set_interface(self, interface: str) -> "SDPConfigurationBuilder":

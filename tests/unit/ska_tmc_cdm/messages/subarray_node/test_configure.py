@@ -77,7 +77,14 @@ def test_configure_request_equality(
     # Initialize pointing based on config_type
     pointing_config = (
         PointingConfigurationBuilder()
-        .set_target(TargetBuilder().set_ra(1).set_dec(1).build())
+        .set_target(
+            TargetBuilder()
+            .set_ra(1)
+            .set_dec(1)
+            .set_ca_offset_arcsec(ca_offset_arcsec=5.0)
+            .set_ie_offset_arcsec(ie_offset_arcsec=5.0)
+            .build()
+        )
         .build()
     )
 
@@ -89,6 +96,11 @@ def test_configure_request_equality(
             .set_dish(dish=dish_config)
             .set_sdp(sdp=sdp_config)
             .set_csp(csp=csp_config)
+            .set_tmc(
+                tmc=TMCConfigurationBuilder()
+                .set_partial_configuration(partial_configuration=True)
+                .build()
+            )
             .build()
         )
         request_2 = copy.deepcopy(request) if use_deepcopy else request
@@ -98,6 +110,11 @@ def test_configure_request_equality(
             .set_mccs(mccs=mccs_config)
             .set_sdp(sdp=sdp_config)
             .set_csp(csp=csp_config)
+            .set_tmc(
+                tmc=TMCConfigurationBuilder()
+                .set_partial_configuration(partial_configuration=True)
+                .build()
+            )
             .build()
         )
         request_2 = copy.deepcopy(request) if use_deepcopy else request
@@ -108,6 +125,11 @@ def test_configure_request_equality(
             .set_dish(dish=dish_config)
             .set_sdp(sdp=sdp_config)
             .set_csp(csp=csp_config)
+            .set_tmc(
+                tmc=TMCConfigurationBuilder()
+                .set_partial_configuration(partial_configuration=True)
+                .build()
+            )
             .build()
         )
         request_2 = object()
@@ -127,9 +149,6 @@ def test_configure_request_mccs_independence(mccs_config, dish_config):
         ConfigureRequestBuilder().set_dish(dish=dish_config).set_mccs(
             mccs=mccs_config
         ).build()
-
-
-#
 
 
 def test_configure_partial_configuration(dish_config):

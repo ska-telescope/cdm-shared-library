@@ -80,6 +80,58 @@ class AssignResourcesRequestBuilder:
         self.transaction_id = transaction_id
         return self
 
+    @classmethod
+    def from_dish(
+        cls,
+        subarray_id: int,
+        dish_allocation: DishAllocation,
+        sdp_config: SDPConfiguration = None,
+        interface: str = None,
+        transaction_id: str = None,
+    ) -> "AssignResourcesRequestBuilder":
+        """
+        Initialize the builder for Mid Assign Resource request
+        :param subarray_id: the numeric SubArray ID (1..16)
+        :param dish_allocation: object holding the DISH resource allocation for this request.
+        :param sdp_config: sdp configuration
+        :param interface: Mid Assign Resource Interface version
+        :param: transaction_id: Transaction ID
+
+        """
+        builder = cls()
+        builder.subarray_id = subarray_id
+        builder.dish_allocation = dish_allocation
+        builder.sdp_config = sdp_config
+        builder.interface = interface
+        builder.transaction_id = transaction_id
+        return builder
+
+    @classmethod
+    def from_mccs(
+        cls,
+        subarray_id: int,
+        mccs: MCCSAllocate,
+        sdp_config: SDPConfiguration = None,
+        interface: str = None,
+        transaction_id: str = None,
+    ) -> "AssignResourcesRequestBuilder":
+        """
+        Initialize the builder for Low Assign Resource request
+        :param subarray_id: the numeric SubArray ID (1..16)
+        :param mccs: MCCS subarray allocation
+        :param sdp_config: SDP configuration
+        :param interface: url string to determine JsonSchema version
+        :param: transaction_id: Transaction ID
+
+        """
+        builder = cls()
+        builder.subarray_id = subarray_id
+        builder.mccs = mccs
+        builder.sdp_config = sdp_config
+        builder.interface = interface
+        builder.transaction_id = transaction_id
+        return builder
+
     def build(self) -> AssignResourcesRequest:
         """
         Builds or creates instance of CDM Assign Resource Request

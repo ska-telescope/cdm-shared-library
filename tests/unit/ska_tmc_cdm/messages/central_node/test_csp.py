@@ -1,6 +1,7 @@
 """
 Unit tests for the CentralNode.AssignResources csp module.
 """
+import pytest
 
 from tests.unit.ska_tmc_cdm.builder.central_node.csp import (
     CommonConfigurationBuilder,
@@ -9,73 +10,104 @@ from tests.unit.ska_tmc_cdm.builder.central_node.csp import (
     ResourceConfigurationBuilder,
 )
 
-
-def csp_configuration_builder(interface=None, common=None, lowcbf=None):
-    """This csp configuration builder is a test data builder for CDM csp configuration"""
-    return (
-        CSPConfigurationBuilder()
-        .set_interface(interface=interface)
-        .set_common(common=common)
-        .set_lowcbf(lowcbf=lowcbf)
-        .build()
-    )
+interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
 
 
-def common_configuration_builder(subarray_id=None):
-    """This common configuration builder is a test data builder for CDM common configuration"""
-    return CommonConfigurationBuilder().set_subarray_id(subarray_id=subarray_id).build()
-
-
-def lowcbf_configuration_builder(resources=None):
-    """This lowcbf configuration builder is a test data builder for CDM lowcbf configuration"""
-    return LowCbfConfigurationBuilder().set_resources(resources=resources).build()
-
-
-def resource_configuration_builder(
-    device=None, shared=None, fw_image=None, fw_mode=None
-):
-    """This resource configuration builder is a test data builder for CDM resource configuration"""
-    return (
-        ResourceConfigurationBuilder()
-        .set_device(device=device)
-        .set_shared(shared=shared)
-        .set_fw_image(fw_image=fw_image)
-        .set_fw_mode(fw_mode=fw_mode)
-        .build()
-    )
-
-
-interface1 = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
-resource1 = resource_configuration_builder(
-    device="fsp_01", shared=True, fw_image="pst", fw_mode="unused"
+@pytest.mark.parametrize(
+    "object1, object2, is_equal",
+    [
+        (  # equal
+            CSPConfigurationBuilder()
+            .set_interface(interface)
+            .set_common(
+                CommonConfigurationBuilder().set_subarray_id(subarray_id=1).build()
+            )
+            .set_lowcbf(
+                LowCbfConfigurationBuilder()
+                .set_resources(
+                    [
+                        ResourceConfigurationBuilder()
+                        .set_device("fsp_01")
+                        .set_shared(True)
+                        .set_fw_image("pst")
+                        .set_fw_mode("unused")
+                        .build()
+                    ]
+                )
+                .build()
+            )
+            .build(),
+            CSPConfigurationBuilder()
+            .set_interface(interface)
+            .set_common(
+                CommonConfigurationBuilder().set_subarray_id(subarray_id=1).build()
+            )
+            .set_lowcbf(
+                LowCbfConfigurationBuilder()
+                .set_resources(
+                    [
+                        ResourceConfigurationBuilder()
+                        .set_device("fsp_01")
+                        .set_shared(True)
+                        .set_fw_image("pst")
+                        .set_fw_mode("unused")
+                        .build()
+                    ]
+                )
+                .build()
+            )
+            .build(),
+            True,
+        ),
+        (  # not equal
+            CSPConfigurationBuilder()
+            .set_interface(interface)
+            .set_common(
+                CommonConfigurationBuilder().set_subarray_id(subarray_id=1).build()
+            )
+            .set_lowcbf(
+                LowCbfConfigurationBuilder()
+                .set_resources(
+                    [
+                        ResourceConfigurationBuilder()
+                        .set_device("fsp_01")
+                        .set_shared(True)
+                        .set_fw_image("pst")
+                        .set_fw_mode("unused")
+                        .build()
+                    ]
+                )
+                .build()
+            )
+            .build(),
+            CSPConfigurationBuilder()
+            .set_interface(interface)
+            .set_common(
+                CommonConfigurationBuilder().set_subarray_id(subarray_id=1).build()
+            )
+            .set_lowcbf(
+                LowCbfConfigurationBuilder()
+                .set_resources(
+                    [
+                        ResourceConfigurationBuilder()
+                        .set_device("p4_01")
+                        .set_shared(True)
+                        .set_fw_image("pst")
+                        .set_fw_mode("unused")
+                        .build()
+                    ]
+                )
+                .build()
+            )
+            .build(),
+            False,
+        ),
+    ],
 )
-resource2 = resource_configuration_builder(
-    device="p4_01", shared=True, fw_image="p4.bin", fw_mode="p4"
-)
-lowcbf2 = lowcbf_configuration_builder(resources=[resource1, resource2])
-common2 = common_configuration_builder(subarray_id=1)
-
-valid_obj = csp_configuration_builder(
-    interface=interface1, common=common2, lowcbf=lowcbf2
-)
-
-
-def test_valid():
+def test_csp_eq_check(object1, object2, is_equal):
     """
-    Verify that CSP object is create valid_command when valid input
+    Verify  object  of CSP with same properties are equal
+    And with different properties are different and also check equality with different object
     """
-    assert valid_obj.interface == interface1
-    assert valid_obj.common == common2
-    assert valid_obj.lowcbf == lowcbf2
-
-
-def test_eq():
-    """
-    Verify that two different CSP objects of same values considered equal
-    """
-    valid_obj2 = csp_configuration_builder(
-        interface=interface1, common=common2, lowcbf=lowcbf2
-    )
-    assert valid_obj == valid_obj2
-    assert valid_obj != int(1)
-    assert valid_obj != object
+    assert (object1 == object2) == is_equal
+    assert object1 != object()

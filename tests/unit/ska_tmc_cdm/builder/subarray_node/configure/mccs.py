@@ -184,7 +184,7 @@ class MCCSConfigurationBuilder:
     ) -> "MCCSConfigurationBuilder":
         """
         Set station configuration
-        :param station_config: list of station configuration instance
+        :param station_configs: list of station configuration instance
         """
         self.station_configs = station_configs
         return self
@@ -194,7 +194,7 @@ class MCCSConfigurationBuilder:
     ) -> "MCCSConfigurationBuilder":
         """
         Set subarray beam configuration
-        :param subarray_beam_config: list of subarray beam configuration instance
+        :param subarray_beam_configs: list of subarray beam configuration instance
         """
         self.subarray_beam_configs = subarray_beam_configs
         return self

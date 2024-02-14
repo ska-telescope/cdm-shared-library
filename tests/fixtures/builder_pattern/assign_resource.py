@@ -10,8 +10,8 @@ from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     ChannelConfigurationBuilder,
     PolarisationConfigurationBuilder,
     PhaseDirBuilder,
-    FieldConfigurationBuilder
-    )
+    FieldConfigurationBuilder, ExecutionBlockConfigurationBuilder, SDPConfigurationBuilder
+)
 
 
 @pytest.fixture(scope="module")
@@ -67,6 +67,7 @@ def processing_block_parameters():
         },
     }
 
+
 @pytest.fixture(scope="module")
 def channel():
     """
@@ -84,6 +85,7 @@ def channel():
         .build()
     )
 
+
 @pytest.fixture(scope="module")
 def eb_scan_type():
     """
@@ -96,6 +98,7 @@ def eb_scan_type():
         .set_derive_from(derive_from=".default")
         .build()
     )
+
 
 @pytest.fixture(scope="module")
 def scan_type(channel):
@@ -112,6 +115,7 @@ def scan_type(channel):
         .build()
     )
 
+
 @pytest.fixture(scope="module")
 def workflow():
     """
@@ -125,17 +129,20 @@ def workflow():
         .build()
     )
 
+
 @pytest.fixture(scope="module")
-def processing_block(workflow):
+def processing_block(workflow, processing_block_parameters):
     """
     Provides CDM ProcessingBlock configuration instance through ProcessingBlockConfigurationBuilder builder class
     """
     return (
         ProcessingBlockConfigurationBuilder()
+        .set_parameters(parameters=processing_block_parameters)
         .set_pb_id(pb_id="pb-mvp01-20200325-00001")
         .set_workflow(workflow=workflow)
         .build()
     )
+
 
 @pytest.fixture(scope="module")
 def beams():
@@ -149,6 +156,7 @@ def beams():
         .build()
     )
 
+
 @pytest.fixture(scope="module")
 def channels(channel):
     """
@@ -161,8 +169,9 @@ def channels(channel):
         .build()
     )
 
+
 @pytest.fixture(scope="module")
-def polarisatrion_config():
+def polarisation_config():
     """
     Provides CDM Polarisation configuration instance through PolarisationConfigurationBuilder builder class
     """
@@ -172,6 +181,7 @@ def polarisatrion_config():
         .set_corr_type(corr_type=["XX", "XY", "YY", "YX"])
         .build()
     )
+
 
 @pytest.fixture(scope="module")
 def phase_dir():
@@ -187,6 +197,7 @@ def phase_dir():
         .build()
     )
 
+
 @pytest.fixture(scope="module")
 def field_config(phase_dir):
     """
@@ -197,5 +208,39 @@ def field_config(phase_dir):
         .set_field_id(field_id="field_a")
         .set_pointing_fqdn(pointing_fqdn="low-tmc/telstate/0/pointing")
         .set_phase_dir(phase_dir=phase_dir)
+        .build()
+    )
+
+
+@pytest.fixture(scope="module")
+def execution_block(beams, channels, polarisation_config, field_config, eb_scan_type):
+    """
+    Provides CDM Execution Block configuration instance through ExecutionBlockConfigurationBuilder builder class
+    """
+    return (
+        ExecutionBlockConfigurationBuilder()
+        .set_eb_id(eb_id="eb-mvp01-20200325-00001")
+        .set_max_length(max_length=3600)
+        .set_beams(beams=[beams])
+        .set_channels(channels=[channels])
+        .set_polarisations(polarisations=[polarisation_config])
+        .set_fields(fields=[field_config])
+        .set_scan_types(scan_types=[eb_scan_type])
+        .build()
+    )
+
+
+@pytest.fixture(scope="module")
+def sdp_allocate(processing_block, execution_block, scan_type):
+    """
+    Provides CDM SDP configuration instance through SDPConfigurationBuilder builder class
+    """
+    return (
+        SDPConfigurationBuilder()
+        .set_eb_id(eb_id="sbi-mvp01-20200325-00001")
+        .set_max_length(max_length=100.0)
+        .set_scan_types(scan_types=[scan_type])
+        .set_processing_blocks(processing_blocks=[processing_block])
+        .set_execution_block(execution_block=execution_block)
         .build()
     )

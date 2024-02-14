@@ -35,6 +35,7 @@ class ChannelBuilder:
         self.freq_min = None
         self.freq_max = None
         self.link_map = None
+        self.spectral_window_id = None
 
     def set_count(self, count: int) -> "ChannelBuilder":
         self.count = count
@@ -72,6 +73,7 @@ class ChannelBuilder:
             self.freq_min,
             self.freq_max,
             self.link_map,
+            self.spectral_window_id,
         )
 
 
@@ -234,7 +236,7 @@ class ProcessingBlockConfigurationBuilder:
         return self
 
     def set_dependencies(
-        self, dependencies: PbDependency
+        self, dependencies: List[PbDependency]
     ) -> "ProcessingBlockConfigurationBuilder":
         self.dependencies = dependencies
         return self
