@@ -7,6 +7,7 @@ from os import environ
 
 from ska_telmodel import schema
 from ska_telmodel.data import TMData
+from ska_telmodel.osd.osd import osd_tmdata_source
 from ska_telmodel.telvalidation import semantic_validator as televalidation_schema
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
@@ -87,14 +88,13 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         """
         if env_var_sources := environ.get("SKA_TELMODEL_SOURCES"):
             data_sources = env_var_sources.split(",")
+            osd_tmdata_source(source="file")
         else:
             data_sources = CAR_TELMODEL_SOURCE
         tm_data = TMData(source_uris=data_sources, update=True)
         try:
             return televalidation_schema.semantic_validate(
-                config=instance,
-                tm_data=tm_data,
-                interface=uri,
+                observing_command_input=instance, tm_data=tm_data, interface=uri
             )
 
         except SchematicValidationError as exc:
