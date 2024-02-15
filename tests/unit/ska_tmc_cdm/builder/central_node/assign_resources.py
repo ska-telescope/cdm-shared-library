@@ -6,7 +6,7 @@ from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
 from ska_tmc_cdm.messages.central_node.sdp import SDPConfiguration
 
-_all__ = ["AssignResourcesRequestBuilder"]
+__all__ = ["AssignResourcesRequestBuilder"]
 
 
 class AssignResourcesRequestBuilder:

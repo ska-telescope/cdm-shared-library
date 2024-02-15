@@ -257,7 +257,7 @@ class CBFConfigurationBuilder:
         """
          Set Frequency Slice Processor (FSP) configuration.
 
-        :param fsp_configs: List of  FSPConfiguration instance to add to the CBF configuration.
+        :param fsp_configs: List of FSPConfiguration instance to add to the CBF configuration.
         :return: An instance of CBFConfigurationBuilder with the added FSP configuration.
         """
         self.fsp_configs = fsp_configs

@@ -134,10 +134,7 @@ def test_configure_request_equality(
         )
         request_2 = object()
 
-    if is_equal:
-        assert request == request_2
-    else:
-        assert request != request_2
+    assert (request == request_2) == is_equal
 
 
 def test_configure_request_mccs_independence(mccs_config, dish_config):

@@ -10,7 +10,9 @@ from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     ChannelConfigurationBuilder,
     PolarisationConfigurationBuilder,
     PhaseDirBuilder,
-    FieldConfigurationBuilder, ExecutionBlockConfigurationBuilder, SDPConfigurationBuilder
+    FieldConfigurationBuilder,
+    ExecutionBlockConfigurationBuilder,
+    SDPConfigurationBuilder
 )
 
 
