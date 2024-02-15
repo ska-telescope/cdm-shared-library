@@ -92,9 +92,7 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         tm_data = TMData(source_uris=data_sources, update=True)
         try:
             return televalidation_schema.semantic_validate(
-                config=instance,
-                tm_data=tm_data,
-                interface=uri,
+                observing_command_input=instance, tm_data=tm_data, interface=uri
             )
 
         except SchematicValidationError as exc:
