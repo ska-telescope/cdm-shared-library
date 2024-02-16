@@ -5,6 +5,11 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
+[8.3.0]
+*******
+
+* Updated version of telmodel which has first (early) version of Observatory Static Data (OSD).
+  Added semantic validation support for SBD.
 
 [8.2.0]
 *******
