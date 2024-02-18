@@ -119,7 +119,7 @@ def scan_type(channel):
 
 
 @pytest.fixture(scope="module")
-def workflow():
+def sdp_workflow():
     """
     Provides CDM SDPWorkflow configuration instance through SDPWorkflowBuilder builder class
     """
@@ -133,7 +133,7 @@ def workflow():
 
 
 @pytest.fixture(scope="module")
-def processing_block(workflow, processing_block_parameters):
+def processing_block(sdp_workflow, processing_block_parameters):
     """
     Provides CDM ProcessingBlock configuration instance through ProcessingBlockConfigurationBuilder builder class
     """
@@ -141,7 +141,7 @@ def processing_block(workflow, processing_block_parameters):
         ProcessingBlockConfigurationBuilder()
         .set_parameters(parameters=processing_block_parameters)
         .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-        .set_workflow(workflow=workflow)
+        .set_workflow(workflow=sdp_workflow)
         .build()
     )
 

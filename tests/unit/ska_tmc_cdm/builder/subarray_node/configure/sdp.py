@@ -22,7 +22,7 @@ class SDPConfigurationBuilder:
         self.scan_type = scan_type
         return self
 
-    def build(self):
+    def build(self) -> SDPConfiguration:
         """
         Build or create SDP configuration
         :return: CDM SDP configuration instance
