@@ -16,18 +16,34 @@ class MCCSAllocateBuilder:
         self.station_ids = None
 
     def set_subarray_beam_ids(self, subarray_beam_ids: list) -> "MCCSAllocateBuilder":
+        """
+        Set subarray_beam_ids
+        :param subarray_beam_ids: subarray_beam_ids
+        """
         self.subarray_beam_ids = subarray_beam_ids
         return self
 
     def set_station_ids(self, station_ids: list) -> "MCCSAllocateBuilder":
+        """
+        Set station_ids
+        :param station_ids: station_ids
+        """
         self.station_ids = station_ids
         return self
 
     def set_channel_blocks(self, channel_blocks: list) -> "MCCSAllocateBuilder":
+        """
+        Set channel_blocks
+        :param channel_blocks: channel_blocks
+        """
         self.channel_blocks = channel_blocks
         return self
 
     def build(self) -> MCCSAllocate:
+        """
+        Build or create CDM MCCSAllocate object
+        :return: CDM MCCSAllocate object
+        """
         return MCCSAllocate(
             subarray_beam_ids=self.subarray_beam_ids,
             station_ids=self.station_ids,

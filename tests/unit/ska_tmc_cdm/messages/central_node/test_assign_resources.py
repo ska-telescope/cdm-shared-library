@@ -87,55 +87,6 @@ def test_assign_resources_request_dish_and_mccs_fail():
         ).set_mccs(mccs=mccs_allocate).build()
 
 
-@pytest.mark.parametrize(
-    "object1, object2, is_equal",
-    [
-        # Case where both responses have the same dish allocation
-        (
-            AssignResourcesResponseBuilder()
-            .set_dish(
-                dish_allocation=DishAllocateBuilder()
-                .set_receptor_ids(frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .build(),
-            AssignResourcesResponseBuilder()
-            .set_dish(
-                dish_allocation=DishAllocateBuilder()
-                .set_receptor_ids(frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .build(),
-            True,
-        ),
-        # Case where responses have different dish allocations
-        (
-            AssignResourcesResponseBuilder()
-            .set_dish(
-                dish_allocation=DishAllocateBuilder()
-                .set_receptor_ids(frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .build(),
-            AssignResourcesResponseBuilder()
-            .set_dish(
-                dish_allocation=DishAllocateBuilder()
-                .set_receptor_ids(frozenset(["b", "aab"]))
-                .build()
-            )
-            .build(),
-            False,
-        ),
-    ],
-)
-def test_assign_resources_response_equality_check(object1, object2, is_equal):
-    """
-    Verify that AssignResourcesResponse objects are equal or not equal based on their dish allocations.
-    """
-    assert (object1 == object2) == is_equal
-    assert object1 != object()
-
-
 def test_assign_resources_if_no_subarray_id_argument():
     """
     Verify that the boolean release_all_mid argument is required.
@@ -162,104 +113,6 @@ def test_assign_resources_if_no_subarray_id_argument():
             .set_dish_allocation(dish_allocation=dish_allocation)
             .build()
         )
-
-
-@pytest.mark.parametrize(
-    "object1, object2, is_equal",
-    [
-        (  # MCCS
-            AssignResourcesRequestBuilder()
-            .set_subarray_id(subarray_id=1)
-            .set_mccs(
-                mccs=MCCSAllocateBuilder()
-                .set_subarray_beam_ids(subarray_beam_ids=[1])
-                .set_station_ids(station_ids=[[1, 2]])
-                .set_channel_blocks(channel_blocks=[3])
-                .build()
-            )
-            .build(),
-            AssignResourcesRequestBuilder()
-            .set_subarray_id(subarray_id=1)
-            .set_mccs(
-                mccs=MCCSAllocateBuilder()
-                .set_subarray_beam_ids(subarray_beam_ids=[1])
-                .set_station_ids(station_ids=[[1, 2]])
-                .set_channel_blocks(channel_blocks=[3])
-                .build()
-            )
-            .build(),
-            True,
-        ),
-        (
-            AssignResourcesRequestBuilder()
-            .set_subarray_id(subarray_id=1)
-            .set_mccs(
-                mccs=MCCSAllocateBuilder()
-                .set_subarray_beam_ids(subarray_beam_ids=[1])
-                .set_station_ids(station_ids=[[1, 2]])
-                .set_channel_blocks(channel_blocks=[3])
-                .build(),
-            )
-            .build(),
-            AssignResourcesRequestBuilder()
-            .set_subarray_id(subarray_id=2)
-            .set_mccs(
-                mccs=MCCSAllocateBuilder()
-                .set_subarray_beam_ids(subarray_beam_ids=[1])
-                .set_station_ids(station_ids=[[1, 2]])
-                .set_channel_blocks(channel_blocks=[3])
-                .build(),
-            )
-            .build(),
-            False,
-        ),
-        (  # Dish
-            AssignResourcesRequestBuilder()
-            .set_subarray_id(subarray_id=1)
-            .set_dish_allocation(
-                dish_allocation=DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .build(),
-            AssignResourcesRequestBuilder()
-            .set_subarray_id(subarray_id=1)
-            .set_dish_allocation(
-                dish_allocation=DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .build(),
-            True,
-        ),
-        (
-            AssignResourcesRequestBuilder()
-            .set_subarray_id(subarray_id=1)
-            .set_dish_allocation(
-                dish_allocation=DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .build(),
-            AssignResourcesRequestBuilder()
-            .set_subarray_id(subarray_id=1)
-            .set_dish_allocation(
-                dish_allocation=DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["b", "aab"]))
-                .build()
-            )
-            .build(),
-            False,
-        ),
-    ],
-)
-def test_assign_resource_eq_check(object1, object2, is_equal):
-    """
-    Verify  object  of Assign Resource with same Dish and MCCS properties are equal
-    And with different properties are different and also check equality with different object
-    """
-    assert (object1 == object2) == is_equal
-    assert object1 != object()
 
 
 def test_low_assign_resources_request(
@@ -404,3 +257,136 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
     ).build()
 
     assert request1 == request2
+
+
+@pytest.mark.parametrize(
+    "object1, object2, is_equal",
+    [
+        # Case where both responses have the same dish allocation
+        (
+            AssignResourcesResponseBuilder()
+            .set_dish(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            AssignResourcesResponseBuilder()
+            .set_dish(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            True,
+        ),
+        # Case where responses have different dish allocations
+        (
+            AssignResourcesResponseBuilder()
+            .set_dish(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            AssignResourcesResponseBuilder()
+            .set_dish(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(frozenset(["b", "aab"]))
+                .build()
+            )
+            .build(),
+            False,
+        ),
+        (  # MCCS Equality
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build()
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build()
+            )
+            .build(),
+            True,
+        ),
+        (
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build(),
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=2)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build(),
+            )
+            .build(),
+            False,
+        ),
+        (  # Dish Equality
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_dish_allocation(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_dish_allocation(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            True,
+        ),
+        (
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_dish_allocation(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
+                .build()
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_dish_allocation(
+                dish_allocation=DishAllocateBuilder()
+                .set_receptor_ids(receptor_ids=frozenset(["b", "aab"]))
+                .build()
+            )
+            .build(),
+            False,
+        ),
+    ],
+)
+def test_assign_resources_equality_check(object1, object2, is_equal):
+    """
+    Verify that AssignResourcesResponse objects are equal or not equal based on their dish allocations.
+    """
+    assert (object1 == object2) == is_equal
+    assert object1 != object()
