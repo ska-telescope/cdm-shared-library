@@ -1,27 +1,57 @@
 """
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
+import pytest
 
-from ska_tmc_cdm.messages.central_node.common import DishAllocation
+from tests.unit.ska_tmc_cdm.builder.central_node.common import DishAllocateBuilder
 
 
-def test_dish_allocation_eq():
+@pytest.mark.parametrize(
+    "object1, object2, is_equal",
+    [
+        # equal
+        (
+            DishAllocateBuilder()
+            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
+            .build(),
+            DishAllocateBuilder()
+            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
+            .build(),
+            True,
+        ),
+        # equal but different order
+        (
+            DishAllocateBuilder()
+            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
+            .build(),
+            DishAllocateBuilder()
+            .set_receptor_ids(frozenset(["b", "ac", "aab"]))
+            .build(),
+            True,
+        ),
+        # one receptor list is a subset of the other
+        (
+            DishAllocateBuilder()
+            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
+            .build(),
+            DishAllocateBuilder().set_receptor_ids(frozenset(["ac"])).build(),
+            False,
+        ),
+        # one list has an additional receptor
+        (
+            DishAllocateBuilder()
+            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
+            .build(),
+            DishAllocateBuilder()
+            .set_receptor_ids(frozenset(["ac", "b", "aab", "d"]))
+            .build(),
+            False,
+        ),
+    ],
+)
+def test_dish_allocation_equality_check(object1, object2, is_equal):
     """
-    Verify that two DishAllocations with the same allocated receptors are
-    considered equal.
+    Verify that DishAllocation objects are considered equal if attributes have same value and not equal if they differ.
     """
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
-    assert dish_allocation == DishAllocation(receptor_ids=["ac", "b", "aab"])
-    assert dish_allocation == DishAllocation(receptor_ids=["b", "ac", "aab"])
-    assert dish_allocation != DishAllocation(receptor_ids=["ac"])
-    assert dish_allocation != DishAllocation(receptor_ids=["ac", "b", "aab", "d"])
-
-
-def test_dish_allocation_eq_with_other_objects():
-    """
-    Verify that a DishAllocation is considered unequal to objects of other
-    types.
-    """
-    dish_allocation = DishAllocation(receptor_ids=["ac", "b", "aab"])
-    assert dish_allocation != 1
-    assert dish_allocation != object()
+    assert (object1 == object2) == is_equal
+    assert object2 != object()

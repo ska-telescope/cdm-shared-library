@@ -1,15 +1,34 @@
 """
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.tmc module.
 """
+import pytest
 
-from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.tmc import (
+    TMCConfigurationBuilder,
+)
 
 
-def test_tmcconfiguration_equals():
+@pytest.mark.parametrize(
+    "tmc_config_a,tmc_config_b,is_equal",
+    [
+        (
+            TMCConfigurationBuilder().set_scan_duration(1.23).build(),
+            TMCConfigurationBuilder().set_scan_duration(1.23).build(),
+            True,
+        ),
+        (
+            TMCConfigurationBuilder().set_scan_duration(1.23).build(),
+            TMCConfigurationBuilder().set_scan_duration(4.56).build(),
+            False,
+        ),
+    ],
+)
+def test_tmc_configuration_equality(tmc_config_a, tmc_config_b, is_equal):
     """
-    Verify that TMCConfigurations are considered equal when all attributes are
-    equal.
+    Verify that TMC configuration objects are equal when they have the same value,not equal for different value
+    And that TMC configuration objects are not considered equal to objects of
+    other types.
     """
-    o = TMCConfiguration(scan_duration=1.23)
-    assert o == TMCConfiguration(scan_duration=1.23)
-    assert o != TMCConfiguration(scan_duration=4.56)
+    assert (tmc_config_a == tmc_config_b) == is_equal
+    assert tmc_config_a != 1
+    assert tmc_config_b != object
