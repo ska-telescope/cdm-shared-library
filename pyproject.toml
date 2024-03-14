@@ -37,7 +37,8 @@ marshmallow = "^3.18.0"
 marshmallow-oneofschema = "^3.0.1"
 astropy = "^5.1"
 marshmallow-enum = "^1.5.1"
-ska-telmodel = "^1.13.0"
+# Pinned to 1.13.0 due to a bug in version 1.14.0 and can be removed when a new version is released.
+ska-telmodel = "1.13.0"
 deepdiff = "^5.8.1"
 pydantic = "^2.3.0"
 
