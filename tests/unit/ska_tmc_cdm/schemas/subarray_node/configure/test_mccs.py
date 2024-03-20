@@ -6,7 +6,10 @@ import pytest
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
     StnConfiguration,
+    SubarrayBeamAperatures,
     SubarrayBeamConfiguration,
+    SubarrayBeamLogicalBands,
+    SubarrayBeamSkyCoordinates,
     SubarrayBeamTarget,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure.mccs import (
@@ -62,6 +65,18 @@ VALID_SUBARRAYBEAMCONFIGURATION_OBJECT = SubarrayBeamConfiguration(
     target=VALID_SUBARRAYBEAMTARGET_OBJECT,
     antenna_weights=[1.0, 1.0, 1.0],
     phase_centre=[0.0, 0.0],
+    logical_bands=[SubarrayBeamLogicalBands(start_channel=80, number_of_channels=16)],
+    apertures=[
+        SubarrayBeamAperatures(aperture_id="AP001.01", weighting_key_ref="aperture2")
+    ],
+    sky_coordinates=SubarrayBeamSkyCoordinates(
+        "2021-10-23T12:34:56.789Z",
+        "ICRS",
+        180.0,
+        0.0,
+        45.0,
+        0.0,
+    ),
 )
 
 VALID_MCCSCONFIGURATION_JSON = (

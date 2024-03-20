@@ -9,7 +9,6 @@ from ska_telmodel import schema
 from ska_telmodel.data import TMData
 from ska_telmodel.telvalidation import semantic_validator as televalidation_schema
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
-
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
 __all__ = ["JsonSchema"]

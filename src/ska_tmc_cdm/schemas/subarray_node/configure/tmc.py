@@ -31,7 +31,7 @@ class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
 
         :param data: the scan_duration timedelta
         :param _: kwargs passed by Marshallow
-        :return: float converted
+        :return: float convertedomit_default_values_from_configuration
         """
         copied = copy.deepcopy(data)
         if data.scan_duration:

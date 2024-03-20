@@ -245,6 +245,7 @@ class StnBeamConfigurationSchema(Schema):
     )
     mac = fields.List(fields.Tuple((fields.Integer, fields.String)), data_key="mac")
     integration_ms = fields.Integer(data_key="integration_ms")
+    beam_id = fields.Integer(data_key="beam_id")
 
     @post_load
     def create(self, data, **_):
@@ -263,6 +264,7 @@ class StnBeamConfigurationSchema(Schema):
         port = data.get("port", None)
         mac = data.get("mac", None)
         integration_ms = data.get("integration_ms", None)
+        beam_id = data.get("beam_id", None)
 
         return StnBeamConfiguration(
             stn_beam_id=stn_beam_id,
@@ -271,6 +273,7 @@ class StnBeamConfigurationSchema(Schema):
             port=port,
             mac=mac,
             integration_ms=integration_ms,
+            beam_id=beam_id,
         )
 
     @post_dump
@@ -290,6 +293,7 @@ class StnBeamConfigurationSchema(Schema):
 class VisFspConfigurationSchema(Schema):
     function_mode = fields.String(data_key="function_mode")
     fsp_ids = fields.List(fields.Integer, data_key="fsp_ids")
+    firmware = fields.String(data_key="firmware")
 
     @post_load
     def create(self, data, **_):
@@ -304,7 +308,10 @@ class VisFspConfigurationSchema(Schema):
         """
         function_mode = data.get("function_mode", None)
         fsp_ids = data.get("fsp_ids", None)
-        return VisFspConfiguration(function_mode=function_mode, fsp_ids=fsp_ids)
+        firmware = data.get("firmware", None)
+        return VisFspConfiguration(
+            function_mode=function_mode, fsp_ids=fsp_ids, firmware=firmware
+        )
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use

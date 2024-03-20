@@ -113,6 +113,7 @@ class StnBeamConfiguration:
     """
 
     stn_beam_id: Optional[int] = None
+    beam_id: Optional[int] = None
     freq_ids: Optional[List[int]] = None
     host: Optional[List[Tuple[int, str]]] = None
     port: Optional[List[Tuple[int, int, int]]] = None
@@ -144,15 +145,16 @@ class VisFspConfiguration:
 
     function_mode: Optional[str] = None
     fsp_ids: Optional[List[int]] = None
+    firmware: Optional[str] = None
 
 
 @dataclass
 class VisConfiguration:
     """
-    Class to hold Vis Configuration.
-
-    :param fsp: fsp
-    :param stn_beams: stn_beams
+        Class to hold Vis Configuration.
+    firmware
+        :param fsp: fsp
+        :param stn_beams: stn_beams
     """
 
     fsp: Optional[VisFspConfiguration] = None

@@ -13,6 +13,9 @@ __all__ = [
     "StnConfiguration",
     "SubarrayBeamConfiguration",
     "SubarrayBeamTarget",
+    "SubarrayBeamSkyCoordinates",
+    "SubarrayBeamLogicalBands",
+    "SubarrayBeamAperatures",
 ]
 
 
@@ -48,6 +51,62 @@ class StnConfiguration:
 
 
 @dataclass
+class SubarrayBeamSkyCoordinates:
+    """
+    A class to hold Subarray Beam sky coordinates configuration items
+    :param timestamp: UTC time for begin of drift.
+    :type timestamp: str
+    :param reference_frame: Must be one of: ["topocentric", "ICRS", "galactic"]
+    :type reference_frame: str
+    :param c1: first coordinate, RA or azimuth, in degrees
+    :type c1: float
+    :param c1_rate: Drift rate for first coordinate
+    :type c1_rate: float
+    :param c2: second coordinate, RA or azimuth, in degrees
+    :type c2: float
+    :param c2_rate: Drift rate for second coordinate
+    :type c2_rate: float
+    """
+
+    time_stamp: str = None
+    reference_frame: str = None
+    c1: float = None
+    c1_rate: float = None
+    c2: float = None
+    c2_rate: float = None
+
+
+@dataclass
+class SubarrayBeamLogicalBands:
+    """
+    A class to hold Subarray Beam logical bands configuration items
+    :param start_channel: Start channel value.
+    :type start_channel: str
+    :param number_of_channels: No of channels
+    :type number_of_channels: str
+    """
+
+    start_channel: int = None
+    number_of_channels: int = None
+
+
+@dataclass
+class SubarrayBeamAperatures:
+    """
+    A class to hold Subarray Beam aperatures configuration
+    items
+    :param aperture_id: Aperture ID.
+    :type aperture_id: str
+    :param weighting_key_ref: Descriptive ID for the aperture
+    weights in the aperture database.
+    :type weighting_key_ref: str
+    """
+
+    aperture_id: str = None
+    weighting_key_ref: str = None
+
+
+@dataclass
 class SubarrayBeamConfiguration:
     """A class to hold subarray_beam configuration attributes
 
@@ -74,6 +133,9 @@ class SubarrayBeamConfiguration:
     target: SubarrayBeamTarget
     antenna_weights: List[float]
     phase_centre: List[float]
+    logical_bands: List[SubarrayBeamLogicalBands]
+    apertures: List[SubarrayBeamAperatures]
+    sky_coordinates: SubarrayBeamSkyCoordinates
 
 
 @dataclass(kw_only=True)

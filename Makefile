@@ -10,7 +10,7 @@ PROJECT_NAME := ska-tmc-cdm
 TMDATA_VERSION := $(shell python -c 'from importlib.metadata import version; print(version("ska_telmodel"))')
 
 OCI_IMAGE_BUILD_CONTEXT = $(PWD)
-
+MARK ?=
 # unset defaults so settings in pyproject.toml take effect
 PYTHON_SWITCHES_FOR_BLACK =
 PYTHON_SWITCHES_FOR_ISORT =
@@ -31,7 +31,6 @@ PYTHON_SWITCHES_FOR_FLAKE8 = --max-line-length=88 \
 
 # include your own private variables for custom deployment configuration
 -include PrivateRules.mak
-
 python-pre-test: tests/fixtures/tmdata/
 
 tests/fixtures/tmdata/:

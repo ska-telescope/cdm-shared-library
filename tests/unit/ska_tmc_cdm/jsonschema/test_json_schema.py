@@ -5,9 +5,9 @@ import copy
 import json
 
 import pytest
+
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 from ska_telmodel.tmc.examples import LOW_TMC_RELEASERESOURCES_1_0 as VALID_JSON
-
 from ska_tmc_cdm.jsonschema.json_schema import (
     JsonSchema,
     JsonValidationError,
@@ -21,6 +21,7 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
 )
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
+    VALID_LOW_CONFIGURE_3_2_JSON,
     VALID_LOW_CONFIGURE_JSON,
 )
 
@@ -124,9 +125,44 @@ def test_semantic_validation_low_tmc_configure_with_valid_json():
     assert result
 
 
+# @pytest.mark.hope
+def test_semantic_validation_low_tmc_configure_3_2_with_valid_json():
+    """
+    Verify semantic validation with test low configure valid json
+    """
+    LOW_CONFIGURE_VALID_3_2_JSON = json.loads(VALID_LOW_CONFIGURE_3_2_JSON)
+    json_schema_obj = JsonSchema()
+    result = json_schema_obj.semantic_validate_schema(
+        instance=LOW_CONFIGURE_VALID_3_2_JSON,
+        uri=LOW_CONFIGURE_VALID_3_2_JSON["interface"],
+    )
+    assert result
+
+
 def test_semantic_validation_low_tmc_configure_with_invalid_json():
     """
     Verify semantic validation with test low configure invalid json
+    """
+    LOW_CONFIGURE_INVALID_JSON = json.loads(INVALID_LOW_CONFIGURE_JSON)
+    json_schema_obj = JsonSchema()
+
+    try:
+        json_schema_obj.semantic_validate_schema(
+            instance=LOW_CONFIGURE_INVALID_JSON,
+            uri=LOW_CONFIGURE_INVALID_JSON["interface"],
+        )
+    except SchematicValidationError as error:
+        assert error.message == (
+            "stations are too many! Current limit is 6\n"
+            "Invalid input for function mode! Currently allowed vis\n"
+            "The fsp_ids should all be distinct\n"
+            "fsp_ids are too many!Current Limit is 6"
+        )
+
+
+def test_semantic_validation_low_tmc_configure_3_2_with_invalid_json():
+    """
+    Verify semantic validation with test low configure 3.2 schema invalid json
     """
     LOW_CONFIGURE_INVALID_JSON = json.loads(INVALID_LOW_CONFIGURE_JSON)
     json_schema_obj = JsonSchema()
