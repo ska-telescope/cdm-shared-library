@@ -93,6 +93,9 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     Verify that the codec unmarshalls objects correctly.
     """
     unmarshalled = CODEC.loads(msg_cls, json_str, validate=is_validate)
+    print(unmarshalled)
+    print("----------------------------------------")
+    print(expected)
     assert unmarshalled == expected
 
 
@@ -208,8 +211,6 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
 
     # validation should occur regardless of strictness, but exceptions are
     # only raised when strictness=2
-    # delay_key = {"delay_poly": "tango://delays.skao.int/low/stn-beam/1"}
-    # invalid_data.csp.lowcbf.stations.stn_beams.append(delay_key)
     CODEC.dumps(invalid_data, strictness=0)
     CODEC.dumps(invalid_data, strictness=1)
     with pytest.raises(SchemaNotFound):

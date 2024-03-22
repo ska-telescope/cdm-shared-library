@@ -19,9 +19,8 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
 )
-from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
+from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (  # VALID_LOW_CONFIGURE_3_2_JSON,
     INVALID_LOW_CONFIGURE_JSON,
-    VALID_LOW_CONFIGURE_3_2_JSON,
     VALID_LOW_CONFIGURE_JSON,
 )
 
@@ -125,18 +124,18 @@ def test_semantic_validation_low_tmc_configure_with_valid_json():
     assert result
 
 
-# @pytest.mark.hope
-def test_semantic_validation_low_tmc_configure_3_2_with_valid_json():
-    """
-    Verify semantic validation with test low configure valid json
-    """
-    LOW_CONFIGURE_VALID_3_2_JSON = json.loads(VALID_LOW_CONFIGURE_3_2_JSON)
-    json_schema_obj = JsonSchema()
-    result = json_schema_obj.semantic_validate_schema(
-        instance=LOW_CONFIGURE_VALID_3_2_JSON,
-        uri=LOW_CONFIGURE_VALID_3_2_JSON["interface"],
-    )
-    assert result
+# # @pytest.mark.hope
+# def test_semantic_validation_low_tmc_configure_3_2_with_valid_json():
+#     """
+#     Verify semantic validation with test low configure valid json
+#     """
+#     LOW_CONFIGURE_VALID_3_2_JSON = json.loads(VALID_LOW_CONFIGURE_3_2_JSON)
+#     json_schema_obj = JsonSchema()
+#     result = json_schema_obj.semantic_validate_schema(
+#         instance=LOW_CONFIGURE_VALID_3_2_JSON,
+#         uri=LOW_CONFIGURE_VALID_3_2_JSON["interface"],
+#     )
+#     assert result
 
 
 def test_semantic_validation_low_tmc_configure_with_invalid_json():

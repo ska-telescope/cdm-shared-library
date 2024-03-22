@@ -102,9 +102,9 @@ class SubarrayBeamConfiguration:
     sky_coordinates: list[float]
     antenna_weights: list[float]
     phase_centre: list[float]
-    logical_bands: list[SubarrayBeamLogicalBands]
-    apertures: list[SubarrayBeamAperatures]
-    sky_coordinates: SubarrayBeamSkyCoordinates
+    # logical_bands: list[SubarrayBeamLogicalBands]
+    # apertures: list[SubarrayBeamAperatures]
+    # sky_coordinates: SubarrayBeamSkyCoordinates
 
 
 @dataclass(kw_only=True)

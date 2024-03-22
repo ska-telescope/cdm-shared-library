@@ -79,7 +79,7 @@ class SubarrayConfiguration:
     :param sub-array_name: Name of the sub-array
     """
 
-    subarray_name: str
+    subarray_name: Optional[str] = ""
 
 
 @dataclass
@@ -93,7 +93,7 @@ class CommonConfiguration:
     :param band_5_tuning: band 5 receiver to set (optional)
     """
 
-    config_id: str
+    config_id: Optional[str] = ""
     frequency_band: Optional[core.ReceiverBand] = None
     subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
