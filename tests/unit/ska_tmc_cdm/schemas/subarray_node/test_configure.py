@@ -1202,7 +1202,6 @@ def test_low_configure_serialisation_and_validation_invalid_json(
         )
 
     except SchematicValidationError as error:
-        print(error.message)
         assert error.message == (
             "stations are too many! Current limit is 6\n"
             "The fsp_ids should all be distinct\n"

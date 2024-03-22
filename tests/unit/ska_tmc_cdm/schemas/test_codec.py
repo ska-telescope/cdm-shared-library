@@ -93,9 +93,6 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     Verify that the codec unmarshalls objects correctly.
     """
     unmarshalled = CODEC.loads(msg_cls, json_str, validate=is_validate)
-    print(unmarshalled)
-    print("----------------------------------------")
-    print(expected)
     assert unmarshalled == expected
 
 
