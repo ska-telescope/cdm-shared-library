@@ -35,8 +35,6 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_release_resources import (
 from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
-    VALID_LOW_CONFIGURE_3_2_JSON,
-    VALID_LOW_CONFIGURE_3_2_OBJECT,
     VALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_OBJECT,
     VALID_MID_CONFIGURE_JSON,
