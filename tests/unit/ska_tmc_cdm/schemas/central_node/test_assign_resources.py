@@ -2,8 +2,8 @@
 Unit tests for ska_tmc_cdm.schemas module.
 """
 import pytest
-
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
+
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
     AssignResourcesResponse,

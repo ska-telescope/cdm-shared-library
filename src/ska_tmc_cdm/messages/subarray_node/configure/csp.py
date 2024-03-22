@@ -119,6 +119,7 @@ class StnBeamConfiguration:
     port: Optional[List[Tuple[int, int, int]]] = None
     mac: Optional[List[Tuple[int, str]]] = None
     integration_ms: Optional[int] = None
+    delay_poly: Optional[str] = None
 
 
 @dataclass

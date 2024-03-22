@@ -5,9 +5,9 @@ import copy
 import json
 
 import pytest
-
 from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 from ska_telmodel.tmc.examples import LOW_TMC_RELEASERESOURCES_1_0 as VALID_JSON
+
 from ska_tmc_cdm.jsonschema.json_schema import (
     JsonSchema,
     JsonValidationError,

@@ -29,6 +29,13 @@ VALID_SUBARRAYBEAMTARGET_JSON = """
 }
 """
 
+VALID_LOGICAL_BANDS_JSON = """
+[{
+"start_channel": 80,
+"number_of_channels": 16
+}
+],
+"""
 VALID_SUBARRAYBEAMTARGET_OBJECT = SubarrayBeamTarget(
     180.0, 45.0, "DriftScan", "HORIZON"
 )
@@ -38,8 +45,25 @@ VALID_STNCONFIGURATION_JSON = """
     "station_id":1
 }
 """
-
+VALID_APERTURES_JSON = """
+ [
+          {
+            "aperture_id": "AP001.01",
+            "weighting_key_ref": "aperture2"
+          }
+],
+"""
 VALID_STNCONFIGURATION_OBJECT = StnConfiguration(1)
+VALID_SKY_COORDINATES_JSON = """
+{
+          "timestamp": "2021-10-23T12:34:56.789Z",
+          "reference_frame": "ICRS",
+          "c1": 180.0,
+          "c1_rate": 0.0,
+          "c2": 45.0,
+          "c2_rate": 0.0
+},
+"""
 
 VALID_SUBARRAYBEAMCONFIGURATION_JSON = (
     """
@@ -50,6 +74,15 @@ VALID_SUBARRAYBEAMCONFIGURATION_JSON = (
     "update_rate": 0.0,
     "antenna_weights": [1.0, 1.0, 1.0],
     "phase_centre": [0.0, 0.0],
+    "logical_bands":"""
+    + VALID_LOGICAL_BANDS_JSON
+    + """
+    "apertures":"""
+    + VALID_APERTURES_JSON
+    + """
+    "sky_coordinates":"""
+    + VALID_SKY_COORDINATES_JSON
+    + """
     "target": """
     + VALID_SUBARRAYBEAMTARGET_JSON
     + """

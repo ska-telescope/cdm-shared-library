@@ -7,9 +7,9 @@ import json
 import tempfile
 
 import pytest
+from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 
 import ska_tmc_cdm
-from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
 from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
@@ -44,65 +44,57 @@ from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
 )
 
 TEST_PARAMETERS = [
-    # (
-    #     AssignResourcesRequest,
-    #     VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
-    #     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
-    #     False,
-    # ),
-    # (
-    #     AssignResourcesRequest,
-    #     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
-    #     VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
-    #     True,
-    # ),
-    # (
-    #     AssignResourcesRequest,
-    #     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
-    #     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
-    #     False,
-    # ),
-    # (
-    #     ConfigureRequest,
-    #     VALID_MID_CONFIGURE_JSON,
-    #     VALID_MID_CONFIGURE_OBJECT,
-    #     True,
-    # ),
-    # (
-    #     ConfigureRequest,
-    #     VALID_LOW_CONFIGURE_JSON,
-    #     VALID_LOW_CONFIGURE_OBJECT,
-    #     True,
-    # ),
-    # (
-    #     ReleaseResourcesRequest,
-    #     VALID_MID_FULL_RELEASE_JSON,
-    #     VALID_MID_FULL_RELEASE_OBJECT,
-    #     True,
-    # ),
+    (
+        AssignResourcesRequest,
+        VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
+        VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
+        False,
+    ),
+    (
+        AssignResourcesRequest,
+        VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
+        VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
+        True,
+    ),
+    (
+        AssignResourcesRequest,
+        VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
+        VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
+        False,
+    ),
+    (
+        ConfigureRequest,
+        VALID_MID_CONFIGURE_JSON,
+        VALID_MID_CONFIGURE_OBJECT,
+        True,
+    ),
+    (
+        ConfigureRequest,
+        VALID_LOW_CONFIGURE_JSON,
+        VALID_LOW_CONFIGURE_OBJECT,
+        True,
+    ),
+    (
+        ReleaseResourcesRequest,
+        VALID_MID_FULL_RELEASE_JSON,
+        VALID_MID_FULL_RELEASE_OBJECT,
+        True,
+    ),
     (
         ReleaseResourcesRequest,
         VALID_LOW_FULL_RELEASE_JSON,
         VALID_LOW_FULL_RELEASE_OBJECT,
         False,
     ),
-    # (
-    #     ConfigureRequest,
-    #     VALID_LOW_CONFIGURE_3_2_JSON,
-    #     VALID_LOW_CONFIGURE_3_2_OBJECT,
-    #     True,
-    # ),
 ]
 
 
-@pytest.mark.trial
 @pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", TEST_PARAMETERS)
 def test_codec_loads(msg_cls, json_str, expected, is_validate):
     """
     Verify that the codec unmarshalls objects correctly.
     """
     unmarshalled = CODEC.loads(msg_cls, json_str, validate=is_validate)
-    print("unmarshalled:::::::::::", unmarshalled)
     assert unmarshalled == expected
 
 
@@ -191,6 +183,9 @@ def test_codec_loads_raises_exception_on_invalid_schema():
         )
 
     invalid_json = json.loads(INVALID_LOW_CONFIGURE_JSON)
+    invalid_json["csp"]["lowcbf"]["stations"]["stn_beams"][0][
+        "delay_poly"
+    ] = "tango://delays.skao.int/low/stn-beam/1"
     invalid_json_configure = json.dumps(invalid_json)
 
     try:
@@ -215,7 +210,8 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
 
     # validation should occur regardless of strictness, but exceptions are
     # only raised when strictness=2
-
+    # delay_key = {"delay_poly": "tango://delays.skao.int/low/stn-beam/1"}
+    # invalid_data.csp.lowcbf.stations.stn_beams.append(delay_key)
     CODEC.dumps(invalid_data, strictness=0)
     CODEC.dumps(invalid_data, strictness=1)
     with pytest.raises(SchemaNotFound):

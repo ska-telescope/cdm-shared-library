@@ -2,7 +2,7 @@
 This module defines Marshmallow schemas that map the CDM classes for
 SubArrayNode MCCS configuration to/from JSON.
 """
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_dump, post_load
 
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
@@ -59,7 +59,7 @@ class SubarrayBeamTargetSchema(Schema):  # pylint: disable=too-few-public-method
 
 @CODEC.register_mapping(SubarrayBeamSkyCoordinates)
 class SubarrayBeamSkyCoordinatesSchema(Schema):
-    time_stamp = fields.Float(data_key="timestamp", required=True)
+    timestamp = fields.String(data_key="timestamp", required=True)
     reference_frame = fields.String(data_key="reference_frame", required=True)
     c1 = fields.Float(data_key="c1", required=True)
     c1_rate = fields.Float(data_key="c1_rate", required=True)
@@ -77,14 +77,14 @@ class SubarrayBeamSkyCoordinatesSchema(Schema):
         :return: SubarrayBeamSkyCoordinates instance populated to match JSON
         :rtype: SubarrayBeamSkyCoordinates
         """
-        time_stamp = data["timestamp"]
+        timestamp = data["timestamp"]
         reference_frame = data["reference_frame"]
         c1 = data["c1"]
         c1_rate = data["c1_rate"]
         c2 = data["c2"]
         c2_rate = data["c2_rate"]
         return SubarrayBeamSkyCoordinates(
-            time_stamp=time_stamp,
+            timestamp=timestamp,
             reference_frame=reference_frame,
             c1=c1,
             c1_rate=c1_rate,
@@ -161,16 +161,18 @@ class StnConfigurationSchema(Schema):
 @CODEC.register_mapping(SubarrayBeamConfiguration)
 class SubarrayBeamConfigurationSchema(Schema):
     subarray_beam_id = fields.Integer(data_key="subarray_beam_id", required=True)
-    station_ids = fields.List(fields.Integer(data_key="station_ids", required=True))
+    station_ids = fields.List(fields.Integer(data_key="station_ids"))
     channels = fields.List(fields.List(fields.Integer), data_key="channels")
     update_rate = fields.Float(data_key="update_rate")
     target = fields.Nested(SubarrayBeamTargetSchema, data_key="target")
     antenna_weights = fields.List(fields.Float(data_key="antenna_weights"))
     phase_centre = fields.List(fields.Float(data_key="phase_centre"))
-    logical_bands = fields.Nested(
-        SubarrayBeamLogicalBandsSchema, data_key="logical_bands"
+    logical_bands = fields.List(
+        fields.Nested(SubarrayBeamLogicalBandsSchema, data_key="logical_bands")
     )
-    apertures = fields.Nested(SubarrayBeamAperaturesSchema, data_key="apertures")
+    apertures = fields.List(
+        fields.Nested(SubarrayBeamAperaturesSchema, data_key="apertures")
+    )
     sky_coordinates = fields.Nested(
         SubarrayBeamSkyCoordinatesSchema, data_key="sky_coordinates"
     )
@@ -185,16 +187,16 @@ class SubarrayBeamConfigurationSchema(Schema):
 
         :return: SubarrayBeamConfiguration instance populated to match JSON
         """
-        subarray_beam_id = data["subarray_beam_id"]
-        station_ids = data["station_ids"]
-        channels = data["channels"]
-        update_rate = data["update_rate"]
-        target = data["target"]
-        antenna_weights = data["antenna_weights"]
-        phase_centre = data["phase_centre"]
-        logical_bands = data["logical_bands"]
-        apertures = data["apertures"]
-        sky_coordinates = data["sky_coordinates"]
+        subarray_beam_id = data.get("subarray_beam_id", None)
+        station_ids = data.get("station_ids", None)
+        channels = data.get("channels", None)
+        update_rate = data.get("update_rate", None)
+        target = data.get("target", None)
+        antenna_weights = data.get("antenna_weights", None)
+        phase_centre = data.get("phase_centre", None)
+        logical_bands = data.get("logical_bands", None)
+        apertures = data.get("apertures", None)
+        sky_coordinates = data.get("sky_coordinates", None)
 
         return SubarrayBeamConfiguration(
             subarray_beam_id=subarray_beam_id,
@@ -208,6 +210,17 @@ class SubarrayBeamConfigurationSchema(Schema):
             apertures=apertures,
             sky_coordinates=sky_coordinates,
         )
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for SubArrayNode configuration
+        """
+        return {k: v for k, v in data.items() if v is not None}
 
 
 @CODEC.register_mapping(MCCSConfiguration)

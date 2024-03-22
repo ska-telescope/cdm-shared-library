@@ -246,6 +246,7 @@ class StnBeamConfigurationSchema(Schema):
     mac = fields.List(fields.Tuple((fields.Integer, fields.String)), data_key="mac")
     integration_ms = fields.Integer(data_key="integration_ms")
     beam_id = fields.Integer(data_key="beam_id")
+    delay_poly = fields.String(data_key="delay_poly")
 
     @post_load
     def create(self, data, **_):
@@ -265,6 +266,7 @@ class StnBeamConfigurationSchema(Schema):
         mac = data.get("mac", None)
         integration_ms = data.get("integration_ms", None)
         beam_id = data.get("beam_id", None)
+        delay_poly = data.get("delay_poly", None)
 
         return StnBeamConfiguration(
             stn_beam_id=stn_beam_id,
@@ -274,6 +276,7 @@ class StnBeamConfigurationSchema(Schema):
             mac=mac,
             integration_ms=integration_ms,
             beam_id=beam_id,
+            delay_poly=delay_poly,
         )
 
     @post_dump

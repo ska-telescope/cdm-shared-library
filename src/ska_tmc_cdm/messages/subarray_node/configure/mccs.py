@@ -4,7 +4,7 @@ aspects of MCCS configuration that may be specified in a SubArray.configure
 command.
 """
 
-from typing import List
+from typing import List, Optional
 
 from pydantic.dataclasses import dataclass
 
@@ -68,7 +68,7 @@ class SubarrayBeamSkyCoordinates:
     :type c2_rate: float
     """
 
-    time_stamp: str = None
+    timestamp: str = None
     reference_frame: str = None
     c1: float = None
     c1_rate: float = None
@@ -126,16 +126,16 @@ class SubarrayBeamConfiguration:
     :type phase_centre: List[float]
     """
 
-    subarray_beam_id: int
-    station_ids: List[int]
-    channels: List[List[int]]
     update_rate: float
-    target: SubarrayBeamTarget
-    antenna_weights: List[float]
-    phase_centre: List[float]
     logical_bands: List[SubarrayBeamLogicalBands]
     apertures: List[SubarrayBeamAperatures]
     sky_coordinates: SubarrayBeamSkyCoordinates
+    subarray_beam_id: Optional[int] = None
+    station_ids: Optional[List[int]] = None
+    channels: Optional[List[List[int]]] = None
+    target: Optional[SubarrayBeamTarget] = None
+    antenna_weights: Optional[List[float]] = None
+    phase_centre: Optional[List[float]] = None
 
 
 @dataclass(kw_only=True)
