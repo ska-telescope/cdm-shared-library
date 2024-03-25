@@ -94,8 +94,8 @@ class CommonConfiguration:
     """
 
     config_id: Optional[str] = ""
-    frequency_band: Optional[core.ReceiverBand] = None
     subarray_id: Optional[int] = None
+    frequency_band: Optional[core.ReceiverBand] = None
     band_5_tuning: Optional[List[float]] = None
 
 

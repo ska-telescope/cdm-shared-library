@@ -884,7 +884,8 @@ INVALID_LOW_CONFIGURE_JSON = """
 "csp": {
     "interface": "https://schema.skao.int/ska-low-csp-configure/3.1",
     "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A"
+      "config_id": "sbi-mvp01-20200325-00001-science_A",
+      "subarray_id": 1
     },
     "lowcbf": {
       "stations": {
@@ -899,7 +900,8 @@ INVALID_LOW_CONFIGURE_JSON = """
             "beam_id":1,
             "freq_ids": [
               400
-            ]
+            ],
+            "delay_poly":"sdlssl"
           }
         ]
       },
@@ -977,7 +979,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-configure/3.1",
-        common=CommonConfiguration(config_id="sbi-mvp01-20200325-00001-science_A"),
+        common=CommonConfiguration(config_id="sbi-mvp01-20200325-00001-science_A", subarray_id=1),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1]],
@@ -985,6 +987,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                     StnBeamConfiguration(
                         beam_id=1,
                         freq_ids=[400],
+                        delay_poly="sdlssl"
                     )
                 ],
             ),
