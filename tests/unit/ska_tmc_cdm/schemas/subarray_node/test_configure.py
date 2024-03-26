@@ -447,25 +447,6 @@ VALID_LOW_CONFIGURE_JSON = """
         "stn_beams": [
           {
             "stn_beam_id": 1,
-            "host": [
-              [
-                0,
-                "192.168.1.00"
-              ]
-            ],
-            "port": [
-              [
-                0,
-                9000,
-                1
-              ]
-            ],
-            "mac": [
-              [
-                0,
-                "02-03-04-0a-0b-0c"
-              ]
-            ],
             "integration_ms": 849
           }
         ]
@@ -482,7 +463,6 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-low-tmc-configure/3.2",
     transaction_id="txn-....-00001",
     mccs=MCCSConfiguration(
-        # station_configs=[StnConfiguration(1), StnConfiguration(2)],
         subarray_beam_configs=[
             SubarrayBeamConfiguration(
                 subarray_beam_id=1,
@@ -524,7 +504,6 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-configurescan/0.0",
-        # subarray={"subarray_name": "science period 23"},
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
         ),
@@ -538,9 +517,6 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                 stn_beams=[
                     StnBeamConfiguration(
                         stn_beam_id=1,
-                        host=[[0, "192.168.1.00"]],
-                        port=[[0, 9000, 1]],
-                        mac=[[0, "02-03-04-0a-0b-0c"]],
                         integration_ms=849,
                     )
                 ],

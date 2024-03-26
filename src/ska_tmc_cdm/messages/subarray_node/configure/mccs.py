@@ -151,4 +151,3 @@ class MCCSConfiguration:
 
     subarray_beam_configs: List[SubarrayBeamConfiguration]
     station_configs: Optional[List[StnConfiguration]] = None
-

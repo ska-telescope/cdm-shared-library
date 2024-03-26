@@ -247,12 +247,12 @@ class MCCSConfigurationSchema(ValidatingSchema):
         :return: MCCSConfiguration instance populated to match JSON
         :rtype: MCCSConfiguration
         """
-        stn_configs = data.get("station_configs",None)
-        subarray_beam_configs = data.get("subarray_beam_configs",None)
+        stn_configs = data.get("station_configs", None)
+        subarray_beam_configs = data.get("subarray_beam_configs", None)
         return MCCSConfiguration(
             station_configs=stn_configs, subarray_beam_configs=subarray_beam_configs
         )
-    
+
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
         """
