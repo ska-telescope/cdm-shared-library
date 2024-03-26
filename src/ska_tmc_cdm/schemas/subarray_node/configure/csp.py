@@ -237,16 +237,14 @@ class CBFConfigurationSchema(Schema):
 
 @CODEC.register_mapping(StnBeamConfiguration)
 class StnBeamConfigurationSchema(Schema):
-    stn_beam_id = fields.Integer(data_key="stn_beam_id")
-    freq_ids = fields.List(fields.Integer, data_key="freq_ids")
-    host = fields.List(fields.Tuple((fields.Integer, fields.String)), data_key="host")
-    port = fields.List(
-        fields.Tuple((fields.Integer, fields.Integer, fields.Integer)), data_key="port"
-    )
-    mac = fields.List(fields.Tuple((fields.Integer, fields.String)), data_key="mac")
-    integration_ms = fields.Integer(data_key="integration_ms")
-    beam_id = fields.Integer(data_key="beam_id")
-    delay_poly = fields.String(data_key="delay_poly")
+    stn_beam_id = fields.Integer()
+    freq_ids = fields.List(fields.Integer)
+    host = fields.List(fields.Tuple((fields.Integer, fields.String)))
+    port = fields.List(fields.Tuple((fields.Integer, fields.Integer, fields.Integer)))
+    mac = fields.List(fields.Tuple((fields.Integer, fields.String)))
+    integration_ms = fields.Integer()
+    beam_id = fields.Integer()
+    delay_poly = fields.String()
 
     @post_load
     def create(self, data, **_):
@@ -294,9 +292,9 @@ class StnBeamConfigurationSchema(Schema):
 
 @CODEC.register_mapping(VisFspConfiguration)
 class VisFspConfigurationSchema(Schema):
-    function_mode = fields.String(data_key="function_mode")
-    fsp_ids = fields.List(fields.Integer, data_key="fsp_ids")
-    firmware = fields.String(data_key="firmware")
+    function_mode = fields.String()
+    fsp_ids = fields.List(fields.Integer)
+    firmware = fields.String()
 
     @post_load
     def create(self, data, **_):

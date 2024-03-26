@@ -59,12 +59,12 @@ class SubarrayBeamTargetSchema(Schema):  # pylint: disable=too-few-public-method
 
 @CODEC.register_mapping(SubarrayBeamSkyCoordinates)
 class SubarrayBeamSkyCoordinatesSchema(Schema):
-    timestamp = fields.String(data_key="timestamp", required=True)
-    reference_frame = fields.String(data_key="reference_frame", required=True)
-    c1 = fields.Float(data_key="c1", required=True)
-    c1_rate = fields.Float(data_key="c1_rate", required=True)
-    c2 = fields.Float(data_key="c2", required=True)
-    c2_rate = fields.Float(data_key="c2_rate", required=True)
+    timestamp = fields.String(required=True)
+    reference_frame = fields.String(required=True)
+    c1 = fields.Float(required=True)
+    c1_rate = fields.Float(required=True)
+    c2 = fields.Float(required=True)
+    c2_rate = fields.Float(required=True)
 
     @post_load
     def create(self, data, **_):
@@ -95,8 +95,8 @@ class SubarrayBeamSkyCoordinatesSchema(Schema):
 
 @CODEC.register_mapping(SubarrayBeamLogicalBands)
 class SubarrayBeamLogicalBandsSchema(Schema):
-    start_channel = fields.Integer(data_key="start_channel", required=True)
-    number_of_channels = fields.Integer(data_key="number_of_channels", required=True)
+    start_channel = fields.Integer(required=True)
+    number_of_channels = fields.Integer(required=True)
 
     @post_load
     def create(self, data, **_):
@@ -118,8 +118,8 @@ class SubarrayBeamLogicalBandsSchema(Schema):
 
 @CODEC.register_mapping(SubarrayBeamAperatures)
 class SubarrayBeamAperaturesSchema(Schema):
-    aperture_id = fields.String(data_key="aperture_id", required=True)
-    weighting_key_ref = fields.String(data_key="weighting_key_ref", required=True)
+    aperture_id = fields.String(required=True)
+    weighting_key_ref = fields.String(required=True)
 
     @post_load
     def create(self, data, **_):
@@ -161,21 +161,15 @@ class StnConfigurationSchema(Schema):
 @CODEC.register_mapping(SubarrayBeamConfiguration)
 class SubarrayBeamConfigurationSchema(Schema):
     subarray_beam_id = fields.Integer(data_key="subarray_beam_id", required=True)
-    station_ids = fields.List(fields.Integer(data_key="station_ids"))
+    station_ids = fields.List(fields.Integer())
     channels = fields.List(fields.List(fields.Integer), data_key="channels")
     update_rate = fields.Float(data_key="update_rate")
     target = fields.Nested(SubarrayBeamTargetSchema, data_key="target")
     antenna_weights = fields.List(fields.Float(data_key="antenna_weights"))
     phase_centre = fields.List(fields.Float(data_key="phase_centre"))
-    logical_bands = fields.List(
-        fields.Nested(SubarrayBeamLogicalBandsSchema, data_key="logical_bands")
-    )
-    apertures = fields.List(
-        fields.Nested(SubarrayBeamAperaturesSchema, data_key="apertures")
-    )
-    sky_coordinates = fields.Nested(
-        SubarrayBeamSkyCoordinatesSchema, data_key="sky_coordinates"
-    )
+    logical_bands = fields.List(fields.Nested(SubarrayBeamLogicalBandsSchema))
+    apertures = fields.List(fields.Nested(SubarrayBeamAperaturesSchema))
+    sky_coordinates = fields.Nested(SubarrayBeamSkyCoordinatesSchema)
 
     @post_load
     def create(self, data, **_) -> SubarrayBeamConfiguration:
