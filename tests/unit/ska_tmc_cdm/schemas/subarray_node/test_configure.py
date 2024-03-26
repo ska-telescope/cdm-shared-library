@@ -439,10 +439,11 @@ VALID_LOW_CONFIGURE_JSON = """
       },
       "vis": {
         "fsp": {
-          "firmware": "vis",
+          "function_mode": "vis",
           "fsp_ids": [
             1
-          ]
+          ],
+          "firmware": "vis"
         },
         "stn_beams": [
           {
@@ -513,7 +514,9 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                 stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400])],
             ),
             vis=VisConfiguration(
-                fsp=VisFspConfiguration(firmware="vis", fsp_ids=[1]),
+                fsp=VisFspConfiguration(
+                    function_mode="vis", fsp_ids=[1], firmware="vis"
+                ),
                 stn_beams=[
                     StnBeamConfiguration(
                         stn_beam_id=1,
