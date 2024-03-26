@@ -149,5 +149,6 @@ class MCCSConfiguration:
     :type subarray_beam_configs: List[SubarrayBeamConfiguration]
     """
 
-    station_configs: List[StnConfiguration]
     subarray_beam_configs: List[SubarrayBeamConfiguration]
+    station_configs: Optional[List[StnConfiguration]] = None
+

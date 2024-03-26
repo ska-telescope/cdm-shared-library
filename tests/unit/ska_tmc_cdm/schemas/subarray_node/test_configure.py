@@ -343,16 +343,8 @@ VALID_LOW_CONFIGURE_JSON = """
 {
   "interface": "https://schema.skao.int/ska-low-tmc-configure/3.2",
   "transaction_id": "txn-....-00001",
-  "mccs": {
-    "stations": [
-      {
-        "station_id": 1
-      },
-      {
-        "station_id": 2
-      }
-    ],
-    "subarray_beams": [
+  "mccs":{
+  "subarray_beams": [
     {
         "subarray_beam_id": 1,
         "update_rate": 0.0,
@@ -490,7 +482,7 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-low-tmc-configure/3.2",
     transaction_id="txn-....-00001",
     mccs=MCCSConfiguration(
-        station_configs=[StnConfiguration(1), StnConfiguration(2)],
+        # station_configs=[StnConfiguration(1), StnConfiguration(2)],
         subarray_beam_configs=[
             SubarrayBeamConfiguration(
                 subarray_beam_id=1,
