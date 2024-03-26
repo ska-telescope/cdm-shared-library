@@ -147,8 +147,6 @@ class ReceiverBand(Enum):
     BAND_2 = "2"
     BAND_5A = "5a"
     BAND_5B = "5b"
-    BAND_LOW = "low"
-
 
 @dataclass
 class DishConfiguration:

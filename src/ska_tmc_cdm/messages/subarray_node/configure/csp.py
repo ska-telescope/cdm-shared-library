@@ -105,11 +105,13 @@ class StnBeamConfiguration:
     Class to hold Stations Beam Configuration.
 
     :param stn_beam_id: stn_beam_id
+    :param beam_id: beam_id
     :param freq_ids: freq_ids
     :param host: host
     :param port: port
     :param mac: mac
     :param integration_ms: integration_ms
+    :param delay_poly: delay_poly
     """
 
     stn_beam_id: Optional[int] = None
@@ -138,10 +140,11 @@ class StationConfiguration:
 @dataclass
 class VisFspConfiguration:
     """
-    Class to hold Vis FSP Configuration.
+    Class to hold Visibility(Vis) Configuration.
 
     :param function_mode: function_mode
     :param fsp_ids: fsp_ids
+    :param firmware: firmware
     """
 
     function_mode: Optional[str] = None
