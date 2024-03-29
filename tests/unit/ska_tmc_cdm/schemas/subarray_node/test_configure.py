@@ -31,7 +31,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
-    StnConfiguration,
     SubarrayBeamAperatures,
     SubarrayBeamConfiguration,
     SubarrayBeamLogicalBands,
@@ -816,11 +815,6 @@ INVALID_LOW_CONFIGURE_JSON = """
   "interface": "https://schema.skao.int/ska-low-tmc-configure/3.2",
   "transaction_id": "txn-....-00001",
   "mccs": {
-    "stations":[
-      {
-        "station_id": 1
-      }
-    ],
   "subarray_beams": [
     {
         "subarray_beam_id": -1,
@@ -921,7 +915,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-low-tmc-configure/3.2",
     transaction_id="txn-....-00001",
     mccs=MCCSConfiguration(
-        station_configs=[StnConfiguration(1)],
+        # station_configs=[StnConfiguration(1)],
         subarray_beam_configs=[
             SubarrayBeamConfiguration(
                 subarray_beam_id=1,

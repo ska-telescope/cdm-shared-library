@@ -19,7 +19,7 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
 )
-from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (  # VALID_LOW_CONFIGURE_3_2_JSON,
+from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
 )
