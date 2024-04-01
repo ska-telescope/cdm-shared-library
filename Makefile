@@ -10,7 +10,6 @@ PROJECT_NAME := ska-tmc-cdm
 TMDATA_VERSION := $(shell python -c 'from importlib.metadata import version; print(version("ska_telmodel"))')
 
 OCI_IMAGE_BUILD_CONTEXT = $(PWD)
-MARK ?=
 # unset defaults so settings in pyproject.toml take effect
 PYTHON_SWITCHES_FOR_BLACK =
 PYTHON_SWITCHES_FOR_ISORT =
