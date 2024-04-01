@@ -107,9 +107,14 @@ class CommonConfigurationSchema(Schema):
         if frequency_band:
             frequency_band_enum = ReceiverBand(frequency_band)
             return CommonConfiguration(
-                config_id, subarray_id, frequency_band_enum, band_5_tuning
+                config_id=config_id,
+                frequency_band=frequency_band_enum,
+                subarray_id=subarray_id,
+                band_5_tuning=band_5_tuning,
             )
-        return CommonConfiguration(config_id, subarray_id, band_5_tuning)
+        return CommonConfiguration(
+            config_id=config_id, subarray_id=subarray_id, band_5_tuning=band_5_tuning
+        )
 
 
 @CODEC.register_mapping(FSPConfiguration)
