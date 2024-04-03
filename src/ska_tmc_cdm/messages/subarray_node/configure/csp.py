@@ -107,21 +107,32 @@ class StnBeamConfiguration:
     :param stn_beam_id: stn_beam_id
     :param beam_id: beam_id
     :param freq_ids: freq_ids
+    :param delay_poly: delay_poly
+    """
+
+    beam_id: int
+    freq_ids: List[int]
+    stn_beam_id: Optional[int] = None
+    delay_poly: Optional[str] = None
+
+
+@dataclass
+class VisStnBeamConfiguration:
+    """
+    Class to hold Vis Stations Beam Configuration.
+
+    :param stn_beam_id: stn_beam_id
     :param host: host
     :param port: port
     :param mac: mac
     :param integration_ms: integration_ms
-    :param delay_poly: delay_poly
     """
 
-    stn_beam_id: Optional[int] = None
-    beam_id: Optional[int] = None
-    freq_ids: Optional[List[int]] = None
+    stn_beam_id: int
+    integration_ms: int
     host: Optional[List[Tuple[int, str]]] = None
     port: Optional[List[Tuple[int, int, int]]] = None
     mac: Optional[List[Tuple[int, str]]] = None
-    integration_ms: Optional[int] = None
-    delay_poly: Optional[str] = None
 
 
 @dataclass
@@ -162,7 +173,7 @@ class VisConfiguration:
     """
 
     fsp: Optional[VisFspConfiguration] = None
-    stn_beams: Optional[List[StnBeamConfiguration]] = None
+    stn_beams: Optional[List[VisStnBeamConfiguration]] = None
 
 
 @dataclass

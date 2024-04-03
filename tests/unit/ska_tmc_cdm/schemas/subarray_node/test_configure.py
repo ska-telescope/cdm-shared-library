@@ -28,6 +28,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
+    VisStnBeamConfiguration,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
@@ -517,7 +518,7 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                     function_mode="vis", fsp_ids=[1], firmware="vis"
                 ),
                 stn_beams=[
-                    StnBeamConfiguration(
+                    VisStnBeamConfiguration(
                         stn_beam_id=1,
                         integration_ms=849,
                     )
@@ -866,7 +867,8 @@ INVALID_LOW_CONFIGURE_JSON = """
             "freq_ids": [
               400
             ],
-            "delay_poly":"sdlssl"
+            "delay_poly": "tango://delays.skao.int/low/stn-beam/1"
+
           }
         ]
       },
@@ -915,7 +917,6 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-low-tmc-configure/3.2",
     transaction_id="txn-....-00001",
     mccs=MCCSConfiguration(
-        # station_configs=[StnConfiguration(1)],
         subarray_beam_configs=[
             SubarrayBeamConfiguration(
                 subarray_beam_id=1,
@@ -951,18 +952,22 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
             stations=StationConfiguration(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1]],
                 stn_beams=[
-                    StnBeamConfiguration(beam_id=1, freq_ids=[400], delay_poly="sdlssl")
+                    StnBeamConfiguration(
+                        beam_id=1,
+                        freq_ids=[400],
+                        delay_poly="tango://delays.skao.int/low/stn-beam/1",
+                    )
                 ],
             ),
             vis=VisConfiguration(
                 fsp=VisFspConfiguration(firmware="abcd", fsp_ids=[1, 2, 2, 4, 5, 6, 7]),
                 stn_beams=[
-                    StnBeamConfiguration(
+                    VisStnBeamConfiguration(
                         stn_beam_id=1,
+                        integration_ms=849,
                         host=[[0, "192.168.1.00"]],
                         port=[[0, 9000, 1]],
                         mac=[[0, "02-03-04-0a-0b-0c"]],
-                        integration_ms=849,
                     )
                 ],
             ),

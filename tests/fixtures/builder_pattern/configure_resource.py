@@ -6,7 +6,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode, CS
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration, MCCSConfiguration
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import DishConfigurationBuilder
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import CSPConfigurationBuilder, SubarrayConfigurationBuilder, CommonConfigurationBuilder, CBFConfigurationBuilder, \
-    FSPConfigurationBuilder, StnBeamConfigurationBuilder, VisFspConfigurationBuilder, VisConfigurationBuilder, StationConfigurationBuilder, LowCBFConfigurationBuilder
+    FSPConfigurationBuilder, StnBeamConfigurationBuilder, VisFspConfigurationBuilder, VisConfigurationBuilder, StationConfigurationBuilder, LowCBFConfigurationBuilder, VisStnBeamConfigurationBuilder
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import SubarrayBeamConfigurationBuilder, MCCSConfigurationBuilder, SubarrayBeamSkyCoordinatesBuilder, SubarrayBeamLogicalbandsBuilder, SubarrayBeamApertureBuilder
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.sdp import SDPConfigurationBuilder
 
@@ -135,10 +135,7 @@ def low_csp_config() ->CSPConfiguration:
                            [ StnBeamConfigurationBuilder()
                                 .set_stn_beam_id(1)
                                 .set_freq_ids([400])
-                            .set_host([(0, "192.168.1.00")])
-                            .set_port([(0, 9000, 1)])
-                            .set_mac([(0, "02-03-04-0a-0b-0c")])
-                                .set_integration_ms(849)
+                                .set_beam_id(1)
                                 .build()]
                         )
                         .build()
@@ -152,12 +149,11 @@ def low_csp_config() ->CSPConfiguration:
                                 .build()
                         )
                         .set_stn_beam(
-                            [StnBeamConfigurationBuilder()
+                            [VisStnBeamConfigurationBuilder()
                                 .set_stn_beam_id(1)
-                                .set_freq_ids([400])
-                            .set_host([(0, "192.168.1.00")])
-                            .set_port([(0, 9000, 1)])
-                            .set_mac([(0, "02-03-04-0a-0b-0c")])
+                                .set_host([(0, "192.168.1.00")])
+                                .set_port([(0, 9000, 1)])
+                                .set_mac([(0, "02-03-04-0a-0b-0c")])
                                 .set_integration_ms(849)
                                 .build()]
                         )

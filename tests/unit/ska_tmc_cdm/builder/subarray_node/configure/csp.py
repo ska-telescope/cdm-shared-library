@@ -15,6 +15,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
+    VisStnBeamConfiguration,
 )
 
 
@@ -369,10 +370,8 @@ class StnBeamConfigurationBuilder:
     def __init__(self):
         self.stn_beam_id = None
         self.freq_ids = None
-        self.host = None
-        self.port = None
-        self.mac = None
-        self.integration_ms = None
+        self.delay_poly = None
+        self.beam_id = None
 
     def set_stn_beam_id(self, stn_beam_id: int) -> "StnBeamConfigurationBuilder":
         """
@@ -394,46 +393,24 @@ class StnBeamConfigurationBuilder:
         self.freq_ids = freq_ids
         return self
 
-    def set_host(self, host: List[Tuple[int, str]]) -> "StnBeamConfigurationBuilder":
+    def set_beam_id(self, beam_id: int) -> "StnBeamConfigurationBuilder":
         """
-        Set the host information for the station beam.
+        Set the Beam IDs for the station beam.
 
-        :param host: A list of tuples, where each tuple contains an integer and a string representing the host information.
-        :return: An instance of StnBeamConfigurationBuilder with the set host information.
+        :param beam_id: A list of integers representing the beam IDs.
+        :return: An instance of StnBeamConfigurationBuilder with the set beam IDs.
         """
-        self.host = host
+        self.beam_id = beam_id
         return self
 
-    def set_port(
-        self, port: List[Tuple[int, int, int]]
-    ) -> "StnBeamConfigurationBuilder":
+    def set_delay_poly(self, delay_poly: str) -> "StnBeamConfigurationBuilder":
         """
-        Set the port information for the station beam.
+        Set the delay poly for the station beam.
 
-        :param port: A list of tuples, where each tuple contains three integers representing the port information.
-        :return: An instance of StnBeamConfigurationBuilder with the set port information.
+        :param delay_poly: String representing the delay poly.
+        :return: An instance of StnBeamConfigurationBuilder with the set delay poly.
         """
-        self.port = port
-        return self
-
-    def set_mac(self, mac: List[Tuple[int, str]]) -> "StnBeamConfigurationBuilder":
-        """
-        Set the MAC address information for the station beam.
-
-        :param mac: A list of tuples, where each tuple contains an integer and a string representing the MAC address information.
-        :return: An instance of StnBeamConfigurationBuilder with the set MAC address information.
-        """
-        self.mac = mac
-        return self
-
-    def set_integration_ms(self, integration_ms: int) -> "StnBeamConfigurationBuilder":
-        """
-        Set the integration time in milliseconds for the station beam.
-
-        :param integration_ms: Integer representing the integration time in milliseconds.
-        :return: An instance of StnBeamConfigurationBuilder with the set integration time.
-        """
-        self.integration_ms = integration_ms
+        self.delay_poly = delay_poly
         return self
 
     def build(self) -> StnBeamConfiguration:
@@ -443,11 +420,9 @@ class StnBeamConfigurationBuilder:
         """
         return StnBeamConfiguration(
             stn_beam_id=self.stn_beam_id,
+            beam_id=self.beam_id,
             freq_ids=self.freq_ids,
-            host=self.host,
-            port=self.port,
-            mac=self.mac,
-            integration_ms=self.integration_ms,
+            delay_poly=self.delay_poly,
         )
 
 
@@ -488,6 +463,86 @@ class VisFspConfigurationBuilder:
         )
 
 
+class VisStnBeamConfigurationBuilder:
+    """
+    VisStnBeamConfigurationBuilder is a test data builder for VisStnBeamConfigurationBuilder objects.
+    """
+
+    def __init__(self):
+        self.stn_beam_id = None
+        self.host = None
+        self.port = None
+        self.mac = None
+        self.integration_ms = None
+
+    def set_stn_beam_id(self, stn_beam_id: int) -> "VisStnBeamConfigurationBuilder":
+        """
+        Set the station beam ID.
+
+        :param stn_beam_id: Integer representing the station beam ID.
+        :return: An instance of VisStnBeamConfigurationBuilder with the set station beam ID.
+        """
+        self.stn_beam_id = stn_beam_id
+        return self
+
+    def set_host(self, host: List[Tuple[int, str]]) -> "VisStnBeamConfigurationBuilder":
+        """
+        Set the host information for the station beam.
+
+        :param host: A list of tuples, where each tuple contains an integer and a string representing the host information.
+        :return: An instance of VisStnBeamConfigurationBuilder with the set host information.
+        """
+        self.host = host
+        return self
+
+    def set_port(
+        self, port: List[Tuple[int, int, int]]
+    ) -> "VisStnBeamConfigurationBuilder":
+        """
+        Set the port information for the station beam.
+
+        :param port: A list of tuples, where each tuple contains three integers representing the port information.
+        :return: An instance of VisStnBeamConfigurationBuilder with the set port information.
+        """
+        self.port = port
+        return self
+
+    def set_mac(self, mac: List[Tuple[int, str]]) -> "VisStnBeamConfigurationBuilder":
+        """
+        Set the MAC address information for the station beam.
+
+        :param mac: A list of tuples, where each tuple contains an integer and a string representing the MAC address information.
+        :return: An instance of VisStnBeamConfigurationBuilder with the set MAC address information.
+        """
+        self.mac = mac
+        return self
+
+    def set_integration_ms(
+        self, integration_ms: int
+    ) -> "VisStnBeamConfigurationBuilder":
+        """
+        Set the integration time in milliseconds for the station beam.
+
+        :param integration_ms: Integer representing the integration time in milliseconds.
+        :return: An instance of VisStnBeamConfigurationBuilder with the set integration time.
+        """
+        self.integration_ms = integration_ms
+        return self
+
+    def build(self) -> VisStnBeamConfiguration:
+        """
+        Builds or creates an instance of VisStnBeamConfiguration with the set properties.
+        :return: An instance of VisStnBeamConfiguration with the specified configurations.
+        """
+        return VisStnBeamConfiguration(
+            stn_beam_id=self.stn_beam_id,
+            host=self.host,
+            port=self.port,
+            mac=self.mac,
+            integration_ms=self.integration_ms,
+        )
+
+
 class VisConfigurationBuilder:
     """
     VisConfigurationBuilder is a test data builder for VisConfiguration objects.
@@ -508,12 +563,12 @@ class VisConfigurationBuilder:
         return self
 
     def set_stn_beam(
-        self, stn_beams: List[StnBeamConfiguration]
+        self, stn_beams: List[VisStnBeamConfiguration]
     ) -> "VisConfigurationBuilder":
         """
         Set the station beam configuration to the visibility configuration.
 
-        :param stn_beams: list of StnBeamConfiguration instance to be added to the visibility configuration.
+        :param stn_beams: list of VisStnBeamConfiguration instance to be added to the visibility configuration.
         :return: An instance of VisConfigurationBuilder with the added station beam configuration.
         """
 

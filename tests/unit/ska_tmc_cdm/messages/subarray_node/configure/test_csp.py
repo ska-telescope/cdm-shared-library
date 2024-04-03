@@ -19,6 +19,7 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     SubarrayConfigurationBuilder,
     VisConfigurationBuilder,
     VisFspConfigurationBuilder,
+    VisStnBeamConfigurationBuilder,
 )
 
 
@@ -475,19 +476,15 @@ def test_fsp_configuration_channel_avg_map_length(
         (
             StnBeamConfigurationBuilder()
             .set_stn_beam_id(1)
+            .set_beam_id(1)
             .set_freq_ids([400])
-            .set_host([(0, "192.168.1.00")])
-            .set_port([(0, 9000, 1)])
-            .set_mac([(0, "02-03-04-0a-0b-0c")])
-            .set_integration_ms(849)
+            .set_delay_poly("tango/device/instance/delay")
             .build(),
             StnBeamConfigurationBuilder()
             .set_stn_beam_id(1)
+            .set_beam_id(1)
             .set_freq_ids([400])
-            .set_host([(0, "192.168.1.00")])
-            .set_port([(0, 9000, 1)])
-            .set_mac([(0, "02-03-04-0a-0b-0c")])
-            .set_integration_ms(849)
+            .set_delay_poly("tango/device/instance/delay")
             .build(),
             True,
         ),
@@ -495,14 +492,15 @@ def test_fsp_configuration_channel_avg_map_length(
         (
             StnBeamConfigurationBuilder()
             .set_stn_beam_id(1)
+            .set_beam_id(1)
             .set_freq_ids([400])
-            .set_host([(0, "192.168.1.00")])
-            .set_port([(0, 9000, 1)])
-            .set_mac([(0, "02-03-04-0a-0b-0c")])
-            .set_integration_ms(849)
+            .set_delay_poly("tango/device/instance/delay")
             .build(),
             StnBeamConfigurationBuilder()
             .set_stn_beam_id(2)  # Different stn_beam_id
+            .set_beam_id(1)
+            .set_freq_ids([400])
+            .set_delay_poly("tango/device/instance/delay")
             .build(),
             False,
         ),
@@ -531,11 +529,9 @@ def test_stn_beam_configuration_equality(
                 [
                     StnBeamConfigurationBuilder()
                     .set_stn_beam_id(1)
+                    .set_beam_id(1)
                     .set_freq_ids([400])
-                    .set_host([(0, "192.168.1.00")])
-                    .set_port([(0, 9000, 1)])
-                    .set_mac([(0, "02-03-04-0a-0b-0c")])
-                    .set_integration_ms(849)
+                    .set_delay_poly("tango/device/instance/delay")
                     .build()
                 ]
             )
@@ -546,11 +542,9 @@ def test_stn_beam_configuration_equality(
                 [
                     StnBeamConfigurationBuilder()
                     .set_stn_beam_id(1)
+                    .set_beam_id(1)
                     .set_freq_ids([400])
-                    .set_host([(0, "192.168.1.00")])
-                    .set_port([(0, 9000, 1)])
-                    .set_mac([(0, "02-03-04-0a-0b-0c")])
-                    .set_integration_ms(849)
+                    .set_delay_poly("tango/device/instance/delay")
                     .build()
                 ]
             )
@@ -565,11 +559,9 @@ def test_stn_beam_configuration_equality(
                 [
                     StnBeamConfigurationBuilder()
                     .set_stn_beam_id(1)
+                    .set_beam_id(1)
                     .set_freq_ids([400])
-                    .set_host([(0, "192.168.1.00")])
-                    .set_port([(0, 9000, 1)])
-                    .set_mac([(0, "02-03-04-0a-0b-0c")])
-                    .set_integration_ms(849)
+                    .set_delay_poly("tango/device/instance/delay")
                     .build()
                 ]
             )
@@ -644,9 +636,8 @@ def test_vis_fsp_configuration_equality(vis_fsp_config_a, vis_fsp_config_b, is_e
             )
             .set_stn_beam(
                 [
-                    StnBeamConfigurationBuilder()
+                    VisStnBeamConfigurationBuilder()
                     .set_stn_beam_id(1)
-                    .set_freq_ids([400])
                     .set_host([(0, "192.168.1.00")])
                     .set_port([(0, 9000, 1)])
                     .set_mac([(0, "02-03-04-0a-0b-0c")])
@@ -664,9 +655,8 @@ def test_vis_fsp_configuration_equality(vis_fsp_config_a, vis_fsp_config_b, is_e
             )
             .set_stn_beam(
                 [
-                    StnBeamConfigurationBuilder()
+                    VisStnBeamConfigurationBuilder()
                     .set_stn_beam_id(1)
-                    .set_freq_ids([400])
                     .set_host([(0, "192.168.1.00")])
                     .set_port([(0, 9000, 1)])
                     .set_mac([(0, "02-03-04-0a-0b-0c")])
@@ -704,11 +694,9 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
                     [
                         StnBeamConfigurationBuilder()
                         .set_stn_beam_id(1)
+                        .set_beam_id(1)
                         .set_freq_ids([400])
-                        .set_host([(0, "192.168.1.00")])
-                        .set_port([(0, 9000, 1)])
-                        .set_mac([(0, "02-03-04-0a-0b-0c")])
-                        .set_integration_ms(849)
+                        .set_delay_poly("tango/device/instance/delay")
                         .build()
                     ]
                 )
@@ -724,9 +712,8 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
                 )
                 .set_stn_beam(
                     [
-                        StnBeamConfigurationBuilder()
+                        VisStnBeamConfigurationBuilder()
                         .set_stn_beam_id(1)
-                        .set_freq_ids([400])
                         .set_host([(0, "192.168.1.00")])
                         .set_port([(0, 9000, 1)])
                         .set_mac([(0, "02-03-04-0a-0b-0c")])
@@ -745,11 +732,9 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
                     [
                         StnBeamConfigurationBuilder()
                         .set_stn_beam_id(1)
+                        .set_beam_id(1)
                         .set_freq_ids([400])
-                        .set_host([(0, "192.168.1.00")])
-                        .set_port([(0, 9000, 1)])
-                        .set_mac([(0, "02-03-04-0a-0b-0c")])
-                        .set_integration_ms(849)
+                        .set_delay_poly("tango/device/instance/delay")
                         .build()
                     ]
                 )
@@ -765,9 +750,8 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
                 )
                 .set_stn_beam(
                     [
-                        StnBeamConfigurationBuilder()
+                        VisStnBeamConfigurationBuilder()
                         .set_stn_beam_id(1)
-                        .set_freq_ids([400])
                         .set_host([(0, "192.168.1.00")])
                         .set_port([(0, 9000, 1)])
                         .set_mac([(0, "02-03-04-0a-0b-0c")])

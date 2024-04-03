@@ -4,6 +4,9 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.csp module.
 import copy
 import inspect
 
+import pytest
+from pydantic import ValidationError
+
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CBFConfiguration,
@@ -17,6 +20,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
+    VisStnBeamConfiguration,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure import (
     CSPConfigurationSchema,
@@ -29,7 +33,6 @@ from ska_tmc_cdm.schemas.subarray_node.configure.csp import (
     VisConfigurationSchema,
     VisFspConfigurationSchema,
 )
-from ska_tmc_cdm.utils import assert_json_is_equal
 
 from ... import utils
 
@@ -326,9 +329,15 @@ def test_marshall_for_low_csp_configuration_pi20():
     """
     Verify that serialising a CSPConfiguration does not change the object.
     """
-    csp_configuration_object = CSPConfigurationSchema().loads(VALID_LOW_CSP_JSON_PI20)
-    serialized_csp_config = CSPConfigurationSchema().dumps(csp_configuration_object)
-    assert_json_is_equal(VALID_LOW_CSP_JSON_PI20, serialized_csp_config)
+    # Raises validation error as this is PI20 schema and
+    # as per PI22 agreement beam_id is required field for
+    # CSP schema
+    with pytest.raises(
+        ValidationError,
+        match="1 validation error for StnBeamConfiguration\nbeam_id\n "
+        + " Input should be a valid integer",
+    ):
+        CSPConfigurationSchema().loads(VALID_LOW_CSP_JSON_PI20)
 
 
 def test_marshall_station_configuration_does_not_modify_original():
@@ -339,12 +348,9 @@ def test_marshall_station_configuration_does_not_modify_original():
         stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
         stn_beams=[
             StnBeamConfiguration(
-                stn_beam_id=1,
+                beam_id=1,
                 freq_ids=[400],
-                host=[[0, "192.168.1.00"]],
-                port=[[0, 9000, 1]],
-                mac=[[0, "02-03-04-0a-0b-0c"]],
-                integration_ms=849,
+                stn_beam_id=1,
             )
         ],
     )
@@ -361,22 +367,15 @@ def test_marshall_station_beam_configuration_does_not_modify_original():
     Verify that serialising a StationConfiguration does not change the object.
     """
     config = StnBeamConfiguration(
-        stn_beam_id=1,
+        beam_id=1,
         freq_ids=[400],
-        host=[[0, "192.168.1.00"]],
-        port=[[0, 9000, 1]],
-        mac=[[0, "02-03-04-0a-0b-0c"]],
-        integration_ms=849,
+        stn_beam_id=1,
     )
     copied = copy.deepcopy(config)
     StnBeamConfigurationSchema().dumps(config)
 
     assert config.stn_beam_id == copied.stn_beam_id
     assert config.freq_ids == copied.freq_ids
-    assert config.host == copied.host
-    assert config.port == copied.port
-    assert config.mac == copied.mac
-    assert config.integration_ms == copied.integration_ms
     assert config == copied
 
 
@@ -387,13 +386,12 @@ def test_marshall_vis_configuration_does_not_modify_original():
     config = VisConfiguration(
         fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
         stn_beams=[
-            StnBeamConfiguration(
+            VisStnBeamConfiguration(
                 stn_beam_id=1,
-                freq_ids=[400],
+                integration_ms=849,
                 host=[[0, "192.168.1.00"]],
                 port=[[0, 9000, 1]],
                 mac=[[0, "02-03-04-0a-0b-0c"]],
-                integration_ms=849,
             )
         ],
     )
@@ -429,26 +427,17 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
     config = LowCBFConfiguration(
         stations=StationConfiguration(
             stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-            stn_beams=[
-                StnBeamConfiguration(
-                    stn_beam_id=1,
-                    freq_ids=[400],
-                    host=[[0, "192.168.1.00"]],
-                    port=[[0, 9000, 1]],
-                    mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
-                )
-            ],
+            stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400], stn_beam_id=1)],
         ),
         vis=VisConfiguration(
             fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),
             stn_beams=[
-                StnBeamConfiguration(
+                VisStnBeamConfiguration(
+                    integration_ms=849,
                     stn_beam_id=1,
                     host=[[0, "192.168.1.00"]],
                     port=[[0, 9000, 1]],
                     mac=[[0, "02-03-04-0a-0b-0c"]],
-                    integration_ms=849,
                 )
             ],
         ),

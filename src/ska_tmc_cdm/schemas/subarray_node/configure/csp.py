@@ -21,6 +21,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
+    VisStnBeamConfiguration,
 )
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
@@ -244,10 +245,6 @@ class CBFConfigurationSchema(Schema):
 class StnBeamConfigurationSchema(Schema):
     stn_beam_id = fields.Integer()
     freq_ids = fields.List(fields.Integer)
-    host = fields.List(fields.Tuple((fields.Integer, fields.String)))
-    port = fields.List(fields.Tuple((fields.Integer, fields.Integer, fields.Integer)))
-    mac = fields.List(fields.Tuple((fields.Integer, fields.String)))
-    integration_ms = fields.Integer()
     beam_id = fields.Integer()
     delay_poly = fields.String()
 
@@ -264,21 +261,13 @@ class StnBeamConfigurationSchema(Schema):
         """
         stn_beam_id = data.get("stn_beam_id", None)
         freq_ids = data.get("freq_ids", None)
-        host = data.get("host", None)
-        port = data.get("port", None)
-        mac = data.get("mac", None)
-        integration_ms = data.get("integration_ms", None)
         beam_id = data.get("beam_id", None)
         delay_poly = data.get("delay_poly", None)
 
         return StnBeamConfiguration(
-            stn_beam_id=stn_beam_id,
-            freq_ids=freq_ids,
-            host=host,
-            port=port,
-            mac=mac,
-            integration_ms=integration_ms,
             beam_id=beam_id,
+            freq_ids=freq_ids,
+            stn_beam_id=stn_beam_id,
             delay_poly=delay_poly,
         )
 
@@ -332,10 +321,56 @@ class VisFspConfigurationSchema(Schema):
         return result
 
 
+@CODEC.register_mapping(VisStnBeamConfiguration)
+class VisStnBeamConfigurationSchema(Schema):
+    stn_beam_id = fields.Integer()
+    host = fields.List(fields.Tuple((fields.Integer, fields.String)))
+    port = fields.List(fields.Tuple((fields.Integer, fields.Integer, fields.Integer)))
+    mac = fields.List(fields.Tuple((fields.Integer, fields.String)))
+    integration_ms = fields.Integer()
+
+    @post_load
+    def create(self, data, **_):
+        """
+         Convert parsed JSON back into a VisStnBeamConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+
+        :return: VisStnBeamConfiguration instance populated to match JSON
+        :rtype: VisStnBeamConfiguration
+        """
+        stn_beam_id = data.get("stn_beam_id", None)
+        host = data.get("host", None)
+        port = data.get("port", None)
+        mac = data.get("mac", None)
+        integration_ms = data.get("integration_ms", None)
+
+        return VisStnBeamConfiguration(
+            stn_beam_id=stn_beam_id,
+            host=host,
+            port=port,
+            mac=mac,
+            integration_ms=integration_ms,
+        )
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CBF configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
+
 @CODEC.register_mapping(VisConfiguration)
 class VisConfigurationSchema(Schema):
     fsp = fields.Nested(VisFspConfigurationSchema)
-    stn_beams = fields.List(fields.Nested(StnBeamConfigurationSchema))
+    stn_beams = fields.List(fields.Nested(VisStnBeamConfigurationSchema))
 
     @post_load
     def create(self, data, **_):
