@@ -381,13 +381,10 @@ VALID_LOW_CONFIGURE_JSON = """
           }
         ],
         "sky_coordinates": {
-          "timestamp": "2021-10-23T12:34:56.789Z",
           "reference_frame": "ICRS",
           "c1": 180.0,
-          "c1_rate": 0.0,
-          "c2": 45.0,
-          "c2_rate": 0.0
-        }
+          "c2": 45.0
+          }
       }
     ]
   },
@@ -490,12 +487,9 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                     ),
                 ],
                 sky_coordinates=SubarrayBeamSkyCoordinates(
-                    timestamp="2021-10-23T12:34:56.789Z",
                     reference_frame="ICRS",
                     c1=180.0,
-                    c1_rate=0.0,
                     c2=45.0,
-                    c2_rate=0.0,
                 ),
             )
         ],
@@ -833,13 +827,10 @@ INVALID_LOW_CONFIGURE_JSON = """
           }
         ],
         "sky_coordinates": {
-          "timestamp": "2021-10-23T12:34:56.789Z",
           "reference_frame": "ICRS",
           "c1": 180.0,
-          "c1_rate": 0.0,
-          "c2": 45.0,
-          "c2_rate": 0.0
-        }
+          "c2": 45.0
+          }
       }
     ]
   },
@@ -930,12 +921,9 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                     )
                 ],
                 sky_coordinates=SubarrayBeamSkyCoordinates(
-                    timestamp="2021-10-23T12:34:56.789Z",
                     reference_frame="ICRS",
                     c1=180.0,
-                    c1_rate=0.0,
                     c2=45.0,
-                    c2_rate=0.0,
                 ),
             )
         ],

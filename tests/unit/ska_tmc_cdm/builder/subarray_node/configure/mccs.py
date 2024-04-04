@@ -11,20 +11,9 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
 
 class SubarrayBeamSkyCoordinatesBuilder:
     def __init__(self):
-        self.timestamp = None
         self.reference_frame = None
         self.c1 = None
-        self.c1_rate = None
         self.c2 = None
-        self.c2_rate = None
-
-    def set_timestamp(self, timestamp: str) -> "SubarrayBeamSkyCoordinatesBuilder":
-        """
-        Set timestamp
-        :param: timestamp: timestamp specification
-        """
-        self.timestamp = timestamp
-        return self
 
     def set_reference_frame(
         self, reference_frame: str
@@ -52,34 +41,15 @@ class SubarrayBeamSkyCoordinatesBuilder:
         self.c2 = c2
         return self
 
-    def set_c1_rate(self, c1_rate: float) -> "SubarrayBeamSkyCoordinatesBuilder":
-        """
-        Set c1_rate
-        :param: c1_rate: c1_rate specification
-        """
-        self.c1_rate = c1_rate
-        return self
-
-    def set_c2_rate(self, c2_rate: float) -> "SubarrayBeamSkyCoordinatesBuilder":
-        """
-        Set c2_rate
-        :param: c2_rate: c2_rate specification
-        """
-        self.c2_rate = c2_rate
-        return self
-
     def build(self) -> SubarrayBeamSkyCoordinates:
         """
         Build or create subarray beam target
         :return: CDM subarray beam target instance
         """
         return SubarrayBeamSkyCoordinates(
-            timestamp=self.timestamp,
             reference_frame=self.reference_frame,
             c1=self.c1,
-            c1_rate=self.c1_rate,
             c2=self.c2,
-            c2_rate=self.c2_rate,
         )
 
 
@@ -205,12 +175,9 @@ class SubarrayBeamConfigurationBuilder:
                 )
             ],
             sky_coordinates=SubarrayBeamSkyCoordinates(
-                timestamp="2021-10-23T12:34:56.789Z",
                 reference_frame="ICRS",
                 c1=180.0,
-                c1_rate=0.0,
                 c2=90.0,
-                c2_rate=0.0,
             ),
             subarray_beam_id=self.subarray_beam_id,
         )

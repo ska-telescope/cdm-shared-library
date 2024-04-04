@@ -13,39 +13,27 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import (
     [
         (
             SubarrayBeamSkyCoordinatesBuilder()
-            .set_timestamp("value")
             .set_reference_frame("HORIZON")
             .set_c1(180.0)
-            .set_c1_rate(0.0)
             .set_c2(90.0)
-            .set_c2_rate(0.0)
             .build(),
             SubarrayBeamSkyCoordinatesBuilder()
-            .set_timestamp("value")
             .set_reference_frame("HORIZON")
             .set_c1(180.0)
-            .set_c1_rate(0.0)
             .set_c2(90.0)
-            .set_c2_rate(0.0)
             .build(),
             True,
         ),
         (
             SubarrayBeamSkyCoordinatesBuilder()
-            .set_timestamp("value")
             .set_reference_frame("HORIZON")
             .set_c1(180.0)
-            .set_c1_rate(0.0)
             .set_c2(90.0)
-            .set_c2_rate(0.0)
             .build(),
             SubarrayBeamSkyCoordinatesBuilder()
-            .set_timestamp("value")
             .set_reference_frame("frame")
             .set_c1(180.0)
-            .set_c1_rate(0.0)
             .set_c2(80.0)
-            .set_c2_rate(0.0)
             .build(),
             False,
         ),

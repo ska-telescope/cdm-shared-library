@@ -26,12 +26,9 @@ from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
 @CODEC.register_mapping(SubarrayBeamSkyCoordinates)
 class SubarrayBeamSkyCoordinatesSchema(Schema):
-    timestamp = fields.String(data_key="timestamp", required=True)
     reference_frame = fields.String(data_key="reference_frame", required=True)
     c1 = fields.Float(data_key="c1", required=True)
-    c1_rate = fields.Float(data_key="c1_rate", required=True)
     c2 = fields.Float(data_key="c2", required=True)
-    c2_rate = fields.Float(data_key="c2_rate", required=True)
 
     @post_load
     def create(self, data, **_):
@@ -44,19 +41,13 @@ class SubarrayBeamSkyCoordinatesSchema(Schema):
         :return: SubarrayBeamSkyCoordinates instance populated to match JSON
         :rtype: SubarrayBeamSkyCoordinates
         """
-        timestamp = data["timestamp"]
         reference_frame = data["reference_frame"]
         c1 = data["c1"]
-        c1_rate = data["c1_rate"]
         c2 = data["c2"]
-        c2_rate = data["c2_rate"]
         return SubarrayBeamSkyCoordinates(
-            timestamp=timestamp,
             reference_frame=reference_frame,
             c1=c1,
-            c1_rate=c1_rate,
             c2=c2,
-            c2_rate=c2_rate,
         )
 
 

@@ -34,12 +34,9 @@ VALID_APERTURES_JSON = """
 """
 VALID_SKY_COORDINATES_JSON = """
 {
-          "timestamp": "2021-10-23T12:34:56.789Z",
           "reference_frame": "ICRS",
           "c1": 180.0,
-          "c1_rate": 0.0,
-          "c2": 45.0,
-          "c2_rate": 0.0
+          "c2": 45.0
 }
 """
 
@@ -69,12 +66,9 @@ VALID_SUBARRAYBEAMCONFIGURATION_OBJECT = SubarrayBeamConfiguration(
         SubarrayBeamAperatures(aperture_id="AP001.01", weighting_key_ref="aperture2")
     ],
     sky_coordinates=SubarrayBeamSkyCoordinates(
-        timestamp="2021-10-23T12:34:56.789Z",
         reference_frame="ICRS",
         c1=180.0,
-        c1_rate=0.0,
         c2=45.0,
-        c2_rate=0.0,
     ),
 )
 

@@ -32,12 +32,9 @@ def station_beam_config() -> SubarrayBeamConfiguration:
             )
             .set_sky_coordinates(
             SubarrayBeamSkyCoordinatesBuilder()
-            .set_timestamp("value")
             .set_reference_frame("HORIZON")
             .set_c1(180.0)
-            .set_c1_rate(0.0)
             .set_c2(90.0)
-            .set_c2_rate(0.0)   
             )
             .build()
         )
