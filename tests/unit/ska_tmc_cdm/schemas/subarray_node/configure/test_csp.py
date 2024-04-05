@@ -325,21 +325,6 @@ def test_marshall_for_csp_configuration_pi16():
     )
 
 
-def test_marshall_for_low_csp_configuration_pi20():
-    """
-    Verify that serialising a CSPConfiguration does not change the object.
-    """
-    # Raises validation error as this is PI20 schema and
-    # as per PI22 agreement beam_id is required field for
-    # CSP schema
-    with pytest.raises(
-        ValidationError,
-        match="1 validation error for StnBeamConfiguration\nbeam_id\n "
-        + " Input should be a valid integer",
-    ):
-        CSPConfigurationSchema().loads(VALID_LOW_CSP_JSON_PI20)
-
-
 def test_marshall_station_configuration_does_not_modify_original():
     """
     Verify that serialising a StationConfiguration does not change the object.

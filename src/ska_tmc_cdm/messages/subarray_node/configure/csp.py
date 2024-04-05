@@ -110,7 +110,7 @@ class StnBeamConfiguration:
     :param delay_poly: delay_poly
     """
 
-    beam_id: int
+    beam_id: Optional[int]
     freq_ids: List[int]
     stn_beam_id: Optional[int] = None
     delay_poly: Optional[str] = None
@@ -128,7 +128,7 @@ class VisStnBeamConfiguration:
     :param integration_ms: integration_ms
     """
 
-    stn_beam_id: int
+    stn_beam_id: Optional[int]
     integration_ms: int
     host: Optional[List[Tuple[int, str]]] = None
     port: Optional[List[Tuple[int, int, int]]] = None
