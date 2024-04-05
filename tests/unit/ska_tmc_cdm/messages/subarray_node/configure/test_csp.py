@@ -498,7 +498,7 @@ def test_fsp_configuration_channel_avg_map_length(
             .build(),
             StnBeamConfigurationBuilder()
             .set_stn_beam_id(2)  # Different stn_beam_id
-            .set_beam_id(1)
+            .set_beam_id(2)
             .set_freq_ids([400])
             .set_delay_poly("tango/device/instance/delay")
             .build(),

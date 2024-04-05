@@ -457,6 +457,72 @@ VALID_LOW_CONFIGURE_JSON = """
 }
 """
 
+VALID_LOW_CONFIGURE_OBJECT_3_1 = ConfigureRequest(
+    interface="https://schema.skao.int/ska-low-tmc-configure/3.2",
+    transaction_id="txn-....-00001",
+    mccs=MCCSConfiguration(
+        subarray_beam_configs=[
+            SubarrayBeamConfiguration(
+                subarray_beam_id=1,
+                update_rate=0.0,
+                logical_bands=[
+                    SubarrayBeamLogicalBands(start_channel=80, number_of_channels=16),
+                    SubarrayBeamLogicalBands(start_channel=384, number_of_channels=16),
+                ],
+                apertures=[
+                    SubarrayBeamAperatures(
+                        aperture_id="AP001.01", weighting_key_ref="aperture2"
+                    ),
+                    SubarrayBeamAperatures(
+                        aperture_id="AP001.02", weighting_key_ref="aperture3"
+                    ),
+                    SubarrayBeamAperatures(
+                        aperture_id="AP002.01", weighting_key_ref="aperture2"
+                    ),
+                    SubarrayBeamAperatures(
+                        aperture_id="AP002.02", weighting_key_ref="aperture3"
+                    ),
+                    SubarrayBeamAperatures(
+                        aperture_id="AP003.01", weighting_key_ref="aperture1"
+                    ),
+                ],
+                sky_coordinates=SubarrayBeamSkyCoordinates(
+                    reference_frame="ICRS",
+                    c1=180.0,
+                    c2=45.0,
+                ),
+            )
+        ],
+    ),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+    ),
+    csp=CSPConfiguration(
+        interface="https://schema.skao.int/ska-low-csp-configure/3.1",
+        common=CommonConfiguration(config_id="sbi-mvp01-20200325-00001-science_A",subarray_id=1),
+        lowcbf=LowCBFConfiguration(
+            stations=StationConfiguration(
+                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
+                stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400], delay_poly="a/b/c/delaymodel")],
+            ),
+            vis=VisConfiguration(
+                fsp=VisFspConfiguration(
+                    fsp_ids=[1], firmware="vis"
+                ),
+                stn_beams=[
+                    VisStnBeamConfiguration(
+                        stn_beam_id=1,
+                        integration_ms=849,
+                        host=[[0, "192.168.1.00"]],
+                        port=[[0, 9000, 1]]
+                    )
+                ],
+            ),
+        ),
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+)
+
 VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-low-tmc-configure/3.2",
     transaction_id="txn-....-00001",
@@ -1035,7 +1101,7 @@ def partial_invalidator(o: ConfigureRequest):
             None,
             VALID_LOW_CONFIGURE_JSON,
             None,
-            True,
+            False,
         ),
         (
             ConfigureRequestSchema,

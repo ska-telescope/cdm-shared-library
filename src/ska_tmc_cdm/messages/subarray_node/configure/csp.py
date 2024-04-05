@@ -99,7 +99,7 @@ class CommonConfiguration:
     band_5_tuning: Optional[List[float]] = None
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StnBeamConfiguration:
     """
     Class to hold Stations Beam Configuration.
