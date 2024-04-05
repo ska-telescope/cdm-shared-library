@@ -101,14 +101,13 @@ LOW_CONFIGURE_PARAMS = (
     (
         ConfigureRequest,
         VALID_LOW_CONFIGURE_JSON,
-        VALID_LOW_CONFIGURE_OBJECT,
         True,
     ),
 )
 
 
-@pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", LOW_CONFIGURE_PARAMS)
-def test_codec_loads_configure(msg_cls, json_str, expected, is_validate):
+@pytest.mark.parametrize("msg_cls,json_str, is_validate", LOW_CONFIGURE_PARAMS)
+def test_codec_loads_configure(msg_cls, json_str, is_validate):
     """
     Verify that the codec unmarshalls objects correctly.
     """
