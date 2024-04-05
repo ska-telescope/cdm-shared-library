@@ -499,22 +499,26 @@ VALID_LOW_CONFIGURE_OBJECT_3_1 = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-configure/3.1",
-        common=CommonConfiguration(config_id="sbi-mvp01-20200325-00001-science_A",subarray_id=1),
+        common=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A", subarray_id=1
+        ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-                stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400], delay_poly="a/b/c/delaymodel")],
+                stn_beams=[
+                    StnBeamConfiguration(
+                        beam_id=1, freq_ids=[400], delay_poly="a/b/c/delaymodel"
+                    )
+                ],
             ),
             vis=VisConfiguration(
-                fsp=VisFspConfiguration(
-                    fsp_ids=[1], firmware="vis"
-                ),
+                fsp=VisFspConfiguration(fsp_ids=[1], firmware="vis"),
                 stn_beams=[
                     VisStnBeamConfiguration(
                         stn_beam_id=1,
                         integration_ms=849,
                         host=[[0, "192.168.1.00"]],
-                        port=[[0, 9000, 1]]
+                        port=[[0, 9000, 1]],
                     )
                 ],
             ),

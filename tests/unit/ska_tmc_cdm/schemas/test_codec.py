@@ -37,9 +37,9 @@ from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_OBJECT,
+    VALID_LOW_CONFIGURE_OBJECT_3_1,
     VALID_MID_CONFIGURE_JSON,
     VALID_MID_CONFIGURE_OBJECT,
-    VALID_LOW_CONFIGURE_OBJECT_3_1
 )
 
 TEST_PARAMETERS = [
@@ -98,11 +98,15 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
 
 
 LOW_CONFIGURE_PARAMS = (
+    (
         ConfigureRequest,
         VALID_LOW_CONFIGURE_JSON,
         VALID_LOW_CONFIGURE_OBJECT,
         True,
     ),
+)
+
+
 @pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", LOW_CONFIGURE_PARAMS)
 def test_codec_loads_configure(msg_cls, json_str, expected, is_validate):
     """
