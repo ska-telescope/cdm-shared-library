@@ -4,9 +4,6 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.csp module.
 import copy
 import inspect
 
-import pytest
-from pydantic import ValidationError
-
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CBFConfiguration,
