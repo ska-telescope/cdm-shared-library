@@ -21,26 +21,17 @@ __all__ = [
 class SubarrayBeamSkyCoordinates:
     """
     A class to hold Subarray Beam sky coordinates configuration items
-    :param timestamp: UTC time for begin of drift.
-    :type timestamp: str
     :param reference_frame: Must be one of: ["topocentric", "ICRS", "galactic"]
     :type reference_frame: str
     :param c1: first coordinate, RA or azimuth, in degrees
     :type c1: float
-    :param c1_rate: Drift rate for first coordinate
-    :type c1_rate: float
     :param c2: second coordinate, RA or azimuth, in degrees
     :type c2: float
-    :param c2_rate: Drift rate for second coordinate
-    :type c2_rate: float
     """
 
-    timestamp: str = None
     reference_frame: str = None
     c1: float = None
-    c1_rate: float = None
     c2: float = None
-    c2_rate: float = None
 
 
 @dataclass

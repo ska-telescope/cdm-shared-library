@@ -393,10 +393,10 @@ VALID_LOW_CONFIGURE_JSON = """
     "scan_type": "science_A"
   },
   "csp": {
-    "interface": "https://schema.skao.int/ska-low-csp-configurescan/0.0",
+    "interface": "https://schema.skao.int/ska-low-csp-configure/3.1",
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A"
-    },
+      },
     "lowcbf": {
       "stations": {
         "stns": [
@@ -498,10 +498,8 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
         interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
     ),
     csp=CSPConfiguration(
-        interface="https://schema.skao.int/ska-low-csp-configurescan/0.0",
-        common=CommonConfiguration(
-            config_id="sbi-mvp01-20200325-00001-science_A",
-        ),
+        interface="https://schema.skao.int/ska-low-csp-configure/3.1",
+        common=CommonConfiguration(config_id="sbi-mvp01-20200325-00001-science_A"),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
