@@ -5,6 +5,17 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
+[9.0.0]
+*******
+
+* Utlised ska_telmodel v1.15.1 with OSO-TMC low configure schema 3.2
+* Created class for low cbf VIS station beams configurations
+* SAH-1500 - Update low delay model calculation to accept Ra-Dec in configure command
+* BTN-2263 - ska-telmodel: Add pointing calibration interface changes
+* CT-1244 - Support other teams
+
+* Updated existing unit tests and add new tests
+
 [8.3.0]
 *******
 
