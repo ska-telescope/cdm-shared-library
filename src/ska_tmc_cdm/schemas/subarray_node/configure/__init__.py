@@ -15,7 +15,6 @@ __all__ = [
     "FSPConfigurationSchema",
     "SDPConfigurationSchema",
     "MCCSConfigurationSchema",
-    "StnConfigurationSchema",
     "SubarrayBeamConfigurationSchema",
     "LowCBFConfigurationSchema",
 ]
@@ -34,9 +33,5 @@ from .csp import (
     LowCBFConfigurationSchema,
     SubarrayConfigurationSchema,
 )
-from .mccs import (
-    MCCSConfigurationSchema,
-    StnConfigurationSchema,
-    SubarrayBeamConfigurationSchema,
-)
+from .mccs import MCCSConfigurationSchema, SubarrayBeamConfigurationSchema
 from .sdp import SDPConfigurationSchema

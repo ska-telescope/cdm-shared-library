@@ -21,9 +21,9 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
+    VisStnBeamConfiguration,
 )
 from ska_tmc_cdm.schemas import CODEC
-from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
 __all__ = [
     "CSPConfigurationSchema",
@@ -57,8 +57,8 @@ class SubarrayConfigurationSchema(Schema):
 @CODEC.register_mapping(CommonConfiguration)
 class CommonConfigurationSchema(Schema):
     config_id = fields.String(data_key="config_id", required=True)
-    frequency_band = fields.String(data_key="frequency_band")
     subarray_id = fields.Integer(data_key="subarray_id")
+    frequency_band = fields.String(data_key="frequency_band")
     band_5_tuning = fields.List(fields.Float, data_key="band_5_tuning")
 
     @pre_dump
@@ -107,9 +107,14 @@ class CommonConfigurationSchema(Schema):
         if frequency_band:
             frequency_band_enum = ReceiverBand(frequency_band)
             return CommonConfiguration(
-                config_id, frequency_band_enum, subarray_id, band_5_tuning
+                config_id=config_id,
+                frequency_band=frequency_band_enum,
+                subarray_id=subarray_id,
+                band_5_tuning=band_5_tuning,
             )
-        return CommonConfiguration(config_id, subarray_id, band_5_tuning)
+        return CommonConfiguration(
+            config_id=config_id, subarray_id=subarray_id, band_5_tuning=band_5_tuning
+        )
 
 
 @CODEC.register_mapping(FSPConfiguration)
@@ -237,14 +242,10 @@ class CBFConfigurationSchema(Schema):
 
 @CODEC.register_mapping(StnBeamConfiguration)
 class StnBeamConfigurationSchema(Schema):
-    stn_beam_id = fields.Integer(data_key="stn_beam_id")
-    freq_ids = fields.List(fields.Integer, data_key="freq_ids")
-    host = fields.List(fields.Tuple((fields.Integer, fields.String)), data_key="host")
-    port = fields.List(
-        fields.Tuple((fields.Integer, fields.Integer, fields.Integer)), data_key="port"
-    )
-    mac = fields.List(fields.Tuple((fields.Integer, fields.String)), data_key="mac")
-    integration_ms = fields.Integer(data_key="integration_ms")
+    stn_beam_id = fields.Integer()
+    freq_ids = fields.List(fields.Integer)
+    beam_id = fields.Integer()
+    delay_poly = fields.String()
 
     @post_load
     def create(self, data, **_):
@@ -259,14 +260,93 @@ class StnBeamConfigurationSchema(Schema):
         """
         stn_beam_id = data.get("stn_beam_id", None)
         freq_ids = data.get("freq_ids", None)
+        beam_id = data.get("beam_id", None)
+        delay_poly = data.get("delay_poly", None)
+
+        return StnBeamConfiguration(
+            beam_id=beam_id,
+            freq_ids=freq_ids,
+            stn_beam_id=stn_beam_id,
+            delay_poly=delay_poly,
+        )
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CBF configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
+
+@CODEC.register_mapping(VisFspConfiguration)
+class VisFspConfigurationSchema(Schema):
+    function_mode = fields.String()
+    fsp_ids = fields.List(fields.Integer)
+    firmware = fields.String()
+
+    @post_load
+    def create(self, data, **_):
+        """
+         Convert parsed JSON back into a VisFspConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+
+        :return: VisFspConfiguration instance populated to match JSON
+        :rtype: VisFspConfiguration
+        """
+        function_mode = data.get("function_mode", None)
+        fsp_ids = data.get("fsp_ids", None)
+        firmware = data.get("firmware", None)
+        return VisFspConfiguration(
+            function_mode=function_mode, fsp_ids=fsp_ids, firmware=firmware
+        )
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CBF configuration
+        """
+        result = {k: v for k, v in data.items() if v is not None}
+        return result
+
+
+@CODEC.register_mapping(VisStnBeamConfiguration)
+class VisStnBeamConfigurationSchema(Schema):
+    stn_beam_id = fields.Integer()
+    host = fields.List(fields.Tuple((fields.Integer, fields.String)))
+    port = fields.List(fields.Tuple((fields.Integer, fields.Integer, fields.Integer)))
+    mac = fields.List(fields.Tuple((fields.Integer, fields.String)))
+    integration_ms = fields.Integer()
+
+    @post_load
+    def create(self, data, **_):
+        """
+         Convert parsed JSON back into a VisStnBeamConfiguration object.
+
+        :param data: dict containing parsed JSON values
+        :param _: kwargs passed by Marshmallow
+
+        :return: VisStnBeamConfiguration instance populated to match JSON
+        :rtype: VisStnBeamConfiguration
+        """
+        stn_beam_id = data.get("stn_beam_id", None)
         host = data.get("host", None)
         port = data.get("port", None)
         mac = data.get("mac", None)
         integration_ms = data.get("integration_ms", None)
 
-        return StnBeamConfiguration(
+        return VisStnBeamConfiguration(
             stn_beam_id=stn_beam_id,
-            freq_ids=freq_ids,
             host=host,
             port=port,
             mac=mac,
@@ -286,43 +366,10 @@ class StnBeamConfigurationSchema(Schema):
         return result
 
 
-@CODEC.register_mapping(VisFspConfiguration)
-class VisFspConfigurationSchema(Schema):
-    function_mode = fields.String(data_key="function_mode")
-    fsp_ids = fields.List(fields.Integer, data_key="fsp_ids")
-
-    @post_load
-    def create(self, data, **_):
-        """
-         Convert parsed JSON back into a VisFspConfiguration object.
-
-        :param data: dict containing parsed JSON values
-        :param _: kwargs passed by Marshmallow
-
-        :return: VisFspConfiguration instance populated to match JSON
-        :rtype: VisFspConfiguration
-        """
-        function_mode = data.get("function_mode", None)
-        fsp_ids = data.get("fsp_ids", None)
-        return VisFspConfiguration(function_mode=function_mode, fsp_ids=fsp_ids)
-
-    @post_dump
-    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
-        """
-        Filter out null values from JSON.
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param _: kwargs passed by Marshmallow
-        :return: dict suitable for CBF configuration
-        """
-        result = {k: v for k, v in data.items() if v is not None}
-        return result
-
-
 @CODEC.register_mapping(VisConfiguration)
 class VisConfigurationSchema(Schema):
     fsp = fields.Nested(VisFspConfigurationSchema)
-    stn_beams = fields.List(fields.Nested(StnBeamConfigurationSchema))
+    stn_beams = fields.List(fields.Nested(VisStnBeamConfigurationSchema))
 
     @post_load
     def create(self, data, **_):
@@ -413,7 +460,7 @@ class LowCBFConfigurationSchema(Schema):
 
 
 @CODEC.register_mapping(CSPConfiguration)
-class CSPConfigurationSchema(ValidatingSchema):
+class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
@@ -432,7 +479,7 @@ class CSPConfigurationSchema(ValidatingSchema):
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
         """
-         Convert parsed JSON back into a CSPConfiguration object.
+        Convert parsed JSON back into a CSPConfiguration object.
 
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -473,5 +520,6 @@ class CSPConfigurationSchema(ValidatingSchema):
         # convert tuples to lists
         data = json.loads(json.dumps(data))
 
-        data = super().validate_on_dump(data)
+        # SAH-1500: validation disabled as OSO-TMC JSON is invalid w.r.t. TMC-CSP schema
+        # data = super().validate_on_dump(data)
         return data

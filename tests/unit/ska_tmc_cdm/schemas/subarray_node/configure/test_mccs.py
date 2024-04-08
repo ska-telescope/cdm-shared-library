@@ -5,50 +5,54 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
-    StnConfiguration,
+    SubarrayBeamAperatures,
     SubarrayBeamConfiguration,
-    SubarrayBeamTarget,
+    SubarrayBeamLogicalBands,
+    SubarrayBeamSkyCoordinates,
 )
 from ska_tmc_cdm.schemas.subarray_node.configure.mccs import (
     MCCSConfigurationSchema,
-    StnConfigurationSchema,
     SubarrayBeamConfigurationSchema,
-    SubarrayBeamTargetSchema,
 )
 from ska_tmc_cdm.utils import assert_json_is_equal
 
-VALID_SUBARRAYBEAMTARGET_JSON = """
-{
-    "reference_frame": "HORIZON",
-    "target_name": "DriftScan",
-    "az": 180.0,
-    "el": 45.0
+VALID_LOGICAL_BANDS_JSON = """
+[{
+"start_channel": 80,
+"number_of_channels": 16
 }
+],
 """
 
-VALID_SUBARRAYBEAMTARGET_OBJECT = SubarrayBeamTarget(
-    180.0, 45.0, "DriftScan", "HORIZON"
-)
-
-VALID_STNCONFIGURATION_JSON = """
+VALID_APERTURES_JSON = """
+ [
+          {
+            "aperture_id": "AP001.01",
+            "weighting_key_ref": "aperture2"
+          }
+],
+"""
+VALID_SKY_COORDINATES_JSON = """
 {
-    "station_id":1
+          "reference_frame": "ICRS",
+          "c1": 180.0,
+          "c2": 45.0
 }
 """
-
-VALID_STNCONFIGURATION_OBJECT = StnConfiguration(1)
 
 VALID_SUBARRAYBEAMCONFIGURATION_JSON = (
     """
 {
     "subarray_beam_id": 1,
-    "station_ids": [1,2],
-    "channels": [[1, 2]],
     "update_rate": 0.0,
-    "antenna_weights": [1.0, 1.0, 1.0],
-    "phase_centre": [0.0, 0.0],
-    "target": """
-    + VALID_SUBARRAYBEAMTARGET_JSON
+    "logical_bands":"""
+    + VALID_LOGICAL_BANDS_JSON
+    + """
+    "apertures":"""
+    + VALID_APERTURES_JSON
+    + """
+    "sky_coordinates":"""
+    + VALID_SKY_COORDINATES_JSON
     + """
 }
 """
@@ -56,22 +60,21 @@ VALID_SUBARRAYBEAMCONFIGURATION_JSON = (
 
 VALID_SUBARRAYBEAMCONFIGURATION_OBJECT = SubarrayBeamConfiguration(
     subarray_beam_id=1,
-    station_ids=[1, 2],
-    channels=[[1, 2]],
     update_rate=0.0,
-    target=VALID_SUBARRAYBEAMTARGET_OBJECT,
-    antenna_weights=[1.0, 1.0, 1.0],
-    phase_centre=[0.0, 0.0],
+    logical_bands=[SubarrayBeamLogicalBands(start_channel=80, number_of_channels=16)],
+    apertures=[
+        SubarrayBeamAperatures(aperture_id="AP001.01", weighting_key_ref="aperture2")
+    ],
+    sky_coordinates=SubarrayBeamSkyCoordinates(
+        reference_frame="ICRS",
+        c1=180.0,
+        c2=45.0,
+    ),
 )
 
 VALID_MCCSCONFIGURATION_JSON = (
     """
 {
-    "stations": [
-    """
-    + VALID_STNCONFIGURATION_JSON
-    + """
-    ],
     "subarray_beams": [
     """
     + VALID_SUBARRAYBEAMCONFIGURATION_JSON
@@ -82,7 +85,6 @@ VALID_MCCSCONFIGURATION_JSON = (
 )
 
 VALID_MCCSCONFIGURATION_OBJECT = MCCSConfiguration(
-    station_configs=[VALID_STNCONFIGURATION_OBJECT],
     subarray_beam_configs=[VALID_SUBARRAYBEAMCONFIGURATION_OBJECT],
 )
 
@@ -90,16 +92,6 @@ VALID_MCCSCONFIGURATION_OBJECT = MCCSConfiguration(
 @pytest.mark.parametrize(
     "schema_cls,instance,expected",
     [
-        (
-            SubarrayBeamTargetSchema,
-            VALID_SUBARRAYBEAMTARGET_OBJECT,
-            VALID_SUBARRAYBEAMTARGET_JSON,
-        ),
-        (
-            StnConfigurationSchema,
-            VALID_STNCONFIGURATION_OBJECT,
-            VALID_STNCONFIGURATION_JSON,
-        ),
         (
             SubarrayBeamConfigurationSchema,
             VALID_SUBARRAYBEAMCONFIGURATION_OBJECT,
@@ -124,16 +116,6 @@ def test_marshal(schema_cls, instance, expected):
 @pytest.mark.parametrize(
     "schema_cls,json_str,expected",
     [
-        (
-            SubarrayBeamTargetSchema,
-            VALID_SUBARRAYBEAMTARGET_JSON,
-            VALID_SUBARRAYBEAMTARGET_OBJECT,
-        ),
-        (
-            StnConfigurationSchema,
-            VALID_STNCONFIGURATION_JSON,
-            VALID_STNCONFIGURATION_OBJECT,
-        ),
         (
             SubarrayBeamConfigurationSchema,
             VALID_SUBARRAYBEAMCONFIGURATION_JSON,

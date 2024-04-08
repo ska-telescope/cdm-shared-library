@@ -2,44 +2,22 @@ from typing import List
 
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
-    StnConfiguration,
+    SubarrayBeamAperatures,
     SubarrayBeamConfiguration,
-    SubarrayBeamTarget,
+    SubarrayBeamLogicalBands,
+    SubarrayBeamSkyCoordinates,
 )
 
 
-class SubarrayBeamTargetBuilder:
+class SubarrayBeamSkyCoordinatesBuilder:
     def __init__(self):
-        self.az = None
-        self.el = None
-        self.target_name = None
         self.reference_frame = None
+        self.c1 = None
+        self.c2 = None
 
-    def set_az(self, az: float) -> "SubarrayBeamTargetBuilder":
-        """
-        Set Az
-        :param: az: Az specification with rates
-        """
-        self.az = az
-        return self
-
-    def set_el(self, el: float) -> "SubarrayBeamTargetBuilder":
-        """
-        Set El
-        :param: el: El specification with rates
-        """
-        self.el = el
-        return self
-
-    def set_target_name(self, target_name: str) -> "SubarrayBeamTargetBuilder":
-        """
-        Set target name
-        :param: target_name: target name
-        """
-        self.target_name = target_name
-        return self
-
-    def set_reference_frame(self, reference_frame: str) -> "SubarrayBeamTargetBuilder":
+    def set_reference_frame(
+        self, reference_frame: str
+    ) -> "SubarrayBeamSkyCoordinatesBuilder":
         """
         Set reference frame
         :param: reference_frame: Target coordinate reference frame
@@ -47,48 +25,91 @@ class SubarrayBeamTargetBuilder:
         self.reference_frame = reference_frame
         return self
 
-    def build(self) -> SubarrayBeamTarget:
+    def set_c1(self, c1: float) -> "SubarrayBeamSkyCoordinatesBuilder":
+        """
+        Set c1
+        :param: c1: c1 specification
+        """
+        self.c1 = c1
+        return self
+
+    def set_c2(self, c2: float) -> "SubarrayBeamSkyCoordinatesBuilder":
+        """
+        Set c2
+        :param: c2: c2 specification
+        """
+        self.c2 = c2
+        return self
+
+    def build(self) -> SubarrayBeamSkyCoordinates:
         """
         Build or create subarray beam target
         :return: CDM subarray beam target instance
         """
-        return SubarrayBeamTarget(
-            az=self.az,
-            el=self.el,
-            target_name=self.target_name,
+        return SubarrayBeamSkyCoordinates(
             reference_frame=self.reference_frame,
+            c1=self.c1,
+            c2=self.c2,
         )
 
 
-class StnConfigurationBuilder:
+class SubarrayBeamLogicalbandsBuilder:
     def __init__(self):
-        self.station_id = None
+        self.start_channel = None
+        self.number_of_channels = None
 
-    def set_station_id(self, station_id: int) -> "StnConfigurationBuilder":
+    def set_number_of_channels(
+        self, number_of_channels: int
+    ) -> "SubarrayBeamLogicalbandsBuilder":
         """
-        Set station id
-        :param: station_id: station id
+        Set number_of_channels
+        :param: number_of_channels: number_of_channels specification
         """
-        self.station_id = station_id
+        self.number_of_channels = number_of_channels
         return self
 
-    def build(self) -> StnConfiguration:
+    def set_start_channel(
+        self, start_channel: int
+    ) -> "SubarrayBeamLogicalbandsBuilder":
         """
-        Build or create station configuration
-        :return: CDM station configuration instance
+        Set start_channel
+        :param: start_channel: start_channel specification
         """
-        return StnConfiguration(station_id=self.station_id)
+        self.start_channel = start_channel
+        return self
+
+
+class SubarrayBeamApertureBuilder:
+    def __init__(self):
+        self.aperture_id = None
+        self.weighting_key_ref = None
+
+    def set_aperture_id(self, aperture_id: int) -> "SubarrayBeamApertureBuilder":
+        """
+        Set aperture_id
+        :param: aperture_id: aperture_id specification
+        """
+        self.aperture_id = aperture_id
+        return self
+
+    def set_weighting_key_ref(
+        self, weighting_key_ref: int
+    ) -> "SubarrayBeamApertureBuilder":
+        """
+        Set weighting_key_ref
+        :param: weighting_key_ref: weighting_key_ref specification
+        """
+        self.weighting_key_ref = weighting_key_ref
+        return self
 
 
 class SubarrayBeamConfigurationBuilder:
     def __init__(self):
         self.subarray_beam_id = None
-        self.station_ids = None
-        self.channels = None
         self.update_rate = None
-        self.target = None
-        self.antenna_weights = None
-        self.phase_centre = None
+        self.logical_bands = None
+        self.apertures = None
+        self.sky_coordinates = None
 
     def set_subarray_beam_id(
         self, subarray_beam_id: int
@@ -100,26 +121,6 @@ class SubarrayBeamConfigurationBuilder:
         self.subarray_beam_id = subarray_beam_id
         return self
 
-    def set_station_ids(
-        self, station_ids: List[int]
-    ) -> "SubarrayBeamConfigurationBuilder":
-        """
-        Set station ids
-        :param: station_ids: list of station ids
-        """
-        self.station_ids = station_ids
-        return self
-
-    def set_channels(
-        self, channels: List[List[int]]
-    ) -> "SubarrayBeamConfigurationBuilder":
-        """
-        Set channels
-        :param: channels: list of channel list
-        """
-        self.channels = channels
-        return self
-
     def set_update_rate(self, update_rate: float) -> "SubarrayBeamConfigurationBuilder":
         """
         Set update rate
@@ -128,34 +129,34 @@ class SubarrayBeamConfigurationBuilder:
         self.update_rate = update_rate
         return self
 
-    def set_target(
-        self, target: SubarrayBeamTarget
+    def set_logical_bands(
+        self, logical_bands: SubarrayBeamLogicalBands
     ) -> "SubarrayBeamConfigurationBuilder":
         """
-        Set target
-        :param: target: SubarrayBeamTarget Instance
+        Set logical_bands
+        :param: logical_bands: SubarrayBeamLogicalBands Instance
         """
-        self.target = target
+        self.logical_bands = logical_bands
         return self
 
-    def set_antenna_weights(
-        self, antenna_weights: List[float]
+    def set_apertures(
+        self, apertures: SubarrayBeamAperatures
     ) -> "SubarrayBeamConfigurationBuilder":
         """
-        Set antenna weights
-        :param: antenna_weights: list of antenna weights
+        Set apertures
+        :param: apertures: SubarrayBeamAperatures Instance
         """
-        self.antenna_weights = antenna_weights
+        self.apertures = apertures
         return self
 
-    def set_phase_centre(
-        self, phase_centre: List[float]
+    def set_sky_coordinates(
+        self, sky_coordinates: SubarrayBeamSkyCoordinates
     ) -> "SubarrayBeamConfigurationBuilder":
         """
-        Set phase centre
-        :param: phase_centre: list of phase centre
+        Set sky_coordinates
+        :param: sky_coordinates: SubarrayBeamSkyCoordinates Instance
         """
-        self.phase_centre = phase_centre
+        self.sky_coordinates = sky_coordinates
         return self
 
     def build(self) -> SubarrayBeamConfiguration:
@@ -164,30 +165,27 @@ class SubarrayBeamConfigurationBuilder:
         :return: CDM subarray beam configuration instance
         """
         return SubarrayBeamConfiguration(
-            subarray_beam_id=self.subarray_beam_id,
-            station_ids=self.station_ids,
-            channels=self.channels,
             update_rate=self.update_rate,
-            target=self.target,
-            antenna_weights=self.antenna_weights,
-            phase_centre=self.phase_centre,
+            logical_bands=[
+                SubarrayBeamLogicalBands(start_channel=80, number_of_channels=16)
+            ],
+            apertures=[
+                SubarrayBeamAperatures(
+                    aperture_id="AP001.01", weighting_key_ref="aperture2"
+                )
+            ],
+            sky_coordinates=SubarrayBeamSkyCoordinates(
+                reference_frame="ICRS",
+                c1=180.0,
+                c2=90.0,
+            ),
+            subarray_beam_id=self.subarray_beam_id,
         )
 
 
 class MCCSConfigurationBuilder:
     def __init__(self):
-        self.station_configs = None
         self.subarray_beam_configs = None
-
-    def set_station_configs(
-        self, station_configs: List[StnConfiguration]
-    ) -> "MCCSConfigurationBuilder":
-        """
-        Set station configuration
-        :param station_configs: list of station configuration instance
-        """
-        self.station_configs = station_configs
-        return self
 
     def set_subarray_beam_config(
         self, subarray_beam_configs: List[SubarrayBeamConfiguration]
@@ -205,6 +203,5 @@ class MCCSConfigurationBuilder:
         :return: CDM MCCS configuration instance
         """
         return MCCSConfiguration(
-            station_configs=self.station_configs,
             subarray_beam_configs=self.subarray_beam_configs,
         )

@@ -3,63 +3,50 @@ import pytest
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand, DishConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode, CSPConfiguration
-from ska_tmc_cdm.messages.subarray_node.configure.mccs import StnConfiguration, SubarrayBeamTarget, SubarrayBeamConfiguration, MCCSConfiguration
+from ska_tmc_cdm.messages.subarray_node.configure.mccs import SubarrayBeamConfiguration, MCCSConfiguration
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import DishConfigurationBuilder
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import CSPConfigurationBuilder, SubarrayConfigurationBuilder, CommonConfigurationBuilder, CBFConfigurationBuilder, \
-    FSPConfigurationBuilder, StnBeamConfigurationBuilder, VisFspConfigurationBuilder, VisConfigurationBuilder, StationConfigurationBuilder, LowCBFConfigurationBuilder
-from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import StnConfigurationBuilder, SubarrayBeamTargetBuilder, SubarrayBeamConfigurationBuilder, MCCSConfigurationBuilder
+    FSPConfigurationBuilder, StnBeamConfigurationBuilder, VisFspConfigurationBuilder, VisConfigurationBuilder, StationConfigurationBuilder, LowCBFConfigurationBuilder, VisStnBeamConfigurationBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import SubarrayBeamConfigurationBuilder, MCCSConfigurationBuilder, SubarrayBeamSkyCoordinatesBuilder, SubarrayBeamLogicalbandsBuilder, SubarrayBeamApertureBuilder
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.sdp import SDPConfigurationBuilder
 
 
 @pytest.fixture(scope="module")
-def station_config() -> StnConfiguration:
-    """
-    Provides CDM Station Configuration instance through Builder class with predefined values
-    """
-    return StnConfigurationBuilder().set_station_id(1).build()
-
-
-@pytest.fixture(scope="module")
-def target() -> SubarrayBeamTarget:
-    """
-    Provides CDM Target instance through Builder class with predefined values
-    """
-    return (
-        SubarrayBeamTargetBuilder()
-        .set_az(180.0)
-        .set_el(45.0)
-        .set_target_name("DriftScan")
-        .set_reference_frame("HORIZON")
-        .build()
-    )
-
-
-@pytest.fixture(scope="module")
-def station_beam_config(target) -> SubarrayBeamConfiguration:
+def station_beam_config() -> SubarrayBeamConfiguration:
     """
     Provides CDM Station Beam Configuration instance through Builder class with predefined values
     """
     return (
         SubarrayBeamConfigurationBuilder()
-        .set_subarray_beam_id(1)
-        .set_station_ids([1, 2])
-        .set_channels([[1, 2, 3, 4, 5, 6]])
-        .set_update_rate(1.0)
-        .set_target(target)
-        .set_antenna_weights([1.0, 1.0, 1.0])
-        .set_phase_centre([0.0, 0.0])
-        .build()
-    )
+            .set_subarray_beam_id(1)
+            .set_update_rate(1.0)
+            .set_logical_bands(
+            SubarrayBeamLogicalbandsBuilder()
+            .set_start_channel(80)
+            .set_number_of_channels(16)
+            )
+            .set_apertures(
+            SubarrayBeamApertureBuilder()
+            .set_aperture_id("AP001.01")
+            .set_weighting_key_ref("aperture2")
+            )
+            .set_sky_coordinates(
+            SubarrayBeamSkyCoordinatesBuilder()
+            .set_reference_frame("HORIZON")
+            .set_c1(180.0)
+            .set_c2(90.0)
+            )
+            .build()
+        )
 
 
 @pytest.fixture(scope="module")
-def mccs_config(station_config, station_beam_config) -> MCCSConfiguration:
+def mccs_config(station_beam_config) -> MCCSConfiguration:
     """
     Provides CDM MCCS Configuration instance through Builder class with predefined values
     """
     return (
         MCCSConfigurationBuilder()
-        .set_station_configs(station_configs=[station_config])
         .set_subarray_beam_config(subarray_beam_configs=[station_beam_config])
         .build()
     )
@@ -145,10 +132,7 @@ def low_csp_config() ->CSPConfiguration:
                            [ StnBeamConfigurationBuilder()
                                 .set_stn_beam_id(1)
                                 .set_freq_ids([400])
-                            .set_host([(0, "192.168.1.00")])
-                            .set_port([(0, 9000, 1)])
-                            .set_mac([(0, "02-03-04-0a-0b-0c")])
-                                .set_integration_ms(849)
+                                .set_beam_id(1)
                                 .build()]
                         )
                         .build()
@@ -162,12 +146,11 @@ def low_csp_config() ->CSPConfiguration:
                                 .build()
                         )
                         .set_stn_beam(
-                            [StnBeamConfigurationBuilder()
+                            [VisStnBeamConfigurationBuilder()
                                 .set_stn_beam_id(1)
-                                .set_freq_ids([400])
-                            .set_host([(0, "192.168.1.00")])
-                            .set_port([(0, 9000, 1)])
-                            .set_mac([(0, "02-03-04-0a-0b-0c")])
+                                .set_host([(0, "192.168.1.00")])
+                                .set_port([(0, 9000, 1)])
+                                .set_mac([(0, "02-03-04-0a-0b-0c")])
                                 .set_integration_ms(849)
                                 .build()]
                         )

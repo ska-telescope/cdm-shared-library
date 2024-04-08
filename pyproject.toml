@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ska-tmc-cdm"
-version = "8.3.0"
+version = "9.0.0"
 description = "SKA Control Data Model serialisation library"
 authors = ["Team Buttons"]
 license = "BSD-3-Clause"
@@ -37,8 +37,7 @@ marshmallow = "^3.18.0"
 marshmallow-oneofschema = "^3.0.1"
 astropy = "^5.1"
 marshmallow-enum = "^1.5.1"
-# Pinned to 1.13.0 due to a bug in version 1.14.0 and can be changed back when a new version is released.
-ska-telmodel = "1.13.0"
+ska-telmodel = "1.15.1"
 deepdiff = "^5.8.1"
 pydantic = "^2.3.0"
 

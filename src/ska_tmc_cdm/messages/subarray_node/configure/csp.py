@@ -79,10 +79,10 @@ class SubarrayConfiguration:
     :param sub-array_name: Name of the sub-array
     """
 
-    subarray_name: str
+    subarray_name: Optional[str] = ""
 
 
-@dataclass
+@dataclass(kw_only=True)
 class CommonConfiguration:
     """
     Class to hold the CSP sub-elements.
@@ -93,31 +93,46 @@ class CommonConfiguration:
     :param band_5_tuning: band 5 receiver to set (optional)
     """
 
-    config_id: str
+    config_id: Optional[str] = ""
     frequency_band: Optional[core.ReceiverBand] = None
     subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
 
 
-@dataclass
+@dataclass(kw_only=True)
 class StnBeamConfiguration:
     """
     Class to hold Stations Beam Configuration.
 
     :param stn_beam_id: stn_beam_id
+    :param beam_id: beam_id
     :param freq_ids: freq_ids
+    :param delay_poly: delay_poly
+    """
+
+    beam_id: Optional[int]
+    freq_ids: List[int]
+    stn_beam_id: Optional[int] = None
+    delay_poly: Optional[str] = None
+
+
+@dataclass
+class VisStnBeamConfiguration:
+    """
+    Class to hold Vis Stations Beam Configuration.
+
+    :param stn_beam_id: stn_beam_id
     :param host: host
     :param port: port
     :param mac: mac
     :param integration_ms: integration_ms
     """
 
-    stn_beam_id: Optional[int] = None
-    freq_ids: Optional[List[int]] = None
+    stn_beam_id: Optional[int]
+    integration_ms: int
     host: Optional[List[Tuple[int, str]]] = None
     port: Optional[List[Tuple[int, int, int]]] = None
     mac: Optional[List[Tuple[int, str]]] = None
-    integration_ms: Optional[int] = None
 
 
 @dataclass
@@ -136,27 +151,29 @@ class StationConfiguration:
 @dataclass
 class VisFspConfiguration:
     """
-    Class to hold Vis FSP Configuration.
+    Class to hold Visibility(Vis) Configuration.
 
     :param function_mode: function_mode
     :param fsp_ids: fsp_ids
+    :param firmware: firmware
     """
 
     function_mode: Optional[str] = None
     fsp_ids: Optional[List[int]] = None
+    firmware: Optional[str] = None
 
 
 @dataclass
 class VisConfiguration:
     """
-    Class to hold Vis Configuration.
-
-    :param fsp: fsp
-    :param stn_beams: stn_beams
+        Class to hold Vis Configuration.
+    firmware
+        :param fsp: fsp
+        :param stn_beams: stn_beams
     """
 
     fsp: Optional[VisFspConfiguration] = None
-    stn_beams: Optional[List[StnBeamConfiguration]] = None
+    stn_beams: Optional[List[VisStnBeamConfiguration]] = None
 
 
 @dataclass

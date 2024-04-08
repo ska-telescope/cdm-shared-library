@@ -37,6 +37,7 @@ from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_OBJECT,
+    VALID_LOW_CONFIGURE_OBJECT_3_1,
     VALID_MID_CONFIGURE_JSON,
     VALID_MID_CONFIGURE_OBJECT,
 )
@@ -94,6 +95,24 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     """
     unmarshalled = CODEC.loads(msg_cls, json_str, validate=is_validate)
     assert unmarshalled == expected
+
+
+# LOW_CONFIGURE_PARAMS = (
+#     (
+#         ConfigureRequest,
+#         VALID_LOW_CONFIGURE_JSON,
+#         True,
+#     ),
+# )
+
+
+# @pytest.mark.parametrize("msg_cls,json_str, is_validate", LOW_CONFIGURE_PARAMS)
+# def test_codec_loads_configure(msg_cls, json_str, is_validate):
+#     """
+#     Verify that the codec unmarshalls objects correctly.
+#     """
+#     with pytest.raises(JsonValidationError, match="Missing key: 'subarray_id'"):
+#         CODEC.loads(msg_cls, json_str, validate=is_validate)
 
 
 @pytest.mark.parametrize("msg_cls,expected,instance, is_validate", TEST_PARAMETERS)
@@ -181,6 +200,9 @@ def test_codec_loads_raises_exception_on_invalid_schema():
         )
 
     invalid_json = json.loads(INVALID_LOW_CONFIGURE_JSON)
+    invalid_json["csp"]["lowcbf"]["stations"]["stn_beams"][0][
+        "delay_poly"
+    ] = "tango://delays.skao.int/low/stn-beam/1"
     invalid_json_configure = json.dumps(invalid_json)
 
     try:
@@ -200,12 +222,9 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
     SchemaNotFound when strictness=2.
     """
     # create a test object that references an invalid schema
-    invalid_data = copy.deepcopy(VALID_LOW_CONFIGURE_OBJECT)
+    invalid_data = copy.deepcopy(VALID_LOW_CONFIGURE_OBJECT_3_1)
     invalid_data.interface = "https://foo.com/badschema/2.0"
-
-    # validation should occur regardless of strictness, but exceptions are
     # only raised when strictness=2
-
     CODEC.dumps(invalid_data, strictness=0)
     CODEC.dumps(invalid_data, strictness=1)
     with pytest.raises(SchemaNotFound):
