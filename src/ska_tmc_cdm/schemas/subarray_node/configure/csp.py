@@ -24,7 +24,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     VisStnBeamConfiguration,
 )
 from ska_tmc_cdm.schemas import CODEC
-from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
 __all__ = [
     "CSPConfigurationSchema",
