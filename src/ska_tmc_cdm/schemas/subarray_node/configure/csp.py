@@ -461,7 +461,7 @@ class LowCBFConfigurationSchema(Schema):
 
 
 @CODEC.register_mapping(CSPConfiguration)
-class CSPConfigurationSchema(ValidatingSchema):
+class CSPConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.CSPConfiguration class
     """
@@ -480,7 +480,7 @@ class CSPConfigurationSchema(ValidatingSchema):
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
         """
-         Convert parsed JSON back into a CSPConfiguration object.
+        Convert parsed JSON back into a CSPConfiguration object.
 
         :param data: dict containing parsed JSON values
         :param _: kwargs passed by Marshmallow
@@ -521,5 +521,6 @@ class CSPConfigurationSchema(ValidatingSchema):
         # convert tuples to lists
         data = json.loads(json.dumps(data))
 
-        data = super().validate_on_dump(data)
+        # SAH-1500: validation disabled as OSO-TMC JSON is invalid w.r.t. TMC-CSP schema
+        # data = super().validate_on_dump(data)
         return data
