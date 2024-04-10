@@ -127,6 +127,7 @@ class Target:
         hmsdms = self.coord.to_string(style="hmsdms")
         return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
+
 class PointingCorrection(Enum):
     """
     Operation to apply to the pointing correction model.
@@ -138,6 +139,7 @@ class PointingCorrection(Enum):
     MAINTAIN = "MAINTAIN"
     UPDATE = "UPDATE"
     RESET = "RESET"
+
 
 @dataclass
 class PointingConfiguration:  # pylint: disable=too-few-public-methods
