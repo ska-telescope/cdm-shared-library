@@ -133,7 +133,9 @@ class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: Pointing instance populated to match JSON
         """
         target = data["target"]
-        return configure_msgs.PointingConfiguration(target)
+        calibration = data["MAINTAIN"]
+
+        return configure_msgs.PointingConfiguration(target,calibration)
 
 
 class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
