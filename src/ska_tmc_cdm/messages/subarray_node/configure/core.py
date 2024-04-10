@@ -15,7 +15,13 @@ from astropy.coordinates import SkyCoord
 from pydantic import ConfigDict, model_validator
 from pydantic.dataclasses import dataclass
 
-__all__ = ["PointingConfiguration", "Target", "PointingCorrection", "ReceiverBand", "DishConfiguration"]
+__all__ = [
+    "PointingConfiguration",
+    "Target",
+    "PointingCorrection",
+    "ReceiverBand",
+    "DishConfiguration",
+]
 
 UnitStr = str | u.Unit
 

@@ -135,7 +135,7 @@ class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
         target = data["target"]
         calibration = data["MAINTAIN"]
 
-        return configure_msgs.PointingConfiguration(target,calibration)
+        return configure_msgs.PointingConfiguration(target, calibration)
 
 
 class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
