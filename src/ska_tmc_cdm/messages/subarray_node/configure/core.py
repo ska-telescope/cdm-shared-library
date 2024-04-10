@@ -127,6 +127,17 @@ class Target:
         hmsdms = self.coord.to_string(style="hmsdms")
         return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
+class PointingCorrection(Enum):
+    """
+    Operation to apply to the pointing correction model.
+    MAINTAIN: continue applying the current pointing correction model
+    UPDATE: wait for (if necessary) and apply new pointing calibration solution
+    RESET: reset the applied pointing correction to the pointing model defaults
+    """
+
+    MAINTAIN = "MAINTAIN"
+    UPDATE = "UPDATE"
+    RESET = "RESET"
 
 @dataclass
 class PointingConfiguration:  # pylint: disable=too-few-public-methods
@@ -135,7 +146,8 @@ class PointingConfiguration:  # pylint: disable=too-few-public-methods
     point.
     """
 
-    target: Target
+    target: Optional[Target] = None
+    correction: Optional[PointingCorrection] = None
 
 
 class ReceiverBand(Enum):
