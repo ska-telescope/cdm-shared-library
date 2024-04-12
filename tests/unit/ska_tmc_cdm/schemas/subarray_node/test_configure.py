@@ -13,6 +13,7 @@ from ska_tmc_cdm.messages.subarray_node.configure import MID_SCHEMA, ConfigureRe
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     PointingConfiguration,
+    PointingCorrection,
     ReceiverBand,
     Target,
 )
@@ -80,7 +81,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
             target_name="Polaris Australis",
             reference_frame="icrs",
         ),
-        correction="MAINTAIN",
+        correction=PointingCorrection.MAINTAIN,
     ),
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_5A),
     sdp=SDPConfiguration(
@@ -831,7 +832,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
             target_name="Polaris Australis",
             reference_frame="icrs",
         ),
-        correction="MAINTAIN",
+        correction=PointingCorrection.MAINTAIN,
     ),
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
     sdp=SDPConfiguration(
