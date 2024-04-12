@@ -122,6 +122,39 @@ class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
     """
 
     target = fields.Nested(TargetSchema)
+    correction = fields.String(validate=OneOf(["MAINTAIN", "UPDATE", "RESET", None]))
+
+    @pre_dump
+    def convert(
+        self, pointing_configuration: configure_msgs.PointingConfiguration, **_
+    ):  # pylint: disable=no-self-use
+        """
+        Process PointingConfiguration instance so that it is ready for conversion
+        to JSON.
+
+        :param pointing_configuration: the pointing configuration
+        :param _: kwargs passed by Marshmallow
+        :return: PointingCorrection instance populated to match JSON
+        """
+        # Convert Python Enum to its string value
+        copied = copy.deepcopy(pointing_configuration)
+
+        if pointing_configuration.correction != None:
+            copied.correction = pointing_configuration.correction.value
+
+        return copied
+
+    @post_dump
+    def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
+        """
+        Filter out null values from JSON.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param _: kwargs passed by Marshmallow
+        :return: dict suitable for CBF configuration
+        """
+
+        return {k: v for k, v in data.items() if v is not None}
 
     @post_load
     def create(self, data, **_):  # pylint: disable=no-self-use
@@ -133,8 +166,14 @@ class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
         :return: Pointing instance populated to match JSON
         """
         target = data["target"]
+        correction = data.get("correction", None)
 
-        return configure_msgs.PointingConfiguration(target)
+        if correction:
+            correction = configure_msgs.PointingCorrection(correction)
+
+        return configure_msgs.PointingConfiguration(
+            target=target, correction=correction
+        )
 
 
 class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods

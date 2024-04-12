@@ -16,7 +16,7 @@ from .mccs import MCCSConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 
-MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.2"
+MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.3"
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-configure/3.1"
 
 
@@ -33,7 +33,7 @@ class ConfigureRequest:
     :param mccs: MCCS configuration
     :param tmc: TMCS configuration
     :param interface: Interface URI. Defaults to
-        https://schema.skao.int/ska-tmc-configure/2.2 for Mid and
+        https://schema.skao.int/ska-tmc-configure/2.3 for Mid and
         https://schema.skao.int/ska-low-tmc-configure/3.1 for Low
     :param transaction_id: Optional transaction ID
     """

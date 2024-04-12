@@ -45,7 +45,7 @@ from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 from .. import utils
 
 PARTIAL_CONFIGURATION_OFFSET_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/2.2",
+    interface="https://schema.skao.int/ska-tmc-configure/2.3",
     transaction_id="txn-....-00002",
     pointing=PointingConfiguration(
         Target(
@@ -58,7 +58,7 @@ PARTIAL_CONFIGURATION_OFFSET_OBJECT = ConfigureRequest(
 
 PARTIAL_CONFIGURATION_OFFSET_JSON = json.dumps(
     {
-        "interface": "https://schema.skao.int/ska-tmc-configure/2.2",
+        "interface": "https://schema.skao.int/ska-tmc-configure/2.3",
         "transaction_id": "txn-....-00002",
         "pointing": {
             "target": {
@@ -71,7 +71,7 @@ PARTIAL_CONFIGURATION_OFFSET_JSON = json.dumps(
 )
 
 NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/2.2",
+    interface="https://schema.skao.int/ska-tmc-configure/2.3",
     transaction_id="txn-....-00001",
     pointing=PointingConfiguration(
         Target(
@@ -79,7 +79,8 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
             dec="-88:57:22.9",
             target_name="Polaris Australis",
             reference_frame="icrs",
-        )
+        ),
+        correction="MAINTAIN",
     ),
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_5A),
     sdp=SDPConfiguration(
@@ -157,7 +158,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
 
 NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.2",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.3",
   "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
@@ -622,7 +623,7 @@ VALID_NULL_OBJECT = ConfigureRequest(interface=MID_SCHEMA)
 
 VALID_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.3",
   "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
@@ -630,7 +631,8 @@ VALID_MID_CONFIGURE_JSON = """
       "target_name": "Polaris Australis",
       "ra": "21:08:47.92",
       "dec": "-88:57:22.9"
-    }
+    },
+    "correction": "MAINTAIN"
   },
   "dish": {
     "receiver_band": "1"
@@ -729,7 +731,8 @@ INVALID_MID_CONFIGURE_JSON = """
       "target_name": "Polaris Australis",
       "ra": "21:08:47.92",
       "dec": "-88:57:22.9"
-    }
+    },
+    "correction": "MAINTAIN"
   },
   "dish": {
     "receiver_band": "1"
@@ -819,15 +822,16 @@ INVALID_MID_CONFIGURE_JSON = """
 }"""
 
 VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/2.1",
+    interface="https://schema.skao.int/ska-tmc-configure/2.3",
     transaction_id="txn-....-00001",
     pointing=PointingConfiguration(
-        Target(
+        target=Target(
             ra="21:08:47.92",
             dec="-88:57:22.9",
             target_name="Polaris Australis",
             reference_frame="icrs",
-        )
+        ),
+        correction="MAINTAIN",
     ),
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
     sdp=SDPConfiguration(
