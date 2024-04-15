@@ -12,7 +12,16 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			ie_offset_arcsec: float = 0
 		}
 
-		class PointingConfiguration
+		enum PointingCorrection {
+			MAINTAIN
+			UPDATE
+			RESET
+		}
+
+		class PointingConfiguration {
+			correction: PointingCorrection
+		}
+		
 		PointingConfiguration *-- "1" Target
 
 		class DishConfiguration {
