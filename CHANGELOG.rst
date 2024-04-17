@@ -8,8 +8,7 @@ This project adheres to `Semantic Versioning <http://semver.org/>`_.
 [9.1.0]
 *******
 
-* BTN-2265 - ska-tmc-cdm: Add pointing calibration interface changes
-* Updated existing unit tests
+* BTN-2265 - Added ability to apply, maintain or reset a previously calculated reference pointing calibration
 
 [9.0.0]
 *******
