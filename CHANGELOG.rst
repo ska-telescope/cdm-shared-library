@@ -5,6 +5,12 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
+[9.1.0]
+*******
+
+* BTN-2265 - ska-tmc-cdm: Add pointing calibration interface changes
+* Updated existing unit tests
+
 [9.0.0]
 *******
 
