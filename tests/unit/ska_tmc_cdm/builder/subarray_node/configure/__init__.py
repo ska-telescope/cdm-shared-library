@@ -83,7 +83,9 @@ class ConfigureRequestBuilder:
         self.interface = interface
         return self
 
-    def set_transaction_id(self, transaction_id: str) -> "ConfigureRequestBuilder":
+    def set_transaction_id(
+        self, transaction_id: str
+    ) -> "ConfigureRequestBuilder":
         """
         Set transaction ID
         :param: transaction_id: Transaction ID

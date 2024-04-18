@@ -986,7 +986,9 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_minimal_par
     """
     Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly with minimum parameters
     """
-    sdp_all_params_config = SDPConfigurationSchema().loads(VALID_SDP_MINIMAL_JSON_PI16)
+    sdp_all_params_config = SDPConfigurationSchema().loads(
+        VALID_SDP_MINIMAL_JSON_PI16
+    )
     serialized_sdp_all_params_config = SDPConfigurationSchema().dumps(
         sdp_all_params_config
     )
@@ -1001,22 +1003,32 @@ def test_validate_serialization_and_deserialization_ebscantype_using_schema_clas
     """
     Verifies that the EBScanType schema marshal and Unmarshal works correctly
     """
-    scan_types_config = EBScanTypeSchema(many=True).loads(VALID_SCAN_TYPES_JSON_PI16)
-    serialized_scan_types_config = EBScanTypeSchema(many=True).dumps(scan_types_config)
+    scan_types_config = EBScanTypeSchema(many=True).loads(
+        VALID_SCAN_TYPES_JSON_PI16
+    )
+    serialized_scan_types_config = EBScanTypeSchema(many=True).dumps(
+        scan_types_config
+    )
 
-    assert_json_is_equal(VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config)
+    assert_json_is_equal(
+        VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config
+    )
 
 
 def test_validate_serialization_and_deserialization_beam_vis0_using_schema_class():
     """
     Verifies that the EBScanType Beam schema marshal and Unmarshal works correctly
     """
-    scan_types_beam_config = EBScanTypeBeamSchema().loads(VALID_BEAM_VIS0_JSON_PI16)
+    scan_types_beam_config = EBScanTypeBeamSchema().loads(
+        VALID_BEAM_VIS0_JSON_PI16
+    )
     serialized_scan_types_beam_config = EBScanTypeBeamSchema().dumps(
         scan_types_beam_config
     )
 
-    assert_json_is_equal(VALID_BEAM_VIS0_JSON_PI16, serialized_scan_types_beam_config)
+    assert_json_is_equal(
+        VALID_BEAM_VIS0_JSON_PI16, serialized_scan_types_beam_config
+    )
 
 
 def test_validate_serialization_and_deserialization_executionblockconfiguration_using_schema_class():
@@ -1026,8 +1038,8 @@ def test_validate_serialization_and_deserialization_executionblockconfiguration_
     execution_block_config = ExecutionBlockConfigurationSchema().loads(
         VALID_EXECUTION_BLOCK_JSON_PI16
     )
-    serialized_execution_block_config = ExecutionBlockConfigurationSchema().dumps(
-        execution_block_config
+    serialized_execution_block_config = (
+        ExecutionBlockConfigurationSchema().dumps(execution_block_config)
     )
 
     assert_json_is_equal(
@@ -1039,8 +1051,12 @@ def test_validate_serialization_and_deserialization_beamconfiguration_using_sche
     """
     Verifies that the BeamConfiguration schema marshal and Unmarshal works correctly
     """
-    beam_config = BeamConfigurationSchema(many=True).loads(VALID_BEAM_JSON_PI16)
-    serialized_beam_config = BeamConfigurationSchema(many=True).dumps(beam_config)
+    beam_config = BeamConfigurationSchema(many=True).loads(
+        VALID_BEAM_JSON_PI16
+    )
+    serialized_beam_config = BeamConfigurationSchema(many=True).dumps(
+        beam_config
+    )
 
     assert_json_is_equal(VALID_BEAM_JSON_PI16, serialized_beam_config)
 
@@ -1078,8 +1094,12 @@ def test_validate_serialization_and_deserialization_fieldconfiguration_using_sch
     """
     Verifies that the FieldConfiguration schema marshal and Unmarshal works correctly
     """
-    fields_config = FieldConfigurationSchema(many=True).loads(VALID_FIELDS_JSON_PI16)
-    serialized_field_config = FieldConfigurationSchema(many=True).dumps(fields_config)
+    fields_config = FieldConfigurationSchema(many=True).loads(
+        VALID_FIELDS_JSON_PI16
+    )
+    serialized_field_config = FieldConfigurationSchema(many=True).dumps(
+        fields_config
+    )
 
     assert_json_is_equal(VALID_FIELDS_JSON_PI16, serialized_field_config)
 
@@ -1091,9 +1111,9 @@ def test_validate_serialization_and_deserialization_processingblock_using_schema
     processing_block_config = ProcessingBlockSchema(many=True).loads(
         VALID_PROCESSING_BLOCK_JSON_PI16
     )
-    serialized_processing_block_config = ProcessingBlockSchema(many=True).dumps(
-        processing_block_config
-    )
+    serialized_processing_block_config = ProcessingBlockSchema(
+        many=True
+    ).dumps(processing_block_config)
 
     assert_json_is_equal(
         VALID_PROCESSING_BLOCK_JSON_PI16, serialized_processing_block_config
@@ -1105,7 +1125,11 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_json_using_
     Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly
     """
 
-    sdp_configuration_object = SDPConfigurationSchema().loads(VALID_SDP_JSON_PI17)
-    serialized_sdp_config = SDPConfigurationSchema().dumps(sdp_configuration_object)
+    sdp_configuration_object = SDPConfigurationSchema().loads(
+        VALID_SDP_JSON_PI17
+    )
+    serialized_sdp_config = SDPConfigurationSchema().dumps(
+        sdp_configuration_object
+    )
 
     assert_json_is_equal(VALID_SDP_JSON_PI17, serialized_sdp_config)

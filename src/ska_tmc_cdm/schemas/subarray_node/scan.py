@@ -13,7 +13,9 @@ __all__ = ["ScanRequestSchema"]
 
 
 @CODEC.register_mapping(ScanRequest)
-class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
+class ScanRequestSchema(
+    ValidatingSchema
+):  # pylint: disable=too-few-public-methods
     """
     ScanRequestSchema is the Marshmallow schema that marshals a ScanRequest
     to/from JSON.

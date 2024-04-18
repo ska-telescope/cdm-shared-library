@@ -85,12 +85,16 @@ class AssignResourcesRequestSchema(
 
 
 @CODEC.register_mapping(AssignResourcesResponse)
-class AssignResourcesResponseSchema(Schema):  # pylint: disable=too-few-public-methods
+class AssignResourcesResponseSchema(
+    Schema
+):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the AssignResourcesResponse class.
     """
 
-    dish = fields.Nested(DishAllocationResponseSchema, data_key="dish", required=True)
+    dish = fields.Nested(
+        DishAllocationResponseSchema, data_key="dish", required=True
+    )
 
     class Meta:  # pylint: disable=too-few-public-methods
         """

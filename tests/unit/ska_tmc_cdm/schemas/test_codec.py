@@ -7,12 +7,18 @@ import json
 import tempfile
 
 import pytest
-from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
+from ska_telmodel.telvalidation.semantic_validator import (
+    SchematicValidationError,
+)
 
 import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
-from ska_tmc_cdm.messages.central_node.assign_resources import AssignResourcesRequest
-from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
+from ska_tmc_cdm.messages.central_node.assign_resources import (
+    AssignResourcesRequest,
+)
+from ska_tmc_cdm.messages.central_node.release_resources import (
+    ReleaseResourcesRequest,
+)
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
@@ -88,7 +94,9 @@ TEST_PARAMETERS = [
 ]
 
 
-@pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", TEST_PARAMETERS)
+@pytest.mark.parametrize(
+    "msg_cls,json_str,expected, is_validate", TEST_PARAMETERS
+)
 def test_codec_loads(msg_cls, json_str, expected, is_validate):
     """
     Verify that the codec unmarshalls objects correctly.
@@ -115,7 +123,9 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
 #         CODEC.loads(msg_cls, json_str, validate=is_validate)
 
 
-@pytest.mark.parametrize("msg_cls,expected,instance, is_validate", TEST_PARAMETERS)
+@pytest.mark.parametrize(
+    "msg_cls,expected,instance, is_validate", TEST_PARAMETERS
+)
 def test_codec_dumps(
     msg_cls, expected, instance, is_validate
 ):  # pylint: disable=unused-argument
@@ -126,7 +136,9 @@ def test_codec_dumps(
     assert_json_is_equal(marshalled, expected)
 
 
-@pytest.mark.parametrize("msg_cls,json_str,expected, is_validate", TEST_PARAMETERS)
+@pytest.mark.parametrize(
+    "msg_cls,json_str,expected, is_validate", TEST_PARAMETERS
+)
 def test_codec_load_from_file(msg_cls, json_str, expected, is_validate):
     """
     Verify that the codec loads JSON from file for all key objects.
@@ -135,7 +147,9 @@ def test_codec_load_from_file(msg_cls, json_str, expected, is_validate):
     with tempfile.NamedTemporaryFile(mode="w") as f:
         f.write(json_str)
         f.flush()
-        unmarshalled = CODEC.load_from_file(msg_cls, f.name, validate=is_validate)
+        unmarshalled = CODEC.load_from_file(
+            msg_cls, f.name, validate=is_validate
+        )
         assert unmarshalled == expected
 
 
@@ -237,7 +251,10 @@ def test_loads_invalid_json_with_validation_enabled():
     JSON, resulting in a JsonValidationError with strictness=2.
     """
     test_call = functools.partial(
-        CODEC.loads, ConfigureRequest, INVALID_LOW_CONFIGURE_JSON, validate=True
+        CODEC.loads,
+        ConfigureRequest,
+        INVALID_LOW_CONFIGURE_JSON,
+        validate=True,
     )
 
     # no exception should be raised unless strictness is 0 or 1

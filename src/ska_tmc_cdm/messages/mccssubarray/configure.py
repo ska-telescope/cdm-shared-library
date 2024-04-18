@@ -4,7 +4,11 @@ various structured bits of JSON given in an MCCSSubarray.Configure call.
 """
 from pydantic.dataclasses import dataclass
 
-__all__ = ["ConfigureRequest", "StationConfiguration", "SubarrayBeamConfiguration"]
+__all__ = [
+    "ConfigureRequest",
+    "StationConfiguration",
+    "SubarrayBeamConfiguration",
+]
 
 SCHEMA = "https://schema.skao.int/ska-low-mccs-configure/2.0"
 

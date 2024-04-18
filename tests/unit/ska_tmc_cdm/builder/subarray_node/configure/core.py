@@ -28,7 +28,9 @@ class TargetBuilder:
         self.ca_offset_arcsec = 0.0
         self.ie_offset_arcsec = 0.0
 
-    def set_ra(self, ra: Union[str, int, float, u.Quantity]) -> "TargetBuilder":
+    def set_ra(
+        self, ra: Union[str, int, float, u.Quantity]
+    ) -> "TargetBuilder":
         """
         Set right ascension.
         :param ra: Right ascension, can be a string, integer, float, or astropy Quantity.
@@ -36,7 +38,9 @@ class TargetBuilder:
         self.ra = ra
         return self
 
-    def set_dec(self, dec: Union[str, int, float, u.Quantity]) -> "TargetBuilder":
+    def set_dec(
+        self, dec: Union[str, int, float, u.Quantity]
+    ) -> "TargetBuilder":
         """
         Set declination.
         :param dec: Declination, can be a string, integer, float, or astropy Quantity.

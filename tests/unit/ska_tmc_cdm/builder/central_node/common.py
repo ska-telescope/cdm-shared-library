@@ -16,7 +16,9 @@ class DishAllocateBuilder:
         """
         self.receptor_ids = None
 
-    def set_receptor_ids(self, receptor_ids: frozenset) -> "DishAllocateBuilder":
+    def set_receptor_ids(
+        self, receptor_ids: frozenset
+    ) -> "DishAllocateBuilder":
         """
         Set Receptor ID
         :params: receptor_ids: Receptor ID

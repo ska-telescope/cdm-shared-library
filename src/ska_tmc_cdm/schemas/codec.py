@@ -47,7 +47,11 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
         self._schema[cdm_class] = schema_class
 
     def load_from_file(
-        self, cls, path, validate: bool = True, strictness: Optional[int] = STRICTNESS
+        self,
+        cls,
+        path,
+        validate: bool = True,
+        strictness: Optional[int] = STRICTNESS,
     ):
         """
         Load an instance of a CDM class from disk.
@@ -86,11 +90,18 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         schema_obj.context[ValidatingSchema.VALIDATE] = validate
         if strictness is not None:
-            schema_obj.context[ValidatingSchema.VALIDATION_STRICTNESS] = strictness
+            schema_obj.context[
+                ValidatingSchema.VALIDATION_STRICTNESS
+            ] = strictness
 
         return schema_obj.loads(json_data=json_data)
 
-    def dumps(self, obj, validate: bool = True, strictness: Optional[int] = STRICTNESS):
+    def dumps(
+        self,
+        obj,
+        validate: bool = True,
+        strictness: Optional[int] = STRICTNESS,
+    ):
         """
         Return a string JSON representation of a CDM instance.
 
@@ -107,6 +118,8 @@ class MarshmallowCodec:  # pylint: disable=too-few-public-methods
 
         schema_obj.context[ValidatingSchema.VALIDATE] = validate
         if strictness is not None:
-            schema_obj.context[ValidatingSchema.VALIDATION_STRICTNESS] = strictness
+            schema_obj.context[
+                ValidatingSchema.VALIDATION_STRICTNESS
+            ] = strictness
 
         return schema_obj.dumps(obj)

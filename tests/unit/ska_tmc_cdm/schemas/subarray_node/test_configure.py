@@ -6,10 +6,15 @@ import json
 from datetime import timedelta
 
 import pytest
-from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
+from ska_telmodel.telvalidation.semantic_validator import (
+    SchematicValidationError,
+)
 
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
-from ska_tmc_cdm.messages.subarray_node.configure import MID_SCHEMA, ConfigureRequest
+from ska_tmc_cdm.messages.subarray_node.configure import (
+    MID_SCHEMA,
+    ConfigureRequest,
+)
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     PointingConfiguration,
@@ -85,7 +90,8 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_5A),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+        interface="https://schema.skao.int/ska-sdp-configure/0.4",
+        scan_type="science_A",
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
@@ -468,8 +474,12 @@ VALID_LOW_CONFIGURE_OBJECT_3_1 = ConfigureRequest(
                 subarray_beam_id=1,
                 update_rate=0.0,
                 logical_bands=[
-                    SubarrayBeamLogicalBands(start_channel=80, number_of_channels=16),
-                    SubarrayBeamLogicalBands(start_channel=384, number_of_channels=16),
+                    SubarrayBeamLogicalBands(
+                        start_channel=80, number_of_channels=16
+                    ),
+                    SubarrayBeamLogicalBands(
+                        start_channel=384, number_of_channels=16
+                    ),
                 ],
                 apertures=[
                     SubarrayBeamAperatures(
@@ -497,7 +507,8 @@ VALID_LOW_CONFIGURE_OBJECT_3_1 = ConfigureRequest(
         ],
     ),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+        interface="https://schema.skao.int/ska-sdp-configure/0.4",
+        scan_type="science_A",
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-configure/3.1",
@@ -509,7 +520,9 @@ VALID_LOW_CONFIGURE_OBJECT_3_1 = ConfigureRequest(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
                 stn_beams=[
                     StnBeamConfiguration(
-                        beam_id=1, freq_ids=[400], delay_poly="a/b/c/delaymodel"
+                        beam_id=1,
+                        freq_ids=[400],
+                        delay_poly="a/b/c/delaymodel",
                     )
                 ],
             ),
@@ -538,8 +551,12 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                 subarray_beam_id=1,
                 update_rate=0.0,
                 logical_bands=[
-                    SubarrayBeamLogicalBands(start_channel=80, number_of_channels=16),
-                    SubarrayBeamLogicalBands(start_channel=384, number_of_channels=16),
+                    SubarrayBeamLogicalBands(
+                        start_channel=80, number_of_channels=16
+                    ),
+                    SubarrayBeamLogicalBands(
+                        start_channel=384, number_of_channels=16
+                    ),
                 ],
                 apertures=[
                     SubarrayBeamAperatures(
@@ -567,11 +584,14 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
         ],
     ),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+        interface="https://schema.skao.int/ska-sdp-configure/0.4",
+        scan_type="science_A",
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-configure/3.1",
-        common=CommonConfiguration(config_id="sbi-mvp01-20200325-00001-science_A"),
+        common=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A"
+        ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
@@ -836,7 +856,8 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+        interface="https://schema.skao.int/ska-sdp-configure/0.4",
+        scan_type="science_A",
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
@@ -986,7 +1007,9 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                 subarray_beam_id=1,
                 update_rate=1.0,
                 logical_bands=[
-                    SubarrayBeamLogicalBands(start_channel=80, number_of_channels=16)
+                    SubarrayBeamLogicalBands(
+                        start_channel=80, number_of_channels=16
+                    )
                 ],
                 apertures=[
                     SubarrayBeamAperatures(
@@ -1002,7 +1025,8 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
         ],
     ),
     sdp=SDPConfiguration(
-        interface="https://schema.skao.int/ska-sdp-configure/0.4", scan_type="science_A"
+        interface="https://schema.skao.int/ska-sdp-configure/0.4",
+        scan_type="science_A",
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-configure/3.1",
@@ -1021,7 +1045,9 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                 ],
             ),
             vis=VisConfiguration(
-                fsp=VisFspConfiguration(firmware="abcd", fsp_ids=[1, 2, 2, 4, 5, 6, 7]),
+                fsp=VisFspConfiguration(
+                    firmware="abcd", fsp_ids=[1, 2, 2, 4, 5, 6, 7]
+                ),
                 stn_beams=[
                     VisStnBeamConfiguration(
                         stn_beam_id=1,

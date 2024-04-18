@@ -34,14 +34,19 @@ class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
 
 
 @CODEC.register_mapping(DishAllocation)
-class DishAllocationResponseSchema(Schema):  # pylint: disable=too-few-public-methods
+class DishAllocationResponseSchema(
+    Schema
+):  # pylint: disable=too-few-public-methods
     """
     Marshmallow schema for the DishAllocation class when received in the
     response.
     """
 
     receptor_ids = fields.List(
-        fields.String, data_key="receptor_ids_allocated", many=True, required=True
+        fields.String,
+        data_key="receptor_ids_allocated",
+        many=True,
+        required=True,
     )
 
     @post_load

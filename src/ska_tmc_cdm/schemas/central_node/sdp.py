@@ -85,7 +85,13 @@ class ChannelSchema(Schema):
         link_map = data.get("link_map")
         spectral_window_id = data.get("spectral_window_id")
         return Channel(
-            count, start, stride, freq_min, freq_max, link_map, spectral_window_id
+            count,
+            start,
+            stride,
+            freq_min,
+            freq_max,
+            link_map,
+            spectral_window_id,
         )
 
 
@@ -195,7 +201,9 @@ class ScriptConfigurationSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_executionblock_config(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ScriptConfiguration object.
 
@@ -230,7 +238,9 @@ class ProcessingBlockSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_processing_block_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_processing_block_config(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ProcessingBlock object.
 
@@ -326,7 +336,9 @@ class PolarisationConfigurationSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_polarisation_config(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a PolarisationConfiguration object.
 
@@ -359,7 +371,9 @@ class PhaseDirSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_phase_dir_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_phase_dir_config(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a PhaseDir object.
 
@@ -391,7 +405,9 @@ class FieldConfigurationSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_polarisation_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_polarisation_config(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a FieldConfiguration object.
 
@@ -423,7 +439,9 @@ class EBScanTypeBeamSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_ebscantypebeams_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_ebscantypebeams_config(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a EBScanTypeBeam object.
 
@@ -458,7 +476,9 @@ class EBScanTypeSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_ebscantype_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_ebscantype_config(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a EBScanType object.
 
@@ -496,7 +516,9 @@ class ExecutionBlockConfigurationSchema(Schema):
         return {k: v for k, v in data.items() if v is not None}
 
     @post_load
-    def create_executionblock_config(self, data, **_):  # pylint: disable=no-self-use
+    def create_executionblock_config(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a ExecutionBlockConfiguration object.
 

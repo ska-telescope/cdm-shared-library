@@ -73,7 +73,10 @@ INVALID_JSON = """
 
 VALID_OBJECT = ConfigureRequest(
     interface="https://schema.skatelescope.org/ska-low-mccs-configure/1.0",
-    stations=[StationConfiguration(station_id=1), StationConfiguration(station_id=2)],
+    stations=[
+        StationConfiguration(station_id=1),
+        StationConfiguration(station_id=2),
+    ],
     subarray_beams=[
         SubarrayBeamConfiguration(
             subarray_beam_id=1,

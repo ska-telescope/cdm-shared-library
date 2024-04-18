@@ -85,7 +85,9 @@ class ChannelBuilder:
         self.link_map = link_map
         return self
 
-    def set_spectral_window_id(self, spectral_window_id: str) -> "ChannelBuilder":
+    def set_spectral_window_id(
+        self, spectral_window_id: str
+    ) -> "ChannelBuilder":
         """
         Set the spectral window id
         :param spectral_window_id: Spectral window id
@@ -171,7 +173,11 @@ class ScanTypeBuilder:
         :return: CDM ScanType object
         """
         return ScanType(
-            self.scan_type_id, self.reference_frame, self.ra, self.dec, self.channels
+            self.scan_type_id,
+            self.reference_frame,
+            self.ra,
+            self.dec,
+            self.channels,
         )
 
 
@@ -339,7 +345,9 @@ class ProcessingBlockConfigurationBuilder:
         self.workflow = workflow
         return self
 
-    def set_parameters(self, parameters: dict) -> "ProcessingBlockConfigurationBuilder":
+    def set_parameters(
+        self, parameters: dict
+    ) -> "ProcessingBlockConfigurationBuilder":
         """
         Set the parameters
         :param parameters: Parameters
@@ -357,7 +365,9 @@ class ProcessingBlockConfigurationBuilder:
         self.dependencies = dependencies
         return self
 
-    def set_sbi_ids(self, sbi_ids: list) -> "ProcessingBlockConfigurationBuilder":
+    def set_sbi_ids(
+        self, sbi_ids: list
+    ) -> "ProcessingBlockConfigurationBuilder":
         """
         Set the sbi ids
         :param sbi_ids: SBI ids
@@ -516,7 +526,9 @@ class BeamConfigurationBuilder:
         self.function = function
         return self
 
-    def set_search_beam_id(self, search_beam_id: int) -> "BeamConfigurationBuilder":
+    def set_search_beam_id(
+        self, search_beam_id: int
+    ) -> "BeamConfigurationBuilder":
         """
         Set the search beam id
         :param search_beam_id: Search beam id
@@ -524,7 +536,9 @@ class BeamConfigurationBuilder:
         self.search_beam_id = search_beam_id
         return self
 
-    def set_timing_beam_id(self, timing_beam_id: int) -> "BeamConfigurationBuilder":
+    def set_timing_beam_id(
+        self, timing_beam_id: int
+    ) -> "BeamConfigurationBuilder":
         """
         Set the timing beam id
         :param timing_beam_id: Timing beam id
@@ -532,7 +546,9 @@ class BeamConfigurationBuilder:
         self.timing_beam_id = timing_beam_id
         return self
 
-    def set_vlbi_beam_id(self, vlbi_beam_id: int) -> "BeamConfigurationBuilder":
+    def set_vlbi_beam_id(
+        self, vlbi_beam_id: int
+    ) -> "BeamConfigurationBuilder":
         """
         Set the vlbi beam id
         :param vlbi_beam_id: Vlbi beam id
@@ -567,7 +583,9 @@ class ChannelConfigurationBuilder:
         self.channels_id = None
         self.spectral_windows = None
 
-    def set_channels_id(self, channels_id: str) -> "ChannelConfigurationBuilder":
+    def set_channels_id(
+        self, channels_id: str
+    ) -> "ChannelConfigurationBuilder":
         """
         Set the channels id
         :param channels_id: Channels id
@@ -616,7 +634,9 @@ class PolarisationConfigurationBuilder:
         self.polarisations_id = polarisations_id
         return self
 
-    def set_corr_type(self, corr_type: list) -> "PolarisationConfigurationBuilder":
+    def set_corr_type(
+        self, corr_type: list
+    ) -> "PolarisationConfigurationBuilder":
         """
         Set the correlation type
         :param corr_type: Correlation type
@@ -684,7 +704,9 @@ class PhaseDirBuilder:
         Build or create CDM PhaseDir object
         :return: CDM PhaseDir object
         """
-        return PhaseDir(self.ra, self.dec, self.reference_time, self.reference_frame)
+        return PhaseDir(
+            self.ra, self.dec, self.reference_time, self.reference_frame
+        )
 
 
 class FieldConfigurationBuilder:
@@ -709,7 +731,9 @@ class FieldConfigurationBuilder:
         self.field_id = field_id
         return self
 
-    def set_pointing_fqdn(self, pointing_fqdn: str) -> "FieldConfigurationBuilder":
+    def set_pointing_fqdn(
+        self, pointing_fqdn: str
+    ) -> "FieldConfigurationBuilder":
         """
         Set the pointing fqdn
         :param pointing_fqdn: Pointing fqdn
@@ -717,7 +741,9 @@ class FieldConfigurationBuilder:
         self.pointing_fqdn = pointing_fqdn
         return self
 
-    def set_phase_dir(self, phase_dir: PhaseDir) -> "FieldConfigurationBuilder":
+    def set_phase_dir(
+        self, phase_dir: PhaseDir
+    ) -> "FieldConfigurationBuilder":
         """
         Set the phase dir
         :param phase_dir: Phase dir
@@ -730,7 +756,9 @@ class FieldConfigurationBuilder:
         Build or create CDM FieldConfiguration object
         :return: CDM FieldConfiguration object
         """
-        return FieldConfiguration(self.field_id, self.pointing_fqdn, self.phase_dir)
+        return FieldConfiguration(
+            self.field_id, self.pointing_fqdn, self.phase_dir
+        )
 
 
 class EBScanTypeBuilder:
@@ -809,7 +837,9 @@ class EBScanTypeBeamBuilder:
         self.channels_id = channels_id
         return self
 
-    def set_polarisations_id(self, polarisations_id: str) -> "EBScanTypeBeamBuilder":
+    def set_polarisations_id(
+        self, polarisations_id: str
+    ) -> "EBScanTypeBeamBuilder":
         """
         Set the polarisations id
         :param polarisations_id: Polarisations id
@@ -822,7 +852,9 @@ class EBScanTypeBeamBuilder:
         Build or create CDM EBScanTypeBeam object
         :return: CDM EBScanTypeBeam object
         """
-        return EBScanTypeBeam(self.field_id, self.channels_id, self.polarisations_id)
+        return EBScanTypeBeam(
+            self.field_id, self.channels_id, self.polarisations_id
+        )
 
 
 class ExecutionBlockConfigurationBuilder:
@@ -860,7 +892,9 @@ class ExecutionBlockConfigurationBuilder:
         self.max_length = max_length
         return self
 
-    def set_context(self, context: dict) -> "ExecutionBlockConfigurationBuilder":
+    def set_context(
+        self, context: dict
+    ) -> "ExecutionBlockConfigurationBuilder":
         """
         Set the context
         :param context: Context
@@ -876,7 +910,9 @@ class ExecutionBlockConfigurationBuilder:
         self.beams = beams
         return self
 
-    def set_channels(self, channels: list) -> "ExecutionBlockConfigurationBuilder":
+    def set_channels(
+        self, channels: list
+    ) -> "ExecutionBlockConfigurationBuilder":
         """
         Set the channels
         :param channels: Channels
@@ -902,7 +938,9 @@ class ExecutionBlockConfigurationBuilder:
         self.fields = fields
         return self
 
-    def set_scan_types(self, scan_types: list) -> "ExecutionBlockConfigurationBuilder":
+    def set_scan_types(
+        self, scan_types: list
+    ) -> "ExecutionBlockConfigurationBuilder":
         """
         Set the scan types
         :param scan_types: Scan types

@@ -52,8 +52,14 @@ TARGET_EQ_CASES = [
         True,
     ),
     (
-        TargetBuilder().set_ca_offset_arcsec(-1.1).set_ie_offset_arcsec(1.1).build(),
-        TargetBuilder().set_ca_offset_arcsec(-1.1).set_ie_offset_arcsec(1.1).build(),
+        TargetBuilder()
+        .set_ca_offset_arcsec(-1.1)
+        .set_ie_offset_arcsec(1.1)
+        .build(),
+        TargetBuilder()
+        .set_ca_offset_arcsec(-1.1)
+        .set_ie_offset_arcsec(1.1)
+        .build(),
         True,
     ),
     (
@@ -76,7 +82,10 @@ TARGET_EQ_CASES = [
         .set_ca_offset_arcsec(-1.1)
         .set_ie_offset_arcsec(1.1)
         .build(),
-        TargetBuilder().set_ca_offset_arcsec(-1.1).set_ie_offset_arcsec(1.1).build(),
+        TargetBuilder()
+        .set_ca_offset_arcsec(-1.1)
+        .set_ie_offset_arcsec(1.1)
+        .build(),
         False,
     ),
     (
@@ -180,11 +189,15 @@ TARGET_VALIDATION_CASES = [
         expected_error=None,
     ),
     ValidationCase(
-        builder=TargetBuilder().set_ca_offset_arcsec(-1).set_ie_offset_arcsec(1),
+        builder=TargetBuilder()
+        .set_ca_offset_arcsec(-1)
+        .set_ie_offset_arcsec(1),
         expected_error=None,
     ),
     ValidationCase(
-        builder=TargetBuilder().set_ca_offset_arcsec(0).set_ie_offset_arcsec(0),
+        builder=TargetBuilder()
+        .set_ca_offset_arcsec(0)
+        .set_ie_offset_arcsec(0),
         expected_error=ValueError,
     ),
     ValidationCase(
@@ -296,7 +309,9 @@ def test_target_str():
     ],
 )
 def test_pointing_configuration_eq(
-    pointing_configuration_setup_1, pointing_configuration_setup_2, expected_equality
+    pointing_configuration_setup_1,
+    pointing_configuration_setup_2,
+    expected_equality,
 ):
     """
     Verify that PointingConfiguration objects are considered equal when they point to the same target, not equal for different value
@@ -314,13 +329,21 @@ def test_pointing_configuration_eq(
     "dish_configuration_setup_1, dish_configuration_setup_2, expected_equality",
     [
         (
-            DishConfigurationBuilder().set_receiver_band(ReceiverBand.BAND_1).build(),
-            DishConfigurationBuilder().set_receiver_band(ReceiverBand.BAND_1).build(),
+            DishConfigurationBuilder()
+            .set_receiver_band(ReceiverBand.BAND_1)
+            .build(),
+            DishConfigurationBuilder()
+            .set_receiver_band(ReceiverBand.BAND_1)
+            .build(),
             True,
         ),
         (
-            DishConfigurationBuilder().set_receiver_band(ReceiverBand.BAND_1).build(),
-            DishConfigurationBuilder().set_receiver_band(ReceiverBand.BAND_2).build(),
+            DishConfigurationBuilder()
+            .set_receiver_band(ReceiverBand.BAND_1)
+            .build(),
+            DishConfigurationBuilder()
+            .set_receiver_band(ReceiverBand.BAND_2)
+            .build(),
             False,
         ),
     ],

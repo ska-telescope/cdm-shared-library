@@ -3,7 +3,9 @@ Unit tests for the CentralNode.mccs allocate module.
 """
 import pytest
 
-from tests.unit.ska_tmc_cdm.builder.central_node.mccs import MCCSAllocateBuilder
+from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
+    MCCSAllocateBuilder,
+)
 
 
 @pytest.mark.parametrize(

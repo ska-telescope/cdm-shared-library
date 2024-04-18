@@ -5,7 +5,9 @@ representation.
 """
 from marshmallow import fields, post_load
 
-from ska_tmc_cdm.messages.mccscontroller.releaseresources import ReleaseResourcesRequest
+from ska_tmc_cdm.messages.mccscontroller.releaseresources import (
+    ReleaseResourcesRequest,
+)
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
@@ -36,5 +38,7 @@ class ReleaseResourcesRequestSchema(
         subarray_id = data["subarray_id"]
         release_all = data["release_all"]
         return ReleaseResourcesRequest(
-            interface=interface, subarray_id=subarray_id, release_all=release_all
+            interface=interface,
+            subarray_id=subarray_id,
+            release_all=release_all,
         )

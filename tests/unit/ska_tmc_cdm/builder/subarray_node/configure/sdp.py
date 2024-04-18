@@ -1,4 +1,7 @@
-from ska_tmc_cdm.messages.subarray_node.configure.sdp import SCHEMA, SDPConfiguration
+from ska_tmc_cdm.messages.subarray_node.configure.sdp import (
+    SCHEMA,
+    SDPConfiguration,
+)
 
 
 class SDPConfigurationBuilder:
@@ -27,4 +30,6 @@ class SDPConfigurationBuilder:
         Build or create SDP configuration
         :return: CDM SDP configuration instance
         """
-        return SDPConfiguration(interface=self.interface, scan_type=self.scan_type)
+        return SDPConfiguration(
+            interface=self.interface, scan_type=self.scan_type
+        )

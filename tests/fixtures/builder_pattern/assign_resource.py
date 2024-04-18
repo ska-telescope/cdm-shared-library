@@ -12,7 +12,7 @@ from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     PhaseDirBuilder,
     FieldConfigurationBuilder,
     ExecutionBlockConfigurationBuilder,
-    SDPConfigurationBuilder
+    SDPConfigurationBuilder,
 )
 
 
@@ -57,7 +57,10 @@ def processing_block_parameters():
                         "/mnt/data/output.ms",
                     ],
                     "volumeMounts": [
-                        {"name": "plasma-storage-volume", "mountPath": "/plasma"},
+                        {
+                            "name": "plasma-storage-volume",
+                            "mountPath": "/plasma",
+                        },
                         {"mountPath": "/mnt/data", "name": "receive-data"},
                     ],
                 },
@@ -215,7 +218,9 @@ def field_config(phase_dir):
 
 
 @pytest.fixture(scope="module")
-def execution_block(beams, channels, polarisation_config, field_config, eb_scan_type):
+def execution_block(
+    beams, channels, polarisation_config, field_config, eb_scan_type
+):
     """
     Provides CDM Execution Block configuration instance through ExecutionBlockConfigurationBuilder builder class
     """

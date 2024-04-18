@@ -84,7 +84,9 @@ class SubarrayBeamApertureBuilder:
         self.aperture_id = None
         self.weighting_key_ref = None
 
-    def set_aperture_id(self, aperture_id: int) -> "SubarrayBeamApertureBuilder":
+    def set_aperture_id(
+        self, aperture_id: int
+    ) -> "SubarrayBeamApertureBuilder":
         """
         Set aperture_id
         :param: aperture_id: aperture_id specification
@@ -121,7 +123,9 @@ class SubarrayBeamConfigurationBuilder:
         self.subarray_beam_id = subarray_beam_id
         return self
 
-    def set_update_rate(self, update_rate: float) -> "SubarrayBeamConfigurationBuilder":
+    def set_update_rate(
+        self, update_rate: float
+    ) -> "SubarrayBeamConfigurationBuilder":
         """
         Set update rate
         :param: update_rate: update rate
@@ -167,7 +171,9 @@ class SubarrayBeamConfigurationBuilder:
         return SubarrayBeamConfiguration(
             update_rate=self.update_rate,
             logical_bands=[
-                SubarrayBeamLogicalBands(start_channel=80, number_of_channels=16)
+                SubarrayBeamLogicalBands(
+                    start_channel=80, number_of_channels=16
+                )
             ],
             apertures=[
                 SubarrayBeamAperatures(

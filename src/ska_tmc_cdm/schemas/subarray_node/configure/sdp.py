@@ -21,7 +21,9 @@ class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
     scan_type = fields.String()
 
     @post_load
-    def create_sdp_configuration(self, data, **_):  # pylint: disable=no-self-use
+    def create_sdp_configuration(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Convert parsed JSON back into a set containing all the scans
         :param data: dict containing parsed JSON values

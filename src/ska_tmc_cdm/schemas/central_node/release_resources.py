@@ -6,7 +6,9 @@ import json
 
 from marshmallow import fields, post_dump, post_load
 
-from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
+from ska_tmc_cdm.messages.central_node.release_resources import (
+    ReleaseResourcesRequest,
+)
 from ska_tmc_cdm.schemas.central_node.common import DishAllocationSchema
 
 from ...schemas import CODEC
@@ -29,7 +31,9 @@ class ReleaseResourcesRequestSchema(
     transaction_id = fields.String()
     subarray_id = fields.Integer()
     release_all = fields.Boolean()
-    dish = fields.Pluck(DishAllocationSchema, "receptor_ids", data_key="receptor_ids")
+    dish = fields.Pluck(
+        DishAllocationSchema, "receptor_ids", data_key="receptor_ids"
+    )
 
     class Meta:  # pylint: disable=too-few-public-methods
         """

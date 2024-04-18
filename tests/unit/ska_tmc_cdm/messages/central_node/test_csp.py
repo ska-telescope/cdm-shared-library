@@ -20,7 +20,9 @@ interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
             CSPConfigurationBuilder()
             .set_interface(interface)
             .set_common(
-                CommonConfigurationBuilder().set_subarray_id(subarray_id=1).build()
+                CommonConfigurationBuilder()
+                .set_subarray_id(subarray_id=1)
+                .build()
             )
             .set_lowcbf(
                 LowCbfConfigurationBuilder()
@@ -40,7 +42,9 @@ interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
             CSPConfigurationBuilder()
             .set_interface(interface)
             .set_common(
-                CommonConfigurationBuilder().set_subarray_id(subarray_id=1).build()
+                CommonConfigurationBuilder()
+                .set_subarray_id(subarray_id=1)
+                .build()
             )
             .set_lowcbf(
                 LowCbfConfigurationBuilder()
@@ -63,7 +67,9 @@ interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
             CSPConfigurationBuilder()
             .set_interface(interface)
             .set_common(
-                CommonConfigurationBuilder().set_subarray_id(subarray_id=1).build()
+                CommonConfigurationBuilder()
+                .set_subarray_id(subarray_id=1)
+                .build()
             )
             .set_lowcbf(
                 LowCbfConfigurationBuilder()
@@ -83,7 +89,9 @@ interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
             CSPConfigurationBuilder()
             .set_interface(interface)
             .set_common(
-                CommonConfigurationBuilder().set_subarray_id(subarray_id=1).build()
+                CommonConfigurationBuilder()
+                .set_subarray_id(subarray_id=1)
+                .build()
             )
             .set_lowcbf(
                 LowCbfConfigurationBuilder()

@@ -7,7 +7,9 @@ from datetime import timedelta
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
-from ska_tmc_cdm.schemas.subarray_node.configure.tmc import TMCConfigurationSchema
+from ska_tmc_cdm.schemas.subarray_node.configure.tmc import (
+    TMCConfigurationSchema,
+)
 
 from ... import utils
 

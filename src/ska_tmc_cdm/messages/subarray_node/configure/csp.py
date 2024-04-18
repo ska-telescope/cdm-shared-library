@@ -66,7 +66,9 @@ class FSPConfiguration:
     # FIXME: should be Field(default_factory=list, max_length=20)?
     channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?
-    output_link_map: Optional[List[Tuple]] = None  # FIXME: Field(default_factory=list)?
+    output_link_map: Optional[
+        List[Tuple]
+    ] = None  # FIXME: Field(default_factory=list)?
     channel_offset: Optional[int] = None
     zoom_window_tuning: Optional[int] = None
 

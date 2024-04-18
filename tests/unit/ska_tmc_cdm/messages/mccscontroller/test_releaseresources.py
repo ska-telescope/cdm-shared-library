@@ -1,7 +1,9 @@
 """
 Unit tests for the mccscontroller.releaseresources module
 """
-from ska_tmc_cdm.messages.mccscontroller.releaseresources import ReleaseResourcesRequest
+from ska_tmc_cdm.messages.mccscontroller.releaseresources import (
+    ReleaseResourcesRequest,
+)
 
 
 def test_releaseresourcesrequest_object_equality():

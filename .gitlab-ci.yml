@@ -18,8 +18,8 @@ variables:
 
 stages:
   - lint
-  - build
   - test
+  - build
   - pages
   - scan
   - publish

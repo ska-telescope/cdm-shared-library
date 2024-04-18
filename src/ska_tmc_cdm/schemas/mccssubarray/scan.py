@@ -13,7 +13,9 @@ __all__ = ["ScanRequestSchema"]
 
 
 @CODEC.register_mapping(ScanRequest)
-class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-methods
+class ScanRequestSchema(
+    ValidatingSchema
+):  # pylint: disable=too-few-public-methods
     """
     Create the Schema for ScanRequest
     """
@@ -35,4 +37,6 @@ class ScanRequestSchema(ValidatingSchema):  # pylint: disable=too-few-public-met
         scan_id = data["scan_id"]
         start_time = data["start_time"]
 
-        return ScanRequest(interface=interface, scan_id=scan_id, start_time=start_time)
+        return ScanRequest(
+            interface=interface, scan_id=scan_id, start_time=start_time
+        )

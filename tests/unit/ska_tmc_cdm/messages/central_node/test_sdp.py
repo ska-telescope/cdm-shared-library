@@ -570,7 +570,9 @@ PHASEDIR_CASES = (
 )
 
 
-@pytest.mark.parametrize("expected_equal,phase_dir1,phase_dir2", PHASEDIR_CASES)
+@pytest.mark.parametrize(
+    "expected_equal,phase_dir1,phase_dir2", PHASEDIR_CASES
+)
 def test_phase_dir_equals(
     expected_equal: bool, phase_dir1: PhaseDir, phase_dir2: PhaseDir
 ):

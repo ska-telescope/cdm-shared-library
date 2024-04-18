@@ -40,7 +40,13 @@ def invalidator_fn(o: ScanRequest):
 @pytest.mark.parametrize(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json",
     [
-        (ScanRequestSchema, VALID_OBJECT, invalidator_fn, VALID_JSON, INVALID_JSON),
+        (
+            ScanRequestSchema,
+            VALID_OBJECT,
+            invalidator_fn,
+            VALID_JSON,
+            INVALID_JSON,
+        ),
     ],
 )
 def test_releaseresources_serialisation_and_validation(
