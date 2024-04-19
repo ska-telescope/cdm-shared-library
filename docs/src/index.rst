@@ -13,7 +13,7 @@
    :caption: ChangeLog
    :hidden:
 
-   releases/changelog.rst
+   changelog.rst
 
 .. toctree::
   :maxdepth: 3
