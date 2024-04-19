@@ -11,8 +11,9 @@
 .. toctree::
    :maxdepth: 1
    :caption: ChangeLog
+   :hidden:
 
-   releases/changelog.md
+   releases/changelog.rst
 
 .. toctree::
   :maxdepth: 2
