@@ -16,7 +16,7 @@
    releases/changelog.rst
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 3
   :caption: Table of Contents
   :hidden:
 
