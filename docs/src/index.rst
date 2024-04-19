@@ -11,7 +11,6 @@
 .. toctree::
    :maxdepth: 1
    :caption: ChangeLog
-   :hidden:
 
    changelog.rst
 
