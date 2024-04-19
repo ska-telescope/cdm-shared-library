@@ -12,7 +12,7 @@
    :maxdepth: 1
    :caption: ChangeLog
 
-   changelog.rst
+   CHANGELOG.rst
 
 .. toctree::
   :maxdepth: 3
