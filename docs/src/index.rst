@@ -12,7 +12,7 @@
    :maxdepth: 1
    :caption: ChangeLog
 
-   releases/changelog
+   releases/changelog.md
 
 .. toctree::
   :maxdepth: 2
