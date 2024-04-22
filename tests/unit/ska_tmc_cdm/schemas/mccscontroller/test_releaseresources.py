@@ -4,7 +4,9 @@ Unit tests for ska_tmc_cdm.schemas.mccscontroller.releaseresources module.
 
 import pytest
 
-from ska_tmc_cdm.messages.mccscontroller.releaseresources import ReleaseResourcesRequest
+from ska_tmc_cdm.messages.mccscontroller.releaseresources import (
+    ReleaseResourcesRequest,
+)
 from ska_tmc_cdm.schemas.mccscontroller.releaseresources import (
     ReleaseResourcesRequestSchema,
 )

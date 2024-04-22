@@ -26,7 +26,9 @@ class AssignResourcesRequestBuilder:
         self.interface = None
         self.transaction_id = None
 
-    def set_subarray_id(self, subarray_id: int) -> "AssignResourcesRequestBuilder":
+    def set_subarray_id(
+        self, subarray_id: int
+    ) -> "AssignResourcesRequestBuilder":
         """
         Set subarray id
         :param: subarray_id: Subarray ID

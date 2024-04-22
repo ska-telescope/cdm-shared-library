@@ -7,8 +7,12 @@ from os import environ
 
 from ska_telmodel import schema
 from ska_telmodel.data import TMData
-from ska_telmodel.telvalidation import semantic_validator as televalidation_schema
-from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
+from ska_telmodel.telvalidation import (
+    semantic_validator as televalidation_schema,
+)
+from ska_telmodel.telvalidation.semantic_validator import (
+    SchematicValidationError,
+)
 
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
@@ -23,7 +27,7 @@ CAR_TELMODEL_SOURCE = (
 )
 
 
-class JsonSchema:  # pylint: disable=too-few-public-methods
+class JsonSchema:
     """
     JSON Schema use for validating the structure of JSON data
     """
@@ -92,7 +96,9 @@ class JsonSchema:  # pylint: disable=too-few-public-methods
         tm_data = TMData(source_uris=data_sources, update=True)
         try:
             return televalidation_schema.semantic_validate(
-                observing_command_input=instance, tm_data=tm_data, interface=uri
+                observing_command_input=instance,
+                tm_data=tm_data,
+                interface=uri,
             )
 
         except SchematicValidationError as exc:

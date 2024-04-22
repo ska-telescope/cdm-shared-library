@@ -3,7 +3,9 @@ Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 import pytest
 
-from tests.unit.ska_tmc_cdm.builder.central_node.common import DishAllocateBuilder
+from tests.unit.ska_tmc_cdm.builder.central_node.common import (
+    DishAllocateBuilder,
+)
 
 
 @pytest.mark.parametrize(

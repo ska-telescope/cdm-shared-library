@@ -1,5 +1,7 @@
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
+from ska_tmc_cdm.messages.central_node.release_resources import (
+    ReleaseResourcesRequest,
+)
 
 
 class ReleaseResourcesRequestBuilder:
@@ -19,7 +21,9 @@ class ReleaseResourcesRequestBuilder:
         self.release_all = None
         self.dish_allocation = None
 
-    def set_interface(self, interface: str) -> "ReleaseResourcesRequestBuilder":
+    def set_interface(
+        self, interface: str
+    ) -> "ReleaseResourcesRequestBuilder":
         """
         Set interface version
         :param: interface: Interface version
@@ -37,7 +41,9 @@ class ReleaseResourcesRequestBuilder:
         self.transaction_id = transaction_id
         return self
 
-    def set_subarray_id(self, subarray_id: int) -> "ReleaseResourcesRequestBuilder":
+    def set_subarray_id(
+        self, subarray_id: int
+    ) -> "ReleaseResourcesRequestBuilder":
         """
         Set subarray id
         :param: subarray_id: Subarray ID
@@ -45,7 +51,9 @@ class ReleaseResourcesRequestBuilder:
         self.subarray_id = subarray_id
         return self
 
-    def set_release_all(self, release_all: bool) -> "ReleaseResourcesRequestBuilder":
+    def set_release_all(
+        self, release_all: bool
+    ) -> "ReleaseResourcesRequestBuilder":
         """
         Set release all value
         :param: release_all: Release all value to either True or false

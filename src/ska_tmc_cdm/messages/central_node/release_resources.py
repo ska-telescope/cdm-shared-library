@@ -34,12 +34,18 @@ class ReleaseResourcesRequest:
     transaction_id: Optional[str] = None
     subarray_id: Optional[int] = None
     release_all: StrictBool = False
-    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
+    dish: Optional[DishAllocation] = Field(
+        default=None, alias="dish_allocation"
+    )
 
     @model_validator(mode="after")
-    def validate_release_all_ignores_dish_allocation(self) -> "ReleaseResourcesRequest":
+    def validate_release_all_ignores_dish_allocation(
+        self,
+    ) -> "ReleaseResourcesRequest":
         if self.release_all is False and self.dish is None:
-            raise ValueError("Either release_all or dish_allocation must be defined")
+            raise ValueError(
+                "Either release_all or dish_allocation must be defined"
+            )
         if self.release_all:
             self.dish = None
         return self

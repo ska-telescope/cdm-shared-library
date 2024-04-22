@@ -61,7 +61,9 @@ class Target:
         if ra is None and dec is None:
             self.coord = None
         else:
-            self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
+            self.coord = SkyCoord(
+                ra=ra, dec=dec, unit=unit, frame=reference_frame
+            )
 
     @model_validator(mode="after")
     def coord_or_offsets_required(self) -> "Target":
@@ -131,7 +133,9 @@ class Target:
         reference_frame = self.coord.frame.name
         target_name = self.target_name
         hmsdms = self.coord.to_string(style="hmsdms")
-        return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
+        return "<Target: {!r} ({} {})>".format(
+            target_name, hmsdms, reference_frame
+        )
 
 
 class PointingCorrection(Enum):
@@ -148,7 +152,7 @@ class PointingCorrection(Enum):
 
 
 @dataclass
-class PointingConfiguration:  # pylint: disable=too-few-public-methods
+class PointingConfiguration:
     """
     PointingConfiguration specifies where the subarray receptors are going to
     point.

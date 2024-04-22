@@ -9,7 +9,14 @@
 .. Hidden toctree to manage the sidebar navigation.
 
 .. toctree::
-  :maxdepth: 2
+   :maxdepth: 1
+   :caption: ChangeLog
+   :hidden:
+
+   CHANGELOG.rst
+
+.. toctree::
+  :maxdepth: 3
   :caption: Table of Contents
   :hidden:
 

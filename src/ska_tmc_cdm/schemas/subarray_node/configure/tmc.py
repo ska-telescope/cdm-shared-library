@@ -14,7 +14,7 @@ __all__ = ["TMCConfigurationSchema"]
 
 
 @CODEC.register_mapping(TMCConfiguration)
-class TMCConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
+class TMCConfigurationSchema(Schema):
     """
     Create the Schema for ScanDuration using timedelta
     """

@@ -5,8 +5,12 @@ import copy
 import json
 
 import pytest
-from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError
-from ska_telmodel.tmc.examples import LOW_TMC_RELEASERESOURCES_1_0 as VALID_JSON
+from ska_telmodel.telvalidation.semantic_validator import (
+    SchematicValidationError,
+)
+from ska_telmodel.tmc.examples import (
+    LOW_TMC_RELEASERESOURCES_1_0 as VALID_JSON,
+)
 
 from ska_tmc_cdm.jsonschema.json_schema import (
     JsonSchema,
@@ -33,7 +37,9 @@ def test_schema_validation_with_valid_json():
     Verify schema validation with test valid json
     """
     json_schema_obj = JsonSchema()
-    json_schema_obj.validate_schema(uri=VALID_JSON["interface"], instance=VALID_JSON)
+    json_schema_obj.validate_schema(
+        uri=VALID_JSON["interface"], instance=VALID_JSON
+    )
 
 
 def test_schema_validation_with_invalid_json():
@@ -97,12 +103,15 @@ def test_semantic_validation_low_tmc_assign_with_invalid_json():
     """
     Verify semantic validation with test low assign resources invalid json
     """
-    LOW_ASSIGN_INVALID_JSON = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
+    LOW_ASSIGN_INVALID_JSON = json.loads(
+        INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON
+    )
     json_schema_obj = JsonSchema()
 
     try:
         json_schema_obj.semantic_validate_schema(
-            instance=LOW_ASSIGN_INVALID_JSON, uri=LOW_ASSIGN_INVALID_JSON["interface"]
+            instance=LOW_ASSIGN_INVALID_JSON,
+            uri=LOW_ASSIGN_INVALID_JSON["interface"],
         )
     except SchematicValidationError as error:
         assert error.message == (
@@ -119,7 +128,8 @@ def test_semantic_validation_low_tmc_configure_with_valid_json():
     LOW_CONFIGURE_VALID_JSON = json.loads(VALID_LOW_CONFIGURE_JSON)
     json_schema_obj = JsonSchema()
     result = json_schema_obj.semantic_validate_schema(
-        instance=LOW_CONFIGURE_VALID_JSON, uri=LOW_CONFIGURE_VALID_JSON["interface"]
+        instance=LOW_CONFIGURE_VALID_JSON,
+        uri=LOW_CONFIGURE_VALID_JSON["interface"],
     )
     assert result
 

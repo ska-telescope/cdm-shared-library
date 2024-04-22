@@ -75,7 +75,10 @@ class CommonConfigurationSchema(Schema):
         """
         # Convert Python Enum to its string value
         copied = copy.deepcopy(common_configuration)
-        if hasattr(copied, "frequency_band") and copied.frequency_band is not None:
+        if (
+            hasattr(copied, "frequency_band")
+            and copied.frequency_band is not None
+        ):
             copied.frequency_band = common_configuration.frequency_band.value
         return copied
 
@@ -113,7 +116,9 @@ class CommonConfigurationSchema(Schema):
                 band_5_tuning=band_5_tuning,
             )
         return CommonConfiguration(
-            config_id=config_id, subarray_id=subarray_id, band_5_tuning=band_5_tuning
+            config_id=config_id,
+            subarray_id=subarray_id,
+            band_5_tuning=band_5_tuning,
         )
 
 
@@ -129,14 +134,20 @@ class FSPConfigurationSchema(Schema):
         validate=OneOf(["CORR", "PSS-BF", "PST-BF", "VLBI"]),
         required=True,
     )
-    frequency_slice_id = fields.Integer(data_key="frequency_slice_id", required=True)
+    frequency_slice_id = fields.Integer(
+        data_key="frequency_slice_id", required=True
+    )
     zoom_factor = fields.Integer(data_key="zoom_factor", required=True)
-    integration_factor = fields.Integer(data_key="integration_factor", required=True)
+    integration_factor = fields.Integer(
+        data_key="integration_factor", required=True
+    )
     channel_averaging_map = fields.List(
-        fields.Tuple((fields.Integer, fields.Integer)), data_key="channel_averaging_map"
+        fields.Tuple((fields.Integer, fields.Integer)),
+        data_key="channel_averaging_map",
     )
     output_link_map = fields.List(
-        fields.Tuple((fields.Integer, fields.Integer)), data_key="output_link_map"
+        fields.Tuple((fields.Integer, fields.Integer)),
+        data_key="output_link_map",
     )
     channel_offset = fields.Integer(data_key="channel_offset")
     zoom_window_tuning = fields.Integer(data_key="zoom_window_tuning")
@@ -207,7 +218,9 @@ class FSPConfigurationSchema(Schema):
 
 @CODEC.register_mapping(CBFConfiguration)
 class CBFConfigurationSchema(Schema):
-    fsp_configs = fields.Nested(FSPConfigurationSchema, many=True, data_key="fsp")
+    fsp_configs = fields.Nested(
+        FSPConfigurationSchema, many=True, data_key="fsp"
+    )
     vlbi_config = fields.Dict(data_key="vlbi")
 
     @post_load
@@ -222,10 +235,12 @@ class CBFConfigurationSchema(Schema):
         :rtype: CBFConfiguration
         """
         fsp_configs = data.get("fsp_configs", None)
-        # TODO: In future, when csp Interface 2.2 will be used than vlbi_config parameter type will be                  # pylint: disable=W0511
+        # TODO: In future, when csp Interface 2.2 will be used than vlbi_config parameter type will be
         #  replaced with the respective class schema (VLBIConfigurationSchema)
         vlbi_config = data.get("vlbi_config", None)
-        return CBFConfiguration(fsp_configs=fsp_configs, vlbi_config=vlbi_config)
+        return CBFConfiguration(
+            fsp_configs=fsp_configs, vlbi_config=vlbi_config
+        )
 
     @post_dump
     def filter_nulls(self, data, **_):  # pylint: disable=no-self-use
@@ -324,7 +339,9 @@ class VisFspConfigurationSchema(Schema):
 class VisStnBeamConfigurationSchema(Schema):
     stn_beam_id = fields.Integer()
     host = fields.List(fields.Tuple((fields.Integer, fields.String)))
-    port = fields.List(fields.Tuple((fields.Integer, fields.Integer, fields.Integer)))
+    port = fields.List(
+        fields.Tuple((fields.Integer, fields.Integer, fields.Integer))
+    )
     mac = fields.List(fields.Tuple((fields.Integer, fields.String)))
     integration_ms = fields.Integer()
 
@@ -471,7 +488,7 @@ class CSPConfigurationSchema(Schema):
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
     lowcbf = fields.Nested(LowCBFConfigurationSchema, data_key="lowcbf")
 
-    # TODO: In future when csp Interface 2.2 will be used than these 2 parameter type will be                           # pylint: disable=W0511
+    # TODO: In future when csp Interface 2.2 will be used than these 2 parameter type will be
     #  replaced with the respective class schema (PSSConfigurationSchema,PSTConfigurationSchema)
     pss_config = fields.Dict(data_key="pss")
     pst_config = fields.Dict(data_key="pst")
@@ -504,7 +521,7 @@ class CSPConfigurationSchema(Schema):
         )
 
     @post_dump
-    def validate_on_dump(self, data, **_):  # pylint: disable=arguments-differ
+    def validate_on_dump(self, data, **_):
         """
         Validating the structure of JSON against schemas and
         Filter out null values from JSON.

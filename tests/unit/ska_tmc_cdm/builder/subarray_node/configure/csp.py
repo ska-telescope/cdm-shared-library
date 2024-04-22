@@ -113,7 +113,9 @@ class FSPConfigurationBuilder:
         self.output_link_map = output_link_map
         return self
 
-    def set_channel_offset(self, channel_offset: int) -> "FSPConfigurationBuilder":
+    def set_channel_offset(
+        self, channel_offset: int
+    ) -> "FSPConfigurationBuilder":
         """
         Set the channel offset.
         :param channel_offset: Integer representing the channel offset.
@@ -157,7 +159,9 @@ class SubarrayConfigurationBuilder:
     def __init__(self):
         self.subarray_name = None
 
-    def set_subarray_name(self, subarray_name: str) -> "SubarrayConfigurationBuilder":
+    def set_subarray_name(
+        self, subarray_name: str
+    ) -> "SubarrayConfigurationBuilder":
         """
         Set the name of the sub-array.
 
@@ -208,7 +212,9 @@ class CommonConfigurationBuilder:
         self.frequency_band = frequency_band
         return self
 
-    def set_subarray_id(self, subarray_id: int) -> "CommonConfigurationBuilder":
+    def set_subarray_id(
+        self, subarray_id: int
+    ) -> "CommonConfigurationBuilder":
         """
         Set the sub-array ID.
 
@@ -373,7 +379,9 @@ class StnBeamConfigurationBuilder:
         self.delay_poly = None
         self.beam_id = None
 
-    def set_stn_beam_id(self, stn_beam_id: int) -> "StnBeamConfigurationBuilder":
+    def set_stn_beam_id(
+        self, stn_beam_id: int
+    ) -> "StnBeamConfigurationBuilder":
         """
         Set the station beam ID.
 
@@ -383,7 +391,9 @@ class StnBeamConfigurationBuilder:
         self.stn_beam_id = stn_beam_id
         return self
 
-    def set_freq_ids(self, freq_ids: List[int]) -> "StnBeamConfigurationBuilder":
+    def set_freq_ids(
+        self, freq_ids: List[int]
+    ) -> "StnBeamConfigurationBuilder":
         """
         Set the frequency IDs for the station beam.
 
@@ -435,7 +445,9 @@ class VisFspConfigurationBuilder:
         self.function_mode = None
         self.fsp_ids = None
 
-    def set_function_mode(self, function_mode: str) -> "VisFspConfigurationBuilder":
+    def set_function_mode(
+        self, function_mode: str
+    ) -> "VisFspConfigurationBuilder":
         """
         Set the function mode for the visibility FSP.
 
@@ -475,7 +487,9 @@ class VisStnBeamConfigurationBuilder:
         self.mac = None
         self.integration_ms = None
 
-    def set_stn_beam_id(self, stn_beam_id: int) -> "VisStnBeamConfigurationBuilder":
+    def set_stn_beam_id(
+        self, stn_beam_id: int
+    ) -> "VisStnBeamConfigurationBuilder":
         """
         Set the station beam ID.
 
@@ -485,7 +499,9 @@ class VisStnBeamConfigurationBuilder:
         self.stn_beam_id = stn_beam_id
         return self
 
-    def set_host(self, host: List[Tuple[int, str]]) -> "VisStnBeamConfigurationBuilder":
+    def set_host(
+        self, host: List[Tuple[int, str]]
+    ) -> "VisStnBeamConfigurationBuilder":
         """
         Set the host information for the station beam.
 
@@ -507,7 +523,9 @@ class VisStnBeamConfigurationBuilder:
         self.port = port
         return self
 
-    def set_mac(self, mac: List[Tuple[int, str]]) -> "VisStnBeamConfigurationBuilder":
+    def set_mac(
+        self, mac: List[Tuple[int, str]]
+    ) -> "VisStnBeamConfigurationBuilder":
         """
         Set the MAC address information for the station beam.
 
@@ -619,7 +637,9 @@ class CSPConfigurationBuilder:
         self.subarray = subarray
         return self
 
-    def set_common(self, common: CommonConfiguration) -> "CSPConfigurationBuilder":
+    def set_common(
+        self, common: CommonConfiguration
+    ) -> "CSPConfigurationBuilder":
         """
         Set the CommonConfiguration.
         :param common: An instance of CommonConfiguration.
@@ -627,7 +647,9 @@ class CSPConfigurationBuilder:
         self.common = common
         return self
 
-    def set_cbf_config(self, cbf_config: CBFConfiguration) -> "CSPConfigurationBuilder":
+    def set_cbf_config(
+        self, cbf_config: CBFConfiguration
+    ) -> "CSPConfigurationBuilder":
         """
         Set the CBFConfiguration.
         :param cbf_config: An instance of CBFConfiguration.
@@ -655,7 +677,9 @@ class CSPConfigurationBuilder:
         self.pss_config = pss_config
         return self
 
-    def set_lowcbf(self, lowcbf: LowCBFConfiguration) -> "CSPConfigurationBuilder":
+    def set_lowcbf(
+        self, lowcbf: LowCBFConfiguration
+    ) -> "CSPConfigurationBuilder":
         """
         Set the LowCBFConfiguration.
         :param lowcbf: An instance of LowCBFConfiguration.

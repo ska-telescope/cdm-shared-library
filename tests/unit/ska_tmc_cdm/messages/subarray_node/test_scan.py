@@ -4,7 +4,9 @@ Unit tests for the ska_tmc_cdm.messages.subarraynode.scan module
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.scan import LOW_SCHEMA, MID_SCHEMA
-from tests.unit.ska_tmc_cdm.builder.subarray_node.scan import ScanRequestBuilder
+from tests.unit.ska_tmc_cdm.builder.subarray_node.scan import (
+    ScanRequestBuilder,
+)
 
 
 @pytest.mark.parametrize(

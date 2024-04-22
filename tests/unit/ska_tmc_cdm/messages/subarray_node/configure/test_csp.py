@@ -92,7 +92,9 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
         ),
     ],
 )
-def test_common_configuration_equality(common_config_a, common_config_b, is_equal):
+def test_common_configuration_equality(
+    common_config_a, common_config_b, is_equal
+):
     """
     Verify that CommonConfiguration objects are equal when they have the same values
     ,not equal when any attribute differs and not equal to other objects.
@@ -107,14 +109,22 @@ def test_common_configuration_equality(common_config_a, common_config_b, is_equa
     [
         # Case when both configurations have the same subarray name
         (
-            SubarrayConfigurationBuilder().set_subarray_name("Test Subarray").build(),
-            SubarrayConfigurationBuilder().set_subarray_name("Test Subarray").build(),
+            SubarrayConfigurationBuilder()
+            .set_subarray_name("Test Subarray")
+            .build(),
+            SubarrayConfigurationBuilder()
+            .set_subarray_name("Test Subarray")
+            .build(),
             True,
         ),
         # Case when configurations have different subarray names
         (
-            SubarrayConfigurationBuilder().set_subarray_name("Test Subarray").build(),
-            SubarrayConfigurationBuilder().set_subarray_name("Test Subarray2").build(),
+            SubarrayConfigurationBuilder()
+            .set_subarray_name("Test Subarray")
+            .build(),
+            SubarrayConfigurationBuilder()
+            .set_subarray_name("Test Subarray2")
+            .build(),
             False,
         ),
     ],
@@ -224,7 +234,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
-            .set_channel_averaging_map(list(zip(itertools.count(1, 744), 20 * [0])))
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
@@ -232,7 +244,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
-            .set_channel_averaging_map(list(zip(itertools.count(1, 744), 20 * [0])))
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             True,
         ),
@@ -264,7 +278,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)  # Different function mode
+            .set_function_mode(
+                FSPFunctionMode.PSS_BF
+            )  # Different function mode
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
@@ -281,7 +297,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)  # Different function mode
+            .set_function_mode(
+                FSPFunctionMode.PSS_BF
+            )  # Different function mode
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .set_frequency_slice_id(2)  # Different frequency slice ID
@@ -329,11 +347,15 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
-            .set_channel_averaging_map(list(zip(itertools.count(1, 744), 20 * [0])))
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)  # Different function mode
+            .set_function_mode(
+                FSPFunctionMode.PSS_BF
+            )  # Different function mode
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
@@ -372,14 +394,18 @@ def test_fsp_id_range_with_builder(fsp_id, expected_exception):
         with pytest.raises(expected_exception):
             FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
                 FSPFunctionMode.CORR
-            ).set_frequency_slice_id(1).set_integration_factor(10).set_zoom_factor(
+            ).set_frequency_slice_id(1).set_integration_factor(
+                10
+            ).set_zoom_factor(
                 0
             ).build()
     else:
         try:
             FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
                 FSPFunctionMode.CORR
-            ).set_frequency_slice_id(1).set_integration_factor(10).set_zoom_factor(
+            ).set_frequency_slice_id(1).set_integration_factor(
+                10
+            ).set_zoom_factor(
                 0
             ).build()
         except ValueError:
@@ -444,13 +470,18 @@ def test_fsp_integration_factor_range(integration_factor, expected_exception):
     "channel_avg_map_length, expected_exception",
     [
         (20, None),  # Assuming 20 entries are valid
-        (21, ValueError),  # Invalid number of entries, assuming more than 20 is invalid
+        (
+            21,
+            ValueError,
+        ),  # Invalid number of entries, assuming more than 20 is invalid
     ],
 )
 def test_fsp_configuration_channel_avg_map_length(
     channel_avg_map_length, expected_exception
 ):
-    channel_avg_map = list(zip(itertools.count(1, 744), [0] * channel_avg_map_length))
+    channel_avg_map = list(
+        zip(itertools.count(1, 744), [0] * channel_avg_map_length)
+    )
     builder = (
         FSPConfigurationBuilder()
         .set_fsp_id(1)
@@ -573,7 +604,9 @@ def test_stn_beam_configuration_equality(
         ),
     ],
 )
-def test_station_configuration_equality(station_config_a, station_config_b, is_equal):
+def test_station_configuration_equality(
+    station_config_a, station_config_b, is_equal
+):
     """
     Verify that StationConfiguration objects are equal when they have the same values
     and not equal when any attribute differs.
@@ -611,7 +644,9 @@ def test_station_configuration_equality(station_config_a, station_config_b, is_e
         ),
     ],
 )
-def test_vis_fsp_configuration_equality(vis_fsp_config_a, vis_fsp_config_b, is_equal):
+def test_vis_fsp_configuration_equality(
+    vis_fsp_config_a, vis_fsp_config_b, is_equal
+):
     """
     Verify that VisFspConfiguration objects are equal when they have the same values
     and not equal when any attribute differs.
@@ -766,7 +801,9 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
         ),
     ],
 )
-def test_low_cbf_configuration_equality(low_cbf_config_a, low_cbf_config_b, is_equal):
+def test_low_cbf_configuration_equality(
+    low_cbf_config_a, low_cbf_config_b, is_equal
+):
     """
     Verify that LowCBFConfiguration objects are equal when they have the same values
     and not equal when any attribute differs.
@@ -784,14 +821,18 @@ def test_csp_configuration_equality(csp_config, low_csp_config):
 
     csp_config_invalid = CSPConfigurationBuilder().set_interface("foo").build()
     csp_config_b = copy.deepcopy(csp_config)
-    assert csp_config == csp_config_b  # comparing same instance created using deepcopy
+    assert (
+        csp_config == csp_config_b
+    )  # comparing same instance created using deepcopy
     assert csp_config != csp_config_invalid  # comparing with invalid instance
     assert csp_config != 1  # comparing with other instance
 
     assert low_csp_config == copy.deepcopy(
         low_csp_config
     )  # comparing same instance created using deepcopy
-    assert low_csp_config != csp_config_invalid  # comparing with invalid instance
+    assert (
+        low_csp_config != csp_config_invalid
+    )  # comparing with invalid instance
     assert low_csp_config != 1  # comparing with other instance
 
     assert csp_config != low_csp_config  # comparing mid with low

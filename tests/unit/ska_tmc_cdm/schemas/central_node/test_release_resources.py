@@ -5,7 +5,9 @@ Unit tests for ska_tmc_cdm.schemas module.
 import pytest
 
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
+from ska_tmc_cdm.messages.central_node.release_resources import (
+    ReleaseResourcesRequest,
+)
 from ska_tmc_cdm.schemas.central_node.release_resources import (
     ReleaseResourcesRequestSchema,
 )
@@ -121,5 +123,10 @@ def test_releaseresources_serialisation_and_validation(
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
     utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json, is_validate
+        schema_cls,
+        instance,
+        modifier_fn,
+        valid_json,
+        invalid_json,
+        is_validate,
     )

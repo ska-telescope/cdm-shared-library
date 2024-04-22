@@ -57,8 +57,16 @@ def test_configure_request_has_correct_schema_on_creation(
             True,
             False,
         ),  # Test equality for ConfigureRequests with dish, sdp, and csp configs
-        ("mccs", True, False),  # Test equality for ConfigureRequests with mccs config
-        ("other_objects", False, True),  # Test inequality against other object types
+        (
+            "mccs",
+            True,
+            False,
+        ),  # Test equality for ConfigureRequests with mccs config
+        (
+            "other_objects",
+            False,
+            True,
+        ),  # Test inequality against other object types
     ],
 )
 def test_configure_request_equality(

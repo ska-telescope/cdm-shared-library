@@ -5,7 +5,9 @@ MCCSSubarray.assigned_resources attribute to/from a JSON representation.
 
 from marshmallow import fields, post_load
 
-from ska_tmc_cdm.messages.mccssubarray.assigned_resources import AssignedResources
+from ska_tmc_cdm.messages.mccssubarray.assigned_resources import (
+    AssignedResources,
+)
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.schemas.shared import ValidatingSchema
 

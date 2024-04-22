@@ -18,7 +18,9 @@ class CommonConfigurationBuilder:
     def __init__(self) -> "CommonConfigurationBuilder":
         self.subarray_id = None
 
-    def set_subarray_id(self, subarray_id: int) -> "CommonConfigurationBuilder":
+    def set_subarray_id(
+        self, subarray_id: int
+    ) -> "CommonConfigurationBuilder":
         """
         Set the subarray_id
         :param subarray_id: Subarray ID
@@ -144,7 +146,9 @@ class CSPConfigurationBuilder:
         self.interface = interface
         return self
 
-    def set_common(self, common: CommonConfiguration) -> "CSPConfigurationBuilder":
+    def set_common(
+        self, common: CommonConfiguration
+    ) -> "CSPConfigurationBuilder":
         """
         Set the common
         :param common: Common
@@ -152,7 +156,9 @@ class CSPConfigurationBuilder:
         self.common = common
         return self
 
-    def set_lowcbf(self, lowcbf: LowCbfConfiguration) -> "CSPConfigurationBuilder":
+    def set_lowcbf(
+        self, lowcbf: LowCbfConfiguration
+    ) -> "CSPConfigurationBuilder":
         """
         Set the lowcbf
         :param lowcbf: Lowcbf

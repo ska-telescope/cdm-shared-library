@@ -5,7 +5,9 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.sdp module.
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure import SDPConfiguration
-from ska_tmc_cdm.schemas.subarray_node.configure.sdp import SDPConfigurationSchema
+from ska_tmc_cdm.schemas.subarray_node.configure.sdp import (
+    SDPConfigurationSchema,
+)
 
 from ... import utils
 

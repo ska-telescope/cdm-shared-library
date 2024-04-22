@@ -22,11 +22,12 @@ __all__ = [
 ]
 
 JsonTarget = collections.namedtuple(
-    "JsonTarget", "ra dec reference_frame target_name ca_offset_arcsec ie_offset_arcsec"
+    "JsonTarget",
+    "ra dec reference_frame target_name ca_offset_arcsec ie_offset_arcsec",
 )
 
 
-class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
+class TargetSchema(Schema):
     """
     Marshmallow schema for the subarray_node.Target class
     """
@@ -116,13 +117,15 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         return target
 
 
-class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
+class PointingSchema(Schema):
     """
     Marshmallow schema for the subarray_node.Pointing class.
     """
 
     target = fields.Nested(TargetSchema)
-    correction = fields.String(validate=OneOf(["MAINTAIN", "UPDATE", "RESET", None]))
+    correction = fields.String(
+        validate=OneOf(["MAINTAIN", "UPDATE", "RESET", None])
+    )
 
     @pre_dump
     def convert(
@@ -176,13 +179,15 @@ class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
         )
 
 
-class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
+class DishConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.DishConfiguration class.
     """
 
     receiver_band = fields.String(
-        data_key="receiver_band", required=True, validate=OneOf(["1", "2", "5a", "5b"])
+        data_key="receiver_band",
+        required=True,
+        validate=OneOf(["1", "2", "5a", "5b"]),
     )
 
     @pre_dump
@@ -203,7 +208,9 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
         return copied
 
     @post_load
-    def create_dish_configuration(self, data, **_):  # pylint: disable=no-self-use
+    def create_dish_configuration(
+        self, data, **_
+    ):  # pylint: disable=no-self-use
         """
         Converted parsed JSON back into a subarray_node.DishConfiguration
         object.
@@ -218,9 +225,7 @@ class DishConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
 
 
 @CODEC.register_mapping(ConfigureRequest)
-class ConfigureRequestSchema(
-    shared.ValidatingSchema
-):  # pylint: disable=too-few-public-methods
+class ConfigureRequestSchema(shared.ValidatingSchema):
     """
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """

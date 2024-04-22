@@ -15,7 +15,7 @@ def test_upper_cased_field_serialises_to_uppercase():
     Verify that UpperCasedField serialises to uppercase text.
     """
 
-    class TestObject:  # pylint: disable=too-few-public-methods
+    class TestObject:
         """
         Simple test object to hold an attribute.
         """
@@ -33,7 +33,7 @@ def test_upper_cased_field_serialises_none():
     Verify that UpperCasedField serialises None to an empty string.
     """
 
-    class TestObject:  # pylint: disable=too-few-public-methods
+    class TestObject:
         """
         Simple test object to hold an attribute.
         """

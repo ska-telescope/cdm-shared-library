@@ -81,7 +81,9 @@ class ConfigureRequestSchema(ValidatingSchema):
     """
 
     interface = fields.String(required=True)
-    stations = fields.Nested(StationConfigurationSchema, many=True, required=True)
+    stations = fields.Nested(
+        StationConfigurationSchema, many=True, required=True
+    )
     subarray_beams = fields.Nested(
         SubarrayBeamConfigurationSchema, many=True, required=True
     )
@@ -100,5 +102,7 @@ class ConfigureRequestSchema(ValidatingSchema):
         stations = data["stations"]
         subarray_beams = data["subarray_beams"]
         return ConfigureRequest(
-            interface=interface, stations=stations, subarray_beams=subarray_beams
+            interface=interface,
+            stations=stations,
+            subarray_beams=subarray_beams,
         )

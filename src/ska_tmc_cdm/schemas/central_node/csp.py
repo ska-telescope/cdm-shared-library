@@ -129,10 +129,14 @@ class CSPConfigurationSchema(Schema):
 
     interface = fields.String(metadata={"require": True})
     common = fields.Nested(
-        CommonConfigurationSchema, data_key="common", metadata={"require": True}
+        CommonConfigurationSchema,
+        data_key="common",
+        metadata={"require": True},
     )
     lowcbf = fields.Nested(
-        LowCbfConfigurationSchema, data_key="lowcbf", metadata={"require": True}
+        LowCbfConfigurationSchema,
+        data_key="lowcbf",
+        metadata={"require": True},
     )
 
     @post_dump

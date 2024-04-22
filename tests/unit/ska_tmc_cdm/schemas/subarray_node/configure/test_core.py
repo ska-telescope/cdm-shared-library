@@ -86,7 +86,9 @@ def test_unmarshall_target_from_json():
     """
     Verify that a Target is unmarshalled correctly from JSON.
     """
-    expected = Target(ra="12h34m56.78s", dec="+12d34m56.78s", target_name="NGC123")
+    expected = Target(
+        ra="12h34m56.78s", dec="+12d34m56.78s", target_name="NGC123"
+    )
     unmarshalled = TargetSchema().loads(VALID_TARGET_JSON)
     assert unmarshalled == expected
 
@@ -105,7 +107,9 @@ def test_unmarshall_dish_configuration_from_json():
     Verify that JSON can be unmarshalled to a DishConfiguration
     """
     expected = DishConfiguration(receiver_band=ReceiverBand.BAND_5A)
-    unmarshalled = DishConfigurationSchema().loads(VALID_DISH_CONFIGURATION_JSON)
+    unmarshalled = DishConfigurationSchema().loads(
+        VALID_DISH_CONFIGURATION_JSON
+    )
     assert unmarshalled == expected
 
 

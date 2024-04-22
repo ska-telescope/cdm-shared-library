@@ -27,13 +27,7 @@ sys.path.insert(0, os.path.abspath("../../src"))
 with open("../../pyproject.toml", "rb") as fh:
     pyproject = tomli.load(fh)
 
-autodoc_mock_imports = ["marshmallow", "ska_telmodel"]
-
-
-def setup(app):
-    app.add_css_file('css/custom.css')
-    app.add_js_file('js/github.js')
-
+autodoc_mock_imports = ["marshmallow", "pydantic"]
 
 add_module_names = False
 
@@ -56,16 +50,15 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
+    "recommonmark"
 ]
 
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = ".rst"
+source_suffix = ['.rst', '.md']
+# source_suffix = ".rst"
 
 # The master toctree document.
 master_doc = "index"
@@ -105,33 +98,13 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+html_theme = "ska_ser_sphinx_theme"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {
-    # 'logo_only' : False,
-    # 'logo_only' : 'ska_logo.jpg',
-    # 'logo' : 'ska_logo.jpg',
-}
-
-html_context = {
-    "favicon": "img/favicon.ico",
-    "logo": "img/logo.jpg",
-    "theme_logo_only": True,
-    "display_github": True,  # Integrate GitHub
-    "github_user": "flyingfrog81",  # Username
-    "github_repo": "developer.skatelescope.org",  # Repo name
-    "github_version": "master",  # Version
-    "conf_py_path": "/src/",  # Path in the checkout to the docs root
-}
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
+html_theme_options = {}
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
@@ -241,4 +214,4 @@ epub_exclude_files = ["search.html"]
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {"https://docs.python.org/": None}
+intersphinx_mapping = {"python": ("https://docs.python.org/", None)}

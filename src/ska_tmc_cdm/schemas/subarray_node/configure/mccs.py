@@ -54,7 +54,9 @@ class SubarrayBeamSkyCoordinatesSchema(Schema):
 @CODEC.register_mapping(SubarrayBeamLogicalBands)
 class SubarrayBeamLogicalBandsSchema(Schema):
     start_channel = fields.Integer(data_key="start_channel", required=True)
-    number_of_channels = fields.Integer(data_key="number_of_channels", required=True)
+    number_of_channels = fields.Integer(
+        data_key="number_of_channels", required=True
+    )
 
     @post_load
     def create(self, data, **_):
@@ -77,7 +79,9 @@ class SubarrayBeamLogicalBandsSchema(Schema):
 @CODEC.register_mapping(SubarrayBeamAperatures)
 class SubarrayBeamAperaturesSchema(Schema):
     aperture_id = fields.String(data_key="aperture_id", required=True)
-    weighting_key_ref = fields.String(data_key="weighting_key_ref", required=True)
+    weighting_key_ref = fields.String(
+        data_key="weighting_key_ref", required=True
+    )
 
     @post_load
     def create(self, data, **_):
@@ -99,7 +103,9 @@ class SubarrayBeamAperaturesSchema(Schema):
 
 @CODEC.register_mapping(SubarrayBeamConfiguration)
 class SubarrayBeamConfigurationSchema(Schema):
-    subarray_beam_id = fields.Integer(data_key="subarray_beam_id", required=True)
+    subarray_beam_id = fields.Integer(
+        data_key="subarray_beam_id", required=True
+    )
     update_rate = fields.Float(data_key="update_rate")
     logical_bands = fields.List(
         fields.Nested(SubarrayBeamLogicalBandsSchema, data_key="logical_bands")

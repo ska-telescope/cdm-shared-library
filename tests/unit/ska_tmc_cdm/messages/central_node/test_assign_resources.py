@@ -5,13 +5,20 @@ import itertools
 
 import pytest
 
-from ska_tmc_cdm.messages.central_node.assign_resources import LOW_SCHEMA, MID_SCHEMA
+from ska_tmc_cdm.messages.central_node.assign_resources import (
+    LOW_SCHEMA,
+    MID_SCHEMA,
+)
 from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
     AssignResourcesResponseBuilder,
 )
-from tests.unit.ska_tmc_cdm.builder.central_node.common import DishAllocateBuilder
-from tests.unit.ska_tmc_cdm.builder.central_node.mccs import MCCSAllocateBuilder
+from tests.unit.ska_tmc_cdm.builder.central_node.common import (
+    DishAllocateBuilder,
+)
+from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
+    MCCSAllocateBuilder,
+)
 
 
 @pytest.mark.parametrize(

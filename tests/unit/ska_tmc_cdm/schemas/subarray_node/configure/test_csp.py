@@ -263,7 +263,9 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
     ]
     null_kwargs = {name: None for name in optional_kwarg_names}
 
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0, **null_kwargs)
+    fsp_config = FSPConfiguration(
+        1, FSPFunctionMode.CORR, 1, 10, 0, **null_kwargs
+    )
     schema = FSPConfigurationSchema()
     marshalled = schema.dumps(fsp_config)
 
@@ -409,7 +411,9 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
     config = LowCBFConfiguration(
         stations=StationConfiguration(
             stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-            stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400], stn_beam_id=1)],
+            stn_beams=[
+                StnBeamConfiguration(beam_id=1, freq_ids=[400], stn_beam_id=1)
+            ],
         ),
         vis=VisConfiguration(
             fsp=VisFspConfiguration(function_mode="vis", fsp_ids=[1]),

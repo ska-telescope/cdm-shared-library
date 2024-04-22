@@ -12,7 +12,9 @@ class TMCConfigurationBuilder:
         self.scan_duration = None
         self.partial_configuration = False
 
-    def set_scan_duration(self, scan_duration: timedelta) -> "TMCConfigurationBuilder":
+    def set_scan_duration(
+        self, scan_duration: timedelta
+    ) -> "TMCConfigurationBuilder":
         """
         Set the scan duration for the TMC configuration.
         :param scan_duration: A timedelta object representing the duration of the scan.

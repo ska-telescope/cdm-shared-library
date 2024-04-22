@@ -11,7 +11,7 @@ SCHEMA = "https://schema.skao.int/ska-low-mccs-scan/2.0"
 
 
 @dataclass(kw_only=True)
-class ScanRequest:  # pylint: disable=too-few-public-methods
+class ScanRequest:
     """
     ScanRequest represents the request argument for MCCSSubarray.Scan call.
     """

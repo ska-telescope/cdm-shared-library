@@ -1,7 +1,9 @@
 """
 Unit tests for the mccscontroller.assignresources module
 """
-from ska_tmc_cdm.messages.mccssubarray.assigned_resources import AssignedResources
+from ska_tmc_cdm.messages.mccssubarray.assigned_resources import (
+    AssignedResources,
+)
 
 
 def test_assignresourcesrequest_object_equality():

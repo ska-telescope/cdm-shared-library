@@ -4,8 +4,12 @@ Unit tests for ska_tmc_cdm.schemas.mccssubarray.assigned_resources module.
 
 import pytest
 
-from ska_tmc_cdm.messages.mccssubarray.assigned_resources import AssignedResources
-from ska_tmc_cdm.schemas.mccssubarray.assigned_resources import AssignedResourcesSchema
+from ska_tmc_cdm.messages.mccssubarray.assigned_resources import (
+    AssignedResources,
+)
+from ska_tmc_cdm.schemas.mccssubarray.assigned_resources import (
+    AssignedResourcesSchema,
+)
 
 from .. import utils
 
