@@ -39,7 +39,8 @@ astropy = "^5.1"
 marshmallow-enum = "^1.5.1"
 ska-telmodel = "1.15.1"
 deepdiff = "^5.8.1"
-pydantic = "^2.3.0"
+pydantic = "^2.7.0"
+pydantic-core = "^2.18.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1.3"
