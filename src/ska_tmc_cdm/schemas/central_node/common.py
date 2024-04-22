@@ -11,7 +11,7 @@ __all__ = ["DishAllocationSchema", "DishAllocationResponseSchema"]
 
 
 @CODEC.register_mapping(DishAllocation)
-class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
+class DishAllocationSchema(Schema):
     """
     Marshmallow schema for the DishAllocation class.
     """
@@ -34,9 +34,7 @@ class DishAllocationSchema(Schema):  # pylint: disable=too-few-public-methods
 
 
 @CODEC.register_mapping(DishAllocation)
-class DishAllocationResponseSchema(
-    Schema
-):  # pylint: disable=too-few-public-methods
+class DishAllocationResponseSchema(Schema):
     """
     Marshmallow schema for the DishAllocation class when received in the
     response.

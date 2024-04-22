@@ -206,7 +206,7 @@ class CBFConfiguration:
     """
 
     fsp_configs: List[FSPConfiguration]
-    # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter # pylint: disable=W0511
+    # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter
     #  will be replaced with the respective class(VLBIConfiguration)
     vlbi_config: Optional[dict] = None
 
@@ -240,7 +240,7 @@ class CSPConfiguration:
     subarray: Optional[SubarrayConfiguration] = None
     common: Optional[CommonConfiguration] = None
     cbf_config: Optional[CBFConfiguration] = None
-    # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config # pylint: disable=W0511
+    # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.
     pst_config: Optional[PSTConfiguration | dict] = None
     pss_config: Optional[PSSConfiguration | dict] = None

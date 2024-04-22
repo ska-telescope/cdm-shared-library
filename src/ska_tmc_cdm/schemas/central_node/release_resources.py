@@ -20,9 +20,7 @@ __all__ = [
 
 
 @CODEC.register_mapping(ReleaseResourcesRequest)
-class ReleaseResourcesRequestSchema(
-    ValidatingSchema
-):  # pylint: disable=too-few-public-methods
+class ReleaseResourcesRequestSchema(ValidatingSchema):
     """
     Marshmallow schema for the ReleaseResourcesRequest class.
     """
@@ -35,7 +33,7 @@ class ReleaseResourcesRequestSchema(
         DishAllocationSchema, "receptor_ids", data_key="receptor_ids"
     )
 
-    class Meta:  # pylint: disable=too-few-public-methods
+    class Meta:
         """
         Marshmallow directives for ReleaseResourcesRequestSchema.
         """
@@ -88,7 +86,7 @@ class ReleaseResourcesRequestSchema(
             # for MID, remove dish specifier when release all is True and vice
             # versa. We do not need to strip partial resources for LOW as only
             # full release is allowed.
-            # TODO : - When the receptor Ids will be added into the telemodel library for                                # pylint: disable=W0511
+            # TODO : - When the receptor Ids will be added into the telemodel library for
             #  MID release resource command when release_all = False  then we need to remove below if condition
             if not data["release_all"]:
                 temp_receptor_id = data["receptor_ids"]
@@ -97,7 +95,7 @@ class ReleaseResourcesRequestSchema(
         # convert tuples to lists
         data = json.loads(json.dumps(data))
         data = super().validate_on_dump(data)
-        # TODO : - When the receptor Ids will be added into the telemodel library for                                    # pylint: disable=W0511
+        # TODO : - When the receptor Ids will be added into the telemodel library for
         #  MID release resource command when release_all = False  then we need to remove below if condition
         if is_mid and not data["release_all"]:
             data["receptor_ids"] = temp_receptor_id

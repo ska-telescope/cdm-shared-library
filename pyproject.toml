@@ -103,6 +103,7 @@ disable = [
     # and https://stackoverflow.com/q/77142439/845210#
     "unexpected-keyword-arg",
 ]
+enable = "useless-suppression"
 
 
 [build-system]

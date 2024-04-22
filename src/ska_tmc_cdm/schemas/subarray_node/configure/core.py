@@ -27,7 +27,7 @@ JsonTarget = collections.namedtuple(
 )
 
 
-class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
+class TargetSchema(Schema):
     """
     Marshmallow schema for the subarray_node.Target class
     """
@@ -117,7 +117,7 @@ class TargetSchema(Schema):  # pylint: disable=too-few-public-methods
         return target
 
 
-class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
+class PointingSchema(Schema):
     """
     Marshmallow schema for the subarray_node.Pointing class.
     """
@@ -179,9 +179,7 @@ class PointingSchema(Schema):  # pylint: disable=too-few-public-methods
         )
 
 
-class DishConfigurationSchema(
-    Schema
-):  # pylint: disable=too-few-public-methods
+class DishConfigurationSchema(Schema):
     """
     Marshmallow schema for the subarray_node.DishConfiguration class.
     """
@@ -227,9 +225,7 @@ class DishConfigurationSchema(
 
 
 @CODEC.register_mapping(ConfigureRequest)
-class ConfigureRequestSchema(
-    shared.ValidatingSchema
-):  # pylint: disable=too-few-public-methods
+class ConfigureRequestSchema(shared.ValidatingSchema):
     """
     Marshmallow schema for the subarray_node.ConfigureRequest class.
     """

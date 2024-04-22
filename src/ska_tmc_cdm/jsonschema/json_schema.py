@@ -27,7 +27,7 @@ CAR_TELMODEL_SOURCE = (
 )
 
 
-class JsonSchema:  # pylint: disable=too-few-public-methods
+class JsonSchema:
     """
     JSON Schema use for validating the structure of JSON data
     """

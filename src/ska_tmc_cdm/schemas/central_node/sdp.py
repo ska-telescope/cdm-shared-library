@@ -128,13 +128,13 @@ class ScanTypeSchema(Schema):
         """
         scan_type_id = data["scan_type_id"]
         reference_frame = data["reference_frame"]
-        ra = data["ra"]  # pylint: disable=invalid-name
+        ra = data["ra"]
         dec = data["dec"]
         channels = data["channels"]
         return ScanType(scan_type_id, reference_frame, ra, dec, channels)
 
 
-class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
+class SDPWorkflowSchema(Schema):
     """
     Represents the type of workflow being configured on the SDP
     """
@@ -158,7 +158,7 @@ class SDPWorkflowSchema(Schema):  # pylint: disable=too-few-public-methods
         return SDPWorkflow(name, kind, version)
 
 
-class PbDependencySchema(Schema):  # pylint: disable=too-few-public-methods
+class PbDependencySchema(Schema):
     """
     Marshmallow schema for the PbDepedency class.
     """

@@ -25,9 +25,7 @@ __all__ = [
 
 
 @CODEC.register_mapping(AssignResourcesRequest)
-class AssignResourcesRequestSchema(
-    ValidatingSchema
-):  # pylint: disable=too-few-public-methods
+class AssignResourcesRequestSchema(ValidatingSchema):
     """
     Marshmallow schema for the AssignResourcesRequest class.
     """
@@ -39,7 +37,7 @@ class AssignResourcesRequestSchema(
     sdp_config = fields.Nested(SDPConfigurationSchema, data_key="sdp")
     mccs = fields.Nested(MCCSAllocateSchema)
 
-    class Meta:  # pylint: disable=too-few-public-methods
+    class Meta:
         """
         marshmallow directives for AssignResourcesRequestSchema.
         """
@@ -85,9 +83,7 @@ class AssignResourcesRequestSchema(
 
 
 @CODEC.register_mapping(AssignResourcesResponse)
-class AssignResourcesResponseSchema(
-    Schema
-):  # pylint: disable=too-few-public-methods
+class AssignResourcesResponseSchema(Schema):
     """
     Marshmallow schema for the AssignResourcesResponse class.
     """
@@ -96,7 +92,7 @@ class AssignResourcesResponseSchema(
         DishAllocationResponseSchema, data_key="dish", required=True
     )
 
-    class Meta:  # pylint: disable=too-few-public-methods
+    class Meta:
         """
         Marshmallow directives for AssignResourcesResponseSchema.
         """

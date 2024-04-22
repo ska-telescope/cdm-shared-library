@@ -235,7 +235,7 @@ class CBFConfigurationSchema(Schema):
         :rtype: CBFConfiguration
         """
         fsp_configs = data.get("fsp_configs", None)
-        # TODO: In future, when csp Interface 2.2 will be used than vlbi_config parameter type will be                  # pylint: disable=W0511
+        # TODO: In future, when csp Interface 2.2 will be used than vlbi_config parameter type will be
         #  replaced with the respective class schema (VLBIConfigurationSchema)
         vlbi_config = data.get("vlbi_config", None)
         return CBFConfiguration(
@@ -488,7 +488,7 @@ class CSPConfigurationSchema(Schema):
     cbf_config = fields.Nested(CBFConfigurationSchema, data_key="cbf")
     lowcbf = fields.Nested(LowCBFConfigurationSchema, data_key="lowcbf")
 
-    # TODO: In future when csp Interface 2.2 will be used than these 2 parameter type will be                           # pylint: disable=W0511
+    # TODO: In future when csp Interface 2.2 will be used than these 2 parameter type will be
     #  replaced with the respective class schema (PSSConfigurationSchema,PSTConfigurationSchema)
     pss_config = fields.Dict(data_key="pss")
     pst_config = fields.Dict(data_key="pst")
@@ -521,7 +521,7 @@ class CSPConfigurationSchema(Schema):
         )
 
     @post_dump
-    def validate_on_dump(self, data, **_):  # pylint: disable=arguments-differ
+    def validate_on_dump(self, data, **_):
         """
         Validating the structure of JSON against schemas and
         Filter out null values from JSON.

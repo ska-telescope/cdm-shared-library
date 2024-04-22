@@ -13,9 +13,7 @@ from ska_tmc_cdm.schemas.shared import ValidatingSchema
 
 
 @CODEC.register_mapping(ReleaseResourcesRequest)
-class ReleaseResourcesRequestSchema(
-    ValidatingSchema
-):  # pylint: disable=too-few-public-methods
+class ReleaseResourcesRequestSchema(ValidatingSchema):
     """
     Marshmallow schema for the ReleaseResourcesRequest class.
     """

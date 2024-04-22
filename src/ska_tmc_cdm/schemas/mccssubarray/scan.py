@@ -13,9 +13,7 @@ __all__ = ["ScanRequestSchema"]
 
 
 @CODEC.register_mapping(ScanRequest)
-class ScanRequestSchema(
-    ValidatingSchema
-):  # pylint: disable=too-few-public-methods
+class ScanRequestSchema(ValidatingSchema):
     """
     Create the Schema for ScanRequest
     """

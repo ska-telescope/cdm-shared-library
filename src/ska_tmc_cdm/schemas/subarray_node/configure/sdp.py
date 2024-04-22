@@ -12,7 +12,7 @@ __all__ = ["SDPConfigurationSchema"]
 
 
 @CODEC.register_mapping(SDPConfiguration)
-class SDPConfigurationSchema(Schema):  # pylint: disable=too-few-public-methods
+class SDPConfigurationSchema(Schema):
     """
     Marshmallow class for the SDPConfiguration class
     """

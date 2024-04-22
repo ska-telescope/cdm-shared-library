@@ -12,7 +12,7 @@ from .shared import ValidatingSchema
 STRICTNESS = None
 
 
-class MarshmallowCodec:  # pylint: disable=too-few-public-methods
+class MarshmallowCodec:
     """
     MarshmallowCodec marshalls and unmarshalls CDM classes.
 

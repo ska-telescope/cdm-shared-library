@@ -152,7 +152,7 @@ class PointingCorrection(Enum):
 
 
 @dataclass
-class PointingConfiguration:  # pylint: disable=too-few-public-methods
+class PointingConfiguration:
     """
     PointingConfiguration specifies where the subarray receptors are going to
     point.
