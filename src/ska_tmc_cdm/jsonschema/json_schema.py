@@ -2,12 +2,12 @@
 The JSON Schema module contains methods for fetching version-specific JSON schemas
 using interface uri and validating the structure of JSON against these schemas.
 """
+from importlib.metadata import version
 from os import environ
 
 from ska_ost_osd.telvalidation import (
     semantic_validator as televalidation_schema,
 )
-from ska_ost_osd.telvalidation.constant import CAR_TELMODEL_SOURCE
 from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
@@ -17,6 +17,13 @@ from ska_telmodel.data import TMData
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
 __all__ = ["JsonSchema"]
+
+# SKA OSD data is not packaged with the client library, and by default the library will fetch the "latest"
+# version in git, which may contain unreleased, breaking changes. We want to explicitly pin to the same data
+# version as the library version:
+
+OSD_LIB_VERSION = version("ska_ost_osd")
+CAR_OSD_SOURCE = (f"car:ost/ska-ost-osd?{OSD_LIB_VERSION}#tmdata",)
 
 
 class JsonSchema:
@@ -85,7 +92,7 @@ class JsonSchema:
         if env_var_sources := environ.get("SKA_TELMODEL_SOURCES"):
             data_sources = env_var_sources.split(",")
         else:
-            data_sources = CAR_TELMODEL_SOURCE
+            data_sources = CAR_OSD_SOURCE
 
         tm_data = TMData(source_uris=data_sources, update=True)
         try:

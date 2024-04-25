@@ -7,7 +7,7 @@
 CAR_OCI_REGISTRY_HOST ?= artefact.skao.int
 CAR_OCI_REGISTRY_USERNAME ?= ska-telescope
 PROJECT_NAME := ska-tmc-cdm
-TMDATA_VERSION := $(shell python -c 'from importlib.metadata import version; print(version("ska_telmodel"))')
+TMDATA_VERSION := $(shell python -c 'from importlib.metadata import version; print(version("ska_ost_osd"))')
 
 OCI_IMAGE_BUILD_CONTEXT = $(PWD)
 # unset defaults so settings in pyproject.toml take effect
@@ -36,7 +36,7 @@ python-pre-test: tests/fixtures/tmdata/
 # 	ska-telmodel cp -UR --sources=car://gitlab.com/ska-telescope/ska-telmodel?${TMDATA_VERSION}#tmdata "" tests/fixtures/tmdata
 
 tests/fixtures/tmdata/:
-	ska-telmodel cp -UR --sources=car:ost/ska-ost-osd?main "" tests/fixtures/tmdata
+	ska-telmodel cp -UR --sources=car:ost/ska-ost-osd?${TMDATA_VERSION} "" tests/fixtures/tmdata
 
 diagrams:  ## recreate PlantUML diagrams whose source has been modified
 	@for i in $$(git diff --name-only -- '*.puml'); \
