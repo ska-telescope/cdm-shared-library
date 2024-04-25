@@ -4,6 +4,12 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+9.2.0
+*****
+
+* Integrated newly created OSD as a service into CDM.
+* Consumed semantic validation from OSD.
+
 9.1.1
 *****
 
