@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 9.2.0
 *****
 
-* Integrated newly created OSD as a service into CDM.
+* Integrated new OSD release into CDM..
 * Consumed semantic validation from OSD.
 
 9.1.1
