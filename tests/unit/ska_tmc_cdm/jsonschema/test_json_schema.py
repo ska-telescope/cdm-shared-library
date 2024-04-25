@@ -5,7 +5,7 @@ import copy
 import json
 
 import pytest
-from ska_telmodel.telvalidation.semantic_validator import (
+from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
 from ska_telmodel.tmc.examples import (
@@ -148,7 +148,7 @@ def test_semantic_validation_low_tmc_configure_with_invalid_json():
         )
     except SchematicValidationError as error:
         assert error.message == (
-            "stations are too many! Current limit is 6\n"
+            "stations are too many! Current limit is 4\n"
             "Invalid input for function mode! Currently allowed vis\n"
             "The fsp_ids should all be distinct\n"
             "fsp_ids are too many!Current Limit is 6"
@@ -169,7 +169,7 @@ def test_semantic_validation_low_tmc_configure_3_2_with_invalid_json():
         )
     except SchematicValidationError as error:
         assert error.message == (
-            "stations are too many! Current limit is 6\n"
+            "stations are too many! Current limit is 4\n"
             "Invalid input for function mode! Currently allowed vis\n"
             "The fsp_ids should all be distinct\n"
             "fsp_ids are too many!Current Limit is 6"

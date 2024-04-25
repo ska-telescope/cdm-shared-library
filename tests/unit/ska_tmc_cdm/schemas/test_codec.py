@@ -7,7 +7,7 @@ import json
 import tempfile
 
 import pytest
-from ska_telmodel.telvalidation.semantic_validator import (
+from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
 
