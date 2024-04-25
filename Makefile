@@ -32,8 +32,11 @@ PYTHON_SWITCHES_FOR_FLAKE8 = --max-line-length=88 \
 -include PrivateRules.mak
 python-pre-test: tests/fixtures/tmdata/
 
+# tests/fixtures/tmdata/:
+# 	ska-telmodel cp -UR --sources=car://gitlab.com/ska-telescope/ska-telmodel?${TMDATA_VERSION}#tmdata "" tests/fixtures/tmdata
+
 tests/fixtures/tmdata/:
-	ska-telmodel cp -UR --sources=car://gitlab.com/ska-telescope/ska-telmodel?${TMDATA_VERSION}#tmdata "" tests/fixtures/tmdata
+	ska-telmodel cp -UR --sources=car:ost/ska-ost-osd?main "" tests/fixtures/tmdata
 
 diagrams:  ## recreate PlantUML diagrams whose source has been modified
 	@for i in $$(git diff --name-only -- '*.puml'); \

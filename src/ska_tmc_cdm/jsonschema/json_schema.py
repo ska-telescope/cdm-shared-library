@@ -2,6 +2,8 @@
 The JSON Schema module contains methods for fetching version-specific JSON schemas
 using interface uri and validating the structure of JSON against these schemas.
 """
+from os import environ
+
 from ska_ost_osd.telvalidation import (
     semantic_validator as televalidation_schema,
 )
@@ -80,7 +82,10 @@ class JsonSchema:
         :return: None, in case of valid data otherwise, it raises an exception.
         """
 
-        data_sources = CAR_TELMODEL_SOURCE
+        if env_var_sources := environ.get("SKA_TELMODEL_SOURCES"):
+            data_sources = env_var_sources.split(",")
+        else:
+            data_sources = CAR_TELMODEL_SOURCE
 
         tm_data = TMData(source_uris=data_sources, update=True)
         try:
