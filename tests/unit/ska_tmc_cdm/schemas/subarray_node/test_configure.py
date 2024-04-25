@@ -6,7 +6,7 @@ import json
 from datetime import timedelta
 
 import pytest
-from ska_telmodel.telvalidation.semantic_validator import (
+from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
 
@@ -423,14 +423,6 @@ VALID_LOW_CONFIGURE_JSON = """
           [
             4,
             1
-          ],
-          [
-            5,
-            1
-          ],
-          [
-            6,
-            1
           ]
         ],
         "stn_beams": [
@@ -594,7 +586,7 @@ VALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
-                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
+                stns=[[1, 1], [2, 1], [3, 1], [4, 1]],
                 stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400])],
             ),
             vis=VisConfiguration(
@@ -1261,7 +1253,7 @@ def test_low_configure_serialisation_and_validation_invalid_json(
 
     except SchematicValidationError as error:
         assert error.message == (
-            "stations are too many! Current limit is 6\n"
+            "stations are too many! Current limit is 4\n"
             "The fsp_ids should all be distinct\n"
             "fsp_ids are too many!Current Limit is 6"
         )
