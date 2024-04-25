@@ -2,15 +2,11 @@
 The JSON Schema module contains methods for fetching version-specific JSON schemas
 using interface uri and validating the structure of JSON against these schemas.
 """
+from ska_ost_osd.telvalidation import semantic_validator as televalidation_schema
+from ska_ost_osd.telvalidation.constant import CAR_TELMODEL_SOURCE
+from ska_ost_osd.telvalidation.semantic_validator import SchematicValidationError
 from ska_telmodel import schema
 from ska_telmodel.data import TMData
-from ska_ost_osd.telvalidation import (
-    semantic_validator as televalidation_schema,
-)
-from ska_ost_osd.telvalidation.semantic_validator import (
-    SchematicValidationError,
-)
-from ska_ost_osd.telvalidation.constant import CAR_TELMODEL_SOURCE
 
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
@@ -79,7 +75,7 @@ class JsonSchema:
         :param instance: The instance to validate
         :return: None, in case of valid data otherwise, it raises an exception.
         """
-        
+
         data_sources = CAR_TELMODEL_SOURCE
 
         tm_data = TMData(source_uris=data_sources, update=True)
