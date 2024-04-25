@@ -3,7 +3,7 @@ The exceptions module contains all custom exceptions that are
 part of the CDM library.
 """
 
-from ska_telmodel.telvalidation.semantic_validator import (
+from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
 

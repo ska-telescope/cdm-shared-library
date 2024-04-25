@@ -11,7 +11,7 @@ It referred to as a semantic error. It is generally encountered at run time.
 It occurs when a statement is syntactically valid but semantically invalid. 
 This type of error is tough to catch.
 To catch this type of error we have created a framework named 'Semantic Validation'
-into 'ska_telmodel' under 'telvalidation' package and integrated the same into 'CDM'.
+into 'ska_ost_osd' under 'telvalidation' package and integrated the same into 'CDM'.
 
 To do the Semantic Validation of received JSON for any other component through CDM 
 there are some steps which user needs to follow.
@@ -48,9 +48,9 @@ there are some steps which user needs to follow.
             raise exc
     
 
-   Import 'SchematicValidationError' from 'ska_telmodel' which contains all the customized error messages
+   Import 'SchematicValidationError' from 'ska_ost_osd' which contains all the customized error messages
    in string format.
 
    .. code-block:: python
 
-      from ska_telmodel.telvalidation.semantic_validator import SchematicValidationError   
+      from ska_ost_osd.telvalidation.semantic_validator import SchematicValidationError   

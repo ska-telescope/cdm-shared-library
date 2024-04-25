@@ -5,26 +5,25 @@ using interface uri and validating the structure of JSON against these schemas.
 from importlib.metadata import version
 from os import environ
 
-from ska_telmodel import schema
-from ska_telmodel.data import TMData
-from ska_telmodel.telvalidation import (
+from ska_ost_osd.telvalidation import (
     semantic_validator as televalidation_schema,
 )
-from ska_telmodel.telvalidation.semantic_validator import (
+from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
+from ska_telmodel import schema
+from ska_telmodel.data import TMData
 
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 
 __all__ = ["JsonSchema"]
 
-# SKA Telmodel data is not packaged with the client library, and by default the library will fetch the "latest"
+# SKA OSD data is not packaged with the client library, and by default the library will fetch the "latest"
 # version in git, which may contain unreleased, breaking changes. We want to explicitly pin to the same data
 # version as the library version:
-TELMODEL_LIB_VERSION = version("ska_telmodel")
-CAR_TELMODEL_SOURCE = (
-    f"car://gitlab.com/ska-telescope/ska-telmodel?{TELMODEL_LIB_VERSION}#tmdata",
-)
+
+OSD_LIB_VERSION = version("ska_ost_osd")
+CAR_OSD_SOURCE = (f"car:ost/ska-ost-osd?{OSD_LIB_VERSION}#tmdata",)
 
 
 class JsonSchema:
@@ -89,10 +88,12 @@ class JsonSchema:
         :param instance: The instance to validate
         :return: None, in case of valid data otherwise, it raises an exception.
         """
+
         if env_var_sources := environ.get("SKA_TELMODEL_SOURCES"):
             data_sources = env_var_sources.split(",")
         else:
-            data_sources = CAR_TELMODEL_SOURCE
+            data_sources = CAR_OSD_SOURCE
+
         tm_data = TMData(source_uris=data_sources, update=True)
         try:
             return televalidation_schema.semantic_validate(
