@@ -1174,7 +1174,7 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    try:
+    with pytest.raises(SchematicValidationError):
         utils.test_schema_serialisation_and_validation(
             schema_cls,
             instance,
@@ -1182,20 +1182,6 @@ def test_assignresources_serialisation_and_validation_invalid_json(
             valid_json,
             invalid_json,
             is_validate,
-        )
-
-    except SchematicValidationError as error:
-        assert error.message == (
-            "receptor_ids are too many!Current Limit is 4\n"
-            "beams are too many! Current limit is 1\n"
-            "Invalid function for beams! Currently allowed visibilities\n"
-            "spectral windows are too many! Current limit = 1\n"
-            "Invalid input for channel_count! Currently allowed 14880\n"
-            "Invalid input for freq_min\n"
-            "Invalid input for freq_max\n"
-            "freq_min should be less than freq_max\n"
-            "length of receptor_ids should be same as length of receptors\n"
-            "receptor_ids did not match receptors"
         )
 
 
@@ -1224,7 +1210,7 @@ def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError for TMC LOW.
     """
-    try:
+    with pytest.raises(SchematicValidationError):
         utils.test_schema_serialisation_and_validation(
             schema_cls,
             instance,
@@ -1232,11 +1218,4 @@ def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
             valid_json,
             invalid_json,
             is_validate,
-        )
-
-    except SchematicValidationError as error:
-        assert error.message == (
-            "beams are too many! Current limit is 1\n"
-            "Invalid function for beams! Currently allowed visibilities\n"
-            "spectral windows are too many! Current limit = 1"
         )

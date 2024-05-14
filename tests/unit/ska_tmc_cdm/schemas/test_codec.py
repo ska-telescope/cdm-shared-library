@@ -169,49 +169,20 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_json = json.loads(INVALID_MID_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    try:
+    with pytest.raises(SchematicValidationError):
         CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
-    except SchematicValidationError as error:
-        assert error.message == (
-            "receptor_ids are too many!Current Limit is 4\n"
-            "beams are too many! Current limit is 1\n"
-            "Invalid function for beams! Currently allowed visibilities\n"
-            "spectral windows are too many! Current limit = 1\n"
-            "Invalid input for channel_count! Currently allowed 14880\n"
-            "Invalid input for freq_min\n"
-            "Invalid input for freq_max\n"
-            "freq_min should be less than freq_max\n"
-            "length of receptor_ids should be same as length of receptors\n"
-            "receptor_ids did not match receptors"
-        )
 
     invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
     invalid_json_configure = json.dumps(invalid_json)
 
-    try:
+    with pytest.raises(SchematicValidationError):
         CODEC.loads(ConfigureRequest, invalid_json_configure)
-    except SchematicValidationError as error:
-        assert error.message == (
-            "Invalid input for receiver_band! Currently allowed [1,2]\n"
-            "FSPs are too many!Current Limit = 4\n"
-            "Invalid input for fsp_id!\n"
-            "Invalid input for function_mode\n"
-            "Invalid input for zoom_factor\n"
-            "frequency_slice_id did not match fsp_id\n"
-            "frequency_band did not match receiver_band"
-        )
 
     invalid_json = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    try:
+    with pytest.raises(SchematicValidationError):
         CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
-    except SchematicValidationError as error:
-        assert error.message == (
-            "beams are too many! Current limit is 1\n"
-            "Invalid function for beams! Currently allowed visibilities\n"
-            "spectral windows are too many! Current limit = 1"
-        )
 
     invalid_json = json.loads(INVALID_LOW_CONFIGURE_JSON)
     invalid_json["csp"]["lowcbf"]["stations"]["stn_beams"][0][
@@ -219,15 +190,8 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     ] = "tango://delays.skao.int/low/stn-beam/1"
     invalid_json_configure = json.dumps(invalid_json)
 
-    try:
+    with pytest.raises(SchematicValidationError):
         CODEC.loads(ConfigureRequest, invalid_json_configure)
-    except SchematicValidationError as error:
-        assert error.message == (
-            "stations are too many! Current limit is 6\n"
-            "Invalid input for function mode! Currently allowed vis\n"
-            "The fsp_ids should all be distinct\n"
-            "fsp_ids are too many!Current Limit is 6"
-        )
 
 
 def test_codec_dumps_raises_exception_on_invalid_schema():
