@@ -936,6 +936,22 @@ INVALID_LOW_CONFIGURE_JSON = """
           [
             1,
             1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            5,
+            1
           ]
         ],
         "stn_beams": [
@@ -953,7 +969,7 @@ INVALID_LOW_CONFIGURE_JSON = """
         "fsp": {
           "firmware": "abcd",
           "fsp_ids": [
-            1
+            1, 2, 2, 4, 5, 6, 7
           ]
         },
         "stn_beams": [
@@ -1027,7 +1043,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
-                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1]],
+                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1]],
                 stn_beams=[
                     StnBeamConfiguration(
                         beam_id=1,
@@ -1194,7 +1210,7 @@ def test_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    try:
+    with pytest.raises(SchematicValidationError):
         utils.test_schema_serialisation_and_validation(
             schema_cls,
             instance,
@@ -1202,17 +1218,6 @@ def test_configure_serialisation_and_validation_invalid_json(
             valid_json,
             invalid_json,
             is_validate,
-        )
-
-    except SchematicValidationError as error:
-        assert error.message == (
-            "Invalid input for receiver_band! Currently allowed [1,2]\n"
-            "FSPs are too many!Current Limit = 4\n"
-            "Invalid input for fsp_id!\n"
-            "Invalid input for function_mode\n"
-            "Invalid input for zoom_factor\n"
-            "frequency_slice_id did not match fsp_id\n"
-            "frequency_band did not match receiver_band"
         )
 
 
@@ -1241,7 +1246,7 @@ def test_low_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    try:
+    with pytest.raises(SchematicValidationError):
         utils.test_schema_serialisation_and_validation(
             schema_cls,
             instance,
@@ -1249,11 +1254,4 @@ def test_low_configure_serialisation_and_validation_invalid_json(
             valid_json,
             invalid_json,
             is_validate,
-        )
-
-    except SchematicValidationError as error:
-        assert error.message == (
-            "stations are too many! Current limit is 4\n"
-            "The fsp_ids should all be distinct\n"
-            "fsp_ids are too many!Current Limit is 6"
         )
