@@ -98,5 +98,5 @@ class ReleaseResourcesRequestSchema(ValidatingSchema):
         # TODO : - When the receptor Ids will be added into the telemodel library for
         #  MID release resource command when release_all = False  then we need to remove below if condition
         if is_mid and not data["release_all"]:
-            data["receptor_ids"] = temp_receptor_id
+            data["receptor_ids"] = temp_receptor_id  # pylint: disable=E0601
         return data
