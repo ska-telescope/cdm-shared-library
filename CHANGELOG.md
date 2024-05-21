@@ -4,6 +4,11 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+9.2.1
+*****
+
+* OSD Patch release integration
+
 9.2.0
 *****
 
