@@ -2,7 +2,7 @@
 The mccssubarray.configure module contains a Python object model for the
 various structured bits of JSON given in an MCCSSubarray.Configure call.
 """
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
     "ConfigureRequest",
@@ -13,9 +13,6 @@ __all__ = [
 SCHEMA = "https://schema.skao.int/ska-low-mccs-configure/2.0"
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class StationConfiguration(CdmObject):
     """A class to hold station configuration
 
@@ -23,9 +20,6 @@ class StationConfiguration(CdmObject):
     """
 
     station_id: int
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class SubarrayBeamConfiguration(CdmObject):
@@ -47,9 +41,6 @@ class SubarrayBeamConfiguration(CdmObject):
     sky_coordinates: list[float]
     antenna_weights: list[float]
     phase_centre: list[float]
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class ConfigureRequest(CdmObject):

@@ -6,15 +6,12 @@ Marshmallow schema directly.
 __all__ = ["Codec"]
 
 from os import PathLike
-
 from typing import Optional, Type
-
-from .shared import ValidatingSchema
 
 STRICTNESS = None
 
-class Codec:
 
+class Codec:
     @staticmethod
     def loads(
         cdm_class,

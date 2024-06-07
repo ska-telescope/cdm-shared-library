@@ -5,16 +5,14 @@ structured request and response for a TMC CentralNode.ReleaseResources call.
 from typing import Optional
 
 from pydantic import Field, StrictBool, model_validator
-from pydantic.dataclasses import dataclass
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 from .common import DishAllocation
 
 __all__ = ["ReleaseResourcesRequest"]
 
 SCHEMA = "https://schema.skao.int/ska-tmc-releaseresources/2.1"
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class ReleaseResourcesRequest(CdmObject):

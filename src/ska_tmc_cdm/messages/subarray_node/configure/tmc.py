@@ -6,12 +6,10 @@ from datetime import timedelta
 from typing import Optional
 
 from pydantic import model_validator
-from pydantic.dataclasses import dataclass
-
-__all__ = ["TMCConfiguration"]
-
 
 from ska_tmc_cdm.messages.base import CdmObject
+
+__all__ = ["TMCConfiguration"]
 
 
 class TMCConfiguration(CdmObject):

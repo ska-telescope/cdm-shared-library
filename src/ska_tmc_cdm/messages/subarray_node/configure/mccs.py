@@ -6,7 +6,7 @@ command.
 
 from typing import List, Optional
 
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
     "MCCSConfiguration",
@@ -15,9 +15,6 @@ __all__ = [
     "SubarrayBeamLogicalBands",
     "SubarrayBeamAperatures",
 ]
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class SubarrayBeamSkyCoordinates(CdmObject):
@@ -36,9 +33,6 @@ class SubarrayBeamSkyCoordinates(CdmObject):
     c2: float = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class SubarrayBeamLogicalBands(CdmObject):
     """
     A class to hold Subarray Beam logical bands configuration items
@@ -50,9 +44,6 @@ class SubarrayBeamLogicalBands(CdmObject):
 
     start_channel: int = None
     number_of_channels: int = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class SubarrayBeamAperatures(CdmObject):
@@ -70,9 +61,6 @@ class SubarrayBeamAperatures(CdmObject):
     weighting_key_ref: str = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class SubarrayBeamConfiguration(CdmObject):
     """A class to hold subarray_beam configuration attributes
 
@@ -87,9 +75,6 @@ class SubarrayBeamConfiguration(CdmObject):
     apertures: List[SubarrayBeamAperatures]
     sky_coordinates: SubarrayBeamSkyCoordinates
     subarray_beam_id: Optional[int] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class MCCSConfiguration(CdmObject):

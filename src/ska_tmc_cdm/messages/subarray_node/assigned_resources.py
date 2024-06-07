@@ -4,14 +4,11 @@ TMC Assigned Resources
 
 from typing import Optional
 
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = ["MCCSAllocation", "AssignedResources"]
 
 SCHEMA = "https://schema.skao.int/ska-low-tmc-assignedresources/2.0"
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class MCCSAllocation(CdmObject):

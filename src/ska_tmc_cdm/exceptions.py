@@ -3,9 +3,7 @@ The exceptions module contains all custom exceptions that are
 part of the CDM library.
 """
 
-from ska_ost_osd.telvalidation.semantic_validator import (
-    SchematicValidationError,
-)
+from ska_ost_osd.telvalidation.semantic_validator import SchematicValidationError
 
 
 class JsonValidationError(ValueError):
@@ -14,9 +12,7 @@ class JsonValidationError(ValueError):
     schema version.
     """
 
-    def __init__(
-        self, exc: SchematicValidationError, uri: str, json_dict: dict = None
-    ):
+    def __init__(self, exc: SchematicValidationError, uri: str, json_dict: dict = None):
         self._msg = f"JSON validation error: {exc}"
         super().__init__(self._msg)
         self.exc = exc

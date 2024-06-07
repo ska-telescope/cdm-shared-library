@@ -4,7 +4,7 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import Optional
 
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
     "CSPConfiguration",
@@ -12,9 +12,6 @@ __all__ = [
     "ResourceConfiguration",
     "LowCbfConfiguration",
 ]
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class CommonConfiguration(CdmObject):
@@ -25,9 +22,6 @@ class CommonConfiguration(CdmObject):
     """
 
     subarray_id: Optional[int] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class ResourceConfiguration(CdmObject):
@@ -42,9 +36,6 @@ class ResourceConfiguration(CdmObject):
     fw_mode: Optional[str] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class LowCbfConfiguration(CdmObject):
     """
     Class to get lowcbf configuration within low csp assign resources
@@ -55,9 +46,6 @@ class LowCbfConfiguration(CdmObject):
     """
 
     resources: list[ResourceConfiguration]
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class CSPConfiguration(CdmObject):

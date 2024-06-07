@@ -5,7 +5,9 @@ request for a TMC SubArrayNode.Scan command.
 from typing import Optional
 
 from pydantic import model_validator
-from pydantic.dataclasses import dataclass
+from typing_extensions import Self
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = ["ScanRequest"]
 
@@ -15,9 +17,6 @@ __all__ = ["ScanRequest"]
 # non-telescope specific schema.
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-scan/4.0"
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-scan/2.1"
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class ScanRequest(CdmObject):
@@ -38,7 +37,7 @@ class ScanRequest(CdmObject):
     scan_id: int
 
     @model_validator(mode="after")
-    def set_default_schema(self) -> "ConfigureRequest":
+    def set_default_schema(self) -> Self:
         if self.interface is None:
             if self.subarray_id is None:
                 self.interface = MID_SCHEMA

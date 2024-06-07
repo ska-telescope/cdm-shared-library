@@ -6,12 +6,9 @@
 #
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = ["MCCSAllocate"]
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class MCCSAllocate(CdmObject):

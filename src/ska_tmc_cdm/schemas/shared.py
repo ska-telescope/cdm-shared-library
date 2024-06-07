@@ -17,16 +17,12 @@ class UpperCasedField(Field):
     to a lower-case string.
     """
 
-    def _serialize(
-        self, value, attr, obj, **kwargs
-    ):  # pylint: disable=no-self-use
+    def _serialize(self, value, attr, obj, **kwargs):  # pylint: disable=no-self-use
         if value is None:
             return ""
         return value.upper()
 
-    def _deserialize(
-        self, value, attr, data, **kwargs
-    ):  # pylint: disable=no-self-use
+    def _deserialize(self, value, attr, data, **kwargs):  # pylint: disable=no-self-use
         return value.lower()
 
 
@@ -137,6 +133,4 @@ class ValidatingSchema(Schema):
                 or "ska-low-tmc-assignresources" in interface
                 or "ska-low-tmc-configure" in interface
             ):
-                JsonSchema.semantic_validate_schema(
-                    process_fn(data), interface
-                )
+                JsonSchema.semantic_validate_schema(process_fn(data), interface)

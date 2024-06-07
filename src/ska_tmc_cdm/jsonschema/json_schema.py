@@ -5,12 +5,8 @@ using interface uri and validating the structure of JSON against these schemas.
 from importlib.metadata import version
 from os import environ
 
-from ska_ost_osd.telvalidation import (
-    semantic_validator as televalidation_schema,
-)
-from ska_ost_osd.telvalidation.semantic_validator import (
-    SchematicValidationError,
-)
+from ska_ost_osd.telvalidation import semantic_validator as televalidation_schema
+from ska_ost_osd.telvalidation.semantic_validator import SchematicValidationError
 from ska_telmodel import schema
 from ska_telmodel.data import TMData
 

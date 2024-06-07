@@ -7,7 +7,8 @@ from enum import Enum
 from typing import List, Optional, Tuple
 
 from pydantic import Field
-from pydantic.dataclasses import dataclass
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 from . import core
 
@@ -35,9 +36,6 @@ class FSPFunctionMode(Enum):
     PSS_BF = "PSS-BF"
     PST_BF = "PST-BF"
     VLBI = "VLBI"
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class FSPConfiguration(CdmObject):
@@ -73,9 +71,6 @@ class FSPConfiguration(CdmObject):
     zoom_window_tuning: Optional[int] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class SubarrayConfiguration(CdmObject):
     """
     Class to hold the parameters relevant only for the current sub-array device.
@@ -84,9 +79,6 @@ class SubarrayConfiguration(CdmObject):
     """
 
     subarray_name: Optional[str] = ""
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class CommonConfiguration(CdmObject):
@@ -105,9 +97,6 @@ class CommonConfiguration(CdmObject):
     band_5_tuning: Optional[List[float]] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class StnBeamConfiguration(CdmObject):
     """
     Class to hold Stations Beam Configuration.
@@ -122,9 +111,6 @@ class StnBeamConfiguration(CdmObject):
     freq_ids: List[int]
     stn_beam_id: Optional[int] = None
     delay_poly: Optional[str] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class VisStnBeamConfiguration(CdmObject):
@@ -145,9 +131,6 @@ class VisStnBeamConfiguration(CdmObject):
     mac: Optional[List[Tuple[int, str]]] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class StationConfiguration(CdmObject):
     """
     Class to hold Stations Configuration.
@@ -158,9 +141,6 @@ class StationConfiguration(CdmObject):
 
     stns: Optional[List[List[int]]] = None
     stn_beams: Optional[List[StnBeamConfiguration]] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class VisFspConfiguration(CdmObject):
@@ -177,9 +157,6 @@ class VisFspConfiguration(CdmObject):
     firmware: Optional[str] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class VisConfiguration(CdmObject):
     """
         Class to hold Vis Configuration.
@@ -190,9 +167,6 @@ class VisConfiguration(CdmObject):
 
     fsp: Optional[VisFspConfiguration] = None
     stn_beams: Optional[List[VisStnBeamConfiguration]] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class LowCBFConfiguration(CdmObject):
@@ -207,14 +181,8 @@ class LowCBFConfiguration(CdmObject):
     vis: Optional[VisConfiguration] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class VLBIConfiguration(CdmObject):
     pass
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class CBFConfiguration(CdmObject):
@@ -231,21 +199,12 @@ class CBFConfiguration(CdmObject):
     vlbi_config: Optional[dict] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class PSTConfiguration(CdmObject):
     pass
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class PSSConfiguration(CdmObject):
     pass
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class CSPConfiguration(CdmObject):

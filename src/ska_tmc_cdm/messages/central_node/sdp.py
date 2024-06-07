@@ -3,10 +3,11 @@ The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
 import math
-from dataclasses import field
 from typing import Optional
 
-from pydantic.dataclasses import dataclass
+from pydantic import Field
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
     "SDPWorkflow",
@@ -28,9 +29,6 @@ __all__ = [
 ]
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class SDPWorkflow(CdmObject):
     """
     Class to hold SDPWorkflows for ProcessingBlock
@@ -45,9 +43,6 @@ class SDPWorkflow(CdmObject):
     name: str
     kind: str
     version: str
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class Channel(CdmObject):
@@ -76,9 +71,6 @@ class Channel(CdmObject):
     spectral_window_id: Optional[str] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class ScanType(CdmObject):
     """
     Class to hold ScanType configuration
@@ -97,9 +89,6 @@ class ScanType(CdmObject):
     channels: list[Channel]
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class PbDependency(CdmObject):
     """
     Class to hold Dependencies for ProcessingBlock
@@ -112,9 +101,6 @@ class PbDependency(CdmObject):
     kind: list[str]
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class ScriptConfiguration(CdmObject):
     """
     Class to hold ScriptConfiguration
@@ -124,12 +110,9 @@ class ScriptConfiguration(CdmObject):
     :param version: Version of the processing script
     """
 
-    kind: str = None
-    name: str = None
-    version: str = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
+    kind: Optional[str] = None
+    name: Optional[str] = None
+    version: Optional[str] = None
 
 
 class ProcessingBlockConfiguration(CdmObject):
@@ -146,16 +129,13 @@ class ProcessingBlockConfiguration(CdmObject):
 
     pb_id: Optional[str] = None
     workflow: Optional[SDPWorkflow] = None
-    # FIXME: should probably be `field(default_factory=dict)` not `None`
+    # FIXME: should probably be `Field(default_factory=dict)` not `None`
     parameters: Optional[dict] = None
-    # FIXME: should probably be `field(default_factory=list)` not `None`
+    # FIXME: should probably be `Field(default_factory=list)` not `None`
     dependencies: Optional[list[PbDependency]] = None
-    # FIXME: should probably be `field(default_factory=list)` not `None`
+    # FIXME: should probably be `Field(default_factory=list)` not `None`
     sbi_ids: Optional[list[str]] = None
     script: Optional[ScriptConfiguration] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class BeamConfiguration(CdmObject):
@@ -176,9 +156,6 @@ class BeamConfiguration(CdmObject):
     vlbi_beam_id: Optional[int] = None
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class ChannelConfiguration(CdmObject):
     """
     Class to hold Dependencies for Channel Configuration
@@ -188,10 +165,7 @@ class ChannelConfiguration(CdmObject):
     """
 
     channels_id: Optional[str] = None
-    spectral_windows: list[Channel] = field(default_factory=list)
-
-
-from ska_tmc_cdm.messages.base import CdmObject
+    spectral_windows: list[Channel] = Field(default_factory=list)
 
 
 class PolarisationConfiguration(CdmObject):
@@ -203,10 +177,7 @@ class PolarisationConfiguration(CdmObject):
     """
 
     polarisations_id: Optional[str] = None
-    corr_type: list[str] = field(default_factory=list)
-
-
-from ska_tmc_cdm.messages.base import CdmObject
+    corr_type: list[str] = Field(default_factory=list)
 
 
 class PhaseDir(CdmObject):
@@ -240,41 +211,32 @@ class PhaseDir(CdmObject):
         )
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class FieldConfiguration(CdmObject):
     """
     Class to hold Field configuration
 
-    :param field_id: field_id
+    :param Field_id: Field_id
     :param pointing_fqdn: pointing_fqdn
     :param phase_dir: Phase direction
     """
 
-    field_id: Optional[str] = None
+    Field_id: Optional[str] = None
     pointing_fqdn: Optional[str] = None
     phase_dir: Optional[PhaseDir] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class EBScanTypeBeam(CdmObject):
     """
     Class to hold EBScanTypeBeam Configuration
 
-    :param field_id: field_id
+    :param Field_id: Field_id
     :param channels_id: channels_id
     :param polarisations_id: polarisations_id
     """
 
-    field_id: Optional[str] = None
+    Field_id: Optional[str] = None
     channels_id: Optional[str] = None
     polarisations_id: Optional[str] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class EBScanType(CdmObject):
@@ -287,11 +249,8 @@ class EBScanType(CdmObject):
     """
 
     scan_type_id: Optional[str] = None
-    beams: dict[str, EBScanTypeBeam] = field(default_factory=dict)
+    beams: dict[str, EBScanTypeBeam] = Field(default_factory=dict)
     derive_from: Optional[str] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class ExecutionBlockConfiguration(CdmObject):
@@ -304,22 +263,19 @@ class ExecutionBlockConfiguration(CdmObject):
     :param beams: Beam parameters for the purpose of the Science Data Processor.
     :param channels: Spectral windows per channel configuration.
     :param polarisations: Polarisation definition.
-    :param fields: Fields / Targets
-    :param scan_types: Scan types. Associates scans with per-beam fields & channel configurations
+    :param Fields: Fields / Targets
+    :param scan_types: Scan types. Associates scans with per-beam Fields & channel configurations
     """
 
     eb_id: Optional[str] = None
     max_length: Optional[float] = None
-    context: dict = field(default_factory=dict)
-    # FIXME: should these all be `field(default_factory=list)` instead of `None`?
+    context: dict = Field(default_factory=dict)
+    # FIXME: should these all be `Field(default_factory=list)` instead of `None`?
     beams: Optional[list[BeamConfiguration]] = None
     channels: Optional[list[ChannelConfiguration]] = None
     polarisations: Optional[list[PolarisationConfiguration]] = None
-    fields: Optional[list[FieldConfiguration]] = None
+    Fields: Optional[list[FieldConfiguration]] = None
     scan_types: Optional[list[EBScanType]] = None
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class SDPConfiguration(CdmObject):
@@ -337,11 +293,11 @@ class SDPConfiguration(CdmObject):
 
     eb_id: Optional[str] = None
     max_length: Optional[float] = None
-    # FIXME: should probably be `field(default_factory=list)` not `None`
+    # FIXME: should probably be `Field(default_factory=list)` not `None`
     scan_types: Optional[list[ScanType]] = None
-    # FIXME: should probably be `field(default_factory=list)` not `None`
+    # FIXME: should probably be `Field(default_factory=list)` not `None`
     processing_blocks: Optional[list[ProcessingBlockConfiguration]] = None
     execution_block: Optional[ExecutionBlockConfiguration] = None
-    # FIXME: should probably be `field(default_factory=dict)` not `None`
+    # FIXME: should probably be `Field(default_factory=dict)` not `None`
     resources: Optional[dict] = None
     interface: Optional[str] = None

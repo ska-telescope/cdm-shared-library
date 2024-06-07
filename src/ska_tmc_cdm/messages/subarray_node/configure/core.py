@@ -15,6 +15,8 @@ from astropy.coordinates import SkyCoord
 from pydantic import ConfigDict, model_validator
 from pydantic.dataclasses import dataclass
 
+from ska_tmc_cdm.messages.base import CdmObject
+
 __all__ = [
     "PointingConfiguration",
     "Target",
@@ -26,10 +28,7 @@ __all__ = [
 UnitStr = str | u.Unit
 
 
-@dataclass(
-    config=ConfigDict(arbitrary_types_allowed=True)
-)  # Required because AstroPy types aren't Pydantic models
-class Target:
+class Target(CdmObject):
     """
     Target encapsulates source coordinates and source metadata.
 
@@ -147,9 +146,6 @@ class PointingCorrection(Enum):
     RESET = "RESET"
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class PointingConfiguration(CdmObject):
     """
     PointingConfiguration specifies where the subarray receptors are going to
@@ -169,9 +165,6 @@ class ReceiverBand(Enum):
     BAND_2 = "2"
     BAND_5A = "5a"
     BAND_5B = "5b"
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class DishConfiguration(CdmObject):

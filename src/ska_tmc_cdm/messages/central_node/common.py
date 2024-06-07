@@ -2,12 +2,9 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = ["DishAllocation"]
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class DishAllocation(CdmObject):

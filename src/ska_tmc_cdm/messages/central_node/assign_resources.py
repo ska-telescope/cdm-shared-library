@@ -5,7 +5,8 @@ request and response for the TMC CentralNode.AssignResources command.
 from typing import Optional
 
 from pydantic import Field, model_validator
-from pydantic.dataclasses import dataclass
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 from .common import DishAllocation
 from .mccs import MCCSAllocate
@@ -15,9 +16,6 @@ __all__ = ["AssignResourcesRequest", "AssignResourcesResponse"]
 
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-assignresources/2.1"
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-assignresources/3.2"
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class AssignResourcesRequest(CdmObject):
@@ -118,9 +116,6 @@ class AssignResourcesRequest(CdmObject):
             interface=interface,
             transaction_id=transaction_id,
         )
-
-
-from ska_tmc_cdm.messages.base import CdmObject
 
 
 class AssignResourcesResponse(CdmObject):

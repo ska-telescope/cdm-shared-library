@@ -8,7 +8,6 @@ __all__ = ["ConfigureRequest"]
 from typing import Optional
 
 from pydantic import model_validator
-from pydantic.dataclasses import dataclass
 
 from .core import DishConfiguration, PointingConfiguration
 from .csp import CSPConfiguration
