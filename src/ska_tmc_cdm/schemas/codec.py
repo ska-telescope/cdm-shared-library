@@ -53,7 +53,7 @@ class Codec:
         :param strictness: optional validation strictness level (0=min, 2=max)
         :return: JSON representation of obj
         """
-        return obj.model_dump_json()
+        return obj.model_dump_json(exclude_none=True)
 
     @staticmethod
     def load_from_file(
