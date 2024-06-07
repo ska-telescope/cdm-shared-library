@@ -61,9 +61,7 @@ class Target:
         if ra is None and dec is None:
             self.coord = None
         else:
-            self.coord = SkyCoord(
-                ra=ra, dec=dec, unit=unit, frame=reference_frame
-            )
+            self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
 
     @model_validator(mode="after")
     def coord_or_offsets_required(self) -> "Target":
@@ -133,9 +131,7 @@ class Target:
         reference_frame = self.coord.frame.name
         target_name = self.target_name
         hmsdms = self.coord.to_string(style="hmsdms")
-        return "<Target: {!r} ({} {})>".format(
-            target_name, hmsdms, reference_frame
-        )
+        return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
 
 class PointingCorrection(Enum):
@@ -151,8 +147,10 @@ class PointingCorrection(Enum):
     RESET = "RESET"
 
 
-@dataclass
-class PointingConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class PointingConfiguration(CdmObject):
     """
     PointingConfiguration specifies where the subarray receptors are going to
     point.
@@ -173,8 +171,10 @@ class ReceiverBand(Enum):
     BAND_5B = "5b"
 
 
-@dataclass
-class DishConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class DishConfiguration(CdmObject):
     """
     DishConfiguration specifies how SKA MID dishes in a sub-array should be
     configured. At the moment, this is limited to setting the receiver band.

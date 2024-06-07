@@ -14,8 +14,10 @@ __all__ = ["ReleaseResourcesRequest"]
 SCHEMA = "https://schema.skao.int/ska-tmc-releaseresources/2.1"
 
 
-@dataclass(kw_only=True)
-class ReleaseResourcesRequest:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ReleaseResourcesRequest(CdmObject):
     """
     ReleaseResourcesRequest is a Python representation of the structured
     request for a TMC CentralNode.ReleaseResources call.
@@ -34,18 +36,14 @@ class ReleaseResourcesRequest:
     transaction_id: Optional[str] = None
     subarray_id: Optional[int] = None
     release_all: StrictBool = False
-    dish: Optional[DishAllocation] = Field(
-        default=None, alias="dish_allocation"
-    )
+    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
 
     @model_validator(mode="after")
     def validate_release_all_ignores_dish_allocation(
         self,
     ) -> "ReleaseResourcesRequest":
         if self.release_all is False and self.dish is None:
-            raise ValueError(
-                "Either release_all or dish_allocation must be defined"
-            )
+            raise ValueError("Either release_all or dish_allocation must be defined")
         if self.release_all:
             self.dish = None
         return self

@@ -12,8 +12,10 @@ __all__ = ["AllocateRequest"]
 SCHEMA = "https://schema.skao.int/ska-low-mccs-assignresources/2.0"
 
 
-@dataclass(kw_only=True)
-class AllocateRequest:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class AllocateRequest(CdmObject):
     """
     AssignResourcesRequest is the object representation of the JSON argument
     for an MCCSController.Allocate command.

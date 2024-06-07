@@ -1,10 +1,7 @@
 from os import environ
 from typing import cast
 
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-)
+from pydantic import BaseModel, ConfigDict
 from pydantic.config import ExtraValues
 
 # Defaults to 'ignore' (silently accept), it can be helpful to set 'forbid'

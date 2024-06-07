@@ -37,8 +37,10 @@ class FSPFunctionMode(Enum):
     VLBI = "VLBI"
 
 
-@dataclass
-class FSPConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class FSPConfiguration(CdmObject):
     """
     FSPConfiguration defines the configuration for a CSP Frequency Slice
     Processor.
@@ -66,15 +68,15 @@ class FSPConfiguration:
     # FIXME: should be Field(default_factory=list, max_length=20)?
     channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?
-    output_link_map: Optional[
-        List[Tuple]
-    ] = None  # FIXME: Field(default_factory=list)?
+    output_link_map: Optional[List[Tuple]] = None  # FIXME: Field(default_factory=list)?
     channel_offset: Optional[int] = None
     zoom_window_tuning: Optional[int] = None
 
 
-@dataclass
-class SubarrayConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class SubarrayConfiguration(CdmObject):
     """
     Class to hold the parameters relevant only for the current sub-array device.
 
@@ -84,8 +86,10 @@ class SubarrayConfiguration:
     subarray_name: Optional[str] = ""
 
 
-@dataclass(kw_only=True)
-class CommonConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class CommonConfiguration(CdmObject):
     """
     Class to hold the CSP sub-elements.
 
@@ -101,8 +105,10 @@ class CommonConfiguration:
     band_5_tuning: Optional[List[float]] = None
 
 
-@dataclass(kw_only=True)
-class StnBeamConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class StnBeamConfiguration(CdmObject):
     """
     Class to hold Stations Beam Configuration.
 
@@ -118,8 +124,10 @@ class StnBeamConfiguration:
     delay_poly: Optional[str] = None
 
 
-@dataclass
-class VisStnBeamConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class VisStnBeamConfiguration(CdmObject):
     """
     Class to hold Vis Stations Beam Configuration.
 
@@ -137,8 +145,10 @@ class VisStnBeamConfiguration:
     mac: Optional[List[Tuple[int, str]]] = None
 
 
-@dataclass
-class StationConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class StationConfiguration(CdmObject):
     """
     Class to hold Stations Configuration.
 
@@ -150,8 +160,10 @@ class StationConfiguration:
     stn_beams: Optional[List[StnBeamConfiguration]] = None
 
 
-@dataclass
-class VisFspConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class VisFspConfiguration(CdmObject):
     """
     Class to hold Visibility(Vis) Configuration.
 
@@ -165,8 +177,10 @@ class VisFspConfiguration:
     firmware: Optional[str] = None
 
 
-@dataclass
-class VisConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class VisConfiguration(CdmObject):
     """
         Class to hold Vis Configuration.
     firmware
@@ -178,8 +192,10 @@ class VisConfiguration:
     stn_beams: Optional[List[VisStnBeamConfiguration]] = None
 
 
-@dataclass
-class LowCBFConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class LowCBFConfiguration(CdmObject):
     """
     Class to hold Low CBF Configuration.
 
@@ -191,13 +207,17 @@ class LowCBFConfiguration:
     vis: Optional[VisConfiguration] = None
 
 
-@dataclass
-class VLBIConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class VLBIConfiguration(CdmObject):
     pass
 
 
-@dataclass
-class CBFConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class CBFConfiguration(CdmObject):
     """
     Class to hold all FSP and VLBI configurations.
 
@@ -211,18 +231,24 @@ class CBFConfiguration:
     vlbi_config: Optional[dict] = None
 
 
-@dataclass
-class PSTConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class PSTConfiguration(CdmObject):
     pass
 
 
-@dataclass
-class PSSConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class PSSConfiguration(CdmObject):
     pass
 
 
-@dataclass
-class CSPConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class CSPConfiguration(CdmObject):
     """
     Class to hold all CSP configuration. In order to support backward
     compatibility, We have kept old attributes as it is and added

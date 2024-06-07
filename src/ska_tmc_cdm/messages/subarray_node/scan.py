@@ -17,8 +17,10 @@ LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-scan/4.0"
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-scan/2.1"
 
 
-@dataclass(kw_only=True)
-class ScanRequest:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ScanRequest(CdmObject):
     """
     ScanRequest represents the JSON for a SubArrayNode.scan call.
 

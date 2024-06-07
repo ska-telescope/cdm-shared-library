@@ -11,8 +11,10 @@ from pydantic.dataclasses import dataclass
 __all__ = ["TMCConfiguration"]
 
 
-@dataclass
-class TMCConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class TMCConfiguration(CdmObject):
     """
     Class to hold TMC configuration
 

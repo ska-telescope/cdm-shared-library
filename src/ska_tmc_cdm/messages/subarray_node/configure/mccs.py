@@ -17,8 +17,10 @@ __all__ = [
 ]
 
 
-@dataclass
-class SubarrayBeamSkyCoordinates:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class SubarrayBeamSkyCoordinates(CdmObject):
     """
     A class to hold Subarray Beam sky coordinates configuration items
     :param reference_frame: Must be one of: ["topocentric", "ICRS", "galactic"]
@@ -34,8 +36,10 @@ class SubarrayBeamSkyCoordinates:
     c2: float = None
 
 
-@dataclass
-class SubarrayBeamLogicalBands:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class SubarrayBeamLogicalBands(CdmObject):
     """
     A class to hold Subarray Beam logical bands configuration items
     :param start_channel: Start channel value.
@@ -48,8 +52,10 @@ class SubarrayBeamLogicalBands:
     number_of_channels: int = None
 
 
-@dataclass
-class SubarrayBeamAperatures:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class SubarrayBeamAperatures(CdmObject):
     """
     A class to hold Subarray Beam aperatures configuration
     items
@@ -64,8 +70,10 @@ class SubarrayBeamAperatures:
     weighting_key_ref: str = None
 
 
-@dataclass
-class SubarrayBeamConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class SubarrayBeamConfiguration(CdmObject):
     """A class to hold subarray_beam configuration attributes
 
     :param subarray_beam_id: stationbeam's id
@@ -81,8 +89,10 @@ class SubarrayBeamConfiguration:
     subarray_beam_id: Optional[int] = None
 
 
-@dataclass(kw_only=True)
-class MCCSConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class MCCSConfiguration(CdmObject):
     """
     Class to hold all subarray configuration.
     :param subarray_beam_configs: a list of subarray beam configurations

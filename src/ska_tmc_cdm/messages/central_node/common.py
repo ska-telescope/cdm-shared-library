@@ -7,8 +7,10 @@ from pydantic.dataclasses import dataclass
 __all__ = ["DishAllocation"]
 
 
-@dataclass
-class DishAllocation:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class DishAllocation(CdmObject):
     """
     DishAllocation represents the DISH allocation part of an
     AssignResources request and response.

@@ -11,8 +11,10 @@ from pydantic.dataclasses import dataclass
 SCHEMA = "https://schema.skao.int/ska-sdp-configure/0.3"
 
 
-@dataclass(kw_only=True)
-class SDPConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class SDPConfiguration(CdmObject):
     """
     Message class to hold SDP configuration aspect of a
     TMC SubArrayNode.Configure call.

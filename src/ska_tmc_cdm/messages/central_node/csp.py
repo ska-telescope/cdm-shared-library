@@ -14,8 +14,10 @@ __all__ = [
 ]
 
 
-@dataclass
-class CommonConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class CommonConfiguration(CdmObject):
     """
     Class to get common subarray id
 
@@ -25,8 +27,10 @@ class CommonConfiguration:
     subarray_id: Optional[int] = None
 
 
-@dataclass
-class ResourceConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ResourceConfiguration(CdmObject):
     """
     Class to contain keys
     for resources under lowcbf
@@ -38,8 +42,10 @@ class ResourceConfiguration:
     fw_mode: Optional[str] = None
 
 
-@dataclass
-class LowCbfConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class LowCbfConfiguration(CdmObject):
     """
     Class to get lowcbf configuration within low csp assign resources
 
@@ -51,8 +57,10 @@ class LowCbfConfiguration:
     resources: list[ResourceConfiguration]
 
 
-@dataclass
-class CSPConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class CSPConfiguration(CdmObject):
     """
     Class to get CSP Configuration
     """

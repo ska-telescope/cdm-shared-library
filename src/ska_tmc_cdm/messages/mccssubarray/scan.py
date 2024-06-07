@@ -10,8 +10,10 @@ __all__ = ["ScanRequest"]
 SCHEMA = "https://schema.skao.int/ska-low-mccs-scan/2.0"
 
 
-@dataclass(kw_only=True)
-class ScanRequest:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ScanRequest(CdmObject):
     """
     ScanRequest represents the request argument for MCCSSubarray.Scan call.
     """

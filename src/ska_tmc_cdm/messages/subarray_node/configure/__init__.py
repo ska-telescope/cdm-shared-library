@@ -20,8 +20,10 @@ MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.3"
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-configure/3.1"
 
 
-@dataclass
-class ConfigureRequest:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ConfigureRequest(CdmObject):
     """
     ConfigureRequest encapsulates the arguments required for the TMC
     SubArrayNode.Configure() command.

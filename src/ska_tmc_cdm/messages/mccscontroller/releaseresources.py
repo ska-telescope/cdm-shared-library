@@ -7,8 +7,10 @@ from pydantic.dataclasses import dataclass
 SCHEMA = "https://schema.skao.int/ska-low-mccs-releaseresources/2.0"
 
 
-@dataclass(kw_only=True)
-class ReleaseResourcesRequest:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ReleaseResourcesRequest(CdmObject):
     """
     ReleaseResourcesRequest is the object representation of the JSON argument
     for an MCCSController.ReleaseResources command.

@@ -17,8 +17,10 @@ MID_SCHEMA = "https://schema.skao.int/ska-tmc-assignresources/2.1"
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-assignresources/3.2"
 
 
-@dataclass
-class AssignResourcesRequest:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class AssignResourcesRequest(CdmObject):
     """
     AssignResourcesRequest is a Python representation of the structured
     argument for a TMC CentralNode.AssignResourcesRequest request.
@@ -38,9 +40,7 @@ class AssignResourcesRequest:
 
     subarray_id: Optional[int] = None
     # FIXME: Do we really need this dish/dish_allocation inconsistency?
-    dish: Optional[DishAllocation] = Field(
-        default=None, alias="dish_allocation"
-    )
+    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
     sdp_config: Optional[SDPConfiguration] = None
     mccs: Optional[MCCSAllocate] = None
     interface: Optional[str] = None
@@ -120,13 +120,13 @@ class AssignResourcesRequest:
         )
 
 
-@dataclass
-class AssignResourcesResponse:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class AssignResourcesResponse(CdmObject):
     """
     AssignResourcesResponse is a Python representation of the structured
     response from a TMC CentralNode.AssignResources request.
     """
 
-    dish: Optional[DishAllocation] = Field(
-        default=None, alias="dish_allocation"
-    )
+    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")

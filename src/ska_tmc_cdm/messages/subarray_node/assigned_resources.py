@@ -11,8 +11,10 @@ __all__ = ["MCCSAllocation", "AssignedResources"]
 SCHEMA = "https://schema.skao.int/ska-low-tmc-assignedresources/2.0"
 
 
-@dataclass
-class MCCSAllocation:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class MCCSAllocation(CdmObject):
     """
     MCCSAllocation is a Python representation of the structured JSON
     representing the resources assigned to an MCCS subarray.
@@ -34,13 +36,13 @@ class MCCSAllocation:
         Determine that the current MCCSAllocation instance
         is empty (none of the attribute Lists are populated)
         """
-        return not (
-            self.subarray_beam_ids or self.station_ids or self.channel_blocks
-        )
+        return not (self.subarray_beam_ids or self.station_ids or self.channel_blocks)
 
 
-@dataclass(kw_only=True)
-class AssignedResources:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class AssignedResources(CdmObject):
     """
     AssignedResources models the structured JSON returned when the
     MCCSSubarray.assigned_resources Tango attribute is read.

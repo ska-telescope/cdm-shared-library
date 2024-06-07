@@ -28,8 +28,10 @@ __all__ = [
 ]
 
 
-@dataclass
-class SDPWorkflow:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class SDPWorkflow(CdmObject):
     """
     Class to hold SDPWorkflows for ProcessingBlock
 
@@ -45,8 +47,10 @@ class SDPWorkflow:
     version: str
 
 
-@dataclass
-class Channel:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class Channel(CdmObject):
     """
     Class to hold Channels for ScanType
 
@@ -72,8 +76,10 @@ class Channel:
     spectral_window_id: Optional[str] = None
 
 
-@dataclass
-class ScanType:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ScanType(CdmObject):
     """
     Class to hold ScanType configuration
 
@@ -91,8 +97,10 @@ class ScanType:
     channels: list[Channel]
 
 
-@dataclass
-class PbDependency:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class PbDependency(CdmObject):
     """
     Class to hold Dependencies for ProcessingBlock
 
@@ -104,8 +112,10 @@ class PbDependency:
     kind: list[str]
 
 
-@dataclass
-class ScriptConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ScriptConfiguration(CdmObject):
     """
     Class to hold ScriptConfiguration
 
@@ -119,8 +129,10 @@ class ScriptConfiguration:
     version: str = None
 
 
-@dataclass
-class ProcessingBlockConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ProcessingBlockConfiguration(CdmObject):
     """
     Class to hold ProcessingBlock configuration
 
@@ -143,8 +155,10 @@ class ProcessingBlockConfiguration:
     script: Optional[ScriptConfiguration] = None
 
 
-@dataclass
-class BeamConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class BeamConfiguration(CdmObject):
     """
     Class to hold Dependencies for Beam Configuration
 
@@ -162,8 +176,10 @@ class BeamConfiguration:
     vlbi_beam_id: Optional[int] = None
 
 
-@dataclass
-class ChannelConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ChannelConfiguration(CdmObject):
     """
     Class to hold Dependencies for Channel Configuration
 
@@ -175,8 +191,10 @@ class ChannelConfiguration:
     spectral_windows: list[Channel] = field(default_factory=list)
 
 
-@dataclass
-class PolarisationConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class PolarisationConfiguration(CdmObject):
     """
     Class to hold Dependencies for Polarisation Configuration
 
@@ -188,8 +206,10 @@ class PolarisationConfiguration:
     corr_type: list[str] = field(default_factory=list)
 
 
-@dataclass
-class PhaseDir:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class PhaseDir(CdmObject):
     """
     Class to hold PhaseDir configuration
 
@@ -207,9 +227,7 @@ class PhaseDir:
     @staticmethod
     def _floatlist_eq(list_a: list[float], list_b: list[float]) -> bool:
         tol = 1e-15
-        return all(
-            (math.isclose(x, y, abs_tol=tol) for x, y in zip(list_a, list_b))
-        )
+        return all((math.isclose(x, y, abs_tol=tol) for x, y in zip(list_a, list_b)))
 
     def __eq__(self, other):
         if not isinstance(other, PhaseDir):
@@ -222,8 +240,10 @@ class PhaseDir:
         )
 
 
-@dataclass
-class FieldConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class FieldConfiguration(CdmObject):
     """
     Class to hold Field configuration
 
@@ -237,8 +257,10 @@ class FieldConfiguration:
     phase_dir: Optional[PhaseDir] = None
 
 
-@dataclass
-class EBScanTypeBeam:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class EBScanTypeBeam(CdmObject):
     """
     Class to hold EBScanTypeBeam Configuration
 
@@ -252,8 +274,10 @@ class EBScanTypeBeam:
     polarisations_id: Optional[str] = None
 
 
-@dataclass
-class EBScanType:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class EBScanType(CdmObject):
     """
     Class to hold EBScanType configuration
 
@@ -267,8 +291,10 @@ class EBScanType:
     derive_from: Optional[str] = None
 
 
-@dataclass
-class ExecutionBlockConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ExecutionBlockConfiguration(CdmObject):
     """
     Class to hold ExecutionBlock configuration
 
@@ -293,8 +319,10 @@ class ExecutionBlockConfiguration:
     scan_types: Optional[list[EBScanType]] = None
 
 
-@dataclass
-class SDPConfiguration:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class SDPConfiguration(CdmObject):
     """
     Class to hold SDP Configuration
 
