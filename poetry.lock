@@ -1059,29 +1059,6 @@ url = "https://pypi.org/simple"
 reference = "PyPI-public"
 
 [[package]]
-name = "marshmallow-oneofschema"
-version = "3.1.1"
-description = "marshmallow multiplexing schema"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "marshmallow_oneofschema-3.1.1-py3-none-any.whl", hash = "sha256:ff4cb2a488785ee8edd521a765682c2c80c78b9dc48894124531bdfa1ec9303b"},
-    {file = "marshmallow_oneofschema-3.1.1.tar.gz", hash = "sha256:68b4a57d0281a04ac25d4eb7a4c5865a57090a0a8fd30fd6362c8e833ac6a6d9"},
-]
-
-[package.dependencies]
-marshmallow = ">=3.0.0,<4.0.0"
-
-[package.extras]
-dev = ["marshmallow-oneofschema[tests]", "pre-commit (>=3.5,<4.0)", "tox"]
-tests = ["pytest"]
-
-[package.source]
-type = "legacy"
-url = "https://pypi.org/simple"
-reference = "PyPI-public"
-
-[[package]]
 name = "mccabe"
 version = "0.7.0"
 description = "McCabe checker, plugin for flake8"
@@ -2597,4 +2574,4 @@ reference = "PyPI-public"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "b68107e9ff8f6e9edd79d4567b61deff7d8c711cded2307859449bb2de46eef0"
+content-hash = "2b15c3ba88cdb768b95f0dc2262b51110085db59fe417983dddbc3151e678ac5"
