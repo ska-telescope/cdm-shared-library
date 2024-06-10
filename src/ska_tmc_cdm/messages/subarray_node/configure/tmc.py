@@ -4,6 +4,7 @@ for all scan commands following this configuration.
 """
 from datetime import timedelta
 from typing import Optional
+from typing_extensions import Self
 
 from pydantic import model_validator
 
@@ -23,7 +24,7 @@ class TMCConfiguration(CdmObject):
     partial_configuration: bool = False
 
     @model_validator(mode="after")
-    def partial_configuration_xor_scan_duration(self) -> "ConfigureRequest":
+    def partial_configuration_xor_scan_duration(self) -> Self:
         if self.scan_duration is not None:
             assert self.partial_configuration is False
         if self.partial_configuration is False:

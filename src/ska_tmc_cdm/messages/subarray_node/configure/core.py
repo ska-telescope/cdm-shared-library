@@ -13,7 +13,6 @@ from typing import ClassVar, Optional
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import ConfigDict, model_validator
-from pydantic.dataclasses import dataclass
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -35,6 +34,7 @@ class Target(CdmObject):
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     ra: InitVar[Optional[str | int | float | u.Quantity]] = None
     dec: InitVar[Optional[str | int | float | u.Quantity]] = None

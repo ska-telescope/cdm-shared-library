@@ -8,6 +8,8 @@ __all__ = ["Codec"]
 from os import PathLike
 from typing import Optional, Type
 
+from ska_tmc_cdm.messages.base import CdmObject
+
 STRICTNESS = None
 
 
@@ -54,7 +56,7 @@ class Codec:
 
     @staticmethod
     def load_from_file(
-        cdm_class: Type[Cdm],
+        cdm_class: Type[CdmObject],
         path: PathLike[str],
         validate: bool = True,
         strictness: Optional[int] = STRICTNESS,

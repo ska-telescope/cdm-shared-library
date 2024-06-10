@@ -27,13 +27,6 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     SDPConfiguration,
 )
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
-from ska_tmc_cdm.schemas.central_node.assign_resources import (
-    AssignResourcesRequestSchema,
-    AssignResourcesResponseSchema,
-)
-from ska_tmc_cdm.schemas.central_node.sdp import SDPConfigurationSchema
-from ska_tmc_cdm.schemas.mccssubarray.scan import ScanRequestSchema
-
 from .. import utils
 
 VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
