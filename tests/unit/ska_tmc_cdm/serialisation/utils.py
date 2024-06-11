@@ -8,9 +8,9 @@ from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 
-ModifierType = Callable[[CdmObject]]
+ModifierType = Callable[[CdmObject], None]
 
-def test_schema_serialisation_and_validation(
+def test_serialisation_and_validation(
     model_class: Type[CdmObject],
     instance: CdmObject,
     modifier_fn: ModifierType,
@@ -18,7 +18,7 @@ def test_schema_serialisation_and_validation(
     invalid_json: str,
 ):
     """
-    Performs a set of tests to confirm that the Marshmallow schema validates
+    Performs a set of tests to confirm that we validate
     objects and JSON correctly when marshaling objects to JSON and when
     unmarshaling JSON to objects.
 
@@ -29,13 +29,10 @@ def test_schema_serialisation_and_validation(
     :param valid_json: JSON equivalent of the valid instance
     :param invalid_json: invalid JSON representation, on None if
         validate-on-unmarshal tests should be skipped
-    :param is_validate: Boolean True to Validate the schema, on False if
-        schema validation should be skipped
     """
     test_marshal(instance, valid_json)
     test_unmarshal(model_class, valid_json, instance)
     test_serialising_valid_object_does_not_raise_exception_when_strict(
-        model_class,
         instance,
     )
 
@@ -43,7 +40,6 @@ def test_schema_serialisation_and_validation(
     if modifier_fn is not None:
 
         test_serialising_invalid_object_raises_exception_when_strict(
-            model_class,
             instance,
             modifier_fn,
         )

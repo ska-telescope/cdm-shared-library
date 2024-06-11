@@ -24,7 +24,7 @@ VALID_MCCSALLOCATE_OBJECT = MCCSAllocate(
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "cdm_class,instance,modifier_fn,valid_json,invalid_json",
     [
         (
             MCCSAllocate,
@@ -41,6 +41,6 @@ def test_releaseresources_serialisation_and_validation(
     """
     Verifies that the model marshals, unmarshals, and validates correctly.
     """
-    utils.test_schema_serialisation_and_validation(
+    utils.test_serialisation_and_validation(
         cdm_class, instance, modifier_fn, valid_json, invalid_json
     )
