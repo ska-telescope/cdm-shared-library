@@ -25,9 +25,9 @@ VALID_CSP_LOW_JSON = """ {
   }"""
 
 
-def test_validate_serialization_and_deserialization_CSPConfiguration_json_using_schema_class():
+def test_validate_serialization_and_deserialization_CSPConfiguration_json():
     """
-    Verifies that the CSPConfiguration schema marshal and Unmarshal works correctly
+    Verifies that the CSPConfiguration de/serialises correctly.
     """
 
     csp_configuration_object = CSPConfiguration.model_validate_json(

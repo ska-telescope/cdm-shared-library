@@ -1,11 +1,10 @@
 """
-Unit tests for ska_tmc_cdm.schemas module.
+Unit tests for serialisation of ska_tmc_cdm modules.
 """
 
 import pytest
 
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
-from ska_tmc_cdm.schemas.central_node.mccs import MCCSAllocateSchema
 
 from .. import utils
 
@@ -28,7 +27,7 @@ VALID_MCCSALLOCATE_OBJECT = MCCSAllocate(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json",
     [
         (
-            MCCSAllocateSchema,
+            MCCSAllocate,
             VALID_MCCSALLOCATE_OBJECT,
             None,  # no validation on subschema
             VALID_MCCSALLOCATE_JSON,
@@ -37,11 +36,11 @@ VALID_MCCSALLOCATE_OBJECT = MCCSAllocate(
     ],
 )
 def test_releaseresources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
+    cdm_class, instance, modifier_fn, valid_json, invalid_json
 ):
     """
-    Verifies that the schema marshals, unmarshals, and validates correctly.
+    Verifies that the model marshals, unmarshals, and validates correctly.
     """
     utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
+        cdm_class, instance, modifier_fn, valid_json, invalid_json
     )

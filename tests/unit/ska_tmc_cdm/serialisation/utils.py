@@ -1,26 +1,28 @@
 import copy
+from typing import Callable, Type
 
 import pytest
 
+from ska_tmc_cdm import CdmObject
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
-from ska_tmc_cdm.schemas.shared import ValidatingSchema
+from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 
+ModifierType = Callable[[CdmObject]]
 
 def test_schema_serialisation_and_validation(
-    schema_cls,
-    instance,
-    modifier_fn,
-    valid_json,
-    invalid_json,
-    is_validate=True,
+    model_class: Type[CdmObject],
+    instance: CdmObject,
+    modifier_fn: ModifierType,
+    valid_json: str,
+    invalid_json: str,
 ):
     """
     Performs a set of tests to confirm that the Marshmallow schema validates
     objects and JSON correctly when marshaling objects to JSON and when
     unmarshaling JSON to objects.
 
-    :param schema_cls: Marshmallow schema class for object type
+    :param model_class: CdmObject subclass for object type
     :param instance: a valid instance of the object type
     :param modifier_fn: function to make the valid object invalid, or
         None if validate-on-marshal tests should be skipped
@@ -30,127 +32,101 @@ def test_schema_serialisation_and_validation(
     :param is_validate: Boolean True to Validate the schema, on False if
         schema validation should be skipped
     """
-    test_marshal(schema_cls, instance, valid_json, is_validate)
-    test_unmarshal(schema_cls, valid_json, instance, is_validate)
+    test_marshal(instance, valid_json)
+    test_unmarshal(model_class, valid_json, instance)
     test_serialising_valid_object_does_not_raise_exception_when_strict(
-        schema_cls,
+        model_class,
         instance,
-        is_validate,
     )
 
     # not all schema have validation, such as TMC MID at time of writing
     if modifier_fn is not None:
 
         test_serialising_invalid_object_raises_exception_when_strict(
-            schema_cls,
+            model_class,
             instance,
             modifier_fn,
-            is_validate,
         )
 
     # Empty instances such as '{}' do not have an invalid representation
     if invalid_json is not None:
         test_deserialising_invalid_json_raises_exception_when_strict(
-            schema_cls,
+            model_class,
             invalid_json,
-            is_validate,
         )
 
 
 def test_marshal(
-    schema_cls,
-    instance,
-    valid_json,
-    is_validate=True,
+    instance: CdmObject,
+    valid_json: str,
 ):
     """
     Verify that an object instance is marshalled to JSON correctly.
     """
-    # schema with strictness=1 is used so that marshalling continues when
+    # strictness=1 is used so that marshalling continues when
     # SchemaNotFound is raised
-    schema = get_schema(schema_cls, is_validate, strictness=1)
-    marshalled = schema.dumps(instance)
+    marshalled = CODEC.dumps(instance, strictness=1)
     assert_json_is_equal(marshalled, valid_json)
 
 
 def test_unmarshal(
-    schema_cls,
-    valid_json,
-    instance,
-    is_validate=True,
+    model_class: Type[CdmObject],
+    valid_json: str,
+    instance: CdmObject,
 ):
     """
     Verify that JSON is correctly unmarshalled to the expected instance.
     """
-    # schema with strictness=1 is used so that marshalling continues when
+    # strictness=1 is used so that marshalling continues when
     # SchemaNotFound is raised
-    schema = get_schema(schema_cls, is_validate, strictness=1)
-    unmarshalled = schema.loads(valid_json)
+    unmarshalled = CODEC.loads(model_class, valid_json, strictness=1)
     assert unmarshalled == instance
 
 
 def test_deserialising_invalid_json_raises_exception_when_strict(
-    schema_cls,
-    invalid_json,
-    is_validate=True,
+    model_class: Type[CdmObject],
+    invalid_json: str,
 ):
     """
     Verifies that unmarshaling an invalid JSON string results in an exception
     when the schema validation is set to strict.
 
-    :param schema_cls: Marshmallow schema class for object type
+    :param model_class: CdmObject class
     :param invalid_json: JSON string
     """
-    schema = get_schema(schema_cls, is_validate, strictness=2)
     with pytest.raises(JsonValidationError):
-        _ = schema.loads(invalid_json)
+        CODEC.loads(model_class, invalid_json, strictness=2)
 
 
 def test_serialising_valid_object_does_not_raise_exception_when_strict(
-    schema_cls,
-    instance,
-    is_validate=True,
+    instance: CdmObject,
 ):
     """
     Verifies that marshaling a valid instance does not result in a validation
     error when the schema exists and schema validation is set to strict.
 
-    :param schema_cls: Marshmallow schema class for object type
     :param instance: valid object
     """
-    schema = get_schema(schema_cls, is_validate, strictness=2)
     try:
-        _ = schema.dumps(instance)
+        CODEC.dumps(instance, strictness=2)
     except SchemaNotFound:
         pass
 
 
 def test_serialising_invalid_object_raises_exception_when_strict(
-    schema_cls,
-    instance,
-    modifier_fn,
-    is_validate=True,
+    instance: CdmObject,
+    modifier_fn: ModifierType,
 ):
     """
-    Verify that marshaling an invalid object results in a validation error
-    when schema validation is set to strict.
+    Verify that serialising an invalid object results in a validation error
+    when validation is set to strict.
 
-    :param instance: valid object
+    :param instance: valid CdmObject instance
     :param modifier_fn: function that makes the valid object invalid
-    :param schema_cls: Marshmallow schema class
     """
 
-    o = copy.deepcopy(instance)
-    modifier_fn(o)
-
-    schema = get_schema(schema_cls, is_validate, strictness=2)
+    obj = copy.deepcopy(instance)
+    modifier_fn(obj)
 
     with pytest.raises(JsonValidationError):
-        _ = schema.dumps(o)
-
-
-def get_schema(schema_cls, is_validate=True, strictness: int = 0):
-    schema = schema_cls()
-    schema.context[ValidatingSchema.VALIDATE] = is_validate
-    schema.context[ValidatingSchema.VALIDATION_STRICTNESS] = strictness
-    return schema
+        CODEC.dumps(obj, strictness=2)
