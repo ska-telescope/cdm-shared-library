@@ -1,4 +1,4 @@
-from ska_tmc_cdm.schemas.central_node.csp import CSPConfigurationSchema
+from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
 from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_CSP_LOW_JSON = """ {
@@ -30,10 +30,8 @@ def test_validate_serialization_and_deserialization_CSPConfiguration_json_using_
     Verifies that the CSPConfiguration schema marshal and Unmarshal works correctly
     """
 
-    csp_configuration_object = CSPConfigurationSchema().loads(
+    csp_configuration_object = CSPConfiguration.model_validate_json(
         VALID_CSP_LOW_JSON
     )
-    serialized_csp_config = CSPConfigurationSchema().dumps(
-        csp_configuration_object
-    )
+    serialized_csp_config = csp_configuration_object.model_dump_json(exclude_none=True)
     assert_json_is_equal(VALID_CSP_LOW_JSON, serialized_csp_config)
