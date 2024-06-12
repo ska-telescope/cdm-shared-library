@@ -10,6 +10,7 @@ from ska_tmc_cdm.utils import assert_json_is_equal
 
 ModifierType = Callable[[CdmObject], None]
 
+
 def test_serialisation_and_validation(
     model_class: Type[CdmObject],
     instance: CdmObject,
