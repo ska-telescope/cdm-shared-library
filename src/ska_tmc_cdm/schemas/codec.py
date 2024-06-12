@@ -7,6 +7,8 @@ __all__ = ["Codec"]
 
 from os import PathLike
 from typing import Optional, Type
+from ..jsonschema.json_schema import JsonSchema
+
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -73,3 +75,29 @@ class Codec:
         with open(path, "r", encoding="utf-8") as json_file:
             json_data = json_file.read()
             return Codec.loads(cdm_class, json_data, validate, strictness)
+
+
+    @staticmethod
+    def semantic_validate_json(data, process_fn=lambda x: x, **_):
+        """
+        Validate JSON using the Telescope Model schema.
+
+        The process_fn argument can be used to process semantically correct
+        but schematically invalid Python to something equivalent but valid,
+        e.g., to convert a list of Python tuples to a list of lists.
+
+        :param data: Marshmallow-provided dict containing parsed object values
+        :param process_fn: data processing function called before validation
+        :return:
+        """
+        interface = data.get("interface", None)
+        # TODO: This fails 'open' instead of failing 'closed', if the
+        # caller is requesting strict validation and we can't even tell
+        # what interface to validate against, that should be an error.
+        if interface and (
+            "ska-tmc-assignresources" in interface
+            or "ska-tmc-configure" in interface
+            or "ska-low-tmc-assignresources" in interface
+            or "ska-low-tmc-configure" in interface
+        ):
+            JsonSchema.semantic_validate_schema(process_fn(data), interface)
