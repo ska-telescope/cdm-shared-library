@@ -6,6 +6,7 @@ other serialisation schemas.
 
 from ..jsonschema.json_schema import JsonSchema
 
+
 def validate_json(data, process_fn, strictness=0):
     """
     Validate JSON using the Telescope Model schema.
@@ -24,11 +25,10 @@ def validate_json(data, process_fn, strictness=0):
     # caller is requesting strict validation and we can't even tell
     # what interface to validate against, that should be an error.
     if interface:
-        JsonSchema.validate_schema(
-            interface, process_fn(data), strictness=strictness
-        )
+        JsonSchema.validate_schema(interface, process_fn(data), strictness=strictness)
 
-def semantic_validate_json(self, data, process_fn=lambda x: x, **_):
+
+def semantic_validate_json(data, process_fn=lambda x: x, **_):
     """
     Validate JSON using the Telescope Model schema.
 

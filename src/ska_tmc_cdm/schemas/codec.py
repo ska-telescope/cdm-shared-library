@@ -5,24 +5,32 @@ Marshmallow schema directly.
 """
 __all__ = ["Codec"]
 
+import json
 from os import PathLike
 from typing import Optional, Type
-from ..jsonschema.json_schema import JsonSchema
-
 
 from ska_tmc_cdm.messages.base import CdmObject
 
-STRICTNESS = None
+from .telmodel_validation import semantic_validate_json, validate_json
+
+DEFAULT_STRICTNESS = 0
 
 
 class Codec:
     @staticmethod
+    def _telmodel_validation(enforced: bool, jsonable_data: dict, strictness: int = 0):
+        if not enforced:
+            return
+        validate_json(jsonable_data, strictness=strictness)
+        semantic_validate_json(jsonable_data)
+
+    @staticmethod
     def loads(
-        cdm_class,
-        json_data,
+        cdm_class: Type[CdmObject],
+        json_data: str,
         validate: bool = True,
-        strictness: Optional[int] = STRICTNESS,
-    ):
+        strictness: int = DEFAULT_STRICTNESS,
+    ) -> CdmObject:
         """
         Create an instance of a CDM class from a JSON string.
 
@@ -33,15 +41,21 @@ class Codec:
         :param json_data: the JSON to unmarshall
         :param validate: True to enable schema validation
         :param strictness: optional validation strictness level (0=min, 2=max)
-        :return: an instance of cls
+        :return: an instance of CdmObject
         """
-        return cdm_class.model_validate_json(json_data)
+        # Making Pydantic the first line of validation gives us
+        # basic checks up front, and also yields performance benefits
+        # because it uses a fast Rust JSON parser internally.
+        obj = cdm_class.model_validate_json(json_data)
+        jsonable_dict = obj.model_dump(exclude_none=True, by_alias=True)
+        Codec._telmodel_validation(validate, jsonable_dict, strictness)
+        return obj
 
     @staticmethod
     def dumps(
-        obj,
+        obj: CdmObject,
         validate: bool = True,
-        strictness: Optional[int] = STRICTNESS,
+        strictness: int = DEFAULT_STRICTNESS,
     ) -> str:
         """
         Return a string JSON representation of a CDM instance.
@@ -54,7 +68,9 @@ class Codec:
         :param strictness: optional validation strictness level (0=min, 2=max)
         :return: JSON representation of obj
         """
-        return obj.model_dump_json(exclude_none=True, by_alias=True)
+        jsonable_dict = obj.model_dump(exclude_none=True, by_alias=True)
+        Codec._telmodel_validation(validate, jsonable_dict, strictness)
+        return json.dumps(jsonable_dict)
 
     @staticmethod
     def load_from_file(
@@ -75,29 +91,3 @@ class Codec:
         with open(path, "r", encoding="utf-8") as json_file:
             json_data = json_file.read()
             return Codec.loads(cdm_class, json_data, validate, strictness)
-
-
-    @staticmethod
-    def semantic_validate_json(data, process_fn=lambda x: x, **_):
-        """
-        Validate JSON using the Telescope Model schema.
-
-        The process_fn argument can be used to process semantically correct
-        but schematically invalid Python to something equivalent but valid,
-        e.g., to convert a list of Python tuples to a list of lists.
-
-        :param data: Marshmallow-provided dict containing parsed object values
-        :param process_fn: data processing function called before validation
-        :return:
-        """
-        interface = data.get("interface", None)
-        # TODO: This fails 'open' instead of failing 'closed', if the
-        # caller is requesting strict validation and we can't even tell
-        # what interface to validate against, that should be an error.
-        if interface and (
-            "ska-tmc-assignresources" in interface
-            or "ska-tmc-configure" in interface
-            or "ska-low-tmc-assignresources" in interface
-            or "ska-low-tmc-configure" in interface
-        ):
-            JsonSchema.semantic_validate_schema(process_fn(data), interface)
