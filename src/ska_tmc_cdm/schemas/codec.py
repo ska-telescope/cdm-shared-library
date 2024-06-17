@@ -13,12 +13,12 @@ from ska_tmc_cdm.messages.base import CdmObject
 
 from .telmodel_validation import semantic_validate_json, validate_json
 
-DEFAULT_STRICTNESS = 0
+DEFAULT_STRICTNESS = None
 
 
 class Codec:
     @staticmethod
-    def _telmodel_validation(enforced: bool, jsonable_data: dict, strictness: int = 0):
+    def _telmodel_validation(enforced: bool, jsonable_data: dict, strictness: Optional[int] = 0):
         if not enforced:
             return
         validate_json(jsonable_data, strictness=strictness)
@@ -47,7 +47,7 @@ class Codec:
         # basic checks up front, and also yields performance benefits
         # because it uses a fast Rust JSON parser internally.
         obj = cdm_class.model_validate_json(json_data)
-        jsonable_dict = obj.model_dump(exclude_none=True, by_alias=True)
+        jsonable_dict = obj.model_dump(model='json', exclude_none=True, by_alias=True)
         Codec._telmodel_validation(validate, jsonable_dict, strictness)
         return obj
 
@@ -55,7 +55,7 @@ class Codec:
     def dumps(
         obj: CdmObject,
         validate: bool = True,
-        strictness: int = DEFAULT_STRICTNESS,
+        strictness: Optional[int] = DEFAULT_STRICTNESS,
     ) -> str:
         """
         Return a string JSON representation of a CDM instance.
@@ -68,7 +68,7 @@ class Codec:
         :param strictness: optional validation strictness level (0=min, 2=max)
         :return: JSON representation of obj
         """
-        jsonable_dict = obj.model_dump(exclude_none=True, by_alias=True)
+        jsonable_dict = obj.model_dump(mode='json', exclude_none=True, by_alias=True)
         Codec._telmodel_validation(validate, jsonable_dict, strictness)
         return json.dumps(jsonable_dict)
 

@@ -1032,7 +1032,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    "model_cls,instance,modifier_fn,valid_json,invalid_json",
     [
         (
             AssignResourcesRequest,
@@ -1107,7 +1107,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
     ],
 )
 def test_assignresources_serialisation_and_validation(
-    schema_cls,
+    model_cls,
     instance,
     modifier_fn,
     valid_json,
@@ -1117,7 +1117,7 @@ def test_assignresources_serialisation_and_validation(
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
     utils.test_serialisation_and_validation(
-        schema_cls,
+        model_cls,
         instance,
         modifier_fn,
         valid_json,
@@ -1126,7 +1126,7 @@ def test_assignresources_serialisation_and_validation(
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    ("model_cls","instance","modifier_fn","valid_json","invalid_json"),
     [
         (
             AssignResourcesRequest,
@@ -1138,7 +1138,7 @@ def test_assignresources_serialisation_and_validation(
     ],
 )
 def test_assignresources_serialisation_and_validation_invalid_json(
-    schema_cls,
+    model_cls,
     instance,
     modifier_fn,
     valid_json,
@@ -1150,7 +1150,7 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     """
     with pytest.raises(SchematicValidationError):
         utils.test_serialisation_and_validation(
-            schema_cls,
+            model_cls,
             instance,
             modifier_fn,
             valid_json,
@@ -1159,7 +1159,7 @@ def test_assignresources_serialisation_and_validation_invalid_json(
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    ("model_cls","instance","modifier_fn","valid_json","invalid_json"),
     [
         (
             AssignResourcesRequest,
@@ -1171,7 +1171,7 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     ],
 )
 def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
-    schema_cls,
+    model_cls,
     instance,
     modifier_fn,
     valid_json,
@@ -1183,7 +1183,7 @@ def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
     """
     with pytest.raises(SchematicValidationError):
         utils.test_serialisation_and_validation(
-            schema_cls,
+            model_cls,
             instance,
             modifier_fn,
             valid_json,
