@@ -77,7 +77,7 @@ class Codec:
         cdm_class: Type[CdmObject],
         path: PathLike[str],
         validate: bool = True,
-        strictness: Optional[int] = STRICTNESS,
+        strictness: Optional[int] = DEFAULT_STRICTNESS,
     ):
         """
         Load an instance of a CDM class from disk.

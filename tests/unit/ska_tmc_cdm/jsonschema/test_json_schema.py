@@ -17,13 +17,13 @@ from ska_tmc_cdm.jsonschema.json_schema import (
     JsonValidationError,
     SchemaNotFound,
 )
-from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
+from tests.unit.ska_tmc_cdm.serialisation.central_node.test_assign_resources import (
     INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
 )
-from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
+from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
 )

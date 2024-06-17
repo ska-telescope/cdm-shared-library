@@ -2,9 +2,7 @@
 Unit tests for ska_tmc_cdm.schemas module.
 """
 import pytest
-from ska_ost_osd.telvalidation.semantic_validator import (
-    SchematicValidationError,
-)
+from ska_ost_osd.telvalidation.semantic_validator import SchematicValidationError
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
@@ -27,6 +25,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     SDPConfiguration,
 )
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
+
 from .. import utils
 
 VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
@@ -272,7 +271,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = """
                "name":"vis_receive",
                "version":"0.1.0"
             },
-            "parameters":{      
+            "parameters":{
             }
          },
          {
@@ -285,7 +284,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = """
                "name":"test_realtime",
                "version":"0.1.0"
             },
-            "parameters":{       
+            "parameters":{
             }
          },
          {
@@ -320,7 +319,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16 = """
                "name":"dpreb",
                "version":"0.1.0"
             },
-            "parameters":{  
+            "parameters":{
             },
             "dependencies":[
                {
@@ -613,7 +612,7 @@ VALID_MID_ASSIGNRESOURCESRESPONSE_JSON = """
 """
 
 VALID_MID_ASSIGNRESOURCESRESPONSE_OBJECT = AssignResourcesResponse(
-    dish_allocation=DishAllocation(["0001", "0002"])
+    dish_allocation=DishAllocation(receptor_ids=["0001", "0002"])
 )
 
 
@@ -989,9 +988,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-assignresources/3.2",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    mccs=MCCSAllocate(
-        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
-    ),
+    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
     sdp_config=VALID_SDP_OBJECT,
 )
 
@@ -999,9 +996,7 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-assignresources/3.2",
     transaction_id="txn-....-00001",
     subarray_id="1",
-    mccs=MCCSAllocate(
-        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
-    ),
+    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
     sdp_config=INVALID_SDP_OBJECT,
 )
 
@@ -1040,84 +1035,74 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
     "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            False,
         ),
         (
-            AssignResourcesResponseSchema,
+            AssignResourcesResponse,
             VALID_MID_ASSIGNRESOURCESRESPONSE_OBJECT,
             None,
             VALID_MID_ASSIGNRESOURCESRESPONSE_JSON,
             None,
-            False,
         ),
         (
-            SDPConfigurationSchema,
+            SDPConfiguration,
             VALID_SDP_OBJECT,
             None,
             VALID_SDP_JSON,
             None,
-            True,
         ),
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
             low_tmc_invalidator_fn,
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            True,
         ),
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
             None,
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            True,
         ),
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
             None,
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            False,
         ),
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
-            True,
         ),
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
             mid_invalidator_fn,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
-            True,
         ),
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
-            False,
         ),
         (
-            ScanRequestSchema,
+            ScanRequest,
             SCAN_VALID_OBJECT,
             None,
             SCAN_VALID_JSON,
             None,
-            True,
         ),
     ],
 )
@@ -1127,18 +1112,16 @@ def test_assignresources_serialisation_and_validation(
     modifier_fn,
     valid_json,
     invalid_json,
-    is_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    utils.test_schema_serialisation_and_validation(
+    utils.test_serialisation_and_validation(
         schema_cls,
         instance,
         modifier_fn,
         valid_json,
         invalid_json,
-        is_validate,
     )
 
 
@@ -1146,12 +1129,11 @@ def test_assignresources_serialisation_and_validation(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
             mid_invalidator_fn,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            True,
         ),
     ],
 )
@@ -1161,20 +1143,18 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     modifier_fn,
     valid_json,
     invalid_json,
-    is_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
     with pytest.raises(SchematicValidationError):
-        utils.test_schema_serialisation_and_validation(
+        utils.test_serialisation_and_validation(
             schema_cls,
             instance,
             modifier_fn,
             valid_json,
             invalid_json,
-            is_validate,
         )
 
 
@@ -1182,12 +1162,11 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
-            AssignResourcesRequestSchema,
+            AssignResourcesRequest,
             INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT,
             low_tmc_invalidator_fn,
             INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            True,
         ),
     ],
 )
@@ -1197,18 +1176,16 @@ def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
     modifier_fn,
     valid_json,
     invalid_json,
-    is_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError for TMC LOW.
     """
     with pytest.raises(SchematicValidationError):
-        utils.test_schema_serialisation_and_validation(
+        utils.test_serialisation_and_validation(
             schema_cls,
             instance,
             modifier_fn,
             valid_json,
             invalid_json,
-            is_validate,
         )
