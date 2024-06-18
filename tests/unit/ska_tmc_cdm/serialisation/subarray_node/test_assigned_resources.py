@@ -4,10 +4,6 @@ from ska_tmc_cdm.messages.subarray_node.assigned_resources import (
     AssignedResources,
     MCCSAllocation,
 )
-from ska_tmc_cdm.schemas.subarray_node.assigned_resources import (
-    AssignedResourcesSchema,
-    MCCSAllocationSchema,
-)
 
 from .. import utils
 
@@ -57,17 +53,17 @@ def invalidate_assignresources(o: AssignedResources):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "model_class,instance,modifier_fn,valid_json,invalid_json",
     [
         (
-            AssignedResourcesSchema,
+            AssignedResources,
             VALID_ASSIGNEDRESOURCES_OBJECT,
             invalidate_assignresources,
             VALID_ASSIGNEDRESOURCES_JSON,
             INVALID_ASSIGNEDRESOURCES_JSON,
         ),
         (
-            MCCSAllocationSchema,
+            MCCSAllocation,
             VALID_MCCSALLOCATION_OBJECT,
             None,  # no validation on MCCSAllocation subschema
             VALID_MCCSALLOCATION_JSON,
@@ -76,11 +72,11 @@ def invalidate_assignresources(o: AssignedResources):
     ],
 )
 def test_releaseresources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
+    model_class, instance, modifier_fn, valid_json, invalid_json
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    utils.test_serialisation_and_validation(
+        model_class, instance, modifier_fn, valid_json, invalid_json
     )

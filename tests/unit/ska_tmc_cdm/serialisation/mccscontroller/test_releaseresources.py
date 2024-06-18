@@ -7,9 +7,6 @@ import pytest
 from ska_tmc_cdm.messages.mccscontroller.releaseresources import (
     ReleaseResourcesRequest,
 )
-from ska_tmc_cdm.schemas.mccscontroller.releaseresources import (
-    ReleaseResourcesRequestSchema,
-)
 
 from .. import utils
 
@@ -37,10 +34,10 @@ VALID_OBJECT = ReleaseResourcesRequest(
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "model_class,instance,modifier_fn,valid_json,invalid_json",
     [
         (
-            ReleaseResourcesRequestSchema,
+            ReleaseResourcesRequest,
             VALID_OBJECT,
             lambda o: setattr(o, "subarray_id", -1),
             VALID_JSON,
@@ -49,12 +46,12 @@ VALID_OBJECT = ReleaseResourcesRequest(
     ],
 )
 def test_releaseresources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
+    model_class, instance, modifier_fn, valid_json, invalid_json
 ):
     """
-    Verifies that ReleaseResourcesRequestSchema marshals, unmarshals, and
+    Verifies that ReleaseResourcesRequest marshals, unmarshals, and
     validates correctly.
     """
-    utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    utils.test_serialisation_and_validation(
+        model_class, instance, modifier_fn, valid_json, invalid_json
     )

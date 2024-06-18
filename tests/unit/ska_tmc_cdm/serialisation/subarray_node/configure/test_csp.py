@@ -19,17 +19,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     VisFspConfiguration,
     VisStnBeamConfiguration,
 )
-from ska_tmc_cdm.schemas.subarray_node.configure import (
-    CSPConfigurationSchema,
-    FSPConfigurationSchema,
-)
-from ska_tmc_cdm.schemas.subarray_node.configure.csp import (
-    LowCBFConfigurationSchema,
-    StationConfigurationSchema,
-    StnBeamConfigurationSchema,
-    VisConfigurationSchema,
-    VisFspConfigurationSchema,
-)
+from ska_tmc_cdm import CODEC
 
 from ... import utils
 
@@ -117,7 +107,7 @@ VALID_CSP_JSON_PI16 = """{
 
 CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     interface="https://schema.skao.int/ska-csp-configure/2.0",
-    subarray=SubarrayConfiguration("science period 23"),
+    subarray=SubarrayConfiguration(subarray_name="science period 23"),
     common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
         frequency_band=ReceiverBand.BAND_1,
@@ -238,8 +228,7 @@ def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     left unset.
     """
     fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
-    schema = FSPConfigurationSchema()
-    marshalled = schema.dumps(fsp_config)
+    marshalled = CODEC.dumps(fsp_config)
 
     optional_fields = [
         field.data_key
@@ -266,8 +255,7 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
     fsp_config = FSPConfiguration(
         1, FSPFunctionMode.CORR, 1, 10, 0, **null_kwargs
     )
-    schema = FSPConfigurationSchema()
-    marshalled = schema.dumps(fsp_config)
+    marshalled = CODEC.dumps(fsp_config)
 
     # optional constructor args are optional fields in the schema
     optional_fields = [
@@ -298,8 +286,8 @@ def test_marshall_csp_configuration_does_not_modify_original():
         pss_config=None,
         pst_config=None,
     )
-    copied = copy.deepcopy(config)
-    CSPConfigurationSchema().dumps(config)
+    copied = config.model_copy(deep=True)
+    CODEC.dumps(config)
 
     assert config.interface == copied.interface
     assert config.subarray == copied.subarray
@@ -315,8 +303,8 @@ def test_marshall_for_csp_configuration_pi16():
     """
     Verify that serialising a CSPConfiguration does not change the object.
     """
-    utils.test_schema_serialisation_and_validation(
-        schema_cls=CSPConfigurationSchema,
+    utils.test_serialisation_and_validation(
+        model_class=CSPConfiguration,
         instance=CSP_CONFIGURATION_OBJECT_PI16,
         modifier_fn=None,
         valid_json=VALID_CSP_JSON_PI16,
@@ -338,8 +326,8 @@ def test_marshall_station_configuration_does_not_modify_original():
             )
         ],
     )
-    copied = copy.deepcopy(config)
-    StationConfigurationSchema().dumps(config)
+    copied = config.model_copy(deep=True)
+    CODEC.dumps(config)
 
     assert config.stns == copied.stns
     assert config.stn_beams == copied.stn_beams
@@ -355,8 +343,8 @@ def test_marshall_station_beam_configuration_does_not_modify_original():
         freq_ids=[400],
         stn_beam_id=1,
     )
-    copied = copy.deepcopy(config)
-    StnBeamConfigurationSchema().dumps(config)
+    copied = config.model_copy(deep=True)
+    CODEC.dumps(config)
 
     assert config.stn_beam_id == copied.stn_beam_id
     assert config.freq_ids == copied.freq_ids
@@ -380,9 +368,8 @@ def test_marshall_vis_configuration_does_not_modify_original():
         ],
     )
 
-    copied = copy.deepcopy(config)
-
-    VisConfigurationSchema().dumps(config)
+    copied = config.model_copy(deep=True)
+    CODEC.dumps(config)
 
     assert config.fsp == copied.fsp
     assert config.stn_beams == copied.stn_beams
@@ -395,9 +382,8 @@ def test_marshall_vis_fsp_configuration_does_not_modify_original():
     """
     config = VisFspConfiguration(function_mode="vis", fsp_ids=[1])
 
-    copied = copy.deepcopy(config)
-
-    VisFspConfigurationSchema().dumps(config)
+    copied = config.model_copy(deep=True)
+    CODEC.dumps(config)
 
     assert config.function_mode == copied.function_mode
     assert config.fsp_ids == copied.fsp_ids
@@ -428,9 +414,8 @@ def test_marshall_low_cbf_configuration_does_not_modify_original():
             ],
         ),
     )
-    copied = copy.deepcopy(config)
-
-    LowCBFConfigurationSchema().dumps(config)
+    copied = config.model_copy(deep=True)
+    CODEC.dumps(config)
 
     assert config.stations == copied.stations
     assert config.vis == config.vis

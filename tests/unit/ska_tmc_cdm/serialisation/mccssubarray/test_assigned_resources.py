@@ -7,9 +7,6 @@ import pytest
 from ska_tmc_cdm.messages.mccssubarray.assigned_resources import (
     AssignedResources,
 )
-from ska_tmc_cdm.schemas.mccssubarray.assigned_resources import (
-    AssignedResourcesSchema,
-)
 
 from .. import utils
 
@@ -56,17 +53,17 @@ VALID_EMPTY_OBJECT = AssignedResources(
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "model_class,instance,modifier_fn,valid_json,invalid_json",
     [
         (
-            AssignedResourcesSchema,
+            AssignedResources,
             VALID_OBJECT,
             lambda o: setattr(o, "subarray_beam_ids", [-1]),
             VALID_JSON,
             INVALID_JSON,
         ),
         (
-            AssignedResourcesSchema,
+            AssignedResources,
             VALID_EMPTY_OBJECT,
             lambda o: setattr(o, "subarray_beam_ids", [-1]),
             VALID_EMPTY_JSON,
@@ -75,12 +72,12 @@ VALID_EMPTY_OBJECT = AssignedResources(
     ],
 )
 def test_assigned_resources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
+    model_class, instance, modifier_fn, valid_json, invalid_json
 ):
     """
-    Verifies that AssignedResourcesSchema marshals, unmarshals, and validates
+    Verifies that AssignedResources marshals, unmarshals, and validates
     correctly.
     """
-    utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    utils.test_serialisation_and_validation(
+        model_class, instance, modifier_fn, valid_json, invalid_json
     )

@@ -9,7 +9,6 @@ from ska_tmc_cdm.messages.mccssubarray.configure import (
     StationConfiguration,
     SubarrayBeamConfiguration,
 )
-from ska_tmc_cdm.schemas.mccssubarray.configure import ConfigureRequestSchema
 
 from .. import utils
 
@@ -97,10 +96,10 @@ def invalidate_configurerequest(o):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "model_class,instance,modifier_fn,valid_json,invalid_json",
     [
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             VALID_OBJECT,
             invalidate_configurerequest,
             VALID_JSON,
@@ -109,12 +108,12 @@ def invalidate_configurerequest(o):
     ],
 )
 def test_assigned_resources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
+    model_class, instance, modifier_fn, valid_json, invalid_json
 ):
     """
-    Verifies that ConfigureRequestSchema marshals, unmarshals, and validates
+    Verifies that ConfigureRequest marshals, unmarshals, and validates
     correctly.
     """
-    utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
+    utils.test_serialisation_and_validation(
+        model_class, instance, modifier_fn, valid_json, invalid_json
     )

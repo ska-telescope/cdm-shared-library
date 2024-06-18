@@ -7,9 +7,7 @@ from datetime import timedelta
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
-from ska_tmc_cdm.schemas.subarray_node.configure.tmc import (
-    TMCConfigurationSchema,
-)
+from ska_tmc_cdm import CODEC
 
 from ... import utils
 
@@ -29,22 +27,22 @@ def test_marshall_tmcconfiguration_does_not_modify_original():
     dt = timedelta(seconds=123.45)
     config = TMCConfiguration(scan_duration=dt)
     original_config = copy.deepcopy(config)
-    TMCConfigurationSchema().dumps(config)
+    CODEC.dumps(config)
     assert config == original_config
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "model_class,instance,modifier_fn,valid_json,invalid_json",
     [
-        (TMCConfigurationSchema, VALID_OBJECT, None, VALID_JSON, None),
+        (TMCConfiguration, VALID_OBJECT, None, VALID_JSON, None),
     ],
 )
 def test_releaseresources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
+    model_class, instance, modifier_fn, valid_json, invalid_json
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
     utils.test_schema_serialisation_and_validation(
-        schema_cls, instance, modifier_fn, valid_json, invalid_json
+        model_class, instance, modifier_fn, valid_json, invalid_json
     )

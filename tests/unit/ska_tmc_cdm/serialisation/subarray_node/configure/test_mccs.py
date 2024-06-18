@@ -10,10 +10,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     SubarrayBeamLogicalBands,
     SubarrayBeamSkyCoordinates,
 )
-from ska_tmc_cdm.schemas.subarray_node.configure.mccs import (
-    MCCSConfigurationSchema,
-    SubarrayBeamConfigurationSchema,
-)
+from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_LOGICAL_BANDS_JSON = """
@@ -94,48 +91,46 @@ VALID_MCCSCONFIGURATION_OBJECT = MCCSConfiguration(
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,expected",
+    "model_class,instance,expected",
     [
         (
-            SubarrayBeamConfigurationSchema,
+            SubarrayBeamConfiguration,
             VALID_SUBARRAYBEAMCONFIGURATION_OBJECT,
             VALID_SUBARRAYBEAMCONFIGURATION_JSON,
         ),
         (
-            MCCSConfigurationSchema,
+            MCCSConfiguration,
             VALID_MCCSCONFIGURATION_OBJECT,
             VALID_MCCSCONFIGURATION_JSON,
         ),
     ],
 )
-def test_marshal(schema_cls, instance, expected):
+def test_marshal(model_class, instance, expected):
     """
     Verify that instances are marshalled to JSON correctly.
     """
-    schema = schema_cls()
-    marshalled = schema.dumps(instance)
+    marshalled = CODEC.dumps(instance)
     assert_json_is_equal(expected, marshalled)
 
 
 @pytest.mark.parametrize(
-    "schema_cls,json_str,expected",
+    "model_class,json_str,expected",
     [
         (
-            SubarrayBeamConfigurationSchema,
+            SubarrayBeamConfiguration,
             VALID_SUBARRAYBEAMCONFIGURATION_JSON,
             VALID_SUBARRAYBEAMCONFIGURATION_OBJECT,
         ),
         (
-            MCCSConfigurationSchema,
+            MCCSConfiguration,
             VALID_MCCSCONFIGURATION_JSON,
             VALID_MCCSCONFIGURATION_OBJECT,
         ),
     ],
 )
-def test_unmarshal(schema_cls, json_str, expected):
+def test_unmarshal(model_class, json_str, expected):
     """
     Verify that instances are unmarshalled to instances correctly.
     """
-    schema = schema_cls()
-    unmarshalled = schema.loads(json_str)
+    unmarshalled = CODEC.loads(model_class, json_str)
     assert unmarshalled == expected
