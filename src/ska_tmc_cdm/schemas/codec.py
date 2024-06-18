@@ -47,7 +47,7 @@ class Codec:
         # basic checks up front, and also yields performance benefits
         # because it uses a fast Rust JSON parser internally.
         obj = cdm_class.model_validate_json(json_data)
-        jsonable_dict = obj.model_dump(model='json', exclude_none=True, by_alias=True)
+        jsonable_dict = obj.model_dump(mode='json', exclude_none=True, by_alias=True)
         Codec._telmodel_validation(validate, jsonable_dict, strictness)
         return obj
 

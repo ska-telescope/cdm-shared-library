@@ -6,7 +6,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ExecutionBlockConfiguration,
     FieldConfiguration,
     PolarisationConfiguration,
-    ProcessingBlock,
+    ProcessingBlockConfiguration,
     SDPConfiguration,
 )
 from pydantic import TypeAdapter
@@ -1093,7 +1093,7 @@ def test_validate_serialization_and_deserialization_processingblock():
     """
     Verifies that the ProcessingBlock schema marshal and Unmarshal works correctly
     """
-    adapter = TypeAdapter(list[ProcessingBlock])
+    adapter = TypeAdapter(list[ProcessingBlockConfiguration])
     processing_block_config = adapter.validate_json(VALID_PROCESSING_BLOCK_JSON_PI16)
     serialized_processing_block_config = adapter.dump_json(
         processing_block_config, exclude_none=True, by_alias=True
