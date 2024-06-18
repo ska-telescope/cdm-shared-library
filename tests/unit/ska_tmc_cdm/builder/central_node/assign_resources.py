@@ -139,12 +139,12 @@ class AssignResourcesRequestBuilder:
         Builds or creates instance of CDM Assign Resource Request
         """
         return AssignResourcesRequest(
-            self.subarray_id,
-            self.dish_allocation,
-            self.sdp_config,
-            self.mccs,
-            self.interface,
-            self.transaction_id,
+            subarray_id=self.subarray_id,
+            dish_allocation=self.dish_allocation,
+            sdp_config=self.sdp_config,
+            mccs=self.mccs,
+            interface=self.interface,
+            transaction_id=self.transaction_id,
         )
 
 

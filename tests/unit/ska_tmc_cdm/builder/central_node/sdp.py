@@ -101,13 +101,13 @@ class ChannelBuilder:
         :return: CDM Channel object
         """
         return Channel(
-            self.count,
-            self.start,
-            self.stride,
-            self.freq_min,
-            self.freq_max,
-            self.link_map,
-            self.spectral_window_id,
+            count=self.count,
+            start=self.start,
+            stride=self.stride,
+            freq_min=self.freq_min,
+            freq_max=self.freq_max,
+            link_map=self.link_map,
+            spectral_window_id=self.spectral_window_id,
         )
 
 
@@ -173,11 +173,11 @@ class ScanTypeBuilder:
         :return: CDM ScanType object
         """
         return ScanType(
-            self.scan_type_id,
-            self.reference_frame,
-            self.ra,
-            self.dec,
-            self.channels,
+            scan_type_id=self.scan_type_id,
+            reference_frame=self.reference_frame,
+            ra=self.ra,
+            dec=self.dec,
+            channels=self.channels,
         )
 
 
@@ -224,7 +224,7 @@ class SDPWorkflowBuilder:
         Build or create CDM SDPWorkflow object
         :return: CDM SDPWorkflow object
         """
-        return SDPWorkflow(self.name, self.kind, self.version)
+        return SDPWorkflow(name=self.name, kind=self.kind, version=self.version)
 
 
 class PbDependencyBuilder:
@@ -261,7 +261,7 @@ class PbDependencyBuilder:
         Build or create CDM PbDependency object
         :return: CDM PbDependency object
         """
-        return PbDependency(self.pb_id, self.kind)
+        return PbDependency(pb_id=self.pb_id, kind=self.kind)
 
 
 class ScriptConfigurationBuilder:
@@ -307,7 +307,7 @@ class ScriptConfigurationBuilder:
         Build or create CDM ScriptConfiguration object
         :return: CDM ScriptConfiguration object
         """
-        return ScriptConfiguration(self.kind, self.name, self.version)
+        return ScriptConfiguration(kind=self.kind, name=self.name, version=self.version)
 
 
 class ProcessingBlockConfigurationBuilder:
@@ -391,12 +391,12 @@ class ProcessingBlockConfigurationBuilder:
         :return: CDM ProcessingBlockConfiguration object
         """
         return ProcessingBlockConfiguration(
-            self.pb_id,
-            self.workflow,
-            self.parameters,
-            self.dependencies,
-            self.sbi_ids,
-            self.script,
+            pb_id=self.pb_id,
+            workflow=self.workflow,
+            parameters=self.parameters,
+            dependencies=self.dependencies,
+            sbi_ids=self.sbi_ids,
+            script=self.script,
         )
 
 
@@ -484,13 +484,13 @@ class SDPConfigurationBuilder:
         :return: CDM SDPConfiguration object
         """
         return SDPConfiguration(
-            self.eb_id,
-            self.max_length,
-            self.scan_types,
-            self.processing_blocks,
-            self.execution_block,
-            self.resources,
-            self.interface,
+            eb_id=self.eb_id,
+            max_length=self.max_length,
+            scan_types=self.scan_types,
+            processing_blocks=self.processing_blocks,
+            execution_block=self.execution_block,
+            resources=self.resources,
+            interface=self.interface,
         )
 
 
@@ -562,11 +562,11 @@ class BeamConfigurationBuilder:
         :return: CDM BeamConfiguration object
         """
         return BeamConfiguration(
-            self.beam_id,
-            self.function,
-            self.search_beam_id,
-            self.timing_beam_id,
-            self.vlbi_beam_id,
+            beam_id=self.beam_id,
+            function=self.function,
+            search_beam_id=self.search_beam_id,
+            timing_beam_id=self.timing_beam_id,
+            vlbi_beam_id=self.vlbi_beam_id,
         )
 
 
@@ -608,7 +608,7 @@ class ChannelConfigurationBuilder:
         Build or create CDM ChannelConfiguration object
         :return: CDM ChannelConfiguration object
         """
-        return ChannelConfiguration(self.channels_id, self.spectral_windows)
+        return ChannelConfiguration(channels_id=self.channels_id, spectral_windows=self.spectral_windows)
 
 
 class PolarisationConfigurationBuilder:
@@ -649,7 +649,7 @@ class PolarisationConfigurationBuilder:
         Build or create CDM PolarisationConfiguration object
         :return: CDM PolarisationConfiguration object
         """
-        return PolarisationConfiguration(self.polarisations_id, self.corr_type)
+        return PolarisationConfiguration(polarisations_id=self.polarisations_id, corr_type=self.corr_type)
 
 
 class PhaseDirBuilder:
@@ -705,7 +705,7 @@ class PhaseDirBuilder:
         :return: CDM PhaseDir object
         """
         return PhaseDir(
-            self.ra, self.dec, self.reference_time, self.reference_frame
+            ra=self.ra, dec=self.dec, reference_time=self.reference_time, reference_frame=self.reference_frame
         )
 
 
@@ -757,7 +757,7 @@ class FieldConfigurationBuilder:
         :return: CDM FieldConfiguration object
         """
         return FieldConfiguration(
-            self.field_id, self.pointing_fqdn, self.phase_dir
+            Field_id=self.field_id, pointing_fqdn=self.pointing_fqdn, phase_dir=self.phase_dir
         )
 
 
@@ -804,7 +804,7 @@ class EBScanTypeBuilder:
         Build or create CDM EBScanType object
         :return: CDM EBScanType object
         """
-        return EBScanType(self.scan_type_id, self.beams, self.derive_from)
+        return EBScanType(scan_type_id=self.scan_type_id, beams=self.beams, derive_from=self.derive_from)
 
 
 class EBScanTypeBeamBuilder:
@@ -853,7 +853,7 @@ class EBScanTypeBeamBuilder:
         :return: CDM EBScanTypeBeam object
         """
         return EBScanTypeBeam(
-            self.field_id, self.channels_id, self.polarisations_id
+            field_id=self.field_id, channels_id=self.channels_id, polarisations_id=self.polarisations_id
         )
 
 
@@ -954,12 +954,12 @@ class ExecutionBlockConfigurationBuilder:
         :return: CDM ExecutionBlockConfiguration object
         """
         return ExecutionBlockConfiguration(
-            self.eb_id,
-            self.max_length,
-            self.context,
-            self.beams,
-            self.channels,
-            self.polarisations,
-            self.fields,
-            self.scan_types,
+            eb_id=self.eb_id,
+            max_length=self.max_length,
+            context=self.context,
+            beams=self.beams,
+            channels=self.channels,
+            polarisations=self.polarisations,
+            fields=self.fields,
+            scan_types=self.scan_types,
         )

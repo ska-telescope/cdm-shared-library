@@ -215,12 +215,12 @@ class FieldConfiguration(CdmObject):
     """
     Class to hold Field configuration
 
-    :param Field_id: Field_id
+    :param field_id: field_id
     :param pointing_fqdn: pointing_fqdn
     :param phase_dir: Phase direction
     """
 
-    Field_id: Optional[str] = None
+    field_id: Optional[str] = None
     pointing_fqdn: Optional[str] = None
     phase_dir: Optional[PhaseDir] = None
 
@@ -229,12 +229,12 @@ class EBScanTypeBeam(CdmObject):
     """
     Class to hold EBScanTypeBeam Configuration
 
-    :param Field_id: Field_id
+    :param field_id: field_id
     :param channels_id: channels_id
     :param polarisations_id: polarisations_id
     """
 
-    Field_id: Optional[str] = None
+    field_id: Optional[str] = None
     channels_id: Optional[str] = None
     polarisations_id: Optional[str] = None
 
@@ -263,8 +263,8 @@ class ExecutionBlockConfiguration(CdmObject):
     :param beams: Beam parameters for the purpose of the Science Data Processor.
     :param channels: Spectral windows per channel configuration.
     :param polarisations: Polarisation definition.
-    :param Fields: Fields / Targets
-    :param scan_types: Scan types. Associates scans with per-beam Fields & channel configurations
+    :param fields: fields / Targets
+    :param scan_types: Scan types. Associates scans with per-beam fields & channel configurations
     """
 
     eb_id: Optional[str] = None
@@ -274,7 +274,7 @@ class ExecutionBlockConfiguration(CdmObject):
     beams: Optional[list[BeamConfiguration]] = None
     channels: Optional[list[ChannelConfiguration]] = None
     polarisations: Optional[list[PolarisationConfiguration]] = None
-    Fields: Optional[list[FieldConfiguration]] = None
+    fields: Optional[list[FieldConfiguration]] = None
     scan_types: Optional[list[EBScanType]] = None
 
 

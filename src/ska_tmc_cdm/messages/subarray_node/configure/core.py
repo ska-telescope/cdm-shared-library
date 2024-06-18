@@ -13,7 +13,7 @@ from typing_extensions import Self
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
-from pydantic import ConfigDict, model_validator
+from pydantic import ConfigDict, PrivateAttr, model_validator
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -26,6 +26,7 @@ __all__ = [
 ]
 
 UnitStr = str | u.Unit
+UnitInput = UnitStr | tuple[UnitStr, UnitStr]
 
 
 class Target(CdmObject):
@@ -35,35 +36,46 @@ class Target(CdmObject):
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
-    model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=False, validate_default=False)
-    target_name: str = ""
-    reference_frame: InitVar[str]
+
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True, validate_assignment=False, validate_default=False
+    )
+    target_name: str
     ca_offset_arcsec: float = 0.0
     ie_offset_arcsec: float = 0.0
-    _coord: Optional[SkyCoord]
+    _coord: Optional[SkyCoord] = PrivateAttr(None)
+
+    @property
+    def coord(self):
+        return self._coord
 
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
+
+
 
     def __init__(
         self,
         ra: Optional[str | u.Quantity] = None,
         dec: Optional[str | u.Quantity] = None,
+        target_name: str = "",
+        reference_frame: str = "icrs",
         ca_offset_arcsec: float = 0.0,
         ie_offset_arcsec: float = 0.0,
-        reference_frame: str = "icrs",
-        unit: UnitStr | tuple[UnitStr, UnitStr] =  (
+        unit: UnitInput = (
             u.hourangle,
             u.deg,
-        )
+        ),
     ):
-        self.ca_offset_arcsec = ca_offset_arcsec
-        self.ie_offset_arcsec = ie_offset_arcsec
-        if ra is None and dec is None:
-            self._coord = None
-        else:
+        super().__init__(
+            target_name=target_name,
+            ca_offset_arcsec=ca_offset_arcsec,
+            ie_offset_arcsec=ie_offset_arcsec,
+        )
+        if ra and dec:
             self._coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
+        self.coord_or_offsets_required()
 
-    @model_validator(mode="after")
+
     def coord_or_offsets_required(self) -> Self:
         if self._coord is None:
             if not (self.ca_offset_arcsec or self.ie_offset_arcsec):

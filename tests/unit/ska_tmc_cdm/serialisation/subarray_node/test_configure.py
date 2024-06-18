@@ -52,7 +52,7 @@ PARTIAL_CONFIGURATION_OFFSET_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.3",
     transaction_id="txn-....-00002",
     pointing=PointingConfiguration(
-        Target(
+        target=Target(
             ca_offset_arcsec=-5.0,
             ie_offset_arcsec=5.0,
         )
@@ -78,7 +78,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.3",
     transaction_id="txn-....-00001",
     pointing=PointingConfiguration(
-        Target(
+        target=Target(
             ra="21:08:47.92",
             dec="-88:57:22.9",
             target_name="Polaris Australis",
@@ -93,7 +93,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray=SubarrayConfiguration("science period 23"),
+        subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_5B,
@@ -617,7 +617,7 @@ VALID_MID_DISH_ONLY_JSON = (
 )
 
 VALID_MID_DISH_ONLY_OBJECT = ConfigureRequest(
-    dish=DishConfiguration(ReceiverBand.BAND_1)
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1)
 )
 
 VALID_NULL_JSON = (
@@ -851,7 +851,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray=SubarrayConfiguration("science period 23"),
+        subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_1,
