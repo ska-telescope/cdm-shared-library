@@ -9,6 +9,7 @@ import math
 from dataclasses import InitVar, field
 from enum import Enum
 from typing import ClassVar, Optional
+from typing_extensions import Self
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
@@ -34,37 +35,37 @@ class Target(CdmObject):
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-
-    ra: InitVar[Optional[str | int | float | u.Quantity]] = None
-    dec: InitVar[Optional[str | int | float | u.Quantity]] = None
+    model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=False, validate_default=False)
     target_name: str = ""
-    reference_frame: InitVar[str] = "icrs"
-    unit: InitVar[UnitStr | tuple[UnitStr, UnitStr]] = (
-        u.hourangle,
-        u.deg,
-    )
+    reference_frame: InitVar[str]
     ca_offset_arcsec: float = 0.0
     ie_offset_arcsec: float = 0.0
-    coord: Optional[SkyCoord] = field(init=False)
+    _coord: Optional[SkyCoord]
 
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
 
-    def __post_init__(
+    def __init__(
         self,
-        ra: str | u.Quantity,
-        dec: str | u.Quantity,
-        reference_frame: str,
-        unit: u.Unit,
+        ra: Optional[str | u.Quantity] = None,
+        dec: Optional[str | u.Quantity] = None,
+        ca_offset_arcsec: float = 0.0,
+        ie_offset_arcsec: float = 0.0,
+        reference_frame: str = "icrs",
+        unit: UnitStr | tuple[UnitStr, UnitStr] =  (
+            u.hourangle,
+            u.deg,
+        )
     ):
+        self.ca_offset_arcsec = ca_offset_arcsec
+        self.ie_offset_arcsec = ie_offset_arcsec
         if ra is None and dec is None:
-            self.coord = None
+            self._coord = None
         else:
-            self.coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
+            self._coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
 
     @model_validator(mode="after")
-    def coord_or_offsets_required(self) -> "Target":
-        if self.coord is None:
+    def coord_or_offsets_required(self) -> Self:
+        if self._coord is None:
             if not (self.ca_offset_arcsec or self.ie_offset_arcsec):
                 raise ValueError(
                     "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
@@ -75,7 +76,7 @@ class Target(CdmObject):
         if not isinstance(other, Target):
             return False
         # Either both are None or both defined...
-        if bool(self.coord) != bool(other.coord):
+        if bool(self._coord) != bool(other._coord):
             return False
 
         # Common checks:
@@ -106,15 +107,15 @@ class Target(CdmObject):
         return True
 
     def __repr__(self):
-        if self.coord is None:
+        if self._coord is None:
             return "Target(target_name={!r}, ca_offset_arcsect={!r}, ie_offset_arcsec={!r})".format(
                 self.target_name, self.ca_offset_arcsec, self.ie_offset_arcsec
             )
         else:
-            raw_ra = self.coord.ra.value
-            raw_dec = self.coord.dec.value
-            units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
-            reference_frame = self.coord.frame.name
+            raw_ra = self._coord.ra.value
+            raw_dec = self._coord.dec.value
+            units = (self._coord.ra.unit.name, self.coord.dec.unit.name)
+            reference_frame = self._coord.frame.name
             target_name = self.target_name
             return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
                 raw_ra,
@@ -127,9 +128,9 @@ class Target(CdmObject):
             )
 
     def __str__(self):
-        reference_frame = self.coord.frame.name
+        reference_frame = self._coord.frame.name
         target_name = self.target_name
-        hmsdms = self.coord.to_string(style="hmsdms")
+        hmsdms = self._coord.to_string(style="hmsdms")
         return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
 
