@@ -45,8 +45,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
-from ska_tmc_cdm.schemas.mccssubarray.scan import ScanRequestSchema
-from ska_tmc_cdm.schemas.subarray_node.configure import ConfigureRequestSchema
 
 from .. import utils
 
@@ -1104,10 +1102,10 @@ def partial_invalidator(o: ConfigureRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    "model_class,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             PARTIAL_CONFIGURATION_OFFSET_OBJECT,
             mid_invalidator,
             PARTIAL_CONFIGURATION_OFFSET_JSON,
@@ -1115,7 +1113,7 @@ def partial_invalidator(o: ConfigureRequest):
             True,
         ),
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             VALID_MID_CONFIGURE_OBJECT,
             mid_invalidator,
             VALID_MID_CONFIGURE_JSON,
@@ -1123,7 +1121,7 @@ def partial_invalidator(o: ConfigureRequest):
             True,
         ),
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             VALID_MID_DISH_ONLY_OBJECT,
             None,  # no validation on MID
             VALID_MID_DISH_ONLY_JSON,
@@ -1131,7 +1129,7 @@ def partial_invalidator(o: ConfigureRequest):
             False,
         ),
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             VALID_NULL_OBJECT,
             None,  # no validation for null object
             VALID_NULL_JSON,
@@ -1139,7 +1137,7 @@ def partial_invalidator(o: ConfigureRequest):
             False,
         ),
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             VALID_LOW_CONFIGURE_OBJECT,
             None,
             VALID_LOW_CONFIGURE_JSON,
@@ -1147,7 +1145,7 @@ def partial_invalidator(o: ConfigureRequest):
             False,
         ),
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             VALID_MID_CONFIGURE_OBJECT,
             None,
             VALID_MID_CONFIGURE_JSON,
@@ -1155,7 +1153,7 @@ def partial_invalidator(o: ConfigureRequest):
             True,
         ),
         (
-            ScanRequestSchema,
+            ScanRequest,
             SCAN_VALID_OBJECT,
             None,
             SCAN_VALID_JSON,
@@ -1165,7 +1163,7 @@ def partial_invalidator(o: ConfigureRequest):
     ],
 )
 def test_configure_serialisation_and_validation(
-    schema_cls,
+    model_class,
     instance,
     modifier_fn,
     valid_json,
@@ -1175,21 +1173,21 @@ def test_configure_serialisation_and_validation(
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-    utils.test_schema_serialisation_and_validation(
-        schema_cls,
+    utils.test_serialisation_and_validation(
+        model_class,
         instance,
         modifier_fn,
         valid_json,
         invalid_json,
-        is_validate,
+        #is_validate,
     )
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    "model_class,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             NON_COMPLIANCE_MID_CONFIGURE_OBJECT,
             None,
             NON_COMPLIANCE_MID_CONFIGURE_JSON,
@@ -1199,7 +1197,7 @@ def test_configure_serialisation_and_validation(
     ],
 )
 def test_configure_serialisation_and_validation_invalid_json(
-    schema_cls,
+    model_class,
     instance,
     modifier_fn,
     valid_json,
@@ -1211,21 +1209,21 @@ def test_configure_serialisation_and_validation_invalid_json(
     for invalid json and raise SchematicValidationError.
     """
     with pytest.raises(SchematicValidationError):
-        utils.test_schema_serialisation_and_validation(
-            schema_cls,
+        utils.test_serialisation_and_validation(
+            model_class,
             instance,
             modifier_fn,
             valid_json,
             invalid_json,
-            is_validate,
+            #is_validate,
         )
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
+    "model_class,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
-            ConfigureRequestSchema,
+            ConfigureRequest,
             INVALID_LOW_CONFIGURE_OBJECT,
             low_invalidator,
             INVALID_LOW_CONFIGURE_JSON,
@@ -1235,7 +1233,7 @@ def test_configure_serialisation_and_validation_invalid_json(
     ],
 )
 def test_low_configure_serialisation_and_validation_invalid_json(
-    schema_cls,
+    model_class,
     instance,
     modifier_fn,
     valid_json,
@@ -1247,11 +1245,11 @@ def test_low_configure_serialisation_and_validation_invalid_json(
     for invalid json and raise SchematicValidationError.
     """
     with pytest.raises(SchematicValidationError):
-        utils.test_schema_serialisation_and_validation(
-            schema_cls,
+        utils.test_serialisation_and_validation(
+            model_class,
             instance,
             modifier_fn,
             valid_json,
             invalid_json,
-            is_validate,
+            #is_validate,
         )
