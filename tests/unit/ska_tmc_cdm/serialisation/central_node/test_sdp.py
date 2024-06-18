@@ -1,14 +1,16 @@
-from ska_tmc_cdm.schemas.central_node.sdp import (
-    BeamConfigurationSchema,
-    ChannelConfigurationSchema,
-    EBScanTypeBeamSchema,
-    EBScanTypeSchema,
-    ExecutionBlockConfigurationSchema,
-    FieldConfigurationSchema,
-    PolarisationConfigurationSchema,
-    ProcessingBlockSchema,
-    SDPConfigurationSchema,
+from ska_tmc_cdm.messages.central_node.sdp import (
+    BeamConfiguration,
+    ChannelConfiguration,
+    EBScanTypeBeam,
+    EBScanType,
+    ExecutionBlockConfiguration,
+    FieldConfiguration,
+    PolarisationConfiguration,
+    ProcessingBlock,
+    SDPConfiguration,
 )
+from pydantic import TypeAdapter
+from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_SCAN_TYPES_JSON_PI16 = """[
@@ -41,19 +43,19 @@ VALID_SCAN_TYPES_JSON_PI16 = """[
 VALID_SCAN_TYPES_JSON_PI16_test = """
 [
          {
-            "scan_type_id": ".default"    
+            "scan_type_id": ".default"
          },
          {
             "scan_type_id": "science",
-            "derive_from": ".default"    
+            "derive_from": ".default"
          },
          {
             "scan_type_id": "calibration",
-            "derive_from": ".default"        
+            "derive_from": ".default"
          }
       ]"""
 
-VALID_RESOURCES_JSON_PI16 = """{ 
+VALID_RESOURCES_JSON_PI16 = """{
       "csp_links": [
         1,
         2,
@@ -64,7 +66,7 @@ VALID_RESOURCES_JSON_PI16 = """{
         "FS4",
         "FS8"
       ],
-      "receive_nodes": 10 
+      "receive_nodes": 10
     }"""
 
 VALID_PROCESSING_BLOCK_JSON_PI16 = """[
@@ -214,7 +216,7 @@ VALID_CHANNELS_JSON_PI16 = """
     ]"""
 
 VALID_BEAM_JSON_PI16 = """
-    [ 
+    [
         {
           "beam_id": "vis0",
           "function": "visibilities"
@@ -251,7 +253,7 @@ VALID_EXECUTION_BLOCK_JSON_PI16 = """
       "eb_id": "eb-mvp01-20200325-00001",
       "max_length": 100.0,
       "context": {},
-      "beams": [ 
+      "beams": [
         {
           "beam_id": "vis0",
           "function": "visibilities"
@@ -742,7 +744,7 @@ VALID_SDP_ALL_PARAMETERS_JSON_PI16 = """{
 VALID_SDP_MINIMAL_JSON_PI16 = """
 {
     "interface": "https://schema.skao.int/ska-sdp-assignres/0.4",
-    "resources": {    
+    "resources": {
         "receptors": ["SKA001", "SKA036", "SKA063", "SKA100"]
     },
     "execution_block": {
@@ -965,16 +967,14 @@ VALID_SDP_JSON_PI17 = """
 """
 
 
-def test_validate_serialization_and_deserialization_sdpconfiguration_all_parameters_using_schema_class():
+def test_validate_serialization_and_deserialization_sdpconfiguration_all_parameters():
     """
     Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly with all parameters
     """
-    sdp_all_params_config = SDPConfigurationSchema().loads(
-        VALID_SDP_ALL_PARAMETERS_JSON_PI16
+    sdp_all_params_config = CODEC.loads(
+        SDPConfiguration, VALID_SDP_ALL_PARAMETERS_JSON_PI16
     )
-    serialized_sdp_all_params_config = SDPConfigurationSchema().dumps(
-        sdp_all_params_config
-    )
+    serialized_sdp_all_params_config = CODEC.dumps(sdp_all_params_config)
 
     assert_json_is_equal(
         VALID_SDP_ALL_PARAMETERS_JSON_PI16,
@@ -982,16 +982,12 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_all_paramet
     )
 
 
-def test_validate_serialization_and_deserialization_sdpconfiguration_minimal_parameters_using_schema_class():
+def test_validate_serialization_and_deserialization_sdpconfiguration_minimal_parameters():
     """
     Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly with minimum parameters
     """
-    sdp_all_params_config = SDPConfigurationSchema().loads(
-        VALID_SDP_MINIMAL_JSON_PI16
-    )
-    serialized_sdp_all_params_config = SDPConfigurationSchema().dumps(
-        sdp_all_params_config
-    )
+    sdp_all_params_config = CODEC.loads(SDPConfiguration, VALID_SDP_MINIMAL_JSON_PI16)
+    serialized_sdp_all_params_config = CODEC.dumps(sdp_all_params_config)
 
     assert_json_is_equal(
         VALID_SDP_MINIMAL_JSON_PI16,
@@ -999,137 +995,121 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_minimal_par
     )
 
 
-def test_validate_serialization_and_deserialization_ebscantype_using_schema_class():
+def test_validate_serialization_and_deserialization_ebscantype():
     """
     Verifies that the EBScanType schema marshal and Unmarshal works correctly
     """
-    scan_types_config = EBScanTypeSchema(many=True).loads(
-        VALID_SCAN_TYPES_JSON_PI16
-    )
-    serialized_scan_types_config = EBScanTypeSchema(many=True).dumps(
-        scan_types_config
-    )
-
-    assert_json_is_equal(
-        VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config
+    adapter = TypeAdapter(list[EBScanType])
+    scan_types_config = adapter.validate_json(VALID_SCAN_TYPES_JSON_PI16)
+    serialized_scan_types_config = adapter.dump_json(
+        scan_types_config, exclude_none=True, by_alias=True
     )
 
+    assert_json_is_equal(VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config)
 
-def test_validate_serialization_and_deserialization_beam_vis0_using_schema_class():
+
+def test_validate_serialization_and_deserialization_beam_vis0():
     """
     Verifies that the EBScanType Beam schema marshal and Unmarshal works correctly
     """
-    scan_types_beam_config = EBScanTypeBeamSchema().loads(
-        VALID_BEAM_VIS0_JSON_PI16
-    )
-    serialized_scan_types_beam_config = EBScanTypeBeamSchema().dumps(
-        scan_types_beam_config
-    )
+    scan_types_beam_config = CODEC.loads(EBScanTypeBeam, VALID_BEAM_VIS0_JSON_PI16)
+    serialized_scan_types_beam_config = CODEC.dumps(scan_types_beam_config)
 
-    assert_json_is_equal(
-        VALID_BEAM_VIS0_JSON_PI16, serialized_scan_types_beam_config
-    )
+    assert_json_is_equal(VALID_BEAM_VIS0_JSON_PI16, serialized_scan_types_beam_config)
 
 
-def test_validate_serialization_and_deserialization_executionblockconfiguration_using_schema_class():
+def test_validate_serialization_and_deserialization_executionblockconfiguration():
     """
     Verifies that the ExecutionBlockConfiguration schema marshal and Unmarshal works correctly
     """
-    execution_block_config = ExecutionBlockConfigurationSchema().loads(
-        VALID_EXECUTION_BLOCK_JSON_PI16
+    execution_block_config = CODEC.loads(
+        ExecutionBlockConfiguration, VALID_EXECUTION_BLOCK_JSON_PI16
     )
-    serialized_execution_block_config = (
-        ExecutionBlockConfigurationSchema().dumps(execution_block_config)
-    )
+    serialized_execution_block_config = CODEC.dumps(execution_block_config)
 
     assert_json_is_equal(
         VALID_EXECUTION_BLOCK_JSON_PI16, serialized_execution_block_config
     )
 
 
-def test_validate_serialization_and_deserialization_beamconfiguration_using_schema_class():
+def test_validate_serialization_and_deserialization_beamconfiguration():
     """
     Verifies that the BeamConfiguration schema marshal and Unmarshal works correctly
     """
-    beam_config = BeamConfigurationSchema(many=True).loads(
-        VALID_BEAM_JSON_PI16
-    )
-    serialized_beam_config = BeamConfigurationSchema(many=True).dumps(
-        beam_config
+    adapter = TypeAdapter(list[BeamConfiguration])
+    beam_config = adapter.validate_json(VALID_BEAM_JSON_PI16)
+    serialized_beam_config = adapter.dump_json(
+        beam_config,
+        exclude_none=True,
+        by_alias=True,
     )
 
     assert_json_is_equal(VALID_BEAM_JSON_PI16, serialized_beam_config)
 
 
-def test_validate_serialization_and_deserialization_channelconfiguration_using_schema_class():
+def test_validate_serialization_and_deserialization_channelconfiguration():
     """
     Verifies that the ChannelConfiguration schema marshal and Unmarshal works correctly
     """
-    channels_config = ChannelConfigurationSchema(many=True).loads(
-        VALID_CHANNELS_JSON_PI16
-    )
-    serialized_field_config = ChannelConfigurationSchema(many=True).dumps(
-        channels_config
+    adapter = TypeAdapter(list[ChannelConfiguration])
+    channels_config = adapter.validate_json(VALID_CHANNELS_JSON_PI16)
+    serialized_field_config = adapter.dump_json(
+        channels_config, exclude_none=True, by_alias=True
     )
 
     assert_json_is_equal(VALID_CHANNELS_JSON_PI16, serialized_field_config)
 
 
-def test_validate_serialization_and_deserialization_polarisationconfiguration_using_schema_class():
+def test_validate_serialization_and_deserialization_polarisationconfiguration():
 
     """
     Verifies that the PolarisationConfiguration schema marshal and Unmarshal works correctly
     """
-    polarisation_config = PolarisationConfigurationSchema(many=True).loads(
-        VALID_POLARISATION_JSON_PI16
-    )
-    serialized_field_config = PolarisationConfigurationSchema(many=True).dumps(
-        polarisation_config
+    adapter = TypeAdapter(list[PolarisationConfiguration])
+    polarisation_config = adapter.validate_json(VALID_POLARISATION_JSON_PI16)
+    serialized_field_config = adapter.dump_json(
+        polarisation_config,
+        exclude_none=True,
+        by_alias=True,
     )
 
     assert_json_is_equal(VALID_POLARISATION_JSON_PI16, serialized_field_config)
 
 
-def test_validate_serialization_and_deserialization_fieldconfiguration_using_schema_class():
+def test_validate_serialization_and_deserialization_fieldconfiguration():
     """
     Verifies that the FieldConfiguration schema marshal and Unmarshal works correctly
     """
-    fields_config = FieldConfigurationSchema(many=True).loads(
-        VALID_FIELDS_JSON_PI16
-    )
-    serialized_field_config = FieldConfigurationSchema(many=True).dumps(
-        fields_config
+    adapter = TypeAdapter(list[FieldConfiguration])
+    fields_config = adapter.validate_json(VALID_FIELDS_JSON_PI16)
+    serialized_field_config = adapter.dump_json(
+        fields_config, exclude_none=True, by_alias=True
     )
 
     assert_json_is_equal(VALID_FIELDS_JSON_PI16, serialized_field_config)
 
 
-def test_validate_serialization_and_deserialization_processingblock_using_schema_class():
+def test_validate_serialization_and_deserialization_processingblock():
     """
     Verifies that the ProcessingBlock schema marshal and Unmarshal works correctly
     """
-    processing_block_config = ProcessingBlockSchema(many=True).loads(
-        VALID_PROCESSING_BLOCK_JSON_PI16
+    adapter = TypeAdapter(list[ProcessingBlock])
+    processing_block_config = adapter.validate_json(VALID_PROCESSING_BLOCK_JSON_PI16)
+    serialized_processing_block_config = adapter.dump_json(
+        processing_block_config, exclude_none=True, by_alias=True
     )
-    serialized_processing_block_config = ProcessingBlockSchema(
-        many=True
-    ).dumps(processing_block_config)
 
     assert_json_is_equal(
         VALID_PROCESSING_BLOCK_JSON_PI16, serialized_processing_block_config
     )
 
 
-def test_validate_serialization_and_deserialization_sdpconfiguration_json_using_schema_class():
+def test_validate_serialization_and_deserialization_sdpconfiguration_json():
     """
     Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly
     """
 
-    sdp_configuration_object = SDPConfigurationSchema().loads(
-        VALID_SDP_JSON_PI17
-    )
-    serialized_sdp_config = SDPConfigurationSchema().dumps(
-        sdp_configuration_object
-    )
+    sdp_configuration_object = CODEC.loads(SDPConfiguration, VALID_SDP_JSON_PI17)
+    serialized_sdp_config = CODEC.dumps(sdp_configuration_object)
 
     assert_json_is_equal(VALID_SDP_JSON_PI17, serialized_sdp_config)

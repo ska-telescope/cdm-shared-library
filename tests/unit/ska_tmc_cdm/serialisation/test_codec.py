@@ -22,7 +22,7 @@ from ska_tmc_cdm.messages.central_node.release_resources import (
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
-from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
+from tests.unit.ska_tmc_cdm.serialisation.central_node.test_assign_resources import (
     INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
     VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
@@ -32,13 +32,13 @@ from tests.unit.ska_tmc_cdm.schemas.central_node.test_assign_resources import (
     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT,
     VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16,
 )
-from tests.unit.ska_tmc_cdm.schemas.central_node.test_release_resources import (
+from tests.unit.ska_tmc_cdm.serialisation.central_node.test_release_resources import (
     VALID_LOW_FULL_RELEASE_JSON,
     VALID_LOW_FULL_RELEASE_OBJECT,
     VALID_MID_FULL_RELEASE_JSON,
     VALID_MID_FULL_RELEASE_OBJECT,
 )
-from tests.unit.ska_tmc_cdm.schemas.subarray_node.test_configure import (
+from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
