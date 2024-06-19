@@ -38,7 +38,11 @@ class AssignResourcesRequest(CdmObject):
 
     subarray_id: Optional[int] = None
     # FIXME: Do we really need this dish/dish_allocation inconsistency?
-    dish: Optional[DishAllocation] = Field(default=None, validation_alias=AliasChoices("dish", "dish_allocation"), serialization_alias="dish")
+    dish: Optional[DishAllocation] = Field(
+        default=None,
+        validation_alias=AliasChoices("dish", "dish_allocation"),
+        serialization_alias="dish",
+    )
     sdp_config: Optional[SDPConfiguration] = None
     mccs: Optional[MCCSAllocate] = None
     interface: Optional[str] = None
@@ -124,4 +128,6 @@ class AssignResourcesResponse(CdmObject):
     response from a TMC CentralNode.AssignResources request.
     """
 
-    dish: Optional[DishAllocation] = Field(default=None, validation_alias="dish_allocation")
+    dish: Optional[DishAllocation] = Field(
+        default=None, validation_alias="dish_allocation"
+    )
