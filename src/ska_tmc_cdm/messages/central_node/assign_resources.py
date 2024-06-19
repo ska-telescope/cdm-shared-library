@@ -4,7 +4,7 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import Optional
 
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, AliasChoices
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -37,7 +37,8 @@ class AssignResourcesRequest(CdmObject):
     """
 
     subarray_id: Optional[int] = None
-    dish: Optional[DishAllocation] = None
+    # FIXME: Do we really need this dish/dish_allocation inconsistency?
+    dish: Optional[DishAllocation] = Field(default=None, validation_alias=AliasChoices("dish", "dish_allocation"), serialization_alias="dish")
     sdp_config: Optional[SDPConfiguration] = None
     mccs: Optional[MCCSAllocate] = None
     interface: Optional[str] = None
@@ -123,4 +124,4 @@ class AssignResourcesResponse(CdmObject):
     response from a TMC CentralNode.AssignResources request.
     """
 
-    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
+    dish: Optional[DishAllocation] = Field(default=None, validation_alias="dish_allocation")
