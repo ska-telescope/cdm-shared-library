@@ -757,7 +757,7 @@ class FieldConfigurationBuilder:
         :return: CDM FieldConfiguration object
         """
         return FieldConfiguration(
-            Field_id=self.field_id, pointing_fqdn=self.pointing_fqdn, phase_dir=self.phase_dir
+            field_id=self.field_id, pointing_fqdn=self.pointing_fqdn, phase_dir=self.phase_dir
         )
 
 
