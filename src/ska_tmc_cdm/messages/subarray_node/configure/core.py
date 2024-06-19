@@ -76,15 +76,16 @@ class Target(CdmObject):
             ie_offset_arcsec=ie_offset_arcsec,
             _coord=coord
         )
-
-        #self.coord_or_offsets_required()
+        # Because this is a PrivateAttr, pydantic
+        # doesn't set it for us:
+        self._coord = coord
 
     @model_validator(mode='before')
     @classmethod
     def ra_dec_or_offsets_required(cls, data: Any) -> Any:
         coord = data.get('_coord')
         offsets = data.get('ca_offset_arcsec') or data.get('ie_offset_arcsec')
-        if not coord or offsets:
+        if not coord and not offsets:
             raise ValueError(
                 "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
             )
