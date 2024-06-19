@@ -36,9 +36,6 @@ class MCCSAllocation(CdmObject):
         return not (self.subarray_beam_ids or self.station_ids or self.channel_blocks)
 
 
-from ska_tmc_cdm.messages.base import CdmObject
-
-
 class AssignedResources(CdmObject):
     """
     AssignedResources models the structured JSON returned when the
