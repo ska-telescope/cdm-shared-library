@@ -37,8 +37,7 @@ class AssignResourcesRequest(CdmObject):
     """
 
     subarray_id: Optional[int] = None
-    # FIXME: Do we really need this dish/dish_allocation inconsistency?
-    dish: Optional[DishAllocation] = Field(default=None, alias="dish_allocation")
+    dish: Optional[DishAllocation] = None
     sdp_config: Optional[SDPConfiguration] = None
     mccs: Optional[MCCSAllocate] = None
     interface: Optional[str] = None
