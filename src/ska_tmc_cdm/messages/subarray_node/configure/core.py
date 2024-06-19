@@ -8,7 +8,7 @@ this package.
 import math
 from dataclasses import InitVar, field
 from enum import Enum
-from typing import ClassVar, Optional
+from typing import ClassVar, Optional, Any
 from typing_extensions import Self
 
 from astropy import units as u
@@ -66,23 +66,29 @@ class Target(CdmObject):
             u.deg,
         ),
     ):
+        if ra and dec:
+            coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
+        else:
+            coord = None
         super().__init__(
             target_name=target_name,
             ca_offset_arcsec=ca_offset_arcsec,
             ie_offset_arcsec=ie_offset_arcsec,
+            _coord=coord
         )
-        if ra and dec:
-            self._coord = SkyCoord(ra=ra, dec=dec, unit=unit, frame=reference_frame)
-        self.coord_or_offsets_required()
 
+        #self.coord_or_offsets_required()
 
-    def coord_or_offsets_required(self) -> Self:
-        if self._coord is None:
-            if not (self.ca_offset_arcsec or self.ie_offset_arcsec):
-                raise ValueError(
-                    "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
-                )
-        return self
+    @model_validator(mode='before')
+    @classmethod
+    def ra_dec_or_offsets_required(cls, data: Any) -> Any:
+        coord = data.get('_coord')
+        offsets = data.get('ca_offset_arcsec') or data.get('ie_offset_arcsec')
+        if not coord or offsets:
+            raise ValueError(
+                "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
+            )
+        return data
 
     def __eq__(self, other):
         if not isinstance(other, Target):
