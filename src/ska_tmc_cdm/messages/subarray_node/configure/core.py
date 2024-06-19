@@ -170,10 +170,10 @@ class Target(CdmObject):
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
 
     model_config = ConfigDict(
-        arbitrary_types_allowed=True, validate_assignment=False, validate_default=False
+        arbitrary_types_allowed=True, validate_assignment=True, validate_default=True
     )
-    ra: Optional[str] = None
-    dec: Optional[str] = None
+    ra: Optional[str | float] = None
+    dec: Optional[str | float] = None
     reference_frame: str = "icrs"
     unit: UnitInput = Field(default=("hourangle", "deg"), exclude=True)
     target_name: str = ""
@@ -198,13 +198,15 @@ class Target(CdmObject):
 
     @field_validator("coord")
     @classmethod
-    def set_coord(cls, value: Any, other_fields: ValidationInfo) -> Optional[SkyCoord]:
-        if other_fields.data["ra"] and other_fields["dec"]:
+    def set_coord(cls, value: Any, info: ValidationInfo) -> Optional[SkyCoord]:
+        # NB: This validator only fires with validate_default=True
+        # because we want to *replace* the default None.
+        if info.data["ra"] and info.data["dec"]:
             return SkyCoord(
-                ra=other_fields.data["ra"],
-                dec=other_fields.data["dec"],
-                unit=other_fields.data["unit"],
-                frame=other_fields.data["reference_frame"],
+                ra=info.data["ra"],
+                dec=info.data["dec"],
+                unit=info.data["unit"],
+                frame=info.data["reference_frame"],
             )
 
     @model_validator(mode="after")
@@ -220,7 +222,7 @@ class Target(CdmObject):
         if not isinstance(other, Target):
             return False
         # Either both are None or both defined...
-        if bool(self.cord) != bool(other.coord):
+        if bool(self.coord) != bool(other.coord):
             return False
 
         # Common checks:
@@ -251,15 +253,15 @@ class Target(CdmObject):
         return True
 
     def __repr__(self):
-        if self.cord is None:
+        if self.coord is None:
             return "Target(target_name={!r}, ca_offset_arcsect={!r}, ie_offset_arcsec={!r})".format(
                 self.target_name, self.ca_offset_arcsec, self.ie_offset_arcsec
             )
         else:
-            raw_ra = self.cord.ra.value
-            raw_dec = self.cord.dec.value
-            units = (self.cord.ra.unit.name, self.coord.dec.unit.name)
-            reference_frame = self.cord.frame.name
+            raw_ra = self.coord.ra.value
+            raw_dec = self.coord.dec.value
+            units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
+            reference_frame = self.coord.frame.name
             target_name = self.target_name
             return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
                 raw_ra,
@@ -272,9 +274,9 @@ class Target(CdmObject):
             )
 
     def __str__(self):
-        reference_frame = self.cord.frame.name
+        reference_frame = self.coord.frame.name
         target_name = self.target_name
-        hmsdms = self.cord.to_string(style="hmsdms")
+        hmsdms = self.coord.to_string(style="hmsdms")
         return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
 
