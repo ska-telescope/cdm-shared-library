@@ -78,7 +78,7 @@ make python-test
 ```
 
 **Note:** These unit tests rely on a local copy of the telescope model data downloaded
-to `tests/fixtures/tmdata/`. Updating the `ska-telmodel` library should automatically
+to `tests/fixtures/tmdata/`. Updating the `ska-ost-osd` library should automatically
 refresh this downloaded data on your workstation, but in some cases you may need to run:
 
 ```shell
