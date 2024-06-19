@@ -16,10 +16,8 @@ This library can marshal JSON for the following Tango devices.
 
 ## Quickstart
 
-This project is structured to use Docker containers for development and
-testing so that the build environment, test environment and test results are
-all completely reproducible and are independent of host environment. It uses
-``make`` to provide a consistent UI.
+This project is a Python library that uses `poetry` to manage the enivrionment.
+``make`` targets are provided for the convenience of developers.
 
 First, clone this repository with:
 
@@ -48,12 +46,6 @@ To update the poetry.lock file, use command:
 
 ```
 > poetry update
-```
-
-Build a new Docker image for the CDM,run:
-
-```
-make oci-build
 ```
 
 Execute the unit tests and lint the project with:
