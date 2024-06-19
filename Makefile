@@ -1,3 +1,4 @@
+.PHONY: tests/fixtures/tmdata/ diagrams
 #
 # CAR_OCI_REGISTRY_USER  and PROJECT are combined to define the Docker
 # tag for this project. The definition below inherits the standard
@@ -36,7 +37,14 @@ python-pre-test: tests/fixtures/tmdata/
 # 	ska-telmodel cp -UR --sources=car://gitlab.com/ska-telescope/ska-telmodel?${TMDATA_VERSION}#tmdata "" tests/fixtures/tmdata
 
 tests/fixtures/tmdata/:
+ifneq ($(TMDATA_VERSION), $(shell cat tests/fixtures/tmdata/TMDATA_VERSION))
+	rm -rf tests/fixtures/tmdata
 	ska-telmodel cp -UR --sources=car:ost/ska-ost-osd?${TMDATA_VERSION} "" tests/fixtures/tmdata
+	echo ${TMDATA_VERSION} > tests/fixtures/tmdata/TMDATA_VERSION
+else
+	$(info tests/fixtures/tmdata already current v${TMDATA_VERSION})
+endif
+
 
 diagrams:  ## recreate PlantUML diagrams whose source has been modified
 	@for i in $$(git diff --name-only -- '*.puml'); \
