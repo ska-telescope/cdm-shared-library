@@ -3,6 +3,7 @@ The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import Optional
+from typing_extensions import Self
 
 from pydantic import Field, model_validator, AliasChoices
 
@@ -43,7 +44,11 @@ class AssignResourcesRequest(CdmObject):
         validation_alias=AliasChoices("dish", "dish_allocation"),
         serialization_alias="dish",
     )
-    sdp_config: Optional[SDPConfiguration] = None
+    sdp_config: Optional[SDPConfiguration] = Field(
+        default=None,
+        validation_alias=AliasChoices("sdp", "sdp_config"),
+        serialization_alias="sdp"
+    )
     mccs: Optional[MCCSAllocate] = None
     interface: Optional[str] = None
     transaction_id: Optional[str] = None
@@ -61,7 +66,7 @@ class AssignResourcesRequest(CdmObject):
         return self
 
     @model_validator(mode="after")
-    def set_default_schema(self) -> "AssignResourcesRequest":
+    def set_default_schema(self) -> Self:
         if self.interface is None:
             if self.mccs is not None:
                 self.interface = LOW_SCHEMA
