@@ -6,8 +6,8 @@ from datetime import timedelta
 
 import pytest
 
-from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 from ska_tmc_cdm import CODEC
+from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 
 from ... import utils
 

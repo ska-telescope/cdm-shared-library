@@ -1,16 +1,17 @@
+from pydantic import TypeAdapter
+
+from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     ChannelConfiguration,
-    EBScanTypeBeam,
     EBScanType,
+    EBScanTypeBeam,
     ExecutionBlockConfiguration,
     FieldConfiguration,
     PolarisationConfiguration,
     ProcessingBlockConfiguration,
     SDPConfiguration,
 )
-from pydantic import TypeAdapter
-from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_SCAN_TYPES_JSON_PI16 = """[
@@ -974,7 +975,9 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_all_paramet
     sdp_all_params_config = CODEC.loads(
         SDPConfiguration, VALID_SDP_ALL_PARAMETERS_JSON_PI16
     )
-    serialized_sdp_all_params_config = CODEC.dumps(sdp_all_params_config, validate=False)
+    serialized_sdp_all_params_config = CODEC.dumps(
+        sdp_all_params_config, validate=False
+    )
 
     assert_json_is_equal(
         VALID_SDP_ALL_PARAMETERS_JSON_PI16,
@@ -986,8 +989,12 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_minimal_par
     """
     Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly with minimum parameters
     """
-    sdp_all_params_config = CODEC.loads(SDPConfiguration, VALID_SDP_MINIMAL_JSON_PI16, validate=False)
-    serialized_sdp_all_params_config = CODEC.dumps(sdp_all_params_config, validate=False)
+    sdp_all_params_config = CODEC.loads(
+        SDPConfiguration, VALID_SDP_MINIMAL_JSON_PI16, validate=False
+    )
+    serialized_sdp_all_params_config = CODEC.dumps(
+        sdp_all_params_config, validate=False
+    )
 
     assert_json_is_equal(
         VALID_SDP_MINIMAL_JSON_PI16,
@@ -1005,17 +1012,25 @@ def test_validate_serialization_and_deserialization_ebscantype():
         scan_types_config, exclude_none=True, by_alias=True
     )
 
-    assert_json_is_equal(VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config)
+    assert_json_is_equal(
+        VALID_SCAN_TYPES_JSON_PI16, serialized_scan_types_config
+    )
 
 
 def test_validate_serialization_and_deserialization_beam_vis0():
     """
     Verifies that the EBScanType Beam schema marshal and Unmarshal works correctly
     """
-    scan_types_beam_config = CODEC.loads(EBScanTypeBeam, VALID_BEAM_VIS0_JSON_PI16, validate=False)
-    serialized_scan_types_beam_config = CODEC.dumps(scan_types_beam_config, validate=False)
+    scan_types_beam_config = CODEC.loads(
+        EBScanTypeBeam, VALID_BEAM_VIS0_JSON_PI16, validate=False
+    )
+    serialized_scan_types_beam_config = CODEC.dumps(
+        scan_types_beam_config, validate=False
+    )
 
-    assert_json_is_equal(VALID_BEAM_VIS0_JSON_PI16, serialized_scan_types_beam_config)
+    assert_json_is_equal(
+        VALID_BEAM_VIS0_JSON_PI16, serialized_scan_types_beam_config
+    )
 
 
 def test_validate_serialization_and_deserialization_executionblockconfiguration():
@@ -1023,9 +1038,13 @@ def test_validate_serialization_and_deserialization_executionblockconfiguration(
     Verifies that the ExecutionBlockConfiguration schema marshal and Unmarshal works correctly
     """
     execution_block_config = CODEC.loads(
-        ExecutionBlockConfiguration, VALID_EXECUTION_BLOCK_JSON_PI16, validate=False
+        ExecutionBlockConfiguration,
+        VALID_EXECUTION_BLOCK_JSON_PI16,
+        validate=False,
     )
-    serialized_execution_block_config = CODEC.dumps(execution_block_config, validate=False)
+    serialized_execution_block_config = CODEC.dumps(
+        execution_block_config, validate=False
+    )
 
     assert_json_is_equal(
         VALID_EXECUTION_BLOCK_JSON_PI16, serialized_execution_block_config
@@ -1094,7 +1113,9 @@ def test_validate_serialization_and_deserialization_processingblock():
     Verifies that the ProcessingBlock schema marshal and Unmarshal works correctly
     """
     adapter = TypeAdapter(list[ProcessingBlockConfiguration])
-    processing_block_config = adapter.validate_json(VALID_PROCESSING_BLOCK_JSON_PI16)
+    processing_block_config = adapter.validate_json(
+        VALID_PROCESSING_BLOCK_JSON_PI16
+    )
     serialized_processing_block_config = adapter.dump_json(
         processing_block_config, exclude_none=True, by_alias=True
     )
@@ -1109,7 +1130,11 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_json():
     Verifies that the SDPConfiguration schema marshal and Unmarshal works correctly
     """
 
-    sdp_configuration_object = CODEC.loads(SDPConfiguration, VALID_SDP_JSON_PI17, validate=False)
-    serialized_sdp_config = CODEC.dumps(sdp_configuration_object, validate=False)
+    sdp_configuration_object = CODEC.loads(
+        SDPConfiguration, VALID_SDP_JSON_PI17, validate=False
+    )
+    serialized_sdp_config = CODEC.dumps(
+        sdp_configuration_object, validate=False
+    )
 
     assert_json_is_equal(VALID_SDP_JSON_PI17, serialized_sdp_config)

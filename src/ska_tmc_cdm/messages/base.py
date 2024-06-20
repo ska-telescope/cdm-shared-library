@@ -16,7 +16,7 @@ class CdmObject(BaseModel):
     model_config = ConfigDict(
         extra=EXTRA_FIELDS,
         # Serialize timedelta to floats of seconds:
-        ser_json_timedelta='float',
+        ser_json_timedelta="float",
         # Validate assignments and defaults to help keep ourselves honest:
         validate_assignment=True,
         validate_default=True,

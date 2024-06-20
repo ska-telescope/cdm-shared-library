@@ -88,5 +88,7 @@ class MCCSConfiguration(CdmObject):
 
     subarray_beam_configs: List[SubarrayBeamConfiguration] = Field(
         serialization_alias="subarray_beams",
-        validation_alias=AliasChoices("subarray_beams", "subarray_beam_configs"),
+        validation_alias=AliasChoices(
+            "subarray_beams", "subarray_beam_configs"
+        ),
     )

@@ -2,7 +2,9 @@
 Unit tests for ska_tmc_cdm.schemas module.
 """
 import pytest
-from ska_ost_osd.telvalidation.semantic_validator import SchematicValidationError
+from ska_ost_osd.telvalidation.semantic_validator import (
+    SchematicValidationError,
+)
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
@@ -988,7 +990,9 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-assignresources/3.2",
     transaction_id="txn-....-00001",
     subarray_id=1,
-    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
+    mccs=MCCSAllocate(
+        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
+    ),
     sdp_config=VALID_SDP_OBJECT,
 )
 
@@ -996,7 +1000,9 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-assignresources/3.2",
     transaction_id="txn-....-00001",
     subarray_id="1",
-    mccs=MCCSAllocate(subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]),
+    mccs=MCCSAllocate(
+        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
+    ),
     sdp_config=INVALID_SDP_OBJECT,
 )
 
@@ -1138,7 +1144,14 @@ def test_assignresources_serialisation_and_validation(
 
 
 @pytest.mark.parametrize(
-    ("model_cls","instance","modifier_fn","valid_json","invalid_json","is_validate"),
+    (
+        "model_cls",
+        "instance",
+        "modifier_fn",
+        "valid_json",
+        "invalid_json",
+        "is_validate",
+    ),
     [
         (
             AssignResourcesRequest,
@@ -1146,7 +1159,7 @@ def test_assignresources_serialisation_and_validation(
             mid_invalidator_fn,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            True
+            True,
         ),
     ],
 )
@@ -1174,7 +1187,14 @@ def test_assignresources_serialisation_and_validation_invalid_json(
 
 
 @pytest.mark.parametrize(
-    ("model_cls","instance","modifier_fn","valid_json","invalid_json","is_validate"),
+    (
+        "model_cls",
+        "instance",
+        "modifier_fn",
+        "valid_json",
+        "invalid_json",
+        "is_validate",
+    ),
     [
         (
             AssignResourcesRequest,

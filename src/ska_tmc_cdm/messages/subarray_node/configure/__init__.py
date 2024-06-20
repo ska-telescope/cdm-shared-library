@@ -6,9 +6,9 @@ the permissible arguments for a SubArrayNode.configure() call.
 __all__ = ["ConfigureRequest"]
 
 from typing import Optional
-from typing_extensions import Self
 
 from pydantic import model_validator
+from typing_extensions import Self
 
 from .core import DishConfiguration, PointingConfiguration
 from .csp import CSPConfiguration

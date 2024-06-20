@@ -6,7 +6,7 @@ command.
 from enum import Enum
 from typing import List, Optional, Tuple
 
-from pydantic import Field, AliasChoices
+from pydantic import AliasChoices, Field
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -66,7 +66,9 @@ class FSPConfiguration(CdmObject):
     # FIXME: should be Field(default_factory=list, max_length=20)?
     channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?
-    output_link_map: Optional[List[Tuple]] = None  # FIXME: Field(default_factory=list)?
+    output_link_map: Optional[
+        List[Tuple]
+    ] = None  # FIXME: Field(default_factory=list)?
     channel_offset: Optional[int] = None
     zoom_window_tuning: Optional[int] = None
 
@@ -194,7 +196,8 @@ class CBFConfiguration(CdmObject):
     """
 
     fsp_configs: List[FSPConfiguration] = Field(
-        serialization_alias="fsp", validation_alias=AliasChoices("fsp", "fsp_configs")
+        serialization_alias="fsp",
+        validation_alias=AliasChoices("fsp", "fsp_configs"),
     )
     # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter
     #  will be replaced with the respective class(VLBIConfiguration)

@@ -5,12 +5,12 @@ from typing import NamedTuple
 
 import pytest
 
+from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     ReceiverBand,
     Target,
 )
-from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 
 
@@ -103,8 +103,8 @@ def test_unmarshall_dish_configuration_from_json():
     Verify that JSON can be unmarshalled to a DishConfiguration
     """
     expected = DishConfiguration(receiver_band=ReceiverBand.BAND_5A)
-    unmarshalled = CODEC.loads(DishConfiguration,
-        VALID_DISH_CONFIGURATION_JSON
+    unmarshalled = CODEC.loads(
+        DishConfiguration, VALID_DISH_CONFIGURATION_JSON
     )
     assert unmarshalled == expected
 

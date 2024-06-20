@@ -3,6 +3,7 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.mccs module.
 """
 import pytest
 
+from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     MCCSConfiguration,
     SubarrayBeamAperatures,
@@ -10,7 +11,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     SubarrayBeamLogicalBands,
     SubarrayBeamSkyCoordinates,
 )
-from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.utils import assert_json_is_equal
 
 VALID_LOGICAL_BANDS_JSON = """

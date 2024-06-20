@@ -7,20 +7,20 @@ this package.
 """
 import math
 from enum import Enum
-from typing import ClassVar, Optional, Any, Callable
-from typing_extensions import Self
+from typing import Any, Callable, ClassVar, Optional
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import (
     ConfigDict,
     Field,
-    model_validator,
-    model_serializer,
+    ValidationInfo,
     field_serializer,
     field_validator,
-    ValidationInfo,
+    model_serializer,
+    model_validator,
 )
+from typing_extensions import Self
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -50,7 +50,9 @@ class Target(CdmObject):
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
 
     model_config = ConfigDict(
-        arbitrary_types_allowed=True, validate_assignment=True, validate_default=True
+        arbitrary_types_allowed=True,
+        validate_assignment=True,
+        validate_default=True,
     )
     ra: Optional[str | float] = None
     dec: Optional[str | float] = None
@@ -70,7 +72,7 @@ class Target(CdmObject):
 
         Don't bother sending JSON fields with null/empty/default values.
         """
-        #from pdb import set_trace; set_trace()
+        # from pdb import set_trace; set_trace()
         data = handler(self)
         if self.ra is None and self.dec is None:
             # These should already be filtered out
@@ -87,7 +89,9 @@ class Target(CdmObject):
             #     the JSON marshalling process begins.
             icrs_coord = self.coord.transform_to("icrs")
             data["reference_frame"] = icrs_coord.frame.name.upper()
-            data["ra"], data["dec"] = icrs_coord.to_string("hmsdms", sep=":").split(" ")
+            data["ra"], data["dec"] = icrs_coord.to_string(
+                "hmsdms", sep=":"
+            ).split(" ")
 
         # If offset values are zero, omit them:
         for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
@@ -188,7 +192,9 @@ class Target(CdmObject):
         reference_frame = self.coord.frame.name
         target_name = self.target_name
         hmsdms = self.coord.to_string(style="hmsdms")
-        return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
+        return "<Target: {!r} ({} {})>".format(
+            target_name, hmsdms, reference_frame
+        )
 
 
 class PointingCorrection(Enum):

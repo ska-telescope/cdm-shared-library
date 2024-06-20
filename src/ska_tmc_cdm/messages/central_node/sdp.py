@@ -198,7 +198,9 @@ class PhaseDir(CdmObject):
     @staticmethod
     def _floatlist_eq(list_a: list[float], list_b: list[float]) -> bool:
         tol = 1e-15
-        return all((math.isclose(x, y, abs_tol=tol) for x, y in zip(list_a, list_b)))
+        return all(
+            (math.isclose(x, y, abs_tol=tol) for x, y in zip(list_a, list_b))
+        )
 
     def __eq__(self, other):
         if not isinstance(other, PhaseDir):

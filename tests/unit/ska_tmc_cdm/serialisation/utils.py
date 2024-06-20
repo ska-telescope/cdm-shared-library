@@ -17,7 +17,7 @@ def test_serialisation_and_validation(
     modifier_fn: ModifierType,
     valid_json: str,
     invalid_json: str,
-    is_validate:bool = True,
+    is_validate: bool = True,
 ):
     """
     Performs a set of tests to confirm that we validate
@@ -35,7 +35,8 @@ def test_serialisation_and_validation(
     test_marshal(instance, valid_json, is_validate)
     test_unmarshal(model_class, valid_json, instance, is_validate)
     test_serialising_valid_object_does_not_raise_exception_when_strict(
-        instance, is_validate,
+        instance,
+        is_validate,
     )
 
     # not all schema have validation, such as TMC MID at time of writing
@@ -81,7 +82,9 @@ def test_unmarshal(
     """
     # strictness=1 is used so that marshalling continues when
     # SchemaNotFound is raised
-    unmarshalled = CODEC.loads(model_class, valid_json, is_validate, strictness=1)
+    unmarshalled = CODEC.loads(
+        model_class, valid_json, is_validate, strictness=1
+    )
     assert unmarshalled == instance
 
 
@@ -102,8 +105,7 @@ def test_deserialising_invalid_json_raises_exception_when_strict(
 
 
 def test_serialising_valid_object_does_not_raise_exception_when_strict(
-    instance: CdmObject,
-    is_validate: bool = True
+    instance: CdmObject, is_validate: bool = True
 ):
     """
     Verifies that marshaling a valid instance does not result in a validation

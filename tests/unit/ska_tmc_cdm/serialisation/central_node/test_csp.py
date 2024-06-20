@@ -33,5 +33,7 @@ def test_validate_serialization_and_deserialization_CSPConfiguration_json():
     csp_configuration_object = CSPConfiguration.model_validate_json(
         VALID_CSP_LOW_JSON
     )
-    serialized_csp_config = csp_configuration_object.model_dump_json(exclude_none=True)
+    serialized_csp_config = csp_configuration_object.model_dump_json(
+        exclude_none=True
+    )
     assert_json_is_equal(VALID_CSP_LOW_JSON, serialized_csp_config)

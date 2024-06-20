@@ -4,6 +4,7 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.csp module.
 import copy
 import inspect
 
+from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CBFConfiguration,
@@ -19,7 +20,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     VisFspConfiguration,
     VisStnBeamConfiguration,
 )
-from ska_tmc_cdm import CODEC
 
 from ... import utils
 
@@ -232,12 +232,13 @@ def test_marshall_fsp_configuration_with_undefined_optional_parameters():
         function_mode=FSPFunctionMode.CORR,
         frequency_slice_id=1,
         integration_factor=10,
-        zoom_factor=0)
+        zoom_factor=0,
+    )
     marshalled = CODEC.dumps(fsp_config)
 
     optional_fields = [
-        field for field, detail in
-        FSPConfiguration.model_fields.items()
+        field
+        for field, detail in FSPConfiguration.model_fields.items()
         if not detail.is_required()
     ]
 
@@ -264,14 +265,14 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
         frequency_slice_id=1,
         integration_factor=10,
         zoom_factor=0,
-        **null_kwargs
+        **null_kwargs,
     )
     marshalled = CODEC.dumps(fsp_config)
 
     # optional constructor args are optional fields in the schema
     optional_fields = [
-        field for field, detail in
-        FSPConfiguration.model_fields.items()
+        field
+        for field, detail in FSPConfiguration.model_fields.items()
         if not detail.is_required()
     ]
     for field in optional_fields:
@@ -287,7 +288,7 @@ def test_marshall_csp_configuration_does_not_modify_original():
         function_mode=FSPFunctionMode.CORR,
         frequency_slice_id=1,
         integration_factor=10,
-        zoom_factor=0
+        zoom_factor=0,
     )
     config = CSPConfiguration(
         interface="interface",
@@ -298,9 +299,7 @@ def test_marshall_csp_configuration_does_not_modify_original():
             subarray_id=1,
             band_5_tuning=[5.85, 7.25],
         ),
-        cbf_config=CBFConfiguration(
-            fsp_configs=[fsp_config]
-        ),
+        cbf_config=CBFConfiguration(fsp_configs=[fsp_config]),
         pss_config=None,
         pst_config=None,
     )

@@ -224,7 +224,9 @@ class SDPWorkflowBuilder:
         Build or create CDM SDPWorkflow object
         :return: CDM SDPWorkflow object
         """
-        return SDPWorkflow(name=self.name, kind=self.kind, version=self.version)
+        return SDPWorkflow(
+            name=self.name, kind=self.kind, version=self.version
+        )
 
 
 class PbDependencyBuilder:
@@ -307,7 +309,9 @@ class ScriptConfigurationBuilder:
         Build or create CDM ScriptConfiguration object
         :return: CDM ScriptConfiguration object
         """
-        return ScriptConfiguration(kind=self.kind, name=self.name, version=self.version)
+        return ScriptConfiguration(
+            kind=self.kind, name=self.name, version=self.version
+        )
 
 
 class ProcessingBlockConfigurationBuilder:
@@ -608,7 +612,10 @@ class ChannelConfigurationBuilder:
         Build or create CDM ChannelConfiguration object
         :return: CDM ChannelConfiguration object
         """
-        return ChannelConfiguration(channels_id=self.channels_id, spectral_windows=self.spectral_windows)
+        return ChannelConfiguration(
+            channels_id=self.channels_id,
+            spectral_windows=self.spectral_windows,
+        )
 
 
 class PolarisationConfigurationBuilder:
@@ -649,7 +656,9 @@ class PolarisationConfigurationBuilder:
         Build or create CDM PolarisationConfiguration object
         :return: CDM PolarisationConfiguration object
         """
-        return PolarisationConfiguration(polarisations_id=self.polarisations_id, corr_type=self.corr_type)
+        return PolarisationConfiguration(
+            polarisations_id=self.polarisations_id, corr_type=self.corr_type
+        )
 
 
 class PhaseDirBuilder:
@@ -705,7 +714,10 @@ class PhaseDirBuilder:
         :return: CDM PhaseDir object
         """
         return PhaseDir(
-            ra=self.ra, dec=self.dec, reference_time=self.reference_time, reference_frame=self.reference_frame
+            ra=self.ra,
+            dec=self.dec,
+            reference_time=self.reference_time,
+            reference_frame=self.reference_frame,
         )
 
 
@@ -757,7 +769,9 @@ class FieldConfigurationBuilder:
         :return: CDM FieldConfiguration object
         """
         return FieldConfiguration(
-            field_id=self.field_id, pointing_fqdn=self.pointing_fqdn, phase_dir=self.phase_dir
+            field_id=self.field_id,
+            pointing_fqdn=self.pointing_fqdn,
+            phase_dir=self.phase_dir,
         )
 
 
@@ -804,7 +818,11 @@ class EBScanTypeBuilder:
         Build or create CDM EBScanType object
         :return: CDM EBScanType object
         """
-        return EBScanType(scan_type_id=self.scan_type_id, beams=self.beams, derive_from=self.derive_from)
+        return EBScanType(
+            scan_type_id=self.scan_type_id,
+            beams=self.beams,
+            derive_from=self.derive_from,
+        )
 
 
 class EBScanTypeBeamBuilder:
@@ -853,7 +871,9 @@ class EBScanTypeBeamBuilder:
         :return: CDM EBScanTypeBeam object
         """
         return EBScanTypeBeam(
-            field_id=self.field_id, channels_id=self.channels_id, polarisations_id=self.polarisations_id
+            field_id=self.field_id,
+            channels_id=self.channels_id,
+            polarisations_id=self.polarisations_id,
         )
 
 

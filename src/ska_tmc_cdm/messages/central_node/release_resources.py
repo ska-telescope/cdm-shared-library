@@ -60,7 +60,9 @@ class ReleaseResourcesRequest(CdmObject):
 
     @field_validator("dish", mode="before")
     @classmethod
-    def _rehydrate_to_dish_allocation(cls, value: Any) -> Optional[DishAllocation]:
+    def _rehydrate_to_dish_allocation(
+        cls, value: Any
+    ) -> Optional[DishAllocation]:
         if isinstance(value, DishAllocation):
             return value
         elif value:
@@ -71,7 +73,9 @@ class ReleaseResourcesRequest(CdmObject):
         self,
     ) -> Self:
         if self.release_all is False and self.dish is None:
-            raise ValueError("Either release_all or dish_allocation must be defined")
+            raise ValueError(
+                "Either release_all or dish_allocation must be defined"
+            )
         # TODO: Can we get remove this awkward set-to-none behavior and raise
         # a validation error instead? Callers should be told when they're passing
         # bad inputs, not have their input silently ignored.

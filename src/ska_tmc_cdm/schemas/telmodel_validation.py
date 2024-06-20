@@ -4,13 +4,19 @@ other serialisation schemas.
 """
 
 from typing import Callable, Optional
+
 from ..jsonschema.json_schema import JsonSchema
+
 
 def _identity(x):
     return x
 
 
-def validate_json(data: dict, process_fn: Callable=_identity, strictness: Optional[int]=None):
+def validate_json(
+    data: dict,
+    process_fn: Callable = _identity,
+    strictness: Optional[int] = None,
+):
     """
     Validate JSON using the Telescope Model schema.
 
@@ -28,7 +34,9 @@ def validate_json(data: dict, process_fn: Callable=_identity, strictness: Option
     # caller is requesting strict validation and we can't even tell
     # what interface to validate against, that should be an error.
     if interface:
-        JsonSchema.validate_schema(interface, process_fn(data), strictness=strictness)
+        JsonSchema.validate_schema(
+            interface, process_fn(data), strictness=strictness
+        )
 
 
 def semantic_validate_json(data, process_fn=_identity, **_):

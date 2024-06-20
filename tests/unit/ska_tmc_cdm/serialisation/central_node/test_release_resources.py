@@ -5,7 +5,9 @@ Unit tests for ska_tmc_cdm.schemas module.
 import pytest
 
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.release_resources import ReleaseResourcesRequest
+from ska_tmc_cdm.messages.central_node.release_resources import (
+    ReleaseResourcesRequest,
+)
 
 from .. import utils
 

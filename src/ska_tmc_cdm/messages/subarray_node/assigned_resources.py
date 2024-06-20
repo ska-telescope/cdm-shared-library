@@ -33,7 +33,9 @@ class MCCSAllocation(CdmObject):
         Determine that the current MCCSAllocation instance
         is empty (none of the attribute Lists are populated)
         """
-        return not (self.subarray_beam_ids or self.station_ids or self.channel_blocks)
+        return not (
+            self.subarray_beam_ids or self.station_ids or self.channel_blocks
+        )
 
 
 class AssignedResources(CdmObject):
