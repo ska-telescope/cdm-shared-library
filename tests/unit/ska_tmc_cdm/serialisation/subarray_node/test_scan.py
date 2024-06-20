@@ -74,6 +74,6 @@ def test_assigned_resources_serialisation_and_validation(
     Verifies that ScanRequest marshals, unmarshals, and validates
     correctly.
     """
-    utils.test_schema_serialisation_and_validation(
+    utils.test_serialisation_and_validation(
         model_class, instance, modifier_fn, valid_json, invalid_json
     )
