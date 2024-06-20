@@ -12,7 +12,6 @@ from typing_extensions import Self
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
-from pydantic_core import SerializationCallable
 from pydantic import (
     ConfigDict,
     Field,
