@@ -136,7 +136,7 @@ class AssignResourcesResponse(CdmObject):
     dish: Optional[DishAllocation] = Field(default=None, validation_alias=AliasChoices("dish", "dish_allocation"))
 
     @field_serializer('dish', mode="wrap", when_used="json-unless-none")
-    def rename_receptor_ids(dish: DishAllocation, handler: Callable):
+    def _rename_receptor_ids_dump(dish: DishAllocation, handler: Callable):
         """
         For compatibility reasons, in this specific context, we
         rename the 'receptor_ids' field to 'receptor_ids_allocated'
@@ -144,19 +144,3 @@ class AssignResourcesResponse(CdmObject):
         output = handler(dish)
         output['receptor_ids_allocated'] = output.pop('receptor_ids')
         return output
-
-    @field_validator('dish')
-    @classmethod
-    def rename_receptor_ids(cls, value: Any):
-        """
-        For compatibility reasons, in this specific context, we
-        expect the 'receptor_ids' field to be named 'receptor_ids_allocated' instead.
-        """
-        if value is None:
-            return
-        elif isinstance(value, DishAllocation):
-            return value
-        else:
-            if "receptor_ids_allocated" in value:
-                value["receptor_ids"] = value.pop("receptor_ids_allocated")
-            return DishAllocation(**value)
