@@ -1,4 +1,3 @@
-import copy
 from typing import Callable, Type
 
 import pytest
@@ -35,7 +34,7 @@ def test_serialisation_and_validation(
     test_marshal(instance, valid_json, is_validate)
     test_unmarshal(model_class, valid_json, instance, is_validate)
     test_serialising_valid_object_does_not_raise_exception_when_strict(
-        instance,
+        instance, is_validate,
     )
 
     # not all schema have validation, such as TMC MID at time of writing
@@ -44,6 +43,7 @@ def test_serialisation_and_validation(
         test_serialising_invalid_object_raises_exception_when_strict(
             instance,
             modifier_fn,
+            is_validate,
         )
 
     # Empty instances such as '{}' do not have an invalid representation
@@ -51,6 +51,7 @@ def test_serialisation_and_validation(
         test_deserialising_invalid_json_raises_exception_when_strict(
             model_class,
             invalid_json,
+            is_validate,
         )
 
 
@@ -86,6 +87,7 @@ def test_unmarshal(
 def test_deserialising_invalid_json_raises_exception_when_strict(
     model_class: Type[CdmObject],
     invalid_json: str,
+    is_validate: bool = True,
 ):
     """
     Verifies that unmarshaling an invalid JSON string results in an exception
@@ -95,11 +97,12 @@ def test_deserialising_invalid_json_raises_exception_when_strict(
     :param invalid_json: JSON string
     """
     with pytest.raises(JsonValidationError):
-        CODEC.loads(model_class, invalid_json, strictness=2)
+        CODEC.loads(model_class, invalid_json, is_validate, strictness=2)
 
 
 def test_serialising_valid_object_does_not_raise_exception_when_strict(
     instance: CdmObject,
+    is_validate: bool = True
 ):
     """
     Verifies that marshaling a valid instance does not result in a validation
@@ -108,7 +111,7 @@ def test_serialising_valid_object_does_not_raise_exception_when_strict(
     :param instance: valid object
     """
     try:
-        CODEC.dumps(instance, strictness=2)
+        CODEC.dumps(instance, is_validate, strictness=2)
     except SchemaNotFound:
         pass
 
@@ -116,6 +119,7 @@ def test_serialising_valid_object_does_not_raise_exception_when_strict(
 def test_serialising_invalid_object_raises_exception_when_strict(
     instance: CdmObject,
     modifier_fn: ModifierType,
+    is_validate: bool = True,
 ):
     """
     Verify that serialising an invalid object results in a validation error
@@ -125,8 +129,8 @@ def test_serialising_invalid_object_raises_exception_when_strict(
     :param modifier_fn: function that makes the valid object invalid
     """
 
-    obj = copy.deepcopy(instance)
+    obj = instance.model_copy(deep=True)
     modifier_fn(obj)
 
     with pytest.raises(JsonValidationError):
-        CODEC.dumps(obj, strictness=2)
+        CODEC.dumps(obj, is_validate, strictness=2)

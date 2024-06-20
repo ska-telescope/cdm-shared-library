@@ -1138,7 +1138,7 @@ def test_assignresources_serialisation_and_validation(
 
 
 @pytest.mark.parametrize(
-    ("model_cls","instance","modifier_fn","valid_json","invalid_json"),
+    ("model_cls","instance","modifier_fn","valid_json","invalid_json","is_validate"),
     [
         (
             AssignResourcesRequest,
@@ -1146,6 +1146,7 @@ def test_assignresources_serialisation_and_validation(
             mid_invalidator_fn,
             INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
+            True
         ),
     ],
 )
@@ -1155,6 +1156,7 @@ def test_assignresources_serialisation_and_validation_invalid_json(
     modifier_fn,
     valid_json,
     invalid_json,
+    is_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
@@ -1167,11 +1169,12 @@ def test_assignresources_serialisation_and_validation_invalid_json(
             modifier_fn,
             valid_json,
             invalid_json,
+            is_validate,
         )
 
 
 @pytest.mark.parametrize(
-    ("model_cls","instance","modifier_fn","valid_json","invalid_json"),
+    ("model_cls","instance","modifier_fn","valid_json","invalid_json","is_validate"),
     [
         (
             AssignResourcesRequest,
@@ -1179,6 +1182,7 @@ def test_assignresources_serialisation_and_validation_invalid_json(
             low_tmc_invalidator_fn,
             INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
+            True,
         ),
     ],
 )
@@ -1188,6 +1192,7 @@ def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
     modifier_fn,
     valid_json,
     invalid_json,
+    is_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
@@ -1200,4 +1205,5 @@ def test_tmc_low_assignresources_serialisation_and_validation_invalid_json(
             modifier_fn,
             valid_json,
             invalid_json,
+            is_validate,
         )
