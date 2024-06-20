@@ -70,10 +70,13 @@ class Target(CdmObject):
 
         Don't bother sending JSON fields with null/empty/default values.
         """
+        #from pdb import set_trace; set_trace()
         data = handler(self)
-        if data["ra"] is None and data["dec"] is None:
-            del data["ra"]
-            del data["dec"]
+        if self.ra is None and self.dec is None:
+            # These should already be filtered out
+            # by exclude_none=True
+            data.pop("ra", None)
+            data.pop("dec", None)
             del data["reference_frame"]
         else:
             # TODO: IMHO doing this conversion here is janky. If we only want to

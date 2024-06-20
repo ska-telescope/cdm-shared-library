@@ -1179,7 +1179,7 @@ def test_configure_serialisation_and_validation(
         modifier_fn,
         valid_json,
         invalid_json,
-        #is_validate,
+        is_validate,
     )
 
 
@@ -1215,7 +1215,7 @@ def test_configure_serialisation_and_validation_invalid_json(
             modifier_fn,
             valid_json,
             invalid_json,
-            #is_validate,
+            is_validate,
         )
 
 
@@ -1251,5 +1251,5 @@ def test_low_configure_serialisation_and_validation_invalid_json(
             modifier_fn,
             valid_json,
             invalid_json,
-            #is_validate,
+            is_validate,
         )
