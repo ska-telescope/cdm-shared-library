@@ -37,21 +37,21 @@ class ReleaseResourcesRequest(CdmObject):
     :param subarray_id: the numeric SubArray ID (1..16)
     :param release_all: True to release all sub-array resources, False to
     release just those resources specified as other arguments
-    :param dish: object holding the DISH resource allocation
+    :param dish_allocation: object holding the DISH resource allocation
     to release for this request.
     """
 
     interface: Optional[str] = SCHEMA
     transaction_id: Optional[str] = None
-    subarray_id: Optional[int] = None
+    subarray_id: Optional[int] = Field(default=None, ge=1, le=16)
     release_all: StrictBool = False
     dish: Optional[DishAllocation] = Field(
         default=None,
         serialization_alias="receptor_ids",
-        validation_alias=AliasChoices("receptor_ids", "dish_allocation"),
+        validation_alias=AliasChoices("receptor_ids", "dish_allocation", "dish"),
     )
 
-    # Custom logic required to mimic the behavior of marshallow.fields.Pluck()
+    # Custom logic required to mimic the behaviour of marshallow.fields.Pluck()
     # to maintain backwards compatibility when removing Marshmallow schemas.
     # https://marshmallow.readthedocs.io/en/stable/marshmallow.fields.html#marshmallow.fields.Pluck
     @field_serializer("dish", when_used="json-unless-none")
