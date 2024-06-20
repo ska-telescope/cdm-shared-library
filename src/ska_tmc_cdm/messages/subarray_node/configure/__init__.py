@@ -6,6 +6,7 @@ the permissible arguments for a SubArrayNode.configure() call.
 __all__ = ["ConfigureRequest"]
 
 from typing import Optional
+from typing_extensions import Self
 
 from pydantic import model_validator
 
@@ -49,7 +50,7 @@ class ConfigureRequest(CdmObject):
     transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
-    def partial_configuration_validation(self) -> "ConfigureRequest":
+    def partial_configuration_validation(self) -> Self:
         if self.dish and self.tmc and not self.tmc.partial_configuration:
             if not self.pointing.target.coord:
                 raise ValueError(
@@ -58,7 +59,7 @@ class ConfigureRequest(CdmObject):
         return self
 
     @model_validator(mode="after")
-    def mccs_or_dish_validation(self) -> "ConfigureRequest":
+    def mccs_or_dish_validation(self) -> Self:
         if self.mccs is not None and (self.dish is not None):
             raise ValueError("Can't allocate dish in the same call as mccs")
         if self.mccs is None and self.dish is None and self.interface is None:
@@ -66,7 +67,7 @@ class ConfigureRequest(CdmObject):
         return self
 
     @model_validator(mode="after")
-    def set_default_schema(self) -> "ConfigureRequest":
+    def set_default_schema(self) -> Self:
         if self.interface is None:
             if self.mccs is not None:
                 self.interface = LOW_SCHEMA

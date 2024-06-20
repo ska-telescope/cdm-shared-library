@@ -6,7 +6,7 @@ command.
 from enum import Enum
 from typing import List, Optional, Tuple
 
-from pydantic import Field
+from pydantic import Field, AliasChoices
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -193,10 +193,16 @@ class CBFConfiguration(CdmObject):
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
 
-    fsp_configs: List[FSPConfiguration]
+    fsp_configs: List[FSPConfiguration] = Field(
+        serialization_alias="fsp", validation_alias=AliasChoices("fsp", "fsp_configs")
+    )
     # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter
     #  will be replaced with the respective class(VLBIConfiguration)
-    vlbi_config: Optional[dict] = None
+    vlbi_config: Optional[dict] = Field(
+        default=None,
+        serialization_alias="vlbi",
+        validation_alias=AliasChoices("vlbi", "vlbi_config"),
+    )
 
 
 class PSTConfiguration(CdmObject):
@@ -224,9 +230,21 @@ class CSPConfiguration(CdmObject):
     interface: Optional[str] = None
     subarray: Optional[SubarrayConfiguration] = None
     common: Optional[CommonConfiguration] = None
-    cbf_config: Optional[CBFConfiguration] = None
+    cbf_config: Optional[CBFConfiguration] = Field(
+        default=None,
+        serialization_alias="cbf",
+        validation_alias=AliasChoices("cbf", "cbf_config"),
+    )
     # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.
-    pst_config: Optional[PSTConfiguration | dict] = None
-    pss_config: Optional[PSSConfiguration | dict] = None
+    pst_config: Optional[PSTConfiguration | dict] = Field(
+        default=None,
+        serialization_alias="pst",
+        validation_alias=AliasChoices("pst", "pst_config"),
+    )
+    pss_config: Optional[PSSConfiguration | dict] = Field(
+        default=None,
+        serialization_alias="pss",
+        validation_alias=AliasChoices("pss", "pss_config"),
+    )
     lowcbf: Optional[LowCBFConfiguration] = None
