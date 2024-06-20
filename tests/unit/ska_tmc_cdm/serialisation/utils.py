@@ -131,7 +131,7 @@ def test_serialising_invalid_object_raises_exception_when_strict(
     """
 
     obj = instance.model_copy(deep=True)
-    modifier_fn(obj)
 
     with pytest.raises((JsonValidationError, ValidationError)):
+        modifier_fn(obj)
         CODEC.dumps(obj, is_validate, strictness=2)
