@@ -6,6 +6,8 @@ command.
 
 from typing import List, Optional
 
+from pydantic import AliasChoices, Field
+
 from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
@@ -84,4 +86,7 @@ class MCCSConfiguration(CdmObject):
     :type subarray_beam_configs: List[SubarrayBeamConfiguration]
     """
 
-    subarray_beam_configs: List[SubarrayBeamConfiguration]
+    subarray_beam_configs: List[SubarrayBeamConfiguration] = Field(
+        serialization_alias="subarray_beams",
+        validation_alias=AliasChoices("subarray_beams", "subarray_beam_configs"),
+    )
