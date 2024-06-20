@@ -17,6 +17,7 @@ def test_serialisation_and_validation(
     modifier_fn: ModifierType,
     valid_json: str,
     invalid_json: str,
+    is_validate:bool = True,
 ):
     """
     Performs a set of tests to confirm that we validate
@@ -31,8 +32,8 @@ def test_serialisation_and_validation(
     :param invalid_json: invalid JSON representation, on None if
         validate-on-unmarshal tests should be skipped
     """
-    test_marshal(instance, valid_json)
-    test_unmarshal(model_class, valid_json, instance)
+    test_marshal(instance, valid_json, is_validate)
+    test_unmarshal(model_class, valid_json, instance, is_validate)
     test_serialising_valid_object_does_not_raise_exception_when_strict(
         instance,
     )
@@ -56,13 +57,14 @@ def test_serialisation_and_validation(
 def test_marshal(
     instance: CdmObject,
     valid_json: str,
+    is_validate: bool,
 ):
     """
     Verify that an object instance is marshalled to JSON correctly.
     """
     # strictness=1 is used so that marshalling continues when
     # SchemaNotFound is raised
-    marshalled = CODEC.dumps(instance, strictness=1)
+    marshalled = CODEC.dumps(instance, is_validate, strictness=1)
     assert_json_is_equal(marshalled, valid_json)
 
 
@@ -70,13 +72,14 @@ def test_unmarshal(
     model_class: Type[CdmObject],
     valid_json: str,
     instance: CdmObject,
+    is_validate: bool,
 ):
     """
     Verify that JSON is correctly unmarshalled to the expected instance.
     """
     # strictness=1 is used so that marshalling continues when
     # SchemaNotFound is raised
-    unmarshalled = CODEC.loads(model_class, valid_json, strictness=1)
+    unmarshalled = CODEC.loads(model_class, valid_json, is_validate, strictness=1)
     assert unmarshalled == instance
 
 

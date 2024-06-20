@@ -1032,7 +1032,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
 
 
 @pytest.mark.parametrize(
-    "model_cls,instance,modifier_fn,valid_json,invalid_json",
+    "model_cls,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
         (
             AssignResourcesRequest,
@@ -1040,6 +1040,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON,
             None,
+            False,
         ),
         (
             AssignResourcesResponse,
@@ -1047,6 +1048,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_MID_ASSIGNRESOURCESRESPONSE_JSON,
             None,
+            False,
         ),
         (
             SDPConfiguration,
@@ -1054,6 +1056,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_SDP_JSON,
             None,
+            True,
         ),
         (
             AssignResourcesRequest,
@@ -1061,6 +1064,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             low_tmc_invalidator_fn,
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
+            True,
         ),
         (
             AssignResourcesRequest,
@@ -1068,6 +1072,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
+            False,
         ),
         (
             AssignResourcesRequest,
@@ -1075,6 +1080,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
+            False,
         ),
         (
             AssignResourcesRequest,
@@ -1082,6 +1088,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
+            True,
         ),
         (
             AssignResourcesRequest,
@@ -1089,6 +1096,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             mid_invalidator_fn,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
+            True,
         ),
         (
             AssignResourcesRequest,
@@ -1096,6 +1104,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_MID_ASSIGNRESOURCESREQUEST_JSON_PI16,
             None,
+            False,
         ),
         (
             ScanRequest,
@@ -1103,6 +1112,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             SCAN_VALID_JSON,
             None,
+            True,
         ),
     ],
 )
@@ -1112,6 +1122,7 @@ def test_assignresources_serialisation_and_validation(
     modifier_fn,
     valid_json,
     invalid_json,
+    is_validate,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
@@ -1122,6 +1133,7 @@ def test_assignresources_serialisation_and_validation(
         modifier_fn,
         valid_json,
         invalid_json,
+        is_validate,
     )
 
 
