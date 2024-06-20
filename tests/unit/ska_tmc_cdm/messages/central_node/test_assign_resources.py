@@ -2,12 +2,15 @@
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
 import itertools
+from functools import partial
 
 import pytest
+from pydantic import ValidationError
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     LOW_SCHEMA,
     MID_SCHEMA,
+    AssignResourcesRequest,
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
@@ -19,6 +22,20 @@ from tests.unit.ska_tmc_cdm.builder.central_node.common import (
 from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
     MCCSAllocateBuilder,
 )
+
+
+@pytest.mark.parametrize(
+    ("subarray_id", "okay"),
+    zip(range(-5, 21), ([False] * 6 + [True] * 16 + [False] * 4)),
+)
+def test_validation_applies_to_subarray_id(subarray_id: int, okay: bool):
+    "subarray_id must be from 1...16, inclusive"
+    build = partial(AssignResourcesRequest, subarray_id=subarray_id, interface="DUMMY")
+    if not okay:
+        with pytest.raises(ValidationError):
+            build()
+    else:
+        build()
 
 
 @pytest.mark.parametrize(

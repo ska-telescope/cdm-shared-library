@@ -43,7 +43,7 @@ class AssignResourcesRequest(CdmObject):
     :raises ValueError: if mccs is allocated with dish and sdp_config
     """
 
-    subarray_id: Optional[int] = None
+    subarray_id: Optional[int] = Field(default=None, ge=1, le=16)
     # FIXME: Do we really need this dish/dish_allocation inconsistency?
     dish: Optional[DishAllocation] = Field(
         default=None,
@@ -60,7 +60,7 @@ class AssignResourcesRequest(CdmObject):
     transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
-    def validate_exclusive_fields(self) -> "AssignResourcesRequest":
+    def validate_exclusive_fields(self) -> Self:
         if self.mccs is not None and self.subarray_id is None:
             raise ValueError("subarray_id must be defined for LOW request")
         if self.dish is not None and self.subarray_id is None:
