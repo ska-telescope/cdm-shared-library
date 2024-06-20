@@ -15,7 +15,6 @@ from pydantic import (
     ConfigDict,
     Field,
     ValidationInfo,
-    field_serializer,
     field_validator,
     model_serializer,
     model_validator,
@@ -62,7 +61,16 @@ class Target(CdmObject):
     target_name: str = ""
     ca_offset_arcsec: float = 0.0
     ie_offset_arcsec: float = 0.0
-    coord: Optional[SkyCoord] = Field(default=None, exclude=True)
+
+    @property
+    def coord(self) -> Optional[SkyCoord]:
+        if self.ra and self.dec:
+            return SkyCoord(
+                ra=self.ra,
+                dec=self.dec,
+                unit=self.unit,
+                frame=self.reference_frame,
+            )
 
     @model_serializer(mode="wrap")
     def omit_defaults(self, handler: Callable):
@@ -72,7 +80,6 @@ class Target(CdmObject):
 
         Don't bother sending JSON fields with null/empty/default values.
         """
-        # from pdb import set_trace; set_trace()
         data = handler(self)
         if self.ra is None and self.dec is None:
             # These should already be filtered out
@@ -89,9 +96,7 @@ class Target(CdmObject):
             #     the JSON marshalling process begins.
             icrs_coord = self.coord.transform_to("icrs")
             data["reference_frame"] = icrs_coord.frame.name.upper()
-            data["ra"], data["dec"] = icrs_coord.to_string(
-                "hmsdms", sep=":"
-            ).split(" ")
+            data["ra"], data["dec"] = icrs_coord.to_string("hmsdms", sep=":").split(" ")
 
         # If offset values are zero, omit them:
         for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
@@ -110,19 +115,6 @@ class Target(CdmObject):
         Load to lowercase for compatibility with removed Marshmallow schema
         """
         return value.lower()
-
-    @field_validator("coord")
-    @classmethod
-    def set_coord(cls, value: Any, info: ValidationInfo) -> Optional[SkyCoord]:
-        # NB: This validator only fires with validate_default=True
-        # because we want to *replace* the default None.
-        if info.data["ra"] and info.data["dec"]:
-            return SkyCoord(
-                ra=info.data["ra"],
-                dec=info.data["dec"],
-                unit=info.data["unit"],
-                frame=info.data["reference_frame"],
-            )
 
     @model_validator(mode="after")
     def ra_dec_or_offsets_required(self) -> Self:
@@ -192,9 +184,7 @@ class Target(CdmObject):
         reference_frame = self.coord.frame.name
         target_name = self.target_name
         hmsdms = self.coord.to_string(style="hmsdms")
-        return "<Target: {!r} ({} {})>".format(
-            target_name, hmsdms, reference_frame
-        )
+        return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
 
 
 class PointingCorrection(Enum):
