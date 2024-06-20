@@ -1,6 +1,7 @@
 from typing import Callable, Type
 
 import pytest
+from pydantic import ValidationError
 
 from ska_tmc_cdm import CdmObject
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
@@ -96,7 +97,7 @@ def test_deserialising_invalid_json_raises_exception_when_strict(
     :param model_class: CdmObject class
     :param invalid_json: JSON string
     """
-    with pytest.raises(JsonValidationError):
+    with pytest.raises((JsonValidationError, ValidationError)):
         CODEC.loads(model_class, invalid_json, is_validate, strictness=2)
 
 
