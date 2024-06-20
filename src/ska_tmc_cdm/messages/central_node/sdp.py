@@ -64,10 +64,10 @@ class Channel(CdmObject):
     # TODO: double-check what's optional here:
     count: int
     start: int
-    stride: Optional[int]
+    stride: Optional[int] = None
     freq_min: float
     freq_max: float
-    link_map: Optional[list[list]]
+    link_map: Optional[list[list]] = None
     spectral_window_id: Optional[str] = None
 
 
