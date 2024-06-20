@@ -245,26 +245,3 @@ def test_loads_invalid_json_with_validation_disabled(strictness):
     )
     marshalled = CODEC.dumps(unmarshalled, validate=False)
     assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
-
-
-@pytest.mark.parametrize(
-    "message_cls",
-    [
-        ska_tmc_cdm.messages.central_node.assign_resources.AssignResourcesRequest,
-        ska_tmc_cdm.messages.central_node.assign_resources.AssignResourcesResponse,
-        ska_tmc_cdm.messages.central_node.release_resources.ReleaseResourcesRequest,
-        ska_tmc_cdm.messages.subarray_node.configure.ConfigureRequest,
-        ska_tmc_cdm.messages.subarray_node.scan.ScanRequest,
-        ska_tmc_cdm.messages.subarray_node.assigned_resources.AssignedResources,
-        ska_tmc_cdm.messages.mccscontroller.allocate.AllocateRequest,
-        ska_tmc_cdm.messages.mccscontroller.releaseresources.ReleaseResourcesRequest,
-        ska_tmc_cdm.messages.mccssubarray.configure.ConfigureRequest,
-        ska_tmc_cdm.messages.mccssubarray.scan.ScanRequest,
-        ska_tmc_cdm.messages.mccssubarray.assigned_resources.AssignedResources,
-    ],
-)
-def test_schema_registration(message_cls):
-    """
-    Verify that a schema is registered with the MarshmallowCodec.
-    """
-    assert message_cls in CODEC._schema  # pylint: disable=protected-access

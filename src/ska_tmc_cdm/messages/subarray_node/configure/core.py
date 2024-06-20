@@ -54,6 +54,7 @@ class Target(CdmObject):
     )
     ra: Optional[str | float] = None
     dec: Optional[str | float] = None
+    # TODO: Can this be Literal["ICRS"] instead?
     reference_frame: str = "icrs"
     unit: UnitInput = Field(default=("hourangle", "deg"), exclude=True)
     target_name: str = ""
@@ -82,7 +83,7 @@ class Target(CdmObject):
             #     Process Target co-ordinates by converting them to ICRS frame before
             #     the JSON marshalling process begins.
             icrs_coord = self.coord.transform_to("icrs")
-            data["reference_frame"] = icrs_coord.frame.name
+            data["reference_frame"] = icrs_coord.frame.name.upper()
             data["ra"], data["dec"] = icrs_coord.to_string("hmsdms", sep=":").split(" ")
 
         # If offset values are zero, omit them:
@@ -94,13 +95,6 @@ class Target(CdmObject):
             del data["target_name"]
 
         return data
-
-    @field_serializer("reference_frame")
-    def uppercase(self, value: str) -> str:
-        """
-        Dump to uppercase for compatibility with removed Marshmallow schema
-        """
-        return value.upper()
 
     @field_validator("reference_frame")
     @classmethod
