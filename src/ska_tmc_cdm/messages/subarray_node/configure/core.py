@@ -7,15 +7,17 @@ this package.
 """
 import math
 from enum import Enum
-from typing import ClassVar, Optional, Any
+from typing import ClassVar, Optional, Any, Callable
 from typing_extensions import Self
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
+from pydantic_core import SerializationCallable
 from pydantic import (
     ConfigDict,
     Field,
     model_validator,
+    model_serializer,
     field_serializer,
     field_validator,
     ValidationInfo,
@@ -33,127 +35,6 @@ __all__ = [
 
 UnitStr = str | u.Unit
 UnitInput = UnitStr | tuple[UnitStr, UnitStr]
-
-
-# class TargetSchema(Schema):
-#     """
-#     Marshmallow schema for the subarray_node.Target class
-#     """
-
-#     ra = fields.String()
-#     dec = fields.String()
-#     reference_frame = shared.UpperCasedField(data_key="reference_frame")
-#     target_name = fields.String()
-#     ca_offset_arcsec = fields.Float()
-#     ie_offset_arcsec = fields.Float()
-
-#     @pre_dump
-#     def convert_to_icrs(
-#         self, target: configure_msgs.Target, **_
-#     ):  # pylint: disable=no-self-use
-#         """
-#         Process Target co-ordinates by converting them to ICRS frame before
-#         the JSON marshalling process begins.
-
-#         :param target: Target instance to process
-#         :param _: kwargs passed by Marshallow
-#         :return: SexagesimalTarget with ICRS ra/dec expressed in hms/dms
-#         """
-#         # All pointing coordinates are in ICRS
-#         if target.coord is None:
-#             hms, dms, reference_frame = None, None, None
-#         else:
-#             icrs_coord = target.coord.transform_to("icrs")
-#             reference_frame = icrs_coord.frame.name
-#             hms, dms = icrs_coord.to_string("hmsdms", sep=":").split(" ")
-#         sexagesimal = JsonTarget(
-#             ra=hms,
-#             dec=dms,
-#             reference_frame=reference_frame,
-#             target_name=target.target_name,
-#             ca_offset_arcsec=target.ca_offset_arcsec,
-#             ie_offset_arcsec=target.ie_offset_arcsec,
-#         )
-
-#         return sexagesimal
-
-#     @post_dump
-#     def omit_optional_fields_with_default_values(
-#         self, data, **_
-#     ):  # pylint: disable=no-self-use
-#         """
-#         Don't bother sending JSON fields with null/empty/default values.
-
-#         :param data: Marshmallow-provided dict containing parsed object values
-#         :param _: kwargs passed by Marshmallow
-#         :return: dict suitable for JSON serialization as a Target
-#         """
-#         if data["ra"] is None and data["dec"] is None:
-#             del data["ra"]
-#             del data["dec"]
-#             del data["reference_frame"]
-
-#         # If offset values are zero, omit them:
-#         for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
-#             if data[field_name] == 0.0:
-#                 del data[field_name]
-
-#         if data["target_name"] == "":
-#             del data["target_name"]
-
-#         return data
-
-#     @post_load
-#     def create_target(self, data, **_):  # pylint: disable=no-self-use
-#         """
-#         Convert parsed JSON back into a Target object.
-
-#         :param data: dict containing parsed JSON values
-#         :param _: kwargs passed by Marshmallow
-#         :return: Target instance populated to match JSON
-#         """
-
-#         target = configure_msgs.Target(
-#             data.get("ra"),
-#             data.get("dec"),
-#             reference_frame=data.get("reference_frame", ""),
-#             target_name=data.get("target_name", ""),
-#             unit=("hourangle", "deg"),
-#             ca_offset_arcsec=data.get("ca_offset_arcsec", 0.0),
-#             ie_offset_arcsec=data.get("ie_offset_arcsec", 0.0),
-#         )
-#         return target
-
-#         # If offset values are zero, omit them:
-#         for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
-#             if data[field_name] == 0.0:
-#                 del data[field_name]
-
-#         if data["target_name"] == "":
-#             del data["target_name"]
-
-#         return data
-
-#     @post_load
-#     def create_target(self, data, **_):  # pylint: disable=no-self-use
-#         """
-#         Convert parsed JSON back into a Target object.
-
-#         :param data: dict containing parsed JSON values
-#         :param _: kwargs passed by Marshmallow
-#         :return: Target instance populated to match JSON
-#         """
-
-#         target = configure_msgs.Target(
-#             data.get("ra"),
-#             data.get("dec"),
-#             reference_frame=data.get("reference_frame", ""),
-#             target_name=data.get("target_name", ""),
-#             unit=("hourangle", "deg"),
-#             ca_offset_arcsec=data.get("ca_offset_arcsec", 0.0),
-#             ie_offset_arcsec=data.get("ie_offset_arcsec", 0.0),
-#         )
-#         return target
 
 
 # TODO: Target() is doing too much fancy logic IMHO.
@@ -180,6 +61,40 @@ class Target(CdmObject):
     ca_offset_arcsec: float = 0.0
     ie_offset_arcsec: float = 0.0
     coord: Optional[SkyCoord] = Field(default=None, exclude=True)
+
+    @model_serializer(mode="wrap")
+    def omit_defaults(self, handler: Callable):
+        """
+        (Custom serializer logic copied verbatim from
+        removed Marshmallow schema.)
+
+        Don't bother sending JSON fields with null/empty/default values.
+        """
+        data = handler(self)
+        if data["ra"] is None and data["dec"] is None:
+            del data["ra"]
+            del data["dec"]
+            del data["reference_frame"]
+        else:
+            # TODO: IMHO doing this conversion here is janky. If we only want to
+            # work with ICRS coordinates, we should enforce that as part of
+            # validation, not convert to it at the end when we dump()
+            # Preseved directly from Marshmallow...
+            #     Process Target co-ordinates by converting them to ICRS frame before
+            #     the JSON marshalling process begins.
+            icrs_coord = self.coord.transform_to("icrs")
+            data["reference_frame"] = icrs_coord.frame.name
+            data["ra"], data["dec"] = icrs_coord.to_string("hmsdms", sep=":").split(" ")
+
+        # If offset values are zero, omit them:
+        for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
+            if data[field_name] == 0.0:
+                del data[field_name]
+
+        if data["target_name"] == "":
+            del data["target_name"]
+
+        return data
 
     @field_serializer("reference_frame")
     def uppercase(self, value: str) -> str:
