@@ -227,14 +227,20 @@ def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     Verify that optional FSPConfiguration parameters are removed when they are
     left unset.
     """
-    fsp_config = FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)
+    fsp_config = FSPConfiguration(
+        fsp_id=1,
+        function_mode=FSPFunctionMode.CORR,
+        frequency_slice_id=1,
+        integration_factor=10,
+        zoom_factor=0)
     marshalled = CODEC.dumps(fsp_config)
 
     optional_fields = [
-        field.data_key
-        for name, field in schema.fields.items()
-        if field.required is False
+        field for field, detail in
+        FSPConfiguration.model_fields.items()
+        if not detail.is_required()
     ]
+
     for field in optional_fields:
         assert field not in marshalled
 
@@ -253,15 +259,20 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
     null_kwargs = {name: None for name in optional_kwarg_names}
 
     fsp_config = FSPConfiguration(
-        1, FSPFunctionMode.CORR, 1, 10, 0, **null_kwargs
+        fsp_id=1,
+        function_mode=FSPFunctionMode.CORR,
+        frequency_slice_id=1,
+        integration_factor=10,
+        zoom_factor=0,
+        **null_kwargs
     )
     marshalled = CODEC.dumps(fsp_config)
 
     # optional constructor args are optional fields in the schema
     optional_fields = [
-        field.data_key
-        for name, field in schema.fields.items()
-        if field.required is False
+        field for field, detail in
+        FSPConfiguration.model_fields.items()
+        if not detail.is_required()
     ]
     for field in optional_fields:
         assert field not in marshalled
@@ -271,6 +282,13 @@ def test_marshall_csp_configuration_does_not_modify_original():
     """
     Verify that serialising a CspConfiguration does not change the object.
     """
+    fsp_config = FSPConfiguration(
+        fsp_id=1,
+        function_mode=FSPFunctionMode.CORR,
+        frequency_slice_id=1,
+        integration_factor=10,
+        zoom_factor=0
+    )
     config = CSPConfiguration(
         interface="interface",
         subarray=SubarrayConfiguration(subarray_name="subarray name"),
@@ -281,7 +299,7 @@ def test_marshall_csp_configuration_does_not_modify_original():
             band_5_tuning=[5.85, 7.25],
         ),
         cbf_config=CBFConfiguration(
-            fsp_configs=[FSPConfiguration(1, FSPFunctionMode.CORR, 1, 10, 0)]
+            fsp_configs=[fsp_config]
         ),
         pss_config=None,
         pst_config=None,
