@@ -1,7 +1,6 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.codec module.
 """
-import copy
 import functools
 import json
 import tempfile
@@ -11,7 +10,6 @@ from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
 
-import ska_tmc_cdm
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
@@ -200,7 +198,7 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
     SchemaNotFound when strictness=2.
     """
     # create a test object that references an invalid schema
-    invalid_data = copy.deepcopy(VALID_LOW_CONFIGURE_OBJECT_3_1)
+    invalid_data = VALID_LOW_CONFIGURE_OBJECT_3_1.model_copy(deep=True)
     invalid_data.interface = "https://foo.com/badschema/2.0"
     # only raised when strictness=2
     CODEC.dumps(invalid_data, strictness=0)

@@ -1,7 +1,6 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.csp module.
 """
-import copy
 import inspect
 
 from ska_tmc_cdm import CODEC
