@@ -1072,7 +1072,7 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             None,
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
             None,
-            False,
+            True,
         ),
         (
             AssignResourcesRequest,
