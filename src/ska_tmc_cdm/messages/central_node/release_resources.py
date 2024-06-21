@@ -48,7 +48,9 @@ class ReleaseResourcesRequest(CdmObject):
     dish: Optional[DishAllocation] = Field(
         default=None,
         serialization_alias="receptor_ids",
-        validation_alias=AliasChoices("receptor_ids", "dish_allocation", "dish"),
+        validation_alias=AliasChoices(
+            "receptor_ids", "dish_allocation", "dish"
+        ),
     )
 
     # Custom logic required to mimic the behaviour of marshallow.fields.Pluck()
@@ -85,5 +87,7 @@ class ReleaseResourcesRequest(CdmObject):
             # # and we're inside a validator:
             # https://github.com/pydantic/pydantic/issues/8185
             self.__dict__["dish"] = None
+            # (pylint doesn't see __pydantic_fields_set__ as a set)
+            # pylint: disable=no-member
             self.__pydantic_fields_set__.add("dish")
         return self

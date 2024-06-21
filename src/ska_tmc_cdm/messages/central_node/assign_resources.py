@@ -2,15 +2,9 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from typing import Any, Callable, Optional
+from typing import Callable, Optional
 
-from pydantic import (
-    AliasChoices,
-    Field,
-    field_serializer,
-    field_validator,
-    model_validator,
-)
+from pydantic import AliasChoices, Field, field_serializer, model_validator
 from typing_extensions import Self
 
 from ska_tmc_cdm.messages.base import CdmObject
@@ -144,7 +138,9 @@ class AssignResourcesResponse(CdmObject):
     )
 
     @field_serializer("dish", mode="wrap", when_used="json-unless-none")
-    def _rename_receptor_ids_dump(dish: DishAllocation, handler: Callable):
+    def _rename_receptor_ids_dump(
+        self, dish: DishAllocation, handler: Callable
+    ):
         """
         For compatibility reasons, in this specific context, we
         rename the 'receptor_ids' field to 'receptor_ids_allocated'

@@ -7,14 +7,13 @@ this package.
 """
 import math
 from enum import Enum
-from typing import Any, Callable, ClassVar, Optional
+from typing import Callable, ClassVar, Optional
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import (
     ConfigDict,
     Field,
-    ValidationInfo,
     field_validator,
     model_serializer,
     model_validator,
@@ -96,7 +95,9 @@ class Target(CdmObject):
             #     the JSON marshalling process begins.
             icrs_coord = self.coord.transform_to("icrs")
             data["reference_frame"] = icrs_coord.frame.name.upper()
-            data["ra"], data["dec"] = icrs_coord.to_string("hmsdms", sep=":").split(" ")
+            data["ra"], data["dec"] = icrs_coord.to_string(
+                "hmsdms", sep=":"
+            ).split(" ")
 
         # If offset values are zero, omit them:
         for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
@@ -184,7 +185,9 @@ class Target(CdmObject):
         reference_frame = self.coord.frame.name
         target_name = self.target_name
         hmsdms = self.coord.to_string(style="hmsdms")
-        return "<Target: {!r} ({} {})>".format(target_name, hmsdms, reference_frame)
+        return "<Target: {!r} ({} {})>".format(
+            target_name, hmsdms, reference_frame
+        )
 
 
 class PointingCorrection(Enum):

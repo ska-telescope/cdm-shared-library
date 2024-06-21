@@ -91,21 +91,19 @@ VALID_MCCSCONFIGURATION_OBJECT = MCCSConfiguration(
 
 
 @pytest.mark.parametrize(
-    "model_class,instance,expected",
+    "instance,expected",
     [
         (
-            SubarrayBeamConfiguration,
             VALID_SUBARRAYBEAMCONFIGURATION_OBJECT,
             VALID_SUBARRAYBEAMCONFIGURATION_JSON,
         ),
         (
-            MCCSConfiguration,
             VALID_MCCSCONFIGURATION_OBJECT,
             VALID_MCCSCONFIGURATION_JSON,
         ),
     ],
 )
-def test_marshal(model_class, instance, expected):
+def test_marshal(instance, expected):
     """
     Verify that instances are marshalled to JSON correctly.
     """
