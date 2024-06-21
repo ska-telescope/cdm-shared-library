@@ -219,10 +219,10 @@ def test_loads_invalid_json_with_validation_enabled():
         validate=True,
     )
 
-    # no exception should be raised unless strictness is 0 or 1
-    for strictness in [0, 1]:
-        unmarshalled = test_call(strictness=strictness, validate=False)
-        marshalled = CODEC.dumps(unmarshalled, validate=False)
+    # no exception should be raised when strictness is 0 or 1
+    for strictness in (0, 1):
+        unmarshalled = test_call(strictness=strictness)
+        marshalled = CODEC.dumps(unmarshalled, strictness=strictness)
         assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
 
     # strictness=2 should result in an error
