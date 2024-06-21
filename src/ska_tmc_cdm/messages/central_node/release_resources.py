@@ -37,7 +37,7 @@ class ReleaseResourcesRequest(CdmObject):
     :param subarray_id: the numeric SubArray ID (1..16)
     :param release_all: True to release all sub-array resources, False to
     release just those resources specified as other arguments
-    :param dish: object holding the DISH resource allocation
+    :param dish_allocation: object holding the DISH resource allocation
     to release for this request.
     """
 
@@ -48,7 +48,9 @@ class ReleaseResourcesRequest(CdmObject):
     dish: Optional[DishAllocation] = Field(
         default=None,
         serialization_alias="receptor_ids",
-        validation_alias=AliasChoices("receptor_ids", "dish_allocation"),
+        validation_alias=AliasChoices(
+            "receptor_ids", "dish_allocation", "dish"
+        ),
     )
 
     # Custom logic required to mimic the behavior of marshallow.fields.Pluck()
