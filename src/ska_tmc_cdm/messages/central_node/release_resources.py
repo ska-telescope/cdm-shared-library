@@ -85,5 +85,7 @@ class ReleaseResourcesRequest(CdmObject):
             # # and we're inside a validator:
             # https://github.com/pydantic/pydantic/issues/8185
             self.__dict__["dish"] = None
+            # (pylint doesn't see __pydantic_fields_set__ as a set)
+            # pylint: disable=no-member
             self.__pydantic_fields_set__.add("dish")
         return self

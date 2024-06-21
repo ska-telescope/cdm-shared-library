@@ -7,14 +7,13 @@ this package.
 """
 import math
 from enum import Enum
-from typing import Any, Callable, ClassVar, Optional
+from typing import Callable, ClassVar, Optional
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import (
     ConfigDict,
     Field,
-    ValidationInfo,
     field_validator,
     model_serializer,
     model_validator,
