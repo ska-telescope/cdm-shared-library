@@ -10,6 +10,7 @@ from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
 
+from ska_tmc_cdm.exceptions import JsonValidationError
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
 from ska_tmc_cdm.messages.subarray_node.configure import (
     MID_SCHEMA,
@@ -1243,9 +1244,9 @@ def test_low_configure_serialisation_and_validation_invalid_json(
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
-    for invalid json and raise SchematicValidationError.
+    for invalid json and raise JsonValidationError.
     """
-    with pytest.raises(SchematicValidationError):
+    with pytest.raises(JsonValidationError):
         utils.test_serialisation_and_validation(
             model_class,
             instance,
