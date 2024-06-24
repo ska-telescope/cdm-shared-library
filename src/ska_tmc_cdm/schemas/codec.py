@@ -11,27 +11,38 @@ from typing import Optional, Type
 
 from ska_tmc_cdm.messages.base import CdmObject
 
-from .telmodel_validation import semantic_validate_json, validate_json
-
-DEFAULT_STRICTNESS = None
+from .telmodel_validation import (
+    ValidationLevel,
+    semantic_validate_json,
+    validate_json,
+)
 
 
 class Codec:
     @staticmethod
     def _telmodel_validation(
-        enforced: bool, jsonable_data: dict, strictness: Optional[int] = 0
+        jsonable_data: dict,
+        strictness: ValidationLevel = ValidationLevel.AGNOSTIC,
     ):
-        if not enforced:
-            return
-        validate_json(jsonable_data, strictness=strictness)
-        semantic_validate_json(jsonable_data)
+        if strictness <= ValidationLevel.PERMISSIVE:
+            pass
+        elif strictness == ValidationLevel.AGNOSTIC:
+            # Run everything, it's up to OSD/Telmodel what to do:
+            validate_json(jsonable_data, strictness=strictness)
+            semantic_validate_json(jsonable_data)
+        elif strictness == ValidationLevel.BASIC_WARN:
+            validate_json(jsonable_data, strictness=strictness)
+        elif strictness >= ValidationLevel.BASIC_ERROR:
+            validate_json(jsonable_data, strictness=strictness)
+            semantic_validate_json(jsonable_data, strictness=strictness)
+        else:
+            raise ValueError(f"Ambiguous validation strictness: {strictness}")
 
     @staticmethod
     def loads(
         cdm_class: Type[CdmObject],
         json_data: str,
-        validate: bool = True,
-        strictness: int = DEFAULT_STRICTNESS,
+        strictness: ValidationLevel = ValidationLevel.AGNOSTIC,
     ) -> CdmObject:
         """
         Create an instance of a CDM class from a JSON string.
@@ -58,8 +69,7 @@ class Codec:
     @staticmethod
     def dumps(
         obj: CdmObject,
-        validate: bool = True,
-        strictness: Optional[int] = DEFAULT_STRICTNESS,
+        strictness: ValidationLevel = ValidationLevel.AGNOSTIC,
     ) -> str:
         """
         Return a string JSON representation of a CDM instance.
@@ -75,15 +85,14 @@ class Codec:
         jsonable_dict = obj.model_dump(
             mode="json", exclude_none=True, by_alias=True
         )
-        Codec._telmodel_validation(validate, jsonable_dict, strictness)
+        Codec._telmodel_validation(jsonable_dict, strictness)
         return json.dumps(jsonable_dict)
 
     @staticmethod
     def load_from_file(
         cdm_class: Type[CdmObject],
         path: PathLike[str],
-        validate: bool = True,
-        strictness: Optional[int] = DEFAULT_STRICTNESS,
+        strictness: Optional[int] = ValidationLevel.AGNOSTIC,
     ):
         """
         Load an instance of a CDM class from disk.
@@ -96,4 +105,4 @@ class Codec:
         """
         with open(path, "r", encoding="utf-8") as json_file:
             json_data = json_file.read()
-            return Codec.loads(cdm_class, json_data, validate, strictness)
+            return Codec.loads(cdm_class, json_data, strictness)

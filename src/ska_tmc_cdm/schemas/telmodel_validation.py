@@ -3,9 +3,10 @@ The schemas module defines Marshmallow schemas that are shared by various
 other serialisation schemas.
 """
 
-from typing import Callable, Optional
 
-from ..jsonschema.json_schema import JsonSchema
+from typing import Callable
+
+from ..jsonschema.json_schema import JsonSchema, ValidationLevel
 
 
 def _identity(x):
@@ -15,7 +16,7 @@ def _identity(x):
 def validate_json(
     data: dict,
     process_fn: Callable = _identity,
-    strictness: Optional[int] = None,
+    strictness: ValidationLevel = ValidationLevel.AGNOSTIC,
 ):
     """
     Validate JSON using the Telescope Model schema.
@@ -39,7 +40,12 @@ def validate_json(
         )
 
 
-def semantic_validate_json(data, process_fn=_identity, **_):
+def semantic_validate_json(
+    data,
+    process_fn=_identity,
+    strictness: ValidationLevel = ValidationLevel.AGNOSTIC,
+    **_,
+):
     """
     Validate JSON using the Telescope Model schema.
 
@@ -63,4 +69,6 @@ def semantic_validate_json(data, process_fn=_identity, **_):
         or "ska-low-tmc-assignresources" in interface
         or "ska-low-tmc-configure" in interface
     ):
-        JsonSchema.semantic_validate_schema(process_fn(data), interface)
+        JsonSchema.semantic_validate_schema(
+            process_fn(data), interface, strictness=strictness
+        )
