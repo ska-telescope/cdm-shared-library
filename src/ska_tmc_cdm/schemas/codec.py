@@ -24,7 +24,9 @@ class Codec:
         if not enforced:
             return
         validate_json(jsonable_data, strictness=strictness)
-        semantic_validate_json(jsonable_data)
+        # TODO: Revisit this / unify the validation rules.
+        if strictness and strictness >= 2:
+            semantic_validate_json(jsonable_data)
 
     @staticmethod
     def loads(

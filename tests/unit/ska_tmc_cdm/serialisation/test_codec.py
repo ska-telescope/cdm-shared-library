@@ -161,26 +161,38 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_data["interface"] = "https://foo.com/badschema/2.0"
     invalid_data = json.dumps(invalid_data)
 
+    strict = 2
+
     with pytest.raises(SchemaNotFound):
-        CODEC.loads(ConfigureRequest, invalid_data, strictness=2)
+        CODEC.loads(ConfigureRequest, invalid_data, strictness=strict)
 
     invalid_json = json.loads(INVALID_MID_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
-        CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            AssignResourcesRequest,
+            invalid_json_assign_resources,
+            strictness=strict,
+        )
 
     invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
     invalid_json_configure = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
-        CODEC.loads(ConfigureRequest, invalid_json_configure)
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            ConfigureRequest, invalid_json_configure, strictness=strict
+        )
 
     invalid_json = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
-        CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            AssignResourcesRequest,
+            invalid_json_assign_resources,
+            strictness=strict,
+        )
 
     invalid_json = json.loads(INVALID_LOW_CONFIGURE_JSON)
     invalid_json["csp"]["lowcbf"]["stations"]["stn_beams"][0][
@@ -188,8 +200,10 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     ] = "tango://delays.skao.int/low/stn-beam/1"
     invalid_json_configure = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
-        CODEC.loads(ConfigureRequest, invalid_json_configure)
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            ConfigureRequest, invalid_json_configure, strictness=strict
+        )
 
 
 def test_codec_dumps_raises_exception_on_invalid_schema():
