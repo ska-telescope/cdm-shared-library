@@ -590,7 +590,7 @@ VALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.0",
   "transaction_id":"txn-mvp01-20200325-00004",
   "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001", "0002"]},
+  "dish": {"receptor_ids": ["SKA001", "SKA002"]},
   "sdp": """
     + VALID_SDP_JSON
     + """
@@ -602,19 +602,19 @@ VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.0",
     transaction_id="txn-mvp01-20200325-00004",
     subarray_id=1,
-    dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+    dish_allocation=DishAllocation(receptor_ids=["SKA001", "SKA002"]),
     sdp_config=VALID_SDP_OBJECT,
 )
 
 
 VALID_MID_ASSIGNRESOURCESRESPONSE_JSON = """
 {
-    "dish": {"receptor_ids_allocated": ["0001", "0002"]}
+    "dish": {"receptor_ids_allocated": ["SKA001", "SKA002"]}
 }
 """
 
 VALID_MID_ASSIGNRESOURCESRESPONSE_OBJECT = AssignResourcesResponse(
-    dish_allocation=DishAllocation(receptor_ids=["0001", "0002"])
+    dish_allocation=DishAllocation(receptor_ids=["SKA001", "SKA002"])
 )
 
 
@@ -898,7 +898,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
   "interface": "https://schema.skao.int/ska-tmc-assignresources/2.1",
   "transaction_id":"txn-....-00001",
   "subarray_id": 1,
-  "dish": {"receptor_ids": ["0001","0002","0003","0004","0005"]},
+  "dish": {"receptor_ids": ["SKA001","SKA002","SKA003","SKA004","SKA005"]},
   "sdp": """
     + INVALID_SDP_JSON
     + """
@@ -926,7 +926,7 @@ INVALID_MID_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     transaction_id="txn-....-00001",
     subarray_id=1,
     dish_allocation=DishAllocation(
-        receptor_ids=["0001", "0002", "0003", "0004", "0005"]
+        receptor_ids=["SKA001", "SKA002", "SKA003", "SKA004", "SKA005"]
     ),
     sdp_config=INVALID_SDP_OBJECT,
 )
