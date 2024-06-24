@@ -975,9 +975,7 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_all_paramet
     sdp_all_params_config = CODEC.loads(
         SDPConfiguration, VALID_SDP_ALL_PARAMETERS_JSON_PI16
     )
-    serialized_sdp_all_params_config = CODEC.dumps(
-        sdp_all_params_config, validate=False
-    )
+    serialized_sdp_all_params_config = CODEC.dumps(sdp_all_params_config)
 
     assert_json_is_equal(
         VALID_SDP_ALL_PARAMETERS_JSON_PI16,
@@ -1022,10 +1020,10 @@ def test_validate_serialization_and_deserialization_beam_vis0():
     Verifies that the EBScanType Beam schema marshal and Unmarshal works correctly
     """
     scan_types_beam_config = CODEC.loads(
-        EBScanTypeBeam, VALID_BEAM_VIS0_JSON_PI16, validate=False
+        EBScanTypeBeam, VALID_BEAM_VIS0_JSON_PI16
     )
     serialized_scan_types_beam_config = CODEC.dumps(
-        scan_types_beam_config, validate=False
+        scan_types_beam_config,
     )
 
     assert_json_is_equal(
@@ -1040,11 +1038,8 @@ def test_validate_serialization_and_deserialization_executionblockconfiguration(
     execution_block_config = CODEC.loads(
         ExecutionBlockConfiguration,
         VALID_EXECUTION_BLOCK_JSON_PI16,
-        validate=False,
     )
-    serialized_execution_block_config = CODEC.dumps(
-        execution_block_config, validate=False
-    )
+    serialized_execution_block_config = CODEC.dumps(execution_block_config)
 
     assert_json_is_equal(
         VALID_EXECUTION_BLOCK_JSON_PI16, serialized_execution_block_config
@@ -1131,10 +1126,11 @@ def test_validate_serialization_and_deserialization_sdpconfiguration_json():
     """
 
     sdp_configuration_object = CODEC.loads(
-        SDPConfiguration, VALID_SDP_JSON_PI17, validate=False
+        SDPConfiguration,
+        VALID_SDP_JSON_PI17,
     )
     serialized_sdp_config = CODEC.dumps(
-        sdp_configuration_object, validate=False
+        sdp_configuration_object,
     )
 
     assert_json_is_equal(VALID_SDP_JSON_PI17, serialized_sdp_config)
