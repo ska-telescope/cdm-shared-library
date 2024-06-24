@@ -171,7 +171,8 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
       "target_name": "Polaris Australis",
       "ra": "21:08:47.92",
       "dec": "-88:57:22.9"
-    }
+    },
+    "correction": "MAINTAIN"
   },
   "dish": {
     "receiver_band": "5a"
@@ -896,8 +897,8 @@ INVALID_LOW_CONFIGURE_JSON = """
   "mccs": {
   "subarray_beams": [
     {
-        "subarray_beam_id": -1,
-        "update_rate": 0.0,
+        "subarray_beam_id": 1,
+        "update_rate": 1.0,
         "logical_bands": [
           {
             "start_channel": 80 ,
@@ -1058,7 +1059,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                     VisStnBeamConfiguration(
                         stn_beam_id=1,
                         integration_ms=849,
-                        host=[[0, "192.168.1.00"]],
+                        host=[[0, "192.168.0.1"]],
                         port=[[0, 9000, 1]],
                         mac=[[0, "02-03-04-0a-0b-0c"]],
                     )
