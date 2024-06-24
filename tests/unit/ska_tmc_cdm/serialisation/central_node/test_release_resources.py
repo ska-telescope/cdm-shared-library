@@ -85,7 +85,7 @@ def mid_invalidator_fn(obj: ReleaseResourcesRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "cdm_class,instance,modifier_fn,valid_json,invalid_json",
     [
         (
             ReleaseResourcesRequest,
@@ -111,13 +111,13 @@ def mid_invalidator_fn(obj: ReleaseResourcesRequest):
     ],
 )
 def test_releaseresources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
+    cdm_class, instance, modifier_fn, valid_json, invalid_json
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
     utils.test_serialisation_and_validation(
-        schema_cls,
+        cdm_class,
         instance,
         modifier_fn,
         valid_json,
