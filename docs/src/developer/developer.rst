@@ -13,7 +13,7 @@ Execute the test suite and lint the project with:
 
 ::
 
-  poetry install --with=dev && shell
+  poetry install --with=dev && poetry shell
   make python-test && make python-lint
 
 Format the Python code:
