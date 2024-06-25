@@ -1028,13 +1028,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                     firmware="abcd", fsp_ids=[1, 2, 2, 4, 5, 6, 7]
                 ),
                 stn_beams=[
-                    VisStnBeamConfiguration(
-                        stn_beam_id=1,
-                        integration_ms=849,
-                        # host=[[0, "192.168.0.1"]],
-                        # port=[[0, 9000, 1]],
-                        # mac=[[0, "02-03-04-0a-0b-0c"]],
-                    )
+                    VisStnBeamConfiguration(stn_beam_id=1, integration_ms=849)
                 ],
             ),
         ),
