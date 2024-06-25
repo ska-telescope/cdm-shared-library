@@ -1,7 +1,7 @@
 """
-The codec module contains classes used by clients to marshall CDM classes to
-and from JSON. This saves the clients having to instantiate and manipulate the
-Marshmallow schema directly.
+This module contains a Codec class that provides a public interface for clients
+to de/serialise CDM classes from/to JSON. Basically this spares clients having to
+remember to pass all the arguments to `model_dump()`
 """
 __all__ = ["Codec"]
 
