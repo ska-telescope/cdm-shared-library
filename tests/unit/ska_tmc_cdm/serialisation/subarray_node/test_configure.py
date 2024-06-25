@@ -1030,10 +1030,7 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                 stn_beams=[
                     VisStnBeamConfiguration(
                         stn_beam_id=1,
-                        integration_ms=849,
-                        # host=[[0, "192.168.0.1"]],
-                        # port=[[0, 9000, 1]],
-                        # mac=[[0, "02-03-04-0a-0b-0c"]],
+                        integration_ms=849
                     )
                 ],
             ),
