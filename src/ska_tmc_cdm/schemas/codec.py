@@ -15,7 +15,7 @@ from .telmodel_validation import semantic_validate_json, validate_json
 
 DEFAULT_STRICTNESS = None
 
-T = TypeVar("T", CdmObject)
+T = TypeVar("T", bound=CdmObject)
 
 
 class Codec:
