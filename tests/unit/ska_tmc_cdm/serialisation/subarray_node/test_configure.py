@@ -927,8 +927,7 @@ INVALID_LOW_CONFIGURE_JSON = """
 "csp": {
     "interface": "https://schema.skao.int/ska-low-csp-configure/3.1",
     "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "subarray_id": 1
+      "config_id": "sbi-mvp01-20200325-00001-science_A"
     },
     "lowcbf": {
       "stations": {
@@ -959,9 +958,7 @@ INVALID_LOW_CONFIGURE_JSON = """
             "beam_id":1,
             "freq_ids": [
               400
-            ],
-            "delay_poly": "tango://delays.skao.int/low/stn-beam/1"
-
+            ]
           }
         ]
       },
@@ -1039,18 +1036,12 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-configure/3.1",
         common=CommonConfiguration(
-            config_id="sbi-mvp01-20200325-00001-science_A", subarray_id=1
+            config_id="sbi-mvp01-20200325-00001-science_A",
         ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1]],
-                stn_beams=[
-                    StnBeamConfiguration(
-                        beam_id=1,
-                        freq_ids=[400],
-                        delay_poly="tango://delays.skao.int/low/stn-beam/1",
-                    )
-                ],
+                stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400])],
             ),
             vis=VisConfiguration(
                 fsp=VisFspConfiguration(
@@ -1244,9 +1235,9 @@ def test_low_configure_serialisation_and_validation_invalid_json(
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
-    for invalid json and raise JsonValidationError.
+    for invalid json and raise SchematicValidationError.
     """
-    with pytest.raises(JsonValidationError):
+    with pytest.raises(SchematicValidationError):
         utils.test_serialisation_and_validation(
             model_class,
             instance,
