@@ -1,9 +1,9 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.codec module.
 """
-import functools
 import json
 import tempfile
+from contextlib import nullcontext as does_not_raise
 
 import pytest
 from ska_ost_osd.telvalidation.semantic_validator import (
@@ -221,27 +221,36 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
         CODEC.dumps(invalid_data, strictness=2)
 
 
-def test_loads_invalid_json_with_validation_enabled():
+@pytest.mark.parametrize(
+    "strictness,expectation",
+    [
+        (0, does_not_raise()),
+        (1, does_not_raise()),
+        (2, pytest.raises(JsonValidationError)),
+    ],
+)
+def test_exception_handling_strictness_with_syntactically_invalid_json(
+    caplog, strictness, expectation
+):
     """
-    Verify that the strictness argument is respected when loading invalid
-    JSON, resulting in a JsonValidationError with strictness=2.
+    Verify that the strictness argument is respected when loading
+    syntactically invalid JSON, resulting in:
+
+      - warning only with strictness=0,1
+      - JsonValidationError with strictness=2.
     """
-    test_call = functools.partial(
-        CODEC.loads,
-        ConfigureRequest,
-        INVALID_LOW_CONFIGURE_JSON,
-        validate=True,
-    )
+    request = CODEC.loads(ConfigureRequest, VALID_LOW_CONFIGURE_JSON)
+    request.csp.common.subarray_id = -1
 
-    # no exception should be raised when strictness is 0 or 1
-    for strictness in (0, 1):
-        unmarshalled = test_call(strictness=strictness)
-        marshalled = CODEC.dumps(unmarshalled, strictness=strictness)
-        assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
-
-    # strictness=2 should result in an error
-    with pytest.raises(JsonValidationError):
-        test_call(strictness=2)
+    with expectation:
+        CODEC.loads(
+            ConfigureRequest,
+            CODEC.dumps(request),
+            validate=True,
+            strictness=strictness,
+        )
+        # note: if exception raised, this will not be asserted
+        assert "WARNING" in caplog.text
 
 
 @pytest.mark.parametrize("strictness", [0, 1, 2])

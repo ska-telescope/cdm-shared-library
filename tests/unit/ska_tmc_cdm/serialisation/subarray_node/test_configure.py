@@ -10,7 +10,6 @@ from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
 
-from ska_tmc_cdm.exceptions import JsonValidationError
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
 from ska_tmc_cdm.messages.subarray_node.configure import (
     MID_SCHEMA,
@@ -972,25 +971,6 @@ INVALID_LOW_CONFIGURE_JSON = """
         "stn_beams": [
           {
             "stn_beam_id": 1,
-            "host": [
-              [
-                0,
-                "192.168.0.1"
-              ]
-            ],
-            "port": [
-              [
-                0,
-                9000,
-                1
-              ]
-            ],
-            "mac": [
-              [
-                0,
-                "02-03-04-0a-0b-0c"
-              ]
-            ],
             "integration_ms": 849
           }
         ]
@@ -1051,9 +1031,9 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
                     VisStnBeamConfiguration(
                         stn_beam_id=1,
                         integration_ms=849,
-                        host=[[0, "192.168.0.1"]],
-                        port=[[0, 9000, 1]],
-                        mac=[[0, "02-03-04-0a-0b-0c"]],
+                        # host=[[0, "192.168.0.1"]],
+                        # port=[[0, 9000, 1]],
+                        # mac=[[0, "02-03-04-0a-0b-0c"]],
                     )
                 ],
             ),
