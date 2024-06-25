@@ -7,13 +7,15 @@ __all__ = ["Codec"]
 
 import json
 from os import PathLike
-from typing import Optional, Type
+from typing import Optional, Type, TypeVar
 
 from ska_tmc_cdm.messages.base import CdmObject
 
 from .telmodel_validation import semantic_validate_json, validate_json
 
 DEFAULT_STRICTNESS = None
+
+T = TypeVar("T", CdmObject)
 
 
 class Codec:
@@ -30,11 +32,11 @@ class Codec:
 
     @staticmethod
     def loads(
-        cdm_class: Type[CdmObject],
+        cdm_class: T,
         json_data: str,
         validate: bool = True,
         strictness: int = DEFAULT_STRICTNESS,
-    ) -> CdmObject:
+    ) -> T:
         """
         Create an instance of a CDM class from a JSON string.
 
