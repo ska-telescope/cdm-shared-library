@@ -103,24 +103,6 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     assert unmarshalled == expected
 
 
-# LOW_CONFIGURE_PARAMS = (
-#     (
-#         ConfigureRequest,
-#         VALID_LOW_CONFIGURE_JSON,
-#         True,
-#     ),
-# )
-
-
-# @pytest.mark.parametrize("msg_cls,json_str, is_validate", LOW_CONFIGURE_PARAMS)
-# def test_codec_loads_configure(msg_cls, json_str, is_validate):
-#     """
-#     Verify that the codec unmarshalls objects correctly.
-#     """
-#     with pytest.raises(JsonValidationError, match="Missing key: 'subarray_id'"):
-#         CODEC.loads(msg_cls, json_str, validate=is_validate)
-
-
 @pytest.mark.parametrize(
     "msg_cls,expected,instance, is_validate", TEST_PARAMETERS
 )
