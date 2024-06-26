@@ -12,8 +12,9 @@ from typing import Callable, ClassVar, Literal, Optional, Union
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import (
-    ConfigDict,
+    Discriminator,
     Field,
+    Tag,
     field_validator,
     model_serializer,
     model_validator,
@@ -34,6 +35,12 @@ UnitStr = str | u.Unit
 UnitInput = UnitStr | tuple[UnitStr, UnitStr]
 
 
+class TargetType(str, Enum):
+    SPECIAL = "special"
+    ICRS = "icrs"
+    PARTIAL = "partial"
+
+
 class SolarSystemObject(Enum):
     SUN = "Sun"
     MOON = "Moon"
@@ -48,8 +55,13 @@ class SolarSystemObject(Enum):
 
 
 class SpecialTarget(CdmObject):
-    reference_frame: Literal["special"] = "special"
+    reference_frame: Literal[TargetType.SPECIAL] = TargetType.SPECIAL
     name: SolarSystemObject
+
+
+class PartialTarget(CdmObject):
+    ca_offset_arcsec: float = 0.0
+    ie_offset_arcsec: float = 0.0
 
 
 # TODO: Target() is doing too much fancy logic IMHO.
@@ -64,7 +76,7 @@ class ICRSTarget(CdmObject):
     """
 
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
-    reference_frame: Literal["icrs"] = "icrs"
+    reference_frame: Literal[TargetType.ICRS] = TargetType.ICRS
 
     ra: Optional[str | float] = None
     dec: Optional[str | float] = None
@@ -202,8 +214,25 @@ class ICRSTarget(CdmObject):
         )
 
 
+def determine_target_type(val: Any) -> str:
+    if isinstance(val, dict):
+        if val.get("reference_frame") == TargetType.SPECIAL:
+            return TargetType.SPECIAL
+        elif val.get("reference_frame") == TargetType.ICRS:
+            return TargetType.ICRS
+        elif val.get("ra") is val.get("dec") is None:
+            return TargetType.PARTIAL
+        else:
+            raise ValueError("Unable to determine TargetType")
+
+
 Target = Annotated[
-    Union[ICRSTarget, SpecialTarget], Field(discriminator="reference_frame")
+    Union[
+        Annotated[ICRSTarget, Tag(TargetType.ICRS)],
+        Annotated[PartialTarget, Tag(TargetType.PARTIAL)],
+        Annotated[SpecialTarget, Tag(TargetType.SPECIAL)],
+    ],
+    Discriminator(determine_target_type),
 ]
 
 
