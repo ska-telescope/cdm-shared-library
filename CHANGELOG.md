@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 Unreleased
 **********
 
+10.0.0
+******
+
 * Removes Marshmallow schemas.
 * CDM models are no longer @dataclasses, but Pydantic BaseModel subclasses.
 * [BREAKING] All CDM models now require keyword arguments.
