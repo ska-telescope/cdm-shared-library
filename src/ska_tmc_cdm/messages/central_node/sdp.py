@@ -3,10 +3,11 @@ The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
 import math
-from dataclasses import field
 from typing import Optional
 
-from pydantic.dataclasses import dataclass
+from pydantic import Field
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
     "SDPWorkflow",
@@ -28,8 +29,7 @@ __all__ = [
 ]
 
 
-@dataclass
-class SDPWorkflow:
+class SDPWorkflow(CdmObject):
     """
     Class to hold SDPWorkflows for ProcessingBlock
 
@@ -45,8 +45,7 @@ class SDPWorkflow:
     version: str
 
 
-@dataclass
-class Channel:
+class Channel(CdmObject):
     """
     Class to hold Channels for ScanType
 
@@ -65,15 +64,14 @@ class Channel:
     # TODO: double-check what's optional here:
     count: int
     start: int
-    stride: Optional[int]
+    stride: Optional[int] = None
     freq_min: float
     freq_max: float
-    link_map: Optional[list[list]]
+    link_map: Optional[list[list]] = None
     spectral_window_id: Optional[str] = None
 
 
-@dataclass
-class ScanType:
+class ScanType(CdmObject):
     """
     Class to hold ScanType configuration
 
@@ -91,8 +89,7 @@ class ScanType:
     channels: list[Channel]
 
 
-@dataclass
-class PbDependency:
+class PbDependency(CdmObject):
     """
     Class to hold Dependencies for ProcessingBlock
 
@@ -104,8 +101,7 @@ class PbDependency:
     kind: list[str]
 
 
-@dataclass
-class ScriptConfiguration:
+class ScriptConfiguration(CdmObject):
     """
     Class to hold ScriptConfiguration
 
@@ -114,13 +110,12 @@ class ScriptConfiguration:
     :param version: Version of the processing script
     """
 
-    kind: str = None
-    name: str = None
-    version: str = None
+    kind: Optional[str] = None
+    name: Optional[str] = None
+    version: Optional[str] = None
 
 
-@dataclass
-class ProcessingBlockConfiguration:
+class ProcessingBlockConfiguration(CdmObject):
     """
     Class to hold ProcessingBlock configuration
 
@@ -134,17 +129,16 @@ class ProcessingBlockConfiguration:
 
     pb_id: Optional[str] = None
     workflow: Optional[SDPWorkflow] = None
-    # FIXME: should probably be `field(default_factory=dict)` not `None`
+    # FIXME: should probably be `Field(default_factory=dict)` not `None`
     parameters: Optional[dict] = None
-    # FIXME: should probably be `field(default_factory=list)` not `None`
+    # FIXME: should probably be `Field(default_factory=list)` not `None`
     dependencies: Optional[list[PbDependency]] = None
-    # FIXME: should probably be `field(default_factory=list)` not `None`
+    # FIXME: should probably be `Field(default_factory=list)` not `None`
     sbi_ids: Optional[list[str]] = None
     script: Optional[ScriptConfiguration] = None
 
 
-@dataclass
-class BeamConfiguration:
+class BeamConfiguration(CdmObject):
     """
     Class to hold Dependencies for Beam Configuration
 
@@ -162,8 +156,7 @@ class BeamConfiguration:
     vlbi_beam_id: Optional[int] = None
 
 
-@dataclass
-class ChannelConfiguration:
+class ChannelConfiguration(CdmObject):
     """
     Class to hold Dependencies for Channel Configuration
 
@@ -172,11 +165,10 @@ class ChannelConfiguration:
     """
 
     channels_id: Optional[str] = None
-    spectral_windows: list[Channel] = field(default_factory=list)
+    spectral_windows: list[Channel] = Field(default_factory=list)
 
 
-@dataclass
-class PolarisationConfiguration:
+class PolarisationConfiguration(CdmObject):
     """
     Class to hold Dependencies for Polarisation Configuration
 
@@ -185,11 +177,10 @@ class PolarisationConfiguration:
     """
 
     polarisations_id: Optional[str] = None
-    corr_type: list[str] = field(default_factory=list)
+    corr_type: list[str] = Field(default_factory=list)
 
 
-@dataclass
-class PhaseDir:
+class PhaseDir(CdmObject):
     """
     Class to hold PhaseDir configuration
 
@@ -222,8 +213,7 @@ class PhaseDir:
         )
 
 
-@dataclass
-class FieldConfiguration:
+class FieldConfiguration(CdmObject):
     """
     Class to hold Field configuration
 
@@ -237,8 +227,7 @@ class FieldConfiguration:
     phase_dir: Optional[PhaseDir] = None
 
 
-@dataclass
-class EBScanTypeBeam:
+class EBScanTypeBeam(CdmObject):
     """
     Class to hold EBScanTypeBeam Configuration
 
@@ -252,8 +241,7 @@ class EBScanTypeBeam:
     polarisations_id: Optional[str] = None
 
 
-@dataclass
-class EBScanType:
+class EBScanType(CdmObject):
     """
     Class to hold EBScanType configuration
 
@@ -263,12 +251,11 @@ class EBScanType:
     """
 
     scan_type_id: Optional[str] = None
-    beams: dict[str, EBScanTypeBeam] = field(default_factory=dict)
+    beams: dict[str, EBScanTypeBeam] = Field(default_factory=dict)
     derive_from: Optional[str] = None
 
 
-@dataclass
-class ExecutionBlockConfiguration:
+class ExecutionBlockConfiguration(CdmObject):
     """
     Class to hold ExecutionBlock configuration
 
@@ -278,14 +265,14 @@ class ExecutionBlockConfiguration:
     :param beams: Beam parameters for the purpose of the Science Data Processor.
     :param channels: Spectral windows per channel configuration.
     :param polarisations: Polarisation definition.
-    :param fields: Fields / Targets
+    :param fields: fields / Targets
     :param scan_types: Scan types. Associates scans with per-beam fields & channel configurations
     """
 
     eb_id: Optional[str] = None
     max_length: Optional[float] = None
-    context: dict = field(default_factory=dict)
-    # FIXME: should these all be `field(default_factory=list)` instead of `None`?
+    context: dict = Field(default_factory=dict)
+    # FIXME: should these all be `Field(default_factory=list)` instead of `None`?
     beams: Optional[list[BeamConfiguration]] = None
     channels: Optional[list[ChannelConfiguration]] = None
     polarisations: Optional[list[PolarisationConfiguration]] = None
@@ -293,8 +280,7 @@ class ExecutionBlockConfiguration:
     scan_types: Optional[list[EBScanType]] = None
 
 
-@dataclass
-class SDPConfiguration:
+class SDPConfiguration(CdmObject):
     """
     Class to hold SDP Configuration
 
@@ -309,11 +295,11 @@ class SDPConfiguration:
 
     eb_id: Optional[str] = None
     max_length: Optional[float] = None
-    # FIXME: should probably be `field(default_factory=list)` not `None`
+    # FIXME: should probably be `Field(default_factory=list)` not `None`
     scan_types: Optional[list[ScanType]] = None
-    # FIXME: should probably be `field(default_factory=list)` not `None`
+    # FIXME: should probably be `Field(default_factory=list)` not `None`
     processing_blocks: Optional[list[ProcessingBlockConfiguration]] = None
     execution_block: Optional[ExecutionBlockConfiguration] = None
-    # FIXME: should probably be `field(default_factory=dict)` not `None`
+    # FIXME: should probably be `Field(default_factory=dict)` not `None`
     resources: Optional[dict] = None
     interface: Optional[str] = None

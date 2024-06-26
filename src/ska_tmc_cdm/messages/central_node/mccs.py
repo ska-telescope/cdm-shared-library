@@ -6,13 +6,12 @@
 #
 # Distributed under the terms of the GPL license.
 # See LICENSE.txt for more info.
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = ["MCCSAllocate"]
 
 
-@dataclass
-class MCCSAllocate:
+class MCCSAllocate(CdmObject):
     """
     MCCSAllocate is a Python representation of the structured
     argument for a TMC CentralNode.AssignResourcesRequest.

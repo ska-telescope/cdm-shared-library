@@ -1,78 +1,42 @@
 """
-The codec module contains classes used by clients to marshall CDM classes to
-and from JSON. This saves the clients having to instantiate and manipulate the
-Marshmallow schema directly.
+This module contains a Codec class that provides a public interface for clients
+to de/serialise CDM classes from/to JSON. Basically this spares clients having to
+remember to pass all the arguments to `model_dump()`
 """
-__all__ = ["MarshmallowCodec"]
+__all__ = ["Codec"]
 
-from typing import Optional
+import json
+from os import PathLike
+from typing import Optional, Type, TypeVar
 
-from .shared import ValidatingSchema
+from ska_tmc_cdm.messages.base import CdmObject
 
-STRICTNESS = None
+from .telmodel_validation import semantic_validate_json, validate_json
+
+DEFAULT_STRICTNESS = None
+
+T = TypeVar("T", bound=CdmObject)
 
 
-class MarshmallowCodec:
-    """
-    MarshmallowCodec marshalls and unmarshalls CDM classes.
-
-    The mapping of CDM classes to Marshmallow schema is defined in this class.
-    """
-
-    def __init__(self):
-        self._schema = {}
-
-    def register_mapping(self, cdm_class):
-        """A decorator that is used to register the mapping between a
-        Marshmallow schema and the CDM class it serialises.
-
-        :param cdm_class: the CDM class this schema maps to
-        :return: the decorator
-        """
-
-        def decorator(class_definition):
-            self.set_schema(cdm_class, class_definition)
-            return class_definition
-
-        return decorator
-
-    def set_schema(self, cdm_class, schema_class):
-        """
-        Set the schema for a CDM class.
-
-        :param schema_class: Marshmallow schema to map
-        :param cdm_class: CDM class the schema maps to
-        """
-
-        self._schema[cdm_class] = schema_class
-
-    def load_from_file(
-        self,
-        cls,
-        path,
-        validate: bool = True,
-        strictness: Optional[int] = STRICTNESS,
+class Codec:
+    @staticmethod
+    def _telmodel_validation(
+        enforced: bool, jsonable_data: dict, strictness: Optional[int] = 0
     ):
-        """
-        Load an instance of a CDM class from disk.
+        if not enforced:
+            return
+        validate_json(jsonable_data, strictness=strictness)
+        # TODO: Revisit this / unify the validation rules.
+        if strictness and strictness >= 2:
+            semantic_validate_json(jsonable_data)
 
-        :param cls: the class to create from the file
-        :param path: the path to the file
-        :param validate: True to enable schema validation
-        :param strictness: optional validation strictness level (0=min, 2=max)
-        :return: an instance of cls
-        """
-        with open(path, "r", encoding="utf-8") as json_file:
-            json_data = json_file.read()
-            return self.loads(cls, json_data, validate, strictness)
-
+    @staticmethod
     def loads(
-        self,
-        cdm_class,
-        json_data,
+        cdm_class: T,
+        json_data: str,
         validate: bool = True,
-        strictness: Optional[int] = STRICTNESS,
-    ):
+        strictness: int = DEFAULT_STRICTNESS,
+    ) -> T:
         """
         Create an instance of a CDM class from a JSON string.
 
@@ -83,25 +47,24 @@ class MarshmallowCodec:
         :param json_data: the JSON to unmarshall
         :param validate: True to enable schema validation
         :param strictness: optional validation strictness level (0=min, 2=max)
-        :return: an instance of cls
+        :return: an instance of CdmObject
         """
-        schema_cls = self._schema[cdm_class]
-        schema_obj = schema_cls()
+        # Making Pydantic the first line of validation gives us
+        # basic checks up front, and also yields performance benefits
+        # because it uses a fast Rust JSON parser internally.
+        obj = cdm_class.model_validate_json(json_data)
+        jsonable_dict = obj.model_dump(
+            mode="json", exclude_none=True, by_alias=True
+        )
+        Codec._telmodel_validation(validate, jsonable_dict, strictness)
+        return obj
 
-        schema_obj.context[ValidatingSchema.VALIDATE] = validate
-        if strictness is not None:
-            schema_obj.context[
-                ValidatingSchema.VALIDATION_STRICTNESS
-            ] = strictness
-
-        return schema_obj.loads(json_data=json_data)
-
+    @staticmethod
     def dumps(
-        self,
-        obj,
+        obj: CdmObject,
         validate: bool = True,
-        strictness: Optional[int] = STRICTNESS,
-    ):
+        strictness: Optional[int] = DEFAULT_STRICTNESS,
+    ) -> str:
         """
         Return a string JSON representation of a CDM instance.
 
@@ -113,13 +76,28 @@ class MarshmallowCodec:
         :param strictness: optional validation strictness level (0=min, 2=max)
         :return: JSON representation of obj
         """
-        schema_cls = self._schema[obj.__class__]
-        schema_obj = schema_cls()
+        jsonable_dict = obj.model_dump(
+            mode="json", exclude_none=True, by_alias=True
+        )
+        Codec._telmodel_validation(validate, jsonable_dict, strictness)
+        return json.dumps(jsonable_dict)
 
-        schema_obj.context[ValidatingSchema.VALIDATE] = validate
-        if strictness is not None:
-            schema_obj.context[
-                ValidatingSchema.VALIDATION_STRICTNESS
-            ] = strictness
+    @staticmethod
+    def load_from_file(
+        cdm_class: Type[CdmObject],
+        path: PathLike[str],
+        validate: bool = True,
+        strictness: Optional[int] = DEFAULT_STRICTNESS,
+    ):
+        """
+        Load an instance of a CDM class from disk.
 
-        return schema_obj.dumps(obj)
+        :param cdm_class: the class to create from the file
+        :param path: the path to the file
+        :param validate: True to enable schema validation
+        :param strictness: optional validation strictness level (0=min, 2=max)
+        :return: an instance of cls
+        """
+        with open(path, "r", encoding="utf-8") as json_file:
+            json_data = json_file.read()
+            return Codec.loads(cdm_class, json_data, validate, strictness)

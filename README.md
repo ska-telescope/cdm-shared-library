@@ -16,7 +16,7 @@ This library can marshal JSON for the following Tango devices.
 
 ## Quickstart
 
-This project is a Python library that uses `poetry` to manage the enivrionment.
+This project is a Python library that uses `poetry` to manage the environment.
 ``make`` targets are provided for the convenience of developers.
 
 First, clone this repository with:

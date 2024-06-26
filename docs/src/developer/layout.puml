@@ -1,9 +1,6 @@
 @startuml
 hide empty members
 
-package marshmallow {
-	class Schema
-}
 
 package ska_tmc_cdm {
 	package messages {
@@ -37,34 +34,6 @@ package ska_tmc_cdm {
             end note
         }
     }
-	package schemas {
-		package "<<//name of Tango device//>>" as P1 {
-			package "<<//name of device command//>>" as P2 <<Rectangle>> {
-				class RequestSchema
-				note top of RequestSchema
-					Marshmallow schema
-					for converting the
-					Request object to
-					and from JSON
-				end note
-
-				class ResponseSchema
-				note top of ResponseSchema
-					Marshmallow schema
-					for converting the
-					Response object to
-					and from JSON
-				end note
-			}
-		}
-	}
-	note as N2
-		Classes in the ""ska_tmc_cdm.schemas""
-		package transform their namesakes
-		in the ""ska_tmc_cdm.messages""
-		package to and from JSON.
-	end note
-
 	note as N1
 		One Python package
 		per Tango device.
@@ -72,21 +41,17 @@ package ska_tmc_cdm {
 	P2 .. N1
 	N1 .. device
 
-	note as N3
+	note as N2
 		One Python module per
 		Tango command, or a
 		Python package if the
 		object is complex.
 	end note
-	P2 .. N3
-	N3 .. command.py
+	P2 .. N2
+	N2 .. command.py
 
 
 
 }
-
-
-ResponseSchema --|> Schema
-RequestSchema --|> Schema
 
 @enduml

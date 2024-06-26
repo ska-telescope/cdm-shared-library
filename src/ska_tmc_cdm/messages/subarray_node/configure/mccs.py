@@ -6,7 +6,9 @@ command.
 
 from typing import List, Optional
 
-from pydantic.dataclasses import dataclass
+from pydantic import AliasChoices, Field
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
     "MCCSConfiguration",
@@ -17,8 +19,7 @@ __all__ = [
 ]
 
 
-@dataclass
-class SubarrayBeamSkyCoordinates:
+class SubarrayBeamSkyCoordinates(CdmObject):
     """
     A class to hold Subarray Beam sky coordinates configuration items
     :param reference_frame: Must be one of: ["topocentric", "ICRS", "galactic"]
@@ -34,8 +35,7 @@ class SubarrayBeamSkyCoordinates:
     c2: float = None
 
 
-@dataclass
-class SubarrayBeamLogicalBands:
+class SubarrayBeamLogicalBands(CdmObject):
     """
     A class to hold Subarray Beam logical bands configuration items
     :param start_channel: Start channel value.
@@ -48,8 +48,7 @@ class SubarrayBeamLogicalBands:
     number_of_channels: int = None
 
 
-@dataclass
-class SubarrayBeamAperatures:
+class SubarrayBeamAperatures(CdmObject):
     """
     A class to hold Subarray Beam aperatures configuration
     items
@@ -64,8 +63,7 @@ class SubarrayBeamAperatures:
     weighting_key_ref: str = None
 
 
-@dataclass
-class SubarrayBeamConfiguration:
+class SubarrayBeamConfiguration(CdmObject):
     """A class to hold subarray_beam configuration attributes
 
     :param subarray_beam_id: stationbeam's id
@@ -81,12 +79,16 @@ class SubarrayBeamConfiguration:
     subarray_beam_id: Optional[int] = None
 
 
-@dataclass(kw_only=True)
-class MCCSConfiguration:
+class MCCSConfiguration(CdmObject):
     """
     Class to hold all subarray configuration.
     :param subarray_beam_configs: a list of subarray beam configurations
     :type subarray_beam_configs: List[SubarrayBeamConfiguration]
     """
 
-    subarray_beam_configs: List[SubarrayBeamConfiguration]
+    subarray_beam_configs: List[SubarrayBeamConfiguration] = Field(
+        serialization_alias="subarray_beams",
+        validation_alias=AliasChoices(
+            "subarray_beams", "subarray_beam_configs"
+        ),
+    )

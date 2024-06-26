@@ -15,9 +15,9 @@ def test_stationconfiguration_object_equality():
     equal.
     """
     station_id = 1
-    config = StationConfiguration(station_id)
-    assert config == StationConfiguration(station_id)
-    assert config != StationConfiguration(3)
+    config = StationConfiguration(station_id=station_id)
+    assert config == StationConfiguration(station_id=station_id)
+    assert config != StationConfiguration(station_id=3)
 
 
 def test_stationconfiguration_not_equal_to_other_objects():
@@ -25,7 +25,7 @@ def test_stationconfiguration_not_equal_to_other_objects():
     Verify that StationConfiguration objects are not considered equal to objects
     of other types.
     """
-    config = StationConfiguration(1)
+    config = StationConfiguration(station_id=1)
     assert config is not None
     assert config != 1
     assert config != object()
@@ -95,8 +95,8 @@ def test_configurerequest_equals():
     attributes are equal.
     """
     station_configs = [
-        StationConfiguration(1),
-        StationConfiguration(2),
+        StationConfiguration(station_id=1),
+        StationConfiguration(station_id=2),
     ]
     subarray_beam_config = SubarrayBeamConfiguration(
         subarray_beam_id=1,
@@ -132,8 +132,8 @@ def test_configurerequest_not_equal_to_other_objects():
     of other types.
     """
     station_configs = [
-        StationConfiguration(1),
-        StationConfiguration(2),
+        StationConfiguration(station_id=1),
+        StationConfiguration(station_id=2),
     ]
     subarray_beam_config = SubarrayBeamConfiguration(
         subarray_beam_id=1,

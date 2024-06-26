@@ -202,7 +202,7 @@ TARGET_VALIDATION_CASES = [
     ),
     ValidationCase(
         builder=TargetBuilder().set_ra(5),  # no dec error
-        expected_error=TypeError,
+        expected_error=ValueError,
     ),
 ]
 

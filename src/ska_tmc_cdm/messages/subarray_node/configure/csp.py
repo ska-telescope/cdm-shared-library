@@ -6,8 +6,9 @@ command.
 from enum import Enum
 from typing import List, Optional, Tuple
 
-from pydantic import Field
-from pydantic.dataclasses import dataclass
+from pydantic import AliasChoices, Field
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 from . import core
 
@@ -37,8 +38,7 @@ class FSPFunctionMode(Enum):
     VLBI = "VLBI"
 
 
-@dataclass
-class FSPConfiguration:
+class FSPConfiguration(CdmObject):
     """
     FSPConfiguration defines the configuration for a CSP Frequency Slice
     Processor.
@@ -73,8 +73,7 @@ class FSPConfiguration:
     zoom_window_tuning: Optional[int] = None
 
 
-@dataclass
-class SubarrayConfiguration:
+class SubarrayConfiguration(CdmObject):
     """
     Class to hold the parameters relevant only for the current sub-array device.
 
@@ -84,8 +83,7 @@ class SubarrayConfiguration:
     subarray_name: Optional[str] = ""
 
 
-@dataclass(kw_only=True)
-class CommonConfiguration:
+class CommonConfiguration(CdmObject):
     """
     Class to hold the CSP sub-elements.
 
@@ -101,8 +99,7 @@ class CommonConfiguration:
     band_5_tuning: Optional[List[float]] = None
 
 
-@dataclass(kw_only=True)
-class StnBeamConfiguration:
+class StnBeamConfiguration(CdmObject):
     """
     Class to hold Stations Beam Configuration.
 
@@ -118,8 +115,7 @@ class StnBeamConfiguration:
     delay_poly: Optional[str] = None
 
 
-@dataclass
-class VisStnBeamConfiguration:
+class VisStnBeamConfiguration(CdmObject):
     """
     Class to hold Vis Stations Beam Configuration.
 
@@ -137,8 +133,7 @@ class VisStnBeamConfiguration:
     mac: Optional[List[Tuple[int, str]]] = None
 
 
-@dataclass
-class StationConfiguration:
+class StationConfiguration(CdmObject):
     """
     Class to hold Stations Configuration.
 
@@ -150,8 +145,7 @@ class StationConfiguration:
     stn_beams: Optional[List[StnBeamConfiguration]] = None
 
 
-@dataclass
-class VisFspConfiguration:
+class VisFspConfiguration(CdmObject):
     """
     Class to hold Visibility(Vis) Configuration.
 
@@ -165,8 +159,7 @@ class VisFspConfiguration:
     firmware: Optional[str] = None
 
 
-@dataclass
-class VisConfiguration:
+class VisConfiguration(CdmObject):
     """
         Class to hold Vis Configuration.
     firmware
@@ -178,8 +171,7 @@ class VisConfiguration:
     stn_beams: Optional[List[VisStnBeamConfiguration]] = None
 
 
-@dataclass
-class LowCBFConfiguration:
+class LowCBFConfiguration(CdmObject):
     """
     Class to hold Low CBF Configuration.
 
@@ -191,13 +183,11 @@ class LowCBFConfiguration:
     vis: Optional[VisConfiguration] = None
 
 
-@dataclass
-class VLBIConfiguration:
+class VLBIConfiguration(CdmObject):
     pass
 
 
-@dataclass
-class CBFConfiguration:
+class CBFConfiguration(CdmObject):
     """
     Class to hold all FSP and VLBI configurations.
 
@@ -205,24 +195,28 @@ class CBFConfiguration:
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
 
-    fsp_configs: List[FSPConfiguration]
+    fsp_configs: List[FSPConfiguration] = Field(
+        serialization_alias="fsp",
+        validation_alias=AliasChoices("fsp", "fsp_configs"),
+    )
     # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter
     #  will be replaced with the respective class(VLBIConfiguration)
-    vlbi_config: Optional[dict] = None
+    vlbi_config: Optional[dict] = Field(
+        default=None,
+        serialization_alias="vlbi",
+        validation_alias=AliasChoices("vlbi", "vlbi_config"),
+    )
 
 
-@dataclass
-class PSTConfiguration:
+class PSTConfiguration(CdmObject):
     pass
 
 
-@dataclass
-class PSSConfiguration:
+class PSSConfiguration(CdmObject):
     pass
 
 
-@dataclass
-class CSPConfiguration:
+class CSPConfiguration(CdmObject):
     """
     Class to hold all CSP configuration. In order to support backward
     compatibility, We have kept old attributes as it is and added
@@ -239,9 +233,21 @@ class CSPConfiguration:
     interface: Optional[str] = None
     subarray: Optional[SubarrayConfiguration] = None
     common: Optional[CommonConfiguration] = None
-    cbf_config: Optional[CBFConfiguration] = None
+    cbf_config: Optional[CBFConfiguration] = Field(
+        default=None,
+        serialization_alias="cbf",
+        validation_alias=AliasChoices("cbf", "cbf_config"),
+    )
     # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.
-    pst_config: Optional[PSTConfiguration | dict] = None
-    pss_config: Optional[PSSConfiguration | dict] = None
+    pst_config: Optional[PSTConfiguration | dict] = Field(
+        default=None,
+        serialization_alias="pst",
+        validation_alias=AliasChoices("pst", "pst_config"),
+    )
+    pss_config: Optional[PSSConfiguration | dict] = Field(
+        default=None,
+        serialization_alias="pss",
+        validation_alias=AliasChoices("pss", "pss_config"),
+    )
     lowcbf: Optional[LowCBFConfiguration] = None

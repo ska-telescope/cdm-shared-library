@@ -4,15 +4,14 @@ TMC Assigned Resources
 
 from typing import Optional
 
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = ["MCCSAllocation", "AssignedResources"]
 
 SCHEMA = "https://schema.skao.int/ska-low-tmc-assignedresources/2.0"
 
 
-@dataclass
-class MCCSAllocation:
+class MCCSAllocation(CdmObject):
     """
     MCCSAllocation is a Python representation of the structured JSON
     representing the resources assigned to an MCCS subarray.
@@ -39,8 +38,7 @@ class MCCSAllocation:
         )
 
 
-@dataclass(kw_only=True)
-class AssignedResources:
+class AssignedResources(CdmObject):
     """
     AssignedResources models the structured JSON returned when the
     MCCSSubarray.assigned_resources Tango attribute is read.

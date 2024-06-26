@@ -6,14 +6,21 @@ As configurations become more complex, they may be rehomed in a submodule of
 this package.
 """
 import math
-from dataclasses import InitVar, field
 from enum import Enum
-from typing import ClassVar, Optional
+from typing import Callable, ClassVar, Optional
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
-from pydantic import ConfigDict, model_validator
-from pydantic.dataclasses import dataclass
+from pydantic import (
+    ConfigDict,
+    Field,
+    field_validator,
+    model_serializer,
+    model_validator,
+)
+from typing_extensions import Self
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
     "PointingConfiguration",
@@ -24,12 +31,13 @@ __all__ = [
 ]
 
 UnitStr = str | u.Unit
+UnitInput = UnitStr | tuple[UnitStr, UnitStr]
 
 
-@dataclass(
-    config=ConfigDict(arbitrary_types_allowed=True)
-)  # Required because AstroPy types aren't Pydantic models
-class Target:
+# TODO: Target() is doing too much fancy logic IMHO.
+# Could we annotate astropy.SkyCoord and use that directly
+# instead?
+class Target(CdmObject):
     """
     Target encapsulates source coordinates and source metadata.
 
@@ -37,41 +45,85 @@ class Target:
     non-ra/dec frames such as galactic are not supported.
     """
 
-    ra: InitVar[Optional[str | int | float | u.Quantity]] = None
-    dec: InitVar[Optional[str | int | float | u.Quantity]] = None
-    target_name: str = ""
-    reference_frame: InitVar[str] = "icrs"
-    unit: InitVar[UnitStr | tuple[UnitStr, UnitStr]] = (
-        u.hourangle,
-        u.deg,
-    )
-    ca_offset_arcsec: float = 0.0
-    ie_offset_arcsec: float = 0.0
-    coord: Optional[SkyCoord] = field(init=False)
-
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
 
-    def __post_init__(
-        self,
-        ra: str | u.Quantity,
-        dec: str | u.Quantity,
-        reference_frame: str,
-        unit: u.Unit,
-    ):
-        if ra is None and dec is None:
-            self.coord = None
-        else:
-            self.coord = SkyCoord(
-                ra=ra, dec=dec, unit=unit, frame=reference_frame
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        validate_assignment=True,
+        validate_default=True,
+    )
+    ra: Optional[str | float] = None
+    dec: Optional[str | float] = None
+    # TODO: Can this be Literal["ICRS"] instead?
+    reference_frame: str = "icrs"
+    unit: UnitInput = Field(default=("hourangle", "deg"), exclude=True)
+    target_name: str = ""
+    ca_offset_arcsec: float = 0.0
+    ie_offset_arcsec: float = 0.0
+
+    @property
+    def coord(self) -> Optional[SkyCoord]:
+        if self.ra and self.dec:
+            return SkyCoord(
+                ra=self.ra,
+                dec=self.dec,
+                unit=self.unit,
+                frame=self.reference_frame,
             )
 
+    @model_serializer(mode="wrap")
+    def omit_defaults(self, handler: Callable):
+        """
+        (Custom serializer logic copied verbatim from
+        removed Marshmallow schema.)
+
+        Don't bother sending JSON fields with null/empty/default values.
+        """
+        data = handler(self)
+        if self.ra is None and self.dec is None:
+            # These should already be filtered out
+            # by exclude_none=True
+            data.pop("ra", None)
+            data.pop("dec", None)
+            del data["reference_frame"]
+        else:
+            # TODO: IMHO doing this conversion here is janky. If we only want to
+            # work with ICRS coordinates, we should enforce that as part of
+            # validation, not convert to it at the end when we dump()
+            # Preseved directly from Marshmallow...
+            #     Process Target co-ordinates by converting them to ICRS frame before
+            #     the JSON marshalling process begins.
+            icrs_coord = self.coord.transform_to("icrs")
+            data["reference_frame"] = icrs_coord.frame.name.upper()
+            data["ra"], data["dec"] = icrs_coord.to_string(
+                "hmsdms", sep=":"
+            ).split(" ")
+
+        # If offset values are zero, omit them:
+        for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
+            if data[field_name] == 0.0:
+                del data[field_name]
+
+        if data["target_name"] == "":
+            del data["target_name"]
+
+        return data
+
+    @field_validator("reference_frame")
+    @classmethod
+    def lowercase(cls, value: str) -> str:
+        """
+        Load to lowercase for compatibility with removed Marshmallow schema
+        """
+        return value.lower()
+
     @model_validator(mode="after")
-    def coord_or_offsets_required(self) -> "Target":
-        if self.coord is None:
-            if not (self.ca_offset_arcsec or self.ie_offset_arcsec):
-                raise ValueError(
-                    "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
-                )
+    def ra_dec_or_offsets_required(self) -> Self:
+        offsets = self.ca_offset_arcsec or self.ie_offset_arcsec
+        if not self.coord and not offsets:
+            raise ValueError(
+                "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
+            )
         return self
 
     def __eq__(self, other):
@@ -151,8 +203,7 @@ class PointingCorrection(Enum):
     RESET = "RESET"
 
 
-@dataclass
-class PointingConfiguration:
+class PointingConfiguration(CdmObject):
     """
     PointingConfiguration specifies where the subarray receptors are going to
     point.
@@ -173,8 +224,7 @@ class ReceiverBand(Enum):
     BAND_5B = "5b"
 
 
-@dataclass
-class DishConfiguration:
+class DishConfiguration(CdmObject):
     """
     DishConfiguration specifies how SKA MID dishes in a sub-array should be
     configured. At the moment, this is limited to setting the receiver band.

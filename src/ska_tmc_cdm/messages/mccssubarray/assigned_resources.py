@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from dataclasses import field
+from pydantic import Field
 
-from pydantic.dataclasses import dataclass
+from ska_tmc_cdm.messages.base import CdmObject
 
 # This file is part of the CDM library
 #
@@ -12,8 +12,7 @@ __all__ = ["AssignedResources"]
 SCHEMA = "https://schema.skao.int/ska-low-mccs-assignedresources/2.0"
 
 
-@dataclass
-class AssignedResources:
+class AssignedResources(CdmObject):
     """
     AssignedResources is the object representation of the JSON returned by the
     MCCSSubarray.assigned_resources attribute.
@@ -25,6 +24,6 @@ class AssignedResources:
     """
 
     interface: str = SCHEMA
-    subarray_beam_ids: list[int] = field(default_factory=list)
-    station_ids: list[list[int]] = field(default_factory=list)
-    channel_blocks: list[int] = field(default_factory=list)
+    subarray_beam_ids: list[int] = Field(default_factory=list)
+    station_ids: list[list[int]] = Field(default_factory=list)
+    channel_blocks: list[int] = Field(default_factory=list)

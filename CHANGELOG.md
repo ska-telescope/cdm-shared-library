@@ -4,6 +4,14 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+Unreleased
+**********
+
+* Removes Marshmallow schemas.
+* CDM models are no longer @dataclasses, but Pydantic BaseModel subclasses.
+* [BREAKING] All CDM models now require keyword arguments.
+* Semantic validations only run when strictness is 2 or higher.
+
 9.2.1
 *****
 
@@ -45,9 +53,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 *****
 
 * Updated version of ska_telmodel which has semantic validation for SBD
-* Added new rule, next line support and modified frequency min max ranges in 
+* Added new rule, next line support and modified frequency min max ranges in
   existing semantic validation test-cases.
-* Added default schema to AssignResourcesRequest, ReleaseResourcesRequest and 
+* Added default schema to AssignResourcesRequest, ReleaseResourcesRequest and
   ConfigureRequest
 
 8.1.0

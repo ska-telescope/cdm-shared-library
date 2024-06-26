@@ -2,10 +2,12 @@
 The messages module provides simple Python representations of the structured
 request and response for the TMC CentralNode.AssignResources command.
 """
-from typing import Optional
+from typing import Callable, Optional
 
-from pydantic import Field, model_validator
-from pydantic.dataclasses import dataclass
+from pydantic import AliasChoices, Field, field_serializer, model_validator
+from typing_extensions import Self
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 from .common import DishAllocation
 from .mccs import MCCSAllocate
@@ -17,8 +19,7 @@ MID_SCHEMA = "https://schema.skao.int/ska-tmc-assignresources/2.1"
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-assignresources/3.2"
 
 
-@dataclass
-class AssignResourcesRequest:
+class AssignResourcesRequest(CdmObject):
     """
     AssignResourcesRequest is a Python representation of the structured
     argument for a TMC CentralNode.AssignResourcesRequest request.
@@ -39,9 +40,15 @@ class AssignResourcesRequest:
     subarray_id: Optional[int] = None
     # FIXME: Do we really need this dish/dish_allocation inconsistency?
     dish: Optional[DishAllocation] = Field(
-        default=None, alias="dish_allocation"
+        default=None,
+        validation_alias=AliasChoices("dish", "dish_allocation"),
+        serialization_alias="dish",
     )
-    sdp_config: Optional[SDPConfiguration] = None
+    sdp_config: Optional[SDPConfiguration] = Field(
+        default=None,
+        validation_alias=AliasChoices("sdp", "sdp_config"),
+        serialization_alias="sdp",
+    )
     mccs: Optional[MCCSAllocate] = None
     interface: Optional[str] = None
     transaction_id: Optional[str] = None
@@ -59,7 +66,7 @@ class AssignResourcesRequest:
         return self
 
     @model_validator(mode="after")
-    def set_default_schema(self) -> "AssignResourcesRequest":
+    def set_default_schema(self) -> Self:
         if self.interface is None:
             if self.mccs is not None:
                 self.interface = LOW_SCHEMA
@@ -120,13 +127,24 @@ class AssignResourcesRequest:
         )
 
 
-@dataclass
-class AssignResourcesResponse:
+class AssignResourcesResponse(CdmObject):
     """
     AssignResourcesResponse is a Python representation of the structured
     response from a TMC CentralNode.AssignResources request.
     """
 
     dish: Optional[DishAllocation] = Field(
-        default=None, alias="dish_allocation"
+        default=None, validation_alias=AliasChoices("dish", "dish_allocation")
     )
+
+    @field_serializer("dish", mode="wrap", when_used="json-unless-none")
+    def _rename_receptor_ids_dump(
+        self, dish: DishAllocation, handler: Callable
+    ):
+        """
+        For compatibility reasons, in this specific context, we
+        rename the 'receptor_ids' field to 'receptor_ids_allocated'
+        """
+        output = handler(dish)
+        output["receptor_ids_allocated"] = output.pop("receptor_ids")
+        return output

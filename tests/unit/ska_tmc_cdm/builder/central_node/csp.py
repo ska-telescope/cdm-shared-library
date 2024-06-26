@@ -33,7 +33,7 @@ class CommonConfigurationBuilder:
         Build or create CDM CommonConfiguration object
         :return: CDM CommonConfiguration object
         """
-        return CommonConfiguration(self.subarray_id)
+        return CommonConfiguration(subarray_id=self.subarray_id)
 
 
 class ResourceConfigurationBuilder:
@@ -89,10 +89,10 @@ class ResourceConfigurationBuilder:
         :return: CDM ResourceConfiguration object
         """
         return ResourceConfiguration(
-            self.device,
-            self.shared,
-            self.fw_image,
-            self.fw_mode,
+            device=self.device,
+            shared=self.shared,
+            fw_image=self.fw_image,
+            fw_mode=self.fw_mode,
         )
 
 
@@ -121,7 +121,7 @@ class LowCbfConfigurationBuilder:
         Build or create CDM LowCbfConfiguration object
         :return: CDM LowCbfConfiguration object
         """
-        return LowCbfConfiguration(self.resources)
+        return LowCbfConfiguration(resources=self.resources)
 
 
 class CSPConfigurationBuilder:
@@ -172,7 +172,7 @@ class CSPConfigurationBuilder:
         :return: CDM CSPConfiguration object
         """
         return CSPConfiguration(
-            self.interface,
-            self.common,
-            self.lowcbf,
+            interface=self.interface,
+            common=self.common,
+            lowcbf=self.lowcbf,
         )

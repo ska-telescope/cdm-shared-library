@@ -8,7 +8,7 @@ __all__ = ["ConfigureRequest"]
 from typing import Optional
 
 from pydantic import model_validator
-from pydantic.dataclasses import dataclass
+from typing_extensions import Self
 
 from .core import DishConfiguration, PointingConfiguration
 from .csp import CSPConfiguration
@@ -20,8 +20,10 @@ MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.3"
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-configure/3.1"
 
 
-@dataclass
-class ConfigureRequest:
+from ska_tmc_cdm.messages.base import CdmObject
+
+
+class ConfigureRequest(CdmObject):
     """
     ConfigureRequest encapsulates the arguments required for the TMC
     SubArrayNode.Configure() command.
@@ -48,7 +50,7 @@ class ConfigureRequest:
     transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
-    def partial_configuration_validation(self) -> "ConfigureRequest":
+    def partial_configuration_validation(self) -> Self:
         if self.dish and self.tmc and not self.tmc.partial_configuration:
             if not self.pointing.target.coord:
                 raise ValueError(
@@ -57,7 +59,7 @@ class ConfigureRequest:
         return self
 
     @model_validator(mode="after")
-    def mccs_or_dish_validation(self) -> "ConfigureRequest":
+    def mccs_or_dish_validation(self) -> Self:
         if self.mccs is not None and (self.dish is not None):
             raise ValueError("Can't allocate dish in the same call as mccs")
         if self.mccs is None and self.dish is None and self.interface is None:
@@ -65,7 +67,7 @@ class ConfigureRequest:
         return self
 
     @model_validator(mode="after")
-    def set_default_schema(self) -> "ConfigureRequest":
+    def set_default_schema(self) -> Self:
         if self.interface is None:
             if self.mccs is not None:
                 self.interface = LOW_SCHEMA
