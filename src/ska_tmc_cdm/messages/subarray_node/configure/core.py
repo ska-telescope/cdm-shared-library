@@ -7,11 +7,12 @@ this package.
 """
 import math
 from enum import Enum
-from typing import Callable, ClassVar, Literal, Optional, Union
+from typing import Any, Callable, ClassVar, Literal, Optional, Union
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import (
+    ConfigDict,
     Discriminator,
     Field,
     Tag,
@@ -39,6 +40,17 @@ class TargetType(str, Enum):
     SPECIAL = "special"
     ICRS = "icrs"
     PARTIAL = "partial"
+
+    @classmethod
+    def determine(cls, val: Any) -> Self:
+        if isinstance(val, dict):
+            if val.get("reference_frame") == cls.SPECIAL:
+                return cls.SPECIAL
+            elif val.get("reference_frame") == cls.ICRS:
+                return cls.ICRS
+            elif val.get("ra") is val.get("dec") is None:
+                return cls.PARTIAL
+        raise ValueError("Unable to determine TargetType")
 
 
 class SolarSystemObject(Enum):
@@ -74,6 +86,8 @@ class ICRSTarget(CdmObject):
     The SubArrayNode ICD specifies that RA and Dec must be provided, hence
     non-ra/dec frames such as galactic are not supported.
     """
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
     reference_frame: Literal[TargetType.ICRS] = TargetType.ICRS
@@ -214,25 +228,13 @@ class ICRSTarget(CdmObject):
         )
 
 
-def determine_target_type(val: Any) -> str:
-    if isinstance(val, dict):
-        if val.get("reference_frame") == TargetType.SPECIAL:
-            return TargetType.SPECIAL
-        elif val.get("reference_frame") == TargetType.ICRS:
-            return TargetType.ICRS
-        elif val.get("ra") is val.get("dec") is None:
-            return TargetType.PARTIAL
-        else:
-            raise ValueError("Unable to determine TargetType")
-
-
 Target = Annotated[
     Union[
         Annotated[ICRSTarget, Tag(TargetType.ICRS)],
         Annotated[PartialTarget, Tag(TargetType.PARTIAL)],
         Annotated[SpecialTarget, Tag(TargetType.SPECIAL)],
     ],
-    Discriminator(determine_target_type),
+    Discriminator(TargetType.determine),
 ]
 
 
