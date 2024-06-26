@@ -7,7 +7,7 @@ this package.
 """
 import math
 from enum import Enum
-from typing import Callable, ClassVar, Optional
+from typing import Callable, ClassVar, Literal, Optional, Union
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
@@ -18,7 +18,7 @@ from pydantic import (
     model_serializer,
     model_validator,
 )
-from typing_extensions import Self
+from typing_extensions import Annotated, Self
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -34,10 +34,28 @@ UnitStr = str | u.Unit
 UnitInput = UnitStr | tuple[UnitStr, UnitStr]
 
 
+class SolarSystemObject(Enum):
+    SUN = "Sun"
+    MOON = "Moon"
+    MERCURY = "Mercury"
+    VENUS = "Venus"
+    MARS = "Mars"
+    JUPITER = "Jupiter"
+    SATURN = "Saturn"
+    URANUS = "Uranus"
+    NEPTUNE = "Neptune"
+    PLUTO = "Pluto"
+
+
+class SpecialTarget(CdmObject):
+    reference_frame: Literal["special"] = "special"
+    name: SolarSystemObject
+
+
 # TODO: Target() is doing too much fancy logic IMHO.
 # Could we annotate astropy.SkyCoord and use that directly
 # instead?
-class Target(CdmObject):
+class ICRSTarget(CdmObject):
     """
     Target encapsulates source coordinates and source metadata.
 
@@ -46,16 +64,10 @@ class Target(CdmObject):
     """
 
     OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
+    reference_frame: Literal["icrs"] = "icrs"
 
-    model_config = ConfigDict(
-        arbitrary_types_allowed=True,
-        validate_assignment=True,
-        validate_default=True,
-    )
     ra: Optional[str | float] = None
     dec: Optional[str | float] = None
-    # TODO: Can this be Literal["ICRS"] instead?
-    reference_frame: str = "icrs"
     unit: UnitInput = Field(default=("hourangle", "deg"), exclude=True)
     target_name: str = ""
     ca_offset_arcsec: float = 0.0
@@ -188,6 +200,11 @@ class Target(CdmObject):
         return "<Target: {!r} ({} {})>".format(
             target_name, hmsdms, reference_frame
         )
+
+
+Target = Annotated[
+    Union[ICRSTarget, SpecialTarget], Field(discriminator="reference_frame")
+]
 
 
 class PointingCorrection(Enum):
