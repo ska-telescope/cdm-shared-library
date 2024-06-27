@@ -72,14 +72,37 @@ class SpecialTarget(CdmObject):
 
 
 class PartialTarget(CdmObject):
+    OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
+    target_name: str = ""
     ca_offset_arcsec: float = 0.0
     ie_offset_arcsec: float = 0.0
+
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, Target):
+            return False
+
+        name_and_offsets_matching = (
+            self.target_name == other.target_name
+            and math.isclose(
+                self.ca_offset_arcsec,
+                other.ca_offset_arcsec,
+                abs_tol=self.OFFSET_MARGIN_IN_RAD,
+            )
+            and math.isclose(
+                self.ie_offset_arcsec,
+                other.ie_offset_arcsec,
+                abs_tol=self.OFFSET_MARGIN_IN_RAD,
+            )
+        )
+        return name_and_offsets_matching
+
 
 
 # TODO: Target() is doing too much fancy logic IMHO.
 # Could we annotate astropy.SkyCoord and use that directly
 # instead?
-class ICRSTarget(CdmObject):
+class ICRSTarget(PartialTarget):
     """
     Target encapsulates source coordinates and source metadata.
 
@@ -89,25 +112,21 @@ class ICRSTarget(CdmObject):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    OFFSET_MARGIN_IN_RAD: ClassVar[float] = 6e-17  # Arbitrary small number
+
     reference_frame: Literal[TargetType.ICRS] = TargetType.ICRS
 
-    ra: Optional[str | float] = None
-    dec: Optional[str | float] = None
+    ra: str | float
+    dec: str | float
     unit: UnitInput = Field(default=("hourangle", "deg"), exclude=True)
-    target_name: str = ""
-    ca_offset_arcsec: float = 0.0
-    ie_offset_arcsec: float = 0.0
 
     @property
-    def coord(self) -> Optional[SkyCoord]:
-        if self.ra and self.dec:
-            return SkyCoord(
-                ra=self.ra,
-                dec=self.dec,
-                unit=self.unit,
-                frame=self.reference_frame,
-            )
+    def coord(self) -> SkyCoord:
+        return SkyCoord(
+            ra=self.ra,
+            dec=self.dec,
+            unit=self.unit,
+            frame=self.reference_frame,
+        )
 
     @model_serializer(mode="wrap")
     def omit_defaults(self, handler: Callable):
@@ -118,24 +137,17 @@ class ICRSTarget(CdmObject):
         Don't bother sending JSON fields with null/empty/default values.
         """
         data = handler(self)
-        if self.ra is None and self.dec is None:
-            # These should already be filtered out
-            # by exclude_none=True
-            data.pop("ra", None)
-            data.pop("dec", None)
-            del data["reference_frame"]
-        else:
-            # TODO: IMHO doing this conversion here is janky. If we only want to
-            # work with ICRS coordinates, we should enforce that as part of
-            # validation, not convert to it at the end when we dump()
-            # Preseved directly from Marshmallow...
-            #     Process Target co-ordinates by converting them to ICRS frame before
-            #     the JSON marshalling process begins.
-            icrs_coord = self.coord.transform_to("icrs")
-            data["reference_frame"] = icrs_coord.frame.name.upper()
-            data["ra"], data["dec"] = icrs_coord.to_string(
-                "hmsdms", sep=":"
-            ).split(" ")
+        # TODO: IMHO doing this conversion here is janky. If we only want to
+        # work with ICRS coordinates, we should enforce that as part of
+        # validation, not convert to it at the end when we dump()
+        # Preseved directly from Marshmallow...
+        #     Process Target co-ordinates by converting them to ICRS frame before
+        #     the JSON marshalling process begins.
+        icrs_coord = self.coord.transform_to("icrs")
+        data["reference_frame"] = icrs_coord.frame.name.upper()
+        data["ra"], data["dec"] = icrs_coord.to_string(
+            "hmsdms", sep=":"
+        ).split(" ")
 
         # If offset values are zero, omit them:
         for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
@@ -164,60 +176,35 @@ class ICRSTarget(CdmObject):
             )
         return self
 
-    def __eq__(self, other):
-        if not isinstance(other, Target):
-            return False
-        # Either both are None or both defined...
-        if bool(self.coord) != bool(other.coord):
+    def __eq__(self, other: Any) -> bool:
+        if super().__eq__(other) is False:
             return False
 
-        # Common checks:
-        name_and_offsets_matching = (
-            self.target_name == other.target_name
-            and math.isclose(
-                self.ca_offset_arcsec,
-                other.ca_offset_arcsec,
-                abs_tol=self.OFFSET_MARGIN_IN_RAD,
-            )
-            and math.isclose(
-                self.ie_offset_arcsec,
-                other.ie_offset_arcsec,
-                abs_tol=self.OFFSET_MARGIN_IN_RAD,
-            )
+        other_coord = getattr(other, 'coord', None)
+        if not other_coord:
+            return False
+
+        sep = self.coord.separation(other_coord)
+        return (
+            self.coord.frame.name == other_coord.frame.name
+            and sep.radian < self.OFFSET_MARGIN_IN_RAD
         )
-        if not name_and_offsets_matching:
-            return False
-
-        # Please replace this with a more elegant way of dealing with differences
-        # comparing targets with different properties...
-        if self.coord is not None:
-            sep = self.coord.separation(other.coord)
-            return (
-                self.coord.frame.name == other.coord.frame.name
-                and sep.radian < self.OFFSET_MARGIN_IN_RAD
-            )
-        return True
 
     def __repr__(self):
-        if self.coord is None:
-            return "Target(target_name={!r}, ca_offset_arcsect={!r}, ie_offset_arcsec={!r})".format(
-                self.target_name, self.ca_offset_arcsec, self.ie_offset_arcsec
-            )
-        else:
-            raw_ra = self.coord.ra.value
-            raw_dec = self.coord.dec.value
-            units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
-            reference_frame = self.coord.frame.name
-            target_name = self.target_name
-            return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
-                raw_ra,
-                raw_dec,
-                target_name,
-                reference_frame,
-                units,
-                self.ca_offset_arcsec,
-                self.ie_offset_arcsec,
-            )
+        raw_ra = self.coord.ra.value
+        raw_dec = self.coord.dec.value
+        units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
+        reference_frame = self.coord.frame.name
+        target_name = self.target_name
+        return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
+            raw_ra,
+            raw_dec,
+            target_name,
+            reference_frame,
+            units,
+            self.ca_offset_arcsec,
+            self.ie_offset_arcsec,
+        )
 
     def __str__(self):
         reference_frame = self.coord.frame.name
