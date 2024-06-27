@@ -1445,8 +1445,8 @@ toolz = "^0.12.0"
 [package.source]
 type = "git"
 url = "https://gitlab.com/ska-telescope/ska-telmodel.git"
-reference = "ct-1328-update-make-csp-config"
-resolved_reference = "90aa650a6247c2dc4a8eba4b32ac422e93525db8"
+reference = "skb-355"
+resolved_reference = "823d09fb3744a18872d105a810e9af7e3552a5e6"
 
 [[package]]
 name = "snowballstemmer"
@@ -1760,7 +1760,7 @@ reference = "PyPI-public"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "ec6ba8d7c3f9c52ab34d7a838be6dea2b23ec05db8a49b6231dd836501b8648f"
+content-hash = "376af08792fade6caf72652831c7959215cbc72a76f869d6777581855842e736"
 
 [metadata.files]
 alabaster = [
