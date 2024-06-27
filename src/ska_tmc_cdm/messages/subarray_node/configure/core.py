@@ -88,7 +88,7 @@ class TargetBase:
 
 class SpecialTarget(TargetBase, CdmObject):
     reference_frame: Literal[TargetType.SPECIAL] = TargetType.SPECIAL
-    name: SolarSystemObject
+    target_name: SolarSystemObject
 
 
 # TODO: Target() is doing too much fancy logic IMHO.

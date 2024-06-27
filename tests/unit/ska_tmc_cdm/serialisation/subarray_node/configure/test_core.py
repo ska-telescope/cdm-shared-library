@@ -42,7 +42,7 @@ OFFSET_TARGET_JSON = {
 }
 
 
-NON_SIDEREAL_TARGET_JSON = {"name": "Sun", "reference_frame": "SPECIAL"}
+NON_SIDEREAL_TARGET_JSON = {"target_name": "Sun", "reference_frame": "SPECIAL"}
 
 VALID_DISH_CONFIGURATION_JSON = '{"receiver_band": "5a"}'
 
@@ -72,7 +72,7 @@ TARGET_PAIRS = (
         OFFSET_TARGET_JSON,
     ),
     Case(
-        SpecialTarget(name=SolarSystemObject.SUN, reference_frame="special"),
+        SpecialTarget(target_name=SolarSystemObject.SUN),
         NON_SIDEREAL_TARGET_JSON,
     ),
 )
