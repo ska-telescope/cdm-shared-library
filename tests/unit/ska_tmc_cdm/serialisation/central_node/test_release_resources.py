@@ -17,18 +17,16 @@ VALID_MID_PARTIAL_RELEASE_JSON = """
     "transaction_id": "txn-blah-blah-00001",
     "subarray_id": 1,
     "release_all":false,
-    "receptor_ids": ["0001", "0002"]
+    "receptor_ids": ["SKA001", "SKA002"]
 }
 """
 
-
-"dish_allocation: {receptor_ids: [001, 002]}"
 VALID_MID_PARTIAL_RELEASE_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     transaction_id="txn-blah-blah-00001",
     subarray_id=1,
     release_all=False,
-    dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+    dish_allocation=DishAllocation(receptor_ids=["SKA001", "SKA002"]),
 )
 
 VALID_MID_FULL_RELEASE_JSON = """
@@ -52,7 +50,7 @@ VALID_MID_MIXED_ARGS_OBJECT = ReleaseResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-releaseresources/2.1",
     subarray_id=1,
     release_all=True,
-    dish_allocation=DishAllocation(receptor_ids=["0001", "0002"]),
+    dish_allocation=DishAllocation(receptor_ids=["SKA001", "SKA002"]),
 )
 
 VALID_LOW_FULL_RELEASE_JSON = """
@@ -87,7 +85,7 @@ def mid_invalidator_fn(obj: ReleaseResourcesRequest):
 
 
 @pytest.mark.parametrize(
-    "schema_cls,instance,modifier_fn,valid_json,invalid_json",
+    "cdm_class,instance,modifier_fn,valid_json,invalid_json",
     [
         (
             ReleaseResourcesRequest,
@@ -113,13 +111,13 @@ def mid_invalidator_fn(obj: ReleaseResourcesRequest):
     ],
 )
 def test_releaseresources_serialisation_and_validation(
-    schema_cls, instance, modifier_fn, valid_json, invalid_json
+    cdm_class, instance, modifier_fn, valid_json, invalid_json
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
     utils.test_serialisation_and_validation(
-        schema_cls,
+        cdm_class,
         instance,
         modifier_fn,
         valid_json,

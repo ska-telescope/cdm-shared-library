@@ -7,22 +7,13 @@ Developer Documentation
 Quickstart
 ==========
 
-This project is structured to use Docker containers for development and
-testing so that the build environment, test environment and test results are
-all completely reproducible and are independent of host environment. It uses
-``make`` to provide a consistent UI (see `Makefile targets`_).
-
-Build a new Docker image and execute the test suite with:
-
-::
-
-  make oci-build
-
+This is a pure Python library that uses poetry to manage dependencies.
 
 Execute the test suite and lint the project with:
 
 ::
 
+  poetry install --with=dev && poetry shell
   make python-test && make python-lint
 
 Format the Python code:
@@ -41,8 +32,6 @@ The following make targets are defined:
 +-----------------+------------------------------------------------+
 | Makefile target | Description                                    |
 +=================+================================================+
-| oci-build       | Build a new application image                  |
-+-----------------+------------------------------------------------+
 | python-test     | Test the application image                     |
 +-----------------+------------------------------------------------+
 | python-lint     | Lint the application image                     |
@@ -73,8 +62,6 @@ structured data to and from JSON. This project defines:
 #. a Python object model of the CDM;
 #. a Python object model for the structured arguments sent to TMC Tango
    devices and the structured responses received in return;
-#. serialisation schema to convert the Python object model instances to and
-   from JSON.
 #. validation of the JSON strings sent between devices are compliant with
    the agreed interfaces.
 
@@ -94,11 +81,11 @@ Project layout
 ==============
 
 The CDM project contains three top-level packages, ``ska_tmc_cdm.messages``,
-``ska_tmc_cdm.schemas`` and ``ska_tmc_cdm.jsonschema`` as shown in the figure below. 
+``ska_tmc_cdm.schemas`` and ``ska_tmc_cdm.jsonschema`` as shown in the figure below.
 The ``ska_tmc_cdm.messages``
 package contains Python object models for the JSON command arguments agreed
-in the ICDs. The ``ska_tmc_cdm.schemas`` package contains code to transform the
-classes defined in ``ska_tmc_cdm.messages`` to and from JSON. 
+in the ICDs. The ``ska_tmc_cdm.schemas`` package contains a Codec class that provides an
+interface to transform ``ska_tmc_cdm.messages`` to and from JSON.
 The ``ska_tmc_cdm.jsonschema`` package contains
 code to verify that the JSON strings sent between devices are compliant with the agreed interfaces.
 
@@ -111,21 +98,18 @@ code to verify that the JSON strings sent between devices are compliant with the
 The project layout and naming conventions are:
 
 * Each Tango device has a corresponding Python sub-package in
-  ``ska_tmc_cdm.messages`` and ``ska_tmc_cdm.schemas``.
-* Code and schema for each Tango device command are located in Python modules
-  inside their respective package.
+  ``ska_tmc_cdm.messages``.
+* Accepted format for each Tango device command is specified as Python models
+  inside their respective packages.
 * Structured input for the Tango command is modelled by a ``Request`` object.
 * Structured output from the command is modelled by a ``Response`` object.
-* Marshmallow schema are created to transform Python ``Request`` and
-  ``Response`` instances to an from JSON, along with any other content they
-  contain.
 
 Messages
 --------
 
 The Python object model for the JSON defined in the ICD is located in the
 ``ska_tmc_cdm.messages`` package. In general, each CDM JSON entity is represented
-as a Python class and each CDM attribute presented as a class property.
+as a Pydantic model and each CDM attribute presented as a class property.
 
 CDM attributes can be typed as plain Python data types (strings, floats, etc.)
 or, where appropriate, represented by rich objects if this provides additional
@@ -145,40 +129,6 @@ For details on the device messages modelled by this library, see:
 - :doc:`subarraynode/subarraynode`
 - :doc:`mccscontroller/mccscontroller`
 - :doc:`mccssubarray/mccssubarray`
-
-
-Marshmallow Schemas
--------------------
-
-Classes to marshall the ``ska_tmc_cdm.messages`` objects to and from JSON are
-defined in the ``ska_tmc_cdm.schemas`` package. The ska-tmc-cdm project
-uses `Marshmallow <http://marshmallow.org>`_ for JSON serialisation. Classes
-in the ``ska_tmc_cdm.schemas`` define Marshmallow schemas which are used by
-Marshmallow during JSON conversion.
-
-.. figure:: schema_cn.png
-   :align: center
-   :alt: CentralNode schema
-
-   Schema mapping for objects used to communicate with TMC CentralNode device.
-
-.. figure:: schema_san.png
-   :align: center
-   :alt: SubArrayNode schema
-
-   Schema mapping for objects used to communicate with TMC SubArrayNode device.
-
-.. figure:: schema_mccscontroller.png
-   :align: center
-   :alt: MCCSController schema
-
-   Schema mapping for objects used to communicate with MCCSController device.
-
-.. figure:: schema_mccssubarray.png
-   :align: center
-   :alt: MCCSSubArray schema
-
-   Schema mapping for objects used to communicate with MCCSSubarray device.
 
 
 JSON Schemas
@@ -217,10 +167,3 @@ The steps to extend the CDM are:
    module.
 #. If the command returns a structured response, define a ``Response`` class in
    the module.
-#. With the Python object model defined, create a corresponding package and
-   module structure in ``ska_tmc_cdm.schemas``.
-#. In the schema module, define Marshmallow schemas to convert the object
-   model classes and any structure to JSON.
-#. If this is a major entity, register the schema with the
-   ``ska_tmc_cdm.schemas.CODEC`` object using the ``@CODEC.register_mapping``
-   decorator.

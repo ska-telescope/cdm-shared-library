@@ -171,7 +171,8 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
       "target_name": "Polaris Australis",
       "ra": "21:08:47.92",
       "dec": "-88:57:22.9"
-    }
+    },
+    "correction": "MAINTAIN"
   },
   "dish": {
     "receiver_band": "5a"
@@ -896,8 +897,8 @@ INVALID_LOW_CONFIGURE_JSON = """
   "mccs": {
   "subarray_beams": [
     {
-        "subarray_beam_id": -1,
-        "update_rate": 0.0,
+        "subarray_beam_id": 1,
+        "update_rate": 1.0,
         "logical_bands": [
           {
             "start_channel": 80 ,
@@ -925,8 +926,7 @@ INVALID_LOW_CONFIGURE_JSON = """
 "csp": {
     "interface": "https://schema.skao.int/ska-low-csp-configure/3.1",
     "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "subarray_id": 1
+      "config_id": "sbi-mvp01-20200325-00001-science_A"
     },
     "lowcbf": {
       "stations": {
@@ -957,9 +957,7 @@ INVALID_LOW_CONFIGURE_JSON = """
             "beam_id":1,
             "freq_ids": [
               400
-            ],
-            "delay_poly": "tango://delays.skao.int/low/stn-beam/1"
-
+            ]
           }
         ]
       },
@@ -973,25 +971,6 @@ INVALID_LOW_CONFIGURE_JSON = """
         "stn_beams": [
           {
             "stn_beam_id": 1,
-            "host": [
-              [
-                0,
-                "192.168.0.1"
-              ]
-            ],
-            "port": [
-              [
-                0,
-                9000,
-                1
-              ]
-            ],
-            "mac": [
-              [
-                0,
-                "02-03-04-0a-0b-0c"
-              ]
-            ],
             "integration_ms": 849
           }
         ]
@@ -1037,31 +1016,19 @@ INVALID_LOW_CONFIGURE_OBJECT = ConfigureRequest(
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-low-csp-configure/3.1",
         common=CommonConfiguration(
-            config_id="sbi-mvp01-20200325-00001-science_A", subarray_id=1
+            config_id="sbi-mvp01-20200325-00001-science_A",
         ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1]],
-                stn_beams=[
-                    StnBeamConfiguration(
-                        beam_id=1,
-                        freq_ids=[400],
-                        delay_poly="tango://delays.skao.int/low/stn-beam/1",
-                    )
-                ],
+                stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400])],
             ),
             vis=VisConfiguration(
                 fsp=VisFspConfiguration(
                     firmware="abcd", fsp_ids=[1, 2, 2, 4, 5, 6, 7]
                 ),
                 stn_beams=[
-                    VisStnBeamConfiguration(
-                        stn_beam_id=1,
-                        integration_ms=849,
-                        host=[[0, "192.168.1.00"]],
-                        port=[[0, 9000, 1]],
-                        mac=[[0, "02-03-04-0a-0b-0c"]],
-                    )
+                    VisStnBeamConfiguration(stn_beam_id=1, integration_ms=849)
                 ],
             ),
         ),

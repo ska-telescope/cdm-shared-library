@@ -7,18 +7,21 @@ this package.
 """
 import math
 from enum import Enum
-from typing import Callable, ClassVar, Optional
+from typing import Any, Callable, ClassVar, Literal, Optional, TypeVar, Union
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import (
     ConfigDict,
+    Discriminator,
     Field,
+    Tag,
+    field_serializer,
     field_validator,
     model_serializer,
     model_validator,
 )
-from typing_extensions import Self
+from typing_extensions import Annotated, Self
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -33,11 +36,72 @@ __all__ = [
 UnitStr = str | u.Unit
 UnitInput = UnitStr | tuple[UnitStr, UnitStr]
 
+# If we upgrade to Py 3.11 use StrEnum
+class TargetType(str, Enum):
+    SPECIAL = "special"
+    DEFAULT = "default"
+
+    @classmethod
+    def determine(cls, val: Any) -> Self:
+        if isinstance(val, dict):
+            reference_frame = val.get("reference_frame", "")
+        else:
+            reference_frame = getattr(val, "reference_frame", "")
+
+        match reference_frame.lower():
+            case cls.SPECIAL:
+                return cls.SPECIAL
+            case _:
+                return cls.DEFAULT
+
+
+# If we upgrade to Py 3.11 use StrEnum
+class SolarSystemObject(str, Enum):
+    SUN = "Sun"
+    MOON = "Moon"
+    MERCURY = "Mercury"
+    VENUS = "Venus"
+    MARS = "Mars"
+    JUPITER = "Jupiter"
+    SATURN = "Saturn"
+    URANUS = "Uranus"
+    NEPTUNE = "Neptune"
+    PLUTO = "Pluto"
+
+
+T = TypeVar("T")
+
+
+class TargetBase:
+    @field_validator("reference_frame", mode="before")
+    @classmethod
+    def _to_lowercase(cls, value: T) -> T:
+        """
+        Load to lowercase for compatibility with removed Marshmallow schema
+        """
+        try:
+            return value.lower()
+        except AttributeError:
+            # Not a string:
+            return value
+
+    @field_serializer("reference_frame")
+    def _to_uppercase(self, value: str) -> str:
+        """
+        Dump to uppercase for compatibility with removed Marshmallow schema
+        """
+        return value.upper()
+
+
+class SpecialTarget(TargetBase, CdmObject):
+    reference_frame: Literal[TargetType.SPECIAL] = TargetType.SPECIAL
+    target_name: SolarSystemObject
+
 
 # TODO: Target() is doing too much fancy logic IMHO.
 # Could we annotate astropy.SkyCoord and use that directly
 # instead?
-class Target(CdmObject):
+class Target(TargetBase, CdmObject):
     """
     Target encapsulates source coordinates and source metadata.
 
@@ -108,14 +172,6 @@ class Target(CdmObject):
             del data["target_name"]
 
         return data
-
-    @field_validator("reference_frame")
-    @classmethod
-    def lowercase(cls, value: str) -> str:
-        """
-        Load to lowercase for compatibility with removed Marshmallow schema
-        """
-        return value.lower()
 
     @model_validator(mode="after")
     def ra_dec_or_offsets_required(self) -> Self:
@@ -190,6 +246,15 @@ class Target(CdmObject):
         )
 
 
+TargetUnion = Annotated[
+    Union[
+        Annotated[Target, Tag(TargetType.DEFAULT)],
+        Annotated[SpecialTarget, Tag(TargetType.SPECIAL)],
+    ],
+    Discriminator(TargetType.determine),
+]
+
+
 class PointingCorrection(Enum):
     """
     Operation to apply to the pointing correction model.
@@ -209,7 +274,7 @@ class PointingConfiguration(CdmObject):
     point.
     """
 
-    target: Optional[Target] = None
+    target: Optional[TargetUnion] = None
     correction: Optional[PointingCorrection] = None
 
 

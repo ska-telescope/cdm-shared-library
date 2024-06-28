@@ -1,3 +1,4 @@
+from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
 from ska_tmc_cdm.utils import assert_json_is_equal
 
@@ -30,10 +31,8 @@ def test_validate_serialization_and_deserialization_CSPConfiguration_json():
     Verifies that the CSPConfiguration de/serialises correctly.
     """
 
-    csp_configuration_object = CSPConfiguration.model_validate_json(
-        VALID_CSP_LOW_JSON
+    csp_configuration_object = CODEC.loads(
+        CSPConfiguration, VALID_CSP_LOW_JSON
     )
-    serialized_csp_config = csp_configuration_object.model_dump_json(
-        exclude_none=True
-    )
+    serialized_csp_config = CODEC.dumps(csp_configuration_object)
     assert_json_is_equal(VALID_CSP_LOW_JSON, serialized_csp_config)

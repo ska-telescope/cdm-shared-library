@@ -1,12 +1,12 @@
 from os import environ
-from typing import cast
+from typing import Union, cast
 
 from pydantic import BaseModel, ConfigDict
 from pydantic.config import ExtraValues
 
 # Defaults to 'ignore' (silently accept), it can be helpful to set 'forbid'
 # to catch errors during development:
-EXTRA_FIELDS = cast(ExtraValues | None, environ.get("EXTRA_FIELDS"))
+EXTRA_FIELDS = cast(Union[ExtraValues, None], environ.get("EXTRA_FIELDS"))
 
 
 class CdmObject(BaseModel):

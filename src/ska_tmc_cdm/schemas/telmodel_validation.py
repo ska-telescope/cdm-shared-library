@@ -1,6 +1,6 @@
 """
-The schemas module defines Marshmallow schemas that are shared by various
-other serialisation schemas.
+This module contains high-level functions that invoke validation against
+the telmodel schemas.
 """
 
 from typing import Callable, Optional
@@ -47,7 +47,7 @@ def semantic_validate_json(data, process_fn=_identity, **_):
     but schematically invalid Python to something equivalent but valid,
     e.g., to convert a list of Python tuples to a list of lists.
 
-    :param data: Marshmallow-provided dict containing parsed object values
+    :param data: Jsonable dict containing parsed object values
     :param process_fn: data processing function called before validation
     :return:
     """

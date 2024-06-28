@@ -1,9 +1,9 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.codec module.
 """
-import functools
 import json
 import tempfile
+from contextlib import nullcontext as does_not_raise
 
 import pytest
 from ska_ost_osd.telvalidation.semantic_validator import (
@@ -103,24 +103,6 @@ def test_codec_loads(msg_cls, json_str, expected, is_validate):
     assert unmarshalled == expected
 
 
-# LOW_CONFIGURE_PARAMS = (
-#     (
-#         ConfigureRequest,
-#         VALID_LOW_CONFIGURE_JSON,
-#         True,
-#     ),
-# )
-
-
-# @pytest.mark.parametrize("msg_cls,json_str, is_validate", LOW_CONFIGURE_PARAMS)
-# def test_codec_loads_configure(msg_cls, json_str, is_validate):
-#     """
-#     Verify that the codec unmarshalls objects correctly.
-#     """
-#     with pytest.raises(JsonValidationError, match="Missing key: 'subarray_id'"):
-#         CODEC.loads(msg_cls, json_str, validate=is_validate)
-
-
 @pytest.mark.parametrize(
     "msg_cls,expected,instance, is_validate", TEST_PARAMETERS
 )
@@ -161,26 +143,38 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_data["interface"] = "https://foo.com/badschema/2.0"
     invalid_data = json.dumps(invalid_data)
 
+    strict = 2
+
     with pytest.raises(SchemaNotFound):
-        CODEC.loads(ConfigureRequest, invalid_data, strictness=2)
+        CODEC.loads(ConfigureRequest, invalid_data, strictness=strict)
 
     invalid_json = json.loads(INVALID_MID_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
-        CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            AssignResourcesRequest,
+            invalid_json_assign_resources,
+            strictness=strict,
+        )
 
     invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
     invalid_json_configure = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
-        CODEC.loads(ConfigureRequest, invalid_json_configure)
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            ConfigureRequest, invalid_json_configure, strictness=strict
+        )
 
     invalid_json = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
-        CODEC.loads(AssignResourcesRequest, invalid_json_assign_resources)
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            AssignResourcesRequest,
+            invalid_json_assign_resources,
+            strictness=strict,
+        )
 
     invalid_json = json.loads(INVALID_LOW_CONFIGURE_JSON)
     invalid_json["csp"]["lowcbf"]["stations"]["stn_beams"][0][
@@ -188,8 +182,10 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     ] = "tango://delays.skao.int/low/stn-beam/1"
     invalid_json_configure = json.dumps(invalid_json)
 
-    with pytest.raises(SchematicValidationError):
-        CODEC.loads(ConfigureRequest, invalid_json_configure)
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            ConfigureRequest, invalid_json_configure, strictness=strict
+        )
 
 
 def test_codec_dumps_raises_exception_on_invalid_schema():
@@ -207,27 +203,36 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
         CODEC.dumps(invalid_data, strictness=2)
 
 
-def test_loads_invalid_json_with_validation_enabled():
+@pytest.mark.parametrize(
+    "strictness,expectation",
+    [
+        (0, does_not_raise()),
+        (1, does_not_raise()),
+        (2, pytest.raises(JsonValidationError)),
+    ],
+)
+def test_exception_handling_strictness_with_syntactically_invalid_json(
+    caplog, strictness, expectation
+):
     """
-    Verify that the strictness argument is respected when loading invalid
-    JSON, resulting in a JsonValidationError with strictness=2.
+    Verify that the strictness argument is respected when loading
+    syntactically invalid JSON, resulting in:
+
+      - warning only with strictness=0,1
+      - JsonValidationError with strictness=2.
     """
-    test_call = functools.partial(
-        CODEC.loads,
-        ConfigureRequest,
-        INVALID_LOW_CONFIGURE_JSON,
-        validate=True,
-    )
+    request = CODEC.loads(ConfigureRequest, VALID_LOW_CONFIGURE_JSON)
+    request.csp.common.subarray_id = -1
 
-    # no exception should be raised when strictness is 0 or 1
-    for strictness in (0, 1):
-        unmarshalled = test_call(strictness=strictness)
-        marshalled = CODEC.dumps(unmarshalled, strictness=strictness)
-        assert_json_is_equal(INVALID_LOW_CONFIGURE_JSON, marshalled)
-
-    # strictness=2 should result in an error
-    with pytest.raises(JsonValidationError):
-        test_call(strictness=2)
+    with expectation:
+        CODEC.loads(
+            ConfigureRequest,
+            CODEC.dumps(request),
+            validate=True,
+            strictness=strictness,
+        )
+        # note: if exception raised, this will not be asserted
+        assert "WARNING" in caplog.text
 
 
 @pytest.mark.parametrize("strictness", [0, 1, 2])

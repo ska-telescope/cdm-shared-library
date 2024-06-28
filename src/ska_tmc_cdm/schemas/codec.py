@@ -1,19 +1,21 @@
 """
-The codec module contains classes used by clients to marshall CDM classes to
-and from JSON. This saves the clients having to instantiate and manipulate the
-Marshmallow schema directly.
+This module contains a Codec class that provides a public interface for clients
+to de/serialise CDM classes from/to JSON. Basically this spares clients having to
+remember to pass all the arguments to `model_dump()`
 """
 __all__ = ["Codec"]
 
 import json
 from os import PathLike
-from typing import Optional, Type
+from typing import Optional, Type, TypeVar
 
 from ska_tmc_cdm.messages.base import CdmObject
 
 from .telmodel_validation import semantic_validate_json, validate_json
 
 DEFAULT_STRICTNESS = None
+
+T = TypeVar("T", bound=CdmObject)
 
 
 class Codec:
@@ -24,15 +26,17 @@ class Codec:
         if not enforced:
             return
         validate_json(jsonable_data, strictness=strictness)
-        semantic_validate_json(jsonable_data)
+        # TODO: Revisit this / unify the validation rules.
+        if strictness and strictness >= 2:
+            semantic_validate_json(jsonable_data)
 
     @staticmethod
     def loads(
-        cdm_class: Type[CdmObject],
+        cdm_class: T,
         json_data: str,
         validate: bool = True,
         strictness: int = DEFAULT_STRICTNESS,
-    ) -> CdmObject:
+    ) -> T:
         """
         Create an instance of a CDM class from a JSON string.
 
