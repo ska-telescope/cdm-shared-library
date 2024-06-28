@@ -7,7 +7,7 @@ this package.
 """
 import math
 from enum import Enum
-from typing import Any, Callable, ClassVar, Literal, Optional, Union
+from typing import Any, Callable, ClassVar, Literal, Optional, TypeVar, Union
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
@@ -69,10 +69,13 @@ class SolarSystemObject(str, Enum):
     PLUTO = "Pluto"
 
 
+T = TypeVar("T")
+
+
 class TargetBase:
     @field_validator("reference_frame", mode="before")
     @classmethod
-    def _to_lowercase(cls, value: Any) -> Any:
+    def _to_lowercase(cls, value: T) -> T:
         """
         Load to lowercase for compatibility with removed Marshmallow schema
         """
