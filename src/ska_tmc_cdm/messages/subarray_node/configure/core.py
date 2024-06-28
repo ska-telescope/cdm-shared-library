@@ -72,11 +72,15 @@ class SolarSystemObject(str, Enum):
 class TargetBase:
     @field_validator("reference_frame", mode="before")
     @classmethod
-    def _to_lowercase(cls, value: str) -> str:
+    def _to_lowercase(cls, value: Any) -> Any:
         """
         Load to lowercase for compatibility with removed Marshmallow schema
         """
-        return value.lower()
+        try:
+            return value.lower()
+        except AttributeError:
+            # Not a string:
+            return value
 
     @field_serializer("reference_frame")
     def _to_uppercase(self, value: str) -> str:
