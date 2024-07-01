@@ -11,7 +11,16 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesResponse,
 )
 from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
+from ska_tmc_cdm.messages.central_node.csp import (
+    CSPConfiguration,
+    PSSConfiguration,
+    PSTConfiguration,
+)
+from ska_tmc_cdm.messages.central_node.mccs import (
+    ApertureConfiguration,
+    MCCSAllocate,
+    SubArrayBeamsConfiguration,
+)
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,
     Channel,
@@ -492,6 +501,22 @@ VALID_SDP_JSON = """
     ]
   }
 """
+VALID_CSP_LOW_JSON = """
+{
+  "pss": {
+    "pss_beam_ids": [
+      1,
+      2,
+      3
+    ]
+  },
+  "pst": {
+    "pst_beam_ids": [
+      1
+    ]
+  }
+}      
+"""
 
 VALID_SDP_OBJECT = SDPConfiguration(
     interface="https://schema.skao.int/ska-sdp-assignres/0.4",
@@ -583,6 +608,10 @@ VALID_SDP_OBJECT = SDPConfiguration(
     },
 )
 
+VALID_LOW_CSP_OBJECT = CSPConfiguration(
+    pss=(PSSConfiguration(pss_beam_ids=[1, 2, 3])),
+    pst=(PSTConfiguration(pst_beam_ids=[1])),
+)
 
 VALID_MID_ASSIGNRESOURCESREQUEST_JSON = (
     """
@@ -986,6 +1015,50 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
 """
 )
 
+VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_4_0 = (
+    """
+{
+  "interface": "https://schema.skao.int/ska-low-tmc-assignresources/4.0",
+  "transaction_id": "txn-....-00001",
+  "subarray_id": 1,
+  "mccs": {
+    "subarray_beam_ids": [
+      1
+    ],
+    "station_ids": [
+      [
+        1,
+        2
+      ]
+    ],
+    "channel_blocks": [
+      3
+    ],
+    "interface": "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0",
+    "subarray_beams": [
+      {
+        "subarray_beam_id": 1,
+        "apertures": [
+          {
+            "station_id": 1,
+            "aperture_id": "AP001.01"
+          }
+        ],
+        "number_of_channels": 8
+      }
+    ]
+  },
+"csp": """
+    + VALID_CSP_LOW_JSON
+    + """,
+ "sdp": """
+    + VALID_SDP_JSON
+    + """
+}
+"""
+)
+
+
 VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-low-tmc-assignresources/3.2",
     transaction_id="txn-....-00001",
@@ -993,6 +1066,32 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     mccs=MCCSAllocate(
         subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
     ),
+    sdp_config=VALID_SDP_OBJECT,
+)
+
+VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_4_0 = AssignResourcesRequest(
+    interface="https://schema.skao.int/ska-low-tmc-assignresources/4.0",
+    transaction_id="txn-....-00001",
+    subarray_id=1,
+    mccs=MCCSAllocate(
+        subarray_beam_ids=[1],
+        station_ids=[(1, 2)],
+        channel_blocks=[3],
+        interface="https://schema.skao.int/ska-low-mccs-controller-allocate/3.0",
+        subarray_beams=[
+            SubArrayBeamsConfiguration(
+                subarray_beam_id=1,
+                apertures=[
+                    ApertureConfiguration(
+                        station_id=1,
+                        aperture_id="AP001.01",
+                    ),
+                ],
+                number_of_channels=8,
+            )
+        ],
+    ),
+    csp_config=VALID_LOW_CSP_OBJECT,
     sdp_config=VALID_SDP_OBJECT,
 )
 
@@ -1119,6 +1218,14 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             SCAN_VALID_JSON,
             None,
             True,
+        ),
+        (
+            AssignResourcesRequest,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_4_0,
+            None,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_4_0,
+            None,
+            False,
         ),
     ],
 )

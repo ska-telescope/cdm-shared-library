@@ -17,7 +17,9 @@ from tests.unit.ska_tmc_cdm.builder.central_node.common import (
     DishAllocateBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
+    ApertureConfigurationBuilder,
     MCCSAllocateBuilder,
+    SubArrayBeamsConfigurationBuilder,
 )
 
 
@@ -55,6 +57,25 @@ from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
                 .set_subarray_beam_ids(subarray_beam_ids=[1])
                 .set_station_ids(station_ids=[[1, 2]])
                 .set_channel_blocks(channel_blocks=[3])
+                .set_interface(
+                    "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+                )
+                .set_subarray_beams(
+                    [
+                        SubArrayBeamsConfigurationBuilder()
+                        .set_subarray_beam_id(1)
+                        .set_apertures(
+                            [
+                                ApertureConfigurationBuilder()
+                                .set_aperture_id("AP001.01")
+                                .set_station_id(1)
+                                .build()
+                            ]
+                        )
+                        .set_number_of_channels(8)
+                        .build()
+                    ]
+                )
                 .build()
             )
             .build(),
@@ -80,6 +101,25 @@ def test_assign_resources_request_dish_and_mccs_fail():
         .set_subarray_beam_ids(subarray_beam_ids=[1, 2, 3, 4, 5, 6])
         .set_station_ids(station_ids=list(zip(itertools.count(1, 1), 1 * [2])))
         .set_channel_blocks(channel_blocks=[1, 2, 3, 4, 5])
+        .set_interface(
+            "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+        )
+        .set_subarray_beams(
+            [
+                SubArrayBeamsConfigurationBuilder()
+                .set_subarray_beam_id(1)
+                .set_apertures(
+                    [
+                        ApertureConfigurationBuilder()
+                        .set_aperture_id("AP001.01")
+                        .set_station_id(1)
+                        .build()
+                    ]
+                )
+                .set_number_of_channels(8)
+                .build()
+            ]
+        )
         .build()
     )
 
@@ -103,6 +143,25 @@ def test_assign_resources_if_no_subarray_id_argument():
         .set_subarray_beam_ids(subarray_beam_ids=[1, 2, 3, 4, 5, 6])
         .set_station_ids(station_ids=list(zip(itertools.count(1, 1), 1 * [2])))
         .set_channel_blocks(channel_blocks=[1, 2, 3, 4, 5])
+        .set_interface(
+            "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+        )
+        .set_subarray_beams(
+            [
+                SubArrayBeamsConfigurationBuilder()
+                .set_subarray_beam_id(1)
+                .set_apertures(
+                    [
+                        ApertureConfigurationBuilder()
+                        .set_aperture_id("AP001.01")
+                        .set_station_id(1)
+                        .build()
+                    ]
+                )
+                .set_number_of_channels(8)
+                .build()
+            ]
+        )
         .build()
     )
     dish_allocation = (
@@ -139,6 +198,25 @@ def test_low_assign_resources_request(
             .set_subarray_beam_ids(subarray_beam_ids=[1])
             .set_station_ids(station_ids=[[1, 2]])
             .set_channel_blocks(channel_blocks=[3])
+            .set_interface(
+                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+            )
+            .set_subarray_beams(
+                [
+                    SubArrayBeamsConfigurationBuilder()
+                    .set_subarray_beam_id(1)
+                    .set_apertures(
+                        [
+                            ApertureConfigurationBuilder()
+                            .set_aperture_id("AP001.01")
+                            .set_station_id(1)
+                            .build()
+                        ]
+                    )
+                    .set_number_of_channels(8)
+                    .build()
+                ]
+            )
             .build()
         )
         .set_interface(MID_SCHEMA)
@@ -154,6 +232,25 @@ def test_low_assign_resources_request(
             .set_subarray_beam_ids(subarray_beam_ids=[1])
             .set_station_ids(station_ids=[[1, 2]])
             .set_channel_blocks(channel_blocks=[3])
+            .set_interface(
+                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+            )
+            .set_subarray_beams(
+                [
+                    SubArrayBeamsConfigurationBuilder()
+                    .set_subarray_beam_id(1)
+                    .set_apertures(
+                        [
+                            ApertureConfigurationBuilder()
+                            .set_aperture_id("AP001.01")
+                            .set_station_id(1)
+                            .build()
+                        ]
+                    )
+                    .set_number_of_channels(8)
+                    .build()
+                ]
+            )
             .build()
         )
         .set_interface(MID_SCHEMA)
@@ -242,6 +339,25 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
         .set_subarray_beam_ids(subarray_beam_ids=[1])
         .set_station_ids(station_ids=[[1, 2]])
         .set_channel_blocks(channel_blocks=[3])
+        .set_interface(
+            "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+        )
+        .set_subarray_beams(
+            [
+                SubArrayBeamsConfigurationBuilder()
+                .set_subarray_beam_id(1)
+                .set_apertures(
+                    [
+                        ApertureConfigurationBuilder()
+                        .set_aperture_id("AP001.01")
+                        .set_station_id(1)
+                        .build()
+                    ]
+                )
+                .set_number_of_channels(8)
+                .build()
+            ]
+        )
         .build()
     )
 
@@ -313,6 +429,25 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
                 .set_subarray_beam_ids(subarray_beam_ids=[1])
                 .set_station_ids(station_ids=[[1, 2]])
                 .set_channel_blocks(channel_blocks=[3])
+                .set_interface(
+                    "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+                )
+                .set_subarray_beams(
+                    [
+                        SubArrayBeamsConfigurationBuilder()
+                        .set_subarray_beam_id(1)
+                        .set_apertures(
+                            [
+                                ApertureConfigurationBuilder()
+                                .set_aperture_id("AP001.01")
+                                .set_station_id(1)
+                                .build()
+                            ]
+                        )
+                        .set_number_of_channels(8)
+                        .build()
+                    ]
+                )
                 .build()
             )
             .build(),
@@ -323,6 +458,25 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
                 .set_subarray_beam_ids(subarray_beam_ids=[1])
                 .set_station_ids(station_ids=[[1, 2]])
                 .set_channel_blocks(channel_blocks=[3])
+                .set_interface(
+                    "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+                )
+                .set_subarray_beams(
+                    [
+                        SubArrayBeamsConfigurationBuilder()
+                        .set_subarray_beam_id(1)
+                        .set_apertures(
+                            [
+                                ApertureConfigurationBuilder()
+                                .set_aperture_id("AP001.01")
+                                .set_station_id(1)
+                                .build()
+                            ]
+                        )
+                        .set_number_of_channels(8)
+                        .build()
+                    ]
+                )
                 .build()
             )
             .build(),
