@@ -24,6 +24,8 @@ __all__ = [
     "StnBeamConfiguration",
     "VisFspConfiguration",
     "VisConfiguration",
+    "TimingBeamsConfiguration",
+    "BeamsConfiguration",
 ]
 
 
@@ -97,6 +99,7 @@ class CommonConfiguration(CdmObject):
     frequency_band: Optional[core.ReceiverBand] = None
     subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
+    eb_id: Optional[str] = None
 
 
 class StnBeamConfiguration(CdmObject):
@@ -171,6 +174,32 @@ class VisConfiguration(CdmObject):
     stn_beams: Optional[List[VisStnBeamConfiguration]] = None
 
 
+class BeamsConfiguration(CdmObject):
+    """
+    Class to hold Beams Configuration.
+
+    :param pst_beam_id: pst_beam_id
+    :param stn_beam_id: stn_beam_id
+    :param stn_weights: stn_weights
+    """
+
+    pst_beam_id: Optional[int] = None
+    stn_beam_id: Optional[int] = None
+    stn_weights: Optional[List[float]] = None
+
+
+class TimingBeamsConfiguration(CdmObject):
+    """
+    Class to hold TimingBeams Configuration.
+
+    :param fsp: fsp
+    :param beams: beams
+    """
+
+    fsp: Optional[VisFspConfiguration] = None
+    beams: Optional[List[BeamsConfiguration]] = None
+
+
 class LowCBFConfiguration(CdmObject):
     """
     Class to hold Low CBF Configuration.
@@ -181,6 +210,7 @@ class LowCBFConfiguration(CdmObject):
 
     stations: Optional[StationConfiguration] = None
     vis: Optional[VisConfiguration] = None
+    timing_beams: Optional[TimingBeamsConfiguration] = None
 
 
 class VLBIConfiguration(CdmObject):
@@ -208,11 +238,11 @@ class CBFConfiguration(CdmObject):
     )
 
 
-class PSTConfiguration(CdmObject):
+class PSSConfiguration(CdmObject):
     pass
 
 
-class PSSConfiguration(CdmObject):
+class PSTConfiguration(CdmObject):
     pass
 
 

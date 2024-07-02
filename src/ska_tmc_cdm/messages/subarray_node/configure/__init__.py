@@ -13,6 +13,7 @@ from typing_extensions import Self
 from .core import DishConfiguration, PointingConfiguration
 from .csp import CSPConfiguration
 from .mccs import MCCSConfiguration
+from .pst import PSTConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 
@@ -45,6 +46,7 @@ class ConfigureRequest(CdmObject):
     sdp: Optional[SDPConfiguration] = None
     csp: Optional[CSPConfiguration] = None
     mccs: Optional[MCCSConfiguration] = None
+    pst: Optional[PSTConfiguration] = None
     tmc: Optional[TMCConfiguration] = None
     interface: Optional[str] = None
     transaction_id: Optional[str] = None
