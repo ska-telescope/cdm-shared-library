@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 Unreleased
 **********
 
+10.1.1
+******
+* Removes PLUTO as an allowed target_name for SpecialTarget().
+
 10.1.0
 ******
 * Adds subarray_node.configure.core.SpecialTarget() to represent nonsidereal targets.

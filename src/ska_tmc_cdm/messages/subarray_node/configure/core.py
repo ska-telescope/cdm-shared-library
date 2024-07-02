@@ -66,7 +66,6 @@ class SolarSystemObject(str, Enum):
     SATURN = "Saturn"
     URANUS = "Uranus"
     NEPTUNE = "Neptune"
-    PLUTO = "Pluto"
 
 
 T = TypeVar("T")
