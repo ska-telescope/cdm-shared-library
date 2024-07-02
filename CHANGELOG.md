@@ -6,8 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 Unreleased
 **********
-
 * Adds field validators to assure subarray_id in range 1-16, inclusive.
+
+10.1.1
+******
+* Removes PLUTO as an allowed target_name for SpecialTarget().
 
 10.1.0
 ******
