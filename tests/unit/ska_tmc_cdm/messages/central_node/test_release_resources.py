@@ -3,7 +3,6 @@ Unit tests for the CentralNode.ReleaseResources request/response mapper
 module.
 """
 import pytest
-
 from pydantic import ValidationError
 
 from ska_tmc_cdm.messages.central_node.release_resources import SCHEMA

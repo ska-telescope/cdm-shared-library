@@ -30,7 +30,9 @@ from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
 )
 def test_validation_applies_to_subarray_id(subarray_id: int, okay: bool):
     "subarray_id must be from 1...16, inclusive"
-    build = partial(AssignResourcesRequest, subarray_id=subarray_id, interface="DUMMY")
+    build = partial(
+        AssignResourcesRequest, subarray_id=subarray_id, interface="DUMMY"
+    )
     if not okay:
         with pytest.raises(ValidationError):
             build()
