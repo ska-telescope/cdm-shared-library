@@ -53,6 +53,18 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		class LowCBFConfiguration {
 			stations: StationConfiguration 
 			vis: VisConfiguration
+			timing_beams: TimingBeamsConfiguration
+		}
+
+		class TimingBeamsConfiguration {
+			fsp: VisFspConfiguration
+			beams: [List[BeamsConfiguration]]
+		}
+
+		class BeamsConfiguration {
+			pst_beam_id: int
+			stn_beam_id: int
+			stn_weights: float = None
 		}
 
 		class StationConfiguration {
@@ -86,6 +98,9 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		CSPConfiguration *-- "1" LowCBFConfiguration
 		LowCBFConfiguration *-- "1" StationConfiguration
 		LowCBFConfiguration *-- "1" VisConfiguration
+		LowCBFConfiguration *-- "1" TimingBeamsConfiguration
+		TimingBeamsConfiguration *-- "1" VisFspConfiguration
+		TimingBeamsConfiguration *-- "1" BeamsConfiguration
 		VisConfiguration *-- "1" VisFspConfiguration
 		VisConfiguration *-- "*" StnBeamConfiguration
 		StationConfiguration *-- "*" StnBeamConfiguration
