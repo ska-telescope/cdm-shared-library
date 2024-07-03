@@ -86,13 +86,15 @@ class PSTScanConfiguration(CdmObject):
     feed_tracking_mode: str = None
     feed_position_angle: float = None
     oversampling_ratio: List[int] = None
-    coordinates: PSTScanCoordinates = None
+    coordinates: Optional[PSTScanCoordinates] = None
     max_scan_length: float = None
     subint_duration: float = None
     receptors: List[str] = None
     receptor_weights: List[float] = None
     num_channelization_stages: int = None
-    channelization_stages: List[PSTChannelizationStageConfiguration] = None
+    channelization_stages: Optional[
+        List[PSTChannelizationStageConfiguration]
+    ] = None
 
 
 class PSTBeamConfiguration(CdmObject):
@@ -112,4 +114,4 @@ class PSTConfiguration(CdmObject):
     :param beams: List of beam configurations
     """
 
-    beams: List[PSTBeamConfiguration] = None
+    beams: Optional[List[PSTBeamConfiguration]] = None
