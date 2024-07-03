@@ -3,6 +3,7 @@ Unit tests for the CentralNode.ReleaseResources request/response mapper
 module.
 """
 import pytest
+from pydantic import ValidationError
 
 from ska_tmc_cdm.messages.central_node.release_resources import SCHEMA
 from tests.unit.ska_tmc_cdm.builder.central_node.common import (
@@ -11,6 +12,24 @@ from tests.unit.ska_tmc_cdm.builder.central_node.common import (
 from tests.unit.ska_tmc_cdm.builder.central_node.release_resources import (
     ReleaseResourcesRequestBuilder,
 )
+
+
+@pytest.mark.parametrize(
+    ("subarray_id", "okay"),
+    zip(range(-5, 21), ([False] * 6 + [True] * 16 + [False] * 4)),
+)
+def test_validation_applies_to_subarray_id(subarray_id: int, okay: bool):
+    "subarray_id must be from 1...16, inclusive"
+    builder = (
+        ReleaseResourcesRequestBuilder()
+        .set_release_all(release_all=True)
+        .set_subarray_id(subarray_id)
+    )
+    if not okay:
+        with pytest.raises(ValidationError):
+            builder.build()
+    else:
+        builder.build()
 
 
 def test_release_resources_request_has_interface_set_on_creation():

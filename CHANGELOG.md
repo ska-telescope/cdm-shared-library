@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 Unreleased
 **********
+* Adds field validators to assure subarray_id in range 1-16, inclusive.
 
 10.1.1
 ******
