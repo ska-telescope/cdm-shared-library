@@ -59,10 +59,5 @@ class MCCSAllocate(CdmObject):
     station_ids: list[list[int]] = None
     channel_blocks: list[int] = None
     subarray_beam_ids: list[int] = None
-
-    station_ids: list[list[int]]
-    channel_blocks: list[int]
-    subarray_beam_ids: list[int]
-
     interface: Optional[str] = None
     subarray_beams: Optional[list[SubArrayBeamsConfiguration]] = None

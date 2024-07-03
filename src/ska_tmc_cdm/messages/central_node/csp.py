@@ -12,6 +12,7 @@ __all__ = ["CSPConfiguration", "PSSConfiguration", "PSTConfiguration"]
 class PSSConfiguration(CdmObject):
     """
     Class to get PSS Configuration
+    :param pss_beam_ids: List of PSS Beam IDs
     """
 
     pss_beam_ids: Optional[list[int]] = None
@@ -20,6 +21,7 @@ class PSSConfiguration(CdmObject):
 class PSTConfiguration(CdmObject):
     """
     Class to get PST Configuration
+    :param pst_beam_ids: List of PST Beam IDs
     """
 
     pst_beam_ids: Optional[list[int]] = None
@@ -28,6 +30,8 @@ class PSTConfiguration(CdmObject):
 class CSPConfiguration(CdmObject):
     """
     Class to get Low CSP Configuration
+    :param pss: PSS Configuration
+    :param pst: PST Configuration
     """
 
     pss: Optional[PSSConfiguration] = None
