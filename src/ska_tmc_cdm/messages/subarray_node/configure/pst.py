@@ -14,6 +14,9 @@ __all__ = [
 class PSTScanCoordinates(CdmObject):
     """
     Class to hold Scan coordinates
+    :param equinox: equinox value
+    :param ra: Right Ascension
+    :param dec: Declination
     """
 
     equinox: float = None
@@ -24,6 +27,10 @@ class PSTScanCoordinates(CdmObject):
 class PSTChannelizationStageConfiguration(CdmObject):
     """
     Class to hold Channelization Stage configuration items
+    :param num_filter_taps: Number of filter taps
+    :param filter_coefficients: Filter coefficients
+    :param num_frequency_channels: Number of frequency channels
+    :param oversampling_ratio: Oversampling ratio
     """
 
     num_filter_taps: int = None
@@ -35,6 +42,26 @@ class PSTChannelizationStageConfiguration(CdmObject):
 class PSTScanConfiguration(CdmObject):
     """
     Class to hold Scan configuration items
+    :param activation_time: Activation time
+    :param bits_per_sample: Bits per sample
+    :param num_of_polarizations: Number of polarizations
+    :param udp_nsamp: UDP nsamp
+    :param wt_nsamp: WT nsamp
+    :param udp_nchan: UDP nchan
+    :param num_frequency_channels: Number of frequency channels
+    :param centre_frequency: Centre frequency
+    :param total_bandwidth: Total bandwidth
+    :param observation_mode: Observation mode
+    :param observer_id: Observer ID
+    :param project_id: Project ID
+    :param pointing_id: Pointing ID
+    :param source: Source
+    :param itrf: ITRF coordinates
+    :param receiver_id: Receiver ID
+    :param feed_polarization: Feed polarization
+    :param feed_handedness: Feed handedness
+    :param feed_angle: Feed angle
+    :param feed_tracking_mode: Feed tracking mode
     """
 
     activation_time: str = None
@@ -71,6 +98,8 @@ class PSTScanConfiguration(CdmObject):
 class PSTBeamConfiguration(CdmObject):
     """
     Class to hold PST beam configuration items
+    :param beam_id: Beam ID
+    :param scan: Scan configuration
     """
 
     beam_id: int = None
@@ -80,6 +109,7 @@ class PSTBeamConfiguration(CdmObject):
 class PSTConfiguration(CdmObject):
     """
     Class to hold PST configuration items
+    :param beams: List of beam configurations
     """
 
     beams: List[PSTBeamConfiguration] = None
