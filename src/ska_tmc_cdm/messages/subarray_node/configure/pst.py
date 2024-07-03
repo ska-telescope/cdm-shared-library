@@ -1,5 +1,7 @@
 from typing import List, Optional
 
+from pydantic import Field
+
 from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
@@ -19,9 +21,9 @@ class PSTScanCoordinates(CdmObject):
     :param dec: Declination
     """
 
-    equinox: float = None
-    ra: str = None
-    dec: str = None
+    equinox: Optional[float] = None
+    ra: Optional[str] = None
+    dec: Optional[str] = None
 
 
 class PSTChannelizationStageConfiguration(CdmObject):
@@ -33,10 +35,10 @@ class PSTChannelizationStageConfiguration(CdmObject):
     :param oversampling_ratio: Oversampling ratio
     """
 
-    num_filter_taps: int = None
-    filter_coefficients: List[float] = None
+    num_filter_taps: Optional[int] = None
+    filter_coefficients: List[float] = Field(default_factory=list)
     num_frequency_channels: int = None
-    oversampling_ratio: List[int] = None
+    oversampling_ratio: List[int] = Field(default_factory=list)
 
 
 class PSTScanConfiguration(CdmObject):
@@ -64,37 +66,37 @@ class PSTScanConfiguration(CdmObject):
     :param feed_tracking_mode: Feed tracking mode
     """
 
-    activation_time: str = None
+    activation_time: Optional[str] = None
     bits_per_sample: int = None
-    num_of_polarizations: int = None
-    udp_nsamp: int = None
-    wt_nsamp: int = None
-    udp_nchan: int = None
-    num_frequency_channels: int = None
-    centre_frequency: float = None
-    total_bandwidth: float = None
-    observation_mode: str = None
-    observer_id: str = None
-    project_id: str = None
-    pointing_id: str = None
-    source: str = None
+    num_of_polarizations: Optional[int] = None
+    udp_nsamp: Optional[int] = None
+    wt_nsamp: Optional[int] = None
+    udp_nchan: Optional[int] = None
+    num_frequency_channels: Optional[int] = None
+    centre_frequency: Optional[float] = None
+    total_bandwidth: Optional[float] = None
+    observation_mode: Optional[str] = None
+    observer_id: Optional[str] = None
+    project_id: Optional[str] = None
+    pointing_id: Optional[str] = None
+    source: Optional[str] = None
     itrf: List[float] = None
-    receiver_id: str = None
-    feed_polarization: str = None
-    feed_handedness: int = None
-    feed_angle: float = None
-    feed_tracking_mode: str = None
-    feed_position_angle: float = None
+    receiver_id: Optional[str] = None
+    feed_polarization: Optional[str] = None
+    feed_handedness: Optional[int] = None
+    feed_angle: Optional[float] = None
+    feed_tracking_mode: Optional[str] = None
+    feed_position_angle: Optional[float] = None
     oversampling_ratio: List[int] = None
     coordinates: Optional[PSTScanCoordinates] = None
-    max_scan_length: float = None
-    subint_duration: float = None
+    max_scan_length: Optional[float] = None
+    subint_duration: Optional[float] = None
     receptors: List[str] = None
     receptor_weights: List[float] = None
-    num_channelization_stages: int = None
-    channelization_stages: Optional[
-        List[PSTChannelizationStageConfiguration]
-    ] = None
+    num_channelization_stages: Optional[int] = None
+    channelization_stages: List[PSTChannelizationStageConfiguration] = Field(
+        default_factory=list
+    )
 
 
 class PSTBeamConfiguration(CdmObject):
@@ -104,7 +106,7 @@ class PSTBeamConfiguration(CdmObject):
     :param scan: Scan configuration
     """
 
-    beam_id: int = None
+    beam_id: Optional[int] = None
     scan: Optional[PSTScanConfiguration] = None
 
 
@@ -114,4 +116,4 @@ class PSTConfiguration(CdmObject):
     :param beams: List of beam configurations
     """
 
-    beams: Optional[List[PSTBeamConfiguration]] = None
+    beams: List[PSTBeamConfiguration] = Field(default_factory=list)
