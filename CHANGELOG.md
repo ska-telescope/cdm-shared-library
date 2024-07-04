@@ -4,8 +4,9 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-Unreleased
-**********
+10.1.2
+******
+* Fixes check for partial configuration to exclude SpecialTarget class object.
 * Adds field validators to assure subarray_id in range 1-16, inclusive.
 
 10.1.1

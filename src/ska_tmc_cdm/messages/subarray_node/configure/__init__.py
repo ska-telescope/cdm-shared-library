@@ -10,7 +10,7 @@ from typing import Optional
 from pydantic import model_validator
 from typing_extensions import Self
 
-from .core import DishConfiguration, PointingConfiguration
+from .core import DishConfiguration, PointingConfiguration, SpecialTarget
 from .csp import CSPConfiguration
 from .mccs import MCCSConfiguration
 from .sdp import SDPConfiguration
@@ -52,9 +52,12 @@ class ConfigureRequest(CdmObject):
     @model_validator(mode="after")
     def partial_configuration_validation(self) -> Self:
         if self.dish and self.tmc and not self.tmc.partial_configuration:
-            if not self.pointing.target.coord:
+            if (
+                not isinstance(self.pointing.target, SpecialTarget)
+                and not self.pointing.target.coord
+            ):
                 raise ValueError(
-                    "ra and dec for a Target() should be defined for non-partial configuration"
+                    "ra and dec for a Target() should be defined for non-partial or sidereal configuration"
                 )
         return self
 
