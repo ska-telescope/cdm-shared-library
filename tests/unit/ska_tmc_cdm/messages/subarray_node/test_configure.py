@@ -205,3 +205,24 @@ def test_configure_partial_configuration(dish_config):
             .set_partial_configuration(partial_configuration=False)
             .build()
         ).build()
+
+    pointing_config = (
+        PointingConfigurationBuilder()
+        .set_target(
+            TargetBuilder()
+            .set_reference_frame(reference_frame="special")
+            .set_target_name(target_name="Sun")
+            .build()
+        )
+        .build()
+    )
+
+    # ra and dec should not be required for non-sidereal ConfigureRequest
+    ConfigureRequestBuilder().set_dish(dish=dish_config).set_pointing(
+        pointing=pointing_config
+    ).set_tmc(
+        tmc=TMCConfigurationBuilder()
+        .set_scan_duration(scan_duration=timedelta(seconds=10))
+        .set_partial_configuration(partial_configuration=False)
+        .build()
+    ).build()

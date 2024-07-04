@@ -6,6 +6,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     PointingConfiguration,
     ReceiverBand,
+    SpecialTarget,
     Target,
     UnitStr,
 )
@@ -90,12 +91,16 @@ class TargetBuilder:
         self.ie_offset_arcsec = ie_offset_arcsec
         return self
 
-    def build(self) -> Target:
+    def build(self) -> Union[Target, SpecialTarget]:
         """
         Build or create a Target instance.
         :return: A Target instance with the specified configurations.
         """
-
+        if self.reference_frame == "special":
+            return SpecialTarget(
+                reference_frame=self.reference_frame,
+                target_name=self.target_name,
+            )
         return Target(
             ra=self.ra,
             dec=self.dec,

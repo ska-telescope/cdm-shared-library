@@ -8,6 +8,10 @@ Unreleased
 **********
 * Adds field validators to assure subarray_id in range 1-16, inclusive.
 
+10.1.2
+******
+* Fixes check for partial configuration to exclude SpecialTarget class object.
+
 10.1.1
 ******
 * Removes PLUTO as an allowed target_name for SpecialTarget().
