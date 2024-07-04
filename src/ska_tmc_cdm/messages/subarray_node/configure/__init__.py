@@ -54,7 +54,9 @@ class ConfigureRequest(CdmObject):
         if self.dish and self.tmc and not self.tmc.partial_configuration:
             if (
                 not isinstance(self.pointing.target, SpecialTarget)
-                and not self.pointing.target.coord
+                and self.pointing
+                and self.pointing.target
+                and not bool(self.pointing.target.coord)
             ):
                 raise ValueError(
                     "ra and dec for a Target() should be defined for non-partial or sidereal configuration"

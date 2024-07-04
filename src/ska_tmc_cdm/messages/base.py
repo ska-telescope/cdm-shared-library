@@ -1,13 +1,15 @@
 from os import environ
-from typing import Any, Union, cast
+from typing import Any, Tuple, Union, cast
 
 from pydantic import (
     BaseModel,
     ConfigDict,
+    FieldSerializationInfo,
     SerializerFunctionWrapHandler,
     model_serializer,
 )
 from pydantic.config import ExtraValues
+from pydantic.fields import FieldInfo
 from pydantic_core import PydanticUndefined
 
 # Defaults to 'ignore' (silently accept), it can be helpful to set 'forbid'
@@ -51,15 +53,12 @@ class CdmObject(BaseModel):
         }
         return filtered
 
-    def _get_field_info(self, key):
+    def _get_field_info(self, key: str) -> Tuple[str, FieldInfo]:
         try:
             return key, self.model_fields[key]
         except KeyError:
             for name, info in self.model_fields.items():
-                if (
-                    info.validation_alias
-                    and key in info.validation_alias.choices
-                ):
+                if key == info.serialization_alias:
                     return name, info
         raise ValueError(f"Unknown field name/alias: {key}")
 
