@@ -24,8 +24,10 @@ PYTHON_SWITCHES_FOR_FLAKE8 = --max-line-length=88 \
 -include PrivateRules.mak
 python-pre-test: tests/fixtures/tmdata/
 
-# tests/fixtures/tmdata/:
-# 	ska-telmodel cp -UR --sources=car://gitlab.com/ska-telescope/ska-telmodel?${TMDATA_VERSION}#tmdata "" tests/fixtures/tmdata
+# Static type-checking
+# https://microsoft.github.io/pyright/
+python-post-lint:
+	pyright src/
 
 tests/fixtures/tmdata/:
 ifneq ($(TMDATA_VERSION), $(shell cat tests/fixtures/tmdata/TMDATA_VERSION))
