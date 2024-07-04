@@ -271,7 +271,7 @@ class ExecutionBlockConfiguration(CdmObject):
 
     eb_id: Optional[str] = None
     max_length: Optional[float] = None
-    context: dict = Field(default_factory=dict)
+    context: dict = Field(default_factory=dict, exclude=False)
     # FIXME: should these all be `Field(default_factory=list)` instead of `None`?
     beams: Optional[list[BeamConfiguration]] = None
     channels: Optional[list[ChannelConfiguration]] = None
