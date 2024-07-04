@@ -1,5 +1,5 @@
 from os import environ
-from typing import Union, cast, Any
+from typing import Any, Union, cast
 
 from pydantic import (
     BaseModel,
