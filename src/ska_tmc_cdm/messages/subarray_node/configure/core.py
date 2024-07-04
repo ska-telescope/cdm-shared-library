@@ -7,7 +7,7 @@ this package.
 """
 import math
 from enum import Enum
-from typing import Callable, ClassVar, Optional
+from typing import Callable, ClassVar, Optional, cast
 
 from astropy import units as u
 from astropy.coordinates import SkyCoord
@@ -87,6 +87,8 @@ class Target(CdmObject):
             data.pop("dec", None)
             del data["reference_frame"]
         else:
+            # For the type checker. We know coord is not-none here.
+            assert bool(self.coord)
             # TODO: IMHO doing this conversion here is janky. If we only want to
             # work with ICRS coordinates, we should enforce that as part of
             # validation, not convert to it at the end when we dump()
@@ -95,9 +97,8 @@ class Target(CdmObject):
             #     the JSON marshalling process begins.
             icrs_coord = self.coord.transform_to("icrs")
             data["reference_frame"] = icrs_coord.frame.name.upper()
-            data["ra"], data["dec"] = icrs_coord.to_string(
-                "hmsdms", sep=":"
-            ).split(" ")
+            coord_str = cast(str, icrs_coord.to_string("hmsdms", sep=":"))
+            data["ra"], data["dec"] = coord_str.split(" ")
 
         # If offset values are zero, omit them:
         for field_name in ("ca_offset_arcsec", "ie_offset_arcsec"):
@@ -120,13 +121,13 @@ class Target(CdmObject):
     @model_validator(mode="after")
     def ra_dec_or_offsets_required(self) -> Self:
         offsets = self.ca_offset_arcsec or self.ie_offset_arcsec
-        if not self.coord and not offsets:
+        if not bool(self.coord) and not offsets:
             raise ValueError(
                 "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
             )
         return self
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Target):
             return False
         # Either both are None or both defined...
@@ -152,24 +153,27 @@ class Target(CdmObject):
 
         # Please replace this with a more elegant way of dealing with differences
         # comparing targets with different properties...
-        if self.coord is not None:
-            sep = self.coord.separation(other.coord)
-            return (
-                self.coord.frame.name == other.coord.frame.name
-                and sep.radian < self.OFFSET_MARGIN_IN_RAD
+        self_coord, other_coord = self.coord, other.coord
+        if self_coord is not None and other_coord is not None:
+            sep = self_coord.separation(other_coord)
+            return bool(
+                self_coord.frame.name == other_coord.frame.name
+                and cast(float, sep.radian) < self.OFFSET_MARGIN_IN_RAD
             )
         return True
 
     def __repr__(self):
-        if self.coord is None:
-            return "Target(target_name={!r}, ca_offset_arcsect={!r}, ie_offset_arcsec={!r})".format(
-                self.target_name, self.ca_offset_arcsec, self.ie_offset_arcsec
-            )
-        else:
-            raw_ra = self.coord.ra.value
-            raw_dec = self.coord.dec.value
-            units = (self.coord.ra.unit.name, self.coord.dec.unit.name)
-            reference_frame = self.coord.frame.name
+        self_coord = self.coord
+        if self_coord is not None:
+            # For the type checker. We know these are not-None:
+            assert bool(self_coord.ra)
+            assert bool(self_coord.dec)
+            raw_ra = self_coord.ra.value
+            raw_dec = self_coord.dec.value
+            assert bool(self_coord.ra.unit)
+            assert bool(self_coord.dec.unit)
+            units = (self_coord.ra.unit.name, self_coord.dec.unit.name)
+            reference_frame = self_coord.frame.name
             target_name = self.target_name
             return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
                 raw_ra,
@@ -180,11 +184,19 @@ class Target(CdmObject):
                 self.ca_offset_arcsec,
                 self.ie_offset_arcsec,
             )
+        else:
+            return "Target(target_name={!r}, ca_offset_arcsect={!r}, ie_offset_arcsec={!r})".format(
+                self.target_name, self.ca_offset_arcsec, self.ie_offset_arcsec
+            )
 
     def __str__(self):
-        reference_frame = self.coord.frame.name
+        if self.coord is not None:
+            reference_frame = self.coord.frame.name
+            hmsdms = self.coord.to_string(style="hmsdms")
+        else:
+            hmsdms = ""
+            reference_frame = ""
         target_name = self.target_name
-        hmsdms = self.coord.to_string(style="hmsdms")
         return "<Target: {!r} ({} {})>".format(
             target_name, hmsdms, reference_frame
         )
