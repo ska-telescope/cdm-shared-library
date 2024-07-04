@@ -4,7 +4,6 @@ from typing import Any, Tuple, Union, cast
 from pydantic import (
     BaseModel,
     ConfigDict,
-    FieldSerializationInfo,
     SerializerFunctionWrapHandler,
     model_serializer,
 )

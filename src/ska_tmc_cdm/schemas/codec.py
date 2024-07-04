@@ -7,7 +7,7 @@ __all__ = ["Codec"]
 
 import json
 from os import PathLike
-from typing import Optional, Type, TypeVar
+from typing import Optional, TypeVar
 
 from ska_tmc_cdm.messages.base import CdmObject
 
