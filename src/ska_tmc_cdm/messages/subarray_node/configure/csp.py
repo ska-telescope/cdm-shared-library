@@ -185,7 +185,7 @@ class BeamsConfiguration(CdmObject):
 
     pst_beam_id: Optional[int] = None
     stn_beam_id: Optional[int] = None
-    stn_weights: Optional[List[float]] = None
+    stn_weights: List[float] = Field(default_factory=list)
 
 
 class TimingBeamsConfiguration(CdmObject):

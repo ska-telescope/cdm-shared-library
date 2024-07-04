@@ -300,7 +300,7 @@ class BeamsConfigurationBuilder:
     def __init__(self):
         self.pst_beam_id = None
         self.stn_beam_id = None
-        self.stn_weights = None
+        self.stn_weights = []
 
     def set_pst_beam_id(self, pst_beam_id: int) -> "BeamsConfigurationBuilder":
         """

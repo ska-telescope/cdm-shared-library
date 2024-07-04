@@ -80,19 +80,19 @@ class PSTScanConfiguration(CdmObject):
     project_id: Optional[str] = None
     pointing_id: Optional[str] = None
     source: Optional[str] = None
-    itrf: List[float] = None
+    itrf: List[float] = Field(default_factory=list)
     receiver_id: Optional[str] = None
     feed_polarization: Optional[str] = None
     feed_handedness: Optional[int] = None
     feed_angle: Optional[float] = None
     feed_tracking_mode: Optional[str] = None
     feed_position_angle: Optional[float] = None
-    oversampling_ratio: List[int] = None
+    oversampling_ratio: List[int] = Field(default_factory=list)
     coordinates: Optional[PSTScanCoordinates] = None
     max_scan_length: Optional[float] = None
     subint_duration: Optional[float] = None
-    receptors: List[str] = None
-    receptor_weights: List[float] = None
+    receptors: List[str] = Field(default_factory=list)
+    receptor_weights: List[float] = Field(default_factory=list)
     num_channelization_stages: Optional[int] = None
     channelization_stages: List[PSTChannelizationStageConfiguration] = Field(
         default_factory=list
