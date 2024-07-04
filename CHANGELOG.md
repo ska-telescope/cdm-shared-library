@@ -17,6 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ******
 * Adds subarray_node.configure.core.SpecialTarget() to represent nonsidereal targets.
 
+* Adds static type checking with Pyright to python-lint pipeline.
 * Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
 
 10.0.0
