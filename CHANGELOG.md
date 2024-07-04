@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 Unreleased
 **********
 
+* Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
+
 10.0.0
 ******
 
