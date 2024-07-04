@@ -113,7 +113,7 @@ class MCCSAllocateBuilder:
         self.channel_blocks = None
         self.station_ids = None
         self.interface = None
-        self.subarray_beams = None
+        self.subarray_beams = ()
 
     def set_subarray_beam_ids(
         self, subarray_beam_ids: list

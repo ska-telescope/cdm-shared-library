@@ -24,6 +24,6 @@ class AssignedResources(CdmObject):
     """
 
     interface: str = SCHEMA
-    subarray_beam_ids: list[int] = Field(default_factory=list)
-    station_ids: list[list[int]] = Field(default_factory=list)
-    channel_blocks: list[int] = Field(default_factory=list)
+    subarray_beam_ids: list[int] = Field(default_factory=list, exclude=False)
+    station_ids: list[list[int]] = Field(default_factory=list, exclude=False)
+    channel_blocks: list[int] = Field(default_factory=list, exclude=False)
