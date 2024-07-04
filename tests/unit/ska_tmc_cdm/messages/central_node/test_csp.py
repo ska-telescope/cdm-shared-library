@@ -9,8 +9,6 @@ from tests.unit.ska_tmc_cdm.builder.central_node.csp import (
     PSTConfigurationBuilder,
 )
 
-interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
-
 
 @pytest.mark.parametrize(
     "object1, object2, is_equal",
@@ -30,53 +28,21 @@ interface = "https://schema.skao.int/ska-low-csp-assignresources/2.0"
             .build(),
             True,
         ),
-        # (  # not equal
-        #     CSPConfigurationBuilder()
-        #     .set_interface(interface)
-        #     .set_common(
-        #         CommonConfigurationBuilder()
-        #         .set_subarray_id(subarray_id=1)
-        #         .build()
-        #     )
-        #     .set_lowcbf(
-        #         LowCbfConfigurationBuilder()
-        #         .set_resources(
-        #             [
-        #                 ResourceConfigurationBuilder()
-        #                 .set_device("fsp_01")
-        #                 .set_shared(True)
-        #                 .set_fw_image("pst")
-        #                 .set_fw_mode("unused")
-        #                 .build()
-        #             ]
-        #         )
-        #         .build()
-        #     )
-        #     .build(),
-        #     CSPConfigurationBuilder()
-        #     .set_interface(interface)
-        #     .set_common(
-        #         CommonConfigurationBuilder()
-        #         .set_subarray_id(subarray_id=1)
-        #         .build()
-        #     )
-        #     .set_lowcbf(
-        #         LowCbfConfigurationBuilder()
-        #         .set_resources(
-        #             [
-        #                 ResourceConfigurationBuilder()
-        #                 .set_device("p4_01")
-        #                 .set_shared(True)
-        #                 .set_fw_image("pst")
-        #                 .set_fw_mode("unused")
-        #                 .build()
-        #             ]
-        #         )
-        #         .build()
-        #     )
-        #     .build(),
-        #     False,
-        # ),
+        (  # not equal
+            CSPConfigurationBuilder()
+            .set_pss(
+                PSSConfigurationBuilder().set_pss_beam_ids([1, 2, 3]).build()
+            )
+            .set_pst(PSTConfigurationBuilder().set_pst_beam_ids([1]).build())
+            .build(),
+            CSPConfigurationBuilder()
+            .set_pss(
+                PSSConfigurationBuilder().set_pss_beam_ids([1, 2, 3]).build()
+            )
+            .set_pst(PSTConfigurationBuilder().set_pst_beam_ids([2]).build())
+            .build(),
+            False,
+        ),
     ],
 )
 def test_csp_eq_check(object1, object2, is_equal):

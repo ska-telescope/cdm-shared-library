@@ -19,7 +19,7 @@ class PSSConfigurationBuilder:
     ) -> "PSSConfigurationBuilder":
         """
         Set the PSS
-        :param pss: PSS
+        :param pss: pss beam id for set.
         """
         self.pss_beam_ids = pss_beam_ids
         return self
@@ -46,7 +46,7 @@ class PSTConfigurationBuilder:
     ) -> "PSTConfigurationBuilder":
         """
         Set the PST
-        :param pst: PST
+        :param pst: pst beam id for set.
         """
         self.pst_beam_ids = pst_beam_ids
         return self
@@ -75,7 +75,7 @@ class CSPConfigurationBuilder:
     def set_pss(self, pss: PSSConfiguration) -> "CSPConfigurationBuilder":
         """
         Set the PSS
-        :param pss: PSS
+        :param pss: pss configuration for set.
         """
         self.pss = pss
         return self
@@ -83,7 +83,7 @@ class CSPConfigurationBuilder:
     def set_pst(self, pst: PSTConfiguration) -> "CSPConfigurationBuilder":
         """
         Set the PST
-        :param pst: PST
+        :param pst: pst configuration for set.
         """
         self.pst = pst
         return self

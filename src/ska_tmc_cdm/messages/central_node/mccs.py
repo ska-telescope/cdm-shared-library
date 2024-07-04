@@ -9,6 +9,8 @@
 
 from typing import Optional
 
+from pydantic import Field
+
 from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = [
@@ -27,8 +29,8 @@ class ApertureConfiguration(CdmObject):
     :param aperture_id: aperture id to allocate
     """
 
-    station_id: Optional[int]
-    aperture_id: Optional[str]
+    station_id: Optional[int] = None
+    aperture_id: Optional[str] = None
 
 
 class SubArrayBeamsConfiguration(CdmObject):
@@ -41,9 +43,9 @@ class SubArrayBeamsConfiguration(CdmObject):
     :param number_of_channels: number of channels to allocate
     """
 
-    subarray_beam_id: Optional[int]
-    apertures: Optional[list[ApertureConfiguration]]
-    number_of_channels: Optional[int]
+    subarray_beam_id: Optional[int] = None
+    apertures: list[ApertureConfiguration] = Field(default_factory=list)
+    number_of_channels: Optional[int] = None
 
 
 class MCCSAllocate(CdmObject):
@@ -56,13 +58,10 @@ class MCCSAllocate(CdmObject):
     :param subarray_beam_ids: station beam id's to allocate
     """
 
-    station_ids: list[list[int]] = None
-    channel_blocks: list[int] = None
-    subarray_beam_ids: list[int] = None
-
-    station_ids: list[list[int]]
-    channel_blocks: list[int]
-    subarray_beam_ids: list[int]
-
+    station_ids: list[list[int]] = Field(default_factory=list)
+    channel_blocks: list[int] = Field(default_factory=list)
+    subarray_beam_ids: list[int] = Field(default_factory=list)
     interface: Optional[str] = None
-    subarray_beams: Optional[list[SubArrayBeamsConfiguration]] = None
+    subarray_beams: list[SubArrayBeamsConfiguration] = Field(
+        default_factory=list
+    )

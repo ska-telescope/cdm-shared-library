@@ -133,6 +133,21 @@ package ska_tmc_cdm.messages.central_node {
         SDPConfiguration *-- "*" ProcessingBlockConfiguration
         SDPConfiguration *-- "1" ExecutionBlockConfiguration
 
+        class PSSConfiguration{
+            pss_beam_ids: List[int]
+        }
+
+        class PSTConfiguration{
+            pst_beam_ids: List[int]
+        }
+
+        class CSPConfiguration {
+            pss : PSSConfiguration
+            pst : PSTConfiguration
+        }
+        CSPConfiguration *-- "1" PSSConfiguration
+        CSPConfiguration *-- "1" PSTConfiguration
+
      
         class AssignResourcesRequest {
             interface : str
