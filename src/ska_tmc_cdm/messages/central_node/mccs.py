@@ -62,4 +62,6 @@ class MCCSAllocate(CdmObject):
     channel_blocks: list[int] = Field(default_factory=list)
     subarray_beam_ids: list[int] = Field(default_factory=list)
     interface: Optional[str] = None
-    subarray_beams: list[SubArrayBeamsConfiguration] = Field(default_factory=list)
+    subarray_beams: list[SubArrayBeamsConfiguration] = Field(
+        default_factory=list
+    )
