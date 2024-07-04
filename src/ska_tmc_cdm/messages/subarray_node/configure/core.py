@@ -166,8 +166,8 @@ class Target(CdmObject):
         self_coord = self.coord
         if self_coord is not None:
             # For the type checker. We know these are not-None:
-            assert bool(self_coord.ra)
-            assert bool(self_coord.dec)
+            assert self_coord.ra is not None
+            assert self_coord.dec is not None
             raw_ra = self_coord.ra.value
             raw_dec = self_coord.dec.value
             assert bool(self_coord.ra.unit)
