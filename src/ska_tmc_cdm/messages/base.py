@@ -40,7 +40,7 @@ class CdmObject(BaseModel):
 
     @staticmethod
     def _is_empty(value: Any) -> bool:
-        return value in (None, [], {})
+        return value in (None, [])
 
     def _exclude_default_nulls_and_empty(
         self, dumped: dict[str, Any]
