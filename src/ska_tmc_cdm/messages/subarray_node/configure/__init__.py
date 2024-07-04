@@ -52,7 +52,11 @@ class ConfigureRequest(CdmObject):
     @model_validator(mode="after")
     def partial_configuration_validation(self) -> Self:
         if self.dish and self.tmc and not self.tmc.partial_configuration:
-            if not self.pointing.target.coord:
+            if (
+                self.pointing
+                and self.pointing.target
+                and not bool(self.pointing.target.coord)
+            ):
                 raise ValueError(
                     "ra and dec for a Target() should be defined for non-partial configuration"
                 )
