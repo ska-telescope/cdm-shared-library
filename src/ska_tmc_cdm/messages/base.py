@@ -28,8 +28,20 @@ class CdmObject(BaseModel):
         validate_default=True,
     )
 
+    def _get_field_info(self, key):
+        try:
+            return self.model_fields[key]
+        except KeyError:
+            for info in self.model_fields.values():
+                if (
+                    info.validation_alias
+                    and key in info.validation_alias.choices
+                ):
+                    return info
+        raise ValueError(f"Unknown field name/alias: {key}")
+
     def _is_default(self, key: str) -> bool:
-        field_info = self.model_fields[key]
+        field_info = self._get_field_info(key)
         if field_info.default_factory is not None:
             default = field_info.default_factory()
         elif field_info.default is not PydanticUndefined:
@@ -37,6 +49,13 @@ class CdmObject(BaseModel):
         else:
             default = PydanticUndefined
         return getattr(self, key) == default
+
+    def _must_include(self, key: str) -> bool:
+        field_info = self._get_field_info(key)
+        if field_info.exclude is False:
+            return True
+        else:
+            return False
 
     @staticmethod
     def _is_empty(value: Any) -> bool:
@@ -47,11 +66,13 @@ class CdmObject(BaseModel):
     ) -> dict[str, Any]:
         """To avoid cluttering JSON output, we want to omit any None, [], {} values
         that are present by default, but preserve any 'empty' values that were deliberately
-        set by callers."""
+        set by callers or where the field is explicitly set exclude=False - requiring that it
+        be included in serialised output"""
         filtered = {
             key: val
             for key, val in dumped.items()
-            if not (self._is_empty(val) and self._is_default(key))
+            if self._must_include(key)
+            or not (self._is_empty(val) and self._is_default(key))
         }
         return filtered
 
