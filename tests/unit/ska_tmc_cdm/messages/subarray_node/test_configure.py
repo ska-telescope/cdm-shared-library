@@ -217,12 +217,16 @@ def test_configure_partial_configuration(dish_config):
         .build()
     )
 
-    # ra and dec should not be required for non-sidereal ConfigureRequest
-    ConfigureRequestBuilder().set_dish(dish=dish_config).set_pointing(
-        pointing=pointing_config
-    ).set_tmc(
-        tmc=TMCConfigurationBuilder()
-        .set_scan_duration(scan_duration=timedelta(seconds=10))
-        .set_partial_configuration(partial_configuration=False)
+    valid_non_sidereal_request = (
+        ConfigureRequestBuilder()
+        .set_dish(dish=dish_config)
+        .set_pointing(pointing=pointing_config)
+        .set_tmc(
+            tmc=TMCConfigurationBuilder()
+            .set_scan_duration(scan_duration=timedelta(seconds=10))
+            .set_partial_configuration(partial_configuration=False)
+            .build()
+        )
         .build()
-    ).build()
+    )
+    assert valid_non_sidereal_request is not None

@@ -120,7 +120,9 @@ class PointingConfigurationBuilder:
     def __init__(self):
         self.target = None
 
-    def set_target(self, target: Target) -> "PointingConfigurationBuilder":
+    def set_target(
+        self, target: Union[Target, SpecialTarget]
+    ) -> "PointingConfigurationBuilder":
         """
         Set target
         :param: target: Target instance

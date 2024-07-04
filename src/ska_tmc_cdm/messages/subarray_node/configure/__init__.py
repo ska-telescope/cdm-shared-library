@@ -57,7 +57,7 @@ class ConfigureRequest(CdmObject):
                 and not self.pointing.target.coord
             ):
                 raise ValueError(
-                    "ra and dec for a Target() should be defined for non-partial configuration"
+                    "ra and dec for a Target() should be defined for non-partial or sidereal configuration"
                 )
         return self
 
