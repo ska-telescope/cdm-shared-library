@@ -1,3 +1,4 @@
+# flake8: noqa
 from datetime import datetime, timezone
 from typing import Any, Callable, Optional
 
@@ -25,6 +26,7 @@ def object_factory(
     value: Any = ...,
     static_default: Any = ...,
     default_factory: Optional[Callable] = None,
+    exclude: bool | None = None,
 ):
     """
     This is a test utility that takes a type-annotation, a field value,
@@ -53,7 +55,9 @@ def object_factory(
     # https://stackoverflow.com/a/75495929/845210
     class_constructor_args = {
         "__annotations__": {FIELD_NAME: annotation},
-        FIELD_NAME: Field(static_default, default_factory=default_factory),
+        FIELD_NAME: Field(
+            static_default, default_factory=default_factory, exclude=exclude
+        ),
     }
 
     NewObj = type(
