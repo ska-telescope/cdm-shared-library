@@ -30,28 +30,28 @@ class CdmObject(BaseModel):
 
     def _get_field_info(self, key):
         try:
-            return self.model_fields[key]
+            return key, self.model_fields[key]
         except KeyError:
-            for info in self.model_fields.values():
+            for name, info in self.model_fields.items():
                 if (
                     info.validation_alias
                     and key in info.validation_alias.choices
                 ):
-                    return info
+                    return name, info
         raise ValueError(f"Unknown field name/alias: {key}")
 
     def _is_default(self, key: str) -> bool:
-        field_info = self._get_field_info(key)
+        field_name, field_info = self._get_field_info(key)
         if field_info.default_factory is not None:
             default = field_info.default_factory()
         elif field_info.default is not PydanticUndefined:
             default = field_info.default
         else:
             default = PydanticUndefined
-        return getattr(self, key) == default
+        return getattr(self, field_name) == default
 
     def _must_include(self, key: str) -> bool:
-        field_info = self._get_field_info(key)
+        _, field_info = self._get_field_info(key)
         if field_info.exclude is False:
             return True
         else:
@@ -59,7 +59,7 @@ class CdmObject(BaseModel):
 
     @staticmethod
     def _is_empty(value: Any) -> bool:
-        return value in (None, [])
+        return value in (None, [], {})
 
     def _exclude_default_nulls_and_empty(
         self, dumped: dict[str, Any]
