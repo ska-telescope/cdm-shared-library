@@ -235,8 +235,8 @@ class CSPConfiguration(CdmObject):
     common: Optional[CommonConfiguration] = None
     cbf_config: Optional[CBFConfiguration] = Field(
         default=None,
-        serialization_alias="cbf",
-        validation_alias=AliasChoices("cbf", "cbf_config"),
+        serialization_alias="midcbf",
+        validation_alias=AliasChoices("midcbf", "cbf_config"),
     )
     # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.

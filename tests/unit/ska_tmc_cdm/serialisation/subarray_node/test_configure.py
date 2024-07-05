@@ -93,7 +93,6 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_5B,
@@ -187,7 +186,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
       "frequency_band": "5b",
       "subarray_id": 1
     },
-    "cbf": {
+    "midcbf": {
       "fsp": [
         {
           "fsp_id": 7,
@@ -651,72 +650,35 @@ VALID_MID_CONFIGURE_JSON = """
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "1",
       "subarray_id": 1
     },
-    "cbf": {
-      "fsp": [
-        {
-          "fsp_id": 1,
-          "function_mode": "CORR",
-          "frequency_slice_id": 1,
-          "integration_factor": 1,
-          "zoom_factor": 0,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
-          "channel_offset": 0,
-          "output_link_map": [
-            [
-              0,
-              0
-            ],
-            [
-              200,
-              1
-            ]
-          ]
-        },
-        {
-          "fsp_id": 2,
-          "function_mode": "CORR",
-          "frequency_slice_id": 2,
-          "integration_factor": 1,
-          "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
-          "channel_offset": 744,
-          "output_link_map": [
-            [
-              0,
-              4
-            ],
-            [
-              200,
-              5
-            ]
-          ],
-          "zoom_window_tuning": 650000
+   "midcbf": {
+        "delay_model_subscription_point": "...",
+                   "frequency_band_offset_stream1": 80,
+                   "correlation": {
+                       "processing_regions": [
+                           "fsp_ids": [0,1],
+                           "receptors": ["SKA063", "SKA001", "SKA100"],
+                            "start_freq": 665.6e6,
+                                                   "channel_width": 13.44e3,
+                                                   "channel_count": 20e3,
+                                                   "integration_factor": 1,
+                                                     "sdp_start_channel_id": 1,
+                                                                           "output_host": [
+                                                                               [0, "1.22.3.4"],
+                                                                               [13020, "1.22.3.5"],
+                                                                               [26040, "1.22.3.6"],
+                                                                               [39060, "1.22.3.7"]
+                                                                           ],
+                                                                           "output_port": [
+                                                                           ],
+                                                                           "output_link_map": [
+                                                                               [0, 0],
+                                                                               [200, 1]
+                                                                           ]
         }
       ],
       "vlbi": {}
@@ -751,72 +713,35 @@ INVALID_MID_CONFIGURE_JSON = """
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "1",
       "subarray_id": 1
     },
-    "cbf": {
-      "fsp": [
-        {
-          "fsp_id": 1,
-          "function_mode": "CORR",
-          "frequency_slice_id": 1,
-          "integration_factor": 1,
-          "zoom_factor": 0,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
-          "channel_offset": 0,
-          "output_link_map": [
-            [
-              0,
-              0
-            ],
-            [
-              200,
-              1
-            ]
-          ]
-        },
-        {
-          "fsp_id": 2,
-          "function_mode": "CORR",
-          "frequency_slice_id": 2,
-          "integration_factor": 1,
-          "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
-          "channel_offset": 744,
-          "output_link_map": [
-            [
-              0,
-              4
-            ],
-            [
-              200,
-              5
-            ]
-          ],
-          "zoom_window_tuning": 650000
+    "midcbf": {
+     "delay_model_subscription_point": "...",
+                "frequency_band_offset_stream1": 80,
+                "correlation": {
+                    "processing_regions": [
+                        "fsp_ids": [0,1],
+                        "receptors": ["SKA063", "SKA001", "SKA100"],
+                         "start_freq": 665.6e6,
+                                                "channel_width": 13.44e3,
+                                                "channel_count": 20e3,
+                                                "integration_factor": 1,
+                                                  "sdp_start_channel_id": 1,
+                                                                        "output_host": [
+                                                                            [0, "1.22.3.4"],
+                                                                            [13020, "1.22.3.5"],
+                                                                            [26040, "1.22.3.6"],
+                                                                            [39060, "1.22.3.7"]
+                                                                        ],
+                                                                        "output_port": [
+                                                                        ],
+                                                                        "output_link_map": [
+                                                                            [0, 0],
+                                                                            [200, 1]
+                                                                        ]
         }
       ],
       "vlbi": {}
