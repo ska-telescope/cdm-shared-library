@@ -56,7 +56,7 @@ class ConfigureRequest(CdmObject):
                 not isinstance(self.pointing.target, SpecialTarget)
                 and self.pointing
                 and self.pointing.target
-                and not bool(self.pointing.target.coord)
+                and self.pointing.target.coord is None
             ):
                 raise ValueError(
                     "ra and dec for a Target() should be defined for non-partial or sidereal configuration"
