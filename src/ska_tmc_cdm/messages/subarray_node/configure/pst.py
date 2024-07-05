@@ -37,7 +37,7 @@ class PSTChannelizationStageConfiguration(CdmObject):
 
     num_filter_taps: Optional[int] = None
     filter_coefficients: List[float] = Field(default_factory=list)
-    num_frequency_channels: int = None
+    num_frequency_channels: Optional[int] = None
     oversampling_ratio: List[int] = Field(default_factory=list)
 
 
