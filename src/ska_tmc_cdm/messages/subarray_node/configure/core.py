@@ -88,7 +88,7 @@ class Target(CdmObject):
             del data["reference_frame"]
         else:
             # For the type checker. We know coord is not-none here.
-            assert bool(self.coord)
+            assert self.coord is not None
             # TODO: IMHO doing this conversion here is janky. If we only want to
             # work with ICRS coordinates, we should enforce that as part of
             # validation, not convert to it at the end when we dump()
@@ -121,7 +121,7 @@ class Target(CdmObject):
     @model_validator(mode="after")
     def ra_dec_or_offsets_required(self) -> Self:
         offsets = self.ca_offset_arcsec or self.ie_offset_arcsec
-        if not bool(self.coord) and not offsets:
+        if self.coord is None and not offsets:
             raise ValueError(
                 "A Target() must specify either ra/dec or one nonzero ca_offset_arcsec or ie_offset_arcsec"
             )
@@ -170,8 +170,8 @@ class Target(CdmObject):
             assert self_coord.dec is not None
             raw_ra = self_coord.ra.value
             raw_dec = self_coord.dec.value
-            assert bool(self_coord.ra.unit)
-            assert bool(self_coord.dec.unit)
+            assert self_coord.ra.unit is not None
+            assert self_coord.dec.unit is not None
             units = (self_coord.ra.unit.name, self_coord.dec.unit.name)
             reference_frame = self_coord.frame.name
             target_name = self.target_name
