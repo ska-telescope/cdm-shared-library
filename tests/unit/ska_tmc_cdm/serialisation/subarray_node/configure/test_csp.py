@@ -24,9 +24,6 @@ from ... import utils
 
 VALID_CSP_JSON_PI16 = """{
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-        "subarray_name": "science period 23"
-    },
     "common": {
         "config_id": "sbi-mvp01-20200325-00001-science_A",
         "frequency_band": "1",
@@ -105,7 +102,6 @@ VALID_CSP_JSON_PI16 = """{
 
 CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     interface="https://schema.skao.int/ska-csp-configure/2.0",
-    subarray=SubarrayConfiguration(subarray_name="science period 23"),
     common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
         frequency_band=ReceiverBand.BAND_1,
@@ -290,7 +286,6 @@ def test_marshall_csp_configuration_does_not_modify_original():
     )
     config = CSPConfiguration(
         interface="interface",
-        subarray=SubarrayConfiguration(subarray_name="subarray name"),
         common=CommonConfiguration(
             config_id="config_id",
             frequency_band=ReceiverBand.BAND_1,
@@ -305,7 +300,6 @@ def test_marshall_csp_configuration_does_not_modify_original():
     CODEC.dumps(config)
 
     assert config.interface == copied.interface
-    assert config.subarray == copied.subarray
     assert config.common == copied.common
     assert config.cbf_config == copied.cbf_config
     assert config.pss_config == copied.pss_config

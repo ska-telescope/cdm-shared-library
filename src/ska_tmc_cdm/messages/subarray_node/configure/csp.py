@@ -229,7 +229,6 @@ class CSPConfiguration(CdmObject):
     """
 
     interface: Optional[str] = None
-    subarray: Optional[SubarrayConfiguration] = None
     common: Optional[CommonConfiguration] = None
     cbf_config: Optional[CBFConfiguration] = Field(
         default=None,
