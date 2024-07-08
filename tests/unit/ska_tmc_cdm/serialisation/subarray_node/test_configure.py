@@ -243,8 +243,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               200,
               5
             ]
-          ],
-          "zoom_window_tuning": 650000
+          ]
         },
         {
           "fsp_id": 7,
@@ -715,8 +714,7 @@ VALID_MID_CONFIGURE_JSON = """
               200,
               5
             ]
-          ],
-          "zoom_window_tuning": 650000
+          ]
         }
       ],
       "vlbi": {}

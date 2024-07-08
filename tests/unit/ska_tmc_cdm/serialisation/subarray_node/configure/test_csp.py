@@ -88,8 +88,7 @@ VALID_CSP_JSON_PI16 = """{
                         200,
                         5
                     ]
-                ],
-                "zoom_window_tuning": 650000
+                ]
             }
         ],
         "vlbi": {

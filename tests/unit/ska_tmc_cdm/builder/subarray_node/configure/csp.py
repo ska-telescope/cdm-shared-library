@@ -33,7 +33,6 @@ class FSPConfigurationBuilder:
         self.channel_averaging_map = None
         self.output_link_map = None
         self.channel_offset = None
-        self.zoom_window_tuning = None
 
     def set_fsp_id(self, fsp_id: int) -> "FSPConfigurationBuilder":
         """
@@ -123,16 +122,6 @@ class FSPConfigurationBuilder:
         self.channel_offset = channel_offset
         return self
 
-    def set_zoom_window_tuning(
-        self, zoom_window_tuning: int
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the zoom window tuning.
-        :param zoom_window_tuning: Integer representing the zoom window tuning.
-        """
-        self.zoom_window_tuning = zoom_window_tuning
-        return self
-
     def build(self) -> FSPConfiguration:
         """
         Builds or creates an instance of FSPConfiguration
@@ -147,7 +136,6 @@ class FSPConfigurationBuilder:
             channel_averaging_map=self.channel_averaging_map,
             output_link_map=self.output_link_map,
             channel_offset=self.channel_offset,
-            zoom_window_tuning=self.zoom_window_tuning,
         )
 
 
