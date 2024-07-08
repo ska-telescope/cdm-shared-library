@@ -71,6 +71,7 @@ class FSPConfiguration(CdmObject):
     ] = None  # FIXME: Field(default_factory=list)?
     channel_offset: Optional[int] = None
 
+
 class SubarrayConfiguration(CdmObject):
     """
     Class to hold the parameters relevant only for the current sub-array device.

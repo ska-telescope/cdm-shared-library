@@ -14,7 +14,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     LowCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
-    SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
     VisStnBeamConfiguration,
