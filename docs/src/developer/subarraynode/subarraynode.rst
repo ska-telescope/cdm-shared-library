@@ -150,16 +150,6 @@ of a full CDM JSON object, the elements this maps to are:
           "frequency_slice_id": 1,
           "integration_factor": 1,
           "zoom_factor": 0,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "channel_offset": 0,
           "output_link_map": [
             [
@@ -178,16 +168,6 @@ of a full CDM JSON object, the elements this maps to are:
           "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "channel_offset": 744,
           "output_link_map": [
             [
@@ -472,16 +452,6 @@ Example configuration JSON for MID
               "frequency_slice_id": 1,
               "integration_factor": 1,
               "zoom_factor": 0,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
               "channel_offset": 0,
               "output_link_map": [
                 [
@@ -500,16 +470,6 @@ Example configuration JSON for MID
               "frequency_slice_id": 2,
               "integration_factor": 1,
               "zoom_factor": 1,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
               "channel_offset": 744,
               "output_link_map": [
                 [

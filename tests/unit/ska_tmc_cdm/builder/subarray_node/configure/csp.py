@@ -30,7 +30,6 @@ class FSPConfigurationBuilder:
         self.frequency_slice_id = None
         self.integration_factor = None
         self.zoom_factor = None
-        self.channel_averaging_map = None
         self.output_link_map = None
         self.channel_offset = None
 
@@ -92,16 +91,6 @@ class FSPConfigurationBuilder:
         self.zoom_factor = zoom_factor
         return self
 
-    def set_channel_averaging_map(
-        self, channel_averaging_map: List[Tuple[int, int]]
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the channel averaging map.
-        :param channel_averaging_map: List of tuples representing the channel averaging map.
-        """
-        self.channel_averaging_map = channel_averaging_map
-        return self
-
     def set_output_link_map(
         self, output_link_map: List[Tuple[int, int, int]]
     ) -> "FSPConfigurationBuilder":
@@ -123,7 +112,6 @@ class FSPConfigurationBuilder:
             frequency_slice_id=self.frequency_slice_id,
             integration_factor=self.integration_factor,
             zoom_factor=self.zoom_factor,
-            channel_averaging_map=self.channel_averaging_map,
             output_link_map=self.output_link_map,
         )
 
