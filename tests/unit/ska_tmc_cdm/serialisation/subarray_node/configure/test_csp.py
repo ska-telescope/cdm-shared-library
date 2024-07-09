@@ -46,7 +46,6 @@ VALID_CSP_JSON_PI16 = """{
                         0
                     ]
                 ],
-                "channel_offset": 0,
                 "output_link_map": [
                     [
                         0,
@@ -74,7 +73,6 @@ VALID_CSP_JSON_PI16 = """{
                         0
                     ]
                 ],
-                "channel_offset": 744,
                 "output_link_map": [
                     [
                         0,

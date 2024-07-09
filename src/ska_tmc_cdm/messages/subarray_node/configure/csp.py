@@ -69,7 +69,6 @@ class FSPConfiguration(CdmObject):
     output_link_map: Optional[
         List[Tuple]
     ] = None  # FIXME: Field(default_factory=list)?
-    channel_offset: Optional[int] = None
 
 
 class SubarrayConfiguration(CdmObject):

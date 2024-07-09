@@ -112,16 +112,6 @@ class FSPConfigurationBuilder:
         self.output_link_map = output_link_map
         return self
 
-    def set_channel_offset(
-        self, channel_offset: int
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the channel offset.
-        :param channel_offset: Integer representing the channel offset.
-        """
-        self.channel_offset = channel_offset
-        return self
-
     def build(self) -> FSPConfiguration:
         """
         Builds or creates an instance of FSPConfiguration
@@ -135,7 +125,6 @@ class FSPConfigurationBuilder:
             zoom_factor=self.zoom_factor,
             channel_averaging_map=self.channel_averaging_map,
             output_link_map=self.output_link_map,
-            channel_offset=self.channel_offset,
         )
 
 

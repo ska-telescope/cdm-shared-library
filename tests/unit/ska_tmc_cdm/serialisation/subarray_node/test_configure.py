@@ -201,7 +201,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -229,7 +228,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 744,
           "output_link_map": [
             [
               0,
@@ -257,7 +255,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -285,7 +282,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -313,7 +309,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -669,7 +664,6 @@ VALID_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -697,7 +691,6 @@ VALID_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 744,
           "output_link_map": [
             [
               0,
@@ -765,7 +758,6 @@ INVALID_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -793,7 +785,6 @@ INVALID_MID_CONFIGURE_JSON = """
               0
             ]
           ],
-          "channel_offset": 744,
           "output_link_map": [
             [
               0,
