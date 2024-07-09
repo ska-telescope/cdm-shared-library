@@ -51,7 +51,7 @@ class TargetType(str, Enum):
     DEFAULT = "default"
 
     @classmethod
-    def determine(cls, val: Any) -> Self:
+    def determine(cls, val: Any) -> "TargetType":
         if isinstance(val, dict):
             reference_frame = val.get("reference_frame", "")
         else:
@@ -87,11 +87,10 @@ class TargetBase:
         """
         Load to lowercase for compatibility with removed Marshmallow schema
         """
-        try:
+        if isinstance(value, str):
             return value.lower()
-        except AttributeError:
-            # Not a string:
-            return value
+        # Not a str, downstream validators will catch:
+        return value
 
     @field_serializer("reference_frame")
     def _to_uppercase(self, value: str) -> str:
