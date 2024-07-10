@@ -4,6 +4,11 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+Unreleased changes
+******************
+* Adds static type checking with Pyright to python-lint pipeline.
+* Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
+
 10.1.2
 ******
 * Fixes check for partial configuration to exclude SpecialTarget class object.

@@ -79,9 +79,9 @@ class AssignResourcesRequest(CdmObject):
         cls,
         subarray_id: int,
         dish_allocation: DishAllocation,
-        sdp_config: SDPConfiguration = None,
-        interface: str = None,
-        transaction_id: str = None,
+        sdp_config: Optional[SDPConfiguration] = None,
+        interface: Optional[str] = None,
+        transaction_id: Optional[str] = None,
     ):
         """
         Create a new AssignResourcesRequest object.
@@ -93,7 +93,7 @@ class AssignResourcesRequest(CdmObject):
         """
         return cls(
             subarray_id=subarray_id,
-            dish_allocation=dish_allocation,
+            dish=dish_allocation,
             sdp_config=sdp_config,
             interface=interface,
             transaction_id=transaction_id,
@@ -104,9 +104,9 @@ class AssignResourcesRequest(CdmObject):
         cls,
         subarray_id: int,
         mccs: MCCSAllocate,
-        sdp_config: SDPConfiguration = None,
-        interface: str = None,
-        transaction_id: str = None,
+        sdp_config: Optional[SDPConfiguration] = None,
+        interface: Optional[str] = None,
+        transaction_id: Optional[str] = None,
     ):
         """
         Create a new AssignResourcesRequest object.

@@ -7,7 +7,7 @@ __all__ = ["Codec"]
 
 import json
 from os import PathLike
-from typing import Optional, Type, TypeVar
+from typing import Optional, TypeVar
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -32,10 +32,10 @@ class Codec:
 
     @staticmethod
     def loads(
-        cdm_class: T,
+        cdm_class: type[T],
         json_data: str,
         validate: bool = True,
-        strictness: int = DEFAULT_STRICTNESS,
+        strictness: Optional[int] = DEFAULT_STRICTNESS,
     ) -> T:
         """
         Create an instance of a CDM class from a JSON string.
@@ -84,11 +84,11 @@ class Codec:
 
     @staticmethod
     def load_from_file(
-        cdm_class: Type[CdmObject],
+        cdm_class: type[T],
         path: PathLike[str],
         validate: bool = True,
         strictness: Optional[int] = DEFAULT_STRICTNESS,
-    ):
+    ) -> T:
         """
         Load an instance of a CDM class from disk.
 
