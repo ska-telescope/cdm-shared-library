@@ -108,6 +108,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
                     channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
@@ -117,6 +118,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
                     channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
                     zoom_window_tuning=650000,
@@ -127,6 +129,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
                     channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
@@ -136,6 +139,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
                     channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
@@ -145,6 +149,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
                     channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
@@ -186,6 +191,16 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -203,6 +218,16 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -220,6 +245,16 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -237,6 +272,16 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -254,6 +299,16 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -599,6 +654,16 @@ VALID_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 1,
           "integration_factor": 1,
           "zoom_factor": 0,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -616,6 +681,16 @@ VALID_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -673,6 +748,16 @@ INVALID_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 1,
           "integration_factor": 1,
           "zoom_factor": 0,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -690,6 +775,16 @@ INVALID_MID_CONFIGURE_JSON = """
           "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
           "output_link_map": [
             [
               0,
@@ -752,6 +847,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     frequency_slice_id=1,
                     integration_factor=1,
                     zoom_factor=0,
+                    channel_averaging_map=[(0, 2), (744, 0)],
                     channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
@@ -761,6 +857,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
                     frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
                     channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
                     zoom_window_tuning=650000,

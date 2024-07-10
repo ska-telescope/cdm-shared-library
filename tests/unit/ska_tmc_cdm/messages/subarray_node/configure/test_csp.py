@@ -2,6 +2,7 @@
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
 import copy
+import itertools
 
 import pytest
 
@@ -233,6 +234,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
@@ -240,6 +244,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             True,
         ),
@@ -257,6 +264,7 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
+            .set_fsp_id(2)  # Different FSP ID
             .build(),
             False,
         ),
@@ -339,6 +347,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
@@ -348,6 +359,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .set_frequency_slice_id(1)
             .set_integration_factor(10)
             .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [1]))
+            )  # Different channel averaging map
             .build(),
             False,
         ),
@@ -450,6 +464,40 @@ def test_fsp_integration_factor_range(integration_factor, expected_exception):
         assert (
             config.integration_factor == integration_factor
         )  # Verifies the integration_factor is set as expected
+
+
+@pytest.mark.parametrize(
+    "channel_avg_map_length, expected_exception",
+    [
+        (20, None),  # Assuming 20 entries are valid
+        (
+            21,
+            ValueError,
+        ),  # Invalid number of entries, assuming more than 20 is invalid
+    ],
+)
+def test_fsp_configuration_channel_avg_map_length(
+    channel_avg_map_length, expected_exception
+):
+    channel_avg_map = list(
+        zip(itertools.count(1, 744), [0] * channel_avg_map_length)
+    )
+    builder = (
+        FSPConfigurationBuilder()
+        .set_fsp_id(1)
+        .set_function_mode(FSPFunctionMode.CORR)
+        .set_frequency_slice_id(1)
+        .set_integration_factor(10)
+        .set_zoom_factor(0)
+        .set_channel_averaging_map(channel_avg_map)
+    )
+
+    if expected_exception:
+        with pytest.raises(expected_exception):
+            builder.build()
+    else:
+        config = builder.build()
+        assert len(config.channel_averaging_map) == channel_avg_map_length
 
 
 @pytest.mark.parametrize(
