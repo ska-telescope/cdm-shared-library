@@ -33,19 +33,8 @@ VALID_CSP_JSON_PI16 = """{
             {
                 "fsp_id": 1,
                 "function_mode": "CORR",
-                "frequency_slice_id": 1,
                 "integration_factor": 1,
                 "zoom_factor": 0,
-                "channel_averaging_map": [
-                    [
-                        0,
-                        2
-                    ],
-                    [
-                        744,
-                        0
-                    ]
-                ],
                 "output_link_map": [
                     [
                         0,
@@ -60,19 +49,8 @@ VALID_CSP_JSON_PI16 = """{
             {
                 "fsp_id": 2,
                 "function_mode": "CORR",
-                "frequency_slice_id": 2,
                 "integration_factor": 1,
                 "zoom_factor": 1,
-                "channel_averaging_map": [
-                    [
-                        0,
-                        2
-                    ],
-                    [
-                        744,
-                        0
-                    ]
-                ],
                 "output_link_map": [
                     [
                         0,
@@ -111,23 +89,16 @@ CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
             FSPConfiguration(
                 fsp_id=1,
                 function_mode=FSPFunctionMode.CORR,
-                frequency_slice_id=1,
                 integration_factor=1,
                 zoom_factor=0,
-                channel_averaging_map=[(0, 2), (744, 0)],
-                channel_offset=0,
                 output_link_map=[(0, 0), (200, 1)],
             ),
             FSPConfiguration(
                 fsp_id=2,
                 function_mode=FSPFunctionMode.CORR,
-                frequency_slice_id=2,
                 integration_factor=1,
                 zoom_factor=1,
-                channel_averaging_map=[(0, 2), (744, 0)],
-                channel_offset=744,
                 output_link_map=[(0, 4), (200, 5)],
-                zoom_window_tuning=650000,
             ),
         ],
         vlbi_config={},
@@ -221,7 +192,6 @@ def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     fsp_config = FSPConfiguration(
         fsp_id=1,
         function_mode=FSPFunctionMode.CORR,
-        frequency_slice_id=1,
         integration_factor=10,
         zoom_factor=0,
     )
@@ -253,7 +223,6 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
     fsp_config = FSPConfiguration(
         fsp_id=1,
         function_mode=FSPFunctionMode.CORR,
-        frequency_slice_id=1,
         integration_factor=10,
         zoom_factor=0,
         **null_kwargs,
@@ -277,7 +246,6 @@ def test_marshall_csp_configuration_does_not_modify_original():
     fsp_config = FSPConfiguration(
         fsp_id=1,
         function_mode=FSPFunctionMode.CORR,
-        frequency_slice_id=1,
         integration_factor=10,
         zoom_factor=0,
     )

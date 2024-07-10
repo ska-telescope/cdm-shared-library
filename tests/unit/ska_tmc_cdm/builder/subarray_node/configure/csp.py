@@ -12,7 +12,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     PSTConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
-    SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
     VisStnBeamConfiguration,
@@ -27,12 +26,9 @@ class FSPConfigurationBuilder:
     def __init__(self):
         self.fsp_id = None
         self.function_mode = None
-        self.frequency_slice_id = None
         self.integration_factor = None
         self.zoom_factor = None
-        self.channel_averaging_map = None
         self.output_link_map = None
-        self.channel_offset = None
 
     def set_fsp_id(self, fsp_id: int) -> "FSPConfigurationBuilder":
         """
@@ -55,18 +51,6 @@ class FSPConfigurationBuilder:
         self.function_mode = function_mode
         return self
 
-    def set_frequency_slice_id(
-        self, frequency_slice_id: int
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the frequency slice ID.
-        :param frequency_slice_id: Integer representing the frequency slice ID.
-        :raises ValueError: If the frequency_slice_id is not within the range 1 to 26.
-        """
-        if not 1 <= frequency_slice_id <= 26:
-            raise ValueError("frequency_slice_id must be between 1 and 26")
-        self.frequency_slice_id = frequency_slice_id
-        return self
 
     def set_integration_factor(
         self, integration_factor: int
@@ -92,16 +76,6 @@ class FSPConfigurationBuilder:
         self.zoom_factor = zoom_factor
         return self
 
-    def set_channel_averaging_map(
-        self, channel_averaging_map: List[Tuple[int, int]]
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the channel averaging map.
-        :param channel_averaging_map: List of tuples representing the channel averaging map.
-        """
-        self.channel_averaging_map = channel_averaging_map
-        return self
-
     def set_output_link_map(
         self, output_link_map: List[Tuple[int, int, int]]
     ) -> "FSPConfigurationBuilder":
@@ -120,41 +94,10 @@ class FSPConfigurationBuilder:
         return FSPConfiguration(
             fsp_id=self.fsp_id,
             function_mode=self.function_mode,
-            frequency_slice_id=self.frequency_slice_id,
             integration_factor=self.integration_factor,
             zoom_factor=self.zoom_factor,
-            channel_averaging_map=self.channel_averaging_map,
             output_link_map=self.output_link_map,
         )
-
-
-class SubarrayConfigurationBuilder:
-    """
-    SubarrayConfigurationBuilder is a test data builder for SubarrayConfiguration objects.
-    """
-
-    def __init__(self):
-        self.subarray_name = None
-
-    def set_subarray_name(
-        self, subarray_name: str
-    ) -> "SubarrayConfigurationBuilder":
-        """
-        Set the name of the sub-array.
-
-        :param subarray_name: String representing the name of the sub-array.
-        :return: An instance of SubarrayConfigurationBuilder with the updated sub-array name.
-        """
-        self.subarray_name = subarray_name
-        return self
-
-    def build(self) -> SubarrayConfiguration:
-        """
-        Builds or creates an instance of SubarrayConfiguration with the set properties.
-        :return: An instance of SubarrayConfiguration with the specified name.
-        """
-        return SubarrayConfiguration(subarray_name=self.subarray_name)
-
 
 class CommonConfigurationBuilder:
     """
@@ -589,7 +532,6 @@ class CSPConfigurationBuilder:
 
     def __init__(self):
         self.interface = None
-        self.subarray = None
         self.common = None
         self.cbf_config = None
         self.pst_config = None
@@ -604,15 +546,6 @@ class CSPConfigurationBuilder:
         self.interface = interface
         return self
 
-    def set_subarray(
-        self, subarray: SubarrayConfiguration
-    ) -> "CSPConfigurationBuilder":
-        """
-        Set the SubarrayConfiguration.
-        :param subarray: An instance of SubarrayConfiguration.
-        """
-        self.subarray = subarray
-        return self
 
     def set_common(
         self, common: CommonConfiguration
@@ -670,7 +603,6 @@ class CSPConfigurationBuilder:
         """
         return CSPConfiguration(
             interface=self.interface,
-            subarray=self.subarray,
             common=self.common,
             cbf_config=self.cbf_config,
             pst_config=self.pst_config,

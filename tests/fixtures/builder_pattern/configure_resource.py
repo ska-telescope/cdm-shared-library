@@ -18,7 +18,6 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
 )
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     CSPConfigurationBuilder,
-    SubarrayConfigurationBuilder,
     CommonConfigurationBuilder,
     CBFConfigurationBuilder,
     FSPConfigurationBuilder,
@@ -110,11 +109,6 @@ def csp_config() -> CSPConfiguration:
     return (
         CSPConfigurationBuilder()
         .set_interface("interface")
-        .set_subarray(
-            SubarrayConfigurationBuilder()
-            .set_subarray_name(subarray_name="subarray name")
-            .build()
-        )
         .set_common(
             CommonConfigurationBuilder()
             .set_config_id(config_id="config_id")
@@ -129,7 +123,6 @@ def csp_config() -> CSPConfiguration:
                     FSPConfigurationBuilder()
                     .set_fsp_id(fsp_id=1)
                     .set_function_mode(function_mode=FSPFunctionMode.CORR)
-                    .set_frequency_slice_id(frequency_slice_id=1)
                     .set_integration_factor(integration_factor=10)
                     .set_zoom_factor(0)
                     .build()

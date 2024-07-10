@@ -31,7 +31,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     LowCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
-    SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
     VisStnBeamConfiguration,
@@ -105,52 +104,36 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
                 FSPConfiguration(
                     fsp_id=7,
                     function_mode=FSPFunctionMode.VLBI,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=5,
                     function_mode=FSPFunctionMode.VLBI,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
-                    zoom_window_tuning=650000,
                 ),
                 FSPConfiguration(
                     fsp_id=7,
                     function_mode=FSPFunctionMode.VLBI,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=7,
                     function_mode=FSPFunctionMode.VLBI,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=7,
                     function_mode=FSPFunctionMode.VLBI,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
             ],
@@ -188,19 +171,8 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 7,
           "function_mode": "VLBI",
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -215,19 +187,8 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 5,
           "function_mode": "VLBI",
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -242,19 +203,8 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 7,
           "function_mode": "VLBI",
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -269,19 +219,8 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 7,
           "function_mode": "VLBI",
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -296,19 +235,8 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 7,
           "function_mode": "VLBI",
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -651,19 +579,8 @@ VALID_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 1,
           "function_mode": "CORR",
-          "frequency_slice_id": 1,
           "integration_factor": 1,
           "zoom_factor": 0,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -678,19 +595,8 @@ VALID_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 2,
           "function_mode": "CORR",
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -745,19 +651,8 @@ INVALID_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 1,
           "function_mode": "CORR",
-          "frequency_slice_id": 1,
           "integration_factor": 1,
           "zoom_factor": 0,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -772,19 +667,8 @@ INVALID_MID_CONFIGURE_JSON = """
         {
           "fsp_id": 2,
           "function_mode": "CORR",
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
           "output_link_map": [
             [
               0,
@@ -794,8 +678,6 @@ INVALID_MID_CONFIGURE_JSON = """
               200,
               5
             ]
-          ],
-          "zoom_window_tuning": 650000
         }
       ],
       "vlbi": {}
@@ -831,7 +713,6 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_1,
@@ -844,23 +725,16 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
                 FSPConfiguration(
                     fsp_id=1,
                     function_mode=FSPFunctionMode.CORR,
-                    frequency_slice_id=1,
                     integration_factor=1,
                     zoom_factor=0,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=2,
                     function_mode=FSPFunctionMode.CORR,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     zoom_factor=1,
-                    channel_averaging_map=[(0, 2), (744, 0)],
-                    channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
-                    zoom_window_tuning=650000,
                 ),
             ],
             vlbi_config={},
