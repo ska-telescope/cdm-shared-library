@@ -59,7 +59,7 @@ class ReleaseResourcesRequest(CdmObject):
     # https://marshmallow.readthedocs.io/en/stable/marshmallow.fields.html#marshmallow.fields.Pluck
     @field_serializer("dish", when_used="json-unless-none")
     def _flatten_to_receptor_ids(self, value: DishAllocation) -> list[str]:
-        return value.receptor_ids
+        return sorted(value.receptor_ids)
 
     @field_validator("dish", mode="before")
     @classmethod
@@ -88,7 +88,5 @@ class ReleaseResourcesRequest(CdmObject):
             # # and we're inside a validator:
             # https://github.com/pydantic/pydantic/issues/8185
             self.__dict__["dish"] = None
-            # (pylint doesn't see __pydantic_fields_set__ as a set)
-            # pylint: disable=no-member
             self.__pydantic_fields_set__.add("dish")
         return self

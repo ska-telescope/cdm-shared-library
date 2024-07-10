@@ -51,6 +51,7 @@ isort = "^5.10.1"
 black = "^22.8.0"
 flake8 = "^5.0.4"
 simpleeval = "^0.9.13"
+pyright = "^1.1.370"
 
 [tool.poetry.group.docs.dependencies]
 tomli = "^2.0.1"
