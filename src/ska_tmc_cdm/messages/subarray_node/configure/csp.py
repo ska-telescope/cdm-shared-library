@@ -48,12 +48,9 @@ class FSPConfiguration(CdmObject):
     :param fsp_id: FSP configuration ID [1..27]
     :param function_mode: FSP function mode
     :param frequency_slice_id: frequency slicer ID [1..26]
-    :param zoom_factor: zoom factor [0..6]
     :param integration_factor: integration factor [1..10]
     :param channel_averaging_map: Optional channel averaging map
     :param output_link_map: Optional output link map
-    :param channel_offset: Optional FSP channel offset
-    :param zoom_window_tuning: Optional zoom window tuning
 
     :raises ValueError: Invalid parameter values entered
     """
@@ -62,7 +59,6 @@ class FSPConfiguration(CdmObject):
     function_mode: FSPFunctionMode = Field()
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)
-    zoom_factor: int = Field(ge=0, le=6)
     # FIXME: should be Field(default_factory=list, max_length=20)?
     channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?

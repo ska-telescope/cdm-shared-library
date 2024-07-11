@@ -131,7 +131,6 @@ def csp_config() -> CSPConfiguration:
                     .set_function_mode(function_mode=FSPFunctionMode.CORR)
                     .set_frequency_slice_id(frequency_slice_id=1)
                     .set_integration_factor(integration_factor=10)
-                    .set_zoom_factor(0)
                     .build()
                 ]
             )

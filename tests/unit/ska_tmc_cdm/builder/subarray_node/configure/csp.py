@@ -29,7 +29,6 @@ class FSPConfigurationBuilder:
         self.function_mode = None
         self.frequency_slice_id = None
         self.integration_factor = None
-        self.zoom_factor = None
         self.channel_averaging_map = None
         self.output_link_map = None
         self.channel_offset = None
@@ -81,16 +80,6 @@ class FSPConfigurationBuilder:
         self.integration_factor = integration_factor
         return self
 
-    def set_zoom_factor(self, zoom_factor: int) -> "FSPConfigurationBuilder":
-        """
-        Set the zoom factor.
-        :param zoom_factor: Integer representing the zoom factor.
-        :raises ValueError: If the zoom_factor is not within the range 0 to 6.
-        """
-        if not 0 <= zoom_factor <= 6:
-            raise ValueError("zoom_factor must be between 0 and 6")
-        self.zoom_factor = zoom_factor
-        return self
 
     def set_channel_averaging_map(
         self, channel_averaging_map: List[Tuple[int, int]]
@@ -122,7 +111,6 @@ class FSPConfigurationBuilder:
             function_mode=self.function_mode,
             frequency_slice_id=self.frequency_slice_id,
             integration_factor=self.integration_factor,
-            zoom_factor=self.zoom_factor,
             channel_averaging_map=self.channel_averaging_map,
             output_link_map=self.output_link_map,
         )

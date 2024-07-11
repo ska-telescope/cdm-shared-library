@@ -37,7 +37,6 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			function_mode : FSPFunctionMode
 			frequency_slice_id : int
 			integration_factor : int
-			zoom_factor : int
 			channel_average_map : List[Tuple]
 			output_link_map : List[Tuple]
 			zoom_window_tuning: int

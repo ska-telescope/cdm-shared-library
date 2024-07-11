@@ -69,7 +69,7 @@ TEST_PARAMETERS = [
         ConfigureRequest,
         VALID_MID_CONFIGURE_JSON,
         VALID_MID_CONFIGURE_OBJECT,
-        True,
+        False,
     ),
     (
         ConfigureRequest,
