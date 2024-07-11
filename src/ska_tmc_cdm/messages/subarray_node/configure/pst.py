@@ -67,7 +67,7 @@ class PSTScanConfiguration(CdmObject):
     """
 
     activation_time: Optional[str] = None
-    bits_per_sample: int = None
+    bits_per_sample: Optional[int] = None
     num_of_polarizations: Optional[int] = None
     udp_nsamp: Optional[int] = None
     wt_nsamp: Optional[int] = None

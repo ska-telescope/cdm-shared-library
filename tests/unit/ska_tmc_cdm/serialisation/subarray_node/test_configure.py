@@ -542,14 +542,6 @@ VALID_LOW_CONFIGURE_JSON_4_0 = """
           [
             4,
             1
-          ],
-          [
-            5,
-            1
-          ],
-          [
-            6,
-            1
           ]
         ],
         "stn_beams": [
@@ -597,8 +589,7 @@ VALID_LOW_CONFIGURE_JSON_4_0 = """
           }
         ]
       }
-    }
-  },
+    },
   "pst": {
     "beams": [
       {
@@ -676,6 +667,7 @@ VALID_LOW_CONFIGURE_JSON_4_0 = """
         }
       }
     ]
+  }
   },
   "tmc": {
     "scan_duration": 10.0
@@ -884,7 +876,7 @@ VALID_LOW_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
         ),
         lowcbf=LowCBFConfiguration(
             stations=StationConfiguration(
-                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
+                stns=[[1, 1], [2, 1], [3, 1], [4, 1]],
                 stn_beams=[StnBeamConfiguration(beam_id=1, freq_ids=[400])],
             ),
             vis=VisConfiguration(
@@ -907,61 +899,61 @@ VALID_LOW_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
                 ],
             ),
         ),
-    ),
-    pst=PSTConfiguration(
-        beams=[
-            PSTBeamConfiguration(
-                beam_id=1,
-                scan=PSTScanConfiguration(
-                    activation_time="2022-01-19T23:07:45Z",
-                    bits_per_sample=32,
-                    num_of_polarizations=2,
-                    udp_nsamp=32,
-                    wt_nsamp=32,
-                    udp_nchan=24,
-                    num_frequency_channels=432,
-                    centre_frequency=200000000.0,
-                    total_bandwidth=1562500.0,
-                    observation_mode="VOLTAGE_RECORDER",
-                    observer_id="jdoe",
-                    project_id="project1",
-                    pointing_id="pointing1",
-                    source="J1921+2153",
-                    itrf=[5109360.133, 2006852.586, -3238948.127],
-                    receiver_id="receiver3",
-                    feed_polarization="LIN",
-                    feed_handedness=1,
-                    feed_angle=1.234,
-                    feed_tracking_mode="FA",
-                    feed_position_angle=10.0,
-                    oversampling_ratio=[8, 7],
-                    coordinates=PSTScanCoordinates(
-                        equinox=2000.0,
-                        ra="19:21:44.815",
-                        dec="21:53:02.400",
+        pst=PSTConfiguration(
+            beams=[
+                PSTBeamConfiguration(
+                    beam_id=1,
+                    scan=PSTScanConfiguration(
+                        activation_time="2022-01-19T23:07:45Z",
+                        bits_per_sample=32,
+                        num_of_polarizations=2,
+                        udp_nsamp=32,
+                        wt_nsamp=32,
+                        udp_nchan=24,
+                        num_frequency_channels=432,
+                        centre_frequency=200000000.0,
+                        total_bandwidth=1562500.0,
+                        observation_mode="VOLTAGE_RECORDER",
+                        observer_id="jdoe",
+                        project_id="project1",
+                        pointing_id="pointing1",
+                        source="J1921+2153",
+                        itrf=[5109360.133, 2006852.586, -3238948.127],
+                        receiver_id="receiver3",
+                        feed_polarization="LIN",
+                        feed_handedness=1,
+                        feed_angle=1.234,
+                        feed_tracking_mode="FA",
+                        feed_position_angle=10.0,
+                        oversampling_ratio=[8, 7],
+                        coordinates=PSTScanCoordinates(
+                            equinox=2000.0,
+                            ra="19:21:44.815",
+                            dec="21:53:02.400",
+                        ),
+                        max_scan_length=20000.0,
+                        subint_duration=30.0,
+                        receptors=["receptor1", "receptor2"],
+                        receptor_weights=[0.4, 0.6],
+                        num_channelization_stages=2,
+                        channelization_stages=[
+                            PSTChannelizationStageConfiguration(
+                                num_filter_taps=1,
+                                filter_coefficients=[1.0],
+                                num_frequency_channels=1024,
+                                oversampling_ratio=[32, 27],
+                            ),
+                            PSTChannelizationStageConfiguration(
+                                num_filter_taps=1,
+                                filter_coefficients=[1.0],
+                                num_frequency_channels=256,
+                                oversampling_ratio=[4, 3],
+                            ),
+                        ],
                     ),
-                    max_scan_length=20000.0,
-                    subint_duration=30.0,
-                    receptors=["receptor1", "receptor2"],
-                    receptor_weights=[0.4, 0.6],
-                    num_channelization_stages=2,
-                    channelization_stages=[
-                        PSTChannelizationStageConfiguration(
-                            num_filter_taps=1,
-                            filter_coefficients=[1.0],
-                            num_frequency_channels=1024,
-                            oversampling_ratio=[32, 27],
-                        ),
-                        PSTChannelizationStageConfiguration(
-                            num_filter_taps=1,
-                            filter_coefficients=[1.0],
-                            num_frequency_channels=256,
-                            oversampling_ratio=[4, 3],
-                        ),
-                    ],
                 ),
-            ),
-        ],
+            ],
+        ),
     ),
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
@@ -1472,6 +1464,14 @@ def partial_invalidator(o: ConfigureRequest):
             VALID_LOW_CONFIGURE_JSON,
             None,
             False,
+        ),
+        (
+            ConfigureRequest,
+            VALID_LOW_CONFIGURE_OBJECT_4_0,
+            None,
+            VALID_LOW_CONFIGURE_JSON_4_0,
+            None,
+            True,
         ),
         (
             ConfigureRequest,

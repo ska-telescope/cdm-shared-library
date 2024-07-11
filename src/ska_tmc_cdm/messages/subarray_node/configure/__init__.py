@@ -46,7 +46,6 @@ class ConfigureRequest(CdmObject):
     sdp: Optional[SDPConfiguration] = None
     csp: Optional[CSPConfiguration] = None
     mccs: Optional[MCCSConfiguration] = None
-    pst: Optional[PSTConfiguration] = None
     tmc: Optional[TMCConfiguration] = None
     interface: Optional[str] = None
     transaction_id: Optional[str] = None

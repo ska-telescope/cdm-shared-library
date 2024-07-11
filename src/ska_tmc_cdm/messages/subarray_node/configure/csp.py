@@ -11,6 +11,7 @@ from pydantic import AliasChoices, Field
 from ska_tmc_cdm.messages.base import CdmObject
 
 from . import core
+from .pst import PSTConfiguration
 
 __all__ = [
     "CSPConfiguration",
@@ -239,10 +240,6 @@ class CBFConfiguration(CdmObject):
 
 
 class PSSConfiguration(CdmObject):
-    pass
-
-
-class PSTConfiguration(CdmObject):
     pass
 
 
