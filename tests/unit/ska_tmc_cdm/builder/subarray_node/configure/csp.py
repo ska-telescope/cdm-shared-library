@@ -80,7 +80,6 @@ class FSPConfigurationBuilder:
         self.integration_factor = integration_factor
         return self
 
-
     def set_channel_averaging_map(
         self, channel_averaging_map: List[Tuple[int, int]]
     ) -> "FSPConfigurationBuilder":

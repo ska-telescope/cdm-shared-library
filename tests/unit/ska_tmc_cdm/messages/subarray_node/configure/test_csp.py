@@ -353,7 +353,7 @@ def test_fsp_configuration_equality(fsp_config_a, fsp_config_b, is_equal):
     Verify that FSPConfiguration objects are equal when they have the same values
     and not equal when any attribute differs.
     """
-#     assert (fsp_config_a == fsp_config_b) == is_equal
+    assert (fsp_config_a == fsp_config_b) == is_equal
     assert fsp_config_a != 1
     assert fsp_config_a != object()
 
@@ -375,16 +375,12 @@ def test_fsp_id_range_with_builder(fsp_id, expected_exception):
         with pytest.raises(expected_exception):
             FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
                 FSPFunctionMode.CORR
-            ).set_frequency_slice_id(1).set_integration_factor(
-                10
-            ).build()
+            ).set_frequency_slice_id(1).set_integration_factor(10).build()
     else:
         try:
             FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
                 FSPFunctionMode.CORR
-            ).set_frequency_slice_id(1).set_integration_factor(
-                10
-            ).build()
+            ).set_frequency_slice_id(1).set_integration_factor(10).build()
         except ValueError:
             pytest.fail(f"FSP ID {fsp_id} raised ValueError unexpectedly.")
 
