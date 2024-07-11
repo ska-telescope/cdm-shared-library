@@ -4,8 +4,23 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-Unreleased
-**********
+Unreleased changes
+******************
+* Adds static type checking with Pyright to python-lint pipeline.
+* Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
+
+10.1.2
+******
+* Fixes check for partial configuration to exclude SpecialTarget class object.
+* Adds field validators to assure subarray_id in range 1-16, inclusive.
+
+10.1.1
+******
+* Removes PLUTO as an allowed target_name for SpecialTarget().
+
+10.1.0
+******
+* Adds subarray_node.configure.core.SpecialTarget() to represent nonsidereal targets.
 
 * Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
 

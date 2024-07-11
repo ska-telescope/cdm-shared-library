@@ -190,8 +190,8 @@ class PhaseDir(CdmObject):
     :param reference_frame: Specification of the reference frame or system for a set of pointing coordinates (see ADR-49)
     """
 
-    ra: Optional[list[float]] = None
-    dec: Optional[list[float]] = None
+    ra: list[float] = Field(default_factory=list)
+    dec: list[float] = Field(default_factory=list)
     reference_time: Optional[str] = None
     reference_frame: Optional[str] = None
 
