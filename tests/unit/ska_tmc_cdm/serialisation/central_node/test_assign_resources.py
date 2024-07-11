@@ -1022,18 +1022,6 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_4_0 = (
   "transaction_id": "txn-....-00001",
   "subarray_id": 1,
   "mccs": {
-    "subarray_beam_ids": [
-      1
-    ],
-    "station_ids": [
-      [
-        1,
-        2
-      ]
-    ],
-    "channel_blocks": [
-      3
-    ],
     "interface": "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0",
     "subarray_beams": [
       {
@@ -1074,9 +1062,6 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_4_0 = AssignResourcesRequest(
     transaction_id="txn-....-00001",
     subarray_id=1,
     mccs=MCCSAllocate(
-        subarray_beam_ids=[1],
-        station_ids=[(1, 2)],
-        channel_blocks=[3],
         interface="https://schema.skao.int/ska-low-mccs-controller-allocate/3.0",
         subarray_beams=[
             SubArrayBeamsConfiguration(
@@ -1226,6 +1211,14 @@ def mid_invalidator_fn(o: AssignResourcesRequest):
             VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_4_0,
             None,
             False,
+        ),
+        (
+            AssignResourcesRequest,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_4_0,
+            None,
+            VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_4_0,
+            None,
+            True,
         ),
     ],
 )

@@ -54,7 +54,7 @@ class SubArrayBeamsConfigurationBuilder:
 
     def __init__(self) -> "SubArrayBeamsConfigurationBuilder":
         self.subarray_beam_id = None
-        self.apertures = None
+        self.apertures = []
         self.number_of_channels = None
 
     def set_subarray_beam_id(
@@ -113,7 +113,7 @@ class MCCSAllocateBuilder:
         self.channel_blocks = None
         self.station_ids = None
         self.interface = None
-        self.subarray_beams = ()
+        self.subarray_beams = []
 
     def set_subarray_beam_ids(
         self, subarray_beam_ids: list

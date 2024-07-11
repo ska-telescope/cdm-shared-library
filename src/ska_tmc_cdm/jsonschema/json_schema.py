@@ -94,7 +94,7 @@ class JsonSchema:
         else:
             data_sources = CAR_OSD_SOURCE
 
-        tm_data = TMData(source_uris=data_sources, update=True)
+        tm_data = TMData(source_uris=list(data_sources), update=True)
         try:
             return televalidation_schema.semantic_validate(
                 observing_command_input=instance,

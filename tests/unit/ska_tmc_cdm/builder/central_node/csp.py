@@ -59,9 +59,6 @@ class PSTConfigurationBuilder:
         return PSTConfiguration(pst_beam_ids=self.pst_beam_ids)
 
 
-# create class give name as CSPConfigurationBuilder and add pss and pst as attribute
-
-
 class CSPConfigurationBuilder:
     """
     CSPConfigurationBuilder is a test data builder for CDM CSPConfiguration

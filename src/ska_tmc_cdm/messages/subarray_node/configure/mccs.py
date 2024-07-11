@@ -30,9 +30,9 @@ class SubarrayBeamSkyCoordinates(CdmObject):
     :type c2: float
     """
 
-    reference_frame: str = None
-    c1: float = None
-    c2: float = None
+    reference_frame: Optional[str] = None
+    c1: Optional[float] = None
+    c2: Optional[float] = None
 
 
 class SubarrayBeamLogicalBands(CdmObject):
@@ -44,8 +44,8 @@ class SubarrayBeamLogicalBands(CdmObject):
     :type number_of_channels: str
     """
 
-    start_channel: int = None
-    number_of_channels: int = None
+    start_channel: Optional[int] = None
+    number_of_channels: Optional[int] = None
 
 
 class SubarrayBeamAperatures(CdmObject):
@@ -59,8 +59,8 @@ class SubarrayBeamAperatures(CdmObject):
     :type weighting_key_ref: str
     """
 
-    aperture_id: str = None
-    weighting_key_ref: str = None
+    aperture_id: Optional[str] = None
+    weighting_key_ref: Optional[str] = None
 
 
 class SubarrayBeamConfiguration(CdmObject):

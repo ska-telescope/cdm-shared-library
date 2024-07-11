@@ -38,7 +38,7 @@ class AssignResourcesRequest(CdmObject):
     :raises ValueError: if mccs is allocated with dish and sdp_config
     """
 
-    subarray_id: Optional[int] = None
+    subarray_id: Optional[int] = Field(default=None, ge=1, le=16)
     # FIXME: Do we really need this dish/dish_allocation inconsistency?
     dish: Optional[DishAllocation] = Field(
         default=None,
@@ -60,7 +60,7 @@ class AssignResourcesRequest(CdmObject):
     transaction_id: Optional[str] = None
 
     @model_validator(mode="after")
-    def validate_exclusive_fields(self) -> "AssignResourcesRequest":
+    def validate_exclusive_fields(self) -> Self:
         if self.mccs is not None and self.subarray_id is None:
             raise ValueError("subarray_id must be defined for LOW request")
         if self.dish is not None and self.subarray_id is None:
@@ -85,9 +85,9 @@ class AssignResourcesRequest(CdmObject):
         cls,
         subarray_id: int,
         dish_allocation: DishAllocation,
-        sdp_config: SDPConfiguration = None,
-        interface: str = None,
-        transaction_id: str = None,
+        sdp_config: Optional[SDPConfiguration] = None,
+        interface: Optional[str] = None,
+        transaction_id: Optional[str] = None,
     ):
         """
         Create a new AssignResourcesRequest object.
@@ -99,7 +99,7 @@ class AssignResourcesRequest(CdmObject):
         """
         return cls(
             subarray_id=subarray_id,
-            dish_allocation=dish_allocation,
+            dish=dish_allocation,
             sdp_config=sdp_config,
             interface=interface,
             transaction_id=transaction_id,
@@ -110,9 +110,9 @@ class AssignResourcesRequest(CdmObject):
         cls,
         subarray_id: int,
         mccs: MCCSAllocate,
-        sdp_config: SDPConfiguration = None,
-        interface: str = None,
-        transaction_id: str = None,
+        sdp_config: Optional[SDPConfiguration] = None,
+        interface: Optional[str] = None,
+        transaction_id: Optional[str] = None,
     ):
         """
         Create a new AssignResourcesRequest object.
