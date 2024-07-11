@@ -6,7 +6,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
-    FSPFunctionMode,
     LowCBFConfiguration,
     PSSConfiguration,
     PSTConfiguration,
@@ -26,11 +25,8 @@ class FSPConfigurationBuilder:
 
     def __init__(self):
         self.fsp_id = None
-        self.function_mode = None
-        self.frequency_slice_id = None
         self.integration_factor = None
         self.output_link_map = None
-        self.channel_offset = None
 
     def set_fsp_id(self, fsp_id: int) -> "FSPConfigurationBuilder":
         """
@@ -41,29 +37,6 @@ class FSPConfigurationBuilder:
         if not 1 <= fsp_id <= 27:
             raise ValueError("fsp_id must be between 1 and 27")
         self.fsp_id = fsp_id
-        return self
-
-    def set_function_mode(
-        self, function_mode: FSPFunctionMode
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the FSP function mode.
-        :param function_mode: An instance of FSPFunctionMode enum.
-        """
-        self.function_mode = function_mode
-        return self
-
-    def set_frequency_slice_id(
-        self, frequency_slice_id: int
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the frequency slice ID.
-        :param frequency_slice_id: Integer representing the frequency slice ID.
-        :raises ValueError: If the frequency_slice_id is not within the range 1 to 26.
-        """
-        if not 1 <= frequency_slice_id <= 26:
-            raise ValueError("frequency_slice_id must be between 1 and 26")
-        self.frequency_slice_id = frequency_slice_id
         return self
 
     def set_integration_factor(
@@ -96,8 +69,6 @@ class FSPConfigurationBuilder:
         """
         return FSPConfiguration(
             fsp_id=self.fsp_id,
-            function_mode=self.function_mode,
-            frequency_slice_id=self.frequency_slice_id,
             integration_factor=self.integration_factor,
             output_link_map=self.output_link_map,
         )

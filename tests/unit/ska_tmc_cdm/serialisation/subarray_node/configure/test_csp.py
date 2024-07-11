@@ -31,7 +31,6 @@ VALID_CSP_JSON_PI16 = """{
         "fsp": [
             {
                 "fsp_id": 1,
-                "frequency_slice_id": 1,
                 "integration_factor": 1,
                 "output_link_map": [
                     [
@@ -46,7 +45,6 @@ VALID_CSP_JSON_PI16 = """{
             },
             {
                 "fsp_id": 2,
-                "frequency_slice_id": 2,
                 "integration_factor": 1,
                 "output_link_map": [
                     [
@@ -85,13 +83,11 @@ CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
         fsp_configs=[
             FSPConfiguration(
                 fsp_id=1,
-                frequency_slice_id=1,
                 integration_factor=1,
                 output_link_map=[(0, 0), (200, 1)],
             ),
             FSPConfiguration(
                 fsp_id=2,
-                frequency_slice_id=2,
                 integration_factor=1,
                 output_link_map=[(0, 4), (200, 5)],
             ),
@@ -185,7 +181,6 @@ def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     """
     fsp_config = FSPConfiguration(
         fsp_id=1,
-        frequency_slice_id=1,
         integration_factor=10,
     )
     marshalled = CODEC.dumps(fsp_config)
@@ -215,7 +210,6 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
 
     fsp_config = FSPConfiguration(
         fsp_id=1,
-        frequency_slice_id=1,
         integration_factor=10,
         **null_kwargs,
     )
@@ -237,7 +231,6 @@ def test_marshall_csp_configuration_does_not_modify_original():
     """
     fsp_config = FSPConfiguration(
         fsp_id=1,
-        frequency_slice_id=1,
         integration_factor=10,
     )
     config = CSPConfiguration(

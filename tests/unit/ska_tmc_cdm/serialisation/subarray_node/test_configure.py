@@ -103,31 +103,26 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=7,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=5,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     output_link_map=[(0, 4), (200, 5)],
                 ),
                 FSPConfiguration(
                     fsp_id=7,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=7,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=7,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
@@ -165,7 +160,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
       "fsp": [
         {
           "fsp_id": 7,
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -180,7 +174,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 5,
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -195,7 +188,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 7,
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -210,7 +202,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 7,
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -225,7 +216,6 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 7,
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -567,7 +557,6 @@ VALID_MID_CONFIGURE_JSON = """
       "fsp": [
         {
           "fsp_id": 1,
-          "frequency_slice_id": 1,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -582,7 +571,6 @@ VALID_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 2,
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -637,7 +625,6 @@ INVALID_MID_CONFIGURE_JSON = """
       "fsp": [
         {
           "fsp_id": 1,
-          "frequency_slice_id": 1,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -652,7 +639,6 @@ INVALID_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 2,
-          "frequency_slice_id": 2,
           "integration_factor": 1,
           "output_link_map": [
             [
@@ -711,13 +697,11 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=1,
-                    frequency_slice_id=1,
                     integration_factor=1,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=2,
-                    frequency_slice_id=2,
                     integration_factor=1,
                     output_link_map=[(0, 4), (200, 5)],
                 ),
