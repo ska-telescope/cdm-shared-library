@@ -143,6 +143,7 @@ of a full CDM JSON object, the elements this maps to are:
       "subarray_id": 1
     },
     "cbf": {
+    "delay_model_subscription_point": "...",
       "fsp": [
         {
           "fsp_ids": [1],
@@ -465,6 +466,7 @@ Example configuration JSON for MID
           "subarray_id": 1
         },
         "cbf": {
+    "delay_model_subscription_point": "...",
           "fsp": [
             {
               "fsp_ids": [1],

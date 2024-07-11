@@ -157,6 +157,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
       "subarray_id": 1
     },
     "cbf": {
+        "delay_model_subscription_point": "...",
       "fsp": [
         {
           "fsp_ids": [7],
@@ -554,6 +555,7 @@ VALID_MID_CONFIGURE_JSON = """
       "subarray_id": 1
     },
     "cbf": {
+        "delay_model_subscription_point": "...",
       "fsp": [
         {
           "fsp_ids": [1],
@@ -622,6 +624,7 @@ INVALID_MID_CONFIGURE_JSON = """
       "subarray_id": 1
     },
     "cbf": {
+        "delay_model_subscription_point": "...",
       "fsp": [
         {
          "fsp_ids": [1],

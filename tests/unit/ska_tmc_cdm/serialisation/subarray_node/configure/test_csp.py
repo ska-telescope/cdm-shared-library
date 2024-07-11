@@ -28,6 +28,8 @@ VALID_CSP_JSON_PI16 = """{
         "subarray_id": 1
     },
     "cbf": {
+        "delay_model_subscription_point": "...",
+    "delay_model_subscription_point": "...",
         "fsp": [
             {
                 "fsp_ids": [1],
