@@ -301,30 +301,30 @@ def test_fsp_configuration_equality(fsp_config_a, fsp_config_b, is_equal):
 
 
 @pytest.mark.parametrize(
-    "fsp_id, expected_exception",
+    "fsp_ids, expected_exception",
     [
-        (0, ValueError),  # fsp_id below the valid range
-        (28, ValueError),  # fsp_id above the valid range
+        (0, ValueError),  # fsp_ids below the valid range
+        (28, ValueError),  # fsp_ids above the valid range
         (1, None),  # Valid lower boundary
         (27, None),  # Valid upper boundary
     ],
 )
-def test_fsp_id_range_with_builder(fsp_id, expected_exception):
+def test_fsp_id_range_with_builder(fsp_ids, expected_exception):
     """
     Verify that fsp id is in the range of 1 to 27 using the FSPConfigurationBuilder.
     """
     if expected_exception:
         with pytest.raises(expected_exception):
             FSPConfigurationBuilder().set_fsp_id(
-                fsp_id
+                fsp_ids
             ).set_integration_factor(10).build()
     else:
         try:
             FSPConfigurationBuilder().set_fsp_id(
-                fsp_id
+                fsp_ids
             ).set_integration_factor(10).build()
         except ValueError:
-            pytest.fail(f"FSP ID {fsp_id} raised ValueError unexpectedly.")
+            pytest.fail(f"FSP ID {fsp_ids} raised ValueError unexpectedly.")
 
 
 @pytest.mark.parametrize(

@@ -33,7 +33,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		}
 
 		class FSPConfiguration {
-			fsp_id : int
+			fsp_ids : [int]
 			integration_factor : int
 			output_link_map : List[Tuple]
 		}

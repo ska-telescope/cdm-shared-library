@@ -24,19 +24,19 @@ class FSPConfigurationBuilder:
     """
 
     def __init__(self):
-        self.fsp_id = None
+        self.fsp_ids = None
         self.integration_factor = None
         self.output_link_map = None
 
-    def set_fsp_id(self, fsp_id: int) -> "FSPConfigurationBuilder":
+    def set_fsp_id(self, fsp_ids: [int]) -> "FSPConfigurationBuilder":
         """
         Set the FSP configuration ID.
-        :param fsp_id: Integer representing the FSP configuration ID.
-        :raises ValueError: If the fsp_id is not within the range 1 to 27.
+        :param fsp_ids: List of Integer representing the FSP configuration ID.
+        :raises ValueError: If the fsp_ids is not within the range 1 to 27.
         """
-        if not 1 <= fsp_id <= 27:
-            raise ValueError("fsp_id must be between 1 and 27")
-        self.fsp_id = fsp_id
+        if not 1 <= fsp_ids <= 27:
+            raise ValueError("fsp_ids must be between 1 and 27")
+        self.fsp_ids = fsp_ids
         return self
 
     def set_integration_factor(
@@ -68,7 +68,7 @@ class FSPConfigurationBuilder:
         :return: An instance of FSPConfiguration with the specified configurations.
         """
         return FSPConfiguration(
-            fsp_id=self.fsp_id,
+            fsp_ids=self.fsp_ids,
             integration_factor=self.integration_factor,
             output_link_map=self.output_link_map,
         )

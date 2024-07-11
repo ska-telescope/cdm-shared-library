@@ -145,7 +145,7 @@ of a full CDM JSON object, the elements this maps to are:
     "cbf": {
       "fsp": [
         {
-          "fsp_id": 1,
+          "fsp_ids": [1],
           "function_mode": "CORR",
           "frequency_slice_id": 1,
           "integration_factor": 1,
@@ -173,7 +173,7 @@ of a full CDM JSON object, the elements this maps to are:
           ]
         },
         {
-          "fsp_id": 2,
+          "fsp_ids": [2],
           "function_mode": "CORR",
           "frequency_slice_id": 2,
           "integration_factor": 1,
@@ -467,7 +467,7 @@ Example configuration JSON for MID
         "cbf": {
           "fsp": [
             {
-              "fsp_id": 1,
+              "fsp_ids": [1],
               "function_mode": "CORR",
               "frequency_slice_id": 1,
               "integration_factor": 1,
@@ -495,7 +495,7 @@ Example configuration JSON for MID
               ]
             },
             {
-              "fsp_id": 2,
+              "fsp_ids": [2],
               "function_mode": "CORR",
               "frequency_slice_id": 2,
               "integration_factor": 1,

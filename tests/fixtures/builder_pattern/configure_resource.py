@@ -127,7 +127,7 @@ def csp_config() -> CSPConfiguration:
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()
-                    .set_fsp_id(fsp_id=1)
+                    .set_fsp_ids(fsps_id=[1])
                     .set_integration_factor(integration_factor=10)
                     .build()
                 ]

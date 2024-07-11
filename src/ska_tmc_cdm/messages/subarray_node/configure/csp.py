@@ -45,14 +45,14 @@ class FSPConfiguration(CdmObject):
 
     Channel averaging map is an optional list of 20 x (int,int) tuples.
 
-    :param fsp_id: FSP configuration ID [1..27]
+    :param fsp_ids: FSP configuration ID [1..27]
     :param integration_factor: integration factor [1..10]
     :param output_link_map: Optional output link map
 
     :raises ValueError: Invalid parameter values entered
     """
 
-    fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
+    fsp_ids: int = Field(ge=1, le=27)  # 1 <= id <= 27
     integration_factor: int = Field(ge=1, le=10)
     # FIXME: should be Field(default_factory=list, max_length=20)?
     # could we add enforcements for output_link_map? What are the limits?
