@@ -46,7 +46,6 @@ class FSPConfiguration(CdmObject):
     Channel averaging map is an optional list of 20 x (int,int) tuples.
 
     :param fsp_id: FSP configuration ID [1..27]
-    :param function_mode: FSP function mode
     :param frequency_slice_id: frequency slicer ID [1..26]
     :param integration_factor: integration factor [1..10]
     :param output_link_map: Optional output link map
@@ -55,7 +54,6 @@ class FSPConfiguration(CdmObject):
     """
 
     fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
-    function_mode: FSPFunctionMode = Field()
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)
     # FIXME: should be Field(default_factory=list, max_length=20)?
@@ -141,12 +139,10 @@ class VisFspConfiguration(CdmObject):
     """
     Class to hold Visibility(Vis) Configuration.
 
-    :param function_mode: function_mode
     :param fsp_ids: fsp_ids
     :param firmware: firmware
     """
 
-    function_mode: Optional[str] = None
     fsp_ids: Optional[List[int]] = None
     firmware: Optional[str] = None
 
