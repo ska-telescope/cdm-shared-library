@@ -104,26 +104,74 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
                 FSPConfiguration(
                     fsp_ids=[7],
                     integration_factor=1,
+                    sdp_start_channel_id=1,
+                    output_host=[
+                        [0, "1.22.3.4"],
+                        [13020, "1.22.3.5"],
+                        [26040, "1.22.3.6"],
+                        [39060, "1.22.3.7"],
+                    ],
+                    output_port=[],
+                    sdp_start_channel_id=1,
+                    output_host=[
+                        [0, "1.22.3.4"],
+                        [13020, "1.22.3.5"],
+                        [26040, "1.22.3.6"],
+                        [39060, "1.22.3.7"],
+                    ],
+                    output_port=[],
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_ids=[5],
                     integration_factor=1,
+                    sdp_start_channel_id=1,
+                    output_host=[
+                        [0, "1.22.3.4"],
+                        [13020, "1.22.3.5"],
+                        [26040, "1.22.3.6"],
+                        [39060, "1.22.3.7"],
+                    ],
+                    output_port=[],
                     output_link_map=[(0, 4), (200, 5)],
                 ),
                 FSPConfiguration(
                     fsp_ids=[7],
                     integration_factor=1,
+                    sdp_start_channel_id=1,
+                    output_host=[
+                        [0, "1.22.3.4"],
+                        [13020, "1.22.3.5"],
+                        [26040, "1.22.3.6"],
+                        [39060, "1.22.3.7"],
+                    ],
+                    output_port=[],
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_ids=[7],
                     integration_factor=1,
+                    sdp_start_channel_id=1,
+                    output_host=[
+                        [0, "1.22.3.4"],
+                        [13020, "1.22.3.5"],
+                        [26040, "1.22.3.6"],
+                        [39060, "1.22.3.7"],
+                    ],
+                    output_port=[],
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_ids=[7],
                     integration_factor=1,
+                    sdp_start_channel_id=1,
+                    output_host=[
+                        [0, "1.22.3.4"],
+                        [13020, "1.22.3.5"],
+                        [26040, "1.22.3.6"],
+                        [39060, "1.22.3.7"],
+                    ],
+                    output_port=[],
                     output_link_map=[(0, 0), (200, 1)],
                 ),
             ],
@@ -162,6 +210,15 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_ids": [7],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -176,6 +233,15 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_ids": [5],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -190,6 +256,15 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_ids": [7],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -204,6 +279,15 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_ids": [7],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -218,6 +302,15 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         {
           "fsp_ids": [7],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -560,6 +653,15 @@ VALID_MID_CONFIGURE_JSON = """
         {
           "fsp_ids": [1],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -574,6 +676,15 @@ VALID_MID_CONFIGURE_JSON = """
         {
           "fsp_ids": [2],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -629,6 +740,15 @@ INVALID_MID_CONFIGURE_JSON = """
         {
          "fsp_ids": [1],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -643,6 +763,15 @@ INVALID_MID_CONFIGURE_JSON = """
         {
          "fsp_ids": [2],
           "integration_factor": 1,
+            "sdp_start_channel_id": 1,
+                          "output_host": [
+                              [0, "1.22.3.4"],
+                              [13020, "1.22.3.5"],
+                              [26040, "1.22.3.6"],
+                              [39060, "1.22.3.7"]
+                              ],
+                              "output_port": [
+                                      ],
           "output_link_map": [
             [
               0,
@@ -701,11 +830,27 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
                 FSPConfiguration(
                     fsp_ids=[1],
                     integration_factor=1,
+                    sdp_start_channel_id=1,
+                    output_host=[
+                        [0, "1.22.3.4"],
+                        [13020, "1.22.3.5"],
+                        [26040, "1.22.3.6"],
+                        [39060, "1.22.3.7"],
+                    ],
+                    output_port=[],
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_ids=[2],
                     integration_factor=1,
+                    sdp_start_channel_id=1,
+                    output_host=[
+                        [0, "1.22.3.4"],
+                        [13020, "1.22.3.5"],
+                        [26040, "1.22.3.6"],
+                        [39060, "1.22.3.7"],
+                    ],
+                    output_port=[],
                     output_link_map=[(0, 4), (200, 5)],
                 ),
             ],

@@ -27,6 +27,9 @@ class FSPConfigurationBuilder:
         self.fsp_ids = None
         self.integration_factor = None
         self.output_link_map = None
+        self.sbd_start_channel_id = None
+        self.output_host = None
+        self.output_port = None
 
     def set_fsp_id(self, fsp_ids: [int]) -> "FSPConfigurationBuilder":
         """
@@ -71,6 +74,9 @@ class FSPConfigurationBuilder:
             fsp_ids=self.fsp_ids,
             integration_factor=self.integration_factor,
             output_link_map=self.output_link_map,
+            sbd_start_channel_id=self.sbd_start_channel_id,
+            output_host=self.output_host,
+            output_port=self.output_port,
         )
 
 

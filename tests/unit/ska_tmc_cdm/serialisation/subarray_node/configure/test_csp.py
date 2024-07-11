@@ -34,6 +34,24 @@ VALID_CSP_JSON_PI16 = """{
             {
                 "fsp_ids": [1],
                 "integration_factor": 1,
+                  "sdp_start_channel_id": 1,
+                                "output_host": [
+                                    [0, "1.22.3.4"],
+                                    [13020, "1.22.3.5"],
+                                    [26040, "1.22.3.6"],
+                                    [39060, "1.22.3.7"]
+                                    ],
+                                    "output_port": [
+                                            ],
+                "sdp_start_channel_id": 1,
+                "output_host": [
+                    [0, "1.22.3.4"],
+                    [13020, "1.22.3.5"],
+                    [26040, "1.22.3.6"],
+                    [39060, "1.22.3.7"]
+                    ],
+                    "output_port": [
+                            ],
                 "output_link_map": [
                     [
                         0,
@@ -48,6 +66,24 @@ VALID_CSP_JSON_PI16 = """{
             {
                 "fsp_ids": [2],
                 "integration_factor": 1,
+                  "sdp_start_channel_id": 1,
+                                "output_host": [
+                                    [0, "1.22.3.4"],
+                                    [13020, "1.22.3.5"],
+                                    [26040, "1.22.3.6"],
+                                    [39060, "1.22.3.7"]
+                                    ],
+                                    "output_port": [
+                                            ],
+                                "sdp_start_channel_id": 1,
+                                "output_host": [
+                                    [0, "1.22.3.4"],
+                                    [13020, "1.22.3.5"],
+                                    [26040, "1.22.3.6"],
+                                    [39060, "1.22.3.7"]
+                                    ],
+                                    "output_port": [
+                                            ],
                 "output_link_map": [
                     [
                         0,
@@ -86,11 +122,27 @@ CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
             FSPConfiguration(
                 fsp_ids=[1],
                 integration_factor=1,
+                sdp_start_channel_id=1,
+                output_host=[
+                    [0, "1.22.3.4"],
+                    [13020, "1.22.3.5"],
+                    [26040, "1.22.3.6"],
+                    [39060, "1.22.3.7"],
+                ],
+                output_port=[],
                 output_link_map=[(0, 0), (200, 1)],
             ),
             FSPConfiguration(
                 fsp_ids=[2],
                 integration_factor=1,
+                sdp_start_channel_id=1,
+                output_host=[
+                    [0, "1.22.3.4"],
+                    [13020, "1.22.3.5"],
+                    [26040, "1.22.3.6"],
+                    [39060, "1.22.3.7"],
+                ],
+                output_port=[],
                 output_link_map=[(0, 4), (200, 5)],
             ),
         ],
@@ -184,6 +236,14 @@ def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     fsp_config = FSPConfiguration(
         fsp_ids=[1],
         integration_factor=10,
+        sdp_start_channel_id=1,
+        output_host=[
+            [0, "1.22.3.4"],
+            [13020, "1.22.3.5"],
+            [26040, "1.22.3.6"],
+            [39060, "1.22.3.7"],
+        ],
+        output_port=[],
     )
     marshalled = CODEC.dumps(fsp_config)
 
@@ -213,6 +273,14 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
     fsp_config = FSPConfiguration(
         fsp_ids=[1],
         integration_factor=10,
+        sdp_start_channel_id=1,
+        output_host=[
+            [0, "1.22.3.4"],
+            [13020, "1.22.3.5"],
+            [26040, "1.22.3.6"],
+            [39060, "1.22.3.7"],
+        ],
+        output_port=[],
         **null_kwargs,
     )
     marshalled = CODEC.dumps(fsp_config)
@@ -234,6 +302,14 @@ def test_marshall_csp_configuration_does_not_modify_original():
     fsp_config = FSPConfiguration(
         fsp_ids=[1],
         integration_factor=10,
+        sdp_start_channel_id=1,
+        output_host=[
+            [0, "1.22.3.4"],
+            [13020, "1.22.3.5"],
+            [26040, "1.22.3.6"],
+            [39060, "1.22.3.7"],
+        ],
+        output_port=[],
     )
     config = CSPConfiguration(
         interface="interface",

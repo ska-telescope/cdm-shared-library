@@ -54,6 +54,16 @@ class FSPConfiguration(CdmObject):
 
     fsp_ids: int = Field(ge=1, le=27)  # 1 <= id <= 27
     integration_factor: int = Field(ge=1, le=10)
+    sdp_start_channel_id = (1,)
+    output_host = (
+        [
+            [0, "1.22.3.4"],
+            [13020, "1.22.3.5"],
+            [26040, "1.22.3.6"],
+            [39060, "1.22.3.7"],
+        ],
+    )
+    output_port = ([],)
     # FIXME: should be Field(default_factory=list, max_length=20)?
     # could we add enforcements for output_link_map? What are the limits?
     output_link_map: Optional[

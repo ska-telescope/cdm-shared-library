@@ -36,6 +36,9 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			fsp_ids : [int]
 			integration_factor : int
 			output_link_map : List[Tuple]
+			sdp_start_channel_id : int
+			output_host : List[int]
+			output_port : List[]
 		}
 
 		class CSPConfiguration {
