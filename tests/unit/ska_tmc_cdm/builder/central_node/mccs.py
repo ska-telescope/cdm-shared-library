@@ -109,9 +109,9 @@ class MCCSAllocateBuilder:
     """
 
     def __init__(self) -> "MCCSAllocateBuilder":
-        self.subarray_beam_ids = None
-        self.channel_blocks = None
-        self.station_ids = None
+        self.subarray_beam_ids = []
+        self.channel_blocks = []
+        self.station_ids = []
         self.interface = None
         self.subarray_beams: SubArrayBeamsConfiguration = []
 

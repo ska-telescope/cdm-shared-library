@@ -25,6 +25,8 @@ from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
     SubArrayBeamsConfigurationBuilder,
 )
 
+interface = "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+
 
 @pytest.mark.parametrize(
     ("subarray_id", "okay"),
@@ -76,9 +78,20 @@ def test_validation_applies_to_subarray_id(subarray_id: int, okay: bool):
                 .set_subarray_beam_ids(subarray_beam_ids=[1])
                 .set_station_ids(station_ids=[[1, 2]])
                 .set_channel_blocks(channel_blocks=[3])
-                .set_interface(
-                    "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-                )
+                .build()
+            )
+            .build(),
+            LOW_SCHEMA,
+        ),
+        (
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .set_interface(interface)
                 .set_subarray_beams(
                     [
                         SubArrayBeamsConfigurationBuilder()
@@ -120,9 +133,27 @@ def test_assign_resources_request_dish_and_mccs_fail():
         .set_subarray_beam_ids(subarray_beam_ids=[1, 2, 3, 4, 5, 6])
         .set_station_ids(station_ids=list(zip(itertools.count(1, 1), 1 * [2])))
         .set_channel_blocks(channel_blocks=[1, 2, 3, 4, 5])
-        .set_interface(
-            "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+        .build()
+    )
+
+    with pytest.raises(ValueError):
+        dish_allocation = (
+            DishAllocateBuilder()
+            .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
+            .build()
         )
+        AssignResourcesRequestBuilder().set_dish_allocation(
+            dish_allocation=dish_allocation
+        ).set_mccs(mccs=mccs_allocate).build()
+
+
+def test_assign_resources_request_dish_and_mccs_fail_for_4_0_resource():
+    """
+    Verify that mccs & dish cannot be allocated together
+    """
+    mccs_allocate = (
+        MCCSAllocateBuilder()
+        .set_interface(interface)
         .set_subarray_beams(
             [
                 SubArrayBeamsConfigurationBuilder()
@@ -162,9 +193,32 @@ def test_assign_resources_if_no_subarray_id_argument():
         .set_subarray_beam_ids(subarray_beam_ids=[1, 2, 3, 4, 5, 6])
         .set_station_ids(station_ids=list(zip(itertools.count(1, 1), 1 * [2])))
         .set_channel_blocks(channel_blocks=[1, 2, 3, 4, 5])
-        .set_interface(
-            "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+        .build()
+    )
+    dish_allocation = (
+        DishAllocateBuilder()
+        .set_receptor_ids(receptor_ids=frozenset(["ac", " b", "aab"]))
+        .build()
+    )
+
+    with pytest.raises(ValueError):
+        _ = AssignResourcesRequestBuilder().set_mccs(mccs=mccs).build()
+
+    with pytest.raises(ValueError):
+        _ = (
+            AssignResourcesRequestBuilder()
+            .set_dish_allocation(dish_allocation=dish_allocation)
+            .build()
         )
+
+
+def test_assign_resources_if_no_subarray_id_argument_for_4_0_interface():
+    """
+    Verify that the boolean release_all_mid argument is required.
+    """
+    mccs = (
+        MCCSAllocateBuilder()
+        .set_interface(interface)
         .set_subarray_beams(
             [
                 SubArrayBeamsConfigurationBuilder()
@@ -217,9 +271,47 @@ def test_low_assign_resources_request(
             .set_subarray_beam_ids(subarray_beam_ids=[1])
             .set_station_ids(station_ids=[[1, 2]])
             .set_channel_blocks(channel_blocks=[3])
-            .set_interface(
-                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-            )
+            .build()
+        )
+        .set_interface(MID_SCHEMA)
+        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
+        .build()
+    )
+    request2 = (
+        AssignResourcesRequestBuilder()
+        .set_subarray_id(subarray_id=1)
+        .set_sdp_config(sdp_config=sdp_allocate)
+        .set_mccs(
+            MCCSAllocateBuilder()
+            .set_subarray_beam_ids(subarray_beam_ids=[1])
+            .set_station_ids(station_ids=[[1, 2]])
+            .set_channel_blocks(channel_blocks=[3])
+            .build()
+        )
+        .set_interface(MID_SCHEMA)
+        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
+        .build()
+    )
+
+    assert request1 == request2
+    assert request1 != 1 and request2 != object()
+
+
+def test_low_assign_resources_request_for_4_0_interface(
+    sdp_allocate,
+):
+    """
+    Verify creation of Low AssignResources request objects
+    with both sdp block and check equality
+    """
+
+    request1 = (
+        AssignResourcesRequestBuilder()
+        .set_subarray_id(subarray_id=1)
+        .set_sdp_config(sdp_config=sdp_allocate)
+        .set_mccs(
+            MCCSAllocateBuilder()
+            .set_interface(interface)
             .set_subarray_beams(
                 [
                     SubArrayBeamsConfigurationBuilder()
@@ -248,12 +340,7 @@ def test_low_assign_resources_request(
         .set_sdp_config(sdp_config=sdp_allocate)
         .set_mccs(
             MCCSAllocateBuilder()
-            .set_subarray_beam_ids(subarray_beam_ids=[1])
-            .set_station_ids(station_ids=[[1, 2]])
-            .set_channel_blocks(channel_blocks=[3])
-            .set_interface(
-                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-            )
+            .set_interface(interface)
             .set_subarray_beams(
                 [
                     SubArrayBeamsConfigurationBuilder()
@@ -358,9 +445,39 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
         .set_subarray_beam_ids(subarray_beam_ids=[1])
         .set_station_ids(station_ids=[[1, 2]])
         .set_channel_blocks(channel_blocks=[3])
-        .set_interface(
-            "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-        )
+        .build()
+    )
+
+    request1 = (
+        AssignResourcesRequestBuilder()
+        .set_subarray_id(subarray_id=1)
+        .set_sdp_config(sdp_config=sdp_allocate)
+        .set_mccs(mccs=mccs_allocate)
+        .set_interface(interface=LOW_SCHEMA)
+        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
+        .build()
+    )
+
+    request2 = AssignResourcesRequestBuilder.from_mccs(
+        subarray_id=1,
+        sdp_config=sdp_allocate,
+        mccs=mccs_allocate,
+        interface=LOW_SCHEMA,
+        transaction_id="txn-mvp01-20200325-00001",
+    ).build()
+
+    assert request1 == request2
+
+
+def test_low_assign_resource_request_using_from_mccs_for_4_0_interface(
+    sdp_allocate,
+):
+    """
+    Verify that  Low AssignResource request object created using from_mccs is equal.
+    """
+    mccs_allocate = (
+        MCCSAllocateBuilder()
+        .set_interface(interface)
         .set_subarray_beams(
             [
                 SubArrayBeamsConfigurationBuilder()
@@ -448,9 +565,30 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
                 .set_subarray_beam_ids(subarray_beam_ids=[1])
                 .set_station_ids(station_ids=[[1, 2]])
                 .set_channel_blocks(channel_blocks=[3])
-                .set_interface(
-                    "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-                )
+                .build()
+            )
+            .build(),
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .build()
+            )
+            .build(),
+            True,
+        ),
+        (  # MCCS Equality
+            AssignResourcesRequestBuilder()
+            .set_subarray_id(subarray_id=1)
+            .set_mccs(
+                mccs=MCCSAllocateBuilder()
+                .set_subarray_beam_ids(subarray_beam_ids=[1])
+                .set_station_ids(station_ids=[[1, 2]])
+                .set_channel_blocks(channel_blocks=[3])
+                .set_interface(interface)
                 .set_subarray_beams(
                     [
                         SubArrayBeamsConfigurationBuilder()
@@ -477,9 +615,7 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
                 .set_subarray_beam_ids(subarray_beam_ids=[1])
                 .set_station_ids(station_ids=[[1, 2]])
                 .set_channel_blocks(channel_blocks=[3])
-                .set_interface(
-                    "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-                )
+                .set_interface(interface)
                 .set_subarray_beams(
                     [
                         SubArrayBeamsConfigurationBuilder()
