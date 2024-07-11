@@ -133,13 +133,15 @@ class PSTScanConfigurationBuilder:
         self.feed_tracking_mode = None
         self.feed_position_angle = None
         self.oversampling_ratio = []
-        self.coordinates = None
+        self.coordinates: PSTScanCoordinates = None
         self.max_scan_length = None
         self.subint_duration = None
         self.receptors = []
         self.receptor_weights = []
-        self.num_channelization_stages = []
-        self.channelization_stages = None
+        self.num_channelization_stages = None
+        self.channelization_stages: List[
+            PSTChannelizationStageConfiguration
+        ] = []
 
     def set_activation_time(
         self, activation_time: str
@@ -480,7 +482,7 @@ class PSTBeamConfigurationBuilder:
 
 class PSTConfigurationBuilder:
     def __init__(self):
-        self.beams = []
+        self.beams: List[PSTBeamConfiguration] = []
 
     def set_beams(
         self, beam: PSTBeamConfiguration
