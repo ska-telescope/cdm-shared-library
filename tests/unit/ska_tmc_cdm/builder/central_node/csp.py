@@ -66,8 +66,8 @@ class CSPConfigurationBuilder:
     """
 
     def __init__(self) -> "CSPConfigurationBuilder":
-        self.pss = None
-        self.pst = None
+        self.pss: PSSConfiguration = None
+        self.pst: PSTConfiguration = None
 
     def set_pss(self, pss: PSSConfiguration) -> "CSPConfigurationBuilder":
         """
