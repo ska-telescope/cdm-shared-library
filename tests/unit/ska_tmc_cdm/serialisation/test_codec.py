@@ -69,6 +69,7 @@ TEST_PARAMETERS = [
         ConfigureRequest,
         VALID_MID_CONFIGURE_JSON,
         VALID_MID_CONFIGURE_OBJECT,
+        #TODO: STAR-558: Reset to true
         False,
     ),
     (

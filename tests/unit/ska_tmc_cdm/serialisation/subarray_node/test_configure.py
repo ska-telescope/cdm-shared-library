@@ -1087,6 +1087,7 @@ def partial_invalidator(o: ConfigureRequest):
             None,
             VALID_MID_CONFIGURE_JSON,
             None,
+            #TODO: STAR-558: Reset to true
             False,
         ),
         (

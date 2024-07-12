@@ -31,6 +31,8 @@ class FSPConfigurationBuilder:
         self.output_host = None
         self.output_port = None
 
+        #TODO: STAR-558: add setter functions for newly added fields {sbd_start_channel_id, output_host, output_port}
+
     def set_fsp_id(self, fsp_ids: [int]) -> "FSPConfigurationBuilder":
         """
         Set the FSP configuration ID.
