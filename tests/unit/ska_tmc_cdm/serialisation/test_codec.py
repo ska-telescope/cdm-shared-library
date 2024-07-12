@@ -42,8 +42,10 @@ from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
+    VALID_LOW_CONFIGURE_JSON_4_0,
     VALID_LOW_CONFIGURE_OBJECT,
     VALID_LOW_CONFIGURE_OBJECT_3_1,
+    VALID_LOW_CONFIGURE_OBJECT_4_0,
     VALID_MID_CONFIGURE_JSON,
     VALID_MID_CONFIGURE_OBJECT,
 )
@@ -77,6 +79,12 @@ TEST_PARAMETERS = [
         ConfigureRequest,
         VALID_LOW_CONFIGURE_JSON,
         VALID_LOW_CONFIGURE_OBJECT,
+        True,
+    ),
+    (
+        ConfigureRequest,
+        VALID_LOW_CONFIGURE_JSON_4_0,
+        VALID_LOW_CONFIGURE_OBJECT_4_0,
         True,
     ),
     (

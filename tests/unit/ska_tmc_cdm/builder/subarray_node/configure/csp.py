@@ -2,6 +2,7 @@ from typing import List, Tuple
 
 from ska_tmc_cdm.messages.subarray_node.configure import core
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    BeamsConfiguration,
     CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
@@ -13,6 +14,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
+    TimingBeamsConfiguration,
     VisConfiguration,
     VisFspConfiguration,
     VisStnBeamConfiguration,
@@ -290,6 +292,101 @@ class CBFConfigurationBuilder:
         )
 
 
+class BeamsConfigurationBuilder:
+    """
+    BeamConfigurationBuilder is a test data builder for BeamConfiguration objects.
+    """
+
+    def __init__(self):
+        self.pst_beam_id = None
+        self.stn_beam_id = None
+        self.stn_weights = []
+
+    def set_pst_beam_id(self, pst_beam_id: int) -> "BeamsConfigurationBuilder":
+        """
+        Set the primary station beam ID.
+
+        :param pst_beam_id: Integer representing the primary station beam ID.
+        :return: An instance of BeamConfigurationBuilder with the updated primary station beam ID.
+        """
+        self.pst_beam_id = pst_beam_id
+        return self
+
+    def set_stn_beam_id(self, stn_beam_id: int) -> "BeamsConfigurationBuilder":
+        """
+        Set the secondary station beam ID.
+
+        :param stn_beam_id: Integer representing the secondary station beam ID.
+        :return: An instance of BeamConfigurationBuilder with the updated secondary station beam ID.
+        """
+        self.stn_beam_id = stn_beam_id
+        return self
+
+    def set_stn_weights(
+        self, stn_weights: List[float]
+    ) -> "BeamsConfigurationBuilder":
+        """
+        Set the secondary station weights.
+
+        :param stn_weights: List of floats representing the secondary station weights.
+        :return: An instance of BeamConfigurationBuilder with the updated secondary station weights.
+        """
+        self.stn_weights = stn_weights
+        return self
+
+    def build(self) -> BeamsConfiguration:
+        """
+        Builds or creates an instance of BeamConfiguration with the set properties.
+        :return: An instance of BeamConfiguration with the specified configurations.
+        """
+        return BeamsConfiguration(
+            pst_beam_id=self.pst_beam_id,
+            stn_beam_id=self.stn_beam_id,
+            stn_weights=self.stn_weights,
+        )
+
+
+class TimingBeamsConfigurationBuilder:
+    """
+    TimeBeamConfigurationBuilder is a test data builder for TimeBeamConfiguration objects.
+    """
+
+    def __init__(self):
+        self.fsp = None
+        self.beams = None
+
+    def set_fsp(
+        self, fsp: VisFspConfiguration
+    ) -> "TimingBeamsConfigurationBuilder":
+        """
+        Set the FSP configuration.
+
+        :param fsp: List of integers representing the FSP configuration.
+        :return: An instance of TimeBeamConfigurationBuilder with the updated FSP configuration.
+        """
+        self.fsp = fsp
+        return self
+
+    def set_beams(
+        self, beams: List[BeamsConfiguration]
+    ) -> "TimingBeamsConfigurationBuilder":
+        """
+        Set the visibility beams.
+
+        :param beams: List of VisBeam instances representing the visibility beams.
+        :return: An instance of TimeBeamConfigurationBuilder with the updated visibility beams.
+        """
+        self.beams = beams
+        return self
+
+    def build(self) -> TimingBeamsConfiguration:
+        """
+        Builds or creates an instance of TimeBeamConfiguration with the set properties.
+        :return: An instance of TimeBeamConfiguration with the specified configurations.
+        """
+        return TimingBeamsConfiguration(fsp=self.fsp, beams=self.beams)
+
+
 class LowCBFConfigurationBuilder:
     """
     LowCBFConfigurationBuilder is a test data builder for LowCBFConfiguration objects.
@@ -298,6 +395,7 @@ class LowCBFConfigurationBuilder:
     def __init__(self):
         self.stations = None
         self.vis = None
+        self.timing_beams = None
 
     def set_stations(
         self, stations: StationConfiguration
@@ -321,12 +419,28 @@ class LowCBFConfigurationBuilder:
         self.vis = vis
         return self
 
+    def set_timing_beams(
+        self, timing_beams: TimingBeamsConfiguration
+    ) -> "LowCBFConfigurationBuilder":
+        """
+        Set the timing beams configuration for the LowCBF.
+
+        :param timing_beams: A list of TimingBeamConfiguration instances representing the timing beams configuration.
+        :return: An instance of LowCBFConfigurationBuilder with the set timing beams configuration.
+        """
+        self.timing_beams = timing_beams
+        return self
+
     def build(self) -> LowCBFConfiguration:
         """
         Builds or creates an instance of LowCBFConfiguration with the set properties.
         :return: An instance of LowCBFConfiguration with the specified configurations.
         """
-        return LowCBFConfiguration(stations=self.stations, vis=self.vis)
+        return LowCBFConfiguration(
+            stations=self.stations,
+            vis=self.vis,
+            timing_beams=self.timing_beams,
+        )
 
 
 class StationConfigurationBuilder:
@@ -444,6 +558,17 @@ class VisFspConfigurationBuilder:
     def __init__(self):
         self.function_mode = None
         self.fsp_ids = None
+        self.firmware = None
+
+    def set_firmware(self, firmware: str) -> "VisFspConfigurationBuilder":
+        """
+        Set the function mode for the visibility FSP.
+
+        :param function_mode: A string representing the function mode of the visibility FSP.
+        :return: An instance of VisFspConfigurationBuilder with the set function mode.
+        """
+        self.firmware = firmware
+        return self
 
     def set_function_mode(
         self, function_mode: str
@@ -471,7 +596,9 @@ class VisFspConfigurationBuilder:
         :return: An instance of VisFspConfiguration with the specified configurations.
         """
         return VisFspConfiguration(
-            function_mode=self.function_mode, fsp_ids=self.fsp_ids
+            function_mode=self.function_mode,
+            fsp_ids=self.fsp_ids,
+            firmware=self.firmware,
         )
 
 
