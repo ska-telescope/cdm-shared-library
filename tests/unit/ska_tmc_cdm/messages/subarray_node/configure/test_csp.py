@@ -20,8 +20,7 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     VisStnBeamConfigurationBuilder,
 )
 
-#TODO: STAR-558: make use of setter functions for newly added fields {sbd_start_channel_id, output_host, output_port}
-
+# TODO: STAR-558: make use of setter functions for newly added fields {sbd_start_channel_id, output_host, output_port}
 
 
 @pytest.mark.parametrize(
