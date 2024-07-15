@@ -43,10 +43,64 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			zoom_window_tuning: int
 		}
 
+		class PSTScanConfiguration {
+			activation_time: str
+			bits_per_sample: int
+			num_of_polarizations: int
+			udp_nsamp: int
+			wt_nsamp: int
+			udp_nchan: int
+			num_frequency_channels: int
+			centre_frequency: float
+			total_bandwidth: float
+			observation_mode: str
+			observer_id: str
+			project_id: str
+			pointing_id: str
+			source: str
+			itrf: List[float]
+			receiver_id: str
+			feed_polarization: str
+			feed_handedness: int
+			feed_angle: float
+			feed_tracking_mode: str
+			feed_position_angle: float
+			oversampling_ratio: List[int]
+			coordinates: PSTScanCoordinates
+			max_scan_length: float
+			subint_duration: float
+			receptors: List[str]
+			receptor_weights: List[float]
+			num_channelization_stages: int
+			channelization_stages: List[PSTChannelizationStageConfiguration]
+		}
+
+		class PSTBeamConfiguration {
+			beam_id: int
+            scan: Optional[PSTScanConfiguration]
+		}
+
+		class PSTScanCoordinates {
+			equinox: float
+			ra: str
+			dec: str
+		}
+
+		class PSTChannelizationStageConfiguration {
+			num_filter_taps: int
+			filter_coefficients: List[float]
+			num_frequency_channels: int
+			oversampling_ratio: List[int]
+		}
+
+		class PSTConfiguration {
+			beams: List[PSTBeamConfiguration]
+		}
+
 		class CSPConfiguration {
 	        interface: str
 	        pss: dict
-	        pst: dict
+	        pst: Optional[PSTConfiguration | dict]
 
 		}
 
@@ -96,6 +150,11 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		CSPConfiguration *-- "1" SubarrayConfiguration
 		CSPConfiguration *-- "0..1" CBFConfiguration
 		CSPConfiguration *-- "1" LowCBFConfiguration
+		CSPConfiguration *-- "1" PSTConfiguration
+		PSTConfiguration *-- "1" PSTBeamConfiguration
+		PSTBeamConfiguration *-- "1" PSTScanConfiguration
+		PSTScanConfiguration *-- "1" PSTChannelizationStageConfiguration
+		PSTScanConfiguration *-- "1" PSTScanCoordinates
 		LowCBFConfiguration *-- "1" StationConfiguration
 		LowCBFConfiguration *-- "1" VisConfiguration
 		LowCBFConfiguration *-- "1" TimingBeamsConfiguration

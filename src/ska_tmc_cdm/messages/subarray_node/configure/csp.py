@@ -198,7 +198,7 @@ class TimingBeamsConfiguration(CdmObject):
     """
 
     fsp: Optional[VisFspConfiguration] = None
-    beams: Optional[List[BeamsConfiguration]] = None
+    beams: List[BeamsConfiguration] = Field(default_factory=list)
 
 
 class LowCBFConfiguration(CdmObject):

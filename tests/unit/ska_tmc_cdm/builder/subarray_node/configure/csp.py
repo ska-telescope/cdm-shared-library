@@ -353,7 +353,7 @@ class TimingBeamsConfigurationBuilder:
 
     def __init__(self):
         self.fsp = None
-        self.beams = None
+        self.beams = []
 
     def set_fsp(
         self, fsp: VisFspConfiguration
