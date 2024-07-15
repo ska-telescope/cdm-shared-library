@@ -11,7 +11,7 @@ Unreleased changes
 
 11.0.0
 ******
-* [BREAKING] Modified low assign/configure schema with interface 4.0.
+* [BREAKING] provided support to LOW assign/configure schema with interface 4.0.
 * Modified mccs block and added new csp block with pss/pst support for LOW assign resource schema.
 * Added pst block in LOW configure schema.
 
