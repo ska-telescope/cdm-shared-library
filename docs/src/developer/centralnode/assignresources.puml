@@ -8,10 +8,23 @@ package ska_tmc_cdm.messages.central_node {
             receptor_ids : List[str]
         }
 
+        class ApertureConfiguration {
+            station_id: int
+            aperture_id: str
+        }
+
+        class SubArrayBeamsConfiguration {
+            subarray_beam_id: int
+            apertures: list[ApertureConfiguration]
+            number_of_channels: int
+        }
+
         class MCCSAllocate {
-            station_ids: List[List[int]],
-            channel_blocks: List[int],
-            subarray_beam_ids: List[int]
+            station_ids: Optional[List[List[int]]]
+            channel_blocks: Optional[List[int]]
+            subarray_beam_ids: Optional[List[int]]
+            interface: Optional[str]
+            subarray_beams: Optional[list[SubArrayBeamsConfiguration]]
         }
 
         class Channel {
@@ -157,6 +170,8 @@ package ska_tmc_cdm.messages.central_node {
 
         AssignResourcesRequest *-- "1" DishAllocation
         AssignResourcesRequest *-- "1" MCCSAllocate
+        MCCSAllocate *-- "1" SubArrayBeamsConfiguration
+        SubArrayBeamsConfiguration *-- "1" ApertureConfiguration
         AssignResourcesRequest *-- "1" SDPConfiguration
 
         class AssignResourcesResponse
