@@ -346,36 +346,22 @@ of a full CDM JSON object, the elements this maps to are:
 
   # JSON modelled specifically by mccs.py
   {
-    "mccs": {
-        "stations": [
-          {
-            "station_id": 1
-          },
-          {
-            "station_id": 2
-          }
-        ],
-        "subarray_beams": [
-          {
-            "subarray_beam_id": 1,
-            "station_ids": [1, 2],
-            "update_rate": 0,
-            "channels": [
-              [0, 8, 1, 1],
-              [8, 8, 2, 1],
-              [24, 16, 2, 1]
-            ],
-            "antenna_weights": [1, 1, 1],
-            "phase_centre": [0, 0],
-            "target": {
-              "system": "HORIZON",
-              "name": "DriftScan",
-              "az": 180,
-              "el": 45
-            }
-          }
-        ]
-     }
+      "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/4.0",
+      "mccs": {
+          "interface": "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
+          "subarray_beams": [
+              {
+                  "subarray_beam_id": 1,
+                  "apertures": [
+                      {
+                          "station_id": 1,
+                          "aperture_id": "AP001.01",
+                      },
+                  ],
+                  "number_of_channels": 8,
+              },
+          ]
+      }
   }
 
 
@@ -394,24 +380,26 @@ Examples below depict a populated sub-array and an empty one:
 
 .. code:: JSON
 
-  {
-      "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/4.0",
-      "mccs": {
-          "interface": "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-          "subarray_beams": [
-              {
-                  "subarray_beam_id": 1,
-                  "apertures": [
-                      {
-                          "station_id": 1,
-                          "aperture_id": "AP001.01",
-                      },
-                  ],
-                  "number_of_channels": 8,
-              },
-          ]
-      }
-  }
+    {
+        "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/2.0",
+        "mccs": {
+            "subarray_beam_ids": [1],
+            "station_ids": [[1,2]],
+            "channel_blocks": [3]
+        }
+    }
+
+.. code:: JSON
+
+    {
+        "interface": "https://schema.skao.int/ska-low-tmc-assignedresources/2.0",
+        "mccs": {
+            "subarray_beam_ids": [],
+            "station_ids": [],
+            "channel_blocks": []
+        }
+    }
+
 
 scan.py
 =======

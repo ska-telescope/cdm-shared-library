@@ -61,11 +61,11 @@ test_subarray_beam_config = (
             .set_subarray_beams([test_subarray_beam_config])
             .build(),
             MCCSAllocateBuilder()
-            .set_subarray_beam_ids([2])
+            .set_subarray_beam_ids([1])
             .set_station_ids([[1, 2, 3]])  # different station id
             .set_channel_blocks([4])
             .set_interface(
-                "https://schema.skao.int/ska-low-mccs-controller-allocate/4.0"
+                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
             )
             .set_subarray_beams([test_subarray_beam_config])
             .build(),

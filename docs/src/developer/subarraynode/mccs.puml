@@ -2,7 +2,7 @@
 hide empty members
 
 package ska_tmc_cdm.messages.subarray_node.configure {
-    package mccs.py <<Rectangle>> {
+    package mccs <<Rectangle>> {
         
 
         class SubarrayBeamAperatures {
