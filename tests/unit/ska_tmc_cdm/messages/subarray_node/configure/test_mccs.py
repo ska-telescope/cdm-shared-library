@@ -4,7 +4,57 @@ Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.mccs module.
 import pytest
 
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import (
+    MCCSConfigurationBuilder,
+    SubarrayBeamApertureBuilder,
+    SubarrayBeamConfigurationBuilder,
+    SubarrayBeamLogicalbandsBuilder,
     SubarrayBeamSkyCoordinatesBuilder,
+)
+
+beams_configuration = (
+    SubarrayBeamConfigurationBuilder()
+    .set_subarray_beam_id(1)
+    .set_update_rate(1.0)
+    .set_logical_bands(
+        SubarrayBeamLogicalbandsBuilder()
+        .set_start_channel(80)
+        .set_number_of_channels(16)
+    )
+    .set_apertures(
+        SubarrayBeamApertureBuilder()
+        .set_aperture_id("AP001.01")
+        .set_weighting_key_ref("aperture2")
+    )
+    .set_sky_coordinates(
+        SubarrayBeamSkyCoordinatesBuilder()
+        .set_reference_frame("HORIZON")
+        .set_c1(180.0)
+        .set_c2(90.0)
+    )
+    .build()
+)
+
+beams_configuration_after_value_changed = (
+    SubarrayBeamConfigurationBuilder()
+    .set_subarray_beam_id(2)
+    .set_update_rate(1.0)
+    .set_logical_bands(
+        SubarrayBeamLogicalbandsBuilder()
+        .set_start_channel(80)
+        .set_number_of_channels(16)
+    )
+    .set_apertures(
+        SubarrayBeamApertureBuilder()
+        .set_aperture_id("AP001.01")
+        .set_weighting_key_ref("aperture2")
+    )
+    .set_sky_coordinates(
+        SubarrayBeamSkyCoordinatesBuilder()
+        .set_reference_frame("HORIZON")
+        .set_c1(180.0)
+        .set_c2(90.0)
+    )
+    .build()
 )
 
 
@@ -12,28 +62,28 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import (
     "subarray_beam_ska_coordinates_1, subarray_beam_ska_coordinates_2, is_equal",
     [
         (
-            SubarrayBeamSkyCoordinatesBuilder()
-            .set_reference_frame("HORIZON")
-            .set_c1(180.0)
-            .set_c2(90.0)
+            MCCSConfigurationBuilder()
+            .set_subarray_beam_config(
+                subarray_beam_configs=[beams_configuration]
+            )
             .build(),
-            SubarrayBeamSkyCoordinatesBuilder()
-            .set_reference_frame("HORIZON")
-            .set_c1(180.0)
-            .set_c2(90.0)
+            MCCSConfigurationBuilder()
+            .set_subarray_beam_config(
+                subarray_beam_configs=[beams_configuration]
+            )
             .build(),
             True,
         ),
         (
-            SubarrayBeamSkyCoordinatesBuilder()
-            .set_reference_frame("HORIZON")
-            .set_c1(180.0)
-            .set_c2(90.0)
+            MCCSConfigurationBuilder()
+            .set_subarray_beam_config(
+                subarray_beam_configs=[beams_configuration]
+            )
             .build(),
-            SubarrayBeamSkyCoordinatesBuilder()
-            .set_reference_frame("frame")
-            .set_c1(180.0)
-            .set_c2(80.0)
+            MCCSConfigurationBuilder()
+            .set_subarray_beam_config(
+                subarray_beam_configs=[beams_configuration_after_value_changed]
+            )
             .build(),
             False,
         ),

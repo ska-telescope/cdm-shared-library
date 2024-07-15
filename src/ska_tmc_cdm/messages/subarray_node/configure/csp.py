@@ -11,6 +11,7 @@ from pydantic import AliasChoices, Field
 from ska_tmc_cdm.messages.base import CdmObject
 
 from . import core
+from .pst import PSTConfiguration
 
 __all__ = [
     "CSPConfiguration",
@@ -24,6 +25,8 @@ __all__ = [
     "StnBeamConfiguration",
     "VisFspConfiguration",
     "VisConfiguration",
+    "TimingBeamsConfiguration",
+    "BeamsConfiguration",
 ]
 
 
@@ -97,6 +100,7 @@ class CommonConfiguration(CdmObject):
     frequency_band: Optional[core.ReceiverBand] = None
     subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
+    eb_id: Optional[str] = None
 
 
 class StnBeamConfiguration(CdmObject):
@@ -161,14 +165,40 @@ class VisFspConfiguration(CdmObject):
 
 class VisConfiguration(CdmObject):
     """
-        Class to hold Vis Configuration.
-    firmware
-        :param fsp: fsp
-        :param stn_beams: stn_beams
+    Class to hold Vis Configuration firmware
+
+    :param fsp: fsp
+    :param stn_beams: stn_beams
     """
 
     fsp: Optional[VisFspConfiguration] = None
     stn_beams: Optional[List[VisStnBeamConfiguration]] = None
+
+
+class BeamsConfiguration(CdmObject):
+    """
+    Class to hold Beams Configuration.
+
+    :param pst_beam_id: pst_beam_id
+    :param stn_beam_id: stn_beam_id
+    :param stn_weights: stn_weights
+    """
+
+    pst_beam_id: Optional[int] = None
+    stn_beam_id: Optional[int] = None
+    stn_weights: List[float] = Field(default_factory=list)
+
+
+class TimingBeamsConfiguration(CdmObject):
+    """
+    Class to hold TimingBeams Configuration.
+
+    :param fsp: fsp
+    :param beams: beams
+    """
+
+    fsp: Optional[VisFspConfiguration] = None
+    beams: List[BeamsConfiguration] = Field(default_factory=list)
 
 
 class LowCBFConfiguration(CdmObject):
@@ -181,6 +211,7 @@ class LowCBFConfiguration(CdmObject):
 
     stations: Optional[StationConfiguration] = None
     vis: Optional[VisConfiguration] = None
+    timing_beams: Optional[TimingBeamsConfiguration] = None
 
 
 class VLBIConfiguration(CdmObject):
@@ -206,10 +237,6 @@ class CBFConfiguration(CdmObject):
         serialization_alias="vlbi",
         validation_alias=AliasChoices("vlbi", "vlbi_config"),
     )
-
-
-class PSTConfiguration(CdmObject):
-    pass
 
 
 class PSSConfiguration(CdmObject):

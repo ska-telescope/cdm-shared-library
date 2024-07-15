@@ -4,55 +4,37 @@ request and response for the TMC CentralNode.AssignResources command.
 """
 from typing import Optional
 
+from pydantic import Field
+
 from ska_tmc_cdm.messages.base import CdmObject
 
-__all__ = [
-    "CSPConfiguration",
-    "CommonConfiguration",
-    "ResourceConfiguration",
-    "LowCbfConfiguration",
-]
+__all__ = ["CSPConfiguration", "PSSConfiguration", "PSTConfiguration"]
 
 
-class CommonConfiguration(CdmObject):
+class PSSConfiguration(CdmObject):
     """
-    Class to get common subarray id
-
-    :param subarray_id: Low csp assign resource subarray ID
+    Class to get PSS Configuration
+    :param pss_beam_ids: List of PSS Beam IDs
     """
 
-    subarray_id: Optional[int] = None
+    pss_beam_ids: list[int] = Field(default_factory=list)
 
 
-class ResourceConfiguration(CdmObject):
+class PSTConfiguration(CdmObject):
     """
-    Class to contain keys
-    for resources under lowcbf
-    """
-
-    device: Optional[str] = None
-    shared: Optional[bool] = None
-    fw_image: Optional[str] = None
-    fw_mode: Optional[str] = None
-
-
-class LowCbfConfiguration(CdmObject):
-    """
-    Class to get lowcbf configuration within low csp assign resources
-
-
-    Creates a new LowCbfConfiguration.
-    :param resources: list of objects containing fields from ResourceConfiguration
+    Class to get PST Configuration
+    :param pst_beam_ids: List of PST Beam IDs
     """
 
-    resources: list[ResourceConfiguration]
+    pst_beam_ids: list[int] = Field(default_factory=list)
 
 
 class CSPConfiguration(CdmObject):
     """
-    Class to get CSP Configuration
+    Class to get Low CSP Configuration
+    :param pss: PSS Configuration
+    :param pst: PST Configuration
     """
 
-    interface: Optional[str] = None
-    common: Optional[CommonConfiguration] = None
-    lowcbf: Optional[LowCbfConfiguration] = None
+    pss: Optional[PSSConfiguration] = None
+    pst: Optional[PSTConfiguration] = None

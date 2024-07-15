@@ -1,169 +1,88 @@
 from ska_tmc_cdm.messages.central_node.csp import (
-    CommonConfiguration,
     CSPConfiguration,
-    LowCbfConfiguration,
-    ResourceConfiguration,
+    PSSConfiguration,
+    PSTConfiguration,
 )
 
 
-class CommonConfigurationBuilder:
+class PSSConfigurationBuilder:
     """
-    CommonConfigurationBuilder is a test data builder for CDM CommonConfiguration objects.
-
-    By default, CommonConfigurationBuilder will build an CommonConfiguration
-
-    for low observation command.
+    PSSConfigurationBuilder is a test data builder for CDM PSSConfiguration
+    objects.
     """
 
-    def __init__(self) -> "CommonConfigurationBuilder":
-        self.subarray_id = None
+    def __init__(self) -> "PSSConfigurationBuilder":
+        self.pss_beam_ids = None
 
-    def set_subarray_id(
-        self, subarray_id: int
-    ) -> "CommonConfigurationBuilder":
+    def set_pss_beam_ids(
+        self, pss_beam_ids: list
+    ) -> "PSSConfigurationBuilder":
         """
-        Set the subarray_id
-        :param subarray_id: Subarray ID
+        Set the PSS
+        :param pss: pss beam id for set.
         """
-        self.subarray_id = subarray_id
+        self.pss_beam_ids = pss_beam_ids
         return self
 
-    def build(self) -> CommonConfiguration:
+    def build(self) -> PSSConfiguration:
         """
-        Build or create CDM CommonConfiguration object
-        :return: CDM CommonConfiguration object
+        Build or create CDM PSSConfiguration object
+        :return: CDM PSSConfiguration object
         """
-        return CommonConfiguration(subarray_id=self.subarray_id)
+        return PSSConfiguration(pss_beam_ids=self.pss_beam_ids)
 
 
-class ResourceConfigurationBuilder:
+class PSTConfigurationBuilder:
     """
-    ResourceConfigurationBuilder is a test data builder for CDM ResourceConfiguration objects.
-
-    By default, ResourceConfigurationBuilder will build an ResourceConfiguration
-
-    for low observation command.
+    PSTConfigurationBuilder is a test data builder for CDM PSTConfiguration
+    objects.
     """
 
-    def __init__(self) -> "ResourceConfigurationBuilder":
-        self.device = None
-        self.shared = None
-        self.fw_image = None
-        self.fw_mode = None
+    def __init__(self) -> "PSTConfigurationBuilder":
+        self.pst_beam_ids = None
 
-    def set_device(self, device: str) -> "ResourceConfigurationBuilder":
+    def set_pst_beam_ids(
+        self, pst_beam_ids: list
+    ) -> "PSTConfigurationBuilder":
         """
-        Set the device
-        :param device: Device
+        Set the PST
+        :param pst: pst beam id for set.
         """
-        self.device = device
+        self.pst_beam_ids = pst_beam_ids
         return self
 
-    def set_shared(self, shared: bool) -> "ResourceConfigurationBuilder":
+    def build(self) -> PSTConfiguration:
         """
-        Set the shared
-        :param shared: Shared
+        Build or create CDM PSTConfiguration object
+        :return: CDM PSTConfiguration object
         """
-        self.shared = shared
-        return self
-
-    def set_fw_image(self, fw_image: str) -> "ResourceConfigurationBuilder":
-        """
-        Set the fw_image
-        :param fw_image: Fw image
-        """
-        self.fw_image = fw_image
-        return self
-
-    def set_fw_mode(self, fw_mode: str) -> "ResourceConfigurationBuilder":
-        """
-        Set the fw_mode
-        :param fw_mode: Fw mode
-        """
-        self.fw_mode = fw_mode
-        return self
-
-    def build(self) -> ResourceConfiguration:
-        """
-        Build or create CDM ResourceConfiguration object
-        :return: CDM ResourceConfiguration object
-        """
-        return ResourceConfiguration(
-            device=self.device,
-            shared=self.shared,
-            fw_image=self.fw_image,
-            fw_mode=self.fw_mode,
-        )
-
-
-class LowCbfConfigurationBuilder:
-    """
-    LowCbfConfigurationBuilder is a test data builder for CDM LowCbfConfiguration objects.
-
-    By default, LowCbfConfigurationBuilder will build an LowCbfConfiguration
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "LowCbfConfigurationBuilder":
-        self.resources = None
-
-    def set_resources(self, resources: list) -> "LowCbfConfigurationBuilder":
-        """
-        Set the resources
-        :param resources: Resources
-        """
-        self.resources = resources
-        return self
-
-    def build(self) -> LowCbfConfiguration:
-        """
-        Build or create CDM LowCbfConfiguration object
-        :return: CDM LowCbfConfiguration object
-        """
-        return LowCbfConfiguration(resources=self.resources)
+        return PSTConfiguration(pst_beam_ids=self.pst_beam_ids)
 
 
 class CSPConfigurationBuilder:
     """
-    CSPConfigurationBuilder is a test data builder for CDM CSPConfiguration objects.
-
-    By default, CSPConfigurationBuilder will build an CSPConfiguration
-
-    for low observation command.
+    CSPConfigurationBuilder is a test data builder for CDM CSPConfiguration
+    objects.
     """
 
     def __init__(self) -> "CSPConfigurationBuilder":
-        self.interface = None
-        self.common = None
-        self.lowcbf = None
+        self.pss: PSSConfiguration = None
+        self.pst: PSTConfiguration = None
 
-    def set_interface(self, interface: str) -> "CSPConfigurationBuilder":
+    def set_pss(self, pss: PSSConfiguration) -> "CSPConfigurationBuilder":
         """
-        Set the interface
-        :param interface: Interface
+        Set the PSS
+        :param pss: pss configuration for set.
         """
-        self.interface = interface
+        self.pss = pss
         return self
 
-    def set_common(
-        self, common: CommonConfiguration
-    ) -> "CSPConfigurationBuilder":
+    def set_pst(self, pst: PSTConfiguration) -> "CSPConfigurationBuilder":
         """
-        Set the common
-        :param common: Common
+        Set the PST
+        :param pst: pst configuration for set.
         """
-        self.common = common
-        return self
-
-    def set_lowcbf(
-        self, lowcbf: LowCbfConfiguration
-    ) -> "CSPConfigurationBuilder":
-        """
-        Set the lowcbf
-        :param lowcbf: Lowcbf
-        """
-        self.lowcbf = lowcbf
+        self.pst = pst
         return self
 
     def build(self) -> CSPConfiguration:
@@ -171,8 +90,4 @@ class CSPConfigurationBuilder:
         Build or create CDM CSPConfiguration object
         :return: CDM CSPConfiguration object
         """
-        return CSPConfiguration(
-            interface=self.interface,
-            common=self.common,
-            lowcbf=self.lowcbf,
-        )
+        return CSPConfiguration(pss=self.pss, pst=self.pst)

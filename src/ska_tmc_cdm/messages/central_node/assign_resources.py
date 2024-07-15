@@ -10,6 +10,7 @@ from typing_extensions import Self
 from ska_tmc_cdm.messages.base import CdmObject
 
 from .common import DishAllocation
+from .csp import CSPConfiguration
 from .mccs import MCCSAllocate
 from .sdp import SDPConfiguration
 
@@ -43,6 +44,11 @@ class AssignResourcesRequest(CdmObject):
         default=None,
         validation_alias=AliasChoices("dish", "dish_allocation"),
         serialization_alias="dish",
+    )
+    csp_config: Optional[CSPConfiguration] = Field(
+        default=None,
+        validation_alias=AliasChoices("csp", "csp_config"),
+        serialization_alias="csp",
     )
     sdp_config: Optional[SDPConfiguration] = Field(
         default=None,
