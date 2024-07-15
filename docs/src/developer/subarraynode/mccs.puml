@@ -3,35 +3,38 @@ hide empty members
 
 package ska_tmc_cdm.messages.subarray_node.configure {
     package mccs.py <<Rectangle>> {
+        
 
-        class StnConfiguration {
-            station_id: int
+        class SubarrayBeamAperatures {
+            aperture_id: Optional[str]
+            weighting_key_ref: Optional[str]
+        }
+        class SubarrayBeamLogicalBands {
+            start_channel: Optional[int]
+            number_of_channels: Optional[int]
+        }
+
+        class SubarrayBeamSkyCoordinates {
+            reference_frame: Optional[str]
+            c1: Optional[float]
+            c2: Optional[float]
         }
 
         class SubarrayBeamConfiguration {
-            subarray_beam_id: int
-            station_ids: List[int]
-            channels: List[List[int]]
             update_rate: float
-            antenna_weights: List[int]
-            phase_centre: List[int]
-            target: SubarrayBeamTarget
+            logical_bands: List[SubarrayBeamLogicalBands]
+            apertures: List[SubarrayBeamAperatures]
+            sky_coordinates: SubarrayBeamSkyCoordinates
+            subarray_beam_id: Optional[int]
         }
-
-        class SubarrayBeamTarget {
-             az: float
-             el: float
-             name: str
-             system: str
-          }
-        SubarrayBeamConfiguration *-- "1" SubarrayBeamTarget
 
         class MCCSConfiguration {
-            stations: List[StnConfiguration],
-            subarray_beams: List[SubarrayBeamConfiguration],
+            subarray_beam_configs: List[SubarrayBeamConfiguration],
         }
-        MCCSConfiguration *-- "*" StnConfiguration
         MCCSConfiguration *-- "*" SubarrayBeamConfiguration
+        SubarrayBeamConfiguration *-- "1" SubarrayBeamLogicalBands
+        SubarrayBeamConfiguration *-- "1" SubarrayBeamAperatures
+        SubarrayBeamConfiguration *-- "1" SubarrayBeamSkyCoordinates
     }
 }
 

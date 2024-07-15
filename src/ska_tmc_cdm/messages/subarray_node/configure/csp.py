@@ -165,10 +165,10 @@ class VisFspConfiguration(CdmObject):
 
 class VisConfiguration(CdmObject):
     """
-        Class to hold Vis Configuration.
-    firmware
-        :param fsp: fsp
-        :param stn_beams: stn_beams
+    Class to hold Vis Configuration firmware
+
+    :param fsp: fsp
+    :param stn_beams: stn_beams
     """
 
     fsp: Optional[VisFspConfiguration] = None
