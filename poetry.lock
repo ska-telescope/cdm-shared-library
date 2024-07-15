@@ -2081,6 +2081,22 @@ url = "https://pypi.org/simple"
 reference = "PyPI-public"
 
 [[package]]
+name = "simpleeval"
+version = "0.9.13"
+description = "A simple, safe single expression evaluator library."
+optional = false
+python-versions = "*"
+files = [
+    {file = "simpleeval-0.9.13-py2.py3-none-any.whl", hash = "sha256:22a2701a5006e4188d125d34accf2405c2c37c93f6b346f2484b6422415ae54a"},
+    {file = "simpleeval-0.9.13.tar.gz", hash = "sha256:4a30f9cc01825fe4c719c785e3762623e350c4840d5e6855c2a8496baaa65fac"},
+]
+
+[package.source]
+type = "legacy"
+url = "https://pypi.org/simple"
+reference = "PyPI-public"
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -2576,4 +2592,4 @@ reference = "PyPI-public"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "904e8b70b58ce7624beb40af15f13fcd3130d3deb702a79b97863a2f77567b06"
+content-hash = "4f1ee7f3fb24615b74f408e247c78f46771a42cb8b7d47dbd3bd1277bc6028ce"
