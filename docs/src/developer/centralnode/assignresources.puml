@@ -173,6 +173,7 @@ package ska_tmc_cdm.messages.central_node {
         MCCSAllocate *-- "1" SubArrayBeamsConfiguration
         SubArrayBeamsConfiguration *-- "1" ApertureConfiguration
         AssignResourcesRequest *-- "1" SDPConfiguration
+        AssignResourcesRequest *-- "1" CSPConfiguration
 
         class AssignResourcesResponse
         AssignResourcesResponse *-- "1" DishAllocation
