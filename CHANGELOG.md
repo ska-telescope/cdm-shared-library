@@ -7,7 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 Unreleased changes
 ******************
 * Adds static type checking with Pyright to python-lint pipeline.
-* Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
+
+10.2.0
+******
+* Modified mccs block and added csp block for LOW assign resource schema.
+* Added pst block in LOW configure schema.
 
 10.1.2
 ******
