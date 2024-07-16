@@ -9,6 +9,12 @@ Unreleased changes
 * Adds static type checking with Pyright to python-lint pipeline.
 * Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
 
+11.0.0
+******
+* [BREAKING] provided support to LOW assign/configure schema with interface 4.0.
+* Modified mccs block and added new csp block with pss/pst support for LOW assign resource schema.
+* Added pst block in LOW configure schema.
+
 10.1.2
 ******
 * Fixes check for partial configuration to exclude SpecialTarget class object.
