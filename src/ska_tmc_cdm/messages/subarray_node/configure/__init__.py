@@ -13,6 +13,7 @@ from typing_extensions import Self
 from .core import DishConfiguration, PointingConfiguration, SpecialTarget
 from .csp import CSPConfiguration
 from .mccs import MCCSConfiguration
+from .pst import PSTConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 

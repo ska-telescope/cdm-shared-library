@@ -7,6 +7,7 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
+    BeamsConfigurationBuilder,
     CBFConfigurationBuilder,
     CommonConfigurationBuilder,
     CSPConfigurationBuilder,
@@ -15,13 +16,32 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     StationConfigurationBuilder,
     StnBeamConfigurationBuilder,
     SubarrayConfigurationBuilder,
+    TimingBeamsConfigurationBuilder,
     VisConfigurationBuilder,
     VisFspConfigurationBuilder,
     VisStnBeamConfigurationBuilder,
 )
 
 # TODO: STAR-558: make use of setter functions for newly added fields {sbd_start_channel_id, output_host, output_port}
-
+tr = (
+    TimingBeamsConfigurationBuilder()
+    .set_beams(
+        [
+            BeamsConfigurationBuilder()
+            .set_pst_beam_id(1)
+            .set_stn_beam_id(1)
+            .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
+            .build()
+        ]
+    )
+    .set_fsp(
+        VisFspConfigurationBuilder()
+        .set_fsp_ids([2])
+        .set_firmware("pst")
+        .build()
+    )
+    .build()
+)
 
 @pytest.mark.parametrize(
     "common_config_a, common_config_b, is_equal",
@@ -607,6 +627,24 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
                     ]
                 )
                 .build()
+            )            .set_timing_beams(
+                TimingBeamsConfigurationBuilder()
+                .set_beams(
+                    [
+                        BeamsConfigurationBuilder()
+                        .set_pst_beam_id(1)
+                        .set_stn_beam_id(1)
+                        .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
+                        .build()
+                    ]
+                )
+                .set_fsp(
+                    VisFspConfigurationBuilder()
+                    .set_fsp_ids([2])
+                    .set_firmware("pst")
+                    .build()
+                )
+                .build()
             )
             .build(),
             LowCBFConfigurationBuilder()
@@ -643,6 +681,25 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
                         .set_integration_ms(849)
                         .build()
                     ]
+                )
+                .build()
+            )
+            .set_timing_beams(
+                TimingBeamsConfigurationBuilder()
+                .set_beams(
+                    [
+                        BeamsConfigurationBuilder()
+                        .set_pst_beam_id(1)
+                        .set_stn_beam_id(1)
+                        .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
+                        .build()
+                    ]
+                )
+                .set_fsp(
+                    VisFspConfigurationBuilder()
+                    .set_fsp_ids([2])
+                    .set_firmware("pst")
+                    .build()
                 )
                 .build()
             )
