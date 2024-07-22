@@ -43,6 +43,7 @@ tr = (
     .build()
 )
 
+
 @pytest.mark.parametrize(
     "common_config_a, common_config_b, is_equal",
     [
@@ -627,7 +628,8 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
                     ]
                 )
                 .build()
-            )            .set_timing_beams(
+            )
+            .set_timing_beams(
                 TimingBeamsConfigurationBuilder()
                 .set_beams(
                     [
