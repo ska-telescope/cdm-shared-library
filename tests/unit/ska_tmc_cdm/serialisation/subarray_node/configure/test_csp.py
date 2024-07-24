@@ -22,7 +22,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
 
 from ... import utils
 
-VALID_CSP_JSON_PI16 = """{
+VALID_CSP_JSON_CONFIGURE_2_0 = """{
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
     "subarray": {
         "subarray_name": "science period 23"
@@ -323,7 +323,7 @@ def test_marshall_for_csp_configuration_pi16():
         model_class=CSPConfiguration,
         instance=CSP_CONFIGURATION_OBJECT_PI16,
         modifier_fn=None,
-        valid_json=VALID_CSP_JSON_PI16,
+        valid_json=VALID_CSP_JSON_CONFIGURE_2_0,
         invalid_json=None,
     )
 
