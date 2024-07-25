@@ -3,7 +3,10 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.csp module.
 """
 import inspect
 
+import pytest
+
 from ska_tmc_cdm import CODEC
+from ska_tmc_cdm.exceptions import JsonValidationError
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CommonConfiguration,
@@ -22,7 +25,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
 
 from ... import utils
 
-VALID_CSP_JSON_CONFIGURE_2_0 = """{
+VALID_CSP_CONFIGURATION_JSON_2_0 = """{
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
     "common": {
         "config_id": "sbi-mvp01-20200325-00001-science_A",
@@ -101,7 +104,7 @@ VALID_CSP_JSON_CONFIGURE_2_0 = """{
     }
 }"""
 
-CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
+VALID_CSP_CONFIGURATION_OBJECT_2_0 = CSPConfiguration(
     interface="https://schema.skao.int/ska-csp-configure/2.0",
     common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
@@ -254,6 +257,13 @@ VALID_MID_CSP_CONFIGURE_JSON_4_0 = {
 }
 
 
+# def create_csp_configure_4_0_object():
+#     """
+#     function to create a the csp configure 4.0 object
+#     """
+#
+
+
 def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     """
     Verify that optional FSPConfiguration parameters are removed when they are
@@ -347,17 +357,18 @@ def test_marshall_csp_configuration_does_not_modify_original():
     assert config == copied
 
 
-def test_marshall_for_csp_configuration_pi16():
+def test_marshall_fails_for_csp_configuration_2_0():
     """
-    Verify that serialising a CSPConfiguration does not change the object.
+    Verify that we can no longer serialise an old but valid CSPConfiguration
     """
-    utils.test_serialisation_and_validation(
-        model_class=CSPConfiguration,
-        instance=CSP_CONFIGURATION_OBJECT_PI16,
-        modifier_fn=None,
-        valid_json=VALID_CSP_JSON_CONFIGURE_2_0,
-        invalid_json=None,
-    )
+    with pytest.raises(JsonValidationError):
+        utils.test_serialisation_and_validation(
+            model_class=CSPConfiguration,
+            instance=VALID_CSP_CONFIGURATION_OBJECT_2_0,
+            modifier_fn=None,
+            valid_json=VALID_CSP_CONFIGURATION_JSON_2_0,
+            invalid_json=None,
+        )
 
 
 def test_marshall_for_csp_configuration_4_0():
