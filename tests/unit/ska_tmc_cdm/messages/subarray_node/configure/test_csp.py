@@ -181,7 +181,7 @@ def test_subarray_configuration_equality(
                 ]
             )
             .build(),
-            CBFConfigurationBuilder()
+            MidCBFConfigurationBuilder()
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()
@@ -198,7 +198,7 @@ def test_subarray_configuration_equality(
         ),
         # Case when configurations have different FSP configurations
         (
-            CBFConfigurationBuilder()
+            MidCBFConfigurationBuilder()
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()
@@ -211,7 +211,7 @@ def test_subarray_configuration_equality(
                 ]
             )
             .build(),
-            CBFConfigurationBuilder()
+            MidCBFConfigurationBuilder()
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()

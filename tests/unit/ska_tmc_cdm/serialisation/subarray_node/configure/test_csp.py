@@ -114,7 +114,7 @@ CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     ),
     pss_config={},
     pst_config={},
-    cbf_config=CBFConfiguration(
+    cbf_config=MidCBFConfiguration(
         fsp_configs=[
             FSPConfiguration(
                 fsp_id=1,
@@ -335,7 +335,7 @@ def test_marshall_csp_configuration_does_not_modify_original():
             subarray_id=1,
             band_5_tuning=[5.85, 7.25],
         ),
-        cbf_config=CBFConfiguration(fsp_configs=[fsp_config]),
+        cbf_config=MidCBFConfiguration(fsp_configs=[fsp_config]),
         pss_config=None,
         pst_config=None,
     )
@@ -373,7 +373,7 @@ def test_marshall_for_csp_configuration_4_0():
         model_class=CSPConfiguration,
         instance=CSP_CONFIGURATION_OBJECT_PI16,
         modifier_fn=None,
-        valid_json=VALID_CSP_JSON_CONFIGURE_4_0,
+        valid_json=VALID_MID_CSP_CONFIGURE_JSON_4_0,
         invalid_json=None,
     )
 

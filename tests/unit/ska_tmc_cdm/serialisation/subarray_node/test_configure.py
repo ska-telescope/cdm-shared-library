@@ -110,7 +110,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         pss_config={},
         pst_config={},
-        cbf_config=CBFConfiguration(
+        cbf_config=MidCBFConfiguration(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=7,
@@ -1214,7 +1214,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         pss_config={},
         pst_config={},
-        cbf_config=CBFConfiguration(
+        cbf_config=MidCBFConfiguration(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=1,

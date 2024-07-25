@@ -272,7 +272,9 @@ class MidCBFConfigurationBuilder:
         self.fsp_configs = fsp_configs
         return self
 
-    def set_vlbi_config(self, vlbi_config: dict) -> "CBFConfigurationBuilder":
+    def set_vlbi_config(
+        self, vlbi_config: dict
+    ) -> "MidCBFConfigurationBuilder":
         """
         Set the VLBI configuration.
 

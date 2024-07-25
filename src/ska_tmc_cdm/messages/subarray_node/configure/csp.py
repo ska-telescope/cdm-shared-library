@@ -14,10 +14,8 @@ from . import core
 from .pst import PSTConfiguration
 
 __all__ = [
-    "MidCSPConfiguration",
     "FSPConfiguration",
     "FSPFunctionMode",
-    "CBFConfiguration",
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
