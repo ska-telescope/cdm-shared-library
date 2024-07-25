@@ -755,7 +755,6 @@ class CSPConfigurationBuilder:
         self.interface = interface
         return self
 
-
     def set_common(
         self, common: CommonConfiguration
     ) -> "CSPConfigurationBuilder":

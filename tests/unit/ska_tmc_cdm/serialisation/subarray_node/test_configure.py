@@ -986,7 +986,7 @@ VALID_NULL_OBJECT = ConfigureRequest(interface=MID_SCHEMA)
 
 VALID_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.3",
+  "interface": "https://schema.skao.int/ska-tmc-configure/4.0",
   "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
@@ -1179,7 +1179,7 @@ INVALID_MID_CONFIGURE_JSON = """
 }"""
 
 VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/2.3",
+    interface="https://schema.skao.int/ska-tmc-configure/4.0",
     transaction_id="txn-....-00001",
     pointing=PointingConfiguration(
         target=Target(
