@@ -365,6 +365,19 @@ def test_marshall_for_csp_configuration_pi16():
     )
 
 
+def test_marshall_for_csp_configuration_4_0():
+    """
+    Verify that serialising a CSPConfiguration does not change the object.
+    """
+    utils.test_serialisation_and_validation(
+        model_class=CSPConfiguration,
+        instance=CSP_CONFIGURATION_OBJECT_PI16,
+        modifier_fn=None,
+        valid_json=VALID_CSP_JSON_CONFIGURE_4_0,
+        invalid_json=None,
+    )
+
+
 def test_marshall_station_configuration_does_not_modify_original():
     """
     Verify that serialising a StationConfiguration does not change the object.
