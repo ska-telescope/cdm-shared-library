@@ -20,7 +20,7 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     CSPConfigurationBuilder,
     SubarrayConfigurationBuilder,
     CommonConfigurationBuilder,
-    CBFConfigurationBuilder,
+    MidCBFConfigurationBuilder,
     FSPConfigurationBuilder,
     StnBeamConfigurationBuilder,
     VisFspConfigurationBuilder,
