@@ -102,7 +102,6 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_5B,
@@ -111,7 +110,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         pss_config={},
         pst_config={},
-        cbf_config=MidCBFConfiguration(
+        midcbf=MidCBFConfiguration(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=7,
@@ -189,15 +188,12 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "5b",
       "subarray_id": 1
     },
-    "cbf": {
+    "midcbf": {
       "fsp": [
         {
           "fsp_id": 7,
@@ -1006,15 +1002,12 @@ VALID_MID_CONFIGURE_JSON = """
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "1",
       "subarray_id": 1
     },
-    "cbf": {
+    "midcbf": {
       "fsp": [
         {
           "fsp_id": 1,
@@ -1106,15 +1099,12 @@ INVALID_MID_CONFIGURE_JSON = """
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "1",
       "subarray_id": 1
     },
-    "cbf": {
+    "midcbf": {
       "fsp": [
         {
           "fsp_id": 1,
@@ -1207,7 +1197,6 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
-        subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_1,
@@ -1215,7 +1204,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         pss_config={},
         pst_config={},
-        cbf_config=MidCBFConfiguration(
+        midcbf=MidCBFConfiguration(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=1,

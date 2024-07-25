@@ -741,11 +741,10 @@ class CSPConfigurationBuilder:
 
     def __init__(self):
         self.interface = None
-        self.subarray = None
         self.common = None
-        self.cbf_config = None
         self.pst_config = None
         self.pss_config = None
+        self.midcbf = None
         self.lowcbf = None
 
     def set_interface(self, interface: str) -> "CSPConfigurationBuilder":
@@ -756,15 +755,6 @@ class CSPConfigurationBuilder:
         self.interface = interface
         return self
 
-    def set_subarray(
-        self, subarray: SubarrayConfiguration
-    ) -> "CSPConfigurationBuilder":
-        """
-        Set the SubarrayConfiguration.
-        :param subarray: An instance of SubarrayConfiguration.
-        """
-        self.subarray = subarray
-        return self
 
     def set_common(
         self, common: CommonConfiguration
@@ -822,10 +812,9 @@ class CSPConfigurationBuilder:
         """
         return CSPConfiguration(
             interface=self.interface,
-            subarray=self.subarray,
             common=self.common,
-            cbf_config=self.cbf_config,
             pst_config=self.pst_config,
             pss_config=self.pss_config,
+            midcbf=self.midcbf,
             lowcbf=self.lowcbf,
         )

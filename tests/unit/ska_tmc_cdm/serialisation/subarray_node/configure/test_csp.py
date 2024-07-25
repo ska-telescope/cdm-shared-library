@@ -24,15 +24,12 @@ from ... import utils
 
 VALID_CSP_JSON_CONFIGURE_2_0 = """{
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-        "subarray_name": "science period 23"
-    },
     "common": {
         "config_id": "sbi-mvp01-20200325-00001-science_A",
         "frequency_band": "1",
         "subarray_id": 1
     },
-    "cbf": {
+    "midcbf": {
         "fsp": [
             {
                 "fsp_id": 1,
@@ -106,7 +103,6 @@ VALID_CSP_JSON_CONFIGURE_2_0 = """{
 
 CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     interface="https://schema.skao.int/ska-csp-configure/2.0",
-    subarray=SubarrayConfiguration(subarray_name="science period 23"),
     common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
         frequency_band=ReceiverBand.BAND_1,
@@ -114,7 +110,7 @@ CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     ),
     pss_config={},
     pst_config={},
-    cbf_config=MidCBFConfiguration(
+    midcbf=MidCBFConfiguration(
         fsp_configs=[
             FSPConfiguration(
                 fsp_id=1,
@@ -328,14 +324,13 @@ def test_marshall_csp_configuration_does_not_modify_original():
     )
     config = CSPConfiguration(
         interface="interface",
-        subarray=SubarrayConfiguration(subarray_name="subarray name"),
         common=CommonConfiguration(
             config_id="config_id",
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
             band_5_tuning=[5.85, 7.25],
         ),
-        cbf_config=MidCBFConfiguration(fsp_configs=[fsp_config]),
+        midcbf=MidCBFConfiguration(fsp_configs=[fsp_config]),
         pss_config=None,
         pst_config=None,
     )

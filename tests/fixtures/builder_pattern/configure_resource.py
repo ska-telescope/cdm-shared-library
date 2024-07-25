@@ -118,11 +118,6 @@ def csp_config() -> CSPConfiguration:
     return (
         CSPConfigurationBuilder()
         .set_interface("interface")
-        .set_subarray(
-            SubarrayConfigurationBuilder()
-            .set_subarray_name(subarray_name="subarray name")
-            .build()
-        )
         .set_common(
             CommonConfigurationBuilder()
             .set_config_id(config_id="config_id")
