@@ -14,7 +14,7 @@ from . import core
 from .pst import PSTConfiguration
 
 __all__ = [
-    "CSPConfiguration",
+    "MidCSPConfiguration",
     "FSPConfiguration",
     "FSPFunctionMode",
     "CBFConfiguration",
@@ -98,7 +98,6 @@ class CommonConfiguration(CdmObject):
 
     config_id: Optional[str] = ""
     frequency_band: Optional[core.ReceiverBand] = None
-    subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
     eb_id: Optional[str] = None
 
@@ -218,7 +217,11 @@ class VLBIConfiguration(CdmObject):
     pass
 
 
-class CBFConfiguration(CdmObject):
+class PSSConfiguration(CdmObject):
+    pass
+
+
+class MidCBFConfiguration(CdmObject):
     """
     Class to hold all FSP and VLBI configurations.
 
@@ -239,10 +242,6 @@ class CBFConfiguration(CdmObject):
     )
 
 
-class PSSConfiguration(CdmObject):
-    pass
-
-
 class CSPConfiguration(CdmObject):
     """
     Class to hold all CSP configuration. In order to support backward
@@ -252,19 +251,16 @@ class CSPConfiguration(CdmObject):
     :param interface: url string to determine JsonSchema version
     :param subarray: Sub-array configuration to set
     :param common: the common CSP elemenets to set
-    :param cbf_config: the CBF configurations to set
+    :param midcbf: the MID CBF configurations to set
+    :param lowcbf: the LOW CBF configurations to set
     :param pst_config: the PST configurations to set
     :param pss_config: the PSS configurations to set
     """
 
     interface: Optional[str] = None
-    subarray: Optional[SubarrayConfiguration] = None
     common: Optional[CommonConfiguration] = None
-    cbf_config: Optional[CBFConfiguration] = Field(
-        default=None,
-        serialization_alias="cbf",
-        validation_alias=AliasChoices("cbf", "cbf_config"),
-    )
+    midcbf: Optional[MidCBFConfiguration] = None
+    lowcbf: Optional[LowCBFConfiguration] = None
     # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.
     pst_config: Optional[PSTConfiguration | dict] = Field(
@@ -277,4 +273,3 @@ class CSPConfiguration(CdmObject):
         serialization_alias="pss",
         validation_alias=AliasChoices("pss", "pss_config"),
     )
-    lowcbf: Optional[LowCBFConfiguration] = None

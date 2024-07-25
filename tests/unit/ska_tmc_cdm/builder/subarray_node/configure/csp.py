@@ -3,7 +3,7 @@ from typing import List, Tuple
 from ska_tmc_cdm.messages.subarray_node.configure import core
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
-    CBFConfiguration,
+    MidCBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
@@ -251,9 +251,9 @@ class CommonConfigurationBuilder:
         )
 
 
-class CBFConfigurationBuilder:
+class MidCBFConfigurationBuilder:
     """
-    CBFConfigurationBuilder is a test data builder for CBFConfiguration objects.
+    MidCBFConfigurationBuilder is a test data builder for MidCBFConfiguration objects.
     """
 
     def __init__(self):
@@ -262,12 +262,12 @@ class CBFConfigurationBuilder:
 
     def set_fsp_config(
         self, fsp_configs: List[FSPConfiguration]
-    ) -> "CBFConfigurationBuilder":
+    ) -> "MidCBFConfigurationBuilder":
         """
          Set Frequency Slice Processor (FSP) configuration.
 
         :param fsp_configs: List of FSPConfiguration instance to add to the CBF configuration.
-        :return: An instance of CBFConfigurationBuilder with the added FSP configuration.
+        :return: An instance of MidCBFConfigurationBuilder with the added FSP configuration.
         """
         self.fsp_configs = fsp_configs
         return self
@@ -277,17 +277,17 @@ class CBFConfigurationBuilder:
         Set the VLBI configuration.
 
         :param vlbi_config: A dictionary representing the VLBI configuration.
-        :return: An instance of CBFConfigurationBuilder with the updated VLBI configuration.
+        :return: An instance of MidCBFConfigurationBuilder with the updated VLBI configuration.
         """
         self.vlbi_config = vlbi_config
         return self
 
-    def build(self) -> CBFConfiguration:
+    def build(self) -> MidCBFConfiguration:
         """
-        Builds or creates an instance of CBFConfiguration with the set properties.
-        :return: An instance of CBFConfiguration with the specified configurations.
+        Builds or creates an instance of MidCBFConfiguration with the set properties.
+        :return: An instance of MidCBFConfiguration with the specified configurations.
         """
-        return CBFConfiguration(
+        return MidCBFConfiguration(
             fsp_configs=self.fsp_configs, vlbi_config=self.vlbi_config
         )
 
@@ -774,12 +774,12 @@ class CSPConfigurationBuilder:
         self.common = common
         return self
 
-    def set_cbf_config(
-        self, cbf_config: CBFConfiguration
+    def set_midcbf(
+        self, cbf_config: MidCBFConfiguration
     ) -> "CSPConfigurationBuilder":
         """
-        Set the CBFConfiguration.
-        :param cbf_config: An instance of CBFConfiguration.
+        Set the MidCBFConfiguration.
+        :param cbf_config: An instance of MidCBFConfiguration.
         """
         self.cbf_config = cbf_config
         return self
