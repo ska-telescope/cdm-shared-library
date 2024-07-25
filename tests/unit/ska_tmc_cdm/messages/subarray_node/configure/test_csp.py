@@ -10,11 +10,11 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     BeamsConfigurationBuilder,
-    CBFConfigurationBuilder,
     CommonConfigurationBuilder,
     CSPConfigurationBuilder,
     FSPConfigurationBuilder,
     LowCBFConfigurationBuilder,
+    MidCBFConfigurationBuilder,
     StationConfigurationBuilder,
     StnBeamConfigurationBuilder,
     SubarrayConfigurationBuilder,
@@ -168,7 +168,7 @@ def test_subarray_configuration_equality(
     [
         # Case when both configurations have the same FSP configuration
         (
-            CBFConfigurationBuilder()
+            MidCBFConfigurationBuilder()
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()

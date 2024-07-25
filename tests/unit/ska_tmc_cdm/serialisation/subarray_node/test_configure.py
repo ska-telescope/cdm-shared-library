@@ -24,12 +24,12 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
-    CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
+    MidCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,

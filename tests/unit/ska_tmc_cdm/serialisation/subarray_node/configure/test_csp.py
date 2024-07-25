@@ -6,12 +6,12 @@ import inspect
 from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    CBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
+    MidCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
@@ -225,32 +225,35 @@ VALID_MID_CSP_CONFIGURE_JSON_4_0 = {
         "interface": "https://schema.skao.int/ska-csp-configurescan/4.0",
         "common": {
             "config_id": "sbi-mvp01-20200325-00001-science_A",
-            "frequency_band": "1"
+            "frequency_band": "1",
         },
         "midcbf": {
             "frequency_band_offset_stream1": 80,
             "correlation": {
-                "processing_regions": [{
-                    "fsp_ids": [1, 2, 3, 4],
-                    "receptors": ["SKA063", "SKA001", "SKA100"],
-                    "start_freq": 350000000,
-                    "channel_width": 13440,
-                    "channel_count": 52080,
-                    "sdp_start_channel_id": 0,
-                    "integration_factor": 1
-                }, {
-                    "fsp_ids": [1],
-                    "start_freq": 548437600,
-                    "channel_width": 13440,
-                    "channel_count": 14880,
-                    "sdp_start_channel_id": 1,
-                    "integration_factor": 10
-                }]
+                "processing_regions": [
+                    {
+                        "fsp_ids": [1, 2, 3, 4],
+                        "receptors": ["SKA063", "SKA001", "SKA100"],
+                        "start_freq": 350000000,
+                        "channel_width": 13440,
+                        "channel_count": 52080,
+                        "sdp_start_channel_id": 0,
+                        "integration_factor": 1,
+                    },
+                    {
+                        "fsp_ids": [1],
+                        "start_freq": 548437600,
+                        "channel_width": 13440,
+                        "channel_count": 14880,
+                        "sdp_start_channel_id": 1,
+                        "integration_factor": 10,
+                    },
+                ]
             },
-            "vlbi": {}
+            "vlbi": {},
         },
         "pss": {},
-        "pst": {}
+        "pst": {},
     }
 }
 

@@ -3,12 +3,12 @@ from typing import List, Tuple
 from ska_tmc_cdm.messages.subarray_node.configure import core
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
-    MidCBFConfiguration,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
+    MidCBFConfiguration,
     PSSConfiguration,
     PSTConfiguration,
     StationConfiguration,
