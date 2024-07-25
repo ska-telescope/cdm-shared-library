@@ -106,6 +106,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_5B,
+            band_5_tuning=[5.85, 7.25],
             subarray_id=1,
         ),
         pss_config={},

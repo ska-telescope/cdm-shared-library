@@ -6,7 +6,7 @@ command.
 from enum import Enum
 from typing import List, Optional, Tuple
 
-from pydantic import AliasChoices, Field
+from pydantic import AliasChoices, Field, model_validator
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -95,9 +95,19 @@ class CommonConfiguration(CdmObject):
     """
 
     config_id: Optional[str] = ""
+    subarray_id: Optional[int] = None
     frequency_band: Optional[core.ReceiverBand] = None
     band_5_tuning: Optional[List[float]] = None
     eb_id: Optional[str] = None
+
+    @model_validator(mode="after")
+    def validate_subarray_id_only_band_5(self):
+        band5 = (core.ReceiverBand.BAND_5A, core.ReceiverBand.BAND_5B)
+        if self.frequency_band in band5 and self.band_5_tuning is None:
+            raise ValueError("Band 5 must have a band 5 tuning")
+        if self.frequency_band not in band5 and self.band_5_tuning is not None:
+            raise ValueError("Only Band 5 may have a band 5 tuning")
+        return self
 
 
 class StnBeamConfiguration(CdmObject):
