@@ -32,7 +32,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     MidCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
-    SubarrayConfiguration,
     TimingBeamsConfiguration,
     VisConfiguration,
     VisFspConfiguration,

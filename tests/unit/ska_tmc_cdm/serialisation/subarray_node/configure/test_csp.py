@@ -17,7 +17,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     MidCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
-    SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
     VisStnBeamConfiguration,
@@ -374,10 +373,11 @@ def test_marshall_fails_for_csp_configuration_2_0():
 def test_marshall_for_csp_configuration_4_0():
     """
     Verify that serialising a CSPConfiguration does not change the object.
+    #TODO: Update below to use object 4.0
     """
     utils.test_serialisation_and_validation(
         model_class=CSPConfiguration,
-        instance=CSP_CONFIGURATION_OBJECT_PI16,
+        instance=VALID_CSP_CONFIGURATION_OBJECT_2_0,
         modifier_fn=None,
         valid_json=VALID_MID_CSP_CONFIGURE_JSON_4_0,
         invalid_json=None,
