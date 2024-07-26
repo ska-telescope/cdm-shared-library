@@ -233,10 +233,11 @@ class ProcessingRegionConfiguration(CdmObject):
     """
     some docstring Todo write me
     """
-    fsp_ids: List[int]#Todo add some validation = Field(...)
+
+    fsp_ids: List[int]  # Todo add some validation = Field(...)
     receptors: Optional[List[str]] = None
     start_freq: int = Field(ge=350000000, le=15400000000)
-    channel_width: int #Todo do we use a field validator or maybe an enum?
+    channel_width: int  # Todo do we use a field validator or maybe an enum?
     channel_count: int
 
 
@@ -245,6 +246,7 @@ class CorrelationConfiguration(CdmObject):
     some docstring Todo write me
 
     """
+
     processing_regions: List[ProcessingRegionConfiguration]
 
 
@@ -257,8 +259,12 @@ class MidCBFConfiguration(CdmObject):
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
 
-    frequency_band_offset_stream1: Optional[int] = Field(ge=-100000000, le=100000000)
-    frequency_band_offset_stream2: Optional[int] = Field(ge=-100000000, le=100000000)
+    frequency_band_offset_stream1: Optional[int] = Field(
+        ge=-100000000, le=100000000
+    )
+    frequency_band_offset_stream2: Optional[int] = Field(
+        ge=-100000000, le=100000000
+    )
     correlation: CorrelationConfiguration
     vlbi_config: Optional[VLBIConfiguration] = Field(
         default=None,
