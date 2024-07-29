@@ -46,7 +46,6 @@ class FSPConfiguration(CdmObject):
     Channel averaging map is an optional list of 20 x (int,int) tuples.
 
     :param fsp_id: FSP configuration ID [1..27]
-    :param function_mode: FSP function mode
     :param zoom_factor: zoom factor [0..6]
     :param integration_factor: integration factor [1..10]
     :param channel_averaging_map: Optional channel averaging map
@@ -58,7 +57,6 @@ class FSPConfiguration(CdmObject):
     """
 
     fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
-    function_mode: FSPFunctionMode = Field()
     integration_factor: int = Field(ge=1, le=10)
     zoom_factor: int = Field(ge=0, le=6)
     # FIXME: should be Field(default_factory=list, max_length=20)?

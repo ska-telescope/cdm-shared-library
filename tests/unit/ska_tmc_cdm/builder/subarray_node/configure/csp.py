@@ -6,7 +6,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
-    FSPFunctionMode,
     LowCBFConfiguration,
     MidCBFConfiguration,
     PSSConfiguration,
@@ -27,7 +26,6 @@ class FSPConfigurationBuilder:
 
     def __init__(self):
         self.fsp_id = None
-        self.function_mode = None
         self.integration_factor = None
         self.zoom_factor = None
         self.channel_averaging_map = None
@@ -44,16 +42,6 @@ class FSPConfigurationBuilder:
         if not 1 <= fsp_id <= 27:
             raise ValueError("fsp_id must be between 1 and 27")
         self.fsp_id = fsp_id
-        return self
-
-    def set_function_mode(
-        self, function_mode: FSPFunctionMode
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the FSP function mode.
-        :param function_mode: An instance of FSPFunctionMode enum.
-        """
-        self.function_mode = function_mode
         return self
 
     def set_integration_factor(
@@ -127,7 +115,6 @@ class FSPConfigurationBuilder:
         """
         return FSPConfiguration(
             fsp_id=self.fsp_id,
-            function_mode=self.function_mode,
             integration_factor=self.integration_factor,
             zoom_factor=self.zoom_factor,
             channel_averaging_map=self.channel_averaging_map,

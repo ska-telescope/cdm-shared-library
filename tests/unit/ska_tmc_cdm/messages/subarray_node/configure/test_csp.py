@@ -7,7 +7,6 @@ import itertools
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
-from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     BeamsConfigurationBuilder,
     CommonConfigurationBuilder,
@@ -119,7 +118,6 @@ def test_common_configuration_equality(
                 [
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
-                    .set_function_mode(FSPFunctionMode.CORR)
                     .set_integration_factor(10)
                     .set_zoom_factor(0)
                     .build()
@@ -131,7 +129,6 @@ def test_common_configuration_equality(
                 [
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
-                    .set_function_mode(FSPFunctionMode.CORR)
                     .set_integration_factor(10)
                     .set_zoom_factor(0)
                     .build()
@@ -147,7 +144,6 @@ def test_common_configuration_equality(
                 [
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
-                    .set_function_mode(FSPFunctionMode.CORR)
                     .set_integration_factor(10)
                     .set_zoom_factor(0)
                     .build()
@@ -159,13 +155,11 @@ def test_common_configuration_equality(
                 [
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
-                    .set_function_mode(FSPFunctionMode.CORR)
                     .set_integration_factor(10)
                     .set_zoom_factor(0)
                     .build(),
                     FSPConfigurationBuilder()
                     .set_fsp_id(2)  # Different FSP ID
-                    .set_function_mode(FSPFunctionMode.CORR)
                     .set_integration_factor(10)
                     .set_zoom_factor(0)
                     .build(),
@@ -193,7 +187,6 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.CORR)
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .set_channel_averaging_map(
@@ -202,7 +195,6 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.CORR)
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .set_channel_averaging_map(
@@ -215,12 +207,10 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.CORR)
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
-            .set_function_mode(FSPFunctionMode.CORR)
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .set_fsp_id(2)  # Different FSP ID
@@ -230,15 +220,11 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.CORR)
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(
-                FSPFunctionMode.PSS_BF
-            )  # Different function mode
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .build(),
@@ -247,15 +233,11 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(
-                FSPFunctionMode.PSS_BF
-            )  # Different function mode
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .build(),
@@ -264,13 +246,11 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
             .set_zoom_factor(0)
             .set_integration_factor(10)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
             .set_zoom_factor(0)
             .set_integration_factor(2)  # Different integration factor
             .build(),
@@ -279,13 +259,11 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
             .set_integration_factor(10)
             .set_zoom_factor(1)  # Different zoom factor
             .build(),
@@ -294,7 +272,6 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .set_channel_averaging_map(
@@ -303,9 +280,6 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_function_mode(
-                FSPFunctionMode.PSS_BF
-            )  # Different function mode
             .set_integration_factor(10)
             .set_zoom_factor(0)
             .set_channel_averaging_map(
@@ -341,13 +315,13 @@ def test_fsp_id_range_with_builder(fsp_id, expected_exception):
     """
     if expected_exception:
         with pytest.raises(expected_exception):
-            FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
-                FSPFunctionMode.CORR
+            FSPConfigurationBuilder().set_fsp_id(
+                fsp_id
             ).set_integration_factor(10).set_zoom_factor(0).build()
     else:
         try:
-            FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
-                FSPFunctionMode.CORR
+            FSPConfigurationBuilder().set_fsp_id(
+                fsp_id
             ).set_integration_factor(10).set_zoom_factor(0).build()
         except ValueError:
             pytest.fail(f"FSP ID {fsp_id} raised ValueError unexpectedly.")
@@ -364,10 +338,7 @@ def test_fsp_id_range_with_builder(fsp_id, expected_exception):
 )
 def test_fsp_zoom_factor_range(zoom_factor, expected_exception):
     builder = (
-        FSPConfigurationBuilder()
-        .set_fsp_id(1)
-        .set_function_mode(FSPFunctionMode.CORR)
-        .set_integration_factor(10)
+        FSPConfigurationBuilder().set_fsp_id(1).set_integration_factor(10)
     )
     if expected_exception:
         with pytest.raises(expected_exception):
@@ -389,12 +360,7 @@ def test_fsp_zoom_factor_range(zoom_factor, expected_exception):
     ],
 )
 def test_fsp_integration_factor_range(integration_factor, expected_exception):
-    builder = (
-        FSPConfigurationBuilder()
-        .set_fsp_id(1)
-        .set_function_mode(FSPFunctionMode.CORR)
-        .set_zoom_factor(0)
-    )
+    builder = FSPConfigurationBuilder().set_fsp_id(1).set_zoom_factor(0)
     if expected_exception:
         with pytest.raises(expected_exception):
             builder.set_integration_factor(integration_factor).build()
@@ -424,7 +390,6 @@ def test_fsp_configuration_channel_avg_map_length(
     builder = (
         FSPConfigurationBuilder()
         .set_fsp_id(1)
-        .set_function_mode(FSPFunctionMode.CORR)
         .set_integration_factor(10)
         .set_zoom_factor(0)
         .set_channel_averaging_map(channel_avg_map)
