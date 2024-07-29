@@ -27,7 +27,6 @@ class FSPConfigurationBuilder:
     def __init__(self):
         self.fsp_id = None
         self.integration_factor = None
-        self.channel_averaging_map = None
         self.output_link_map = None
         self.channel_offset = None
         self.zoom_window_tuning = None
@@ -54,16 +53,6 @@ class FSPConfigurationBuilder:
         if not 1 <= integration_factor <= 10:
             raise ValueError("integration_factor must be between 1 and 10")
         self.integration_factor = integration_factor
-        return self
-
-    def set_channel_averaging_map(
-        self, channel_averaging_map: List[Tuple[int, int]]
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the channel averaging map.
-        :param channel_averaging_map: List of tuples representing the channel averaging map.
-        """
-        self.channel_averaging_map = channel_averaging_map
         return self
 
     def set_output_link_map(
@@ -104,7 +93,6 @@ class FSPConfigurationBuilder:
         return FSPConfiguration(
             fsp_id=self.fsp_id,
             integration_factor=self.integration_factor,
-            channel_averaging_map=self.channel_averaging_map,
             output_link_map=self.output_link_map,
             channel_offset=self.channel_offset,
             zoom_window_tuning=self.zoom_window_tuning,

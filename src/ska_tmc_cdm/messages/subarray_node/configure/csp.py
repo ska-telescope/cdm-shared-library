@@ -47,7 +47,6 @@ class FSPConfiguration(CdmObject):
 
     :param fsp_id: FSP configuration ID [1..27]
     :param integration_factor: integration factor [1..10]
-    :param channel_averaging_map: Optional channel averaging map
     :param output_link_map: Optional output link map
     :param channel_offset: Optional FSP channel offset
     :param zoom_window_tuning: Optional zoom window tuning
@@ -58,7 +57,6 @@ class FSPConfiguration(CdmObject):
     fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
     integration_factor: int = Field(ge=1, le=10)
     # FIXME: should be Field(default_factory=list, max_length=20)?
-    channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?
     output_link_map: Optional[
         List[Tuple]
