@@ -48,7 +48,6 @@ class FSPConfiguration(CdmObject):
     :param fsp_id: FSP configuration ID [1..27]
     :param integration_factor: integration factor [1..10]
     :param output_link_map: Optional output link map
-    :param channel_offset: Optional FSP channel offset
     :param zoom_window_tuning: Optional zoom window tuning
 
     :raises ValueError: Invalid parameter values entered
@@ -61,7 +60,6 @@ class FSPConfiguration(CdmObject):
     output_link_map: Optional[
         List[Tuple]
     ] = None  # FIXME: Field(default_factory=list)?
-    channel_offset: Optional[int] = None
     zoom_window_tuning: Optional[int] = None
 
 

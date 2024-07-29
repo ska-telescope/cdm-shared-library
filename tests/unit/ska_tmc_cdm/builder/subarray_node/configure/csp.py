@@ -28,7 +28,6 @@ class FSPConfigurationBuilder:
         self.fsp_id = None
         self.integration_factor = None
         self.output_link_map = None
-        self.channel_offset = None
         self.zoom_window_tuning = None
 
     def set_fsp_id(self, fsp_id: int) -> "FSPConfigurationBuilder":
@@ -65,16 +64,6 @@ class FSPConfigurationBuilder:
         self.output_link_map = output_link_map
         return self
 
-    def set_channel_offset(
-        self, channel_offset: int
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the channel offset.
-        :param channel_offset: Integer representing the channel offset.
-        """
-        self.channel_offset = channel_offset
-        return self
-
     def set_zoom_window_tuning(
         self, zoom_window_tuning: int
     ) -> "FSPConfigurationBuilder":
@@ -94,7 +83,6 @@ class FSPConfigurationBuilder:
             fsp_id=self.fsp_id,
             integration_factor=self.integration_factor,
             output_link_map=self.output_link_map,
-            channel_offset=self.channel_offset,
             zoom_window_tuning=self.zoom_window_tuning,
         )
 
