@@ -28,7 +28,6 @@ class FSPConfigurationBuilder:
         self.fsp_id = None
         self.integration_factor = None
         self.output_link_map = None
-        self.zoom_window_tuning = None
 
     def set_fsp_id(self, fsp_id: int) -> "FSPConfigurationBuilder":
         """
@@ -64,16 +63,6 @@ class FSPConfigurationBuilder:
         self.output_link_map = output_link_map
         return self
 
-    def set_zoom_window_tuning(
-        self, zoom_window_tuning: int
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the zoom window tuning.
-        :param zoom_window_tuning: Integer representing the zoom window tuning.
-        """
-        self.zoom_window_tuning = zoom_window_tuning
-        return self
-
     def build(self) -> FSPConfiguration:
         """
         Builds or creates an instance of FSPConfiguration
@@ -83,7 +72,6 @@ class FSPConfigurationBuilder:
             fsp_id=self.fsp_id,
             integration_factor=self.integration_factor,
             output_link_map=self.output_link_map,
-            zoom_window_tuning=self.zoom_window_tuning,
         )
 
 
