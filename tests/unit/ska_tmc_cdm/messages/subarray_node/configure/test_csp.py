@@ -119,7 +119,6 @@ def test_common_configuration_equality(
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
                     .set_integration_factor(10)
-                    .set_zoom_factor(0)
                     .build()
                 ]
             )
@@ -130,7 +129,6 @@ def test_common_configuration_equality(
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
                     .set_integration_factor(10)
-                    .set_zoom_factor(0)
                     .build()
                 ]
             )
@@ -145,7 +143,6 @@ def test_common_configuration_equality(
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
                     .set_integration_factor(10)
-                    .set_zoom_factor(0)
                     .build()
                 ]
             )
@@ -156,12 +153,10 @@ def test_common_configuration_equality(
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
                     .set_integration_factor(10)
-                    .set_zoom_factor(0)
                     .build(),
                     FSPConfigurationBuilder()
                     .set_fsp_id(2)  # Different FSP ID
                     .set_integration_factor(10)
-                    .set_zoom_factor(0)
                     .build(),
                 ]
             )
@@ -188,7 +183,6 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .set_channel_averaging_map(
                 list(zip(itertools.count(1, 744), 20 * [0]))
             )
@@ -196,7 +190,6 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .set_channel_averaging_map(
                 list(zip(itertools.count(1, 744), 20 * [0]))
             )
@@ -208,11 +201,9 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .set_fsp_id(2)  # Different FSP ID
             .build(),
             False,
@@ -221,12 +212,10 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .build(),
             False,
         ),
@@ -234,24 +223,20 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .build(),
             False,
         ),
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_zoom_factor(0)
             .set_integration_factor(10)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
-            .set_zoom_factor(0)
             .set_integration_factor(2)  # Different integration factor
             .build(),
             False,
@@ -260,12 +245,10 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(1)  # Different zoom factor
             .build(),
             False,
         ),
@@ -273,7 +256,6 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .set_channel_averaging_map(
                 list(zip(itertools.count(1, 744), 20 * [0]))
             )
@@ -281,7 +263,6 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
             FSPConfigurationBuilder()
             .set_fsp_id(1)
             .set_integration_factor(10)
-            .set_zoom_factor(0)
             .set_channel_averaging_map(
                 list(zip(itertools.count(1, 744), 20 * [1]))
             )  # Different channel averaging map
@@ -317,37 +298,14 @@ def test_fsp_id_range_with_builder(fsp_id, expected_exception):
         with pytest.raises(expected_exception):
             FSPConfigurationBuilder().set_fsp_id(
                 fsp_id
-            ).set_integration_factor(10).set_zoom_factor(0).build()
+            ).set_integration_factor(10).build()
     else:
         try:
             FSPConfigurationBuilder().set_fsp_id(
                 fsp_id
-            ).set_integration_factor(10).set_zoom_factor(0).build()
+            ).set_integration_factor(10).build()
         except ValueError:
             pytest.fail(f"FSP ID {fsp_id} raised ValueError unexpectedly.")
-
-
-@pytest.mark.parametrize(
-    "zoom_factor, expected_exception",
-    [
-        (-1, ValueError),  # Invalid zoom_factor below range
-        (7, ValueError),  # Invalid zoom_factor above range
-        (0, None),  # Valid zoom_factor at lower bound
-        (6, None),  # Valid zoom_factor at upper bound
-    ],
-)
-def test_fsp_zoom_factor_range(zoom_factor, expected_exception):
-    builder = (
-        FSPConfigurationBuilder().set_fsp_id(1).set_integration_factor(10)
-    )
-    if expected_exception:
-        with pytest.raises(expected_exception):
-            builder.set_zoom_factor(zoom_factor).build()
-    else:
-        config = builder.set_zoom_factor(zoom_factor).build()
-        assert (
-            config.zoom_factor == zoom_factor
-        )  # Verifies the zoom_factor is set as expected
 
 
 @pytest.mark.parametrize(
@@ -360,7 +318,7 @@ def test_fsp_zoom_factor_range(zoom_factor, expected_exception):
     ],
 )
 def test_fsp_integration_factor_range(integration_factor, expected_exception):
-    builder = FSPConfigurationBuilder().set_fsp_id(1).set_zoom_factor(0)
+    builder = FSPConfigurationBuilder().set_fsp_id(1)
     if expected_exception:
         with pytest.raises(expected_exception):
             builder.set_integration_factor(integration_factor).build()
@@ -391,7 +349,6 @@ def test_fsp_configuration_channel_avg_map_length(
         FSPConfigurationBuilder()
         .set_fsp_id(1)
         .set_integration_factor(10)
-        .set_zoom_factor(0)
         .set_channel_averaging_map(channel_avg_map)
     )
 

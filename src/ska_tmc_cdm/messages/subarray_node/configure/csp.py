@@ -46,7 +46,6 @@ class FSPConfiguration(CdmObject):
     Channel averaging map is an optional list of 20 x (int,int) tuples.
 
     :param fsp_id: FSP configuration ID [1..27]
-    :param zoom_factor: zoom factor [0..6]
     :param integration_factor: integration factor [1..10]
     :param channel_averaging_map: Optional channel averaging map
     :param output_link_map: Optional output link map
@@ -58,7 +57,6 @@ class FSPConfiguration(CdmObject):
 
     fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
     integration_factor: int = Field(ge=1, le=10)
-    zoom_factor: int = Field(ge=0, le=6)
     # FIXME: should be Field(default_factory=list, max_length=20)?
     channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?

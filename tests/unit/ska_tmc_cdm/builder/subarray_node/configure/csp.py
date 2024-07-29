@@ -27,7 +27,6 @@ class FSPConfigurationBuilder:
     def __init__(self):
         self.fsp_id = None
         self.integration_factor = None
-        self.zoom_factor = None
         self.channel_averaging_map = None
         self.output_link_map = None
         self.channel_offset = None
@@ -55,17 +54,6 @@ class FSPConfigurationBuilder:
         if not 1 <= integration_factor <= 10:
             raise ValueError("integration_factor must be between 1 and 10")
         self.integration_factor = integration_factor
-        return self
-
-    def set_zoom_factor(self, zoom_factor: int) -> "FSPConfigurationBuilder":
-        """
-        Set the zoom factor.
-        :param zoom_factor: Integer representing the zoom factor.
-        :raises ValueError: If the zoom_factor is not within the range 0 to 6.
-        """
-        if not 0 <= zoom_factor <= 6:
-            raise ValueError("zoom_factor must be between 0 and 6")
-        self.zoom_factor = zoom_factor
         return self
 
     def set_channel_averaging_map(
@@ -116,7 +104,6 @@ class FSPConfigurationBuilder:
         return FSPConfiguration(
             fsp_id=self.fsp_id,
             integration_factor=self.integration_factor,
-            zoom_factor=self.zoom_factor,
             channel_averaging_map=self.channel_averaging_map,
             output_link_map=self.output_link_map,
             channel_offset=self.channel_offset,
