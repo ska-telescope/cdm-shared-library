@@ -215,6 +215,7 @@ class ProcessingRegionConfiguration(CdmObject):
     receptors: Optional[List[str]] = None
     start_freq: int = Field(ge=350000000, le=15400000000)
     channel_width: int  # Todo do we use a field validator or maybe an enum?
+    sdp_start_channel_id: int = Field(ge=0, le=4294901760 )
     channel_count: int
 
 
