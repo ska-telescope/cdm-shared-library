@@ -729,6 +729,7 @@ class CSPConfigurationBuilder:
                 self.channel_width = None
                 self.sdp_start_channel_id = None
                 self.channel_count = None
+                self.integration_factor = None
 
         def set_fsp_ids(
             self, fsp_ids: List[int]
@@ -794,6 +795,16 @@ class CSPConfigurationBuilder:
             self.channel_count = channel_count
             return self
 
+        def set_integration_factor(
+            self, integration_factor: ProcessingRegionConfiguration
+        ) -> "ProcessingRegionConfigurationBuilder":
+            """
+            Set the ProcessingRegionConfiguration.
+            :param integration_factor: An instance of ProcessingRegionConfiguration.
+            """
+            self.integration_factor = integration_factor
+            return self
+
         def build(self) -> ProcessingRegionConfiguration:
             """
             Builds and returns an instance of CSPConfiguration.
@@ -805,4 +816,5 @@ class CSPConfigurationBuilder:
                 channel_width=self.channel_width,
                 sdp_start_channel_id=self.sdp_start_channel_id,
                 channel_count=self.channel_count,
+                integration_factor=self.integration_factor,
             )

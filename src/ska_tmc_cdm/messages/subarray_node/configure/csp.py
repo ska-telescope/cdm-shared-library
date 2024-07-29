@@ -217,6 +217,7 @@ class ProcessingRegionConfiguration(CdmObject):
     channel_width: int  # Todo do we use a field validator or maybe an enum?
     sdp_start_channel_id: int = Field(ge=0, le=4294901760)
     channel_count: int
+    integration_factor: int = Field(ge=1, le=10)
 
 
 class CorrelationConfiguration(CdmObject):
