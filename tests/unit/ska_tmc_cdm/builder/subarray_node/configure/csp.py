@@ -8,6 +8,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     FSPConfiguration,
     LowCBFConfiguration,
     MidCBFConfiguration,
+    ProcessingRegionConfiguration,
     PSSConfiguration,
     PSTConfiguration,
     StationConfiguration,
@@ -711,3 +712,97 @@ class CSPConfigurationBuilder:
             midcbf=self.midcbf,
             lowcbf=self.lowcbf,
         )
+
+        class ProcessingRegionConfigurationBuilder:
+            """
+            ProcessingRegionConfigurationBuilder is a test data builder for ProcessingRegionConfiguration objects.
+
+            This builder helps in creating instances of ProcessingRegionConfiguration with custom settings for
+            testing or any other purpose. It follows a fluent interface pattern allowing
+            chaining of set methods.
+            """
+
+            def __init__(self):
+                self.fsp_ids = None
+                self.receptors = None
+                self.start_freq = None
+                self.channel_width = None
+                self.sdp_start_channel_id = None
+                self.channel_count = None
+
+        def set_fsp_ids(
+            self, fsp_ids: List[int]
+        ) -> "ProcessingRegionConfigurationBuilder":
+            """
+            Set the FSP IDs for the processing region configuration.
+
+            :param fsp_ids: A list of integers representing the FSP IDs.
+            """
+            self.fsp_ids = fsp_ids
+            return self
+
+        def set_receptors(
+            self, receptors: ProcessingRegionConfiguration
+        ) -> "ProcessingRegionConfigurationBuilder":
+            """
+            Set the ProcessingRegionConfiguration.
+
+            :param receptors: An instance of ProcessingRegionConfiguration.
+            """
+            self.receptors = receptors
+            return self
+
+        def set_start_freq(
+            self, start_freq: ProcessingRegionConfiguration
+        ) -> "ProcessingRegionConfigurationBuilder":
+            """
+            Set the ProcessingRegionConfiguration.
+
+            :param start_freq: An instance of ProcessingRegionConfiguration.
+            """
+            self.start_freq = start_freq
+            return self
+
+        def set_channel_width(
+            self, channel_width: ProcessingRegionConfiguration
+        ) -> "ProcessingRegionConfigurationBuilder":
+            """
+            Set the ProcessingRegionConfiguration.
+
+            :param channel_width: An instance of ProcessingRegionConfiguration.
+            """
+            self.channel_width = channel_width
+            return self
+
+        def set_sdp_start_channel_id(
+            self, sdp_start_channel_id: ProcessingRegionConfiguration
+        ) -> "ProcessingRegionConfigurationBuilder":
+            """
+            Set the ProcessingRegionConfiguration.
+            :param sdp_start_channel_id: An instance of ProcessingRegionConfiguration.
+            """
+            self.sdp_start_channel_id = sdp_start_channel_id
+            return self
+
+        def set_channel_count(
+            self, channel_count: ProcessingRegionConfiguration
+        ) -> "ProcessingRegionConfigurationBuilder":
+            """
+            Set the ProcessingRegionConfiguration.
+            :param channel_count: An instance of ProcessingRegionConfiguration.
+            """
+            self.channel_count = channel_count
+            return self
+
+        def build(self) -> ProcessingRegionConfiguration:
+            """
+            Builds and returns an instance of CSPConfiguration.
+            """
+            return ProcessingRegionConfiguration(
+                fsp_ids=self.fsp_ids,
+                receptors=self.receptors,
+                start_freq=self.start_freq,
+                channel_width=self.channel_width,
+                sdp_start_channel_id=self.sdp_start_channel_id,
+                channel_count=self.channel_count,
+            )
