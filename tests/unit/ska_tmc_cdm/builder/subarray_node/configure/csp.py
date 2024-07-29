@@ -28,7 +28,6 @@ class FSPConfigurationBuilder:
     def __init__(self):
         self.fsp_id = None
         self.function_mode = None
-        self.frequency_slice_id = None
         self.integration_factor = None
         self.zoom_factor = None
         self.channel_averaging_map = None
@@ -55,19 +54,6 @@ class FSPConfigurationBuilder:
         :param function_mode: An instance of FSPFunctionMode enum.
         """
         self.function_mode = function_mode
-        return self
-
-    def set_frequency_slice_id(
-        self, frequency_slice_id: int
-    ) -> "FSPConfigurationBuilder":
-        """
-        Set the frequency slice ID.
-        :param frequency_slice_id: Integer representing the frequency slice ID.
-        :raises ValueError: If the frequency_slice_id is not within the range 1 to 26.
-        """
-        if not 1 <= frequency_slice_id <= 26:
-            raise ValueError("frequency_slice_id must be between 1 and 26")
-        self.frequency_slice_id = frequency_slice_id
         return self
 
     def set_integration_factor(
@@ -142,7 +128,6 @@ class FSPConfigurationBuilder:
         return FSPConfiguration(
             fsp_id=self.fsp_id,
             function_mode=self.function_mode,
-            frequency_slice_id=self.frequency_slice_id,
             integration_factor=self.integration_factor,
             zoom_factor=self.zoom_factor,
             channel_averaging_map=self.channel_averaging_map,
