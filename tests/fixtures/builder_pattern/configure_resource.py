@@ -18,7 +18,6 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
 )
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     CSPConfigurationBuilder,
-    SubarrayConfigurationBuilder,
     CommonConfigurationBuilder,
     MidCBFConfigurationBuilder,
     FSPConfigurationBuilder,

@@ -16,7 +16,6 @@ from .pst import PSTConfiguration
 __all__ = [
     "FSPConfiguration",
     "FSPFunctionMode",
-    "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
     "StationConfiguration",
@@ -72,16 +71,6 @@ class FSPConfiguration(CdmObject):
     ] = None  # FIXME: Field(default_factory=list)?
     channel_offset: Optional[int] = None
     zoom_window_tuning: Optional[int] = None
-
-
-class SubarrayConfiguration(CdmObject):
-    """
-    Class to hold the parameters relevant only for the current sub-array device.
-
-    :param sub-array_name: Name of the sub-array
-    """
-
-    subarray_name: Optional[str] = ""
 
 
 class CommonConfiguration(CdmObject):
@@ -280,7 +269,6 @@ class CSPConfiguration(CdmObject):
     support of new attributes as per ADR-18
 
     :param interface: url string to determine JsonSchema version
-    :param subarray: Sub-array configuration to set
     :param common: the common CSP elemenets to set
     :param midcbf: the MID CBF configurations to set
     :param lowcbf: the LOW CBF configurations to set

@@ -13,7 +13,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     PSTConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
-    SubarrayConfiguration,
     TimingBeamsConfiguration,
     VisConfiguration,
     VisFspConfiguration,
@@ -151,34 +150,6 @@ class FSPConfigurationBuilder:
             channel_offset=self.channel_offset,
             zoom_window_tuning=self.zoom_window_tuning,
         )
-
-
-class SubarrayConfigurationBuilder:
-    """
-    SubarrayConfigurationBuilder is a test data builder for SubarrayConfiguration objects.
-    """
-
-    def __init__(self):
-        self.subarray_name = None
-
-    def set_subarray_name(
-        self, subarray_name: str
-    ) -> "SubarrayConfigurationBuilder":
-        """
-        Set the name of the sub-array.
-
-        :param subarray_name: String representing the name of the sub-array.
-        :return: An instance of SubarrayConfigurationBuilder with the updated sub-array name.
-        """
-        self.subarray_name = subarray_name
-        return self
-
-    def build(self) -> SubarrayConfiguration:
-        """
-        Builds or creates an instance of SubarrayConfiguration with the set properties.
-        :return: An instance of SubarrayConfiguration with the specified name.
-        """
-        return SubarrayConfiguration(subarray_name=self.subarray_name)
 
 
 class CommonConfigurationBuilder:

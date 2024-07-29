@@ -17,7 +17,6 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     MidCBFConfigurationBuilder,
     StationConfigurationBuilder,
     StnBeamConfigurationBuilder,
-    SubarrayConfigurationBuilder,
     TimingBeamsConfigurationBuilder,
     VisConfigurationBuilder,
     VisFspConfigurationBuilder,
@@ -108,43 +107,6 @@ def test_common_configuration_equality(
     assert (common_config_a == common_config_b) == is_equal
     assert common_config_a != 1
     assert common_config_a != object
-
-
-@pytest.mark.parametrize(
-    "subarray_config_a, subarray_config_b, is_equal",
-    [
-        # Case when both configurations have the same subarray name
-        (
-            SubarrayConfigurationBuilder()
-            .set_subarray_name("Test Subarray")
-            .build(),
-            SubarrayConfigurationBuilder()
-            .set_subarray_name("Test Subarray")
-            .build(),
-            True,
-        ),
-        # Case when configurations have different subarray names
-        (
-            SubarrayConfigurationBuilder()
-            .set_subarray_name("Test Subarray")
-            .build(),
-            SubarrayConfigurationBuilder()
-            .set_subarray_name("Test Subarray2")
-            .build(),
-            False,
-        ),
-    ],
-)
-def test_subarray_configuration_equality(
-    subarray_config_a, subarray_config_b, is_equal
-):
-    """
-    Verify that SubarrayConfiguration objects are equal when they have the same subarray name
-    and not equal when subarray names differ.
-    """
-    assert (subarray_config_a == subarray_config_b) == is_equal
-    assert subarray_config_a != 1
-    assert subarray_config_b != object
 
 
 @pytest.mark.parametrize(
