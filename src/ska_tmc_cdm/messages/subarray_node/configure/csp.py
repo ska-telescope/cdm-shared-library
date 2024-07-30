@@ -245,6 +245,7 @@ class MidCBFConfiguration(CdmObject):
         ge=-100000000, le=100000000
     )
     correlation: CorrelationConfiguration
+    processing_regions: ProcessingRegionConfiguration
     vlbi_config: Optional[VLBIConfiguration] = Field(
         default=None,
         serialization_alias="vlbi",
