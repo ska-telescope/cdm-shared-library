@@ -14,8 +14,11 @@ from . import core
 from .pst import PSTConfiguration
 
 __all__ = [
+    "FSPConfiguration2_0",
     "FSPConfiguration",
     "FSPFunctionMode",
+    "CBFConfiguration",
+    "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
     "StationConfiguration",
@@ -36,6 +39,41 @@ class FSPFunctionMode(Enum):
     PSS_BF = "PSS-BF"
     PST_BF = "PST-BF"
     VLBI = "VLBI"
+
+
+class FSPConfiguration2_0(CdmObject):
+    """
+    FSPConfiguration defines the configuration for a CSP Frequency Slice
+    Processor.
+
+    Channel averaging map is an optional list of 20 x (int,int) tuples.
+
+    :param fsp_id: FSP configuration ID [1..27]
+    :param function_mode: FSP function mode
+    :param frequency_slice_id: frequency slicer ID [1..26]
+    :param zoom_factor: zoom factor [0..6]
+    :param integration_factor: integration factor [1..10]
+    :param channel_averaging_map: Optional channel averaging map
+    :param output_link_map: Optional output link map
+    :param channel_offset: Optional FSP channel offset
+    :param zoom_window_tuning: Optional zoom window tuning
+
+    :raises ValueError: Invalid parameter values entered
+    """
+
+    fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
+    function_mode: FSPFunctionMode = Field()
+    frequency_slice_id: int = Field(ge=1, le=26)
+    integration_factor: int = Field(ge=1, le=10)
+    zoom_factor: int = Field(ge=0, le=6)
+    # FIXME: should be Field(default_factory=list, max_length=20)?
+    channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
+    # could we add enforcements for output_link_map? What are the limits?
+    output_link_map: Optional[
+        List[Tuple]
+    ] = None  # FIXME: Field(default_factory=list)?
+    channel_offset: Optional[int] = None
+    zoom_window_tuning: Optional[int] = None
 
 
 class FSPConfiguration(CdmObject):
@@ -59,6 +97,16 @@ class FSPConfiguration(CdmObject):
     output_link_map: Optional[
         List[Tuple]
     ] = None  # FIXME: Field(default_factory=list)?
+
+
+class SubarrayConfiguration(CdmObject):
+    """
+    Class to hold the parameters relevant only for the current sub-array device.
+
+    :param sub-array_name: Name of the sub-array
+    """
+
+    subarray_name: Optional[str] = ""
 
 
 class CommonConfiguration(CdmObject):
@@ -229,6 +277,27 @@ class CorrelationConfiguration(CdmObject):
     processing_regions: List[ProcessingRegionConfiguration]
 
 
+class CBFConfiguration(CdmObject):
+    """
+    Class to hold all FSP and VLBI configurations.
+
+    :param fsp_configs: the FSP configurations to set
+    :param vlbi_config: the VLBI configurations to set, it is optional
+    """
+
+    fsp_configs: List[FSPConfiguration2_0] = Field(
+        serialization_alias="fsp",
+        validation_alias=AliasChoices("fsp", "fsp_configs"),
+    )
+    # TODO: In future when csp Interface 2.2 will be used than type of vlbi_config parameter
+    #  will be replaced with the respective class(VLBIConfiguration)
+    vlbi_config: Optional[dict] = Field(
+        default=None,
+        serialization_alias="vlbi",
+        validation_alias=AliasChoices("vlbi", "vlbi_config"),
+    )
+
+
 class MidCBFConfiguration(CdmObject):
     """
     Class to hold all FSP and VLBI configurations.
@@ -259,7 +328,8 @@ class CSPConfiguration(CdmObject):
     support of new attributes as per ADR-18
 
     :param interface: url string to determine JsonSchema version
-    :param common: the common CSP elemenets to set
+    :param common: the common CSP elements to set
+    :param cbf_config: the CBF configurations to set [DEPRECIATED]
     :param midcbf: the MID CBF configurations to set
     :param lowcbf: the LOW CBF configurations to set
     :param pst_config: the PST configurations to set
@@ -267,9 +337,20 @@ class CSPConfiguration(CdmObject):
     """
 
     interface: Optional[str] = None
+    subarray: Optional[SubarrayConfiguration] = None
     common: Optional[CommonConfiguration] = None
+    cbf_config: Optional[CBFConfiguration] = Field(
+        default=None,
+        serialization_alias="cbf",
+        validation_alias=AliasChoices("cbf", "cbf_config"),
+    )
     midcbf: Optional[MidCBFConfiguration] = None
     lowcbf: Optional[LowCBFConfiguration] = None
+    cbf_config: Optional[CBFConfiguration] = Field(
+        default=None,
+        serialization_alias="cbf",
+        validation_alias=AliasChoices("cbf", "cbf_config"),
+    )
     # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.
     pst_config: Optional[PSTConfiguration | dict] = Field(
