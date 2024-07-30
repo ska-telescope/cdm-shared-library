@@ -297,6 +297,18 @@ class CBFConfigurationDepreciated(CdmObject):
         validation_alias=AliasChoices("vlbi", "vlbi_config"),
     )
 
+    @model_validator(mode="after")
+    def validate_interface(self):
+        interface = core.interface
+        if 2.0 in self.interface:
+            raise ValueError("Subarray_id is required")
+        if 4.0 in self.interface:
+            raise ValueError(
+                "Subarray_id is not supported and config_id is mandatory"
+            )
+
+    return self
+
 
 class MidCBFConfiguration(CdmObject):
     """
