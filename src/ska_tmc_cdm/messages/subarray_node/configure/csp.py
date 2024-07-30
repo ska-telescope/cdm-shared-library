@@ -215,9 +215,9 @@ class ProcessingRegionConfiguration(CdmObject):
     receptors: Optional[List[str]] = None
     start_freq: int = Field(ge=350000000, le=15400000000)
     channel_width: int  # Todo do we use a field validator or maybe an enum?
-    sdp_start_channel_id: int = Field(ge=0, le=4294901760)
     channel_count: int
     integration_factor: int = Field(ge=1, le=10)
+    sdp_start_channel_id: int = Field(ge=0, le=4294901760)
 
 
 class CorrelationConfiguration(CdmObject):
@@ -245,7 +245,6 @@ class MidCBFConfiguration(CdmObject):
         ge=-100000000, le=100000000
     )
     correlation: CorrelationConfiguration
-    processing_regions: ProcessingRegionConfiguration
     vlbi_config: Optional[VLBIConfiguration] = Field(
         default=None,
         serialization_alias="vlbi",
