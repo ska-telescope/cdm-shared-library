@@ -27,7 +27,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
-    FSPFunctionMode,
     LowCBFConfiguration,
     MidCBFConfiguration,
     StationConfiguration,
