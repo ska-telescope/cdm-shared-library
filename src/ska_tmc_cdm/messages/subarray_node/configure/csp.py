@@ -14,10 +14,10 @@ from . import core
 from .pst import PSTConfiguration
 
 __all__ = [
-    "FSPConfiguration2_0",
+    "FSPConfigurationDepreciated",
     "FSPConfiguration",
     "FSPFunctionMode",
-    "CBFConfiguration",
+    "CBFConfigurationDepreciated",
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
@@ -41,7 +41,7 @@ class FSPFunctionMode(Enum):
     VLBI = "VLBI"
 
 
-class FSPConfiguration2_0(CdmObject):
+class FSPConfigurationDepreciated(CdmObject):
     """
     FSPConfiguration defines the configuration for a CSP Frequency Slice
     Processor.
@@ -277,7 +277,7 @@ class CorrelationConfiguration(CdmObject):
     processing_regions: List[ProcessingRegionConfiguration]
 
 
-class CBFConfiguration(CdmObject):
+class CBFConfigurationDepreciated(CdmObject):
     """
     Class to hold all FSP and VLBI configurations.
 
@@ -285,7 +285,7 @@ class CBFConfiguration(CdmObject):
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
 
-    fsp_configs: List[FSPConfiguration2_0] = Field(
+    fsp_configs: List[FSPConfigurationDepreciated] = Field(
         serialization_alias="fsp",
         validation_alias=AliasChoices("fsp", "fsp_configs"),
     )
@@ -339,18 +339,13 @@ class CSPConfiguration(CdmObject):
     interface: Optional[str] = None
     subarray: Optional[SubarrayConfiguration] = None
     common: Optional[CommonConfiguration] = None
-    cbf_config: Optional[CBFConfiguration] = Field(
+    cbf_config: Optional[CBFConfigurationDepreciated] = Field(
         default=None,
         serialization_alias="cbf",
         validation_alias=AliasChoices("cbf", "cbf_config"),
     )
     midcbf: Optional[MidCBFConfiguration] = None
     lowcbf: Optional[LowCBFConfiguration] = None
-    cbf_config: Optional[CBFConfiguration] = Field(
-        default=None,
-        serialization_alias="cbf",
-        validation_alias=AliasChoices("cbf", "cbf_config"),
-    )
     # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.
     pst_config: Optional[PSTConfiguration | dict] = Field(
