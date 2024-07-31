@@ -95,7 +95,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         correction=PointingCorrection.MAINTAIN,
     ),
-    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_5A),
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_2),
     sdp=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-configure/0.4",
         scan_type="science_A",
@@ -105,7 +105,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
-            frequency_band=ReceiverBand.BAND_5B,
+            frequency_band=ReceiverBand.BAND_2,
             subarray_id=1,
         ),
         pss_config={},
@@ -184,7 +184,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
     "correction": "MAINTAIN"
   },
   "dish": {
-    "receiver_band": "5a"
+    "receiver_band": "2"
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
@@ -193,7 +193,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
     },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band": "5b",
+      "frequency_band": "2",
       "subarray_id": 1
     },
     "cbf": {
