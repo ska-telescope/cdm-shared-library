@@ -3,9 +3,11 @@ from typing import List, Tuple
 from ska_tmc_cdm.messages.subarray_node.configure import core
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
+    CBFConfigurationDepreciated,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
+    FSPFunctionMode,
     LowCBFConfiguration,
     MidCBFConfiguration,
     ProcessingRegionConfiguration,
@@ -13,6 +15,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     PSTConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
+    SubarrayConfiguration,
     TimingBeamsConfiguration,
     VisConfiguration,
     VisFspConfiguration,
@@ -27,8 +30,14 @@ class FSPConfigurationBuilder:
 
     def __init__(self):
         self.fsp_id = None
+        self.function_mode = None
+        self.frequency_slice_id = None
         self.integration_factor = None
+        self.zoom_factor = None
+        self.channel_averaging_map = None
         self.output_link_map = None
+        self.channel_offset = None
+        self.zoom_window_tuning = None
 
     def set_fsp_id(self, fsp_id: int) -> "FSPConfigurationBuilder":
         """
@@ -39,6 +48,29 @@ class FSPConfigurationBuilder:
         if not 1 <= fsp_id <= 27:
             raise ValueError("fsp_id must be between 1 and 27")
         self.fsp_id = fsp_id
+        return self
+
+    def set_function_mode(
+        self, function_mode: FSPFunctionMode
+    ) -> "FSPConfigurationBuilder":
+        """
+        Set the FSP function mode.
+        :param function_mode: An instance of FSPFunctionMode enum.
+        """
+        self.function_mode = function_mode
+        return self
+
+    def set_frequency_slice_id(
+        self, frequency_slice_id: int
+    ) -> "FSPConfigurationBuilder":
+        """
+        Set the frequency slice ID.
+        :param frequency_slice_id: Integer representing the frequency slice ID.
+        :raises ValueError: If the frequency_slice_id is not within the range 1 to 26.
+        """
+        if not 1 <= frequency_slice_id <= 26:
+            raise ValueError("frequency_slice_id must be between 1 and 26")
+        self.frequency_slice_id = frequency_slice_id
         return self
 
     def set_integration_factor(
@@ -54,6 +86,27 @@ class FSPConfigurationBuilder:
         self.integration_factor = integration_factor
         return self
 
+    def set_zoom_factor(self, zoom_factor: int) -> "FSPConfigurationBuilder":
+        """
+        Set the zoom factor.
+        :param zoom_factor: Integer representing the zoom factor.
+        :raises ValueError: If the zoom_factor is not within the range 0 to 6.
+        """
+        if not 0 <= zoom_factor <= 6:
+            raise ValueError("zoom_factor must be between 0 and 6")
+        self.zoom_factor = zoom_factor
+        return self
+
+    def set_channel_averaging_map(
+        self, channel_averaging_map: List[Tuple[int, int]]
+    ) -> "FSPConfigurationBuilder":
+        """
+        Set the channel averaging map.
+        :param channel_averaging_map: List of tuples representing the channel averaging map.
+        """
+        self.channel_averaging_map = channel_averaging_map
+        return self
+
     def set_output_link_map(
         self, output_link_map: List[Tuple[int, int, int]]
     ) -> "FSPConfigurationBuilder":
@@ -64,6 +117,26 @@ class FSPConfigurationBuilder:
         self.output_link_map = output_link_map
         return self
 
+    def set_channel_offset(
+        self, channel_offset: int
+    ) -> "FSPConfigurationBuilder":
+        """
+        Set the channel offset.
+        :param channel_offset: Integer representing the channel offset.
+        """
+        self.channel_offset = channel_offset
+        return self
+
+    def set_zoom_window_tuning(
+        self, zoom_window_tuning: int
+    ) -> "FSPConfigurationBuilder":
+        """
+        Set the zoom window tuning.
+        :param zoom_window_tuning: Integer representing the zoom window tuning.
+        """
+        self.zoom_window_tuning = zoom_window_tuning
+        return self
+
     def build(self) -> FSPConfiguration:
         """
         Builds or creates an instance of FSPConfiguration
@@ -71,9 +144,43 @@ class FSPConfigurationBuilder:
         """
         return FSPConfiguration(
             fsp_id=self.fsp_id,
+            function_mode=self.function_mode,
+            frequency_slice_id=self.frequency_slice_id,
             integration_factor=self.integration_factor,
+            zoom_factor=self.zoom_factor,
+            channel_averaging_map=self.channel_averaging_map,
             output_link_map=self.output_link_map,
+            channel_offset=self.channel_offset,
+            zoom_window_tuning=self.zoom_window_tuning,
         )
+
+
+class SubarrayConfigurationBuilder:
+    """
+    SubarrayConfigurationBuilder is a test data builder for SubarrayConfiguration objects.
+    """
+
+    def __init__(self):
+        self.subarray_name = None
+
+    def set_subarray_name(
+        self, subarray_name: str
+    ) -> "SubarrayConfigurationBuilder":
+        """
+        Set the name of the sub-array.
+
+        :param subarray_name: String representing the name of the sub-array.
+        :return: An instance of SubarrayConfigurationBuilder with the updated sub-array name.
+        """
+        self.subarray_name = subarray_name
+        return self
+
+    def build(self) -> SubarrayConfiguration:
+        """
+        Builds or creates an instance of SubarrayConfiguration with the set properties.
+        :return: An instance of SubarrayConfiguration with the specified name.
+        """
+        return SubarrayConfiguration(subarray_name=self.subarray_name)
 
 
 class CommonConfigurationBuilder:
@@ -143,6 +250,47 @@ class CommonConfigurationBuilder:
             frequency_band=self.frequency_band,
             subarray_id=self.subarray_id,
             band_5_tuning=self.band_5_tuning,
+        )
+
+
+class CBFConfigurationBuilder:
+    """
+    CBFConfigurationBuilder is a test data builder for CBFConfiguration objects.
+    """
+
+    def __init__(self):
+        self.fsp_configs = None
+        self.vlbi_config = None
+
+    def set_fsp_config(
+        self, fsp_configs: List[FSPConfiguration]
+    ) -> "CBFConfigurationBuilder":
+        """
+         Set Frequency Slice Processor (FSP) configuration.
+
+        :param fsp_configs: List of FSPConfiguration instance to add to the CBF configuration.
+        :return: An instance of CBFConfigurationBuilder with the added FSP configuration.
+        """
+        self.fsp_configs = fsp_configs
+        return self
+
+    def set_vlbi_config(self, vlbi_config: dict) -> "CBFConfigurationBuilder":
+        """
+        Set the VLBI configuration.
+
+        :param vlbi_config: A dictionary representing the VLBI configuration.
+        :return: An instance of CBFConfigurationBuilder with the updated VLBI configuration.
+        """
+        self.vlbi_config = vlbi_config
+        return self
+
+    def build(self) -> CBFConfigurationDepreciated:
+        """
+        Builds or creates an instance of CBFConfiguration with the set properties.
+        :return: An instance of CBFConfiguration with the specified configurations.
+        """
+        return CBFConfigurationDepreciated(
+            fsp_configs=self.fsp_configs, vlbi_config=self.vlbi_config
         )
 
 
@@ -636,11 +784,13 @@ class CSPConfigurationBuilder:
 
     def __init__(self):
         self.interface = None
+        self.subarray = None
         self.common = None
-        self.pst_config = None
-        self.pss_config = None
+        self.cbf_config = None
         self.midcbf = None
         self.lowcbf = None
+        self.pst_config = None
+        self.pss_config = None
 
     def set_interface(self, interface: str) -> "CSPConfigurationBuilder":
         """
@@ -648,6 +798,16 @@ class CSPConfigurationBuilder:
         :param interface: Interface version URL string.
         """
         self.interface = interface
+        return self
+
+    def set_subarray(
+        self, subarray: SubarrayConfiguration
+    ) -> "CSPConfigurationBuilder":
+        """
+        Set the SubarrayConfiguration.
+        :param subarray: An instance of SubarrayConfiguration.
+        """
+        self.subarray = subarray
         return self
 
     def set_common(
@@ -658,6 +818,16 @@ class CSPConfigurationBuilder:
         :param common: An instance of CommonConfiguration.
         """
         self.common = common
+        return self
+
+    def set_cbf_config(
+        self, cbf_config: CBFConfigurationDepreciated
+    ) -> "CSPConfigurationBuilder":
+        """
+        Set the CommonConfiguration.
+        :param cbf_config: An instance of CBFConfiguration.
+        """
+        self.cbf_config = cbf_config
         return self
 
     def set_midcbf(
@@ -706,115 +876,118 @@ class CSPConfigurationBuilder:
         """
         return CSPConfiguration(
             interface=self.interface,
+            subarray=self.subarray,
             common=self.common,
-            pst_config=self.pst_config,
-            pss_config=self.pss_config,
+            cbf_config=self.cbf_config,
             midcbf=self.midcbf,
             lowcbf=self.lowcbf,
+            pst_config=self.pst_config,
+            pss_config=self.pss_config,
         )
 
-        class ProcessingRegionConfigurationBuilder:
-            """
-            ProcessingRegionConfigurationBuilder is a test data builder for ProcessingRegionConfiguration objects.
 
-            This builder helps in creating instances of ProcessingRegionConfiguration with custom settings for
-            testing or any other purpose. It follows a fluent interface pattern allowing
-            chaining of set methods.
-            """
+class ProcessingRegionConfigurationBuilder:
+    """
+    ProcessingRegionConfigurationBuilder is a test data builder for ProcessingRegionConfiguration objects.
 
-            def __init__(self):
-                self.fsp_ids = None
-                self.receptors = None
-                self.start_freq = None
-                self.channel_width = None
-                self.sdp_start_channel_id = None
-                self.channel_count = None
-                self.integration_factor = None
+    This builder helps in creating instances of ProcessingRegionConfiguration with custom settings for
+    testing or any other purpose. It follows a fluent interface pattern allowing
+    chaining of set methods.
+    """
 
-        def set_fsp_ids(
-            self, fsp_ids: List[int]
-        ) -> "ProcessingRegionConfigurationBuilder":
-            """
-            Set the FSP IDs for the processing region configuration.
+    def __init__(self):
+        self.fsp_ids = None
+        self.receptors = None
+        self.start_freq = None
+        self.channel_width = None
+        self.sdp_start_channel_id = None
+        self.channel_count = None
+        self.integration_factor = None
 
-            :param fsp_ids: A list of integers representing the FSP IDs.
-            """
-            self.fsp_ids = fsp_ids
-            return self
+    def set_fsp_ids(
+        self, fsp_ids: List[int]
+    ) -> "ProcessingRegionConfigurationBuilder":
+        """
+        Set the FSP IDs for the processing region configuration.
 
-        def set_receptors(
-            self, receptors: ProcessingRegionConfiguration
-        ) -> "ProcessingRegionConfigurationBuilder":
-            """
-            Set the ProcessingRegionConfiguration.
+        :param fsp_ids: A list of integers representing the FSP IDs.
+        """
+        self.fsp_ids = fsp_ids
+        return self
 
-            :param receptors: An instance of ProcessingRegionConfiguration.
-            """
-            self.receptors = receptors
-            return self
+    def set_receptors(
+        self, receptors: ProcessingRegionConfiguration
+    ) -> "ProcessingRegionConfigurationBuilder":
+        """
+        Set the ProcessingRegionConfiguration.
 
-        def set_start_freq(
-            self, start_freq: ProcessingRegionConfiguration
-        ) -> "ProcessingRegionConfigurationBuilder":
-            """
-            Set the ProcessingRegionConfiguration.
+        :param receptors: An instance of ProcessingRegionConfiguration.
+        """
+        self.receptors = receptors
+        return self
 
-            :param start_freq: An instance of ProcessingRegionConfiguration.
-            """
-            self.start_freq = start_freq
-            return self
+    def set_start_freq(
+        self, start_freq: ProcessingRegionConfiguration
+    ) -> "ProcessingRegionConfigurationBuilder":
+        """
+        Set the ProcessingRegionConfiguration.
 
-        def set_channel_width(
-            self, channel_width: ProcessingRegionConfiguration
-        ) -> "ProcessingRegionConfigurationBuilder":
-            """
-            Set the ProcessingRegionConfiguration.
+        :param start_freq: An instance of ProcessingRegionConfiguration.
+        """
+        self.start_freq = start_freq
+        return self
 
-            :param channel_width: An instance of ProcessingRegionConfiguration.
-            """
-            self.channel_width = channel_width
-            return self
+    def set_channel_width(
+        self, channel_width: ProcessingRegionConfiguration
+    ) -> "ProcessingRegionConfigurationBuilder":
+        """
+        Set the ProcessingRegionConfiguration.
 
-        def set_sdp_start_channel_id(
-            self, sdp_start_channel_id: ProcessingRegionConfiguration
-        ) -> "ProcessingRegionConfigurationBuilder":
-            """
-            Set the ProcessingRegionConfiguration.
-            :param sdp_start_channel_id: An instance of ProcessingRegionConfiguration.
-            """
-            self.sdp_start_channel_id = sdp_start_channel_id
-            return self
+        :param channel_width: An instance of ProcessingRegionConfiguration.
+        """
+        self.channel_width = channel_width
+        return self
 
-        def set_channel_count(
-            self, channel_count: ProcessingRegionConfiguration
-        ) -> "ProcessingRegionConfigurationBuilder":
-            """
-            Set the ProcessingRegionConfiguration.
-            :param channel_count: An instance of ProcessingRegionConfiguration.
-            """
-            self.channel_count = channel_count
-            return self
+    def set_sdp_start_channel_id(
+        self, sdp_start_channel_id: ProcessingRegionConfiguration
+    ) -> "ProcessingRegionConfigurationBuilder":
+        """
+        Set the ProcessingRegionConfiguration.
+        :param sdp_start_channel_id: An instance of ProcessingRegionConfiguration.
+        """
+        self.sdp_start_channel_id = sdp_start_channel_id
+        return self
 
-        def set_integration_factor(
-            self, integration_factor: ProcessingRegionConfiguration
-        ) -> "ProcessingRegionConfigurationBuilder":
-            """
-            Set the ProcessingRegionConfiguration.
-            :param integration_factor: An instance of ProcessingRegionConfiguration.
-            """
-            self.integration_factor = integration_factor
-            return self
+    def set_channel_count(
+        self, channel_count: ProcessingRegionConfiguration
+    ) -> "ProcessingRegionConfigurationBuilder":
+        """
+        Set the ProcessingRegionConfiguration.
+        :param channel_count: An instance of ProcessingRegionConfiguration.
+        """
+        self.channel_count = channel_count
+        return self
 
-        def build(self) -> ProcessingRegionConfiguration:
-            """
-            Builds and returns an instance of CSPConfiguration.
-            """
-            return ProcessingRegionConfiguration(
-                fsp_ids=self.fsp_ids,
-                receptors=self.receptors,
-                start_freq=self.start_freq,
-                channel_width=self.channel_width,
-                sdp_start_channel_id=self.sdp_start_channel_id,
-                channel_count=self.channel_count,
-                integration_factor=self.integration_factor,
-            )
+    def set_integration_factor(
+        self, integration_factor: ProcessingRegionConfiguration
+    ) -> "ProcessingRegionConfigurationBuilder":
+        """
+        Set the ProcessingRegionConfiguration.
+        :param integration_factor: An instance of ProcessingRegionConfiguration.
+        """
+        self.integration_factor = integration_factor
+        return self
+
+    def build(self) -> ProcessingRegionConfiguration:
+        """
+        Builds and returns an instance of CSPConfiguration.
+        """
+        return ProcessingRegionConfiguration(
+            fsp_ids=self.fsp_ids,
+            receptors=self.receptors,
+            start_freq=self.start_freq,
+            channel_width=self.channel_width,
+            sdp_start_channel_id=self.sdp_start_channel_id,
+            channel_count=self.channel_count,
+            integration_factor=self.integration_factor,
+        )
