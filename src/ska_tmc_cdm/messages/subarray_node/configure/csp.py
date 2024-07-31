@@ -14,7 +14,6 @@ from . import core
 from .pst import PSTConfiguration
 
 __all__ = [
-    "FSPConfigurationDepreciated",
     "FSPConfiguration",
     "FSPFunctionMode",
     "CBFConfigurationDepreciated",
@@ -29,6 +28,11 @@ __all__ = [
     "BeamsConfiguration",
 ]
 
+MID_CSP_SCHEMA = "https://schema.skao.int/ska-csp-configurescan/4.0"
+MID_CSP_SCHEMA_DEPRECIATED = (
+    "https://schema.skao.int/ska-csp-configurescan/2.0"
+)
+
 
 class FSPFunctionMode(Enum):
     """
@@ -41,7 +45,7 @@ class FSPFunctionMode(Enum):
     VLBI = "VLBI"
 
 
-class FSPConfigurationDepreciated(CdmObject):
+class FSPConfiguration(CdmObject):
     """
     FSPConfiguration defines the configuration for a CSP Frequency Slice
     Processor.
@@ -74,29 +78,6 @@ class FSPConfigurationDepreciated(CdmObject):
     ] = None  # FIXME: Field(default_factory=list)?
     channel_offset: Optional[int] = None
     zoom_window_tuning: Optional[int] = None
-
-
-class FSPConfiguration(CdmObject):
-    """
-    FSPConfiguration defines the configuration for a CSP Frequency Slice
-    Processor.
-
-    Channel averaging map is an optional list of 20 x (int,int) tuples.
-
-    :param fsp_id: FSP configuration ID [1..27]
-    :param integration_factor: integration factor [1..10]
-    :param output_link_map: Optional output link map
-
-    :raises ValueError: Invalid parameter values entered
-    """
-
-    fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
-    integration_factor: int = Field(ge=1, le=10)
-    # FIXME: should be Field(default_factory=list, max_length=20)?
-    # could we add enforcements for output_link_map? What are the limits?
-    output_link_map: Optional[
-        List[Tuple]
-    ] = None  # FIXME: Field(default_factory=list)?
 
 
 class SubarrayConfiguration(CdmObject):
@@ -259,11 +240,11 @@ class ProcessingRegionConfiguration(CdmObject):
     some docstring Todo write me
     """
 
-    fsp_ids: List[int]  # Todo add some validation = Field(...)
+    fsp_ids: List[int]
     receptors: Optional[List[str]] = None
     start_freq: int = Field(ge=350000000, le=15400000000)
-    channel_width: int  # Todo do we use a field validator or maybe an enum?
-    channel_count: int
+    channel_width: int = 13440
+    channel_count: int = Field(ge=1, le=58982, multiple_of=20)
     integration_factor: int = Field(ge=1, le=10)
     sdp_start_channel_id: int = Field(ge=0, le=4294901760)
 
@@ -285,7 +266,7 @@ class CBFConfigurationDepreciated(CdmObject):
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
 
-    fsp_configs: List[FSPConfigurationDepreciated] = Field(
+    fsp_configs: List[FSPConfiguration] = Field(
         serialization_alias="fsp",
         validation_alias=AliasChoices("fsp", "fsp_configs"),
     )
@@ -296,17 +277,6 @@ class CBFConfigurationDepreciated(CdmObject):
         serialization_alias="vlbi",
         validation_alias=AliasChoices("vlbi", "vlbi_config"),
     )
-
-    @model_validator(mode="after")
-    def validate_interface(self):
-        deprecatedCbf = core.deprecatedCbf
-        if self.deprecatedCbf in deprecatedCbf:
-            raise ValueError("Subarray_id is required")
-        if self.midcbf not in deprecatedCbf:
-            raise ValueError(
-                "Subarray_id is not supported and config_id is mandatory"
-            )
-        return self
 
 
 class MidCBFConfiguration(CdmObject):
@@ -347,9 +317,9 @@ class CSPConfiguration(CdmObject):
     :param pss_config: the PSS configurations to set
     """
 
-    interface: Optional[str] = None
+    interface: str = MID_CSP_SCHEMA
     subarray: Optional[SubarrayConfiguration] = None
-    common: Optional[CommonConfiguration] = None
+    common: CommonConfiguration
     cbf_config: Optional[CBFConfigurationDepreciated] = Field(
         default=None,
         serialization_alias="cbf",
@@ -369,3 +339,23 @@ class CSPConfiguration(CdmObject):
         serialization_alias="pss",
         validation_alias=AliasChoices("pss", "pss_config"),
     )
+
+    @model_validator(mode="after")
+    def validate_interface(self):
+        if self.interface == MID_CSP_SCHEMA:
+            if self.common.subarray_id is not None:
+                raise KeyError(
+                    f"subarray_id is not supported for CSP Configuration schema version {MID_CSP_SCHEMA}"
+                )
+            elif self.common.config_id is None:
+                raise KeyError(
+                    f"config_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA}"
+                )
+        if (
+            self.interface == MID_CSP_SCHEMA_DEPRECIATED
+            and self.common.subarray_id is None
+        ):
+            raise KeyError(
+                f"subarray_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA_DEPRECIATED}"
+            )
+        return self
