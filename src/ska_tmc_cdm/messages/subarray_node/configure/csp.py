@@ -65,7 +65,7 @@ class FSPConfiguration(CdmObject):
     :raises ValueError: Invalid parameter values entered
     """
 
-    fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
+    fsp_id: int = Field(ge=1, le=27)
     function_mode: FSPFunctionMode = Field()
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)

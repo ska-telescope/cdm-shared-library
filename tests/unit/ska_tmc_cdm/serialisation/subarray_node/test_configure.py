@@ -24,8 +24,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
-    CommonConfiguration,
     CBFConfigurationDepreciated,
+    CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
@@ -1304,12 +1304,12 @@ def partial_invalidator(o: ConfigureRequest):
             True,
         ),
         (
-                ConfigureRequest,
-                VALID_MID_CONFIGURE_OBJECT_2_3,
-                mid_invalidator,
-                VALID_MID_CONFIGURE_JSON_2_3,
-                INVALID_MID_CONFIGURE_JSON,
-                True,
+            ConfigureRequest,
+            VALID_MID_CONFIGURE_OBJECT_2_3,
+            mid_invalidator,
+            VALID_MID_CONFIGURE_JSON_2_3,
+            INVALID_MID_CONFIGURE_JSON,
+            True,
         ),
         (
             ConfigureRequest,
@@ -1352,12 +1352,12 @@ def partial_invalidator(o: ConfigureRequest):
             False,
         ),
         (
-                ConfigureRequest,
-                VALID_MID_CONFIGURE_OBJECT_2_3,
-                None,
-                VALID_MID_CONFIGURE_JSON_2_3,
-                None,
-                True,
+            ConfigureRequest,
+            VALID_MID_CONFIGURE_OBJECT_2_3,
+            None,
+            VALID_MID_CONFIGURE_JSON_2_3,
+            None,
+            True,
         ),
         (
             ScanRequest,
