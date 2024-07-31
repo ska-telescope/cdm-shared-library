@@ -18,7 +18,7 @@ from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.3"
-LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-configure/3.1"
+LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-configure/4.0"
 
 
 from ska_tmc_cdm.messages.base import CdmObject
