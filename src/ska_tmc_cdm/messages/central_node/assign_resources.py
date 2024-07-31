@@ -17,7 +17,7 @@ from .sdp import SDPConfiguration
 __all__ = ["AssignResourcesRequest", "AssignResourcesResponse"]
 
 MID_SCHEMA = "https://schema.skao.int/ska-tmc-assignresources/2.1"
-LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-assignresources/3.2"
+LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-assignresources/4.0"
 
 
 class AssignResourcesRequest(CdmObject):

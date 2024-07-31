@@ -4,8 +4,9 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-Unreleased changes
+11.0.1
 ******************
+* Updated default schema URIs for LOW assign resources and configure
 * Adds static type checking with Pyright to python-lint pipeline.
 * Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
 
