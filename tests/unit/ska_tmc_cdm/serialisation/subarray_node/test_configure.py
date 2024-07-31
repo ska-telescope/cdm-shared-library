@@ -25,12 +25,15 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
     CommonConfiguration,
+    CBFConfigurationDepreciated,
     CSPConfiguration,
     FSPConfiguration,
+    FSPFunctionMode,
     LowCBFConfiguration,
     MidCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
+    SubarrayConfiguration,
     TimingBeamsConfiguration,
     VisConfiguration,
     VisFspConfiguration,
@@ -885,9 +888,9 @@ VALID_NULL_JSON = (
 
 VALID_NULL_OBJECT = ConfigureRequest(interface=MID_SCHEMA)
 
-VALID_MID_CONFIGURE_JSON = """
+VALID_MID_CONFIGURE_JSON_2_3 = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/4.0",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.3",
   "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
@@ -955,7 +958,7 @@ VALID_MID_CONFIGURE_JSON = """
 
 INVALID_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.3",
   "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
@@ -971,16 +974,33 @@ INVALID_MID_CONFIGURE_JSON = """
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+      "subarray_name": "science period 23"
+    },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "1",
       "subarray_id": 1
     },
-    "midcbf": {
+    "cbf": {
       "fsp": [
         {
           "fsp_id": 1,
+          "function_mode": "CORR",
+          "frequency_slice_id": 1,
           "integration_factor": 1,
+          "zoom_factor": 0,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -994,7 +1014,21 @@ INVALID_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 2,
+          "function_mode": "CORR",
+          "frequency_slice_id": 2,
           "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 744,
           "output_link_map": [
             [
               0,
@@ -1005,6 +1039,7 @@ INVALID_MID_CONFIGURE_JSON = """
               5
             ]
           ],
+          "zoom_window_tuning": 650000
         }
       ],
       "vlbi": {}
@@ -1021,8 +1056,9 @@ INVALID_MID_CONFIGURE_JSON = """
   }
 }"""
 
-VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/4.0",
+
+VALID_MID_CONFIGURE_OBJECT_2_3 = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/2.3",
     transaction_id="txn-....-00001",
     pointing=PointingConfiguration(
         target=Target(
@@ -1040,6 +1076,7 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
+        subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_1,
@@ -1047,17 +1084,28 @@ VALID_MID_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         pss_config={},
         pst_config={},
-        midcbf=MidCBFConfiguration(
+        cbf_config=CBFConfigurationDepreciated(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=1,
+                    function_mode=FSPFunctionMode.CORR,
+                    frequency_slice_id=1,
                     integration_factor=1,
+                    zoom_factor=0,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=2,
+                    function_mode=FSPFunctionMode.CORR,
+                    frequency_slice_id=2,
                     integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
+                    zoom_window_tuning=650000,
                 ),
             ],
             vlbi_config={},
@@ -1256,12 +1304,12 @@ def partial_invalidator(o: ConfigureRequest):
             True,
         ),
         (
-            ConfigureRequest,
-            VALID_MID_CONFIGURE_OBJECT,
-            mid_invalidator,
-            VALID_MID_CONFIGURE_JSON,
-            INVALID_MID_CONFIGURE_JSON,
-            True,
+                ConfigureRequest,
+                VALID_MID_CONFIGURE_OBJECT_2_3,
+                mid_invalidator,
+                VALID_MID_CONFIGURE_JSON_2_3,
+                INVALID_MID_CONFIGURE_JSON,
+                True,
         ),
         (
             ConfigureRequest,
@@ -1304,12 +1352,12 @@ def partial_invalidator(o: ConfigureRequest):
             False,
         ),
         (
-            ConfigureRequest,
-            VALID_MID_CONFIGURE_OBJECT,
-            None,
-            VALID_MID_CONFIGURE_JSON,
-            None,
-            True,
+                ConfigureRequest,
+                VALID_MID_CONFIGURE_OBJECT_2_3,
+                None,
+                VALID_MID_CONFIGURE_JSON_2_3,
+                None,
+                True,
         ),
         (
             ScanRequest,
