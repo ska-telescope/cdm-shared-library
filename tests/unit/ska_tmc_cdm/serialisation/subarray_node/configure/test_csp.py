@@ -3,20 +3,18 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.csp module.
 """
 import inspect
 
-import pytest
-
 from ska_tmc_cdm import CODEC
-from ska_tmc_cdm.exceptions import JsonValidationError
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    CBFConfigurationDepreciated,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
-    MidCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
+    SubarrayConfiguration,
     VisConfiguration,
     VisFspConfiguration,
     VisStnBeamConfiguration,
@@ -24,14 +22,17 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
 
 from ... import utils
 
-VALID_CSP_CONFIGURATION_JSON_2_0 = """{
+VALID_CSP_JSON_PI16 = """{
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+        "subarray_name": "science period 23"
+    },
     "common": {
         "config_id": "sbi-mvp01-20200325-00001-science_A",
         "frequency_band": "1",
         "subarray_id": 1
     },
-    "midcbf": {
+    "cbf": {
         "fsp": [
             {
                 "fsp_id": 1,
@@ -103,8 +104,9 @@ VALID_CSP_CONFIGURATION_JSON_2_0 = """{
     }
 }"""
 
-VALID_CSP_CONFIGURATION_OBJECT_2_0 = CSPConfiguration(
+CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     interface="https://schema.skao.int/ska-csp-configure/2.0",
+    subarray=SubarrayConfiguration(subarray_name="science period 23"),
     common=CommonConfiguration(
         config_id="sbi-mvp01-20200325-00001-science_A",
         frequency_band=ReceiverBand.BAND_1,
@@ -112,7 +114,7 @@ VALID_CSP_CONFIGURATION_OBJECT_2_0 = CSPConfiguration(
     ),
     pss_config={},
     pst_config={},
-    midcbf=MidCBFConfiguration(
+    cbf_config=CBFConfigurationDepreciated(
         fsp_configs=[
             FSPConfiguration(
                 fsp_id=1,
@@ -218,50 +220,6 @@ VALID_LOW_CSP_JSON_PI20 = """{
     }
   }"""
 
-VALID_MID_CSP_CONFIGURE_JSON_4_0 = {
-    "csp": {
-        "interface": "https://schema.skao.int/ska-csp-configurescan/4.0",
-        "common": {
-            "config_id": "sbi-mvp01-20200325-00001-science_A",
-            "frequency_band": "1",
-        },
-        "midcbf": {
-            "frequency_band_offset_stream1": 80,
-            "correlation": {
-                "processing_regions": [
-                    {
-                        "fsp_ids": [1, 2, 3, 4],
-                        "receptors": ["SKA063", "SKA001", "SKA100"],
-                        "start_freq": 350000000,
-                        "channel_width": 13440,
-                        "channel_count": 52080,
-                        "sdp_start_channel_id": 0,
-                        "integration_factor": 1,
-                    },
-                    {
-                        "fsp_ids": [1],
-                        "start_freq": 548437600,
-                        "channel_width": 13440,
-                        "channel_count": 14880,
-                        "sdp_start_channel_id": 1,
-                        "integration_factor": 10,
-                    },
-                ]
-            },
-            "vlbi": {},
-        },
-        "pss": {},
-        "pst": {},
-    }
-}
-
-
-# def create_csp_configure_4_0_object():
-#     """
-#     function to create a the csp configure 4.0 object
-#     """
-#
-
 
 def test_marshall_fsp_configuration_with_undefined_optional_parameters():
     """
@@ -333,13 +291,14 @@ def test_marshall_csp_configuration_does_not_modify_original():
     )
     config = CSPConfiguration(
         interface="interface",
+        subarray=SubarrayConfiguration(subarray_name="subarray name"),
         common=CommonConfiguration(
             config_id="config_id",
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
             band_5_tuning=[5.85, 7.25],
         ),
-        midcbf=MidCBFConfiguration(fsp_configs=[fsp_config]),
+        cbf_config=CBFConfigurationDepreciated(fsp_configs=[fsp_config]),
         pss_config=None,
         pst_config=None,
     )
@@ -356,30 +315,15 @@ def test_marshall_csp_configuration_does_not_modify_original():
     assert config == copied
 
 
-def test_marshall_fails_for_csp_configuration_2_0():
-    """
-    Verify that we can no longer serialise an old but valid CSPConfiguration
-    """
-    with pytest.raises(JsonValidationError):
-        utils.test_serialisation_and_validation(
-            model_class=CSPConfiguration,
-            instance=VALID_CSP_CONFIGURATION_OBJECT_2_0,
-            modifier_fn=None,
-            valid_json=VALID_CSP_CONFIGURATION_JSON_2_0,
-            invalid_json=None,
-        )
-
-
-def test_marshall_for_csp_configuration_4_0():
+def test_marshall_for_csp_configuration_pi16():
     """
     Verify that serialising a CSPConfiguration does not change the object.
-    #TODO: Update below to use object 4.0
     """
     utils.test_serialisation_and_validation(
         model_class=CSPConfiguration,
-        instance=VALID_CSP_CONFIGURATION_OBJECT_2_0,
+        instance=CSP_CONFIGURATION_OBJECT_PI16,
         modifier_fn=None,
-        valid_json=VALID_MID_CSP_CONFIGURE_JSON_4_0,
+        valid_json=VALID_CSP_JSON_PI16,
         invalid_json=None,
     )
 

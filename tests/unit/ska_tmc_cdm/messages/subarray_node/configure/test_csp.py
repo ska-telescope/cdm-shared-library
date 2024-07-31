@@ -2,19 +2,22 @@
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
 import copy
+import itertools
 
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
+from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     BeamsConfigurationBuilder,
+    CBFConfigurationBuilder,
     CommonConfigurationBuilder,
     CSPConfigurationBuilder,
     FSPConfigurationBuilder,
     LowCBFConfigurationBuilder,
-    MidCBFConfigurationBuilder,
     StationConfigurationBuilder,
     StnBeamConfigurationBuilder,
+    SubarrayConfigurationBuilder,
     TimingBeamsConfigurationBuilder,
     VisConfigurationBuilder,
     VisFspConfigurationBuilder,
@@ -49,13 +52,13 @@ tr = (
         (
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5A)
+            .set_frequency_band(ReceiverBand.BAND_1)
             .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build(),
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5A)
+            .set_frequency_band(ReceiverBand.BAND_1)
             .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build(),
@@ -64,14 +67,14 @@ tr = (
         # Different frequency band
         (
             CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp02-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5A)
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
             .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build(),
             CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp02-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5B)
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_2)
             .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build(),
@@ -80,16 +83,32 @@ tr = (
         # Different subarray ID
         (
             CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp03-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5A)
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
             .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build(),
             CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp03-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5A)
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
             .set_subarray_id(2)  # Different subarray ID
             .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            False,
+        ),
+        # Missing band_5_tuning in second configuration
+        (
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(1)
+            .set_band_5_tuning([5.85, 7.25])
+            .build(),
+            CommonConfigurationBuilder()
+            .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_frequency_band(ReceiverBand.BAND_1)
+            .set_subarray_id(1)
+            # No band_5_tuning set for second configuration
             .build(),
             False,
         ),
@@ -108,26 +127,69 @@ def test_common_configuration_equality(
 
 
 @pytest.mark.parametrize(
+    "subarray_config_a, subarray_config_b, is_equal",
+    [
+        # Case when both configurations have the same subarray name
+        (
+            SubarrayConfigurationBuilder()
+            .set_subarray_name("Test Subarray")
+            .build(),
+            SubarrayConfigurationBuilder()
+            .set_subarray_name("Test Subarray")
+            .build(),
+            True,
+        ),
+        # Case when configurations have different subarray names
+        (
+            SubarrayConfigurationBuilder()
+            .set_subarray_name("Test Subarray")
+            .build(),
+            SubarrayConfigurationBuilder()
+            .set_subarray_name("Test Subarray2")
+            .build(),
+            False,
+        ),
+    ],
+)
+def test_subarray_configuration_equality(
+    subarray_config_a, subarray_config_b, is_equal
+):
+    """
+    Verify that SubarrayConfiguration objects are equal when they have the same subarray name
+    and not equal when subarray names differ.
+    """
+    assert (subarray_config_a == subarray_config_b) == is_equal
+    assert subarray_config_a != 1
+    assert subarray_config_b != object
+
+
+@pytest.mark.parametrize(
     "cbf_config_a, cbf_config_b, is_equal",
     [
         # Case when both configurations have the same FSP configuration
         (
-            MidCBFConfigurationBuilder()
+            CBFConfigurationBuilder()
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
                     .set_integration_factor(10)
+                    .set_zoom_factor(0)
                     .build()
                 ]
             )
             .build(),
-            MidCBFConfigurationBuilder()
+            CBFConfigurationBuilder()
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
                     .set_integration_factor(10)
+                    .set_zoom_factor(0)
                     .build()
                 ]
             )
@@ -136,26 +198,35 @@ def test_common_configuration_equality(
         ),
         # Case when configurations have different FSP configurations
         (
-            MidCBFConfigurationBuilder()
+            CBFConfigurationBuilder()
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
                     .set_integration_factor(10)
+                    .set_zoom_factor(0)
                     .build()
                 ]
             )
             .build(),
-            MidCBFConfigurationBuilder()
+            CBFConfigurationBuilder()
             .set_fsp_config(
                 [
                     FSPConfigurationBuilder()
                     .set_fsp_id(1)
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
                     .set_integration_factor(10)
+                    .set_zoom_factor(0)
                     .build(),
                     FSPConfigurationBuilder()
                     .set_fsp_id(2)  # Different FSP ID
+                    .set_function_mode(FSPFunctionMode.CORR)
+                    .set_frequency_slice_id(1)
                     .set_integration_factor(10)
+                    .set_zoom_factor(0)
                     .build(),
                 ]
             )
@@ -181,11 +252,23 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             True,
         ),
@@ -193,10 +276,16 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(0)
             .set_fsp_id(2)  # Different FSP ID
             .build(),
             False,
@@ -204,32 +293,54 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.CORR)
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(
+                FSPFunctionMode.PSS_BF
+            )  # Different function mode
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
-            .build(),
-            False,
-        ),
-        (
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_integration_factor(10)
-            .build(),
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_integration_factor(10)
+            .set_zoom_factor(0)
             .build(),
             False,
         ),
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_frequency_slice_id(1)
+            .build(),
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(
+                FSPFunctionMode.PSS_BF
+            )  # Different function mode
+            .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_frequency_slice_id(2)  # Different frequency slice ID
+            .build(),
+            False,
+        ),
+        (
+            FSPConfigurationBuilder()
+            .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
+            .set_zoom_factor(0)
             .set_integration_factor(10)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
+            .set_zoom_factor(0)
             .set_integration_factor(2)  # Different integration factor
             .build(),
             False,
@@ -237,22 +348,42 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(0)
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(1)  # Different zoom factor
             .build(),
             False,
         ),
         (
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(FSPFunctionMode.PSS_BF)
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [0]))
+            )
             .build(),
             FSPConfigurationBuilder()
             .set_fsp_id(1)
+            .set_function_mode(
+                FSPFunctionMode.PSS_BF
+            )  # Different function mode
+            .set_frequency_slice_id(1)
             .set_integration_factor(10)
+            .set_zoom_factor(0)
+            .set_channel_averaging_map(
+                list(zip(itertools.count(1, 744), 20 * [1]))
+            )  # Different channel averaging map
             .build(),
             False,
         ),
@@ -283,16 +414,51 @@ def test_fsp_id_range_with_builder(fsp_id, expected_exception):
     """
     if expected_exception:
         with pytest.raises(expected_exception):
-            FSPConfigurationBuilder().set_fsp_id(
-                fsp_id
-            ).set_integration_factor(10).build()
+            FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
+                FSPFunctionMode.CORR
+            ).set_frequency_slice_id(1).set_integration_factor(
+                10
+            ).set_zoom_factor(
+                0
+            ).build()
     else:
         try:
-            FSPConfigurationBuilder().set_fsp_id(
-                fsp_id
-            ).set_integration_factor(10).build()
+            FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
+                FSPFunctionMode.CORR
+            ).set_frequency_slice_id(1).set_integration_factor(
+                10
+            ).set_zoom_factor(
+                0
+            ).build()
         except ValueError:
             pytest.fail(f"FSP ID {fsp_id} raised ValueError unexpectedly.")
+
+
+@pytest.mark.parametrize(
+    "zoom_factor, expected_exception",
+    [
+        (-1, ValueError),  # Invalid zoom_factor below range
+        (7, ValueError),  # Invalid zoom_factor above range
+        (0, None),  # Valid zoom_factor at lower bound
+        (6, None),  # Valid zoom_factor at upper bound
+    ],
+)
+def test_fsp_zoom_factor_range(zoom_factor, expected_exception):
+    builder = (
+        FSPConfigurationBuilder()
+        .set_fsp_id(1)
+        .set_function_mode(FSPFunctionMode.CORR)
+        .set_frequency_slice_id(1)
+        .set_integration_factor(10)
+    )
+    if expected_exception:
+        with pytest.raises(expected_exception):
+            builder.set_zoom_factor(zoom_factor).build()
+    else:
+        config = builder.set_zoom_factor(zoom_factor).build()
+        assert (
+            config.zoom_factor == zoom_factor
+        )  # Verifies the zoom_factor is set as expected
 
 
 @pytest.mark.parametrize(
@@ -305,7 +471,13 @@ def test_fsp_id_range_with_builder(fsp_id, expected_exception):
     ],
 )
 def test_fsp_integration_factor_range(integration_factor, expected_exception):
-    builder = FSPConfigurationBuilder().set_fsp_id(1)
+    builder = (
+        FSPConfigurationBuilder()
+        .set_fsp_id(1)
+        .set_function_mode(FSPFunctionMode.CORR)
+        .set_frequency_slice_id(1)
+        .set_zoom_factor(0)
+    )
     if expected_exception:
         with pytest.raises(expected_exception):
             builder.set_integration_factor(integration_factor).build()
@@ -314,6 +486,40 @@ def test_fsp_integration_factor_range(integration_factor, expected_exception):
         assert (
             config.integration_factor == integration_factor
         )  # Verifies the integration_factor is set as expected
+
+
+@pytest.mark.parametrize(
+    "channel_avg_map_length, expected_exception",
+    [
+        (20, None),  # Assuming 20 entries are valid
+        (
+            21,
+            ValueError,
+        ),  # Invalid number of entries, assuming more than 20 is invalid
+    ],
+)
+def test_fsp_configuration_channel_avg_map_length(
+    channel_avg_map_length, expected_exception
+):
+    channel_avg_map = list(
+        zip(itertools.count(1, 744), [0] * channel_avg_map_length)
+    )
+    builder = (
+        FSPConfigurationBuilder()
+        .set_fsp_id(1)
+        .set_function_mode(FSPFunctionMode.CORR)
+        .set_frequency_slice_id(1)
+        .set_integration_factor(10)
+        .set_zoom_factor(0)
+        .set_channel_averaging_map(channel_avg_map)
+    )
+
+    if expected_exception:
+        with pytest.raises(expected_exception):
+            builder.build()
+    else:
+        config = builder.build()
+        assert len(config.channel_averaging_map) == channel_avg_map_length
 
 
 @pytest.mark.parametrize(

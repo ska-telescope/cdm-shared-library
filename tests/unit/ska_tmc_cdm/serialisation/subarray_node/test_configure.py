@@ -30,7 +30,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
-    MidCBFConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
@@ -103,39 +102,65 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
     ),
     csp=CSPConfiguration(
         interface="https://schema.skao.int/ska-csp-configure/2.0",
+        subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_5B,
-            band_5_tuning=[5.85, 7.25],
             subarray_id=1,
         ),
         pss_config={},
         pst_config={},
-        midcbf=MidCBFConfiguration(
+        cbf_config=CBFConfigurationDepreciated(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=7,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
                     integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=5,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
                     integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=744,
                     output_link_map=[(0, 4), (200, 5)],
+                    zoom_window_tuning=650000,
                 ),
                 FSPConfiguration(
                     fsp_id=7,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
                     integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=7,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
                     integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
                 FSPConfiguration(
                     fsp_id=7,
+                    function_mode=FSPFunctionMode.VLBI,
+                    frequency_slice_id=2,
                     integration_factor=1,
+                    zoom_factor=1,
+                    channel_averaging_map=[(0, 2), (744, 0)],
+                    channel_offset=0,
                     output_link_map=[(0, 0), (200, 1)],
                 ),
             ],
@@ -163,16 +188,33 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+      "subarray_name": "science period 23"
+    },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "5b",
       "subarray_id": 1
     },
-    "midcbf": {
+    "cbf": {
       "fsp": [
         {
           "fsp_id": 7,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
           "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -186,7 +228,21 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 5,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
           "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 744,
           "output_link_map": [
             [
               0,
@@ -197,10 +253,25 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
               5
             ]
           ],
+          "zoom_window_tuning": 650000
         },
         {
           "fsp_id": 7,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
           "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -214,7 +285,21 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 7,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
           "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -228,7 +313,21 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
         },
         {
           "fsp_id": 7,
+          "function_mode": "VLBI",
+          "frequency_slice_id": 2,
           "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -906,16 +1005,33 @@ VALID_MID_CONFIGURE_JSON_2_3 = """
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "subarray": {
+      "subarray_name": "science period 23"
+    },
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "1",
       "subarray_id": 1
     },
-    "midcbf": {
+    "cbf": {
       "fsp": [
         {
           "fsp_id": 1,
+          "function_mode": "CORR",
+          "frequency_slice_id": 1,
           "integration_factor": 1,
+          "zoom_factor": 0,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 0,
           "output_link_map": [
             [
               0,
@@ -929,7 +1045,21 @@ VALID_MID_CONFIGURE_JSON_2_3 = """
         },
         {
           "fsp_id": 2,
+          "function_mode": "CORR",
+          "frequency_slice_id": 2,
           "integration_factor": 1,
+          "zoom_factor": 1,
+          "channel_averaging_map": [
+            [
+              0,
+              2
+            ],
+            [
+              744,
+              0
+            ]
+          ],
+          "channel_offset": 744,
           "output_link_map": [
             [
               0,
@@ -940,6 +1070,7 @@ VALID_MID_CONFIGURE_JSON_2_3 = """
               5
             ]
           ],
+          "zoom_window_tuning": 650000
         }
       ],
       "vlbi": {}
@@ -958,7 +1089,7 @@ VALID_MID_CONFIGURE_JSON_2_3 = """
 
 INVALID_MID_CONFIGURE_JSON = """
 {
-  "interface": "https://schema.skao.int/ska-tmc-configure/2.3",
+  "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
   "transaction_id": "txn-....-00001",
   "pointing": {
     "target": {
@@ -1055,7 +1186,6 @@ INVALID_MID_CONFIGURE_JSON = """
     "scan_duration": -10
   }
 }"""
-
 
 VALID_MID_CONFIGURE_OBJECT_2_3 = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.3",
