@@ -32,7 +32,7 @@ name = "PyPI-public"
 url = 'https://pypi.org/simple'
 
 [[tool.poetry.source]] 
-name = "ska-ost-osd"
+name = "gitlab"
 url = "https://gitlab.com/api/v4/projects/55825670/packages/pypi/simple"
 
 [tool.poetry.dependencies]
@@ -42,7 +42,7 @@ deepdiff = "^5.8.1"
 pydantic = "^2.7.0"
 pydantic-core = "^2.18.1"
 annotated-types = "^0.6.0"
-#ska-ost-osd = "1.0.3+dev.ceef4f380"
+ska-ost-osd = "1.0.3+dev.ceef4f380"
 #ska-telmodel = "^1.18.1"
 
 [tool.poetry.group.dev.dependencies]
