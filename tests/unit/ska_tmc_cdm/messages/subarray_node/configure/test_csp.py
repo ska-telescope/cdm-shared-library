@@ -104,7 +104,7 @@ tr = (
             .build(),
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5A)
+            .set_frequency_band(ReceiverBand.BAND_1)
             .set_subarray_id(1)
             # No band_5_tuning set for second configuration
             .build(),

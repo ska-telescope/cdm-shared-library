@@ -296,7 +296,6 @@ def test_marshall_csp_configuration_does_not_modify_original():
             config_id="config_id",
             frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
-            band_5_tuning=[5.85, 7.25],
         ),
         cbf_config=CBFConfigurationDepreciated(fsp_configs=[fsp_config]),
         pss_config=None,
