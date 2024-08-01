@@ -31,6 +31,10 @@ url = 'https://artefact.skao.int/repository/pypi-internal/simple'
 name = "PyPI-public"
 url = 'https://pypi.org/simple'
 
+[[tool.poetry.source]] 
+name = "ska-ost-osd"
+url = "https://gitlab.com/api/v4/projects/55825670/packages/pypi/simple"
+
 [tool.poetry.dependencies]
 python = "^3.10"
 astropy = "^5.1"
@@ -38,8 +42,8 @@ deepdiff = "^5.8.1"
 pydantic = "^2.7.0"
 pydantic-core = "^2.18.1"
 annotated-types = "^0.6.0"
-ska-ost-osd = "1.0.3"
-ska-telmodel = "^1.18.1"
+#ska-ost-osd = "1.0.3+dev.ceef4f380"
+#ska-telmodel = "^1.18.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1.3"
