@@ -1,7 +1,7 @@
 .PHONY: tests/fixtures/tmdata/ diagrams
 
 PROJECT_NAME := ska-tmc-cdm
-TMDATA_VERSION := $(shell python -c 'from importlib.metadata import version; print(version("ska_ost_osd"))')
+TMDATA_VERSION := 1.0.3
 
 # unset defaults so settings in pyproject.toml take effect
 PYTHON_SWITCHES_FOR_BLACK =
