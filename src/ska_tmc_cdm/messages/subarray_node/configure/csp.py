@@ -294,7 +294,7 @@ class MidCBFConfiguration(CdmObject):
     frequency_band_offset_stream2: Optional[int] = Field(
         ge=-100000000, le=100000000
     )
-    correlation: CorrelationConfiguration
+    correlation: List[CorrelationConfiguration]
     vlbi_config: Optional[VLBIConfiguration] = Field(
         default=None,
         serialization_alias="vlbi",

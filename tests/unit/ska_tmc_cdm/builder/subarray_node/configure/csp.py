@@ -304,6 +304,7 @@ class MidCBFConfigurationBuilder:
         self.vlbi_config = None
         self.frequency_band_offset_stream1 = None
         self.frequency_band_offset_stream2 = None
+        self.correlation = None
 
     def set_frequency_band_offset_stream1(
         self, frequency_band_offset_stream1: dict
@@ -315,6 +316,18 @@ class MidCBFConfigurationBuilder:
         :return: An instance of MidCBFConfigurationBuilder with the updated frequency_band_offset_stream1 configuration.
         """
         self.frequency_band_offset_stream1 = frequency_band_offset_stream1
+        return self
+
+    def set_correlation(
+        self, correlation: dict
+    ) -> "MidCBFConfigurationBuilder":
+        """
+        Set the correlation configuration.
+
+        :param correlation:
+        :return: An instance of MidCBFConfigurationBuilder with the updated correlation configuration.
+        """
+        self.correlation = correlation
         return self
 
     def set_frequency_band_offset_stream2(
@@ -362,6 +375,7 @@ class MidCBFConfigurationBuilder:
             frequency_band_offset_stream1=self.frequency_band_offset_stream1,
             frequency_band_offset_stream2=self.frequency_band_offset_stream2,
             fsp_configs=self.fsp_configs,
+            correlation=self.correlation,
             vlbi_config=self.vlbi_config,
         )
 
