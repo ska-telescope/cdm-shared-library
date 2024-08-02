@@ -302,6 +302,32 @@ class MidCBFConfigurationBuilder:
     def __init__(self):
         self.fsp_configs = None
         self.vlbi_config = None
+        self.frequency_band_offset_stream1 = None
+        self.frequency_band_offset_stream2 = None
+
+    def set_frequency_band_offset_stream1(
+        self, frequency_band_offset_stream1: dict
+    ) -> "MidCBFConfigurationBuilder":
+        """
+        Set the frequency_band_offset_stream1 configuration.
+
+        :param frequency_band_offset_stream1:
+        :return: An instance of MidCBFConfigurationBuilder with the updated frequency_band_offset_stream1 configuration.
+        """
+        self.frequency_band_offset_stream1 = frequency_band_offset_stream1
+        return self
+
+    def set_frequency_band_offset_stream2(
+        self, frequency_band_offset_stream2: dict
+    ) -> "MidCBFConfigurationBuilder":
+        """
+        Set the frequency_band_offset_stream2 configuration.
+
+        :param frequency_band_offset_stream2:
+        :return: An instance of MidCBFConfigurationBuilder with the updated frequency_band_offset_stream2 configuration.
+        """
+        self.frequency_band_offset_stream2 = frequency_band_offset_stream2
+        return self
 
     def set_fsp_config(
         self, fsp_configs: List[FSPConfiguration]
@@ -333,7 +359,10 @@ class MidCBFConfigurationBuilder:
         :return: An instance of MidCBFConfiguration with the specified configurations.
         """
         return MidCBFConfiguration(
-            fsp_configs=self.fsp_configs, vlbi_config=self.vlbi_config
+            frequency_band_offset_stream1=self.frequency_band_offset_stream1,
+            frequency_band_offset_stream2=self.frequency_band_offset_stream2,
+            fsp_configs=self.fsp_configs,
+            vlbi_config=self.vlbi_config,
         )
 
 
