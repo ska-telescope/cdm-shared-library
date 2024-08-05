@@ -921,7 +921,6 @@ class CSPConfigurationBuilder:
             interface=self.interface,
             subarray=self.subarray,
             common=self.common,
-            cbf_config=self.cbf_config,
             midcbf=self.midcbf,
             lowcbf=self.lowcbf,
             pst_config=self.pst_config,
