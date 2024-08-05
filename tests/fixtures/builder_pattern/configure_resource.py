@@ -126,18 +126,8 @@ def csp_config() -> CSPConfiguration:
         )
         .set_midcbf(
             MidCBFConfigurationBuilder()
-            .set_fsp_config(
-                [
-                    FSPConfigurationBuilder()
-                    .set_fsp_id(fsp_id=1)
-                    .set_function_mode(function_mode=FSPFunctionMode.CORR)
-                    .set_frequency_slice_id(frequency_slice_id=1)
-                    .set_integration_factor(integration_factor=10)
-                    .set_zoom_factor(0)
-                    .build()
-                ]
-            )
-            .build()
+            .set_frequency_band_offset_stream1(1)
+            .set_correlation(...)
         )
         .build()
     )
