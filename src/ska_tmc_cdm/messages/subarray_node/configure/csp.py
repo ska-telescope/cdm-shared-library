@@ -96,7 +96,6 @@ class CommonConfiguration(CdmObject):
 
     :param config_id: CSP configuration ID
     :param frequency_band: the frequency band to set
-    :param subarray_id: an ID of sub-array device
     :param band_5_tuning: band 5 receiver to set (optional)
     """
 

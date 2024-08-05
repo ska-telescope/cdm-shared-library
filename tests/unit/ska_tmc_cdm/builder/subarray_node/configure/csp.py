@@ -190,9 +190,9 @@ class CommonConfigurationBuilder:
 
     def __init__(self):
         self.config_id = None
-        self.frequency_band = None
-        self.subarray_id = None
+        self.eb_id = None
         self.band_5_tuning = None
+        self.frequency_band = None
 
     def set_config_id(self, config_id: str) -> "CommonConfigurationBuilder":
         """
@@ -204,28 +204,14 @@ class CommonConfigurationBuilder:
         self.config_id = config_id
         return self
 
-    def set_frequency_band(
-        self, frequency_band: core.ReceiverBand
-    ) -> "CommonConfigurationBuilder":
+    def set_eb_id(self, eb_id: str) -> "CommonConfigurationBuilder":
         """
-        Set the frequency band.
+        Set the execution block ID.
 
-        :param frequency_band: ReceiverBand instance representing the frequency band.
-        :return: An instance of CommonConfigurationBuilder with the updated frequency band.
+        :param eb_id: String representing the execution block ID.
+        :return: An instance of CommonConfigurationBuilder with the updated execution block  ID.
         """
-        self.frequency_band = frequency_band
-        return self
-
-    def set_subarray_id(
-        self, subarray_id: int
-    ) -> "CommonConfigurationBuilder":
-        """
-        Set the sub-array ID.
-
-        :param subarray_id: Integer representing the sub-array ID.
-        :return: An instance of CommonConfigurationBuilder with the updated sub-array ID.
-        """
-        self.subarray_id = subarray_id
+        self.eb_id = eb_id
         return self
 
     def set_band_5_tuning(
@@ -240,6 +226,18 @@ class CommonConfigurationBuilder:
         self.band_5_tuning = band_5_tuning
         return self
 
+    def set_frequency_band(
+        self, frequency_band: core.ReceiverBand
+    ) -> "CommonConfigurationBuilder":
+        """
+        Set the frequency band.
+
+        :param frequency_band: ReceiverBand instance representing the frequency band.
+        :return: An instance of CommonConfigurationBuilder with the updated frequency band.
+        """
+        self.frequency_band = frequency_band
+        return self
+
     def build(self) -> CommonConfiguration:
         """
         Builds or creates an instance of CommonConfiguration with the set properties.
@@ -247,9 +245,9 @@ class CommonConfigurationBuilder:
         """
         return CommonConfiguration(
             config_id=self.config_id,
-            frequency_band=self.frequency_band,
-            subarray_id=self.subarray_id,
+            eb_id=self.eb_id,
             band_5_tuning=self.band_5_tuning,
+            frequency_band=self.frequency_band,
         )
 
 
@@ -854,7 +852,7 @@ class CSPConfigurationBuilder:
         return self
 
     def set_common(
-        self, common: CommonConfiguration
+        self, common: CommonConfiguration | dict
     ) -> "CSPConfigurationBuilder":
         """
         Set the CommonConfiguration.

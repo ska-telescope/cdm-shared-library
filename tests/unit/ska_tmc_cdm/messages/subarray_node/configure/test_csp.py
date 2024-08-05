@@ -52,14 +52,14 @@ tr = (
         (
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_eb_id("eb-201")
             .set_frequency_band(ReceiverBand.BAND_5A)
-            .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build(),
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_eb_id("eb-201")
             .set_frequency_band(ReceiverBand.BAND_5A)
-            .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build(),
             True,
@@ -68,29 +68,13 @@ tr = (
         (
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_eb_id("eb-201")
             .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
             .build(),
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_eb_id("eb-201")
             .set_frequency_band(ReceiverBand.BAND_2)
-            .set_subarray_id(1)
-            .build(),
-            False,
-        ),
-        # Different subarray ID
-        (
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5A)
-            .set_subarray_id(1)
-            .set_band_5_tuning([5.85, 7.25])
-            .build(),
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_5A)
-            .set_subarray_id(2)  # Different subarray ID
-            .set_band_5_tuning([5.85, 7.25])
             .build(),
             False,
         ),
@@ -98,14 +82,14 @@ tr = (
         (
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_eb_id("eb-201")
             .set_frequency_band(ReceiverBand.BAND_5A)
-            .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build(),
             CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_eb_id("eb-201")
             .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
             # No band_5_tuning set for second configuration
             .build(),
             False,

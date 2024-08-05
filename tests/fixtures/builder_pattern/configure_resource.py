@@ -120,8 +120,8 @@ def csp_config() -> CSPConfiguration:
         .set_common(
             CommonConfigurationBuilder()
             .set_config_id(config_id="config_id")
+            .set_eb_id(eb_id="eb_id")
             .set_frequency_band(frequency_band=ReceiverBand.BAND_1)
-            .set_subarray_id(1)
             .build()
         )
         .set_midcbf(
@@ -144,8 +144,8 @@ def low_csp_config() -> CSPConfiguration:
         .set_common(
             common=CommonConfigurationBuilder()
             .set_config_id("sbi-mvp01-20200325-00001-science_A")
+            .set_eb_id(eb_id="eb_id")
             .set_frequency_band(ReceiverBand.BAND_5A)
-            .set_subarray_id(1)
             .set_band_5_tuning([5.85, 7.25])
             .build()
         )
