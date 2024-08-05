@@ -47,6 +47,8 @@ class FSPFunctionMode(Enum):
 
 class FSPConfiguration(CdmObject):
     """
+    DEPRECIATED IN CSP CONFIGURE SCAN 4.0
+
     FSPConfiguration defines the configuration for a CSP Frequency Slice
     Processor.
 
