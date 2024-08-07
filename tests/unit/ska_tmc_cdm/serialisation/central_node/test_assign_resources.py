@@ -515,7 +515,7 @@ VALID_CSP_LOW_JSON = """
       1
     ]
   }
-}      
+}
 """
 
 VALID_SDP_OBJECT = SDPConfiguration(
@@ -1000,8 +1000,8 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
     ],
     "station_ids": [
       [
-        1,
-        2
+        345,
+        350
       ]
     ],
     "channel_blocks": [
@@ -1028,8 +1028,8 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_4_0 = (
         "subarray_beam_id": 1,
         "apertures": [
           {
-            "station_id": 1,
-            "aperture_id": "AP001.01"
+            "station_id": 350,
+            "aperture_id": "AP001.350"
           }
         ],
         "number_of_channels": 8
@@ -1052,7 +1052,7 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     transaction_id="txn-....-00001",
     subarray_id=1,
     mccs=MCCSAllocate(
-        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
+        subarray_beam_ids=[1], station_ids=[(345, 350)], channel_blocks=[3]
     ),
     sdp_config=VALID_SDP_OBJECT,
 )
@@ -1068,8 +1068,8 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_4_0 = AssignResourcesRequest(
                 subarray_beam_id=1,
                 apertures=[
                     ApertureConfiguration(
-                        station_id=1,
-                        aperture_id="AP001.01",
+                        station_id=350,
+                        aperture_id="AP001.350",
                     ),
                 ],
                 number_of_channels=8,
@@ -1085,7 +1085,7 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT = AssignResourcesRequest(
     transaction_id="txn-....-00001",
     subarray_id="1",
     mccs=MCCSAllocate(
-        subarray_beam_ids=[1], station_ids=[(1, 2)], channel_blocks=[3]
+        subarray_beam_ids=[1], station_ids=[(345, 350)], channel_blocks=[3]
     ),
     sdp_config=INVALID_SDP_OBJECT,
 )
