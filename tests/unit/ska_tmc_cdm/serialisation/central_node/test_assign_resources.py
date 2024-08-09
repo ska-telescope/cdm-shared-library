@@ -972,8 +972,8 @@ INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON = (
     ],
     "station_ids": [
       [
-        1,
-        2
+        345,
+        350
       ]
     ],
     "channel_blocks": [
