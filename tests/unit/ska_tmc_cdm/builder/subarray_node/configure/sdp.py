@@ -1,12 +1,12 @@
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import (
-    SCHEMA,
+    SDP_SCHEMA,
     SDPConfiguration,
 )
 
 
 class SDPConfigurationBuilder:
     def __init__(self):
-        self.interface = SCHEMA
+        self.interface = SDP_SCHEMA
         self.scan_type = None
 
     def set_interface(self, interface: str) -> "SDPConfigurationBuilder":

@@ -346,9 +346,6 @@ def test_sdp_equality_check(processing_block, scan_type, execution_block):
     """
     sdp1 = (
         SDPConfigurationBuilder()
-        .set_eb_id(eb_id="sbi-mvp01-20200325-00001")
-        .set_max_length(max_length=100.0)
-        .set_scan_types(scan_types=[scan_type])
         .set_processing_blocks(processing_blocks=[processing_block])
         .set_execution_block(execution_block=execution_block)
         .build()
@@ -356,9 +353,7 @@ def test_sdp_equality_check(processing_block, scan_type, execution_block):
 
     sdp2 = (
         SDPConfigurationBuilder()
-        .set_eb_id(eb_id="sbi-mvp01-20200325-00001")
-        .set_max_length(max_length=200.0)
-        .set_scan_types(scan_types=[scan_type])
+        .set_interface("https://schema.skao.int/ska-sdp-assignres/0.3")
         .set_processing_blocks(processing_blocks=[processing_block])
         .set_execution_block(execution_block=execution_block)
         .build()
