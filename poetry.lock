@@ -2127,18 +2127,18 @@ reference = "PyPI-public"
 
 [[package]]
 name = "setuptools"
-version = "72.1.0"
+version = "72.2.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "setuptools-72.1.0-py3-none-any.whl", hash = "sha256:5a03e1860cf56bb6ef48ce186b0e557fdba433237481a9a625176c2831be15d1"},
-    {file = "setuptools-72.1.0.tar.gz", hash = "sha256:8d243eff56d095e5817f796ede6ae32941278f542e0f941867cc05ae52b162ec"},
+    {file = "setuptools-72.2.0-py3-none-any.whl", hash = "sha256:f11dd94b7bae3a156a95ec151f24e4637fb4fa19c878e4d191bfb8b2d82728c4"},
+    {file = "setuptools-72.2.0.tar.gz", hash = "sha256:80aacbf633704e9c8bfa1d99fa5dd4dc59573efcf9e4042c13d3bcef91ac2ef9"},
 ]
 
 [package.extras]
 core = ["importlib-metadata (>=6)", "importlib-resources (>=5.10.2)", "jaraco.text (>=3.7)", "more-itertools (>=8.8)", "ordered-set (>=3.1.1)", "packaging (>=24)", "platformdirs (>=2.6.2)", "tomli (>=2.0.1)", "wheel (>=0.43.0)"]
-doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "pyproject-hooks (!=1.1)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier"]
+doc = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "pyproject-hooks (!=1.1)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier", "towncrier (<24.7)"]
 test = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "importlib-metadata", "ini2toml[lite] (>=0.14)", "jaraco.develop (>=7.21)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "jaraco.test", "mypy (==1.11.*)", "packaging (>=23.2)", "pip (>=19.1)", "pyproject-hooks (!=1.1)", "pytest (>=6,!=8.1.*)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-home (>=0.5)", "pytest-mypy", "pytest-perf", "pytest-ruff (<0.4)", "pytest-ruff (>=0.2.1)", "pytest-ruff (>=0.3.2)", "pytest-subprocess", "pytest-timeout", "pytest-xdist (>=3)", "tomli", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel"]
 
 [package.source]
@@ -2180,13 +2180,13 @@ reference = "PyPI-public"
 
 [[package]]
 name = "ska-ost-osd"
-version = "2.0.0+dev.c2d85ad63"
+version = "2.0.0+dev.c148cd3bf"
 description = "simplest form OSD consists ofguration files that are required by OSO tools."
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ska_ost_osd-2.0.0+dev.c2d85ad63-py3-none-any.whl", hash = "sha256:e3d82f8ec3d0b82a7828971b9b55352a52c3fa6bca531540ccbf5dada9b14ccf"},
-    {file = "ska_ost_osd-2.0.0+dev.c2d85ad63.tar.gz", hash = "sha256:9ad233e9e183e7faab0e181912f7c88fb8e53bde9c9591f53b08d61bac3c86c6"},
+    {file = "ska_ost_osd-2.0.0+dev.c148cd3bf-py3-none-any.whl", hash = "sha256:fa21aed65a7a5cc77524dd25c5f516cf4f6a5bf924533b3b3da57ce1e8c796b8"},
+    {file = "ska_ost_osd-2.0.0+dev.c148cd3bf.tar.gz", hash = "sha256:d21da94dbb8cbd383eb67a1f587195d85d04d32f2ad6dd15943be4076b96f763"},
 ]
 
 [package.dependencies]
@@ -2678,4 +2678,4 @@ reference = "PyPI-public"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "cc8b03469ad02e2f2e3a72bc4d739edba4883539bf8f72b08aec953b248beadd"
+content-hash = "0c7ca98be0a0e2fd00a28916660e79ab4cba8396f560c10d92ccb4e42215d754"
