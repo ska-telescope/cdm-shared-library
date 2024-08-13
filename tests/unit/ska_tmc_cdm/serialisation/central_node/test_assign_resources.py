@@ -1028,8 +1028,8 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_4_0 = (
         "subarray_beam_id": 1,
         "apertures": [
           {
-            "station_id": 1,
-            "aperture_id": "AP001.01"
+            "station_id": 345,
+            "aperture_id": "AP345.01"
           }
         ],
         "number_of_channels": 8
@@ -1068,8 +1068,8 @@ VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_4_0 = AssignResourcesRequest(
                 subarray_beam_id=1,
                 apertures=[
                     ApertureConfiguration(
-                        station_id=1,
-                        aperture_id="AP001.01",
+                        station_id=345,
+                        aperture_id="AP345.01",
                     ),
                 ],
                 number_of_channels=8,
