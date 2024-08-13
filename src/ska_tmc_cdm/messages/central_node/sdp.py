@@ -287,7 +287,7 @@ class SDPConfiguration(CdmObject):
     Class to hold SDP Configuration
 
     :param interface: url string to determine JsonSchema version
-    :param transaction_id:
+    :param transaction_id: string ID for tracking requests
     :param processing_blocks: A Processing Block is an atomic unit of data processing for the purpose of SDP’s internal scheduler
     :param execution_block: execution_block
     :param resources: resources
