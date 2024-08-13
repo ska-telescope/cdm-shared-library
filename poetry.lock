@@ -2180,13 +2180,13 @@ reference = "PyPI-public"
 
 [[package]]
 name = "ska-ost-osd"
-version = "2.0.0"
+version = "2.0.0+dev.c2d85ad63"
 description = "simplest form OSD consists ofguration files that are required by OSO tools."
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ska_ost_osd-2.0.0-py3-none-any.whl", hash = "sha256:d2d5c74f2c0235cd20c5fef392842f2503dafe2cd9fcecbe2aeef68b80415fb5"},
-    {file = "ska_ost_osd-2.0.0.tar.gz", hash = "sha256:e0c1a763cae87f0a84ac6ca501ef0dcffa2193e8bfb9e2a74ebb3f2ae4cc053f"},
+    {file = "ska_ost_osd-2.0.0+dev.c2d85ad63-py3-none-any.whl", hash = "sha256:e3d82f8ec3d0b82a7828971b9b55352a52c3fa6bca531540ccbf5dada9b14ccf"},
+    {file = "ska_ost_osd-2.0.0+dev.c2d85ad63.tar.gz", hash = "sha256:9ad233e9e183e7faab0e181912f7c88fb8e53bde9c9591f53b08d61bac3c86c6"},
 ]
 
 [package.dependencies]
@@ -2205,8 +2205,8 @@ ska-telmodel = "1.19.1"
 
 [package.source]
 type = "legacy"
-url = "https://artefact.skao.int/repository/pypi-internal/simple"
-reference = "ska-nexus"
+url = "https://gitlab.com/api/v4/projects/55825670/packages/pypi/simple"
+reference = "gitlab"
 
 [[package]]
 name = "ska-ser-logging"
@@ -2678,4 +2678,4 @@ reference = "PyPI-public"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "cfbb84dcc28b4e26b7591c5caa40d2b98d471da934f8cfbbc188a88f6c89e1a4"
+content-hash = "cc8b03469ad02e2f2e3a72bc4d739edba4883539bf8f72b08aec953b248beadd"
