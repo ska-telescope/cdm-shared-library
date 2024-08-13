@@ -4,10 +4,11 @@ aspects of SDP configuration that may be specified in a SubArrayNode.configure
 command.
 """
 from ska_tmc_cdm.messages.base import CdmObject
+from typing import Optional
 
 __all__ = ["SDPConfiguration"]
 
-SCHEMA = "https://schema.skao.int/ska-sdp-configure/0.3"
+SDP_SCHEMA = "https://schema.skao.int/ska-sdp-configure/0.4"
 
 
 class SDPConfiguration(CdmObject):
@@ -16,5 +17,6 @@ class SDPConfiguration(CdmObject):
     TMC SubArrayNode.Configure call.
     """
 
-    interface: str = SCHEMA
+    interface: str = SDP_SCHEMA
+    transaction_id: Optional[str] = None
     scan_type: str
