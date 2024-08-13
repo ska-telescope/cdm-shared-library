@@ -340,7 +340,7 @@ def test_processing_block_equality_check(object1, object2, is_equal):
     assert object1 != object()
 
 
-def test_sdp_equality_check(processing_block, scan_type, execution_block):
+def test_sdp_equality_check(processing_block, execution_block):
     """
     Verify that SDP Configuration objects are considered equal if attributes have same value and not equal if they differ.
     """

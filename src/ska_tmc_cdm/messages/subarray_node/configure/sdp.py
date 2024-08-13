@@ -3,8 +3,9 @@ The configure.sdp module contains Python classes that represent the various
 aspects of SDP configuration that may be specified in a SubArrayNode.configure
 command.
 """
-from ska_tmc_cdm.messages.base import CdmObject
 from typing import Optional
+
+from ska_tmc_cdm.messages.base import CdmObject
 
 __all__ = ["SDPConfiguration"]
 

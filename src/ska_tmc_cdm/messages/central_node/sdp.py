@@ -30,6 +30,7 @@ __all__ = [
 
 SDP_SCHEMA = "https://schema.skao.int/ska-sdp-assignres/0.4"
 
+
 class SDPWorkflow(CdmObject):
     """
     Class to hold SDPWorkflows for ProcessingBlock
@@ -297,4 +298,3 @@ class SDPConfiguration(CdmObject):
     execution_block: Optional[ExecutionBlockConfiguration] = None
     resources: Optional[dict] = None
     processing_blocks: Optional[list[ProcessingBlockConfiguration]] = None
-
