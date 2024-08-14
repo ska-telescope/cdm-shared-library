@@ -28,6 +28,8 @@ __all__ = [
     "EBScanType",
 ]
 
+SDP_SCHEMA = "https://schema.skao.int/ska-sdp-assignres/0.4"
+
 
 class SDPWorkflow(CdmObject):
     """
@@ -284,22 +286,15 @@ class SDPConfiguration(CdmObject):
     """
     Class to hold SDP Configuration
 
-    :param eb_id: Execution block ID to associate with processing
-    :param max_length: Hint about the maximum observation length to support by the SDP.
-    :param scan_types: Scan types to be supported on subarray
+    :param interface: url string to determine JsonSchema version
+    :param transaction_id: string ID for tracking requests
     :param processing_blocks: A Processing Block is an atomic unit of data processing for the purpose of SDP’s internal scheduler
     :param execution_block: execution_block
-    :param interface: url string to determine JsonSchema version
     :param resources: resources
     """
 
-    eb_id: Optional[str] = None
-    max_length: Optional[float] = None
-    # FIXME: should probably be `Field(default_factory=list)` not `None`
-    scan_types: Optional[list[ScanType]] = None
-    # FIXME: should probably be `Field(default_factory=list)` not `None`
-    processing_blocks: Optional[list[ProcessingBlockConfiguration]] = None
+    interface: Optional[str] = SDP_SCHEMA
+    transaction_id: Optional[str] = None
     execution_block: Optional[ExecutionBlockConfiguration] = None
-    # FIXME: should probably be `Field(default_factory=dict)` not `None`
     resources: Optional[dict] = None
-    interface: Optional[str] = None
+    processing_blocks: Optional[list[ProcessingBlockConfiguration]] = None
