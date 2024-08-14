@@ -4,8 +4,14 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+12.0.0
+**********
+* Updated default schema for sdp-configure to 0.4
+* Added a default schema for sdp-assignres to 0.4
+* [BREAKING] Removed depreciated kwargs for SDPConfiguration in central_node/sdp.py
+
 11.0.1
-******************
+******
 * Updated default schema URIs for LOW assign resources and configure
 * Adds static type checking with Pyright to python-lint pipeline.
 * Adds custom serialiser to CdmObject to exclude default None, [] and {} from JSON output.
