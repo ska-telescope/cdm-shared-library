@@ -2180,13 +2180,13 @@ reference = "PyPI-public"
 
 [[package]]
 name = "ska-ost-osd"
-version = "2.0.0+dev.c148cd3bf"
+version = "2.0.0+dev.cbcc0121c"
 description = "simplest form OSD consists ofguration files that are required by OSO tools."
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ska_ost_osd-2.0.0+dev.c148cd3bf-py3-none-any.whl", hash = "sha256:fa21aed65a7a5cc77524dd25c5f516cf4f6a5bf924533b3b3da57ce1e8c796b8"},
-    {file = "ska_ost_osd-2.0.0+dev.c148cd3bf.tar.gz", hash = "sha256:d21da94dbb8cbd383eb67a1f587195d85d04d32f2ad6dd15943be4076b96f763"},
+    {file = "ska_ost_osd-2.0.0+dev.cbcc0121c-py3-none-any.whl", hash = "sha256:d979cf6321ebbd8b21c98c0ac668299e7d8767d30f1388b6487bb26a0d579982"},
+    {file = "ska_ost_osd-2.0.0+dev.cbcc0121c.tar.gz", hash = "sha256:37e3b45cef0423c9b7aea91a18e472cd91a5561b5ed2d762c9008e85e75155ff"},
 ]
 
 [package.dependencies]
@@ -2585,13 +2585,13 @@ reference = "PyPI-public"
 
 [[package]]
 name = "tomlkit"
-version = "0.13.0"
+version = "0.13.1"
 description = "Style preserving TOML library"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "tomlkit-0.13.0-py3-none-any.whl", hash = "sha256:7075d3042d03b80f603482d69bf0c8f345c2b30e41699fd8883227f89972b264"},
-    {file = "tomlkit-0.13.0.tar.gz", hash = "sha256:08ad192699734149f5b97b45f1f18dad7eb1b6d16bc72ad0c2335772650d7b72"},
+    {file = "tomlkit-0.13.1-py3-none-any.whl", hash = "sha256:fb12e89373b28f3cd6679035324770123d6df04488431e1c7bcecf17820ee2e4"},
+    {file = "tomlkit-0.13.1.tar.gz", hash = "sha256:1be06879860054a26faba7acf2af62b45c94aa43b00a5f87fc445c5f930ad754"},
 ]
 
 [package.source]
@@ -2678,4 +2678,4 @@ reference = "PyPI-public"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "0c7ca98be0a0e2fd00a28916660e79ab4cba8396f560c10d92ccb4e42215d754"
+content-hash = "030368a50d083483fbe0d24e50d8aafa0ca42eae5f291977a649b591698a6fae"

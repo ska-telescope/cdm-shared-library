@@ -80,7 +80,7 @@ class JsonSchema:
                 raise JsonValidationError(exc, uri, instance) from exc
 
     @staticmethod
-    def semantic_validate_schema(instance: dict, uri: str) -> bool:
+    def semantic_validate_schema(instance: dict, uri: str) -> None:
         """
         Validate an instance dictionary under the given schema.
 
