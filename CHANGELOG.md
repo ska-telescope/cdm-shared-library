@@ -4,7 +4,7 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-Unreleased
+12.0.0
 **********
 * Updated default schema for sdp-configure to 0.4
 * Added a default schema for sdp-assignres to 0.4
