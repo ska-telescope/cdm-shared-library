@@ -1648,13 +1648,13 @@ reference = "PyPI-public"
 
 [[package]]
 name = "pyright"
-version = "1.1.375"
+version = "1.1.376"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pyright-1.1.375-py3-none-any.whl", hash = "sha256:4c5e27eddeaee8b41cc3120736a1dda6ae120edf8523bb2446b6073a52f286e3"},
-    {file = "pyright-1.1.375.tar.gz", hash = "sha256:7765557b0d6782b2fadabff455da2014476404c9e9214f49977a4e49dec19a0f"},
+    {file = "pyright-1.1.376-py3-none-any.whl", hash = "sha256:0f2473b12c15c46b3207f0eec224c3cea2bdc07cd45dd4a037687cbbca0fbeff"},
+    {file = "pyright-1.1.376.tar.gz", hash = "sha256:bffd63b197cd0810395bb3245c06b01f95a85ddf6bfa0e5644ed69c841e954dd"},
 ]
 
 [package.dependencies]
@@ -2180,13 +2180,13 @@ reference = "PyPI-public"
 
 [[package]]
 name = "ska-ost-osd"
-version = "2.0.0+dev.cd7e6dc1c"
-description = "simplest form OSD consists ofguration files that are required by OSO tools."
+version = "2.0.1+dev.cbe557823"
+description = "Simplest form OSD consists of configuration files that are required by OSO tools."
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ska_ost_osd-2.0.0+dev.cd7e6dc1c-py3-none-any.whl", hash = "sha256:72e902cc776cff9b0860a0d91b5d24ab2a785e387cc3cd288ab8840b869f2893"},
-    {file = "ska_ost_osd-2.0.0+dev.cd7e6dc1c.tar.gz", hash = "sha256:3bf24cb8fe1adb0a433c595f0c6418e4c0b330674ad4e32ed0d618894e8437d4"},
+    {file = "ska_ost_osd-2.0.1+dev.cbe557823-py3-none-any.whl", hash = "sha256:afcb4f0c993a5a8bea6bbeaaef937c8d2b6207a75470d21af5fc1d198f7e22e7"},
+    {file = "ska_ost_osd-2.0.1+dev.cbe557823.tar.gz", hash = "sha256:10fd55f0ba8128e2ec03ee51ec77c0675646f55e6122fe2dc8cacaf3f67dc793"},
 ]
 
 [package.dependencies]
@@ -2201,7 +2201,7 @@ requests = ">=2.27.1,<3.0.0"
 simpleeval = ">=0.9.13,<0.10.0"
 ska-ser-logging = ">=0.4.1,<0.5.0"
 ska-ser-skuid = ">=3.3.3,<4.0.0"
-ska-telmodel = "1.19.1"
+ska-telmodel = ">=1.19.2,<2.0.0"
 
 [package.source]
 type = "legacy"
@@ -2266,13 +2266,13 @@ reference = "ska-nexus"
 
 [[package]]
 name = "ska-telmodel"
-version = "1.19.1"
+version = "1.19.2"
 description = "SKA telescope model library"
 optional = false
 python-versions = ">=3.10.0,<4.0.0"
 files = [
-    {file = "ska_telmodel-1.19.1-py3-none-any.whl", hash = "sha256:7223bc8f39598c16e89b449448cde1056f11134d4d3055897784dc886874bf55"},
-    {file = "ska_telmodel-1.19.1.tar.gz", hash = "sha256:2f91ba7ab2f4579c4b8d15fef331fa3ad956768ed219655e2a6bbafeb2c4cc7a"},
+    {file = "ska_telmodel-1.19.2-py3-none-any.whl", hash = "sha256:89f6605f4e0107a710e36ae35facd55ea25529216a8d82f7d01941acd62d4139"},
+    {file = "ska_telmodel-1.19.2.tar.gz", hash = "sha256:99a8725a9cce91965a820c5a2e0fb99502d76a9030bb4aef46e55748f61fed15"},
 ]
 
 [package.dependencies]
@@ -2678,4 +2678,4 @@ reference = "PyPI-public"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f93f06ed17c790e3ca7d99df99cd4fce11f00da62b005ffe23478b8ecc76972a"
+content-hash = "64a02449010b71afa2b5577d86ddde2266ed48011b0bab7b4a4ffc9c34b2af1d"
