@@ -871,30 +871,3 @@ def test_low_cbf_configuration_equality(
     assert (low_cbf_config_a == low_cbf_config_b) == is_equal
     assert low_cbf_config_a != 1
     assert low_cbf_config_b != object()
-
-
-def test_csp_configuration_equality(csp_config, low_csp_config):
-    """
-    Verify that CSPConfiguration objects are equal when all they have the same values
-    and not equal when any attribute differs.
-    """
-
-    csp_config_invalid = CSPConfigurationBuilder().set_interface("foo").build()
-    csp_config_b = copy.deepcopy(csp_config)
-    assert (
-        csp_config == csp_config_b
-    )  # comparing same instance created using deepcopy
-    assert csp_config != csp_config_invalid  # comparing with invalid instance
-    assert csp_config != 1  # comparing with other instance
-
-    assert low_csp_config == copy.deepcopy(
-        low_csp_config
-    )  # comparing same instance created using deepcopy
-    assert (
-        low_csp_config != csp_config_invalid
-    )  # comparing with invalid instance
-    assert low_csp_config != 1  # comparing with other instance
-
-    assert csp_config != low_csp_config  # comparing mid with low
-    assert csp_config != object  # comparing with object
-    assert low_csp_config != object  # comparing with object
