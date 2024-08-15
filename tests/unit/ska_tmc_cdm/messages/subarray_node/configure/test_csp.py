@@ -45,18 +45,20 @@ tr = (
 )
 
 
-
 class CommonConfigurationTests:
     """
     testing the CommonConfiguration
     """
+
     def test_common_configuration_version_2_0_is_supported(self):
         pass
 
     def test_common_config_version_4_0_is_supported(self):
         pass
 
-    def test_that_band_5_tuning_kwarg_cannot_be_set_for_non_band_5_frequency_bands(self):
+    def test_that_band_5_tuning_kwarg_cannot_be_set_for_non_band_5_frequency_bands(
+        self,
+    ):
         pass
 
 
