@@ -32,7 +32,7 @@ python-post-lint:
 tests/fixtures/tmdata/:
 ifneq ($(TMDATA_VERSION), $(shell cat tests/fixtures/tmdata/TMDATA_VERSION))
 	rm -rf tests/fixtures/tmdata
-	ska-telmodel cp -UR --sources=car:ost/ska-ost-osd?${TMDATA_VERSION} "" tests/fixtures/tmdata
+	ska-telmodel -U --sources=car:ost/ska-ost-osd?${TMDATA_VERSION}  cp -R "" tests/fixtures/tmdata
 	echo ${TMDATA_VERSION} > tests/fixtures/tmdata/TMDATA_VERSION
 else
 	$(info tests/fixtures/tmdata already current v${TMDATA_VERSION})
