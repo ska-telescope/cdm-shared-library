@@ -26,8 +26,7 @@ VALID_LOW_JSON = """
 {
     "interface": "https://schema.skao.int/ska-low-tmc-scan/4.0",
     "transaction_id": "txn-test-00001",
-    "scan_id": 1,
-    "subarray_id":1
+    "scan_id": 1
 }
 """
 
@@ -35,7 +34,6 @@ VALID_LOW_OBJECT = ScanRequest(
     interface="https://schema.skao.int/ska-low-tmc-scan/4.0",
     transaction_id="txn-test-00001",
     scan_id=1,
-    subarray_id=1,
 )
 
 INVALID_LOW_JSON = """
