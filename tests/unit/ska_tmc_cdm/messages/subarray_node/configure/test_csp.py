@@ -1,7 +1,6 @@
 """
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
-import copy
 import itertools
 
 import pytest
@@ -12,7 +11,6 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     BeamsConfigurationBuilder,
     CBFConfigurationBuilder,
     CommonConfigurationBuilder,
-    CSPConfigurationBuilder,
     FSPConfigurationBuilder,
     LowCBFConfigurationBuilder,
     StationConfigurationBuilder,
