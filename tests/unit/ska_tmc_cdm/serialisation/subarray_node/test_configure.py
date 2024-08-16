@@ -1545,7 +1545,6 @@ def test_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    print("xxxxxxxxxxxxxxxx")
     with pytest.raises(SchematicValidationError):
         utils.test_serialisation_and_validation(
             model_class,
