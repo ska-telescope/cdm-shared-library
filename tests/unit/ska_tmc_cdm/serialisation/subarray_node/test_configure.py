@@ -95,7 +95,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         correction=PointingCorrection.MAINTAIN,
     ),
-    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_2),
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_5A),
     sdp=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-configure/0.4",
         scan_type="science_A",
@@ -184,7 +184,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
     "correction": "MAINTAIN"
   },
   "dish": {
-    "receiver_band": "2"
+    "receiver_band": "5a"
   },
   "csp": {
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
