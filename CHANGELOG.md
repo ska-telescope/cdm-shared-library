@@ -4,6 +4,10 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+12.1.0
+**********
+* Integrated latest OSD release into CDM.
+
 12.0.0
 **********
 * Updated default schema for sdp-configure to 0.4
