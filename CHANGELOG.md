@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 **********
 * Integrated latest OSD version into CDM.
 * After integration test_assign_resources and test_scan testcases were failing
-  so fixed those as per of this release.
+  so fixed those as part of this release.
 
 12.0.0
 **********
