@@ -6,7 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 12.1.0
 **********
-* Integrated latest OSD release into CDM.
+* Integrated latest OSD version into CDM.
+* Fixed failed testcases.
 
 12.0.0
 **********
