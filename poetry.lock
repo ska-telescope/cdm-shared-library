@@ -2180,13 +2180,13 @@ reference = "PyPI-public"
 
 [[package]]
 name = "ska-ost-osd"
-version = "2.0.1+dev.c758daa5d"
+version = "2.0.1+dev.c078b4be6"
 description = "Simplest form OSD consists of configuration files that are required by OSO tools."
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ska_ost_osd-2.0.1+dev.c758daa5d-py3-none-any.whl", hash = "sha256:ccb640bf067988f430ccb3a73ed842eff5be901e88bf190fbf25b8ec37c14491"},
-    {file = "ska_ost_osd-2.0.1+dev.c758daa5d.tar.gz", hash = "sha256:bdfa78e11d1234eb50e75f1ac53148b918d697b196da87ecaa63c38629a64ef1"},
+    {file = "ska_ost_osd-2.0.1+dev.c078b4be6-py3-none-any.whl", hash = "sha256:a5dbc9ca295f3394c0d928015090ed0b546f4e34e9d8da263862dc0cf27eb01e"},
+    {file = "ska_ost_osd-2.0.1+dev.c078b4be6.tar.gz", hash = "sha256:0983b02df90843f56581de5569e9b50040f4979e1e2c6ce63d7a56787286a864"},
 ]
 
 [package.dependencies]
@@ -2196,8 +2196,6 @@ fire = ">=0.5.0,<0.6.0"
 gunicorn = ">=20.1.0,<21.0.0"
 jsonschema = "4.17.3"
 prance = {version = ">=23.6.21.0,<24.0.0.0", extras = ["osv"]}
-pydantic = ">=2.7.0,<3.0.0"
-pydantic-core = ">=2.18.1,<3.0.0"
 python-dateutil = ">=2.8.2,<3.0.0"
 requests = ">=2.27.1,<3.0.0"
 simpleeval = ">=0.9.13,<0.10.0"
@@ -2680,4 +2678,4 @@ reference = "PyPI-public"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "f138a4b99df36142379bd43e98bea7b7e13c6214c1cba7b513a35fad30b0fded"
+content-hash = "b05ea289a05d4bc74166cd3804acb78de9e3481a7569aec7dc5c06b97b4c3b69"
