@@ -30,6 +30,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
+    MidCBFConfiguration,
+    ProcessingRegionConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
@@ -1325,23 +1327,17 @@ VALID_MID_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
         ),
         pss_config={},
         pst_config={},
-        midcbf_config=CBFConfiguration(
+        midcbf_config=MidCBFConfiguration(
             frequency_band_offset_stream1=80,
-            correlation=CorrelationConfiguration(
-            fsp_configs=[
-            FSPConfiguration(
-           ),
-           ProcessingRegionConfiguration(
-           fsp_ids=[1,2, 4, 6],
-           receptors=["SKA063", "SKA001", "SKA100"],
-           start_freq=350000000,
-           channel_width=12440,
-           channel_count=52080,
-           sdp_start_channel_id=0,
-           integration_factor=1
-           ),
-          ],
-            )
+            correlation=ProcessingRegionConfiguration(
+                fsp_ids=[1, 2, 4, 6],
+                receptors=["SKA063", "SKA001", "SKA100"],
+                start_freq=350000000,
+                channel_width=12440,
+                channel_count=52080,
+                sdp_start_channel_id=0,
+                integration_factor=1,
+            ),
             vlbi_config={},
         ),
     ),
