@@ -1087,6 +1087,62 @@ VALID_MID_CONFIGURE_JSON_2_3 = """
   }
 }"""
 
+VALID_MID_CONFIGURE_JSON_4_0 = """
+{
+  "interface": "https://schema.skao.int/ska-tmc-configure/4.0",
+  "transaction_id": "txn-....-00001",
+  "pointing": {
+    "target": {
+      "reference_frame": "ICRS",
+      "target_name": "Polaris Australis",
+      "ra": "21:08:47.92",
+      "dec": "-88:57:22.9"
+    },
+    "correction": "MAINTAIN"
+  },
+  "dish": {
+    "receiver_band": "1"
+  },
+  "csp": {
+    "interface": "https://schema.skao.int/ska-csp-configure/4.0",
+    "common": {
+      "config_id": "sbi-mvp01-20200325-00001-science_A",
+      "frequency_band": "1"
+    },
+    "midcbf": {
+        "frequency_band_offset_stream1": 80,
+        "correlation": {
+             "processing_regions": [{
+                    "fsp_ids": [1, 2, 3, 4],
+                    "receptors": ["SKA063", "SKA001", "SKA100"],
+                    "start_freq": 350000000,
+                    "channel_width": 13440,
+                    "channel_count": 52080,
+                    "sdp_start_channel_id": 0,
+                    "integration_factor": 1
+                }, {
+                    "fsp_ids": [1],
+                    "start_freq": 548437600,
+                    "channel_width": 13440,
+                    "channel_count": 14880,
+                    "sdp_start_channel_id": 1,
+                    "integration_factor": 10
+                }]
+            },
+      "vlbi": {}
+    },
+    "pss": {},
+    "pst": {}
+  },
+  "sdp": {
+    "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+    "scan_type": "science_A"
+  },
+  "tmc": {
+    "scan_duration": 10.0
+  }
+}"""
+
 INVALID_MID_CONFIGURE_JSON = """
 {
   "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
@@ -1238,6 +1294,54 @@ VALID_MID_CONFIGURE_OBJECT_2_3 = ConfigureRequest(
                     zoom_window_tuning=650000,
                 ),
             ],
+            vlbi_config={},
+        ),
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+)
+
+VALID_MID_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/4.0",
+    transaction_id="txn-....-00001",
+    pointing=PointingConfiguration(
+        target=Target(
+            ra="21:08:47.92",
+            dec="-88:57:22.9",
+            target_name="Polaris Australis",
+            reference_frame="icrs",
+        ),
+        correction=PointingCorrection.MAINTAIN,
+    ),
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4",
+        scan_type="science_A",
+    ),
+    csp=CSPConfiguration(
+        interface="https://schema.skao.int/ska-csp-configure/4.0",
+        common=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+            frequency_band=ReceiverBand.BAND_1,
+        ),
+        pss_config={},
+        pst_config={},
+        midcbf_config=CBFConfiguration(
+            frequency_band_offset_stream1=80,
+            correlation=CorrelationConfiguration(
+            fsp_configs=[
+            FSPConfiguration(
+           ),
+           ProcessingRegionConfiguration(
+           fsp_ids=[1,2, 4, 6],
+           receptors=["SKA063", "SKA001", "SKA100"],
+           start_freq=350000000,
+           channel_width=12440,
+           channel_count=52080,
+           sdp_start_channel_id=0,
+           integration_factor=1
+           ),
+          ],
+            )
             vlbi_config={},
         ),
     ),
@@ -1438,6 +1542,14 @@ def partial_invalidator(o: ConfigureRequest):
             VALID_MID_CONFIGURE_OBJECT_2_3,
             mid_invalidator,
             VALID_MID_CONFIGURE_JSON_2_3,
+            INVALID_MID_CONFIGURE_JSON,
+            True,
+        ),
+        (
+            ConfigureRequest,
+            VALID_MID_CONFIGURE_OBJECT_4_0,
+            mid_invalidator,
+            VALID_MID_CONFIGURE_JSON_4_0,
             INVALID_MID_CONFIGURE_JSON,
             True,
         ),
