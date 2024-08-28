@@ -1234,10 +1234,6 @@ INVALID_MID_CONFIGURE_JSON = """
           "zoom_window_tuning": 650000
         }
       ],
-      "vlbi": {}
-    },
-    "pss": {},
-    "pst": {}
   },
   "sdp": {
     "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
@@ -1328,9 +1324,7 @@ VALID_MID_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
             config_id="sbi-mvp01-20200325-00001-science_A",
             frequency_band=ReceiverBand.BAND_1,
         ),
-        pss_config={},
-        pst_config={},
-        midcbf_config=MidCBFConfiguration(
+        midcbf=MidCBFConfiguration(
             frequency_band_offset_stream1=80,
             frequency_band_offset_stream2=80,
             correlation=[
@@ -1348,7 +1342,6 @@ VALID_MID_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
                     ]
                 )
             ],
-            vlbi_config={},
         ),
     ),
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
