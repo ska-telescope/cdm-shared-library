@@ -26,6 +26,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
     CBFConfigurationDepreciated,
     CommonConfiguration,
+    CorrelationConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
@@ -1113,6 +1114,7 @@ VALID_MID_CONFIGURE_JSON_4_0 = """
     },
     "midcbf": {
         "frequency_band_offset_stream1": 80,
+        "frequency_band_offset_stream2": 80,
         "correlation": {
              "processing_regions": [{
                     "fsp_ids": [1, 2, 3, 4],
@@ -1123,7 +1125,8 @@ VALID_MID_CONFIGURE_JSON_4_0 = """
                     "sdp_start_channel_id": 0,
                     "integration_factor": 1
                 }, {
-                    "fsp_ids": [1],
+                    "fsp_ids": [1, 2, 3, 4],
+                    "receptors": ["SKA063", "SKA001", "SKA100"],
                     "start_freq": 548437600,
                     "channel_width": 13440,
                     "channel_count": 14880,
@@ -1329,15 +1332,22 @@ VALID_MID_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
         pst_config={},
         midcbf_config=MidCBFConfiguration(
             frequency_band_offset_stream1=80,
-            correlation=ProcessingRegionConfiguration(
-                fsp_ids=[1, 2, 4, 6],
-                receptors=["SKA063", "SKA001", "SKA100"],
-                start_freq=350000000,
-                channel_width=12440,
-                channel_count=52080,
-                sdp_start_channel_id=0,
-                integration_factor=1,
-            ),
+            frequency_band_offset_stream2=80,
+            correlation=[
+                CorrelationConfiguration(
+                    processing_regions=[
+                        ProcessingRegionConfiguration(
+                            fsp_ids=[1, 2, 4, 6],
+                            receptors=["SKA063", "SKA001", "SKA100"],
+                            start_freq=350000000,
+                            channel_width=12440,
+                            channel_count=52080,
+                            sdp_start_channel_id=0,
+                            integration_factor=1,
+                        )
+                    ]
+                )
+            ],
             vlbi_config={},
         ),
     ),
