@@ -29,45 +29,13 @@ from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     "object1, object2, is_equal",
     [
         (  # equal
-            ChannelBuilder()
-            .set_count(744)
-            .set_start(0)
-            .set_stride(2)
-            .set_freq_min(0.35e9)
-            .set_freq_max(1.05e9)
-            .set_link_map([[0, 0], [200, 1], [744, 2], [944, 3]])
-            .set_spectral_window_id("fsp_2_channels")
-            .build(),
-            ChannelBuilder()
-            .set_count(744)
-            .set_start(0)
-            .set_stride(2)
-            .set_freq_min(0.35e9)
-            .set_freq_max(1.05e9)
-            .set_link_map([[0, 0], [200, 1], [744, 2], [944, 3]])
-            .set_spectral_window_id("fsp_2_channels")
-            .build(),
+            ChannelBuilder(),
+            ChannelBuilder(),
             True,
         ),
         (  # not equal
-            ChannelBuilder()
-            .set_count(744)
-            .set_start(0)
-            .set_stride(1)  # different stride value
-            .set_freq_min(0.35e9)
-            .set_freq_max(1.05e9)
-            .set_link_map([[0, 0], [200, 1], [744, 2], [944, 3]])
-            .set_spectral_window_id("fsp_2_channels")
-            .build(),
-            ChannelBuilder()
-            .set_count(744)
-            .set_start(0)
-            .set_stride(2)
-            .set_freq_min(0.35e9)
-            .set_freq_max(1.05e9)
-            .set_link_map([[0, 0], [200, 1], [744, 2], [944, 3]])
-            .set_spectral_window_id("fsp_2_channels")
-            .build(),
+            ChannelBuilder(stride=1),
+            ChannelBuilder(stride=2),  # different stride value
             False,
         ),
     ],
@@ -89,38 +57,14 @@ def test_channel_equality(object1, object2, is_equal):
             .set_reference_frame(reference_frame="ICRS")
             .set_ra(ra="02:42:40.771")
             .set_dec(dec="-00:00:47.84")
-            .set_channels(
-                [
-                    ChannelBuilder()
-                    .set_count(744)
-                    .set_start(0)
-                    .set_stride(2)
-                    .set_freq_min(0.35e9)
-                    .set_freq_max(1.05e9)
-                    .set_link_map([[0, 0], [200, 1], [744, 2], [944, 3]])
-                    .set_spectral_window_id("fsp_2_channels")
-                    .build()
-                ]
-            )
+            .set_channels([ChannelBuilder()])
             .build(),
             ScanTypeBuilder()
             .set_scan_type_id(scan_type_id="science_A")
             .set_reference_frame(reference_frame="ICRS")
             .set_ra(ra="02:42:40.771")
             .set_dec(dec="-00:00:47.84")
-            .set_channels(
-                [
-                    ChannelBuilder()
-                    .set_count(744)
-                    .set_start(0)
-                    .set_stride(2)
-                    .set_freq_min(0.35e9)
-                    .set_freq_max(1.05e9)
-                    .set_link_map([[0, 0], [200, 1], [744, 2], [944, 3]])
-                    .set_spectral_window_id("fsp_2_channels")
-                    .build()
-                ]
-            )
+            .set_channels([ChannelBuilder()])
             .build(),
             True,
         ),
@@ -130,38 +74,14 @@ def test_channel_equality(object1, object2, is_equal):
             .set_reference_frame(reference_frame="ICRS")
             .set_ra(ra="02:42:40.771")
             .set_dec(dec="-00:00:47.84")
-            .set_channels(
-                [
-                    ChannelBuilder()
-                    .set_count(744)
-                    .set_start(0)
-                    .set_stride(2)
-                    .set_freq_min(0.35e9)
-                    .set_freq_max(1.05e9)
-                    .set_link_map([[0, 0], [200, 1], [744, 2], [944, 3]])
-                    .set_spectral_window_id("fsp_2_channels")
-                    .build()
-                ]
-            )
+            .set_channels([ChannelBuilder()])
             .build(),
             ScanTypeBuilder()
             .set_scan_type_id(scan_type_id="science_B")  # different scan id
             .set_reference_frame(reference_frame="ICRS")
             .set_ra(ra="02:42:40.771")
             .set_dec(dec="-00:00:47.84")
-            .set_channels(
-                [
-                    ChannelBuilder()
-                    .set_count(744)
-                    .set_start(0)
-                    .set_stride(2)
-                    .set_freq_min(0.35e9)
-                    .set_freq_max(1.05e9)
-                    .set_link_map([[0, 0], [200, 1], [744, 2], [944, 3]])
-                    .set_spectral_window_id("fsp_2_channels")
-                    .build()
-                ]
-            )
+            .set_channels([ChannelBuilder()])
             .build(),
             False,
         ),
@@ -407,45 +327,13 @@ def test_beam_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            ChannelBuilder()
-            .set_count(count=744)
-            .set_start(start=0)
-            .set_stride(stride=2)
-            .set_freq_min(freq_min=0.35e9)
-            .set_freq_max(freq_max=1.05e9)
-            .set_link_map(link_map=[[0, 0], [200, 1], [744, 2], [944, 3]])
-            .set_spectral_window_id(spectral_window_id="fsp_2_channels")
-            .build(),
-            ChannelBuilder()
-            .set_count(count=744)
-            .set_start(start=0)
-            .set_stride(stride=2)
-            .set_freq_min(freq_min=0.35e9)
-            .set_freq_max(freq_max=1.05e9)
-            .set_link_map(link_map=[[0, 0], [200, 1], [744, 2], [944, 3]])
-            .set_spectral_window_id(spectral_window_id="fsp_2_channels")
-            .build(),
+            ChannelBuilder(),
+            ChannelBuilder(),
             True,
         ),
         (  # not_equal
-            ChannelBuilder()
-            .set_count(count=744)
-            .set_start(start=0)
-            .set_stride(stride=2)
-            .set_freq_min(freq_min=0.35e9)
-            .set_freq_max(freq_max=1.05e9)
-            .set_link_map(link_map=[[0, 0], [200, 1], [744, 2], [944, 3]])
-            .set_spectral_window_id(spectral_window_id="fsp_2_channels")
-            .build(),
-            ChannelBuilder()
-            .set_count(count=744)
-            .set_start(start=1)
-            .set_stride(stride=2)  # different stride value
-            .set_freq_min(freq_min=0.35e9)
-            .set_freq_max(freq_max=1.05e9)
-            .set_link_map(link_map=[[0, 0], [200, 1], [744, 2], [944, 3]])
-            .set_spectral_window_id(spectral_window_id="fsp_2_channels")
-            .build(),
+            ChannelBuilder(start=0),
+            ChannelBuilder(start=1),
             False,
         ),
     ],
