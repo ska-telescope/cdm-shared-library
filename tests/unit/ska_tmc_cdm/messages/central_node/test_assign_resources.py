@@ -156,11 +156,13 @@ def test_low_assign_resources_request(
     """
 
     request1 = AssignResourcesRequestBuilder(
+        dish=None,
         sdp_config=sdp_allocate,
         mccs=MCCSAllocateBuilder(),
         interface=LOW_SCHEMA,
     )
     request2 = AssignResourcesRequestBuilder(
+        dish=None,
         sdp_config=sdp_allocate,
         mccs=MCCSAllocateBuilder(),
         interface=LOW_SCHEMA,
@@ -239,7 +241,7 @@ def test_mid_assign_resource_request_using_from_dish(sdp_allocate):
 
     request2 = AssignResourcesRequest.from_dish(
         subarray_id=request1.subarray_id,
-        dish_allocation=request1.dish_allocation,
+        dish_allocation=request1.dish,
         sdp_config=request1.sdp_config,
         interface=request1.interface,
         transaction_id=request1.transaction_id,
