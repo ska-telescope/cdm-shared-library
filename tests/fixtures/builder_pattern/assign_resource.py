@@ -94,14 +94,12 @@ def scan_type(channel):
     """
     Provides CDM ScanType configuration instance through ScanTypeBuilder builder class
     """
-    return (
-        ScanTypeBuilder()
-        .set_scan_type_id(scan_type_id="science_A")
-        .set_reference_frame(reference_frame="ICRS")
-        .set_ra(ra="02:42:40.771")
-        .set_dec(dec="-00:00:47.84")
-        .set_channels(channels=[channel])
-        .build()
+    return ScanTypeBuilder(
+        scan_type_id="science_A",
+        reference_frame="ICRS",
+        ra="02:42:40.771",
+        dec="-00:00:47.84",
+        channels=[channel],
     )
 
 

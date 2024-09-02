@@ -52,37 +52,13 @@ def test_channel_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            ScanTypeBuilder()
-            .set_scan_type_id(scan_type_id="science_A")
-            .set_reference_frame(reference_frame="ICRS")
-            .set_ra(ra="02:42:40.771")
-            .set_dec(dec="-00:00:47.84")
-            .set_channels([ChannelBuilder()])
-            .build(),
-            ScanTypeBuilder()
-            .set_scan_type_id(scan_type_id="science_A")
-            .set_reference_frame(reference_frame="ICRS")
-            .set_ra(ra="02:42:40.771")
-            .set_dec(dec="-00:00:47.84")
-            .set_channels([ChannelBuilder()])
-            .build(),
+            ScanTypeBuilder(),
+            ScanTypeBuilder(),
             True,
         ),
         (  # not equal
-            ScanTypeBuilder()
-            .set_scan_type_id(scan_type_id="science_A")
-            .set_reference_frame(reference_frame="ICRS")
-            .set_ra(ra="02:42:40.771")
-            .set_dec(dec="-00:00:47.84")
-            .set_channels([ChannelBuilder()])
-            .build(),
-            ScanTypeBuilder()
-            .set_scan_type_id(scan_type_id="science_B")  # different scan id
-            .set_reference_frame(reference_frame="ICRS")
-            .set_ra(ra="02:42:40.771")
-            .set_dec(dec="-00:00:47.84")
-            .set_channels([ChannelBuilder()])
-            .build(),
+            ScanTypeBuilder(scan_type_id="science_A"),
+            ScanTypeBuilder(scan_type_id="science_B"),
             False,
         ),
     ],

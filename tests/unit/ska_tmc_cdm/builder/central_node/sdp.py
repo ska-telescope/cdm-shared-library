@@ -30,75 +30,16 @@ ChannelBuilder = functools.partial(
     spectral_window_id="fsp_2_channels",
 )
 
-
-class ScanTypeBuilder:
-    """
-    ScanTypeBuilder is a test data builder for CDM ScanType objects.
-
-    By default, ScanTypeBuilder will build an ScanType
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "ScanTypeBuilder":
-        self.scan_type_id = None
-        self.reference_frame = None
-        self.ra = None
-        self.dec = None
-        self.channels = None
-
-    def set_scan_type_id(self, scan_type_id: str) -> "ScanTypeBuilder":
-        """
-        Set the scan type id
-        :param scan_type_id: Scan type id
-        """
-        self.scan_type_id = scan_type_id
-        return self
-
-    def set_reference_frame(self, reference_frame: str) -> "ScanTypeBuilder":
-        """
-        Set the reference frame
-        :param reference_frame: Reference frame
-        """
-        self.reference_frame = reference_frame
-        return self
-
-    def set_ra(self, ra: str) -> "ScanTypeBuilder":
-        """
-        Set the right ascension
-        :param ra: Right ascension
-        """
-        self.ra = ra
-        return self
-
-    def set_dec(self, dec: str) -> "ScanTypeBuilder":
-        """
-        Set the declination
-        :param dec: Declination
-        """
-        self.dec = dec
-        return self
-
-    def set_channels(self, channels: list) -> "ScanTypeBuilder":
-        """
-        Set the channels
-        :param channels: Channels
-        """
-        self.channels = channels
-        return self
-
-    def build(self) -> ScanType:
-        """
-        Build or create CDM ScanType object
-        :return: CDM ScanType object
-        """
-        return ScanType(
-            scan_type_id=self.scan_type_id,
-            reference_frame=self.reference_frame,
-            ra=self.ra,
-            dec=self.dec,
-            channels=self.channels,
-        )
+ScanTypeBuilder = functools.partial(
+    ScanType,
+    scan_type_id="science_A",
+    reference_frame="ICRS",
+    ra="02:42:40.771",
+    dec="-00:00:47.84",
+    # Note: immutable tuple to make it harder for
+    # tests to interfere with each other.
+    channels=(ChannelBuilder(),),
+)
 
 
 class SDPWorkflowBuilder:
