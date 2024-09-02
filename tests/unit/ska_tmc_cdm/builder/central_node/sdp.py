@@ -1,3 +1,4 @@
+import functools
 from typing import List
 
 from ska_tmc_cdm.messages.central_node.sdp import (
@@ -18,97 +19,16 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     SDPWorkflow,
 )
 
-
-class ChannelBuilder:
-    """
-    ChannelBuilder is a test data builder for CDM Channel objects.
-
-    By default, ChannelBuilder will build an Channel
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "ChannelBuilder":
-        self.count = None
-        self.start = None
-        self.stride = None
-        self.freq_min = None
-        self.freq_max = None
-        self.link_map = None
-        self.spectral_window_id = None
-
-    def set_count(self, count: int) -> "ChannelBuilder":
-        """
-        Set the number of channels
-        :param count: Number of channels
-        """
-        self.count = count
-        return self
-
-    def set_start(self, start: int) -> "ChannelBuilder":
-        """
-        Set the start channel
-        :param start: Start channel
-        """
-        self.start = start
-        return self
-
-    def set_stride(self, stride: int) -> "ChannelBuilder":
-        """
-        Set the stride
-        :param stride: Stride
-        """
-        self.stride = stride
-        return self
-
-    def set_freq_min(self, freq_min: float) -> "ChannelBuilder":
-        """
-        Set the minimum frequency
-        :param freq_min: Minimum frequency
-        """
-        self.freq_min = freq_min
-        return self
-
-    def set_freq_max(self, freq_max: float) -> "ChannelBuilder":
-        """
-        Set the maximum frequency
-        :param freq_max: Maximum frequency
-        """
-        self.freq_max = freq_max
-        return self
-
-    def set_link_map(self, link_map: list) -> "ChannelBuilder":
-        """
-        Set the link map
-        :param link_map: Link map
-        """
-        self.link_map = link_map
-        return self
-
-    def set_spectral_window_id(
-        self, spectral_window_id: str
-    ) -> "ChannelBuilder":
-        """
-        Set the spectral window id
-        :param spectral_window_id: Spectral window id
-        """
-        self.spectral_window_id = spectral_window_id
-        return self
-
-    def build(self) -> Channel:
-        """
-        Bild or create CDM Channel object
-        :return: CDM Channel object
-        """
-        return Channel(
-            count=self.count,
-            start=self.start,
-            stride=self.stride,
-            freq_min=self.freq_min,
-            freq_max=self.freq_max,
-            link_map=self.link_map,
-            spectral_window_id=self.spectral_window_id,
-        )
+ChannelBuilder = functools.partial(
+    Channel,
+    count=744,
+    start=0,
+    stride=2,
+    freq_min=0.35e9,
+    freq_max=1.05e9,
+    link_map=((0, 0), (200, 1), (744, 2), (944, 3)),
+    spectral_window_id="fsp_2_channels",
+)
 
 
 class ScanTypeBuilder:

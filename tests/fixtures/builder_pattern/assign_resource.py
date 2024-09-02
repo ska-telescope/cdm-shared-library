@@ -1,5 +1,7 @@
 import pytest
 
+from ska_tmc_cdm.messages.central_node.sdp import Channel, ScanType
+
 from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     ChannelBuilder,
     EBScanTypeBuilder,
@@ -74,25 +76,12 @@ def processing_block_parameters():
 
 
 @pytest.fixture(scope="module")
-def channel():
-    """
-    Provides CDM Channel configuration instance through ChannelBuilder builder class
-    """
-    return (
-        ChannelBuilder()
-        .set_count(count=744)
-        .set_start(start=0)
-        .set_stride(stride=2)
-        .set_freq_min(freq_min=0.35e9)
-        .set_freq_max(freq_max=1.05e9)
-        .set_link_map(link_map=[[0, 0], [200, 1], [744, 2], [944, 3]])
-        .set_spectral_window_id(spectral_window_id="fsp_2_channels")
-        .build()
-    )
+def channel() -> Channel:
+    return ChannelBuilder()
 
 
 @pytest.fixture(scope="module")
-def eb_scan_type():
+def eb_scan_type() -> ScanType:
     """
     Provides CDM EBScanType configuration instance through EBScanTypeBuilder builder class
     """
