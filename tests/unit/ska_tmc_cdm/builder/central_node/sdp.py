@@ -695,54 +695,12 @@ class FieldConfigurationBuilder:
         )
 
 
-class EBScanTypeBuilder:
-    """
-    EBScanTypeBuilder is a test data builder for CDM EBScanType objects.
-
-    By default, EBScanTypeBuilder will build an EBScanType
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "EBScanTypeBuilder":
-        self.scan_type_id = None
-        self.beams = None
-        self.derive_from = None
-
-    def set_scan_type_id(self, scan_type_id: str) -> "EBScanTypeBuilder":
-        """
-        Set the scan type id
-        :param scan_type_id: Scan type id
-        """
-        self.scan_type_id = scan_type_id
-        return self
-
-    def set_beams(self, beams: dict) -> "EBScanTypeBuilder":
-        """
-        Set the beams
-        :param beams: Beams
-        """
-        self.beams = beams
-        return self
-
-    def set_derive_from(self, derive_from: str) -> "EBScanTypeBuilder":
-        """
-        Set the derive from
-        :param derive_from: Derive from
-        """
-        self.derive_from = derive_from
-        return self
-
-    def build(self) -> EBScanType:
-        """
-        Build or create CDM EBScanType object
-        :return: CDM EBScanType object
-        """
-        return EBScanType(
-            scan_type_id=self.scan_type_id,
-            beams=self.beams,
-            derive_from=self.derive_from,
-        )
+EBScanTypeBuilder = functools.partial(
+    EBScanType,
+    scan_type_id="science",
+    beams={"vis0": {"field_id": "field_a"}},
+    derive_from=".default",
+)
 
 
 class EBScanTypeBeamBuilder:

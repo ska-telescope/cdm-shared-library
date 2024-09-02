@@ -545,31 +545,13 @@ def test_field_configuration_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            EBScanTypeBuilder()
-            .set_scan_type_id(scan_type_id="science")
-            .set_beams(beams={"vis0": {"field_id": "field_a"}})
-            .set_derive_from(derive_from=".default")
-            .build(),
-            EBScanTypeBuilder()
-            .set_scan_type_id(scan_type_id="science")
-            .set_beams(beams={"vis0": {"field_id": "field_a"}})
-            .set_derive_from(derive_from=".default")
-            .build(),
+            EBScanTypeBuilder(),
+            EBScanTypeBuilder(),
             True,
         ),
         (  # not_equal
-            EBScanTypeBuilder()
-            .set_scan_type_id(scan_type_id="science")
-            .set_beams(beams={"vis0": {"field_id": "field_a"}})
-            .set_derive_from(derive_from=".default")
-            .build(),
-            EBScanTypeBuilder()
-            .set_scan_type_id(scan_type_id="science")
-            .set_beams(
-                beams={"vis0": {"field_id": "field_b"}}
-            )  # different beam field_id
-            .set_derive_from(derive_from=".default")
-            .build(),
+            EBScanTypeBuilder(beams={"vis0": {"field_id": "field_a"}}),
+            EBScanTypeBuilder(beams={"vis0": {"field_id": "field_b"}}),
             False,
         ),
     ],

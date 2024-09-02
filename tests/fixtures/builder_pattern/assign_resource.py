@@ -1,6 +1,6 @@
 import pytest
 
-from ska_tmc_cdm.messages.central_node.sdp import Channel, ScanType
+from ska_tmc_cdm.messages.central_node.sdp import Channel, EBScanType
 
 from tests.unit.ska_tmc_cdm.builder.central_node.sdp import (
     ChannelBuilder,
@@ -81,16 +81,11 @@ def channel() -> Channel:
 
 
 @pytest.fixture(scope="module")
-def eb_scan_type() -> ScanType:
-    """
-    Provides CDM EBScanType configuration instance through EBScanTypeBuilder builder class
-    """
-    return (
-        EBScanTypeBuilder()
-        .set_scan_type_id(scan_type_id="science")
-        .set_beams(beams={"vis0": {"field_id": "field_a"}})
-        .set_derive_from(derive_from=".default")
-        .build()
+def eb_scan_type() -> EBScanType:
+    return EBScanTypeBuilder(
+        scan_type_id="science",
+        beams={"vis0": {"field_id": "field_a"}},
+        derive_from=".default",
     )
 
 
