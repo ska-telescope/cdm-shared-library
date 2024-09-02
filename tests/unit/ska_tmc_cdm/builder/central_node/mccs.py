@@ -1,3 +1,5 @@
+import functools
+
 from ska_tmc_cdm.messages.central_node.mccs import (
     ApertureConfiguration,
     MCCSAllocate,
@@ -99,77 +101,9 @@ class SubArrayBeamsConfigurationBuilder:
         )
 
 
-class MCCSAllocateBuilder:
-    """
-    MCCSAllocateBuilder is a test data builder for CDM MCCSAllocate objects.
-
-    By default, MCCSAllocateBuilder will build an MCCSAllocate
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "MCCSAllocateBuilder":
-        self.subarray_beam_ids = []
-        self.channel_blocks = []
-        self.station_ids = []
-        self.interface = None
-        self.subarray_beams: SubArrayBeamsConfiguration = []
-
-    def set_subarray_beam_ids(
-        self, subarray_beam_ids: list
-    ) -> "MCCSAllocateBuilder":
-        """
-        Set subarray_beam_ids
-        :param subarray_beam_ids: subarray_beam_ids
-        """
-        self.subarray_beam_ids = subarray_beam_ids
-        return self
-
-    def set_station_ids(self, station_ids: list) -> "MCCSAllocateBuilder":
-        """
-        Set station_ids
-        :param station_ids: station_ids
-        """
-        self.station_ids = station_ids
-        return self
-
-    def set_channel_blocks(
-        self, channel_blocks: list
-    ) -> "MCCSAllocateBuilder":
-        """
-        Set channel_blocks
-        :param channel_blocks: channel_blocks
-        """
-        self.channel_blocks = channel_blocks
-        return self
-
-    def set_interface(self, interface: str) -> "MCCSAllocateBuilder":
-        """
-        Set interface
-        :param interface: interface
-        """
-        self.interface = interface
-        return self
-
-    def set_subarray_beams(
-        self, subarray_beams: SubArrayBeamsConfiguration
-    ) -> "MCCSAllocateBuilder":
-        """
-        Set subarray_beams
-        :param subarray_beams: subarray_beams
-        """
-        self.subarray_beams = subarray_beams
-        return self
-
-    def build(self) -> MCCSAllocate:
-        """
-        Build or create CDM MCCSAllocate object
-        :return: CDM MCCSAllocate object
-        """
-        return MCCSAllocate(
-            subarray_beam_ids=self.subarray_beam_ids,
-            station_ids=self.station_ids,
-            channel_blocks=self.channel_blocks,
-            interface=self.interface,
-            subarray_beams=self.subarray_beams,
-        )
+MCCSAllocateBuilder = functools.partial(
+    MCCSAllocate,
+    subarray_beam_ids=(1,),
+    station_ids=((1, 2),),
+    channel_blocks=(3,),
+)

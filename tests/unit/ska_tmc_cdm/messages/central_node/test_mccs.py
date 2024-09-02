@@ -29,46 +29,16 @@ test_subarray_beam_config = (
     [
         # equal
         (
-            MCCSAllocateBuilder()
-            .set_subarray_beam_ids([1])
-            .set_station_ids([[1, 2]])
-            .set_channel_blocks([3])
-            .set_interface(
-                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-            )
-            .set_subarray_beams([test_subarray_beam_config])
-            .build(),
-            MCCSAllocateBuilder()
-            .set_subarray_beam_ids([1])
-            .set_station_ids([[1, 2]])
-            .set_channel_blocks([3])
-            .set_interface(
-                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-            )
-            .set_subarray_beams([test_subarray_beam_config])
-            .build(),
+            MCCSAllocateBuilder(),
+            MCCSAllocateBuilder(),
             True,
         ),
         # not equal
         (
-            MCCSAllocateBuilder()
-            .set_subarray_beam_ids([1])
-            .set_station_ids([[1, 2]])
-            .set_channel_blocks([3])
-            .set_interface(
-                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-            )
-            .set_subarray_beams([test_subarray_beam_config])
-            .build(),
-            MCCSAllocateBuilder()
-            .set_subarray_beam_ids([1])
-            .set_station_ids([[1, 2, 3]])  # different station id
-            .set_channel_blocks([4])
-            .set_interface(
-                "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
-            )
-            .set_subarray_beams([test_subarray_beam_config])
-            .build(),
+            MCCSAllocateBuilder(station_ids=[[1, 2]]),
+            MCCSAllocateBuilder(
+                station_ids=[[1, 2, 3]]
+            ),  # different station id
             False,
         ),
     ],

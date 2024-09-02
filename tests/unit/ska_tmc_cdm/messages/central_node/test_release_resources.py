@@ -7,7 +7,7 @@ from pydantic import ValidationError
 
 from ska_tmc_cdm.messages.central_node.release_resources import SCHEMA
 from tests.unit.ska_tmc_cdm.builder.central_node.common import (
-    DishAllocateBuilder,
+    DishAllocationBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.release_resources import (
     ReleaseResourcesRequestBuilder,
@@ -49,21 +49,13 @@ def test_release_resources_request_has_interface_set_on_creation():
         (
             ReleaseResourcesRequestBuilder()
             .set_subarray_id(1)
-            .set_dish_allocation(
-                DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
+            .set_dish_allocation(DishAllocationBuilder())
             .set_release_all(True)
             .set_transaction_id("txn-mvp01-20200325-00001")
             .build(),
             ReleaseResourcesRequestBuilder()
             .set_subarray_id(1)
-            .set_dish_allocation(
-                DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
+            .set_dish_allocation(DishAllocationBuilder())
             .set_release_all(True)
             .set_transaction_id("txn-mvp01-20200325-00001")
             .build(),
@@ -73,21 +65,13 @@ def test_release_resources_request_has_interface_set_on_creation():
         (
             ReleaseResourcesRequestBuilder()
             .set_subarray_id(1)
-            .set_dish_allocation(
-                DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
+            .set_dish_allocation(DishAllocationBuilder())
             .set_release_all(True)
             .set_transaction_id("txn-mvp01-20200325-00001")
             .build(),
             ReleaseResourcesRequestBuilder()
             .set_subarray_id(2)
-            .set_dish_allocation(
-                DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
+            .set_dish_allocation(DishAllocationBuilder())
             .set_release_all(True)
             .set_transaction_id("txn-mvp01-20200325-00001")
             .build(),
@@ -129,11 +113,8 @@ def test_deallocate_resources_enforces_boolean_release_all_argument():
             .build()
         )
 
-    dish_allocation = (
-        DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset(["0001", "0002"]))
-        .build()
-    )
+    dish_allocation = DishAllocationBuilder()
+
     with pytest.raises(ValueError):
         _ = (
             ReleaseResourcesRequestBuilder()
