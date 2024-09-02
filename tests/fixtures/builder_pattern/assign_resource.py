@@ -90,14 +90,8 @@ def eb_scan_type() -> EBScanType:
 
 
 @pytest.fixture(scope="module")
-def scan_type(channel):
-    return ScanTypeBuilder(
-        scan_type_id="science_A",
-        reference_frame="ICRS",
-        ra="02:42:40.771",
-        dec="-00:00:47.84",
-        channels=[channel],
-    )
+def scan_type():
+    return ScanTypeBuilder()
 
 
 @pytest.fixture(scope="module")
@@ -107,6 +101,7 @@ def sdp_workflow():
 
 @pytest.fixture(scope="module")
 def processing_block(processing_block_parameters):
+
     return ProcessingBlockConfigurationBuilder(
         parameters=processing_block_parameters
     )

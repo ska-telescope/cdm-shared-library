@@ -487,29 +487,13 @@ def test_eb_scan_type_beam_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            ScriptConfigurationBuilder()
-            .set_kind(kind="realtime")
-            .set_name(name="test-receive-addresses")
-            .set_version(version="0.5.0")
-            .build(),
-            ScriptConfigurationBuilder()
-            .set_kind(kind="realtime")
-            .set_name(name="test-receive-addresses")
-            .set_version(version="0.5.0")
-            .build(),
+            ScriptConfigurationBuilder(),
+            ScriptConfigurationBuilder(),
             True,
         ),
         (  # not_equal
-            ScriptConfigurationBuilder()
-            .set_kind(kind="realtime")
-            .set_name(name="test-receive-addresses")
-            .set_version(version="0.5.0")
-            .build(),
-            ScriptConfigurationBuilder()
-            .set_kind(kind="realtime")
-            .set_name(name="test-receive-addresses")
-            .set_version(version="0.6.0")  # different version
-            .build(),
+            ScriptConfigurationBuilder(version="0.5.0"),
+            ScriptConfigurationBuilder(version="0.6.0"),  # different version
             False,
         ),
     ],
@@ -530,21 +514,13 @@ def test_processing_block_equality(processing_block_parameters):
     pb1 = ProcessingBlockConfigurationBuilder(
         parameters=processing_block_parameters,
         sbi_ids=["sbi-mvp01-20200325-00001"],
-        script=ScriptConfigurationBuilder()
-        .set_kind(kind="realtime")
-        .set_name(name="test-receive-addresses")
-        .set_version(version="0.5.0")
-        .build(),
+        script=ScriptConfigurationBuilder(),
     )
 
     pb2 = ProcessingBlockConfigurationBuilder(
         parameters=processing_block_parameters,
         sbi_ids=["sbi-mvp01-20200325-00003"],  # different sbi_id,
-        script=ScriptConfigurationBuilder()
-        .set_kind(kind="realtime")
-        .set_name(name="test-receive-addresses")
-        .set_version(version="0.5.0")
-        .build(),
+        script=ScriptConfigurationBuilder(),
     )
 
     assert pb1 == copy.deepcopy(pb1)

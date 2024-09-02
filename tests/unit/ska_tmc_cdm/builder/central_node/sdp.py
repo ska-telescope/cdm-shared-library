@@ -52,53 +52,12 @@ PbDependencyBuilder = functools.partial(
     kind=("visibilities",),  # tuple for test isolation
 )
 
-
-class ScriptConfigurationBuilder:
-    """
-    ScriptConfigurationBuilder is a test data builder for CDM ScriptConfiguration objects.
-
-    By default, ScriptConfigurationBuilder will build an ScriptConfiguration
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "ScriptConfigurationBuilder":
-        self.kind = None
-        self.name = None
-        self.version = None
-
-    def set_kind(self, kind: str) -> "ScriptConfigurationBuilder":
-        """
-        Set the kind
-        :param kind: Kind
-        """
-        self.kind = kind
-        return self
-
-    def set_name(self, name: str) -> "ScriptConfigurationBuilder":
-        """
-        Set the name
-        :param name: Name
-        """
-        self.name = name
-        return self
-
-    def set_version(self, version: str) -> "ScriptConfigurationBuilder":
-        """
-        Set the version
-        :param version: Version
-        """
-        self.version = version
-        return self
-
-    def build(self) -> ScriptConfiguration:
-        """
-        Build or create CDM ScriptConfiguration object
-        :return: CDM ScriptConfiguration object
-        """
-        return ScriptConfiguration(
-            kind=self.kind, name=self.name, version=self.version
-        )
+ScriptConfigurationBuilder = functools.partial(
+    ScriptConfiguration,
+    name="test-receive-addresses",
+    kind="realtime",
+    version="0.5.0",
+)
 
 
 ProcessingBlockConfigurationBuilder = functools.partial(
