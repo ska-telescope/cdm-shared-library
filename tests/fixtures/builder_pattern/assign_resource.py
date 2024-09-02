@@ -91,9 +91,6 @@ def eb_scan_type() -> EBScanType:
 
 @pytest.fixture(scope="module")
 def scan_type(channel):
-    """
-    Provides CDM ScanType configuration instance through ScanTypeBuilder builder class
-    """
     return ScanTypeBuilder(
         scan_type_id="science_A",
         reference_frame="ICRS",
@@ -105,16 +102,7 @@ def scan_type(channel):
 
 @pytest.fixture(scope="module")
 def sdp_workflow():
-    """
-    Provides CDM SDPWorkflow configuration instance through SDPWorkflowBuilder builder class
-    """
-    return (
-        SDPWorkflowBuilder()
-        .set_name(name="vis_receive")
-        .set_kind(kind="realtime")
-        .set_version(version="0.1.1")
-        .build()
-    )
+    return SDPWorkflowBuilder()
 
 
 @pytest.fixture(scope="module")

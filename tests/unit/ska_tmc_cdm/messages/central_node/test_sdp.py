@@ -75,29 +75,13 @@ def test_scan_type_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            SDPWorkflowBuilder()
-            .set_name(name="vis_receive")
-            .set_kind(kind="realtime")
-            .set_version(version="0.1.1")
-            .build(),
-            SDPWorkflowBuilder()
-            .set_name(name="vis_receive")
-            .set_kind(kind="realtime")
-            .set_version(version="0.1.1")
-            .build(),
+            SDPWorkflowBuilder(),
+            SDPWorkflowBuilder(),
             True,
         ),
         (  # not equal
-            SDPWorkflowBuilder()
-            .set_name(name="vis_receive")
-            .set_kind(kind="realtime")
-            .set_version(version="0.1.1")
-            .build(),
-            SDPWorkflowBuilder()
-            .set_name(name="vis_receive")
-            .set_kind(kind="realtime")
-            .set_version(version="0.0.1")
-            .build(),
+            SDPWorkflowBuilder(version="0.1.1"),
+            SDPWorkflowBuilder(version="0.0.1"),
             False,
         ),
     ],
@@ -151,13 +135,7 @@ def test_pb_dependency_equality(object1, object2, is_equal):
         (  # equal
             ProcessingBlockConfigurationBuilder()
             .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_workflow(
-                SDPWorkflowBuilder()
-                .set_name(name="vis_receive")
-                .set_kind(kind="realtime")
-                .set_version(version="0.1.1")
-                .build()
-            )
+            .set_workflow(SDPWorkflowBuilder())
             .set_dependencies(
                 [
                     PbDependencyBuilder()
@@ -169,13 +147,7 @@ def test_pb_dependency_equality(object1, object2, is_equal):
             .build(),
             ProcessingBlockConfigurationBuilder()
             .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_workflow(
-                SDPWorkflowBuilder()
-                .set_name(name="vis_receive")
-                .set_kind(kind="realtime")
-                .set_version(version="0.1.1")
-                .build()
-            )
+            .set_workflow(SDPWorkflowBuilder())
             .set_dependencies(
                 [
                     PbDependencyBuilder()
@@ -190,13 +162,7 @@ def test_pb_dependency_equality(object1, object2, is_equal):
         (  # not_equal
             ProcessingBlockConfigurationBuilder()
             .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_workflow(
-                SDPWorkflowBuilder()
-                .set_name(name="vis_receive")
-                .set_kind(kind="realtime")
-                .set_version(version="0.1.1")
-                .build()
-            )
+            .set_workflow(SDPWorkflowBuilder())
             .set_dependencies(
                 [
                     PbDependencyBuilder()
@@ -208,13 +174,7 @@ def test_pb_dependency_equality(object1, object2, is_equal):
             .build(),
             ProcessingBlockConfigurationBuilder()
             .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_workflow(
-                SDPWorkflowBuilder()
-                .set_name(name="vis_receive")
-                .set_kind(kind="realtime")
-                .set_version(version="0.1.1")
-                .build()
-            )
+            .set_workflow(SDPWorkflowBuilder())
             .set_dependencies(
                 [
                     PbDependencyBuilder()

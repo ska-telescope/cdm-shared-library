@@ -41,53 +41,9 @@ ScanTypeBuilder = functools.partial(
     channels=(ChannelBuilder(),),
 )
 
-
-class SDPWorkflowBuilder:
-    """
-    SDPWorkflowBuilder is a test data builder for CDM SDPWorkflow objects.
-
-    By default, SDPWorkflowBuilder will build an SDPWorkflow
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "SDPWorkflowBuilder":
-        self.name = None
-        self.kind = None
-        self.version = None
-
-    def set_name(self, name: str) -> "SDPWorkflowBuilder":
-        """
-        Set the name
-        :param name: Name
-        """
-        self.name = name
-        return self
-
-    def set_kind(self, kind: str) -> "SDPWorkflowBuilder":
-        """
-        Set the kind
-        :param kind: Kind
-        """
-        self.kind = kind
-        return self
-
-    def set_version(self, version: str) -> "SDPWorkflowBuilder":
-        """
-        Set the version
-        :param version: Version
-        """
-        self.version = version
-        return self
-
-    def build(self) -> SDPWorkflow:
-        """
-        Build or create CDM SDPWorkflow object
-        :return: CDM SDPWorkflow object
-        """
-        return SDPWorkflow(
-            name=self.name, kind=self.kind, version=self.version
-        )
+SDPWorkflowBuilder = functools.partial(
+    SDPWorkflow, name="vis_receive", kind="realtime", version="0.1.1"
+)
 
 
 class PbDependencyBuilder:
