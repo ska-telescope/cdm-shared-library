@@ -20,7 +20,6 @@ from tests.unit.ska_tmc_cdm.builder.central_node.common import (
     DishAllocationBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
-    ApertureConfigurationBuilder,
     MCCSAllocateBuilder,
     SubArrayBeamsConfigurationBuilder,
 )
@@ -66,20 +65,7 @@ def test_validation_applies_to_subarray_id(subarray_id: int, okay: bool):
                 dish=None,
                 mccs=MCCSAllocateBuilder(
                     interface=interface,
-                    subarray_beams=[
-                        SubArrayBeamsConfigurationBuilder()
-                        .set_subarray_beam_id(1)
-                        .set_apertures(
-                            [
-                                ApertureConfigurationBuilder()
-                                .set_aperture_id("AP001.01")
-                                .set_station_id(1)
-                                .build()
-                            ]
-                        )
-                        .set_number_of_channels(8)
-                        .build()
-                    ],
+                    subarray_beams=[SubArrayBeamsConfigurationBuilder()],
                 ),
             ),
             LOW_SCHEMA,
@@ -114,24 +100,9 @@ def test_assign_resources_request_dish_and_mccs_fail_for_4_0_resource():
     """
     mccs_allocate = MCCSAllocateBuilder(
         interface=interface,
-        subarray_beams=[
-            SubArrayBeamsConfigurationBuilder()
-            .set_subarray_beam_id(1)
-            .set_apertures(
-                [
-                    ApertureConfigurationBuilder()
-                    .set_aperture_id("AP001.01")
-                    .set_station_id(1)
-                    .build()
-                ]
-            )
-            .set_number_of_channels(8)
-            .build()
-        ],
+        subarray_beams=[SubArrayBeamsConfigurationBuilder()],
     )
-    dish_allocation = DishAllocationBuilder(
-        receptor_ids=frozenset(["ac", "b", "aab"])
-    )
+    dish_allocation = DishAllocationBuilder()
 
     with pytest.raises(ValueError):
 
@@ -144,58 +115,36 @@ def test_assign_resources_if_no_subarray_id_argument():
     """
     Verify that the boolean release_all_mid argument is required.
     """
-    mccs = (
-        MCCSAllocateBuilder()
-        .set_subarray_beam_ids(subarray_beam_ids=[1, 2, 3, 4, 5, 6])
-        .set_station_ids(station_ids=list(zip(itertools.count(1, 1), 1 * [2])))
-        .set_channel_blocks(channel_blocks=[1, 2, 3, 4, 5])
-        .build()
-    )
-    dish_allocation = DishAllocationBuilder(
-        receptor_ids=frozenset(["ac", " b", "aab"])
-    )
+    mccs = MCCSAllocateBuilder()
+    dish_allocation = DishAllocationBuilder()
 
     with pytest.raises(ValueError):
-        AssignResourcesRequestBuilder(mccs=mccs)
+        AssignResourcesRequestBuilder(subarray_id=None, dish=None, mccs=mccs)
 
     with pytest.raises(ValueError):
-        AssignResourcesRequestBuilder(dish_allocation=dish_allocation)
+        AssignResourcesRequestBuilder(
+            subarray_id=None, dish=dish_allocation, mccs=None
+        )
 
 
 def test_assign_resources_if_no_subarray_id_argument_for_4_0_interface():
     """
     Verify that the boolean release_all_mid argument is required.
     """
-    mccs = (
-        MCCSAllocateBuilder()
-        .set_interface(interface)
-        .set_subarray_beams(
-            [
-                SubArrayBeamsConfigurationBuilder()
-                .set_subarray_beam_id(1)
-                .set_apertures(
-                    [
-                        ApertureConfigurationBuilder()
-                        .set_aperture_id("AP001.01")
-                        .set_station_id(1)
-                        .build()
-                    ]
-                )
-                .set_number_of_channels(8)
-                .build()
-            ]
-        )
-        .build()
+    mccs = MCCSAllocateBuilder(
+        subarray_beams=[SubArrayBeamsConfigurationBuilder()],
     )
     dish_allocation = DishAllocationBuilder(
         receptor_ids=frozenset(["ac", " b", "aab"])
     )
 
     with pytest.raises(ValueError):
-        AssignResourcesRequestBuilder(mccs=mccs)
+        AssignResourcesRequestBuilder(subarray_id=None, dish=None, mccs=mccs)
 
     with pytest.raises(ValueError):
-        AssignResourcesRequestBuilder(dish_allocation=dish_allocation)
+        AssignResourcesRequestBuilder(
+            subarray_id=None, dish=dish_allocation, mccs=None
+        )
 
 
 def test_low_assign_resources_request(
@@ -209,12 +158,12 @@ def test_low_assign_resources_request(
     request1 = AssignResourcesRequestBuilder(
         sdp_config=sdp_allocate,
         mccs=MCCSAllocateBuilder(),
-        interface=MID_SCHEMA,
+        interface=LOW_SCHEMA,
     )
     request2 = AssignResourcesRequestBuilder(
         sdp_config=sdp_allocate,
         mccs=MCCSAllocateBuilder(),
-        interface=MID_SCHEMA,
+        interface=LOW_SCHEMA,
     )
 
     assert request1 == request2
@@ -229,63 +178,21 @@ def test_low_assign_resources_request_for_4_0_interface(
     with both sdp block and check equality
     """
 
-    request1 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_sdp_config(sdp_config=sdp_allocate)
-        .set_mccs(
-            MCCSAllocateBuilder()
-            .set_interface(interface)
-            .set_subarray_beams(
-                [
-                    SubArrayBeamsConfigurationBuilder()
-                    .set_subarray_beam_id(1)
-                    .set_apertures(
-                        [
-                            ApertureConfigurationBuilder()
-                            .set_aperture_id("AP001.01")
-                            .set_station_id(1)
-                            .build()
-                        ]
-                    )
-                    .set_number_of_channels(8)
-                    .build()
-                ]
-            )
-            .build()
-        )
-        .set_interface(MID_SCHEMA)
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
+    request1 = AssignResourcesRequestBuilder(
+        interface=LOW_SCHEMA,
+        dish=None,
+        sdp_config=sdp_allocate,
+        mccs=MCCSAllocateBuilder(
+            subarray_beams=[SubArrayBeamsConfigurationBuilder()],
+        ),
     )
-    request2 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_sdp_config(sdp_config=sdp_allocate)
-        .set_mccs(
-            MCCSAllocateBuilder()
-            .set_interface(interface)
-            .set_subarray_beams(
-                [
-                    SubArrayBeamsConfigurationBuilder()
-                    .set_subarray_beam_id(1)
-                    .set_apertures(
-                        [
-                            ApertureConfigurationBuilder()
-                            .set_aperture_id("AP001.01")
-                            .set_station_id(1)
-                            .build()
-                        ]
-                    )
-                    .set_number_of_channels(8)
-                    .build()
-                ]
-            )
-            .build()
-        )
-        .set_interface(MID_SCHEMA)
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
+    request2 = AssignResourcesRequestBuilder(
+        interface=LOW_SCHEMA,
+        dish=None,
+        sdp_config=sdp_allocate,
+        mccs=MCCSAllocateBuilder(
+            subarray_beams=[SubArrayBeamsConfigurationBuilder()],
+        ),
     )
 
     assert request1 == request2
@@ -345,16 +252,11 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
     """
     Verify that  Low AssignResource request object created using from_mccs is equal.
     """
-    mccs_allocate = (
-        MCCSAllocateBuilder()
-        .set_subarray_beam_ids(subarray_beam_ids=[1])
-        .set_station_ids(station_ids=[[1, 2]])
-        .set_channel_blocks(channel_blocks=[3])
-        .build()
-    )
+    mccs_allocate = MCCSAllocateBuilder()
 
     request1 = AssignResourcesRequestBuilder(
         subarray_id=1,
+        dish=None,
         mccs=mccs_allocate,
         sdp_config=sdp_allocate,
         interface=MID_SCHEMA,
@@ -363,7 +265,7 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
 
     request2 = AssignResourcesRequest.from_mccs(
         subarray_id=request1.subarray_id,
-        dish_allocation=request1.mccs,
+        mccs=request1.mccs,
         sdp_config=request1.sdp_config,
         interface=request1.interface,
         transaction_id=request1.transaction_id,
@@ -378,46 +280,26 @@ def test_low_assign_resource_request_using_from_mccs_for_4_0_interface(
     """
     Verify that  Low AssignResource request object created using from_mccs is equal.
     """
-    mccs_allocate = (
-        MCCSAllocateBuilder()
-        .set_interface(interface)
-        .set_subarray_beams(
-            [
-                SubArrayBeamsConfigurationBuilder()
-                .set_subarray_beam_id(1)
-                .set_apertures(
-                    [
-                        ApertureConfigurationBuilder()
-                        .set_aperture_id("AP001.01")
-                        .set_station_id(1)
-                        .build()
-                    ]
-                )
-                .set_number_of_channels(8)
-                .build()
-            ]
-        )
-        .build()
+    mccs_allocate = MCCSAllocateBuilder(
+        subarray_beams=[SubArrayBeamsConfigurationBuilder()],
     )
 
-    request1 = (
-        AssignResourcesRequestBuilder()
-        .set_subarray_id(subarray_id=1)
-        .set_sdp_config(sdp_config=sdp_allocate)
-        .set_mccs(mccs=mccs_allocate)
-        .set_interface(interface=LOW_SCHEMA)
-        .set_transaction_id(transaction_id="txn-mvp01-20200325-00001")
-        .build()
-    )
-
-    request2 = AssignResourcesRequestBuilder.from_mccs(
+    request1 = AssignResourcesRequestBuilder(
         subarray_id=1,
-        sdp_config=sdp_allocate,
+        dish=None,
         mccs=mccs_allocate,
-        interface=LOW_SCHEMA,
+        sdp_config=sdp_allocate,
+        interface=MID_SCHEMA,
         transaction_id="txn-mvp01-20200325-00001",
-    ).build()
+    )
 
+    request2 = AssignResourcesRequest.from_mccs(
+        subarray_id=request1.subarray_id,
+        mccs=request1.mccs,
+        sdp_config=request1.sdp_config,
+        interface=request1.interface,
+        transaction_id=request1.transaction_id,
+    )
     assert request1 == request2
 
 
@@ -457,39 +339,13 @@ def test_low_assign_resource_request_using_from_mccs_for_4_0_interface(
             AssignResourcesRequestBuilder(
                 dish=None,
                 mccs=MCCSAllocateBuilder(
-                    subarray_beams=[
-                        SubArrayBeamsConfigurationBuilder()
-                        .set_subarray_beam_id(1)
-                        .set_apertures(
-                            [
-                                ApertureConfigurationBuilder()
-                                .set_aperture_id("AP001.01")
-                                .set_station_id(1)
-                                .build()
-                            ]
-                        )
-                        .set_number_of_channels(8)
-                        .build()
-                    ]
+                    subarray_beams=[SubArrayBeamsConfigurationBuilder()],
                 ),
             ),
             AssignResourcesRequestBuilder(
                 dish=None,
                 mccs=MCCSAllocateBuilder(
-                    subarray_beams=[
-                        SubArrayBeamsConfigurationBuilder()
-                        .set_subarray_beam_id(1)
-                        .set_apertures(
-                            [
-                                ApertureConfigurationBuilder()
-                                .set_aperture_id("AP001.01")
-                                .set_station_id(1)
-                                .build()
-                            ]
-                        )
-                        .set_number_of_channels(8)
-                        .build()
-                    ]
+                    subarray_beams=[SubArrayBeamsConfigurationBuilder()],
                 ),
             ),
             True,
