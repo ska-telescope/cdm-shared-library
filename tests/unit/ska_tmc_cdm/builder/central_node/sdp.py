@@ -486,57 +486,12 @@ EBScanTypeBuilder = functools.partial(
     derive_from=".default",
 )
 
-
-class EBScanTypeBeamBuilder:
-    """
-    EBScanTypeBeamBuilder is a test data builder for CDM EBScanTypeBeam objects.
-
-    By default, EBScanTypeBeamBuilder will build an EBScanTypeBeam
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "EBScanTypeBeamBuilder":
-        self.field_id = None
-        self.channels_id = None
-        self.polarisations_id = None
-
-    def set_field_id(self, field_id: str) -> "EBScanTypeBeamBuilder":
-        """
-        Set the field id
-        :param field_id: Field id
-        """
-        self.field_id = field_id
-        return self
-
-    def set_channels_id(self, channels_id: str) -> "EBScanTypeBeamBuilder":
-        """
-        Set the channels id
-        :param channels_id: Channels id
-        """
-        self.channels_id = channels_id
-        return self
-
-    def set_polarisations_id(
-        self, polarisations_id: str
-    ) -> "EBScanTypeBeamBuilder":
-        """
-        Set the polarisations id
-        :param polarisations_id: Polarisations id
-        """
-        self.polarisations_id = polarisations_id
-        return self
-
-    def build(self) -> EBScanTypeBeam:
-        """
-        Build or create CDM EBScanTypeBeam object
-        :return: CDM EBScanTypeBeam object
-        """
-        return EBScanTypeBeam(
-            field_id=self.field_id,
-            channels_id=self.channels_id,
-            polarisations_id=self.polarisations_id,
-        )
+EBScanTypeBeamBuilder = functools.partial(
+    EBScanTypeBeam,
+    field_id="pss_field_1",
+    channels_id="pulsar_channels",
+    polarisations_id="all",
+)
 
 
 class ExecutionBlockConfigurationBuilder:

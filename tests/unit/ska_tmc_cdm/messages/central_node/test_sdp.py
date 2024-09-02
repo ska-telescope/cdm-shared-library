@@ -462,29 +462,15 @@ def test_eb_scan_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            EBScanTypeBeamBuilder()
-            .set_field_id(field_id="pss_field_1")
-            .set_channels_id(channels_id="pulsar_channels")
-            .set_polarisations_id(polarisations_id="all")
-            .build(),
-            EBScanTypeBeamBuilder()
-            .set_field_id(field_id="pss_field_1")
-            .set_channels_id(channels_id="pulsar_channels")
-            .set_polarisations_id(polarisations_id="all")
-            .build(),
+            EBScanTypeBeamBuilder(),
+            EBScanTypeBeamBuilder(),
             True,
         ),
         (  # not_equal
-            EBScanTypeBeamBuilder()
-            .set_field_id(field_id="pss_field_1")
-            .set_channels_id(channels_id="pulsar_channels")
-            .set_polarisations_id(polarisations_id="all")
-            .build(),
-            EBScanTypeBeamBuilder()
-            .set_field_id(field_id="pss_field_2")  # different field_id
-            .set_channels_id(channels_id="pulsar_channels")
-            .set_polarisations_id(polarisations_id="all")
-            .build(),
+            EBScanTypeBeamBuilder(field_id="pss_field_1"),
+            EBScanTypeBeamBuilder(
+                field_id="pss_field_2"
+            ),  # different field_id
             False,
         ),
     ],
