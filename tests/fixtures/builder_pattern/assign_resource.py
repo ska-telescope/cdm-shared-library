@@ -106,16 +106,9 @@ def sdp_workflow():
 
 
 @pytest.fixture(scope="module")
-def processing_block(sdp_workflow, processing_block_parameters):
-    """
-    Provides CDM ProcessingBlock configuration instance through ProcessingBlockConfigurationBuilder builder class
-    """
-    return (
-        ProcessingBlockConfigurationBuilder()
-        .set_parameters(parameters=processing_block_parameters)
-        .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-        .set_workflow(workflow=sdp_workflow)
-        .build()
+def processing_block(processing_block_parameters):
+    return ProcessingBlockConfigurationBuilder(
+        parameters=processing_block_parameters
     )
 
 

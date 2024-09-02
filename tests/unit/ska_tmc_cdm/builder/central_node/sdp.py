@@ -46,41 +46,11 @@ SDPWorkflowBuilder = functools.partial(
 )
 
 
-class PbDependencyBuilder:
-    """
-    PbDependencyBuilder is a test data builder for CDM PbDependency objects.
-
-    By default, PbDependencyBuilder will build an PbDependency
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "PbDependencyBuilder":
-        self.pb_id = None
-        self.kind = None
-
-    def set_pb_id(self, pb_id: str) -> "PbDependencyBuilder":
-        """
-        Set the pb id
-        :param pb_id: PB id
-        """
-        self.pb_id = pb_id
-        return self
-
-    def set_kind(self, kind: list) -> "PbDependencyBuilder":
-        """
-        Set the kind
-        :param kind: Kind
-        """
-        self.kind = kind
-        return self
-
-    def build(self) -> PbDependency:
-        """
-        Build or create CDM PbDependency object
-        :return: CDM PbDependency object
-        """
-        return PbDependency(pb_id=self.pb_id, kind=self.kind)
+PbDependencyBuilder = functools.partial(
+    PbDependency,
+    pb_id="pb-mvp01-20200325-00001",
+    kind=("visibilities",),  # tuple for test isolation
+)
 
 
 class ScriptConfigurationBuilder:
@@ -131,94 +101,11 @@ class ScriptConfigurationBuilder:
         )
 
 
-class ProcessingBlockConfigurationBuilder:
-    """
-    ProcessingBlockConfigurationBuilder is a test data builder for CDM ProcessingBlockConfiguration objects.
-
-    By default, ProcessingBlockConfigurationBuilder will build an ProcessingBlockConfiguration
-
-    for low observation command.
-    """
-
-    def __init__(self) -> "ProcessingBlockConfigurationBuilder":
-        self.pb_id = None
-        self.workflow = None
-        self.parameters = {}
-        self.dependencies = None
-        self.sbi_ids = None
-        self.script = None
-
-    def set_pb_id(self, pb_id: str) -> "ProcessingBlockConfigurationBuilder":
-        """
-        Set the pb id
-        :param pb_id: PB id
-        """
-        self.pb_id = pb_id
-        return self
-
-    def set_workflow(
-        self, workflow: SDPWorkflow
-    ) -> "ProcessingBlockConfigurationBuilder":
-        """
-        Set the workflow
-        :param workflow: Workflow
-        """
-        self.workflow = workflow
-        return self
-
-    def set_parameters(
-        self, parameters: dict
-    ) -> "ProcessingBlockConfigurationBuilder":
-        """
-        Set the parameters
-        :param parameters: Parameters
-        """
-        self.parameters = parameters
-        return self
-
-    def set_dependencies(
-        self, dependencies: List[PbDependency]
-    ) -> "ProcessingBlockConfigurationBuilder":
-        """
-        Set the dependencies
-        :param dependencies: Dependencies
-        """
-        self.dependencies = dependencies
-        return self
-
-    def set_sbi_ids(
-        self, sbi_ids: list
-    ) -> "ProcessingBlockConfigurationBuilder":
-        """
-        Set the sbi ids
-        :param sbi_ids: SBI ids
-        """
-        self.sbi_ids = sbi_ids
-        return self
-
-    def set_script(
-        self, script: ScriptConfiguration
-    ) -> "ProcessingBlockConfigurationBuilder":
-        """
-        Set the script
-        :param script: Script
-        """
-        self.script = script
-        return self
-
-    def build(self) -> ProcessingBlockConfiguration:
-        """
-        Build or create CDM ProcessingBlockConfiguration object
-        :return: CDM ProcessingBlockConfiguration object
-        """
-        return ProcessingBlockConfiguration(
-            pb_id=self.pb_id,
-            workflow=self.workflow,
-            parameters=self.parameters,
-            dependencies=self.dependencies,
-            sbi_ids=self.sbi_ids,
-            script=self.script,
-        )
+ProcessingBlockConfigurationBuilder = functools.partial(
+    ProcessingBlockConfiguration,
+    pb_id="pb-mvp01-20200325-00001",
+    workflow=SDPWorkflowBuilder(),
+)
 
 
 class SDPConfigurationBuilder:

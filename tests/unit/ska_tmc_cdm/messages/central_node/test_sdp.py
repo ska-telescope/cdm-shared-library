@@ -98,25 +98,15 @@ def test_workflow_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            PbDependencyBuilder()
-            .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_kind(kind=["visibilities"])
-            .build(),
-            PbDependencyBuilder()
-            .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_kind(kind=["visibilities"])
-            .build(),
+            PbDependencyBuilder(),
+            PbDependencyBuilder(),
             True,
         ),
         (  # not_equal
-            PbDependencyBuilder()
-            .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_kind(kind=["visibilities"])
-            .build(),
-            PbDependencyBuilder()
-            .set_pb_id(pb_id="pb-mvp01-20200325-00002")
-            .set_kind(kind=["visibilities"])
-            .build(),  # different pb_id
+            PbDependencyBuilder(pb_id="pb-mvp01-20200325-00001"),
+            PbDependencyBuilder(
+                pb_id="pb-mvp01-20200325-00002"
+            ),  # different pb_id
             False,
         ),
     ],
@@ -133,57 +123,25 @@ def test_pb_dependency_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            ProcessingBlockConfigurationBuilder()
-            .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_workflow(SDPWorkflowBuilder())
-            .set_dependencies(
-                [
-                    PbDependencyBuilder()
-                    .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-                    .set_kind(kind=["visibilities"])
-                    .build()
-                ]
-            )
-            .build(),
-            ProcessingBlockConfigurationBuilder()
-            .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_workflow(SDPWorkflowBuilder())
-            .set_dependencies(
-                [
-                    PbDependencyBuilder()
-                    .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-                    .set_kind(kind=["visibilities"])
-                    .build()
-                ]
-            )
-            .build(),
+            ProcessingBlockConfigurationBuilder(
+                dependencies=[PbDependencyBuilder()]
+            ),
+            ProcessingBlockConfigurationBuilder(
+                dependencies=[PbDependencyBuilder()]
+            ),
             True,
         ),
-        (  # not_equal
-            ProcessingBlockConfigurationBuilder()
-            .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_workflow(SDPWorkflowBuilder())
-            .set_dependencies(
-                [
-                    PbDependencyBuilder()
-                    .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-                    .set_kind(kind=["visibilities"])
-                    .build()
+        (  # not equal
+            ProcessingBlockConfigurationBuilder(
+                dependencies=[
+                    PbDependencyBuilder(pb_id="pb-mvp01-20200325-00001")
                 ]
-            )
-            .build(),
-            ProcessingBlockConfigurationBuilder()
-            .set_pb_id(pb_id="pb-mvp01-20200325-00001")
-            .set_workflow(SDPWorkflowBuilder())
-            .set_dependencies(
-                [
-                    PbDependencyBuilder()
-                    .set_pb_id(pb_id="pb-mvp01-20200325-00003")
-                    .set_kind(kind=["visibilities"])
-                    .build()
+            ),
+            ProcessingBlockConfigurationBuilder(
+                dependencies=[
+                    PbDependencyBuilder(pb_id="pb-mvp01-20200325-00003")
                 ]
-            )  # different dependency
-            .build(),
+            ),  # different dependency
             False,
         ),
     ],
@@ -583,34 +541,24 @@ def test_processing_block_equality(processing_block_parameters):
     Verify that Processing Block Configuration objects are considered equal if attributes have same value and not equal if they differ.
     """
 
-    pb1 = (
-        ProcessingBlockConfigurationBuilder()
-        .set_pb_id(pb_id="pb-mvp01-20200325-00003")
-        .set_parameters(parameters=processing_block_parameters)
-        .set_sbi_ids(sbi_ids=["sbi-mvp01-20200325-00001"])
-        .set_script(
-            ScriptConfigurationBuilder()
-            .set_kind(kind="realtime")
-            .set_name(name="test-receive-addresses")
-            .set_version(version="0.5.0")
-            .build()
-        )
-        .build()
+    pb1 = ProcessingBlockConfigurationBuilder(
+        parameters=processing_block_parameters,
+        sbi_ids=["sbi-mvp01-20200325-00001"],
+        script=ScriptConfigurationBuilder()
+        .set_kind(kind="realtime")
+        .set_name(name="test-receive-addresses")
+        .set_version(version="0.5.0")
+        .build(),
     )
 
-    pb2 = (
-        ProcessingBlockConfigurationBuilder()
-        .set_pb_id(pb_id="pb-mvp01-20200325-00003")
-        .set_parameters(parameters=processing_block_parameters)
-        .set_sbi_ids(sbi_ids=["sbi-mvp01-20200325-00003"])  # different sbi_id
-        .set_script(
-            ScriptConfigurationBuilder()
-            .set_kind(kind="realtime")
-            .set_name(name="test-receive-addresses")
-            .set_version(version="0.5.0")
-            .build()
-        )
-        .build()
+    pb2 = ProcessingBlockConfigurationBuilder(
+        parameters=processing_block_parameters,
+        sbi_ids=["sbi-mvp01-20200325-00003"],  # different sbi_id,
+        script=ScriptConfigurationBuilder()
+        .set_kind(kind="realtime")
+        .set_name(name="test-receive-addresses")
+        .set_version(version="0.5.0")
+        .build(),
     )
 
     assert pb1 == copy.deepcopy(pb1)
