@@ -334,8 +334,8 @@ def test_pointing_configuration_eq(
             True,
         ),
         (
-            DishConfigurationBuilder(set_receiver_band=ReceiverBand.BAND_1),
-            DishConfigurationBuilder(set_receiver_band=ReceiverBand.BAND_2),
+            DishConfigurationBuilder(receiver_band=ReceiverBand.BAND_1),
+            DishConfigurationBuilder(receiver_band=ReceiverBand.BAND_2),
             False,
         ),
     ],

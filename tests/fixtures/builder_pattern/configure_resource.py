@@ -54,23 +54,7 @@ def station_beam_config() -> SubarrayBeamConfiguration:
     """
     Provides CDM Station Beam Configuration instance through Builder class with predefined values
     """
-    return SubarrayBeamConfigurationBuilder(
-        subarray_beam_id=1,
-        update_rate=1.0,
-        logical_bands=SubarrayBeamLogicalbandsBuilder(
-            start_channel=80,
-            number_of_channels=16,
-        ),
-        apertures=SubarrayBeamApertureBuilder(
-            aperture_id="AP001.01",
-            weighting_key_ref="aperture2",
-        ),
-        sky_coordinates=SubarrayBeamSkyCoordinatesBuilder(
-            reference_frame="HORIZON",
-            c1=180.0,
-            c2=90.0,
-        ),
-    )
+    return SubarrayBeamConfigurationBuilder()
 
 
 @pytest.fixture(scope="module")

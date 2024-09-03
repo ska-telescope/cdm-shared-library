@@ -32,8 +32,8 @@ SubarrayBeamConfigurationBuilder = functools.partial(
     SubarrayBeamConfiguration,
     subarray_beam_id=1,
     update_rate=1.0,
-    logical_bands=SubarrayBeamLogicalbandsBuilder(),
-    apertures=SubarrayBeamApertureBuilder(),
+    logical_bands=(SubarrayBeamLogicalbandsBuilder(),),
+    apertures=(SubarrayBeamApertureBuilder(),),
     sky_coordinates=SubarrayBeamSkyCoordinatesBuilder(),
 )
 
