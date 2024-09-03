@@ -1,5 +1,4 @@
 import functools
-from typing import List, Tuple
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
@@ -10,8 +9,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
-    PSSConfiguration,
-    PSTConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
@@ -46,10 +43,12 @@ CommonConfigurationBuilder = functools.partial(
 
 CBFConfigurationBuilder = functools.partial(CBFConfiguration)
 
-BeamsConfigurationBuilder = functools.partial(BeamsConfiguration,
-                                              pst_beam_id=1,
-                                              stn_beam_id=1,
-                                              stn_weights=(0.9, 1.0, 1.0, 1.0, 0.9, 1.0))
+BeamsConfigurationBuilder = functools.partial(
+    BeamsConfiguration,
+    pst_beam_id=1,
+    stn_beam_id=1,
+    stn_weights=(0.9, 1.0, 1.0, 1.0, 0.9, 1.0),
+)
 
 StnBeamConfigurationBuilder = functools.partial(
     StnBeamConfiguration,
@@ -66,7 +65,10 @@ StationConfigurationBuilder = functools.partial(
 )
 
 VisFspConfigurationBuilder = functools.partial(
-    VisFspConfiguration, function_mode="vis", fsp_ids=(1, 2), firmware="pst",
+    VisFspConfiguration,
+    function_mode="vis",
+    fsp_ids=(1, 2),
+    firmware="pst",
 )
 
 VisStnBeamConfigurationBuilder = functools.partial(
@@ -85,20 +87,23 @@ VisConfigurationBuilder = functools.partial(
     stn_beam=VisStnBeamConfigurationBuilder(),
 )
 
-TimingBeamsConfigurationBuilder = functools.partial(TimingBeamsConfiguration,
+TimingBeamsConfigurationBuilder = functools.partial(
+    TimingBeamsConfiguration,
     beams=(BeamsConfigurationBuilder(),),
     fsp=VisFspConfigurationBuilder(),
 )
 
-CSPConfigurationBuilder = functools.partial(CSPConfiguration,
+CSPConfigurationBuilder = functools.partial(
+    CSPConfiguration,
     interface="interface",
     subarray=SubarrayConfigurationBuilder(),
     common=CommonConfigurationBuilder(),
-    cbf_config=CBFConfigurationBuilder()
+    cbf_config=CBFConfigurationBuilder(),
 )
 
-LowCBFConfigurationBuilder = functools.partial(LowCBFConfiguration,
-                                               stations=StationConfigurationBuilder(),
-                                               vis=VisConfigurationBuilder(),
-                                               timing_beams=TimingBeamsConfigurationBuilder(),
-                                               )
+LowCBFConfigurationBuilder = functools.partial(
+    LowCBFConfiguration,
+    stations=StationConfigurationBuilder(),
+    vis=VisConfigurationBuilder(),
+    timing_beams=TimingBeamsConfigurationBuilder(),
+)

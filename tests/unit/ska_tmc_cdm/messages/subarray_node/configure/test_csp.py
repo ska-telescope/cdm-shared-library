@@ -9,7 +9,6 @@ import pytest
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
-    BeamsConfigurationBuilder,
     CBFConfigurationBuilder,
     CommonConfigurationBuilder,
     CSPConfigurationBuilder,
@@ -18,13 +17,12 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     StationConfigurationBuilder,
     StnBeamConfigurationBuilder,
     SubarrayConfigurationBuilder,
-    TimingBeamsConfigurationBuilder,
     VisConfigurationBuilder,
     VisFspConfigurationBuilder,
-    VisStnBeamConfigurationBuilder,
 )
 
 # tr = TimingBeamsConfigurationBuilder()
+
 
 @pytest.mark.parametrize(
     "common_config_a, common_config_b, is_equal",
@@ -107,12 +105,8 @@ def test_subarray_configuration_equality(
         ),
         # Case when configurations have different FSP configurations
         (
-            CBFConfigurationBuilder(
-                fsp=[FSPConfigurationBuilder(fsp_id=1)]
-            ),
-            CBFConfigurationBuilder(
-                fsp=[FSPConfigurationBuilder(fsp_id=2)]
-            ),
+            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder(fsp_id=1)]),
+            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder(fsp_id=2)]),
             False,
         ),
     ],

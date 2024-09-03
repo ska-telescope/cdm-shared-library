@@ -1,3 +1,4 @@
+import functools
 from typing import Union
 
 from astropy import units as u
@@ -138,27 +139,6 @@ class PointingConfigurationBuilder:
         return PointingConfiguration(target=self.target)
 
 
-class DishConfigurationBuilder:
-    """
-    DishConfigurationBuilder is a test data builder for DishConfiguration objects.
-    """
-
-    def __init__(self):
-        self.receiver_band = None
-
-    def set_receiver_band(
-        self, receiver_band: ReceiverBand
-    ) -> "DishConfigurationBuilder":
-        """
-        Set receiver band
-        :param: receiver_band: receiver band
-        """
-        self.receiver_band = receiver_band
-        return self
-
-    def build(self) -> "DishConfiguration":
-        """
-        Build or create dish configuration
-        :return: CDM dish configuration instance
-        """
-        return DishConfiguration(receiver_band=self.receiver_band)
+DishConfigurationBuilder = functools.partial(
+    DishConfiguration, receiver_band=ReceiverBand.BAND_1
+)
