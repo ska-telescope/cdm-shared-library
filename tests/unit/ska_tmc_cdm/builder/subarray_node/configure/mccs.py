@@ -37,4 +37,6 @@ SubarrayBeamConfigurationBuilder = functools.partial(
 )
 
 
-MCCSConfigurationBuilder = functools.partial(MCCSConfiguration)
+MCCSConfigurationBuilder = functools.partial(
+    MCCSConfiguration, subarray_beams=(SubarrayBeamConfigurationBuilder(),)
+)

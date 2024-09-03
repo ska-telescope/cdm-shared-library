@@ -401,7 +401,6 @@ def test_csp_configuration_equality(csp_config):
     low_csp_config = CSPConfigurationBuilder(
         interface="https://schema.skao.int/ska-low-csp-configure/0.0",
         common=CommonConfigurationBuilder(),
-        pst_config=PSTConfigurationBuilder(),
         lowcbf=LowCBFConfigurationBuilder(
             vis=VisConfigurationBuilder(),
             stations=StationConfigurationBuilder(

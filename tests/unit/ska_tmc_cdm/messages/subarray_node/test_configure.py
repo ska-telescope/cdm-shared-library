@@ -1,19 +1,22 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
-import copy
-from datetime import timedelta
-
 import pytest
 from pydantic import ValidationError
 
-from ska_tmc_cdm.messages.subarray_node.configure import LOW_SCHEMA, MID_SCHEMA
-from tests.unit.ska_tmc_cdm.builder.subarray_node.configure import (
-    ConfigureRequestBuilder,
+from ska_tmc_cdm.messages.subarray_node.configure import (
+    LOW_SCHEMA,
+    MID_SCHEMA,
+    ConfigureRequest,
 )
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
+    DishConfigurationBuilder,
     PointingConfigurationBuilder,
+    SpecialTargetBuilder,
     TargetBuilder,
+)
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import (
+    MCCSConfigurationBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.tmc import (
     TMCConfigurationBuilder,
@@ -25,208 +28,101 @@ def test_empty_configure_request_fails():
     Verify that an empty ConfigureRequest without dish, mccs or interface set throws a ValueError
     """
     with pytest.raises(ValueError):
-        _ = ConfigureRequestBuilder().build()
+        ConfigureRequest()
 
 
 @pytest.mark.parametrize(
-    "config_name, setter_method, expected_schema",
+    "configure_request, expected_schema",
     [
-        ("mccs_config", "set_mccs", LOW_SCHEMA),
-        ("dish_config", "set_dish", MID_SCHEMA),
+        (ConfigureRequest(mccs=MCCSConfigurationBuilder()), LOW_SCHEMA),
+        (ConfigureRequest(dish=DishConfigurationBuilder()), MID_SCHEMA),
     ],
 )
 def test_configure_request_has_correct_schema_on_creation(
-    request, config_name, setter_method, expected_schema
+    configure_request, expected_schema
 ):
     """
     Verify that ConfigureRequest with valid DishConfiguration has a MID Schema set on creation
     And Low Schema set on creation for MCCS Configuration
     """
-    config = request.getfixturevalue(config_name)
-    builder = ConfigureRequestBuilder()
-    getattr(builder, setter_method)(config)
-    request_obj = builder.build()
-    assert request_obj.interface == expected_schema
+    assert configure_request.interface == expected_schema
 
 
 @pytest.mark.parametrize(
-    "config_type, is_equal, use_deepcopy",
+    "config_request, is_equal",
     [
         (
-            "dish",
+            ConfigureRequest(dish=DishConfigurationBuilder()),
+            ConfigureRequest(dish=DishConfigurationBuilder()),
             True,
-            False,
-        ),  # Test equality for ConfigureRequests with dish, sdp, and csp configs
+        ),  # Test equality for ConfigureRequests with dish
         (
-            "mccs",
+            ConfigureRequest(mccs=MCCSConfigurationBuilder()),
+            ConfigureRequest(mccs=MCCSConfigurationBuilder()),
             True,
             False,
         ),  # Test equality for ConfigureRequests with mccs config
         (
-            "other_objects",
+            ConfigureRequest(mccs=MCCSConfigurationBuilder()),
+            object(),
             False,
-            True,
         ),  # Test inequality against other object types
     ],
 )
-def test_configure_request_equality(
-    config_type,
-    is_equal,
-    use_deepcopy,
-    dish_config,
-    sdp_config,
-    csp_config,
-    mccs_config,
-):
+def test_configure_request_equality(request, request_2, is_equal):
     """
     Verify that ConfigureRequests are equal when they have the same values, not equal for different values
     And that ConfigureRequests are not considered equal to objects of other types.
     """
-    # Initialize pointing based on config_type
-    pointing_config = (
-        PointingConfigurationBuilder()
-        .set_target(
-            TargetBuilder()
-            .set_ra(1)
-            .set_dec(1)
-            .set_ca_offset_arcsec(ca_offset_arcsec=5.0)
-            .set_ie_offset_arcsec(ie_offset_arcsec=5.0)
-            .build()
-        )
-        .build()
-    )
-
-    # Initialize request based on config_type
-    if config_type == "dish":
-        request = (
-            ConfigureRequestBuilder()
-            .set_pointing(pointing=pointing_config)
-            .set_dish(dish=dish_config)
-            .set_sdp(sdp=sdp_config)
-            .set_csp(csp=csp_config)
-            .set_tmc(
-                tmc=TMCConfigurationBuilder()
-                .set_partial_configuration(partial_configuration=True)
-                .build()
-            )
-            .build()
-        )
-        request_2 = copy.deepcopy(request) if use_deepcopy else request
-    elif config_type == "mccs":
-        request = (
-            ConfigureRequestBuilder()
-            .set_mccs(mccs=mccs_config)
-            .set_sdp(sdp=sdp_config)
-            .set_csp(csp=csp_config)
-            .set_tmc(
-                tmc=TMCConfigurationBuilder()
-                .set_partial_configuration(partial_configuration=True)
-                .build()
-            )
-            .build()
-        )
-        request_2 = copy.deepcopy(request) if use_deepcopy else request
-    else:  # For testing inequality with other objects
-        request = (
-            ConfigureRequestBuilder()
-            .set_pointing(pointing=pointing_config)
-            .set_dish(dish=dish_config)
-            .set_sdp(sdp=sdp_config)
-            .set_csp(csp=csp_config)
-            .set_tmc(
-                tmc=TMCConfigurationBuilder()
-                .set_partial_configuration(partial_configuration=True)
-                .build()
-            )
-            .build()
-        )
-        request_2 = object()
-
     assert (request == request_2) == is_equal
 
 
-def test_configure_request_mccs_independence(mccs_config, dish_config):
+def test_configure_request_mccs_independence():
     """
     Verify that an Mid & Low ConfigureRequests are independent.
     """
 
     with pytest.raises(ValueError):
-        ConfigureRequestBuilder().set_dish(dish=dish_config).set_mccs(
-            mccs=mccs_config
-        ).build()
+        ConfigureRequest(
+            dish=DishConfigurationBuilder(), mccs=MCCSConfigurationBuilder()
+        )
 
 
-def test_configure_partial_configuration(dish_config):
+def test_configure_partial_configuration():
     """
     Verify that a non-partial Mid ConfigureRequest requires the correct fields
     """
 
-    pointing_config = (
-        PointingConfigurationBuilder()
-        .set_target(
-            TargetBuilder()
-            .set_ca_offset_arcsec(ca_offset_arcsec=5.0)
-            .set_ie_offset_arcsec(ie_offset_arcsec=5.0)
-            .build()
-        )
-        .build()
+    ConfigureRequest(
+        pointing=PointingConfigurationBuilder(
+            target=TargetBuilder(ra=None, dec=None)
+        ),
+        tmc=TMCConfigurationBuilder(partial_configuration=True),
+        dish=DishConfigurationBuilder(),
     )
 
-    valid_partial_request = (
-        ConfigureRequestBuilder()
-        .set_pointing(pointing=pointing_config)
-        .set_tmc(
-            tmc=TMCConfigurationBuilder()
-            .set_partial_configuration(partial_configuration=True)
-            .build()
-        )
-        .set_dish(dish=dish_config)
-        .build()
+    ConfigureRequest(
+        dish=DishConfigurationBuilder(),
+        pointing=PointingConfigurationBuilder(target=SpecialTargetBuilder()),
+        tmc=TMCConfigurationBuilder(partial_configuration=False),
     )
-    assert valid_partial_request is not None
 
     # scan_duration should be required for non-partial ConfigureRequest
     with pytest.raises(ValidationError):
-        ConfigureRequestBuilder().set_dish(dish=dish_config).set_pointing(
-            pointing=pointing_config
-        ).set_tmc(
-            tmc=TMCConfigurationBuilder()
-            .set_partial_configuration(partial_configuration=False)
-            .build()
-        ).build()
+        ConfigureRequest(
+            tmc=TMCConfigurationBuilder(
+                scan_duration=None, partial_configuration=False
+            ),
+            dish=DishConfigurationBuilder(),
+            pointing=PointingConfigurationBuilder(),
+        )
 
     # ra and dec should be required for non-partial ConfigureRequest
     with pytest.raises(ValueError):
-        ConfigureRequestBuilder().set_dish(dish=dish_config).set_pointing(
-            pointing=pointing_config
-        ).set_tmc(
-            tmc=TMCConfigurationBuilder()
-            .set_scan_duration(scan_duration=timedelta(seconds=10))
-            .set_partial_configuration(partial_configuration=False)
-            .build()
-        ).build()
-
-    pointing_config = (
-        PointingConfigurationBuilder()
-        .set_target(
-            TargetBuilder()
-            .set_reference_frame(reference_frame="special")
-            .set_target_name(target_name="Sun")
-            .build()
+        ConfigureRequest(
+            pointing=PointingConfigurationBuilder(
+                target=TargetBuilder(ra=None, dec=None)
+            ),
+            tmc=TMCConfigurationBuilder(partial_configuration=False),
+            ish=DishConfigurationBuilder(),
         )
-        .build()
-    )
-
-    valid_non_sidereal_request = (
-        ConfigureRequestBuilder()
-        .set_dish(dish=dish_config)
-        .set_pointing(pointing=pointing_config)
-        .set_tmc(
-            tmc=TMCConfigurationBuilder()
-            .set_scan_duration(scan_duration=timedelta(seconds=10))
-            .set_partial_configuration(partial_configuration=False)
-            .build()
-        )
-        .build()
-    )
-    assert valid_non_sidereal_request is not None
