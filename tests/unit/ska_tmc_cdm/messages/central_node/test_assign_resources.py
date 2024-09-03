@@ -146,9 +146,7 @@ def test_assign_resources_if_no_subarray_id_argument_for_4_0_interface():
         )
 
 
-def test_low_assign_resources_request(
-    sdp_allocate,
-):
+def test_low_assign_resources_request():
     """
     Verify creation of Low AssignResources request objects
     with both sdp block and check equality
@@ -156,13 +154,11 @@ def test_low_assign_resources_request(
 
     request1 = AssignResourcesRequestBuilder(
         dish=None,
-        sdp_config=sdp_allocate,
         mccs=MCCSAllocateBuilder(),
         interface=LOW_SCHEMA,
     )
     request2 = AssignResourcesRequestBuilder(
         dish=None,
-        sdp_config=sdp_allocate,
         mccs=MCCSAllocateBuilder(),
         interface=LOW_SCHEMA,
     )
@@ -171,9 +167,7 @@ def test_low_assign_resources_request(
     assert request1 != 1 and request2 != object()
 
 
-def test_low_assign_resources_request_for_4_0_interface(
-    sdp_allocate,
-):
+def test_low_assign_resources_request_for_4_0_interface():
     """
     Verify creation of Low AssignResources request objects
     with both sdp block and check equality
@@ -182,7 +176,6 @@ def test_low_assign_resources_request_for_4_0_interface(
     request1 = AssignResourcesRequestBuilder(
         interface=LOW_SCHEMA,
         dish=None,
-        sdp_config=sdp_allocate,
         mccs=MCCSAllocateBuilder(
             subarray_beams=[SubArrayBeamsConfigurationBuilder()],
         ),
@@ -190,7 +183,6 @@ def test_low_assign_resources_request_for_4_0_interface(
     request2 = AssignResourcesRequestBuilder(
         interface=LOW_SCHEMA,
         dish=None,
-        sdp_config=sdp_allocate,
         mccs=MCCSAllocateBuilder(
             subarray_beams=[SubArrayBeamsConfigurationBuilder()],
         ),
@@ -211,17 +203,11 @@ def test_mid_assign_resources_request():
     assert request1 != 1 and request2 != object()
 
 
-def test_mid_assign_resource_request_using_from_dish(sdp_allocate):
+def test_mid_assign_resource_request_using_from_dish():
     """
     Verify that  Mid AssignResource request object created using from_dish is equal.
     """
-    request1 = AssignResourcesRequestBuilder(
-        subarray_id=1,
-        dish=DishAllocationBuilder(),
-        sdp_config=sdp_allocate,
-        interface=MID_SCHEMA,
-        transaction_id="txn-mvp01-20200325-00001",
-    )
+    request1 = AssignResourcesRequestBuilder()
 
     request2 = AssignResourcesRequest.from_dish(
         subarray_id=request1.subarray_id,
@@ -234,19 +220,13 @@ def test_mid_assign_resource_request_using_from_dish(sdp_allocate):
     assert request1 == request2
 
 
-def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
+def test_low_assign_resource_request_using_from_mccs():
     """
     Verify that  Low AssignResource request object created using from_mccs is equal.
     """
-    mccs_allocate = MCCSAllocateBuilder()
-
     request1 = AssignResourcesRequestBuilder(
-        subarray_id=1,
         dish=None,
-        mccs=mccs_allocate,
-        sdp_config=sdp_allocate,
-        interface=MID_SCHEMA,
-        transaction_id="txn-mvp01-20200325-00001",
+        mccs=MCCSAllocateBuilder(),
     )
 
     request2 = AssignResourcesRequest.from_mccs(
@@ -260,9 +240,7 @@ def test_low_assign_resource_request_using_from_mccs(sdp_allocate):
     assert request1 == request2
 
 
-def test_low_assign_resource_request_using_from_mccs_for_4_0_interface(
-    sdp_allocate,
-):
+def test_low_assign_resource_request_using_from_mccs_for_4_0_interface():
     """
     Verify that  Low AssignResource request object created using from_mccs is equal.
     """
@@ -271,12 +249,8 @@ def test_low_assign_resource_request_using_from_mccs_for_4_0_interface(
     )
 
     request1 = AssignResourcesRequestBuilder(
-        subarray_id=1,
         dish=None,
         mccs=mccs_allocate,
-        sdp_config=sdp_allocate,
-        interface=MID_SCHEMA,
-        transaction_id="txn-mvp01-20200325-00001",
     )
 
     request2 = AssignResourcesRequest.from_mccs(

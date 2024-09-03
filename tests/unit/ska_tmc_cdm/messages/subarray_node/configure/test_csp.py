@@ -392,11 +392,28 @@ def test_low_cbf_configuration_equality(
     assert low_cbf_config_b != object()
 
 
-def test_csp_configuration_equality(csp_config, low_csp_config):
+def test_csp_configuration_equality(csp_config):
     """
     Verify that CSPConfiguration objects are equal when all they have the same values
     and not equal when any attribute differs.
     """
+
+    low_csp_config = CSPConfigurationBuilder(
+        interface="https://schema.skao.int/ska-low-csp-configure/0.0",
+        common=CommonConfigurationBuilder(),
+        pst_config=PSTConfigurationBuilder(),
+        lowcbf=LowCBFConfigurationBuilder(
+            vis=VisConfigurationBuilder(),
+            stations=StationConfigurationBuilder(
+                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
+                stn_beams=[
+                    StnBeamConfigurationBuilder(
+                        stn_beam_id=1, freq_ids=[400], beam_id=1
+                    )
+                ],
+            ),
+        ),
+    )
 
     csp_config_invalid = CSPConfigurationBuilder(interface="foo")
     csp_config_b = copy.deepcopy(csp_config)
