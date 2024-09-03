@@ -24,26 +24,7 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     VisStnBeamConfigurationBuilder,
 )
 
-tr = (
-    TimingBeamsConfigurationBuilder()
-    .set_beams(
-        [
-            BeamsConfigurationBuilder()
-            .set_pst_beam_id(1)
-            .set_stn_beam_id(1)
-            .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
-            .build()
-        ]
-    )
-    .set_fsp(
-        VisFspConfigurationBuilder()
-        .set_fsp_ids([2])
-        .set_firmware("pst")
-        .build()
-    )
-    .build()
-)
-
+# tr = TimingBeamsConfigurationBuilder()
 
 @pytest.mark.parametrize(
     "common_config_a, common_config_b, is_equal",
@@ -120,17 +101,17 @@ def test_subarray_configuration_equality(
     [
         # Case when both configurations have the same FSP configuration
         (
-            CBFConfigurationBuilder(fsp_config=[FSPConfigurationBuilder()]),
-            CBFConfigurationBuilder(fsp_config=[FSPConfigurationBuilder()]),
+            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder()]),
+            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder()]),
             True,
         ),
         # Case when configurations have different FSP configurations
         (
             CBFConfigurationBuilder(
-                fsp_config=[FSPConfigurationBuilder(fsp_id=1)]
+                fsp=[FSPConfigurationBuilder(fsp_id=1)]
             ),
             CBFConfigurationBuilder(
-                fsp_config=[FSPConfigurationBuilder(fsp_id=2)]
+                fsp=[FSPConfigurationBuilder(fsp_id=2)]
             ),
             False,
         ),
@@ -294,18 +275,8 @@ def test_fsp_configuration_channel_avg_map_length(
         ),
         # Case where configurations are different
         (
-            StnBeamConfigurationBuilder()
-            .set_stn_beam_id(1)
-            .set_beam_id(1)
-            .set_freq_ids([400])
-            .set_delay_poly("tango/device/instance/delay")
-            .build(),
-            StnBeamConfigurationBuilder()
-            .set_stn_beam_id(2)  # Different stn_beam_id
-            .set_beam_id(2)
-            .set_freq_ids([400])
-            .set_delay_poly("tango/device/instance/delay")
-            .build(),
+            StnBeamConfigurationBuilder(stn_beam_id=1),
+            StnBeamConfigurationBuilder(stn_beam_id=2),
             False,
         ),
     ],
@@ -327,52 +298,16 @@ def test_stn_beam_configuration_equality(
     [
         # Case where both configurations are the same
         (
-            StationConfigurationBuilder()
-            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-            .set_stn_beams(
-                [
-                    StnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_beam_id(1)
-                    .set_freq_ids([400])
-                    .set_delay_poly("tango/device/instance/delay")
-                    .build()
-                ]
-            )
-            .build(),
-            StationConfigurationBuilder()
-            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-            .set_stn_beams(
-                [
-                    StnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_beam_id(1)
-                    .set_freq_ids([400])
-                    .set_delay_poly("tango/device/instance/delay")
-                    .build()
-                ]
-            )
-            .build(),
+            StationConfigurationBuilder(),
+            StationConfigurationBuilder(),
             True,
         ),
         # Case where configurations are different due to missing stn_beams
         (
-            StationConfigurationBuilder()
-            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-            .set_stn_beams(
-                [
-                    StnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_beam_id(1)
-                    .set_freq_ids([400])
-                    .set_delay_poly("tango/device/instance/delay")
-                    .build()
-                ]
-            )
-            .build(),
-            StationConfigurationBuilder()
-            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-            .build(),
+            StationConfigurationBuilder(
+                stn_beams=(StnBeamConfigurationBuilder(),)
+            ),
+            StationConfigurationBuilder(stn_beams=None),
             False,
         ),
     ],
@@ -394,25 +329,14 @@ def test_station_configuration_equality(
     [
         # Case where both configurations are the same
         (
-            VisFspConfigurationBuilder()
-            .set_function_mode("vis")
-            .set_fsp_ids([1])
-            .build(),
-            VisFspConfigurationBuilder()
-            .set_function_mode("vis")
-            .set_fsp_ids([1])
-            .build(),
+            VisFspConfigurationBuilder(),
+            VisFspConfigurationBuilder(),
             True,
         ),
         # Case where configurations are different due to missing fsp_ids in the second instance
         (
-            VisFspConfigurationBuilder()
-            .set_function_mode("vis")
-            .set_fsp_ids([1])
-            .build(),
-            VisFspConfigurationBuilder()
-            .set_function_mode("vis")
-            .build(),  # Omitting set_fsp_ids to simulate difference
+            VisFspConfigurationBuilder(fsp_ids=[1, 2]),
+            VisFspConfigurationBuilder(fsp_ids=None),
             False,
         ),
     ],
@@ -435,44 +359,8 @@ def test_vis_fsp_configuration_equality(
     "vis_config_a, vis_config_b, is_equal",
     [
         (
-            VisConfigurationBuilder()
-            .set_fsp(
-                VisFspConfigurationBuilder()
-                .set_function_mode("vis")
-                .set_fsp_ids([1])
-                .build()
-            )
-            .set_stn_beam(
-                [
-                    VisStnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_host([(0, "192.168.1.00")])
-                    .set_port([(0, 9000, 1)])
-                    .set_mac([(0, "02-03-04-0a-0b-0c")])
-                    .set_integration_ms(849)
-                    .build()
-                ]
-            )
-            .build(),
-            VisConfigurationBuilder()
-            .set_fsp(
-                VisFspConfigurationBuilder()
-                .set_function_mode("vis")
-                .set_fsp_ids([1])
-                .build()
-            )
-            .set_stn_beam(
-                [
-                    VisStnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_host([(0, "192.168.1.00")])
-                    .set_port([(0, 9000, 1)])
-                    .set_mac([(0, "02-03-04-0a-0b-0c")])
-                    .set_integration_ms(849)
-                    .build()
-                ]
-            )
-            .build(),
+            VisConfigurationBuilder(),
+            VisConfigurationBuilder(),
             True,
         )
     ],
@@ -494,120 +382,8 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
     [
         # Case where both LowCBFConfiguration objects are exactly the same
         (
-            LowCBFConfigurationBuilder()
-            .set_stations(
-                StationConfigurationBuilder()
-                .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-                .set_stn_beams(
-                    [
-                        StnBeamConfigurationBuilder()
-                        .set_stn_beam_id(1)
-                        .set_beam_id(1)
-                        .set_freq_ids([400])
-                        .set_delay_poly("tango/device/instance/delay")
-                        .build()
-                    ]
-                )
-                .build()
-            )
-            .set_vis(
-                VisConfigurationBuilder()
-                .set_fsp(
-                    VisFspConfigurationBuilder()
-                    .set_function_mode("vis")
-                    .set_fsp_ids([1])
-                    .build()
-                )
-                .set_stn_beam(
-                    [
-                        VisStnBeamConfigurationBuilder()
-                        .set_stn_beam_id(1)
-                        .set_host([(0, "192.168.1.00")])
-                        .set_port([(0, 9000, 1)])
-                        .set_mac([(0, "02-03-04-0a-0b-0c")])
-                        .set_integration_ms(849)
-                        .build()
-                    ]
-                )
-                .build()
-            )
-            .set_timing_beams(
-                TimingBeamsConfigurationBuilder()
-                .set_beams(
-                    [
-                        BeamsConfigurationBuilder()
-                        .set_pst_beam_id(1)
-                        .set_stn_beam_id(1)
-                        .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
-                        .build()
-                    ]
-                )
-                .set_fsp(
-                    VisFspConfigurationBuilder()
-                    .set_fsp_ids([2])
-                    .set_firmware("pst")
-                    .build()
-                )
-                .build()
-            )
-            .build(),
-            LowCBFConfigurationBuilder()
-            .set_stations(
-                StationConfigurationBuilder()
-                .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-                .set_stn_beams(
-                    [
-                        StnBeamConfigurationBuilder()
-                        .set_stn_beam_id(1)
-                        .set_beam_id(1)
-                        .set_freq_ids([400])
-                        .set_delay_poly("tango/device/instance/delay")
-                        .build()
-                    ]
-                )
-                .build()
-            )
-            .set_vis(
-                VisConfigurationBuilder()
-                .set_fsp(
-                    VisFspConfigurationBuilder()
-                    .set_function_mode("vis")
-                    .set_fsp_ids([1])
-                    .build()
-                )
-                .set_stn_beam(
-                    [
-                        VisStnBeamConfigurationBuilder()
-                        .set_stn_beam_id(1)
-                        .set_host([(0, "192.168.1.00")])
-                        .set_port([(0, 9000, 1)])
-                        .set_mac([(0, "02-03-04-0a-0b-0c")])
-                        .set_integration_ms(849)
-                        .build()
-                    ]
-                )
-                .build()
-            )
-            .set_timing_beams(
-                TimingBeamsConfigurationBuilder()
-                .set_beams(
-                    [
-                        BeamsConfigurationBuilder()
-                        .set_pst_beam_id(1)
-                        .set_stn_beam_id(1)
-                        .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
-                        .build()
-                    ]
-                )
-                .set_fsp(
-                    VisFspConfigurationBuilder()
-                    .set_fsp_ids([2])
-                    .set_firmware("pst")
-                    .build()
-                )
-                .build()
-            )
-            .build(),
+            LowCBFConfigurationBuilder(),
+            LowCBFConfigurationBuilder(),
             True,
         ),
     ],
@@ -630,7 +406,7 @@ def test_csp_configuration_equality(csp_config, low_csp_config):
     and not equal when any attribute differs.
     """
 
-    csp_config_invalid = CSPConfigurationBuilder().set_interface("foo").build()
+    csp_config_invalid = CSPConfigurationBuilder(interface="foo")
     csp_config_b = copy.deepcopy(csp_config)
     assert (
         csp_config == csp_config_b

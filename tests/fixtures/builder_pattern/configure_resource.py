@@ -112,38 +112,7 @@ def csp_config() -> CSPConfiguration:
     """
     Provides Mid CDM CSP Configuration instance through Builder class with predefined values
     """
-    return (
-        CSPConfigurationBuilder()
-        .set_interface("interface")
-        .set_subarray(
-            SubarrayConfigurationBuilder()
-            .set_subarray_name(subarray_name="subarray name")
-            .build()
-        )
-        .set_common(
-            CommonConfigurationBuilder()
-            .set_config_id(config_id="config_id")
-            .set_frequency_band(frequency_band=ReceiverBand.BAND_1)
-            .set_subarray_id(1)
-            .build()
-        )
-        .set_cbf_config(
-            CBFConfigurationBuilder()
-            .set_fsp_config(
-                [
-                    FSPConfigurationBuilder()
-                    .set_fsp_id(fsp_id=1)
-                    .set_function_mode(function_mode=FSPFunctionMode.CORR)
-                    .set_frequency_slice_id(frequency_slice_id=1)
-                    .set_integration_factor(integration_factor=10)
-                    .set_zoom_factor(0)
-                    .build()
-                ]
-            )
-            .build()
-        )
-        .build()
-    )
+    return CSPConfigurationBuilder()
 
 
 @pytest.fixture(scope="module")
@@ -152,15 +121,12 @@ def low_csp_config() -> CSPConfiguration:
     Provides Low CDM CSP Configuration instance through Builder class with predefined values
     """
     return (
-        CSPConfigurationBuilder()
-        .set_interface("https://schema.skao.int/ska-low-csp-configure/0.0")
-        .set_common(
-            common=CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
-            .set_band_5_tuning([5.85, 7.25])
-            .build()
+        CSPConfigurationBuilder(interface="https://schema.skao.int/ska-low-csp-configure/0.0",
+        common=CommonConfigurationBuilder(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+            frequency_band=ReceiverBand.BAND_1,
+            subarray_id=1,
+            band_5_tuning=[5.85, 7.25],
         )
         .set_pst_config(
             PSTConfigurationBuilder()

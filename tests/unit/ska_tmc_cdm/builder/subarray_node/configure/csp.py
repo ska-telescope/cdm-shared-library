@@ -46,24 +46,59 @@ CommonConfigurationBuilder = functools.partial(
 
 CBFConfigurationBuilder = functools.partial(CBFConfiguration)
 
-BeamsConfigurationBuilder = functools.partial(BeamsConfiguration)
+BeamsConfigurationBuilder = functools.partial(BeamsConfiguration,
+                                              pst_beam_id=1,
+                                              stn_beam_id=1,
+                                              stn_weights=(0.9, 1.0, 1.0, 1.0, 0.9, 1.0))
 
-TimingBeamsConfigurationBuilder = functools.partial(TimingBeamsConfiguration)
+StnBeamConfigurationBuilder = functools.partial(
+    StnBeamConfiguration,
+    stn_beam_id=1,
+    beam_id=1,
+    freq_ids=(400,),
+    delay_poly="tango/device/instance/delay",
+)
 
-LowCBFConfigurationBuilder = functools.partial(LowCBFConfiguration)
+StationConfigurationBuilder = functools.partial(
+    StationConfiguration,
+    stns=((1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1)),
+    stn_beams=(StnBeamConfigurationBuilder(),),
+)
 
-StationConfigurationBuilder = functools.partial(StationConfiguration)
+VisFspConfigurationBuilder = functools.partial(
+    VisFspConfiguration, function_mode="vis", fsp_ids=(1, 2), firmware="pst",
+)
 
-StnBeamConfigurationBuilder = functools.partial(StnBeamConfiguration,
-            stn_beam_id=1¸
-            beam_id=1,
-            freq_ids=(400,),
-            delay_poly="tango/device/instance/delay",)
+VisStnBeamConfigurationBuilder = functools.partial(
+    VisStnBeamConfiguration,
+    stn_beam_id=1,
+    # Note: tuples for test isolation
+    host=((0, "192.168.1.00"),),
+    port=((0, 9000, 1),),
+    mac=((0, "02-03-04-0a-0b-0c"),),
+    integration_ms=849,
+)
 
-VisFspConfigurationBuilder = functools.partial(VisFspConfiguration)
+VisConfigurationBuilder = functools.partial(
+    VisConfiguration,
+    fsp=VisFspConfigurationBuilder(),
+    stn_beam=VisStnBeamConfigurationBuilder(),
+)
 
-VisStnBeamConfigurationBuilder = functools.partial(VisStnBeamConfiguration)
+TimingBeamsConfigurationBuilder = functools.partial(TimingBeamsConfiguration,
+    beams=(BeamsConfigurationBuilder(),),
+    fsp=VisFspConfigurationBuilder(),
+)
 
-VisConfigurationBuilder = functools.partial(VisConfiguration)
+CSPConfigurationBuilder = functools.partial(CSPConfiguration,
+    interface="interface",
+    subarray=SubarrayConfigurationBuilder(),
+    common=CommonConfigurationBuilder(),
+    cbf_config=CBFConfigurationBuilder()
+)
 
-CSPConfigurationBuilder = functools.partial(CSPConfiguration)
+LowCBFConfigurationBuilder = functools.partial(LowCBFConfiguration,
+                                               stations=StationConfigurationBuilder(),
+                                               vis=VisConfigurationBuilder(),
+                                               timing_beams=TimingBeamsConfigurationBuilder(),
+                                               )
