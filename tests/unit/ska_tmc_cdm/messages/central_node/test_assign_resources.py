@@ -1,7 +1,6 @@
 """
 Unit tests for the CentralNode.AssignResources request/response mapper module.
 """
-import itertools
 from functools import partial
 
 import pytest

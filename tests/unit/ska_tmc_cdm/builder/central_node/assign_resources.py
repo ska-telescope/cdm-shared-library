@@ -4,9 +4,6 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
     AssignResourcesRequest,
     AssignResourcesResponse,
 )
-from ska_tmc_cdm.messages.central_node.common import DishAllocation
-from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
-from ska_tmc_cdm.messages.central_node.sdp import SDPConfiguration
 from tests.unit.ska_tmc_cdm.builder.central_node.common import (
     DishAllocationBuilder,
 )
