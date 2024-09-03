@@ -200,9 +200,7 @@ def test_low_assign_resources_request_for_4_0_interface(
     assert request1 != 1 and request2 != object()
 
 
-def test_mid_assign_resources_request(
-    sdp_allocate,
-):
+def test_mid_assign_resources_request():
     """
     Verify creation of Mid AssignResources request objects
     with sdp block and equality check

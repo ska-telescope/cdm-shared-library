@@ -1,5 +1,4 @@
 import functools
-from typing import List
 
 from ska_tmc_cdm.messages.central_node.sdp import (
     BeamConfiguration,

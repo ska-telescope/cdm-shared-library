@@ -154,7 +154,7 @@ def test_processing_block_equality_check(object1, object2, is_equal):
     assert object1 != object()
 
 
-def test_sdp_equality_check(processing_block, execution_block):
+def test_sdp_equality_check():
     """
     Verify that SDP Configuration objects are considered equal if attributes have same value and not equal if they differ.
     """
@@ -403,13 +403,7 @@ def test_processing_block_equality():
     assert pb1 != object()
 
 
-def test_execution_block_configuration_equals(
-    channels,
-    eb_scan_type,
-    beams,
-    polarisation_config,
-    field_config,
-):
+def test_execution_block_configuration_equals():
     """
     Verify that Execution Block Configuration objects are considered equal if attributes have same value and not equal if they differ.
     """
