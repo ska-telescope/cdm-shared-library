@@ -11,27 +11,20 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import (
     SubarrayBeamSkyCoordinatesBuilder,
 )
 
-beams_configuration = (
-    SubarrayBeamConfigurationBuilder()
-    .set_subarray_beam_id(1)
-    .set_update_rate(1.0)
-    .set_logical_bands(
-        SubarrayBeamLogicalbandsBuilder()
-        .set_start_channel(80)
-        .set_number_of_channels(16)
-    )
-    .set_apertures(
-        SubarrayBeamApertureBuilder()
-        .set_aperture_id("AP001.01")
-        .set_weighting_key_ref("aperture2")
-    )
-    .set_sky_coordinates(
-        SubarrayBeamSkyCoordinatesBuilder()
-        .set_reference_frame("HORIZON")
-        .set_c1(180.0)
-        .set_c2(90.0)
-    )
-    .build()
+beams_configuration = SubarrayBeamConfigurationBuilder(
+    subarray_beam_id=1,
+    update_rate=1.0,
+    logical_bands=SubarrayBeamLogicalbandsBuilder(
+        start_channel=80,
+        number_of_channels=16,
+    ),
+    apertures=SubarrayBeamApertureBuilder(
+        aperture_id="AP001.01",
+        weighting_key_ref="aperture2",
+    ),
+    sky_coordinates=SubarrayBeamSkyCoordinatesBuilder(
+        reference_frame="HORIZON", c1=180.0, c2=90.0
+    ),
 )
 
 beams_configuration_after_value_changed = (

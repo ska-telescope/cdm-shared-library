@@ -21,8 +21,6 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     VisFspConfigurationBuilder,
 )
 
-# tr = TimingBeamsConfigurationBuilder()
-
 
 @pytest.mark.parametrize(
     "common_config_a, common_config_b, is_equal",

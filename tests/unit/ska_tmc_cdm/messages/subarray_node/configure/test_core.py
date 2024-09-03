@@ -329,21 +329,13 @@ def test_pointing_configuration_eq(
     "dish_configuration_setup_1, dish_configuration_setup_2, expected_equality",
     [
         (
-            DishConfigurationBuilder()
-            .set_receiver_band(ReceiverBand.BAND_1)
-            .build(),
-            DishConfigurationBuilder()
-            .set_receiver_band(ReceiverBand.BAND_1)
-            .build(),
+            DishConfigurationBuilder(),
+            DishConfigurationBuilder(),
             True,
         ),
         (
-            DishConfigurationBuilder()
-            .set_receiver_band(ReceiverBand.BAND_1)
-            .build(),
-            DishConfigurationBuilder()
-            .set_receiver_band(ReceiverBand.BAND_2)
-            .build(),
+            DishConfigurationBuilder(set_receiver_band=ReceiverBand.BAND_1),
+            DishConfigurationBuilder(set_receiver_band=ReceiverBand.BAND_2),
             False,
         ),
     ],

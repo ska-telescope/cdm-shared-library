@@ -41,7 +41,9 @@ CommonConfigurationBuilder = functools.partial(
 )
 
 
-CBFConfigurationBuilder = functools.partial(CBFConfiguration)
+CBFConfigurationBuilder = functools.partial(
+    CBFConfiguration, fsp=[FSPConfigurationBuilder()]
+)
 
 BeamsConfigurationBuilder = functools.partial(
     BeamsConfiguration,

@@ -79,7 +79,7 @@ def mccs_config(station_beam_config) -> MCCSConfiguration:
     Provides CDM MCCS Configuration instance through Builder class with predefined values
     """
     return MCCSConfigurationBuilder(
-        subarray_beam_configs=[station_beam_config],
+        subarray_beam_configs=[station_beam_config]
     )
 
 
