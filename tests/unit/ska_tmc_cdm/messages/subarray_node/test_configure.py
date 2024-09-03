@@ -49,7 +49,7 @@ def test_configure_request_has_correct_schema_on_creation(
 
 
 @pytest.mark.parametrize(
-    "config_request, is_equal",
+    "request1,request2,is_equal",
     [
         (
             ConfigureRequest(dish=DishConfigurationBuilder()),
@@ -60,7 +60,6 @@ def test_configure_request_has_correct_schema_on_creation(
             ConfigureRequest(mccs=MCCSConfigurationBuilder()),
             ConfigureRequest(mccs=MCCSConfigurationBuilder()),
             True,
-            False,
         ),  # Test equality for ConfigureRequests with mccs config
         (
             ConfigureRequest(mccs=MCCSConfigurationBuilder()),
@@ -69,12 +68,12 @@ def test_configure_request_has_correct_schema_on_creation(
         ),  # Test inequality against other object types
     ],
 )
-def test_configure_request_equality(request, request_2, is_equal):
+def test_configure_request_equality(request1, request2, is_equal):
     """
     Verify that ConfigureRequests are equal when they have the same values, not equal for different values
     And that ConfigureRequests are not considered equal to objects of other types.
     """
-    assert (request == request_2) == is_equal
+    assert (request1 == request2) == is_equal
 
 
 def test_configure_request_mccs_independence():

@@ -12,13 +12,13 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.tmc import (
     "tmc_config_a,tmc_config_b,is_equal",
     [
         (
-            TMCConfigurationBuilder().set_scan_duration(1.23).build(),
-            TMCConfigurationBuilder().set_scan_duration(1.23).build(),
+            TMCConfigurationBuilder(),
+            TMCConfigurationBuilder(),
             True,
         ),
         (
-            TMCConfigurationBuilder().set_scan_duration(1.23).build(),
-            TMCConfigurationBuilder().set_scan_duration(4.56).build(),
+            TMCConfigurationBuilder(scan_duration=1.23),
+            TMCConfigurationBuilder(scan_duration=4.56),
             False,
         ),
     ],

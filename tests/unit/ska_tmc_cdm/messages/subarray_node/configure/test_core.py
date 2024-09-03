@@ -20,15 +20,31 @@ def test_target_defaults():
     """
     target_1 = Target(ra=1, dec=0.5)
     target_2 = Target(
-        ra=1, dec=0.5, target_name="", reference_frame="icrs", unit=("hourangle", "deg")
+        ra=1,
+        dec=0.5,
+        target_name="",
+        reference_frame="icrs",
+        unit=("hourangle", "deg"),
     )
     assert target_1 == target_2
 
 
 TARGET_EQ_CASES = (
     (
-        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
-        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
+        Target(
+            ra=1,
+            dec=2,
+            target_name="a source",
+            reference_frame="fk5",
+            unit="deg",
+        ),
+        Target(
+            ra=1,
+            dec=2,
+            target_name="a source",
+            reference_frame="fk5",
+            unit="deg",
+        ),
         True,
     ),
     (
@@ -37,8 +53,12 @@ TARGET_EQ_CASES = (
         True,
     ),
     (
-        Target(target_name="target A", ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
-        Target(target_name="target B", ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(
+            target_name="target A", ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1
+        ),
+        Target(
+            target_name="target B", ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1
+        ),
         False,
     ),
     (
@@ -48,7 +68,13 @@ TARGET_EQ_CASES = (
     ),
     (
         Target(ra=1, dec=1),
-        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
+        Target(
+            ra=1,
+            dec=2,
+            target_name="a source",
+            reference_frame="fk5",
+            unit="deg",
+        ),
         False,
     ),
     (
@@ -125,7 +151,12 @@ TARGET_VALIDATION_CASES = (
         expected_error=None,
     ),
     ValidationCase(
-        args={"ra": None, "dec": None, "ca_offset_arcsec": 0, "ie_offset_arcsec": 0},
+        args={
+            "ra": None,
+            "dec": None,
+            "ca_offset_arcsec": 0,
+            "ie_offset_arcsec": 0,
+        },
         expected_error=ValueError,
     ),
     ValidationCase(
