@@ -2,149 +2,81 @@
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.common module.
 """
 
-from typing import NamedTuple, Optional, Type
+from typing import NamedTuple, Optional
 
 import pytest
 
-from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
-from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
-    DishConfigurationBuilder,
-    PointingConfigurationBuilder,
-    TargetBuilder,
+from ska_tmc_cdm.messages.subarray_node.configure.core import (
+    DishConfiguration,
+    PointingConfiguration,
+    ReceiverBand,
+    Target,
 )
 
 
 def test_target_defaults():
     """
-    Verify Target default arguments using TargetBuilder.
+    Verify Target default arguments.
     """
-    target_1 = TargetBuilder().set_ra(1).set_dec(0.5).build()
-
-    target_2 = (
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(0.5)
-        .set_target_name("")
-        .set_reference_frame("icrs")
-        .set_unit(("hourangle", "deg"))
-        .build()
+    target_1 = Target(ra=1, dec=0.5)
+    target_2 = Target(
+        ra=1, dec=0.5, target_name="", reference_frame="icrs", unit=("hourangle", "deg")
     )
-
     assert target_1 == target_2
 
 
-TARGET_EQ_CASES = [
+TARGET_EQ_CASES = (
     (
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(2)
-        .set_target_name("a source")
-        .set_reference_frame("fk5")
-        .set_unit(("deg", "deg"))
-        .build(),
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(2)
-        .set_target_name("a source")
-        .set_reference_frame("fk5")
-        .set_unit(("deg", "deg"))
-        .build(),
+        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
+        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
         True,
     ),
     (
-        TargetBuilder()
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
-        TargetBuilder()
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
+        Target(ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
         True,
     ),
     (
-        TargetBuilder()
-        .set_target_name("target A")
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
-        TargetBuilder()
-        .set_target_name("target B")
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
+        Target(target_name="target A", ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(target_name="target B", ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
         False,
     ),
     (
-        TargetBuilder()
-        .set_ra(2)
-        .set_dec(1)
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
-        TargetBuilder()
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
+        Target(ra=2, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
         False,
     ),
     (
-        TargetBuilder().set_ra(1).set_dec(1).build(),
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(2)
-        .set_target_name("a source")
-        .set_reference_frame("fk5")
-        .set_unit(("deg", "deg"))
-        .build(),
+        Target(ra=1, dec=1),
+        Target(ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"),
         False,
     ),
     (
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(1)
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
-        TargetBuilder().set_ra(1).set_dec(1).build(),
+        Target(ra=1, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(ra=1, dec=1),
         False,
     ),
     (
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(1)
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(1)
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
+        Target(ra=1, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(ra=1, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
         True,
     ),
     (
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(1)
-        .set_ca_offset_arcsec(-1.1)
-        .set_ie_offset_arcsec(1.1)
-        .build(),
-        TargetBuilder()
-        .set_ra(1)
-        .set_dec(1)
-        .set_ca_offset_arcsec(-1.10000000000000000000000001)
-        .set_ie_offset_arcsec(1.09999999999999999999999999)
-        .build(),
+        Target(ra=1, dec=1, ca_offset_arcsec=-1.1, ie_offset_arcsec=1.1),
+        Target(
+            ra=1,
+            dec=1,
+            ca_offset_arcsec=-1.10000000000000000000000001,
+            ie_offset_arcsec=1.09999999999999999999999999,
+        ),
         True,
     ),
     (
-        TargetBuilder().set_ra(1).set_dec(1).build(),
+        Target(ra=1, dec=1),
         object(),
         False,
     ),
-]
+)
 
 
 @pytest.mark.parametrize(("targetA, targetB, expected_equal"), TARGET_EQ_CASES)
@@ -165,72 +97,63 @@ def test_target_eq(targetA, targetB, expected_equal):
 
 
 class ValidationCase(NamedTuple):
-    builder: TargetBuilder
-    expected_error: Optional[Type[Exception]]
+    args: dict
+    expected_error: Optional[Exception]
 
 
-# Create instances of TargetBuilder for each test case directly.
-TARGET_VALIDATION_CASES = [
+TARGET_VALIDATION_CASES = (
     ValidationCase(
-        builder=TargetBuilder(),
+        args={},
         expected_error=ValueError,
     ),
     ValidationCase(
-        builder=TargetBuilder().set_ra(10).set_dec(-50),
+        args={"ra": 10, "dec": -50},
         expected_error=None,
     ),
     ValidationCase(
-        builder=TargetBuilder()
-        .set_ra(1)
-        .set_dec(2)
-        .set_target_name("a source")
-        .set_reference_frame("fk5")
-        .set_unit(("deg", "deg")),
+        args={
+            "ra": 1,
+            "dec": 2,
+            "target_name": "a source",
+            "reference_frame": "fk5",
+            "unit": "deg",
+        },
+        expected_error=False,
+    ),
+    ValidationCase(
+        args={"ca_offset_arcsec": -1, "ie_offset_arcsec": 1},
         expected_error=None,
     ),
     ValidationCase(
-        builder=TargetBuilder()
-        .set_ca_offset_arcsec(-1)
-        .set_ie_offset_arcsec(1),
-        expected_error=None,
-    ),
-    ValidationCase(
-        builder=TargetBuilder()
-        .set_ca_offset_arcsec(0)
-        .set_ie_offset_arcsec(0),
+        args={"ra": None, "dec": None, "ca_offset_arcsec": 0, "ie_offset_arcsec": 0},
         expected_error=ValueError,
     ),
     ValidationCase(
-        builder=TargetBuilder().set_ra(5),  # no dec error
-        expected_error=ValueError,
+        args={"ra": 5, "dec": None},
+        expected_error=TypeError,
     ),
-]
+)
 
 
-@pytest.mark.parametrize("case", TARGET_VALIDATION_CASES)
-def test_target_validation(case: ValidationCase):
-    """
-    Verify that Target objects are validated correctly.
-    """
-    if case.expected_error:
-        with pytest.raises(case.expected_error):
-            case.builder.build()
+@pytest.mark.parametrize(("args, expected_error"), TARGET_VALIDATION_CASES)
+def test_target_validation(args, expected_error):
+    if expected_error:
+        with pytest.raises(expected_error):
+            Target(**args)
     else:
-        assert case.builder.build() is not None
+        Target(**args)
 
 
 def test_target_repr():
     """
-    Verify the repr representation of a Target using TargetBuilder in one line.
+    Verify the repr representation of a Target.
     """
-    target = (
-        TargetBuilder()
-        .set_ra(30)
-        .set_dec(-3600)
-        .set_target_name("target name")
-        .set_reference_frame("icrs")
-        .set_unit(("deg", "arcsec"))
-        .build()
+    target = Target(
+        ra=30,
+        dec=-3600,
+        target_name="target name",
+        reference_frame="icrs",
+        unit=("deg", "arcsec"),
     )
     expected = "Target(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'), ca_offset_arcsec=0.0, ie_offset_arcsec=0.0)"
     assert expected == repr(target)
@@ -238,118 +161,69 @@ def test_target_repr():
 
 def test_target_str():
     """
-    Verify the string representation of a Target using TargetBuilder in one line.
+    Verify the string representation of a Target.
     """
-    target = (
-        TargetBuilder()
-        .set_ra(30)
-        .set_dec("0")
-        .set_target_name("target name")
-        .set_reference_frame("icrs")
-        .set_unit(("deg", "rad"))
-        .build()
+    target = Target(
+        ra=30,
+        dec="0",
+        target_name="target name",
+        reference_frame="icrs",
+        unit=("deg", "rad"),
     )
     expected = "<Target: 'target name' (02h00m00s +00d00m00s icrs)>"
     assert expected == str(target)
 
 
-@pytest.mark.parametrize(
-    "pointing_configuration_setup_1, pointing_configuration_setup_2, expected_equality",
-    [
-        (
-            PointingConfigurationBuilder()
-            .set_target(
-                TargetBuilder()
-                .set_ra(1)
-                .set_dec(2)
-                .set_target_name("a source")
-                .set_reference_frame("fk5")
-                .set_unit("deg")
-                .build()
-            )
-            .build(),
-            PointingConfigurationBuilder()
-            .set_target(
-                TargetBuilder()
-                .set_ra(1)
-                .set_dec(2)
-                .set_target_name("a source")
-                .set_reference_frame("fk5")
-                .set_unit("deg")
-                .build()
-            )
-            .build(),
-            True,
-        ),
-        (
-            PointingConfigurationBuilder()
-            .set_target(
-                TargetBuilder()
-                .set_ra(1)
-                .set_dec(2)
-                .set_target_name("a source")
-                .set_reference_frame("fk5")
-                .set_unit("deg")
-                .build()
-            )
-            .build(),
-            PointingConfigurationBuilder()
-            .set_target(
-                TargetBuilder()
-                .set_ra(1)
-                .set_dec(2)
-                .set_target_name("foobar")
-                .set_reference_frame("fk4")
-                .set_unit("deg")
-                .build()
-            )
-            .build(),
-            False,
-        ),
-    ],
-)
-def test_pointing_configuration_eq(
-    pointing_configuration_setup_1,
-    pointing_configuration_setup_2,
-    expected_equality,
-):
+def test_pointing_configuration_eq():
     """
-    Verify that PointingConfiguration objects are considered equal when they point to the same target, not equal for different value
-    And PointingConfiguration is not considered equal to
+    Verify that PointingConfiguration objects are considered equal when:
+      - they point to the same target
+    """
+    target_1 = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
+    target_2 = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
+    target_3 = Target(
+        ra=1, dec=2, target_name="foobar", reference_frame="fk4", unit="deg"
+    )
+    config_1 = PointingConfiguration(target_1)
+    config_2 = PointingConfiguration(target_2)
+    config_3 = PointingConfiguration(target_3)
+    assert config_1 == config_2
+    assert config_1 != config_3
+
+
+def test_pointing_configuration_is_not_equal_to_other_objects():
+    """
+    Verify that PointingConfiguration is not considered equal to
     non-PointingConfiguration objects.
     """
-    assert (
-        pointing_configuration_setup_1 == pointing_configuration_setup_2
-    ) == expected_equality
-    assert pointing_configuration_setup_1 != 1
-    assert pointing_configuration_setup_1 != object
+    target = Target(
+        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
+    )
+    config = PointingConfiguration(target)
+    assert config != object
 
 
-@pytest.mark.parametrize(
-    "dish_configuration_setup_1, dish_configuration_setup_2, expected_equality",
-    [
-        (
-            DishConfigurationBuilder(),
-            DishConfigurationBuilder(),
-            True,
-        ),
-        (
-            DishConfigurationBuilder(receiver_band=ReceiverBand.BAND_1),
-            DishConfigurationBuilder(receiver_band=ReceiverBand.BAND_2),
-            False,
-        ),
-    ],
-)
-def test_dish_configuration_eq(
-    dish_configuration_setup_1, dish_configuration_setup_2, expected_equality
-):
+def test_dish_configuration_eq():
     """
-    Verify that DishConfiguration objects are considered equal when they use the same receiver band., not equal for different value
-    And DishConfiguration is not considered equal to
+    Verify that DishConfiguration objects are considered equal when:
+      - they use the same receiver band
+    """
+    config_1 = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
+    config_2 = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
+    config_3 = DishConfiguration(receiver_band=ReceiverBand.BAND_2)
+    assert config_1 == config_2
+    assert config_1 != config_3
+
+
+def test_dish_configuration_is_not_equal_to_other_objects():
+    """
+    Verify that DishConfiguration is considered unequal to
     non-DishConfiguration objects.
     """
-    assert (
-        dish_configuration_setup_1 == dish_configuration_setup_2
-    ) == expected_equality
-    assert dish_configuration_setup_1 != 1
-    assert dish_configuration_setup_1 != object
+    config_1 = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
+    assert config_1 != Target(1, 1)
+    assert config_1 != object
