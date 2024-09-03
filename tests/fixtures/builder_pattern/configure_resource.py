@@ -104,10 +104,7 @@ def dish_config() -> DishConfiguration:
 
 @pytest.fixture(scope="module")
 def sdp_config() -> SDPConfiguration:
-    """
-    Provides CDM SDP Configuration instance through Builder class with predefined values
-    """
-    return SDPConfigurationBuilder().set_scan_type("science_A").build()
+    return SDPConfigurationBuilder()
 
 
 @pytest.fixture(scope="module")

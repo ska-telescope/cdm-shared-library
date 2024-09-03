@@ -82,11 +82,7 @@ def channel() -> Channel:
 
 @pytest.fixture(scope="module")
 def eb_scan_type() -> EBScanType:
-    return EBScanTypeBuilder(
-        scan_type_id="science",
-        beams={"vis0": {"field_id": "field_a"}},
-        derive_from=".default",
-    )
+    return EBScanTypeBuilder()
 
 
 @pytest.fixture(scope="module")
