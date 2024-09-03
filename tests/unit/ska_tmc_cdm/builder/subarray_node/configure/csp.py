@@ -86,7 +86,7 @@ VisStnBeamConfigurationBuilder = functools.partial(
 VisConfigurationBuilder = functools.partial(
     VisConfiguration,
     fsp=VisFspConfigurationBuilder(),
-    stn_beam=VisStnBeamConfigurationBuilder(),
+    stn_beams=(VisStnBeamConfigurationBuilder(),),
 )
 
 TimingBeamsConfigurationBuilder = functools.partial(
