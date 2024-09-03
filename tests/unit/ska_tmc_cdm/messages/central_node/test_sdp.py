@@ -158,19 +158,9 @@ def test_sdp_equality_check(processing_block, execution_block):
     """
     Verify that SDP Configuration objects are considered equal if attributes have same value and not equal if they differ.
     """
-    sdp1 = (
-        SDPConfigurationBuilder()
-        .set_processing_blocks(processing_blocks=[processing_block])
-        .set_execution_block(execution_block=execution_block)
-        .build()
-    )
-
-    sdp2 = (
-        SDPConfigurationBuilder()
-        .set_interface("https://schema.skao.int/ska-sdp-assignres/0.3")
-        .set_processing_blocks(processing_blocks=[processing_block])
-        .set_execution_block(execution_block=execution_block)
-        .build()
+    sdp1 = SDPConfigurationBuilder()
+    sdp2 = SDPConfigurationBuilder(
+        interface="https://schema.skao.int/ska-sdp-assignres/0.3"
     )
 
     assert sdp1 == copy.deepcopy(sdp1)
@@ -182,29 +172,13 @@ def test_sdp_equality_check(processing_block, execution_block):
     "object1, object2, is_equal",
     [
         (  # equal
-            BeamConfigurationBuilder()
-            .set_beam_id(beam_id="pss1")
-            .set_function(function="pulsar search")
-            .set_search_beam_id(search_beam_id=1)
-            .build(),
-            BeamConfigurationBuilder()
-            .set_beam_id(beam_id="pss1")
-            .set_function(function="pulsar search")
-            .set_search_beam_id(search_beam_id=1)
-            .build(),
+            BeamConfigurationBuilder(),
+            BeamConfigurationBuilder(),
             True,
         ),
         (  # not_equal
-            BeamConfigurationBuilder()
-            .set_beam_id(beam_id="pss1")
-            .set_function(function="pulsar search")
-            .set_search_beam_id(search_beam_id=1)
-            .build(),
-            BeamConfigurationBuilder()
-            .set_beam_id(beam_id="vis0")  # different beam id
-            .set_function(function="pulsar search")
-            .set_search_beam_id(search_beam_id=1)
-            .build(),
+            BeamConfigurationBuilder(beam_id="pss1"),
+            BeamConfigurationBuilder(beam_id="vis0"),
             False,
         ),
     ],
@@ -244,27 +218,17 @@ def test_channel_configuration_equality(object1, object2, is_equal):
     "object1, object2, is_equal",
     [
         (  # equal
-            PolarisationConfigurationBuilder()
-            .set_polarisations_id(polarisations_id="all")
-            .set_corr_type(corr_type=["XX", "XY", "YY", "YX"])
-            .build(),
-            PolarisationConfigurationBuilder()
-            .set_polarisations_id(polarisations_id="all")
-            .set_corr_type(corr_type=["XX", "XY", "YY", "YX"])
-            .build(),
+            PolarisationConfigurationBuilder(),
+            PolarisationConfigurationBuilder(),
             True,
         ),
         (  # not_equal
-            PolarisationConfigurationBuilder()
-            .set_polarisations_id(polarisations_id="all")
-            .set_corr_type(corr_type=["XX", "XY", "YY", "YX"])
-            .build(),
-            PolarisationConfigurationBuilder()
-            .set_polarisations_id(polarisations_id="all")
-            .set_corr_type(
+            PolarisationConfigurationBuilder(
                 corr_type=["YY", "XY", "YY", "YX"]
-            )  # different corr_type value
-            .build(),
+            ),
+            PolarisationConfigurationBuilder(
+                corr_type=["XX", "XY", "YY", "YX"]
+            ),
             False,
         ),
     ],
@@ -286,63 +250,24 @@ class PhaseDirCase(NamedTuple):
 PHASEDIR_CASES = (
     PhaseDirCase(
         equal=True,
-        pd1=PhaseDirBuilder()
-        .set_ra(ra=[123, 0.1])
-        .set_dec(dec=[123, 0.1])
-        .set_reference_time(reference_time="...")
-        .set_reference_frame(reference_frame="ICRF3")
-        .build(),
-        pd2=PhaseDirBuilder()
-        .set_ra(ra=[123, 0.1])
-        .set_dec(dec=[123, 0.1])
-        .set_reference_time(reference_time="...")
-        .set_reference_frame(reference_frame="ICRF3")
-        .build(),
+        pd1=PhaseDirBuilder(),
+        pd2=PhaseDirBuilder(),
     ),
     PhaseDirCase(
         equal=True,
-        pd1=PhaseDirBuilder()
-        .set_ra(ra=[188.73658333333333])
-        .set_dec(dec=[12.582438888888891])
-        .set_reference_time(reference_time="...")
-        .set_reference_frame(reference_frame="ICRF3")
-        .build(),
-        pd2=PhaseDirBuilder()
-        .set_ra(ra=[188.73658333333333])
-        .set_dec(dec=[12.582438888888893])  # Very slightly different dec
-        .set_reference_time(reference_time="...")
-        .set_reference_frame(reference_frame="ICRF3")
-        .build(),
+        pd1=PhaseDirBuilder(dec=[12.582438888888891]),
+        # Very slightly different dec
+        pd2=PhaseDirBuilder(dec=[12.582438888888893]),
     ),
     PhaseDirCase(
         equal=False,
-        pd1=PhaseDirBuilder()
-        .set_ra(ra=[123, 0.1])
-        .set_dec(dec=[123, 0.1])
-        .set_reference_time(reference_time="...")
-        .set_reference_frame(reference_frame="ICRF3")
-        .build(),
-        pd2=PhaseDirBuilder()
-        .set_ra(ra=[123, 0.1])
-        .set_dec(dec=[123, 0.1])
-        .set_reference_time(reference_time="...")
-        .set_reference_frame(reference_frame="ICRF4")  # Different frame
-        .build(),
+        pd1=PhaseDirBuilder(reference_frame="ICRF3"),
+        pd2=PhaseDirBuilder(reference_frame="ICRF4"),
     ),
     PhaseDirCase(
         equal=False,
-        pd1=PhaseDirBuilder()
-        .set_ra(ra=[123, 0.1])
-        .set_dec(dec=[123, 0.1])
-        .set_reference_time(reference_time="...")
-        .set_reference_frame(reference_frame="ICRF3")
-        .build(),
-        pd2=PhaseDirBuilder()
-        .set_ra(ra=[123, 2.1])  # Different RA
-        .set_dec(dec=[123, 0.1])
-        .set_reference_time(reference_time="...")
-        .set_reference_frame(reference_frame="ICRF3")
-        .build(),
+        pd1=PhaseDirBuilder(ra=[123, 0.1]),
+        pd2=PhaseDirBuilder(ra=[123, 2.1]),
     ),
 )
 
@@ -372,57 +297,13 @@ def test_phase_dir_equals(
     "object1, object2, is_equal",
     [
         (  # equal
-            FieldConfigurationBuilder()
-            .set_field_id(field_id="field_a")
-            .set_pointing_fqdn(pointing_fqdn="low-tmc/telstate/0/pointing")
-            .set_phase_dir(
-                phase_dir=PhaseDirBuilder()
-                .set_ra(ra=[123, 0.1])
-                .set_dec(dec=[123, 0.1])
-                .set_reference_time(reference_time="...")
-                .set_reference_frame(reference_frame="ICRF3")
-                .build()
-            )
-            .build(),
-            FieldConfigurationBuilder()
-            .set_field_id(field_id="field_a")
-            .set_pointing_fqdn(pointing_fqdn="low-tmc/telstate/0/pointing")
-            .set_phase_dir(
-                phase_dir=PhaseDirBuilder()
-                .set_ra(ra=[123, 0.1])
-                .set_dec(dec=[123, 0.1])
-                .set_reference_time(reference_time="...")
-                .set_reference_frame(reference_frame="ICRF3")
-                .build()
-            )
-            .build(),
+            FieldConfigurationBuilder(),
+            FieldConfigurationBuilder(),
             True,
         ),
         (  # not_equal
-            FieldConfigurationBuilder()
-            .set_field_id(field_id="field_a")
-            .set_pointing_fqdn(pointing_fqdn="low-tmc/telstate/0/pointing")
-            .set_phase_dir(
-                phase_dir=PhaseDirBuilder()
-                .set_ra(ra=[123, 0.1])
-                .set_dec(dec=[123, 0.1])
-                .set_reference_time(reference_time="...")
-                .set_reference_frame(reference_frame="ICRF3")
-                .build()
-            )
-            .build(),
-            FieldConfigurationBuilder()
-            .set_field_id(field_id="field_b")  # different field value
-            .set_pointing_fqdn(pointing_fqdn="low-tmc/telstate/0/pointing")
-            .set_phase_dir(
-                phase_dir=PhaseDirBuilder()
-                .set_ra(ra=[123, 0.1])
-                .set_dec(dec=[123, 0.1])
-                .set_reference_time(reference_time="...")
-                .set_reference_frame(reference_frame="ICRF3")
-                .build()
-            )
-            .build(),
+            FieldConfigurationBuilder(field_id="field_a"),
+            FieldConfigurationBuilder(field_id="field_b"),
             False,
         ),
     ],
@@ -468,9 +349,7 @@ def test_eb_scan_equality(object1, object2, is_equal):
         ),
         (  # not_equal
             EBScanTypeBeamBuilder(field_id="pss_field_1"),
-            EBScanTypeBeamBuilder(
-                field_id="pss_field_2"
-            ),  # different field_id
+            EBScanTypeBeamBuilder(field_id="pss_field_2"),
             False,
         ),
     ],
@@ -506,22 +385,18 @@ def test_script_equality(object1, object2, is_equal):
     assert object1 != object()
 
 
-def test_processing_block_equality(processing_block_parameters):
+def test_processing_block_equality():
     """
     Verify that Processing Block Configuration objects are considered equal if attributes have same value and not equal if they differ.
     """
 
     pb1 = ProcessingBlockConfigurationBuilder(
-        parameters=processing_block_parameters,
-        sbi_ids=["sbi-mvp01-20200325-00001"],
-        script=ScriptConfigurationBuilder(),
+        sbi_ids=["sbi-mvp01-20200325-00001"]
     )
 
     pb2 = ProcessingBlockConfigurationBuilder(
-        parameters=processing_block_parameters,
-        sbi_ids=["sbi-mvp01-20200325-00003"],  # different sbi_id,
-        script=ScriptConfigurationBuilder(),
-    )
+        sbi_ids=["sbi-mvp01-20200325-00003"]
+    )  # different sbi_id
 
     assert pb1 == copy.deepcopy(pb1)
     assert pb1 != pb2
@@ -539,29 +414,8 @@ def test_execution_block_configuration_equals(
     Verify that Execution Block Configuration objects are considered equal if attributes have same value and not equal if they differ.
     """
 
-    execution_block1 = (
-        ExecutionBlockConfigurationBuilder()
-        .set_eb_id(eb_id="eb-mvp01-20200325-00001")
-        .set_max_length(max_length=3600)
-        .set_beams(beams=[beams])
-        .set_channels(channels=[channels])
-        .set_polarisations(polarisations=[polarisation_config])
-        .set_fields(fields=[field_config])
-        .set_scan_types(scan_types=[eb_scan_type])
-        .build()
-    )
-
-    execution_block2 = (
-        ExecutionBlockConfigurationBuilder()
-        .set_eb_id(eb_id="eb-mvp01-20200325-00001")
-        .set_max_length(max_length=3400)  # different max_length
-        .set_beams(beams=[beams])
-        .set_channels(channels=[channels])
-        .set_polarisations(polarisations=[polarisation_config])
-        .set_fields(fields=[field_config])
-        .set_scan_types(scan_types=[eb_scan_type])
-        .build()
-    )
+    execution_block1 = ExecutionBlockConfigurationBuilder(max_length=3600)
+    execution_block2 = ExecutionBlockConfigurationBuilder(max_length=3400)
 
     assert execution_block1 == copy.deepcopy(execution_block1)
     assert execution_block1 != execution_block2

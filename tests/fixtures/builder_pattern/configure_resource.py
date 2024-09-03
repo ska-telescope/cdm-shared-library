@@ -98,6 +98,7 @@ def low_csp_config() -> CSPConfiguration:
         common=CommonConfigurationBuilder(),
         pst_config=PSTConfigurationBuilder(),
         lowcbf=LowCBFConfigurationBuilder(
+            vis=VisConfigurationBuilder(),
             stations=StationConfigurationBuilder(
                 stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
                 stn_beams=[
@@ -105,7 +106,6 @@ def low_csp_config() -> CSPConfiguration:
                         stn_beam_id=1, freq_ids=[400], beam_id=1
                     )
                 ],
-            )
+            ),
         ),
-        vis=VisConfigurationBuilder(),
     )

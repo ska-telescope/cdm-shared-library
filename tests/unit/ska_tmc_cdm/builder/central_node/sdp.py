@@ -180,9 +180,7 @@ ExecutionBlockConfigurationBuilder = functools.partial(
 
 SDPConfigurationBuilder = functools.partial(
     SDPConfiguration,
-    eb_id="sbi-mvp01-20200325-00001",
-    max_length=100.0,
-    scan_types=(ScanTypeBuilder(),),
+    transaction_id="txn-test001-20240705-00001",
     processing_blocks=(ProcessingBlockConfigurationBuilder(),),
     execution_block=ExecutionBlockConfigurationBuilder(),
 )

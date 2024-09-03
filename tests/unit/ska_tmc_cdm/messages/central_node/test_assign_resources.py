@@ -207,21 +207,8 @@ def test_mid_assign_resources_request(
     Verify creation of Mid AssignResources request objects
     with sdp block and equality check
     """
-    request1 = AssignResourcesRequestBuilder(
-        subarray_id=1,
-        dish_allocation=DishAllocationBuilder(),
-        sdp_config=sdp_allocate,
-        interface=MID_SCHEMA,
-        transaction_id="txn-mvp01-20200325-00001",
-    )
-
-    request2 = AssignResourcesRequestBuilder(
-        subarray_id=1,
-        dish_allocation=DishAllocationBuilder(),
-        sdp_config=sdp_allocate,
-        interface=MID_SCHEMA,
-        transaction_id="txn-mvp01-20200325-00001",
-    )
+    request1 = AssignResourcesRequestBuilder()
+    request2 = AssignResourcesRequestBuilder()
     assert request1 == request2
     assert request1 != 1 and request2 != object()
 
@@ -232,7 +219,7 @@ def test_mid_assign_resource_request_using_from_dish(sdp_allocate):
     """
     request1 = AssignResourcesRequestBuilder(
         subarray_id=1,
-        dish_allocation=DishAllocationBuilder(),
+        dish=DishAllocationBuilder(),
         sdp_config=sdp_allocate,
         interface=MID_SCHEMA,
         transaction_id="txn-mvp01-20200325-00001",
