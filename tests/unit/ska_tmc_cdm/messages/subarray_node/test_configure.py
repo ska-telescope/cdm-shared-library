@@ -1,6 +1,8 @@
 """
 Unit tests for the SubarrayNode.Configure request/response mapper module.
 """
+from datetime import timedelta
+
 import pytest
 from pydantic import ValidationError
 
@@ -96,14 +98,18 @@ def test_configure_partial_configuration():
         pointing=PointingConfigurationBuilder(
             target=TargetBuilder(ra=None, dec=None)
         ),
-        tmc=TMCConfigurationBuilder(partial_configuration=True),
+        tmc=TMCConfigurationBuilder(
+            partial_configuration=True, scan_duration=None
+        ),
         dish=DishConfigurationBuilder(),
     )
 
     ConfigureRequest(
         dish=DishConfigurationBuilder(),
         pointing=PointingConfigurationBuilder(target=SpecialTargetBuilder()),
-        tmc=TMCConfigurationBuilder(partial_configuration=False),
+        tmc=TMCConfigurationBuilder(
+            partial_configuration=False, scan_duration=timedelta(10)
+        ),
     )
 
     # scan_duration should be required for non-partial ConfigureRequest

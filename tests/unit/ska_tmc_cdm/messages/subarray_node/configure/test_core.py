@@ -12,6 +12,10 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     ReceiverBand,
     Target,
 )
+from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
+    PointingConfigurationBuilder,
+    TargetBuilder,
+)
 
 
 def test_target_defaults():
@@ -144,7 +148,7 @@ TARGET_VALIDATION_CASES = (
             "reference_frame": "fk5",
             "unit": "deg",
         },
-        expected_error=False,
+        expected_error=None,
     ),
     ValidationCase(
         args={"ca_offset_arcsec": -1, "ie_offset_arcsec": 1},
@@ -161,7 +165,7 @@ TARGET_VALIDATION_CASES = (
     ),
     ValidationCase(
         args={"ra": 5, "dec": None},
-        expected_error=TypeError,
+        expected_error=ValueError,
     ),
 )
 
@@ -210,18 +214,13 @@ def test_pointing_configuration_eq():
     Verify that PointingConfiguration objects are considered equal when:
       - they point to the same target
     """
-    target_1 = Target(
-        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
-    )
-    target_2 = Target(
-        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
-    )
-    target_3 = Target(
-        ra=1, dec=2, target_name="foobar", reference_frame="fk4", unit="deg"
-    )
-    config_1 = PointingConfiguration(target_1)
-    config_2 = PointingConfiguration(target_2)
-    config_3 = PointingConfiguration(target_3)
+    target_1 = TargetBuilder(target_name="a source")
+    target_2 = TargetBuilder(target_name="a source")
+    target_3 = TargetBuilder(target_name="foobar")
+
+    config_1 = PointingConfiguration(target=target_1)
+    config_2 = PointingConfiguration(target=target_2)
+    config_3 = PointingConfiguration(target=target_3)
     assert config_1 == config_2
     assert config_1 != config_3
 
@@ -231,10 +230,7 @@ def test_pointing_configuration_is_not_equal_to_other_objects():
     Verify that PointingConfiguration is not considered equal to
     non-PointingConfiguration objects.
     """
-    target = Target(
-        ra=1, dec=2, target_name="a source", reference_frame="fk5", unit="deg"
-    )
-    config = PointingConfiguration(target)
+    config = PointingConfigurationBuilder()
     assert config != object
 
 
@@ -256,5 +252,5 @@ def test_dish_configuration_is_not_equal_to_other_objects():
     non-DishConfiguration objects.
     """
     config_1 = DishConfiguration(receiver_band=ReceiverBand.BAND_1)
-    assert config_1 != Target(1, 1)
+    assert config_1 != TargetBuilder()
     assert config_1 != object
