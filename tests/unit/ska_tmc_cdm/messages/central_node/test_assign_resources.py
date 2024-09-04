@@ -13,14 +13,13 @@ from ska_tmc_cdm.messages.central_node.assign_resources import (
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
-    AssignResourcesResponseBuilder,
+
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.common import (
     DishAllocationBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.mccs import (
     MCCSAllocateBuilder,
-    SubArrayBeamsConfigurationBuilder,
 )
 
 interface = "https://schema.skao.int/ska-low-mccs-controller-allocate/3.0"
@@ -81,11 +80,11 @@ def test_mid_assign_resource_request_using_from_dish():
     )
 
     request = AssignResourcesRequest.from_dish(
-        subarray_id=request.subarray_id,
-        dish_allocation=request.dish,
-        sdp_config=request.sdp_config,
-        interface=request.interface,
-        transaction_id=request.transaction_id,
+        subarray_id=expected.subarray_id,
+        dish_allocation=expected.dish,
+        sdp_config=expected.sdp_config,
+        interface=expected.interface,
+        transaction_id=expected.transaction_id,
     )
 
     assert request == expected
@@ -101,11 +100,11 @@ def test_low_assign_resource_request_using_from_mccs():
     )
 
     request = AssignResourcesRequest.from_mccs(
-        subarray_id=request.subarray_id,
-        mccs=request.mccs,
-        sdp_config=request.sdp_config,
-        interface=request.interface,
-        transaction_id=request.transaction_id,
+        subarray_id=expected.subarray_id,
+        mccs=expected.mccs,
+        sdp_config=expected.sdp_config,
+        interface=expected.interface,
+        transaction_id=expected.transaction_id,
     )
 
     assert request == expected
