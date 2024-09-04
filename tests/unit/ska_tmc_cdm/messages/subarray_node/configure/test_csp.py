@@ -392,12 +392,12 @@ def test_low_cbf_configuration_equality(
     assert low_cbf_config_b != object()
 
 
-def test_csp_configuration_equality(csp_config):
+def test_csp_configuration_equality():
     """
     Verify that CSPConfiguration objects are equal when all they have the same values
     and not equal when any attribute differs.
     """
-
+    csp_config = CSPConfigurationBuilder()
     low_csp_config = CSPConfigurationBuilder(
         interface="https://schema.skao.int/ska-low-csp-configure/0.0",
         common=CommonConfigurationBuilder(),
@@ -415,7 +415,7 @@ def test_csp_configuration_equality(csp_config):
     )
 
     csp_config_invalid = CSPConfigurationBuilder(interface="foo")
-    csp_config_b = copy.deepcopy(csp_config)
+    csp_config_b = CSPConfigurationBuilder()
     assert (
         csp_config == csp_config_b
     )  # comparing same instance created using deepcopy

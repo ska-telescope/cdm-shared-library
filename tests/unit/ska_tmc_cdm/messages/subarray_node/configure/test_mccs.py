@@ -21,20 +21,14 @@ beams_configuration_after_value_changed = SubarrayBeamConfigurationBuilder(
     "subarray_beam_ska_coordinates_1, subarray_beam_ska_coordinates_2, is_equal",
     [
         (
-            MCCSConfigurationBuilder(
-                subarray_beam_configs=[beams_configuration]
-            ),
-            MCCSConfigurationBuilder(
-                subarray_beam_configs=[beams_configuration]
-            ),
+            MCCSConfigurationBuilder(subarray_beams=[beams_configuration]),
+            MCCSConfigurationBuilder(subarray_beams=[beams_configuration]),
             True,
         ),
         (
+            MCCSConfigurationBuilder(subarray_beams=[beams_configuration]),
             MCCSConfigurationBuilder(
-                subarray_beam_configs=[beams_configuration]
-            ),
-            MCCSConfigurationBuilder(
-                subarray_beam_configs=[beams_configuration_after_value_changed]
+                subarray_beams=[beams_configuration_after_value_changed]
             ),
             False,
         ),
