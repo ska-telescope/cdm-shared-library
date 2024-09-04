@@ -7,7 +7,6 @@ from contextlib import nullcontext as does_not_raise
 import pytest
 from pydantic import ValidationError
 
-from ska_tmc_cdm.messages.central_node.release_resources import SCHEMA
 from tests.unit.ska_tmc_cdm.builder.central_node.release_resources import (
     ReleaseResourcesRequestBuilder,
 )

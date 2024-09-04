@@ -7,13 +7,10 @@ import pytest
 from pydantic import ValidationError
 
 from ska_tmc_cdm.messages.central_node.assign_resources import (
-    LOW_SCHEMA,
-    MID_SCHEMA,
     AssignResourcesRequest,
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.assign_resources import (
     AssignResourcesRequestBuilder,
-
 )
 from tests.unit.ska_tmc_cdm.builder.central_node.common import (
     DishAllocationBuilder,
