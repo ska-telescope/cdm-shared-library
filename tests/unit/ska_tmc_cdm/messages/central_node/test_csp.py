@@ -6,7 +6,6 @@ import pytest
 from tests.unit.ska_tmc_cdm.builder.central_node.csp import (
     CSPConfigurationBuilder,
     PSSConfigurationBuilder,
-    PSTConfigurationBuilder,
 )
 
 
@@ -14,33 +13,13 @@ from tests.unit.ska_tmc_cdm.builder.central_node.csp import (
     "object1, object2, is_equal",
     [
         (  # equal
-            CSPConfigurationBuilder()
-            .set_pss(
-                PSSConfigurationBuilder().set_pss_beam_ids([1, 2, 3]).build()
-            )
-            .set_pst(PSTConfigurationBuilder().set_pst_beam_ids([1]).build())
-            .build(),
-            CSPConfigurationBuilder()
-            .set_pss(
-                PSSConfigurationBuilder().set_pss_beam_ids([1, 2, 3]).build()
-            )
-            .set_pst(PSTConfigurationBuilder().set_pst_beam_ids([1]).build())
-            .build(),
+            CSPConfigurationBuilder(),
+            CSPConfigurationBuilder(),
             True,
         ),
         (  # not equal
-            CSPConfigurationBuilder()
-            .set_pss(
-                PSSConfigurationBuilder().set_pss_beam_ids([1, 2, 3]).build()
-            )
-            .set_pst(PSTConfigurationBuilder().set_pst_beam_ids([1]).build())
-            .build(),
-            CSPConfigurationBuilder()
-            .set_pss(
-                PSSConfigurationBuilder().set_pss_beam_ids([1, 2, 3]).build()
-            )
-            .set_pst(PSTConfigurationBuilder().set_pst_beam_ids([2]).build())
-            .build(),
+            CSPConfigurationBuilder(pss=PSSConfigurationBuilder()),
+            CSPConfigurationBuilder(pss=None),
             False,
         ),
     ],

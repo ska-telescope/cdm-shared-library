@@ -12,13 +12,13 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.sdp import (
     "sdp_config_a,sdp_config_b,is_equal",
     [
         (
-            SDPConfigurationBuilder().set_scan_type("calibration_A").build(),
-            SDPConfigurationBuilder().set_scan_type("calibration_A").build(),
+            SDPConfigurationBuilder(),
+            SDPConfigurationBuilder(),
             True,
         ),
         (
-            SDPConfigurationBuilder().set_scan_type("calibration_A").build(),
-            SDPConfigurationBuilder().set_scan_type("calibration_B").build(),
+            SDPConfigurationBuilder(scan_type="calibration_A"),
+            SDPConfigurationBuilder(scan_type="calibration_B"),
             False,
         ),
     ],

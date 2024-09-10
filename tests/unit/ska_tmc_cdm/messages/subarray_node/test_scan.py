@@ -13,48 +13,18 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.scan import (
     "object1, object2, is_equal",
     [
         (  # mid equal
-            ScanRequestBuilder()
-            .set_interface(interface=MID_SCHEMA)
-            .set_transaction_id(transaction_id="txn-....-00001")
-            .set_scan_id(scan_id=123)
-            .set_subarray_id(subarray_id=1)
-            .build(),
-            ScanRequestBuilder()
-            .set_interface(interface=MID_SCHEMA)
-            .set_transaction_id(transaction_id="txn-....-00001")
-            .set_scan_id(scan_id=123)
-            .set_subarray_id(subarray_id=1)
-            .build(),
+            ScanRequestBuilder(),
+            ScanRequestBuilder(),
             True,
         ),
         (  # low equal
-            ScanRequestBuilder()
-            .set_interface(interface=LOW_SCHEMA)
-            .set_transaction_id(transaction_id="txn-....-00001")
-            .set_scan_id(scan_id=123)
-            .set_subarray_id(subarray_id=1)
-            .build(),
-            ScanRequestBuilder()
-            .set_interface(interface=LOW_SCHEMA)
-            .set_transaction_id(transaction_id="txn-....-00001")
-            .set_scan_id(scan_id=123)
-            .set_subarray_id(subarray_id=1)
-            .build(),
+            ScanRequestBuilder(interface=LOW_SCHEMA),
+            ScanRequestBuilder(interface=LOW_SCHEMA),
             True,
         ),
         (  # not_equal
-            ScanRequestBuilder()
-            .set_interface(interface=MID_SCHEMA)
-            .set_transaction_id(transaction_id="txn-....-00001")
-            .set_scan_id(scan_id=123)
-            .set_subarray_id(subarray_id=1)
-            .build(),
-            ScanRequestBuilder()
-            .set_interface(interface=MID_SCHEMA)
-            .set_transaction_id(transaction_id="txn-....-00001")
-            .set_scan_id(scan_id=123)
-            .set_subarray_id(subarray_id=2)
-            .build(),
+            ScanRequestBuilder(subarray_id=1),
+            ScanRequestBuilder(subarray_id=2),
             False,
         ),
     ],
@@ -71,20 +41,14 @@ def test_scan_request_equality(object1, object2, is_equal):
     "scan_request, expected_interface",
     (
         (
-            ScanRequestBuilder()
-            .set_interface("test-interface")
-            .set_scan_id(scan_id=1)
-            .build(),
+            ScanRequestBuilder(interface="test-interface"),
             "test-interface",
         ),
         (
-            ScanRequestBuilder()
-            .set_scan_id(scan_id=1)
-            .set_subarray_id(subarray_id=1)
-            .build(),
+            ScanRequestBuilder(interface=LOW_SCHEMA),
             LOW_SCHEMA,
         ),
-        (ScanRequestBuilder().set_scan_id(scan_id=1).build(), MID_SCHEMA),
+        (ScanRequestBuilder(), MID_SCHEMA),
     ),
 )
 def test_scan_request_default_interface(scan_request, expected_interface):

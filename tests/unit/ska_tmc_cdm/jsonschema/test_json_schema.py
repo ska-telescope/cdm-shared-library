@@ -8,9 +8,6 @@ import pytest
 from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,
 )
-from ska_telmodel.tmc.examples import (
-    LOW_TMC_RELEASERESOURCES_1_0 as VALID_JSON,
-)
 
 from ska_tmc_cdm.jsonschema.json_schema import (
     JsonSchema,
@@ -27,6 +24,12 @@ from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
     INVALID_LOW_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
 )
+
+VALID_JSON = {
+    "interface": "https://schema.skatelescope.org/ska-low-tmc-releaseresources/1.0",
+    "subarray_id": 1,
+    "release_all": True,
+}
 
 INVALID_JSON = copy.deepcopy(VALID_JSON)
 INVALID_JSON["release_all"] = "foo"

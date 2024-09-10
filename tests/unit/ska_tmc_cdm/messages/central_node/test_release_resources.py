@@ -2,13 +2,12 @@
 Unit tests for the CentralNode.ReleaseResources request/response mapper
 module.
 """
+from contextlib import nullcontext as does_not_raise
+
 import pytest
 from pydantic import ValidationError
 
 from ska_tmc_cdm.messages.central_node.release_resources import SCHEMA
-from tests.unit.ska_tmc_cdm.builder.central_node.common import (
-    DishAllocateBuilder,
-)
 from tests.unit.ska_tmc_cdm.builder.central_node.release_resources import (
     ReleaseResourcesRequestBuilder,
 )
@@ -20,25 +19,16 @@ from tests.unit.ska_tmc_cdm.builder.central_node.release_resources import (
 )
 def test_validation_applies_to_subarray_id(subarray_id: int, okay: bool):
     "subarray_id must be from 1...16, inclusive"
-    builder = (
-        ReleaseResourcesRequestBuilder()
-        .set_release_all(release_all=True)
-        .set_subarray_id(subarray_id)
-    )
-    if not okay:
-        with pytest.raises(ValidationError):
-            builder.build()
+    if okay:
+        expectation = does_not_raise()
     else:
-        builder.build()
+        expectation = pytest.raises(ValidationError)
+    with expectation:
+        ReleaseResourcesRequestBuilder(subarray_id=subarray_id)
 
 
 def test_release_resources_request_has_interface_set_on_creation():
-    request = (
-        ReleaseResourcesRequestBuilder()
-        .set_interface(interface=SCHEMA)
-        .set_release_all(release_all=True)
-        .build()
-    )
+    request = ReleaseResourcesRequestBuilder(interface=SCHEMA)
     assert request.interface is not None
 
 
@@ -47,50 +37,14 @@ def test_release_resources_request_has_interface_set_on_creation():
     [
         # Case where both objects are the same
         (
-            ReleaseResourcesRequestBuilder()
-            .set_subarray_id(1)
-            .set_dish_allocation(
-                DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .set_release_all(True)
-            .set_transaction_id("txn-mvp01-20200325-00001")
-            .build(),
-            ReleaseResourcesRequestBuilder()
-            .set_subarray_id(1)
-            .set_dish_allocation(
-                DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .set_release_all(True)
-            .set_transaction_id("txn-mvp01-20200325-00001")
-            .build(),
+            ReleaseResourcesRequestBuilder(),
+            ReleaseResourcesRequestBuilder(),
             True,
         ),
         # Case where objects differ by subarray_id
         (
-            ReleaseResourcesRequestBuilder()
-            .set_subarray_id(1)
-            .set_dish_allocation(
-                DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .set_release_all(True)
-            .set_transaction_id("txn-mvp01-20200325-00001")
-            .build(),
-            ReleaseResourcesRequestBuilder()
-            .set_subarray_id(2)
-            .set_dish_allocation(
-                DishAllocateBuilder()
-                .set_receptor_ids(receptor_ids=frozenset(["ac", "b", "aab"]))
-                .build()
-            )
-            .set_release_all(True)
-            .set_transaction_id("txn-mvp01-20200325-00001")
-            .build(),
+            ReleaseResourcesRequestBuilder(subarray_id=1),
+            ReleaseResourcesRequestBuilder(subarray_id=2),
             False,
         ),
     ],
@@ -109,12 +63,7 @@ def test_deallocate_resources_must_define_resources_if_not_releasing_all():
     command to release all sub-array resources.
     """
     with pytest.raises(ValueError):
-        _ = (
-            ReleaseResourcesRequestBuilder()
-            .set_subarray_id(1)
-            .set_release_all(False)
-            .build()
-        )
+        ReleaseResourcesRequestBuilder(release_all=False, dish_allocation=None)
 
 
 def test_deallocate_resources_enforces_boolean_release_all_argument():
@@ -122,31 +71,7 @@ def test_deallocate_resources_enforces_boolean_release_all_argument():
     Verify that the boolean release_all_mid argument is required.
     """
     with pytest.raises(ValueError):
-        _ = (
-            ReleaseResourcesRequestBuilder()
-            .set_subarray_id(1)
-            .set_release_all(1)
-            .build()
-        )
-
-    dish_allocation = (
-        DishAllocateBuilder()
-        .set_receptor_ids(receptor_ids=frozenset(["0001", "0002"]))
-        .build()
-    )
-    with pytest.raises(ValueError):
-        _ = (
-            ReleaseResourcesRequestBuilder()
-            .set_subarray_id(1)
-            .set_release_all(1)
-            .set_dish_allocation(dish_allocation)
-            .build()
-        )
+        ReleaseResourcesRequestBuilder(release_all=1, dish_allocation=None)
 
     with pytest.raises(ValueError):
-        _ = (
-            ReleaseResourcesRequestBuilder()
-            .set_subarray_id(1)
-            .set_release_all(1)
-            .build()
-        )
+        ReleaseResourcesRequestBuilder(release_all=1)

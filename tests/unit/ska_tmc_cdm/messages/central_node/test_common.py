@@ -4,7 +4,7 @@ Unit tests for the CentralNode.AssignResources request/response mapper module.
 import pytest
 
 from tests.unit.ska_tmc_cdm.builder.central_node.common import (
-    DishAllocateBuilder,
+    DishAllocationBuilder,
 )
 
 
@@ -13,40 +13,26 @@ from tests.unit.ska_tmc_cdm.builder.central_node.common import (
     [
         # equal
         (
-            DishAllocateBuilder()
-            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
-            .build(),
-            DishAllocateBuilder()
-            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
-            .build(),
+            DishAllocationBuilder(),
+            DishAllocationBuilder(),
             True,
         ),
         # equal but different order
         (
-            DishAllocateBuilder()
-            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
-            .build(),
-            DishAllocateBuilder()
-            .set_receptor_ids(frozenset(["b", "ac", "aab"]))
-            .build(),
+            DishAllocationBuilder(receptor_ids=["ac", "b", "aab"]),
+            DishAllocationBuilder(receptor_ids=["b", "ac", "aab"]),
             True,
         ),
         # one receptor list is a subset of the other
         (
-            DishAllocateBuilder()
-            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
-            .build(),
-            DishAllocateBuilder().set_receptor_ids(frozenset(["ac"])).build(),
+            DishAllocationBuilder(receptor_ids=["ac", "b", "aab"]),
+            DishAllocationBuilder(receptor_ids=["ac"]),
             False,
         ),
         # one list has an additional receptor
         (
-            DishAllocateBuilder()
-            .set_receptor_ids(frozenset(["ac", "b", "aab"]))
-            .build(),
-            DishAllocateBuilder()
-            .set_receptor_ids(frozenset(["ac", "b", "aab", "d"]))
-            .build(),
+            DishAllocationBuilder(receptor_ids=["ac", "b", "aab"]),
+            DishAllocationBuilder(receptor_ids=["ac", "b", "aab", "d"]),
             False,
         ),
     ],

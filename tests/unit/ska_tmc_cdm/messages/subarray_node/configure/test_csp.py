@@ -9,7 +9,6 @@ import pytest
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
-    BeamsConfigurationBuilder,
     CBFConfigurationBuilder,
     CommonConfigurationBuilder,
     CSPConfigurationBuilder,
@@ -18,30 +17,8 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     StationConfigurationBuilder,
     StnBeamConfigurationBuilder,
     SubarrayConfigurationBuilder,
-    TimingBeamsConfigurationBuilder,
     VisConfigurationBuilder,
     VisFspConfigurationBuilder,
-    VisStnBeamConfigurationBuilder,
-)
-
-tr = (
-    TimingBeamsConfigurationBuilder()
-    .set_beams(
-        [
-            BeamsConfigurationBuilder()
-            .set_pst_beam_id(1)
-            .set_stn_beam_id(1)
-            .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
-            .build()
-        ]
-    )
-    .set_fsp(
-        VisFspConfigurationBuilder()
-        .set_fsp_ids([2])
-        .set_firmware("pst")
-        .build()
-    )
-    .build()
 )
 
 
@@ -50,66 +27,26 @@ tr = (
     [
         # Case when both configurations are identical
         (
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
-            .set_band_5_tuning([5.85, 7.25])
-            .build(),
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
-            .set_band_5_tuning([5.85, 7.25])
-            .build(),
+            CommonConfigurationBuilder(),
+            CommonConfigurationBuilder(),
             True,
         ),
         # Different frequency band
         (
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
-            .set_band_5_tuning([5.85, 7.25])
-            .build(),
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_2)
-            .set_subarray_id(1)
-            .set_band_5_tuning([5.85, 7.25])
-            .build(),
+            CommonConfigurationBuilder(frequency_band=ReceiverBand.BAND_1),
+            CommonConfigurationBuilder(frequency_band=ReceiverBand.BAND_2),
             False,
         ),
         # Different subarray ID
         (
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
-            .set_band_5_tuning([5.85, 7.25])
-            .build(),
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(2)  # Different subarray ID
-            .set_band_5_tuning([5.85, 7.25])
-            .build(),
+            CommonConfigurationBuilder(subarray_id=1),
+            CommonConfigurationBuilder(subarray_id=2),
             False,
         ),
         # Missing band_5_tuning in second configuration
         (
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
-            .set_band_5_tuning([5.85, 7.25])
-            .build(),
-            CommonConfigurationBuilder()
-            .set_config_id("sbi-mvp01-20200325-00001-science_A")
-            .set_frequency_band(ReceiverBand.BAND_1)
-            .set_subarray_id(1)
-            # No band_5_tuning set for second configuration
-            .build(),
+            CommonConfigurationBuilder(band_5_tuning=[5.85, 7.25]),
+            CommonConfigurationBuilder(band_5_tuning=None),
             False,
         ),
     ],
@@ -131,22 +68,14 @@ def test_common_configuration_equality(
     [
         # Case when both configurations have the same subarray name
         (
-            SubarrayConfigurationBuilder()
-            .set_subarray_name("Test Subarray")
-            .build(),
-            SubarrayConfigurationBuilder()
-            .set_subarray_name("Test Subarray")
-            .build(),
+            SubarrayConfigurationBuilder(),
+            SubarrayConfigurationBuilder(),
             True,
         ),
         # Case when configurations have different subarray names
         (
-            SubarrayConfigurationBuilder()
-            .set_subarray_name("Test Subarray")
-            .build(),
-            SubarrayConfigurationBuilder()
-            .set_subarray_name("Test Subarray2")
-            .build(),
+            SubarrayConfigurationBuilder(subarray_name="Test Subarray"),
+            SubarrayConfigurationBuilder(subarray_name="Test Subarray2"),
             False,
         ),
     ],
@@ -168,69 +97,14 @@ def test_subarray_configuration_equality(
     [
         # Case when both configurations have the same FSP configuration
         (
-            CBFConfigurationBuilder()
-            .set_fsp_config(
-                [
-                    FSPConfigurationBuilder()
-                    .set_fsp_id(1)
-                    .set_function_mode(FSPFunctionMode.CORR)
-                    .set_frequency_slice_id(1)
-                    .set_integration_factor(10)
-                    .set_zoom_factor(0)
-                    .build()
-                ]
-            )
-            .build(),
-            CBFConfigurationBuilder()
-            .set_fsp_config(
-                [
-                    FSPConfigurationBuilder()
-                    .set_fsp_id(1)
-                    .set_function_mode(FSPFunctionMode.CORR)
-                    .set_frequency_slice_id(1)
-                    .set_integration_factor(10)
-                    .set_zoom_factor(0)
-                    .build()
-                ]
-            )
-            .build(),
+            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder()]),
+            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder()]),
             True,
         ),
         # Case when configurations have different FSP configurations
         (
-            CBFConfigurationBuilder()
-            .set_fsp_config(
-                [
-                    FSPConfigurationBuilder()
-                    .set_fsp_id(1)
-                    .set_function_mode(FSPFunctionMode.CORR)
-                    .set_frequency_slice_id(1)
-                    .set_integration_factor(10)
-                    .set_zoom_factor(0)
-                    .build()
-                ]
-            )
-            .build(),
-            CBFConfigurationBuilder()
-            .set_fsp_config(
-                [
-                    FSPConfigurationBuilder()
-                    .set_fsp_id(1)
-                    .set_function_mode(FSPFunctionMode.CORR)
-                    .set_frequency_slice_id(1)
-                    .set_integration_factor(10)
-                    .set_zoom_factor(0)
-                    .build(),
-                    FSPConfigurationBuilder()
-                    .set_fsp_id(2)  # Different FSP ID
-                    .set_function_mode(FSPFunctionMode.CORR)
-                    .set_frequency_slice_id(1)
-                    .set_integration_factor(10)
-                    .set_zoom_factor(0)
-                    .build(),
-                ]
-            )
-            .build(),
+            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder(fsp_id=1)]),
+            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder(fsp_id=2)]),
             False,
         ),
     ],
@@ -250,141 +124,47 @@ def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
     [
         # both configurations are the same
         (
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.CORR)
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .set_channel_averaging_map(
-                list(zip(itertools.count(1, 744), 20 * [0]))
-            )
-            .build(),
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.CORR)
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .set_channel_averaging_map(
-                list(zip(itertools.count(1, 744), 20 * [0]))
-            )
-            .build(),
+            FSPConfigurationBuilder(),
+            FSPConfigurationBuilder(),
             True,
         ),
         # Cases when one attribute differs, making configurations not equal
         (
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.CORR)
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .build(),
-            FSPConfigurationBuilder()
-            .set_function_mode(FSPFunctionMode.CORR)
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .set_fsp_id(2)  # Different FSP ID
-            .build(),
+            FSPConfigurationBuilder(fsp_id=1),
+            FSPConfigurationBuilder(fsp_id=2),
             False,
         ),
         (
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.CORR)
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .build(),
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(
-                FSPFunctionMode.PSS_BF
-            )  # Different function mode
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .build(),
+            FSPConfigurationBuilder(function_mode=FSPFunctionMode.CORR),
+            FSPConfigurationBuilder(function_mode=FSPFunctionMode.PSS_BF),
             False,
         ),
         (
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .set_frequency_slice_id(1)
-            .build(),
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(
-                FSPFunctionMode.PSS_BF
-            )  # Different function mode
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .set_frequency_slice_id(2)  # Different frequency slice ID
-            .build(),
+            FSPConfigurationBuilder(frequency_slice_id=1),
+            FSPConfigurationBuilder(frequency_slice_id=2),
             False,
         ),
         (
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
-            .set_frequency_slice_id(1)
-            .set_zoom_factor(0)
-            .set_integration_factor(10)
-            .build(),
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
-            .set_frequency_slice_id(1)
-            .set_zoom_factor(0)
-            .set_integration_factor(2)  # Different integration factor
-            .build(),
+            FSPConfigurationBuilder(integration_factor=10),
+            FSPConfigurationBuilder(integration_factor=2),
             False,
         ),
         (
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .build(),
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(1)  # Different zoom factor
-            .build(),
+            FSPConfigurationBuilder(zoom_factor=0),
+            FSPConfigurationBuilder(zoom_factor=1),
             False,
         ),
         (
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(FSPFunctionMode.PSS_BF)
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .set_channel_averaging_map(
-                list(zip(itertools.count(1, 744), 20 * [0]))
-            )
-            .build(),
-            FSPConfigurationBuilder()
-            .set_fsp_id(1)
-            .set_function_mode(
-                FSPFunctionMode.PSS_BF
-            )  # Different function mode
-            .set_frequency_slice_id(1)
-            .set_integration_factor(10)
-            .set_zoom_factor(0)
-            .set_channel_averaging_map(
-                list(zip(itertools.count(1, 744), 20 * [1]))
-            )  # Different channel averaging map
-            .build(),
+            FSPConfigurationBuilder(
+                channel_averaging_map=list(
+                    zip(itertools.count(1, 744), 20 * [0])
+                )
+            ),
+            FSPConfigurationBuilder(
+                channel_averaging_map=list(
+                    zip(itertools.count(1, 744), 20 * [1])
+                )
+            ),
             False,
         ),
     ],
@@ -408,30 +188,15 @@ def test_fsp_configuration_equality(fsp_config_a, fsp_config_b, is_equal):
         (27, None),  # Valid upper boundary
     ],
 )
-def test_fsp_id_range_with_builder(fsp_id, expected_exception):
+def test_fsp_id_range_constraints(fsp_id, expected_exception):
     """
-    Verify that fsp id is in the range of 1 to 27 using the FSPConfigurationBuilder.
+    Verify that fsp id must be in the range of 1 to 27
     """
     if expected_exception:
         with pytest.raises(expected_exception):
-            FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
-                FSPFunctionMode.CORR
-            ).set_frequency_slice_id(1).set_integration_factor(
-                10
-            ).set_zoom_factor(
-                0
-            ).build()
+            FSPConfigurationBuilder(fsp_id=fsp_id)
     else:
-        try:
-            FSPConfigurationBuilder().set_fsp_id(fsp_id).set_function_mode(
-                FSPFunctionMode.CORR
-            ).set_frequency_slice_id(1).set_integration_factor(
-                10
-            ).set_zoom_factor(
-                0
-            ).build()
-        except ValueError:
-            pytest.fail(f"FSP ID {fsp_id} raised ValueError unexpectedly.")
+        FSPConfigurationBuilder(fsp_id=fsp_id)
 
 
 @pytest.mark.parametrize(
@@ -444,21 +209,11 @@ def test_fsp_id_range_with_builder(fsp_id, expected_exception):
     ],
 )
 def test_fsp_zoom_factor_range(zoom_factor, expected_exception):
-    builder = (
-        FSPConfigurationBuilder()
-        .set_fsp_id(1)
-        .set_function_mode(FSPFunctionMode.CORR)
-        .set_frequency_slice_id(1)
-        .set_integration_factor(10)
-    )
     if expected_exception:
         with pytest.raises(expected_exception):
-            builder.set_zoom_factor(zoom_factor).build()
+            FSPConfigurationBuilder(zoom_factor=zoom_factor)
     else:
-        config = builder.set_zoom_factor(zoom_factor).build()
-        assert (
-            config.zoom_factor == zoom_factor
-        )  # Verifies the zoom_factor is set as expected
+        FSPConfigurationBuilder(zoom_factor=zoom_factor)
 
 
 @pytest.mark.parametrize(
@@ -471,21 +226,11 @@ def test_fsp_zoom_factor_range(zoom_factor, expected_exception):
     ],
 )
 def test_fsp_integration_factor_range(integration_factor, expected_exception):
-    builder = (
-        FSPConfigurationBuilder()
-        .set_fsp_id(1)
-        .set_function_mode(FSPFunctionMode.CORR)
-        .set_frequency_slice_id(1)
-        .set_zoom_factor(0)
-    )
     if expected_exception:
         with pytest.raises(expected_exception):
-            builder.set_integration_factor(integration_factor).build()
+            FSPConfigurationBuilder(integration_factor=integration_factor)
     else:
-        config = builder.set_integration_factor(integration_factor).build()
-        assert (
-            config.integration_factor == integration_factor
-        )  # Verifies the integration_factor is set as expected
+        FSPConfigurationBuilder(integration_factor=integration_factor)
 
 
 @pytest.mark.parametrize(
@@ -504,22 +249,11 @@ def test_fsp_configuration_channel_avg_map_length(
     channel_avg_map = list(
         zip(itertools.count(1, 744), [0] * channel_avg_map_length)
     )
-    builder = (
-        FSPConfigurationBuilder()
-        .set_fsp_id(1)
-        .set_function_mode(FSPFunctionMode.CORR)
-        .set_frequency_slice_id(1)
-        .set_integration_factor(10)
-        .set_zoom_factor(0)
-        .set_channel_averaging_map(channel_avg_map)
-    )
-
     if expected_exception:
         with pytest.raises(expected_exception):
-            builder.build()
+            FSPConfigurationBuilder(channel_averaging_map=channel_avg_map)
     else:
-        config = builder.build()
-        assert len(config.channel_averaging_map) == channel_avg_map_length
+        FSPConfigurationBuilder(channel_averaging_map=channel_avg_map)
 
 
 @pytest.mark.parametrize(
@@ -527,34 +261,14 @@ def test_fsp_configuration_channel_avg_map_length(
     [
         # Case where both configurations are the same
         (
-            StnBeamConfigurationBuilder()
-            .set_stn_beam_id(1)
-            .set_beam_id(1)
-            .set_freq_ids([400])
-            .set_delay_poly("tango/device/instance/delay")
-            .build(),
-            StnBeamConfigurationBuilder()
-            .set_stn_beam_id(1)
-            .set_beam_id(1)
-            .set_freq_ids([400])
-            .set_delay_poly("tango/device/instance/delay")
-            .build(),
+            StnBeamConfigurationBuilder(),
+            StnBeamConfigurationBuilder(),
             True,
         ),
         # Case where configurations are different
         (
-            StnBeamConfigurationBuilder()
-            .set_stn_beam_id(1)
-            .set_beam_id(1)
-            .set_freq_ids([400])
-            .set_delay_poly("tango/device/instance/delay")
-            .build(),
-            StnBeamConfigurationBuilder()
-            .set_stn_beam_id(2)  # Different stn_beam_id
-            .set_beam_id(2)
-            .set_freq_ids([400])
-            .set_delay_poly("tango/device/instance/delay")
-            .build(),
+            StnBeamConfigurationBuilder(stn_beam_id=1),
+            StnBeamConfigurationBuilder(stn_beam_id=2),
             False,
         ),
     ],
@@ -576,52 +290,16 @@ def test_stn_beam_configuration_equality(
     [
         # Case where both configurations are the same
         (
-            StationConfigurationBuilder()
-            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-            .set_stn_beams(
-                [
-                    StnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_beam_id(1)
-                    .set_freq_ids([400])
-                    .set_delay_poly("tango/device/instance/delay")
-                    .build()
-                ]
-            )
-            .build(),
-            StationConfigurationBuilder()
-            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-            .set_stn_beams(
-                [
-                    StnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_beam_id(1)
-                    .set_freq_ids([400])
-                    .set_delay_poly("tango/device/instance/delay")
-                    .build()
-                ]
-            )
-            .build(),
+            StationConfigurationBuilder(),
+            StationConfigurationBuilder(),
             True,
         ),
         # Case where configurations are different due to missing stn_beams
         (
-            StationConfigurationBuilder()
-            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-            .set_stn_beams(
-                [
-                    StnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_beam_id(1)
-                    .set_freq_ids([400])
-                    .set_delay_poly("tango/device/instance/delay")
-                    .build()
-                ]
-            )
-            .build(),
-            StationConfigurationBuilder()
-            .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-            .build(),
+            StationConfigurationBuilder(
+                stn_beams=(StnBeamConfigurationBuilder(),)
+            ),
+            StationConfigurationBuilder(stn_beams=None),
             False,
         ),
     ],
@@ -643,25 +321,14 @@ def test_station_configuration_equality(
     [
         # Case where both configurations are the same
         (
-            VisFspConfigurationBuilder()
-            .set_function_mode("vis")
-            .set_fsp_ids([1])
-            .build(),
-            VisFspConfigurationBuilder()
-            .set_function_mode("vis")
-            .set_fsp_ids([1])
-            .build(),
+            VisFspConfigurationBuilder(),
+            VisFspConfigurationBuilder(),
             True,
         ),
         # Case where configurations are different due to missing fsp_ids in the second instance
         (
-            VisFspConfigurationBuilder()
-            .set_function_mode("vis")
-            .set_fsp_ids([1])
-            .build(),
-            VisFspConfigurationBuilder()
-            .set_function_mode("vis")
-            .build(),  # Omitting set_fsp_ids to simulate difference
+            VisFspConfigurationBuilder(fsp_ids=[1, 2]),
+            VisFspConfigurationBuilder(fsp_ids=None),
             False,
         ),
     ],
@@ -684,44 +351,8 @@ def test_vis_fsp_configuration_equality(
     "vis_config_a, vis_config_b, is_equal",
     [
         (
-            VisConfigurationBuilder()
-            .set_fsp(
-                VisFspConfigurationBuilder()
-                .set_function_mode("vis")
-                .set_fsp_ids([1])
-                .build()
-            )
-            .set_stn_beam(
-                [
-                    VisStnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_host([(0, "192.168.1.00")])
-                    .set_port([(0, 9000, 1)])
-                    .set_mac([(0, "02-03-04-0a-0b-0c")])
-                    .set_integration_ms(849)
-                    .build()
-                ]
-            )
-            .build(),
-            VisConfigurationBuilder()
-            .set_fsp(
-                VisFspConfigurationBuilder()
-                .set_function_mode("vis")
-                .set_fsp_ids([1])
-                .build()
-            )
-            .set_stn_beam(
-                [
-                    VisStnBeamConfigurationBuilder()
-                    .set_stn_beam_id(1)
-                    .set_host([(0, "192.168.1.00")])
-                    .set_port([(0, 9000, 1)])
-                    .set_mac([(0, "02-03-04-0a-0b-0c")])
-                    .set_integration_ms(849)
-                    .build()
-                ]
-            )
-            .build(),
+            VisConfigurationBuilder(),
+            VisConfigurationBuilder(),
             True,
         )
     ],
@@ -743,120 +374,8 @@ def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
     [
         # Case where both LowCBFConfiguration objects are exactly the same
         (
-            LowCBFConfigurationBuilder()
-            .set_stations(
-                StationConfigurationBuilder()
-                .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-                .set_stn_beams(
-                    [
-                        StnBeamConfigurationBuilder()
-                        .set_stn_beam_id(1)
-                        .set_beam_id(1)
-                        .set_freq_ids([400])
-                        .set_delay_poly("tango/device/instance/delay")
-                        .build()
-                    ]
-                )
-                .build()
-            )
-            .set_vis(
-                VisConfigurationBuilder()
-                .set_fsp(
-                    VisFspConfigurationBuilder()
-                    .set_function_mode("vis")
-                    .set_fsp_ids([1])
-                    .build()
-                )
-                .set_stn_beam(
-                    [
-                        VisStnBeamConfigurationBuilder()
-                        .set_stn_beam_id(1)
-                        .set_host([(0, "192.168.1.00")])
-                        .set_port([(0, 9000, 1)])
-                        .set_mac([(0, "02-03-04-0a-0b-0c")])
-                        .set_integration_ms(849)
-                        .build()
-                    ]
-                )
-                .build()
-            )
-            .set_timing_beams(
-                TimingBeamsConfigurationBuilder()
-                .set_beams(
-                    [
-                        BeamsConfigurationBuilder()
-                        .set_pst_beam_id(1)
-                        .set_stn_beam_id(1)
-                        .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
-                        .build()
-                    ]
-                )
-                .set_fsp(
-                    VisFspConfigurationBuilder()
-                    .set_fsp_ids([2])
-                    .set_firmware("pst")
-                    .build()
-                )
-                .build()
-            )
-            .build(),
-            LowCBFConfigurationBuilder()
-            .set_stations(
-                StationConfigurationBuilder()
-                .set_stns([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]])
-                .set_stn_beams(
-                    [
-                        StnBeamConfigurationBuilder()
-                        .set_stn_beam_id(1)
-                        .set_beam_id(1)
-                        .set_freq_ids([400])
-                        .set_delay_poly("tango/device/instance/delay")
-                        .build()
-                    ]
-                )
-                .build()
-            )
-            .set_vis(
-                VisConfigurationBuilder()
-                .set_fsp(
-                    VisFspConfigurationBuilder()
-                    .set_function_mode("vis")
-                    .set_fsp_ids([1])
-                    .build()
-                )
-                .set_stn_beam(
-                    [
-                        VisStnBeamConfigurationBuilder()
-                        .set_stn_beam_id(1)
-                        .set_host([(0, "192.168.1.00")])
-                        .set_port([(0, 9000, 1)])
-                        .set_mac([(0, "02-03-04-0a-0b-0c")])
-                        .set_integration_ms(849)
-                        .build()
-                    ]
-                )
-                .build()
-            )
-            .set_timing_beams(
-                TimingBeamsConfigurationBuilder()
-                .set_beams(
-                    [
-                        BeamsConfigurationBuilder()
-                        .set_pst_beam_id(1)
-                        .set_stn_beam_id(1)
-                        .set_stn_weights([0.9, 1.0, 1.0, 1.0, 0.9, 1.0])
-                        .build()
-                    ]
-                )
-                .set_fsp(
-                    VisFspConfigurationBuilder()
-                    .set_fsp_ids([2])
-                    .set_firmware("pst")
-                    .build()
-                )
-                .build()
-            )
-            .build(),
+            LowCBFConfigurationBuilder(),
+            LowCBFConfigurationBuilder(),
             True,
         ),
     ],
@@ -873,14 +392,30 @@ def test_low_cbf_configuration_equality(
     assert low_cbf_config_b != object()
 
 
-def test_csp_configuration_equality(csp_config, low_csp_config):
+def test_csp_configuration_equality():
     """
     Verify that CSPConfiguration objects are equal when all they have the same values
     and not equal when any attribute differs.
     """
+    csp_config = CSPConfigurationBuilder()
+    low_csp_config = CSPConfigurationBuilder(
+        interface="https://schema.skao.int/ska-low-csp-configure/0.0",
+        common=CommonConfigurationBuilder(),
+        lowcbf=LowCBFConfigurationBuilder(
+            vis=VisConfigurationBuilder(),
+            stations=StationConfigurationBuilder(
+                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
+                stn_beams=[
+                    StnBeamConfigurationBuilder(
+                        stn_beam_id=1, freq_ids=[400], beam_id=1
+                    )
+                ],
+            ),
+        ),
+    )
 
-    csp_config_invalid = CSPConfigurationBuilder().set_interface("foo").build()
-    csp_config_b = copy.deepcopy(csp_config)
+    csp_config_invalid = CSPConfigurationBuilder(interface="foo")
+    csp_config_b = CSPConfigurationBuilder()
     assert (
         csp_config == csp_config_b
     )  # comparing same instance created using deepcopy
