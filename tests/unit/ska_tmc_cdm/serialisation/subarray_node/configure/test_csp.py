@@ -6,7 +6,7 @@ import inspect
 from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    CBFConfiguration,
+    CBFConfigurationDepreciated,
     CommonConfiguration,
     CSPConfiguration,
     FSPConfiguration,
@@ -114,7 +114,7 @@ CSP_CONFIGURATION_OBJECT_PI16 = CSPConfiguration(
     ),
     pss_config={},
     pst_config={},
-    cbf_config=CBFConfiguration(
+    cbf_config=CBFConfigurationDepreciated(
         fsp_configs=[
             FSPConfiguration(
                 fsp_id=1,
@@ -294,11 +294,11 @@ def test_marshall_csp_configuration_does_not_modify_original():
         subarray=SubarrayConfiguration(subarray_name="subarray name"),
         common=CommonConfiguration(
             config_id="config_id",
-            frequency_band=ReceiverBand.BAND_1,
+            frequency_band=ReceiverBand.BAND_5A,
             subarray_id=1,
             band_5_tuning=[5.85, 7.25],
         ),
-        cbf_config=CBFConfiguration(fsp_configs=[fsp_config]),
+        cbf_config=CBFConfigurationDepreciated(fsp_configs=[fsp_config]),
         pss_config=None,
         pst_config=None,
     )

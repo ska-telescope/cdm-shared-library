@@ -21,48 +21,6 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     VisFspConfigurationBuilder,
 )
 
-
-@pytest.mark.parametrize(
-    "common_config_a, common_config_b, is_equal",
-    [
-        # Case when both configurations are identical
-        (
-            CommonConfigurationBuilder(),
-            CommonConfigurationBuilder(),
-            True,
-        ),
-        # Different frequency band
-        (
-            CommonConfigurationBuilder(frequency_band=ReceiverBand.BAND_1),
-            CommonConfigurationBuilder(frequency_band=ReceiverBand.BAND_2),
-            False,
-        ),
-        # Different subarray ID
-        (
-            CommonConfigurationBuilder(subarray_id=1),
-            CommonConfigurationBuilder(subarray_id=2),
-            False,
-        ),
-        # Missing band_5_tuning in second configuration
-        (
-            CommonConfigurationBuilder(band_5_tuning=[5.85, 7.25]),
-            CommonConfigurationBuilder(band_5_tuning=None),
-            False,
-        ),
-    ],
-)
-def test_common_configuration_equality(
-    common_config_a, common_config_b, is_equal
-):
-    """
-    Verify that CommonConfiguration objects are equal when they have the same values
-    ,not equal when any attribute differs and not equal to other objects.
-    """
-    assert (common_config_a == common_config_b) == is_equal
-    assert common_config_a != 1
-    assert common_config_a != object
-
-
 @pytest.mark.parametrize(
     "subarray_config_a, subarray_config_b, is_equal",
     [

@@ -6,7 +6,7 @@ command.
 from enum import Enum
 from typing import List, Optional, Tuple
 
-from pydantic import AliasChoices, Field
+from pydantic import AliasChoices, Field, model_validator
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -14,10 +14,9 @@ from . import core
 from .pst import PSTConfiguration
 
 __all__ = [
-    "CSPConfiguration",
     "FSPConfiguration",
     "FSPFunctionMode",
-    "CBFConfiguration",
+    "CBFConfigurationDepreciated",
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
@@ -28,6 +27,11 @@ __all__ = [
     "TimingBeamsConfiguration",
     "BeamsConfiguration",
 ]
+
+MID_CSP_SCHEMA = "https://schema.skao.int/ska-csp-configurescan/4.0"
+MID_CSP_SCHEMA_DEPRECIATED = (
+    "https://schema.skao.int/ska-csp-configurescan/2.0"
+)
 
 
 class FSPFunctionMode(Enum):
@@ -43,6 +47,8 @@ class FSPFunctionMode(Enum):
 
 class FSPConfiguration(CdmObject):
     """
+    DEPRECIATED IN CSP CONFIGURE SCAN 4.0
+
     FSPConfiguration defines the configuration for a CSP Frequency Slice
     Processor.
 
@@ -61,7 +67,7 @@ class FSPConfiguration(CdmObject):
     :raises ValueError: Invalid parameter values entered
     """
 
-    fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
+    fsp_id: int = Field(ge=1, le=27)
     function_mode: FSPFunctionMode = Field()
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)
@@ -92,15 +98,24 @@ class CommonConfiguration(CdmObject):
 
     :param config_id: CSP configuration ID
     :param frequency_band: the frequency band to set
-    :param subarray_id: an ID of sub-array device
     :param band_5_tuning: band 5 receiver to set (optional)
     """
 
     config_id: Optional[str] = ""
     frequency_band: Optional[core.ReceiverBand] = None
+    # possibly remove?
     subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
     eb_id: Optional[str] = None
+
+    @model_validator(mode="after")
+    def validate_subarray_id_only_band_5(self):
+        band5 = (core.ReceiverBand.BAND_5A, core.ReceiverBand.BAND_5B)
+        if self.frequency_band in band5 and self.band_5_tuning is None:
+            raise ValueError("Band 5 must have a band 5 tuning")
+        if self.frequency_band not in band5 and self.band_5_tuning is not None:
+            raise ValueError("Only Band 5 may have a band 5 tuning")
+        return self
 
 
 class StnBeamConfiguration(CdmObject):
@@ -218,7 +233,35 @@ class VLBIConfiguration(CdmObject):
     pass
 
 
-class CBFConfiguration(CdmObject):
+class PSSConfiguration(CdmObject):
+    pass
+
+
+class ProcessingRegionConfiguration(CdmObject):
+    """
+    some docstring Todo write me
+    """
+
+    fsp_ids: List[int]
+    receptors: Optional[List[str]] = None
+    start_freq: int = Field(ge=350000000, le=15400000000)
+    channel_width: int = 13440
+    channel_count: int = Field(ge=1, le=58982, multiple_of=20)
+    integration_factor: int = Field(ge=1, le=10)
+    sdp_start_channel_id: int = Field(ge=0, le=4294901760)
+
+
+class CorrelationConfiguration(CdmObject):
+    """
+    some docstring Todo write me
+
+    """
+
+    processing_regions: List[ProcessingRegionConfiguration]
+
+
+class CBFConfigurationDepreciated(CdmObject):
+
     """
     Class to hold all FSP and VLBI configurations.
 
@@ -239,8 +282,27 @@ class CBFConfiguration(CdmObject):
     )
 
 
-class PSSConfiguration(CdmObject):
-    pass
+class MidCBFConfiguration(CdmObject):
+    """
+    Class to hold all FSP and VLBI configurations.
+
+    Todo update me
+    :param fsp_configs: the FSP configurations to set
+    :param vlbi_config: the VLBI configurations to set, it is optional
+    """
+
+    frequency_band_offset_stream1: Optional[int] = Field(
+        ge=-100000000, le=100000000
+    )
+    frequency_band_offset_stream2: Optional[int] = Field(
+        ge=-100000000, le=100000000
+    )
+    correlation: List[CorrelationConfiguration]
+    vlbi_config: Optional[VLBIConfiguration] = Field(
+        default=None,
+        serialization_alias="vlbi",
+        validation_alias=AliasChoices("vlbi", "vlbi_config"),
+    )
 
 
 class CSPConfiguration(CdmObject):
@@ -250,21 +312,24 @@ class CSPConfiguration(CdmObject):
     support of new attributes as per ADR-18
 
     :param interface: url string to determine JsonSchema version
-    :param subarray: Sub-array configuration to set
-    :param common: the common CSP elemenets to set
-    :param cbf_config: the CBF configurations to set
+    :param common: the common CSP elements to set
+    :param cbf_config: the CBF configurations to set [DEPRECIATED]
+    :param midcbf: the MID CBF configurations to set
+    :param lowcbf: the LOW CBF configurations to set
     :param pst_config: the PST configurations to set
     :param pss_config: the PSS configurations to set
     """
 
-    interface: Optional[str] = None
+    interface: str = MID_CSP_SCHEMA
     subarray: Optional[SubarrayConfiguration] = None
-    common: Optional[CommonConfiguration] = None
-    cbf_config: Optional[CBFConfiguration] = Field(
+    common: CommonConfiguration
+    cbf_config: Optional[CBFConfigurationDepreciated] = Field(
         default=None,
         serialization_alias="cbf",
         validation_alias=AliasChoices("cbf", "cbf_config"),
     )
+    midcbf: Optional[MidCBFConfiguration] = None
+    lowcbf: Optional[LowCBFConfiguration] = None
     # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.
     pst_config: Optional[PSTConfiguration | dict] = Field(
@@ -277,4 +342,24 @@ class CSPConfiguration(CdmObject):
         serialization_alias="pss",
         validation_alias=AliasChoices("pss", "pss_config"),
     )
-    lowcbf: Optional[LowCBFConfiguration] = None
+
+
+@model_validator(mode="after")
+def validate_interface(self):
+    if self.interface == MID_CSP_SCHEMA:
+        if self.common.subarray_id is not None:
+            raise KeyError(
+                f"subarray_id is not supported for CSP Configuration schema version {MID_CSP_SCHEMA}"
+            )
+        elif self.common.config_id is None:
+            raise KeyError(
+                f"config_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA}"
+            )
+    if (
+        self.interface == MID_CSP_SCHEMA_DEPRECIATED
+        and self.common.subarray_id is None
+    ):
+        raise KeyError(
+            f"subarray_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA_DEPRECIATED}"
+        )
+    return self
