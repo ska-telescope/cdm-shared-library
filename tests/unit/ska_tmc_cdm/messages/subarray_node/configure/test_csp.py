@@ -6,7 +6,6 @@ import itertools
 
 import pytest
 
-from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     CBFConfigurationBuilder,
@@ -20,6 +19,7 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     VisConfigurationBuilder,
     VisFspConfigurationBuilder,
 )
+
 
 @pytest.mark.parametrize(
     "subarray_config_a, subarray_config_b, is_equal",
