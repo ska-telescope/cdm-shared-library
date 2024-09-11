@@ -98,11 +98,14 @@ class CommonConfiguration(CdmObject):
 
     :param config_id: CSP configuration ID
     :param frequency_band: the frequency band to set
+    :param subarray_id: subarray_id
     :param band_5_tuning: band 5 receiver to set (optional)
+    :param eb_id: eb_id
     """
 
     config_id: Optional[str] = ""
     frequency_band: Optional[core.ReceiverBand] = None
+    subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
     eb_id: Optional[str] = None
 
