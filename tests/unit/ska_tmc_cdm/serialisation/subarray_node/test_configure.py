@@ -1116,7 +1116,8 @@ VALID_MID_CONFIGURE_JSON_4_0 = """
         "frequency_band_offset_stream1": 80,
         "frequency_band_offset_stream2": 80,
         "correlation": {
-             "processing_regions": [{
+             "processing_regions": [
+                {
                     "fsp_ids": [1, 2, 3, 4],
                     "receptors": ["SKA063", "SKA001", "SKA100"],
                     "start_freq": 350000000,
@@ -1132,12 +1133,11 @@ VALID_MID_CONFIGURE_JSON_4_0 = """
                     "channel_count": 14880,
                     "sdp_start_channel_id": 1,
                     "integration_factor": 10
-                }]
+                }
+              ]
             },
       "vlbi": {}
-    },
-    "pss": {},
-    "pst": {}
+    }
   },
   "sdp": {
     "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
@@ -1328,21 +1328,29 @@ VALID_MID_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
         midcbf=MidCBFConfiguration(
             frequency_band_offset_stream1=80,
             frequency_band_offset_stream2=80,
-            correlation=[
-                CorrelationConfiguration(
-                    processing_regions=[
-                        ProcessingRegionConfiguration(
-                            fsp_ids=[1, 2, 4, 6],
-                            receptors=["SKA063", "SKA001", "SKA100"],
-                            start_freq=350000000,
-                            channel_width=12440,
-                            channel_count=52080,
-                            sdp_start_channel_id=0,
-                            integration_factor=1,
-                        )
-                    ]
-                )
-            ],
+            correlation=CorrelationConfiguration(
+                processing_regions=[
+                    ProcessingRegionConfiguration(
+                        fsp_ids=[1, 2, 3, 4],
+                        receptors=["SKA063", "SKA001", "SKA100"],
+                        start_freq=350000000,
+                        channel_width=13440,
+                        channel_count=52080,
+                        sdp_start_channel_id=0,
+                        integration_factor=1,
+                    ),
+                    ProcessingRegionConfiguration(
+                        fsp_ids=[1, 2, 3, 4],
+                        receptors=["SKA063", "SKA001", "SKA100"],
+                        start_freq=548437600,
+                        channel_width=13440,
+                        channel_count=14880,
+                        sdp_start_channel_id=1,
+                        integration_factor=10,
+                    ),
+                ]
+            ),
+            vlbi_config={},
         ),
     ),
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
