@@ -267,8 +267,7 @@ class CorrelationConfiguration(CdmObject):
     :param processing_regions: processing_regions
     """
 
-
-processing_regions: List[ProcessingRegionConfiguration]
+    processing_regions: List[ProcessingRegionConfiguration]
 
 
 class CBFConfigurationDepreciated(CdmObject):
