@@ -5,6 +5,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
     CBFConfigurationDepreciated,
     CommonConfiguration,
+    CorrelationConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
@@ -117,5 +118,20 @@ ProcessingRegionConfigurationBuilder = functools.partial(
 )
 
 MidCBFConfigurationBuilder = functools.partial(
-    MidCBFConfiguration, fsp_ids=(1, 2, 3), start_freq=5
+    MidCBFConfiguration,
+    frequency_band_offset_stream1=80,
+    frequency_band_offset_stream2=80,
+    correlation=CorrelationConfiguration(
+        processing_regions=[
+            ProcessingRegionConfiguration(
+                fsp_ids=[1, 2, 3, 4],
+                receptors=["SKA063", "SKA001", "SKA100"],
+                start_freq=350000000,
+                channel_width=13440,
+                channel_count=52080,
+                sdp_start_channel_id=0,
+                integration_factor=1,
+            )
+        ]
+    ),
 )
