@@ -103,8 +103,6 @@ class CommonConfiguration(CdmObject):
 
     config_id: Optional[str] = ""
     frequency_band: Optional[core.ReceiverBand] = None
-    # possibly remove?
-    subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
     eb_id: Optional[str] = None
 
@@ -239,7 +237,15 @@ class PSSConfiguration(CdmObject):
 
 class ProcessingRegionConfiguration(CdmObject):
     """
-    some docstring Todo write me
+    Class to hold Processing Region Configuration.
+
+    :param fsp_ids: fsp_ids
+    :param receptors: receptors
+    :param start_freq: start_freq
+    :param channel_width: channel_width
+    :param channel_count: channel_count
+    :param integration_factor: integration_factor
+    :param sdp_start_channel_id: sdp_start_channel_id
     """
 
     fsp_ids: List[int]
@@ -252,10 +258,11 @@ class ProcessingRegionConfiguration(CdmObject):
 
 
 class CorrelationConfiguration(CdmObject):
-    """
-    some docstring Todo write me
+       """
+       Class to hold Correlation Configuration.
 
-    """
+       :param processing_regions: processing_regions
+       """
 
     processing_regions: List[ProcessingRegionConfiguration]
 
@@ -286,8 +293,9 @@ class MidCBFConfiguration(CdmObject):
     """
     Class to hold all FSP and VLBI configurations.
 
-    Todo update me
-    :param fsp_configs: the FSP configurations to set
+    :param frequency_band_offset_stream1: frequency_band_offset_stream1
+    :param frequency_band_offset_stream2: frequency_band_offset_stream2
+    :param correlation: correlation
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
 
