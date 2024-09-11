@@ -258,13 +258,14 @@ class ProcessingRegionConfiguration(CdmObject):
 
 
 class CorrelationConfiguration(CdmObject):
-       """
-       Class to hold Correlation Configuration.
+    """
+    Class to hold Correlation Configuration.
 
-       :param processing_regions: processing_regions
-       """
+    :param processing_regions: processing_regions
+    """
 
-    processing_regions: List[ProcessingRegionConfiguration]
+
+processing_regions: List[ProcessingRegionConfiguration]
 
 
 class CBFConfigurationDepreciated(CdmObject):
