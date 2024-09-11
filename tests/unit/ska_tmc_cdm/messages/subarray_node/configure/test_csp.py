@@ -9,25 +9,9 @@ from typing import NamedTuple, Optional
 import pytest
 from pydantic import ValidationError
 
-from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
-from ska_tmc_cdm.messages.subarray_node.configure.csp import (
-    CorrelationConfiguration,
-    FSPFunctionMode,
-    ProcessingRegionConfiguration,
-)
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
-    CommonConfiguration,
-    CommonConfigurationBuilder,
-    CSPConfiguration,
-    CSPConfigurationBuilder,
     FSPConfigurationBuilder,
-    LowCBFConfigurationBuilder,
     MidCBFConfigurationBuilder,
-    StationConfigurationBuilder,
-    StnBeamConfigurationBuilder,
-    SubarrayConfigurationBuilder,
-    VisConfigurationBuilder,
-    VisFspConfigurationBuilder,
 )
 
 
