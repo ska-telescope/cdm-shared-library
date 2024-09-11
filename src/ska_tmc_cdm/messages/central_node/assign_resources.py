@@ -80,6 +80,8 @@ class AssignResourcesRequest(CdmObject):
                 self.interface = MID_SCHEMA
         return self
 
+    # TODO: What is the point of the from_dish() and from_mccs() constructors?
+    # Can we remove these???
     @classmethod
     def from_dish(
         cls,
