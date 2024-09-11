@@ -3,16 +3,26 @@ Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
 import copy
 import itertools
+from contextlib import nullcontext as does_not_raise
+from typing import NamedTuple, Optional
 
 import pytest
 
-from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
+from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
+from ska_tmc_cdm.messages.subarray_node.configure.csp import (
+    CorrelationConfiguration,
+    FSPFunctionMode,
+    ProcessingRegionConfiguration,
+)
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     CBFConfigurationBuilder,
+    CommonConfiguration,
     CommonConfigurationBuilder,
+    CSPConfiguration,
     CSPConfigurationBuilder,
     FSPConfigurationBuilder,
     LowCBFConfigurationBuilder,
+    MidCBFConfiguration,
     StationConfigurationBuilder,
     StnBeamConfigurationBuilder,
     SubarrayConfigurationBuilder,
@@ -391,3 +401,87 @@ def test_csp_configuration_equality():
     assert csp_config != low_csp_config  # comparing mid with low
     assert csp_config != object  # comparing with object
     assert low_csp_config != object  # comparing with object
+
+
+class ValidationCase(NamedTuple):
+    args: dict
+    expected_error: Optional[Exception]
+
+
+INTERFACE_VALIDATION_CASES = (
+    ValidationCase(
+        args={
+            "interface": "https://schema.skao.int/ska-csp-configure/4.0",
+            "subarray_id": 1,
+        },
+        expected_error=KeyError,
+    ),
+)
+
+
+@pytest.mark.parametrize(("args, expected_error"), INTERFACE_VALIDATION_CASES)
+def test_interface_validation(args, expected_error):
+    if expected_error:
+        with pytest.raises(expected_error):
+            MidCBFConfiguration(**args)
+    else:
+        MidCBFConfiguration(**args)
+
+
+def test_interface_validation():
+    """
+    Verify the interface validation.
+    """
+    csp = (
+        CSPConfiguration(
+            interface="https://schema.skao.int/ska-csp-configure/4.0",
+            common=CommonConfiguration(
+                config_id="sbi-mvp01-20200325-00001-science_A",
+                frequency_band=ReceiverBand.BAND_1,
+            ),
+            midcbf=MidCBFConfiguration(
+                frequency_band_offset_stream1=80,
+                frequency_band_offset_stream2=80,
+                correlation=CorrelationConfiguration(
+                    processing_regions=[
+                        ProcessingRegionConfiguration(
+                            fsp_ids=[1, 2, 3, 4],
+                            receptors=["SKA063", "SKA001", "SKA100"],
+                            start_freq=350000000,
+                            channel_width=13440,
+                            channel_count=52080,
+                            sdp_start_channel_id=0,
+                            integration_factor=1,
+                        )
+                    ]
+                ),
+                vlbi_config={},
+            ),
+        ),
+    )
+    expected = CSPConfiguration(
+        interface="https://schema.skao.int/ska-csp-configure/4.0",
+        common=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+            frequency_band=ReceiverBand.BAND_1,
+        ),
+        midcbf=MidCBFConfiguration(
+            frequency_band_offset_stream1=80,
+            frequency_band_offset_stream2=80,
+            correlation=CorrelationConfiguration(
+                processing_regions=[
+                    ProcessingRegionConfiguration(
+                        fsp_ids=[1, 2, 3, 4],
+                        receptors=["SKA063", "SKA001", "SKA100"],
+                        start_freq=350000000,
+                        channel_width=13440,
+                        channel_count=52080,
+                        sdp_start_channel_id=0,
+                        integration_factor=1,
+                    )
+                ]
+            ),
+            vlbi_config={},
+        ),
+    )
+    assert expected == repr(csp)
