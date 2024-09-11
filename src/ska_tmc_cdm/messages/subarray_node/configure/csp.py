@@ -359,18 +359,18 @@ class CSPConfiguration(CdmObject):
 def validate_interface(self):
     if self.interface == MID_CSP_SCHEMA:
         if self.common.subarray_id is not None:
-            raise KeyError(
+            raise ValueError(
                 f"subarray_id is not supported for CSP Configuration schema version {MID_CSP_SCHEMA}"
             )
         elif self.common.config_id is None:
-            raise KeyError(
+            raise ValueError(
                 f"config_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA}"
             )
     if (
         self.interface == MID_CSP_SCHEMA_DEPRECIATED
         and self.common.subarray_id is None
     ):
-        raise KeyError(
+        raise ValueError(
             f"subarray_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA_DEPRECIATED}"
         )
     return self
