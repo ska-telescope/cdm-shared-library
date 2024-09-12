@@ -106,6 +106,13 @@ INTERFACE_VALIDATION_CASES = (
         },
         expected=pytest.raises(ValidationError),
     ),
+    ValidationCase(
+        args={
+            "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+            "subarray_id": None,
+        },
+        expected=pytest.raises(ValidationError),
+    ),
     #     ValidationCase(
     #         args={
     #             "interface": None,

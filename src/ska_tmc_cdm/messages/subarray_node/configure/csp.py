@@ -16,7 +16,7 @@ from .pst import PSTConfiguration
 __all__ = [
     "FSPConfiguration",
     "FSPFunctionMode",
-    "CBFConfigurationDepreciated",
+    "CBFConfigurationDeprecated",
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
@@ -29,9 +29,7 @@ __all__ = [
 ]
 
 MID_CSP_SCHEMA = "https://schema.skao.int/ska-csp-configurescan/4.0"
-MID_CSP_SCHEMA_DEPRECIATED = (
-    "https://schema.skao.int/ska-csp-configurescan/2.0"
-)
+MID_CSP_SCHEMA_DEPRECATED = "https://schema.skao.int/ska-csp-configurescan/2.0"
 
 
 class FSPFunctionMode(Enum):
@@ -47,7 +45,7 @@ class FSPFunctionMode(Enum):
 
 class FSPConfiguration(CdmObject):
     """
-    DEPRECIATED IN CSP CONFIGURE SCAN 4.0
+    DEPRECATED IN CSP CONFIGURE SCAN 4.0
 
     FSPConfiguration defines the configuration for a CSP Frequency Slice
     Processor.
@@ -270,7 +268,7 @@ class CorrelationConfiguration(CdmObject):
     processing_regions: List[ProcessingRegionConfiguration]
 
 
-class CBFConfigurationDepreciated(CdmObject):
+class CBFConfigurationDeprecated(CdmObject):
 
     """
     Class to hold all FSP and VLBI configurations.
@@ -324,7 +322,7 @@ class CSPConfiguration(CdmObject):
 
     :param interface: url string to determine JsonSchema version
     :param common: the common CSP elements to set
-    :param cbf_config: the CBF configurations to set [DEPRECIATED]
+    :param cbf_config: the CBF configurations to set [DEPRECATED]
     :param midcbf: the MID CBF configurations to set
     :param lowcbf: the LOW CBF configurations to set
     :param pst_config: the PST configurations to set
@@ -334,7 +332,7 @@ class CSPConfiguration(CdmObject):
     interface: str = MID_CSP_SCHEMA
     subarray: Optional[SubarrayConfiguration] = None
     common: CommonConfiguration
-    cbf_config: Optional[CBFConfigurationDepreciated] = Field(
+    cbf_config: Optional[CBFConfigurationDeprecated] = Field(
         default=None,
         serialization_alias="cbf",
         validation_alias=AliasChoices("cbf", "cbf_config"),
@@ -366,10 +364,10 @@ class CSPConfiguration(CdmObject):
                     f"config_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA}"
                 )
         if (
-            self.interface == MID_CSP_SCHEMA_DEPRECIATED
+            self.interface == MID_CSP_SCHEMA_DEPRECATED
             and self.common.subarray_id is None
         ):
             raise ValueError(
-                f"subarray_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA_DEPRECIATED}"
+                f"subarray_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA_DEPRECATED}"
             )
         return self
