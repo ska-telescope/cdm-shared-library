@@ -7,6 +7,7 @@ from enum import Enum
 from typing import List, Optional, Tuple
 
 from pydantic import AliasChoices, Field, model_validator
+from typing_extensions import Annotated
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -336,6 +337,7 @@ class CSPConfiguration(CdmObject):
         default=None,
         serialization_alias="cbf",
         validation_alias=AliasChoices("cbf", "cbf_config"),
+        deprecated=True,
     )
     midcbf: Optional[MidCBFConfiguration] = None
     lowcbf: Optional[LowCBFConfiguration] = None
