@@ -251,7 +251,7 @@ class ProcessingRegionConfiguration(CdmObject):
 
     fsp_ids: List[int]
     receptors: Optional[List[str]] = None
-    start_freq: int = Field(ge=350000000, le=15400000000)
+    start_freq: int = Field(ge=350_000_000, le=15_400_000_000)
     channel_width: int = 13440
     channel_count: int = Field(ge=1, le=58982, multiple_of=20)
     integration_factor: int = Field(ge=1, le=10)
