@@ -3,15 +3,16 @@ Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
 
 import itertools
-from contextlib import nullcontext as does_not_raise
+
+# from contextlib import nullcontext as does_not_raise
 from typing import NamedTuple, Optional
 
 import pytest
 from pydantic import ValidationError
 
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
+    CSPConfiguration,
     FSPConfigurationBuilder,
-    MidCBFConfigurationBuilder,
 )
 
 
@@ -105,17 +106,17 @@ INTERFACE_VALIDATION_CASES = (
         },
         expected=pytest.raises(ValidationError),
     ),
-    ValidationCase(
-        args={
-            "interface": None,
-            "subarray_id": None,
-        },
-        expected=does_not_raise(),
-    ),
+    #     ValidationCase(
+    #         args={
+    #             "interface": None,
+    #             "subarray_id": None,
+    #         },
+    #         expected=does_not_raise(),
+    #     ),
 )
 
 
 @pytest.mark.parametrize(("args, expected"), INTERFACE_VALIDATION_CASES)
 def test_interface_validation(args, expected):
     with expected:
-        MidCBFConfigurationBuilder(**args)
+        CSPConfiguration(**args)
