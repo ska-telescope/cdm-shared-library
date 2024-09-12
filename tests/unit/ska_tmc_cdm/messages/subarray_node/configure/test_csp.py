@@ -3,8 +3,6 @@ Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
 
 import itertools
-
-# from contextlib import nullcontext as does_not_raise
 from typing import NamedTuple, Optional
 
 import pytest
@@ -108,18 +106,18 @@ INTERFACE_VALIDATION_CASES = (
     ),
     ValidationCase(
         args={
+            "interface": "https://schema.skao.int/ska-csp-configure/4.0",
+            "config_id": None,
+        },
+        expected=pytest.raises(ValidationError),
+    ),
+    ValidationCase(
+        args={
             "interface": "https://schema.skao.int/ska-csp-configure/2.0",
             "subarray_id": None,
         },
         expected=pytest.raises(ValidationError),
     ),
-    #     ValidationCase(
-    #         args={
-    #             "interface": None,
-    #             "subarray_id": None,
-    #         },
-    #         expected=does_not_raise(),
-    #     ),
 )
 
 
