@@ -7,7 +7,6 @@ from enum import Enum
 from typing import List, Optional, Tuple
 
 from pydantic import AliasChoices, Field, model_validator
-from typing_extensions import Annotated
 
 from ska_tmc_cdm.messages.base import CdmObject
 
