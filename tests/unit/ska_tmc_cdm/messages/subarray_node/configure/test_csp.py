@@ -1,9 +1,8 @@
 """
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
-
 import itertools
-from typing import NamedTuple, Optional
+from typing import ContextManager, NamedTuple
 
 import pytest
 from pydantic import ValidationError
@@ -96,7 +95,7 @@ def test_fsp_configuration_channel_avg_map_length(
 
 class ValidationCase(NamedTuple):
     args: dict
-    expected: Optional[Exception]
+    expected: ContextManager
 
 
 INTERFACE_VALIDATION_CASES = (
