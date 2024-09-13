@@ -3,6 +3,7 @@ The configure.csp module contains Python classes that represent the various
 aspects of CSP configuration that may be specified in a SubArrayNode.configure
 command.
 """
+import warnings
 from enum import Enum
 from typing import List, Optional, Tuple
 
@@ -64,6 +65,12 @@ class FSPConfiguration(CdmObject):
 
     :raises ValueError: Invalid parameter values entered
     """
+
+    warnings.warn(
+        "This class is deprecated and will be removed in a future version.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
 
     fsp_id: int = Field(ge=1, le=27)
     function_mode: FSPFunctionMode = Field()
