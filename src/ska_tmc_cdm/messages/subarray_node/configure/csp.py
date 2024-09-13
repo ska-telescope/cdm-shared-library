@@ -16,7 +16,7 @@ from .pst import PSTConfiguration
 __all__ = [
     "FSPConfiguration",
     "FSPFunctionMode",
-    "CBFConfigurationDeprecated",
+    "CBFConfiguration",
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
@@ -268,7 +268,7 @@ class CorrelationConfiguration(CdmObject):
     processing_regions: List[ProcessingRegionConfiguration]
 
 
-class CBFConfigurationDeprecated(CdmObject):
+class CBFConfiguration(CdmObject):
 
     """
     Class to hold all FSP and VLBI configurations.
@@ -328,7 +328,7 @@ class CSPConfiguration(CdmObject):
     interface: str = MID_CSP_SCHEMA
     subarray: Optional[SubarrayConfiguration] = None
     common: CommonConfiguration
-    cbf_config: Optional[CBFConfigurationDeprecated] = Field(
+    cbf_config: Optional[CBFConfiguration] = Field(
         default=None,
         serialization_alias="cbf",
         validation_alias=AliasChoices("cbf", "cbf_config"),

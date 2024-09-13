@@ -24,7 +24,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
-    CBFConfigurationDeprecated,
+    CBFConfiguration,
     CommonConfiguration,
     CorrelationConfiguration,
     CSPConfiguration,
@@ -113,7 +113,7 @@ NON_COMPLIANCE_MID_CONFIGURE_OBJECT = ConfigureRequest(
         ),
         pss_config={},
         pst_config={},
-        cbf_config=CBFConfigurationDeprecated(
+        cbf_config=CBFConfiguration(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=7,
@@ -1272,7 +1272,7 @@ VALID_MID_CONFIGURE_OBJECT_2_3 = ConfigureRequest(
         ),
         pss_config={},
         pst_config={},
-        cbf_config=CBFConfigurationDeprecated(
+        cbf_config=CBFConfiguration(
             fsp_configs=[
                 FSPConfiguration(
                     fsp_id=1,

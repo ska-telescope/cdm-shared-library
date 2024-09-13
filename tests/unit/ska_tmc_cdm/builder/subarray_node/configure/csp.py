@@ -3,9 +3,8 @@ import functools
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
-    CBFConfigurationDeprecated,
+    CBFConfiguration,
     CommonConfiguration,
-    CorrelationConfiguration,
     CSPConfiguration,
     FSPConfiguration,
     FSPFunctionMode,
@@ -44,7 +43,7 @@ CommonConfigurationBuilder = functools.partial(
 
 
 CBFConfigurationBuilder = functools.partial(
-    CBFConfigurationDeprecated, fsp=[FSPConfigurationBuilder()]
+    CBFConfiguration, fsp=[FSPConfigurationBuilder()]
 )
 
 BeamsConfigurationBuilder = functools.partial(
