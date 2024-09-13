@@ -13,6 +13,9 @@ from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
     FSPConfigurationBuilder,
 )
 
+MID_CSP_SCHEMA = "https://schema.skao.int/ska-csp-configurescan/4.0"
+MID_CSP_SCHEMA_DEPRECATED = "https://schema.skao.int/ska-csp-configurescan/2.0"
+
 
 @pytest.mark.parametrize(
     "fsp_id, expected_exception",
@@ -99,21 +102,21 @@ class ValidationCase(NamedTuple):
 INTERFACE_VALIDATION_CASES = (
     ValidationCase(
         args={
-            "interface": "https://schema.skao.int/ska-csp-configure/4.0",
+            "interface": MID_CSP_SCHEMA,
             "subarray_id": 1,
         },
         expected=pytest.raises(ValidationError),
     ),
     ValidationCase(
         args={
-            "interface": "https://schema.skao.int/ska-csp-configure/4.0",
+            "interface": MID_CSP_SCHEMA,
             "config_id": None,
         },
         expected=pytest.raises(ValidationError),
     ),
     ValidationCase(
         args={
-            "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+            "interface": MID_CSP_SCHEMA_DEPRECATED,
             "subarray_id": None,
         },
         expected=pytest.raises(ValidationError),
