@@ -25,6 +25,8 @@ __all__ = ["JsonSchema"]
 OSD_LIB_VERSION = version("ska_ost_osd")
 CAR_OSD_SOURCE = (f"car:ost/ska-ost-osd?{OSD_LIB_VERSION}#tmdata",)
 
+SEMANTIC_VALIDATION = environ.get("SEMANTIC_VALIDATION")
+
 
 class JsonSchema:
     """
@@ -95,17 +97,19 @@ class JsonSchema:
             data_sources = CAR_OSD_SOURCE
 
         tm_data = TMData(source_uris=list(data_sources), update=True)
-        try:
-            return televalidation_schema.semantic_validate(
-                observing_command_input=instance,
-                tm_data=tm_data,
-                interface=uri,
-            )
 
-        except SchematicValidationError as exc:
+        if SEMANTIC_VALIDATION == "true":
             try:
-                schema.schema_by_uri(uri)
-            except ValueError:
-                raise SchemaNotFound(uri) from exc
-            else:
-                raise exc
+                return televalidation_schema.semantic_validate(
+                    observing_command_input=instance,
+                    tm_data=tm_data,
+                    interface=uri,
+                )
+
+            except SchematicValidationError as exc:
+                try:
+                    schema.schema_by_uri(uri)
+                except ValueError:
+                    raise SchemaNotFound(uri) from exc
+                else:
+                    raise exc
