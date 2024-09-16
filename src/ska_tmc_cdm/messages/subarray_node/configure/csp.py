@@ -17,15 +17,22 @@ from .pst import PSTConfiguration
 __all__ = [
     "FSPConfiguration",
     "FSPFunctionMode",
+    "CSPConfiguration",
     "CBFConfiguration",
+    "CorrelationConfiguration",
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
+    "MidCBFConfiguration",
     "StationConfiguration",
     "StnBeamConfiguration",
     "VisFspConfiguration",
+    "VisStnBeamConfiguration",
     "VisConfiguration",
+    "VLBIConfiguration",
     "TimingBeamsConfiguration",
+    "ProcessingRegionConfiguration",
+    "PSSConfiguration",
     "BeamsConfiguration",
 ]
 
