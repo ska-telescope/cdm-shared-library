@@ -25,7 +25,7 @@ __all__ = ["JsonSchema"]
 OSD_LIB_VERSION = version("ska_ost_osd")
 CAR_OSD_SOURCE = (f"car:ost/ska-ost-osd?{OSD_LIB_VERSION}#tmdata",)
 
-SEMANTIC_VALIDATION = environ.get("SEMANTIC_VALIDATION")
+SEMANTIC_VALIDATION = environ.get("SEMANTIC_VALIDATION", "true")
 
 
 class JsonSchema:
