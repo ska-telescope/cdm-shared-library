@@ -278,11 +278,19 @@ class CorrelationConfiguration(CdmObject):
 class CBFConfiguration(CdmObject):
 
     """
+    DEPRECATED, future work should make use of MidCBFConfiguration
+
     Class to hold all FSP and VLBI configurations.
 
     :param fsp_configs: the FSP configurations to set
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
+
+    warnings.warn(
+        "This class is deprecated and will be removed in a future version.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
 
     fsp_configs: List[FSPConfiguration] = Field(
         serialization_alias="fsp",
