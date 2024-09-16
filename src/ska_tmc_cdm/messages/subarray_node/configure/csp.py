@@ -316,9 +316,13 @@ class MidCBFConfiguration(CdmObject):
     """
     Class to hold all FSP and VLBI configurations.
 
-    :param frequency_band_offset_stream1: frequency_band_offset_stream1
-    :param frequency_band_offset_stream2: frequency_band_offset_stream2
-    :param correlation: correlation
+    Note: frequency band offset (FBO)
+    Bands 1 and 2 should be specified for Stream 1 only.
+    Bands 5a and 5b input from the receptor consists of two data streams (1 and 2)
+
+    :param frequency_band_offset_stream1: a specified offset so that the entire observed band is shifted in Hz
+    :param frequency_band_offset_stream2: a specified offset so that the entire observed band is shifted in Hz
+    :param correlation: correlation specific parameters
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
 
