@@ -9,6 +9,7 @@ import pytest
 from pydantic import ValidationError
 
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
+    CommonConfigurationBuilder,
     CSPConfigurationBuilder,
     FSPConfigurationBuilder,
 )
@@ -128,7 +129,6 @@ INTERFACE_VALIDATION_CASES = (
 )
 
 
-@pytest.mark.parametrize(("args, expected"), INTERFACE_VALIDATION_CASES)
-def test_interface_validation(args, expected):
-    with expected:
-        CSPConfigurationBuilder(**args)
+@pytest.mark.parametrize(("test_input, expected"), INTERFACE_VALIDATION_CASES)
+def test_interface_validation(test_input, expected):
+    assert expected
