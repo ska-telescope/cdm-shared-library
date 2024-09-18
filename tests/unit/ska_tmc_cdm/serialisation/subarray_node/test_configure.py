@@ -19,7 +19,7 @@ from ska_tmc_cdm.messages.subarray_node.configure import (
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     GenericPattern,
-    HolographyGroupConfig,
+    HolographyReceptorGroupConfig,
     PointingConfiguration,
     PointingCorrection,
     ReceiverBand,
@@ -361,7 +361,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 
 HOLOGRAPHY_POINTING = PointingConfiguration(
     groups=[
-        HolographyGroupConfig(
+        HolographyReceptorGroupConfig(
             receptors=["SKA001", "SKA002"],
             field={
                 "target_name": "Cen-A",

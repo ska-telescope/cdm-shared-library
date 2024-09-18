@@ -40,6 +40,9 @@ __all__ = [
     "PointingCorrection",
     "ReceiverBand",
     "DishConfiguration",
+    "GenericPattern",
+    "HolographyReceptorGroupConfig",
+    "TrajectoryConfig",
 ]
 
 UnitStr = str | u.Unit
@@ -289,7 +292,7 @@ class PointingCorrection(Enum):
 
 class GenericPattern(Enum):
     """
-    Pattern to apply to the Holography
+    Holography Scan Pattern
     """
 
     MOSAIC = "mosaic"
@@ -303,8 +306,19 @@ class TrajectoryConfig(CdmObject):
     name: Optional[GenericPattern] = None
     attrs: Optional[dict] = None
 
+    # @model_validator(mode="after")
+    # def validate_trajectory_name(self) -> Self:
+    #     name = self.name
+    #
+    #     if name == GenericPattern.MOSAIC:
+    #         x_offset = self.attrs['x-offsets']
+    #         y_offset = self.attrs['y-offsets']
+    #         if type(x_offset) is not list and type(y_offset) is not list:
+    #             raise ValueError("x_offset and y_offset should be list")
+    #     return self
 
-class HolographyGroupConfig(CdmObject):
+
+class HolographyReceptorGroupConfig(CdmObject):
     """Holography Group to apply"""
 
     receptors: Optional[list] = []
@@ -321,7 +335,7 @@ class PointingConfiguration(CdmObject):
 
     target: Optional[TargetUnion] = None
     correction: Optional[PointingCorrection] = None
-    groups: Optional[list[HolographyGroupConfig]] = None
+    groups: Optional[list[HolographyReceptorGroupConfig]] = None
 
 
 class ReceiverBand(Enum):
