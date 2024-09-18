@@ -319,7 +319,7 @@ class TrajectoryConfig(CdmObject):
 
 
 class HolographyReceptorGroupConfig(CdmObject):
-    """Holography Group to apply"""
+    """Holography Receptor Group to apply"""
 
     receptors: Optional[list] = []
     field: Optional[dict] = None
