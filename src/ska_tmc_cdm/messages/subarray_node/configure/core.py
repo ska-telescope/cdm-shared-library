@@ -287,6 +287,32 @@ class PointingCorrection(Enum):
     RESET = "RESET"
 
 
+class GenericPattern(Enum):
+    """
+    Pattern to apply to the Holography
+    """
+
+    MOSAIC = "mosaic"
+    SPIRAL = "spiral"
+    RASTER = "raster"
+
+
+class TrajectoryConfig(CdmObject):
+    """Trajectory config for Holography"""
+
+    name: Optional[GenericPattern] = None
+    attrs: Optional[dict] = None
+
+
+class HolographyGroupConfig(CdmObject):
+    """Holography Group to apply"""
+
+    receptors: Optional[list] = []
+    field: Optional[dict] = None
+    trajectory: Optional[TrajectoryConfig] = None
+    projection: Optional[dict] = None
+
+
 class PointingConfiguration(CdmObject):
     """
     PointingConfiguration specifies where the subarray receptors are going to
@@ -295,6 +321,7 @@ class PointingConfiguration(CdmObject):
 
     target: Optional[TargetUnion] = None
     correction: Optional[PointingCorrection] = None
+    groups: Optional[list[HolographyGroupConfig]] = None
 
 
 class ReceiverBand(Enum):

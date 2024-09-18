@@ -3,6 +3,7 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
 import json
+from copy import deepcopy
 from datetime import timedelta
 
 import pytest
@@ -17,10 +18,13 @@ from ska_tmc_cdm.messages.subarray_node.configure import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
+    GenericPattern,
+    HolographyGroupConfig,
     PointingConfiguration,
     PointingCorrection,
     ReceiverBand,
     Target,
+    TrajectoryConfig,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
@@ -354,6 +358,64 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
   }
 }
 """
+
+HOLOGRAPHY_POINTING = PointingConfiguration(
+    groups=[
+        HolographyGroupConfig(
+            receptors=["SKA001", "SKA002"],
+            field={
+                "target_name": "Cen-A",
+                "reference_frame": "ICRS",
+                "attrs": {
+                    "c1": 201.365,
+                    "c2": -43.0191667,
+                },
+            },
+            trajectory=TrajectoryConfig(
+                name=GenericPattern.MOSAIC,
+                attrs={
+                    "x-offsets": [-5, 0, 5, -5, 0, 5, -5, 0, 5],
+                    "y-offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
+                },
+            ),
+            projection={"name": "SSN", "alignment": "ICRS"},
+        )
+    ]
+)
+
+CONFIGURE_MID_HOLOGRAPHY = deepcopy(NON_COMPLIANCE_MID_CONFIGURE_OBJECT)
+
+CONFIGURE_MID_HOLOGRAPHY.pointing = HOLOGRAPHY_POINTING
+
+CONFIGURE_MID_HOLOGRAPHY_JSON_DICT = json.loads(
+    NON_COMPLIANCE_MID_CONFIGURE_JSON
+)
+
+CONFIGURE_MID_HOLOGRAPHY_JSON_DICT["pointing"] = {
+    "groups": [
+        {
+            "receptors": ["SKA001", "SKA002"],
+            "field": {
+                "target_name": "Cen-A",
+                "reference_frame": "ICRS",
+                "attrs": {
+                    "c1": 201.365,
+                    "c2": -43.0191667,
+                },
+            },
+            "trajectory": {
+                "name": "mosaic",
+                "attrs": {
+                    "x-offsets": [-5, 0, 5, -5, 0, 5, -5, 0, 5],
+                    "y-offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
+                },
+            },
+            "projection": {"name": "SSN", "alignment": "ICRS"},
+        }
+    ]
+}
+
+CONFIGURE_MID_HOLOGRAPHY_JSON = json.dumps(CONFIGURE_MID_HOLOGRAPHY_JSON_DICT)
 
 VALID_LOW_CONFIGURE_JSON = """
 {
@@ -1496,6 +1558,14 @@ def partial_invalidator(o: ConfigureRequest):
             SCAN_VALID_JSON,
             None,
             True,
+        ),
+        (
+            ConfigureRequest,
+            CONFIGURE_MID_HOLOGRAPHY,
+            None,  # no validation on MID
+            CONFIGURE_MID_HOLOGRAPHY_JSON,
+            None,
+            False,
         ),
     ],
 )
