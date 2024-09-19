@@ -303,8 +303,8 @@ class GenericPattern(Enum):
 class TrajectoryConfig(CdmObject):
     """Trajectory config for Holography"""
 
-    name: Optional[GenericPattern] = None
-    attrs: Optional[dict] = None
+    name: GenericPattern
+    attrs: dict = Field(default_factory=dict)
 
     # @model_validator(mode="after")
     # def validate_trajectory_name(self) -> Self:
@@ -321,10 +321,10 @@ class TrajectoryConfig(CdmObject):
 class HolographyReceptorGroupConfig(CdmObject):
     """Holography Receptor Group to apply"""
 
-    receptors: Optional[list] = []
-    field: Optional[dict] = None
+    receptors: list[str] = Field(default_factory=list)
+    field: dict = Field(default_factory=dict)
     trajectory: Optional[TrajectoryConfig] = None
-    projection: Optional[dict] = None
+    projection: dict = Field(default_factory=dict)
 
 
 class PointingConfiguration(CdmObject):
@@ -335,7 +335,7 @@ class PointingConfiguration(CdmObject):
 
     target: Optional[TargetUnion] = None
     correction: Optional[PointingCorrection] = None
-    groups: Optional[list[HolographyReceptorGroupConfig]] = None
+    groups: list[HolographyReceptorGroupConfig] = Field(default_factory=list)
 
 
 class ReceiverBand(Enum):

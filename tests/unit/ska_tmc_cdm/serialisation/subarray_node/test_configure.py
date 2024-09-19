@@ -3,7 +3,6 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
 import json
-from copy import deepcopy
 from datetime import timedelta
 
 import pytest
@@ -387,7 +386,7 @@ CONFIGURE_MID_HOLOGRAPHY = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/5.0",
     transaction_id="txn-....-00001",
     pointing=HOLOGRAPHY_POINTING,
-    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_5A),
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
     sdp=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-configure/0.4",
         scan_type="science_A",
@@ -397,7 +396,7 @@ CONFIGURE_MID_HOLOGRAPHY = ConfigureRequest(
         subarray=SubarrayConfiguration(subarray_name="science period 23"),
         common=CommonConfiguration(
             config_id="sbi-mvp01-20200325-00001-science_A",
-            frequency_band=ReceiverBand.BAND_5B,
+            frequency_band=ReceiverBand.BAND_1,
             subarray_id=1,
         ),
         pss_config={},
@@ -462,34 +461,6 @@ CONFIGURE_MID_HOLOGRAPHY = ConfigureRequest(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
-CONFIGURE_MID_HOLOGRAPHY_JSON_DICT = json.loads(
-    NON_COMPLIANCE_MID_CONFIGURE_JSON
-)
-
-CONFIGURE_MID_HOLOGRAPHY_JSON_DICT["pointing"] = {
-    "groups": [
-        {
-            "receptors": ["SKA001", "SKA002"],
-            "field": {
-                "target_name": "Cen-A",
-                "reference_frame": "ICRS",
-                "attrs": {
-                    "c1": 201.365,
-                    "c2": -43.0191667,
-                },
-            },
-            "trajectory": {
-                "name": "mosaic",
-                "attrs": {
-                    "x-offsets": [-5, 0, 5, -5, 0, 5, -5, 0, 5],
-                    "y-offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
-                },
-            },
-            "projection": {"name": "SSN", "alignment": "ICRS"},
-        }
-    ]
-}
-
 CONFIGURE_MID_HOLOGRAPHY_JSON = {
     "interface": "https://schema.skao.int/ska-tmc-configure/5.0",
     "transaction_id": "txn-....-00001",
@@ -519,168 +490,76 @@ CONFIGURE_MID_HOLOGRAPHY_JSON = {
     "dish": {"receiver_band": "1"},
     "csp": {
         "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-        "subarray": {
-          "subarray_name": "science period 23"
-        },
+        "subarray": {"subarray_name": "science period 23"},
         "common": {
-          "config_id": "sbi-mvp01-20200325-00001-science_A",
-          "frequency_band": "5b",
-          "subarray_id": 1
+            "config_id": "sbi-mvp01-20200325-00001-science_A",
+            "frequency_band": "1",
+            "subarray_id": 1,
         },
         "cbf": {
-          "fsp": [
-            {
-              "fsp_id": 7,
-              "function_mode": "VLBI",
-              "frequency_slice_id": 2,
-              "integration_factor": 1,
-              "zoom_factor": 1,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
-              "channel_offset": 0,
-              "output_link_map": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  200,
-                  1
-                ]
-              ]
-            },
-            {
-              "fsp_id": 5,
-              "function_mode": "VLBI",
-              "frequency_slice_id": 2,
-              "integration_factor": 1,
-              "zoom_factor": 1,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
-              "channel_offset": 744,
-              "output_link_map": [
-                [
-                  0,
-                  4
-                ],
-                [
-                  200,
-                  5
-                ]
-              ],
-              "zoom_window_tuning": 650000
-            },
-            {
-              "fsp_id": 7,
-              "function_mode": "VLBI",
-              "frequency_slice_id": 2,
-              "integration_factor": 1,
-              "zoom_factor": 1,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
-              "channel_offset": 0,
-              "output_link_map": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  200,
-                  1
-                ]
-              ]
-            },
-            {
-              "fsp_id": 7,
-              "function_mode": "VLBI",
-              "frequency_slice_id": 2,
-              "integration_factor": 1,
-              "zoom_factor": 1,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
-              "channel_offset": 0,
-              "output_link_map": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  200,
-                  1
-                ]
-              ]
-            },
-            {
-              "fsp_id": 7,
-              "function_mode": "VLBI",
-              "frequency_slice_id": 2,
-              "integration_factor": 1,
-              "zoom_factor": 1,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
-              "channel_offset": 0,
-              "output_link_map": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  200,
-                  1
-                ]
-              ]
-            }
-          ],
-          "vlbi": {}
+            "fsp": [
+                {
+                    "fsp_id": 7,
+                    "function_mode": "VLBI",
+                    "frequency_slice_id": 2,
+                    "integration_factor": 1,
+                    "zoom_factor": 1,
+                    "channel_averaging_map": [[0, 2], [744, 0]],
+                    "channel_offset": 0,
+                    "output_link_map": [[0, 0], [200, 1]],
+                },
+                {
+                    "fsp_id": 5,
+                    "function_mode": "VLBI",
+                    "frequency_slice_id": 2,
+                    "integration_factor": 1,
+                    "zoom_factor": 1,
+                    "channel_averaging_map": [[0, 2], [744, 0]],
+                    "channel_offset": 744,
+                    "output_link_map": [[0, 4], [200, 5]],
+                    "zoom_window_tuning": 650000,
+                },
+                {
+                    "fsp_id": 7,
+                    "function_mode": "VLBI",
+                    "frequency_slice_id": 2,
+                    "integration_factor": 1,
+                    "zoom_factor": 1,
+                    "channel_averaging_map": [[0, 2], [744, 0]],
+                    "channel_offset": 0,
+                    "output_link_map": [[0, 0], [200, 1]],
+                },
+                {
+                    "fsp_id": 7,
+                    "function_mode": "VLBI",
+                    "frequency_slice_id": 2,
+                    "integration_factor": 1,
+                    "zoom_factor": 1,
+                    "channel_averaging_map": [[0, 2], [744, 0]],
+                    "channel_offset": 0,
+                    "output_link_map": [[0, 0], [200, 1]],
+                },
+                {
+                    "fsp_id": 7,
+                    "function_mode": "VLBI",
+                    "frequency_slice_id": 2,
+                    "integration_factor": 1,
+                    "zoom_factor": 1,
+                    "channel_averaging_map": [[0, 2], [744, 0]],
+                    "channel_offset": 0,
+                    "output_link_map": [[0, 0], [200, 1]],
+                },
+            ],
+            "vlbi": {},
         },
         "pss": {},
-        "pst": {}
+        "pst": {},
     },
     "sdp": {
         "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
-        "scan_type": "target:a",
+        "scan_type": "science_A",
     },
-    "tmc": {"scan_duration": 10.0, "partial_configuration": False},
+    "tmc": {"scan_duration": 10.0},
 }
 
 VALID_LOW_CONFIGURE_JSON = """
@@ -1754,85 +1633,85 @@ def partial_invalidator(o: ConfigureRequest):
 @pytest.mark.parametrize(
     "model_class,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
-        # (
-        #     ConfigureRequest,
-        #     PARTIAL_CONFIGURATION_OFFSET_OBJECT,
-        #     mid_invalidator,
-        #     PARTIAL_CONFIGURATION_OFFSET_JSON,
-        #     None,
-        #     True,
-        # ),
-        # (
-        #     ConfigureRequest,
-        #     VALID_MID_CONFIGURE_OBJECT,
-        #     mid_invalidator,
-        #     VALID_MID_CONFIGURE_JSON,
-        #     INVALID_MID_CONFIGURE_JSON,
-        #     True,
-        # ),
-        # (
-        #     ConfigureRequest,
-        #     VALID_MID_DISH_ONLY_OBJECT,
-        #     None,  # no validation on MID
-        #     VALID_MID_DISH_ONLY_JSON,
-        #     None,
-        #     False,
-        # ),
-        # (
-        #     ConfigureRequest,
-        #     VALID_NULL_OBJECT,
-        #     None,  # no validation for null object
-        #     VALID_NULL_JSON,
-        #     None,
-        #     False,
-        # ),
-        # (
-        #     ConfigureRequest,
-        #     VALID_LOW_CONFIGURE_OBJECT,
-        #     None,
-        #     VALID_LOW_CONFIGURE_JSON,
-        #     None,
-        #     False,
-        # ),
-        # (
-        #     ConfigureRequest,
-        #     VALID_LOW_CONFIGURE_OBJECT_4_0,
-        #     None,
-        #     VALID_LOW_CONFIGURE_JSON_4_0,
-        #     None,
-        #     True,
-        # ),
-        # (
-        #     ConfigureRequest,
-        #     VALID_LOW_CONFIGURE_OBJECT_4_0,
-        #     None,
-        #     VALID_LOW_CONFIGURE_JSON_4_0,
-        #     None,
-        #     False,
-        # ),
-        # (
-        #     ConfigureRequest,
-        #     VALID_MID_CONFIGURE_OBJECT,
-        #     None,
-        #     VALID_MID_CONFIGURE_JSON,
-        #     None,
-        #     True,
-        # ),
-        # (
-        #     ScanRequest,
-        #     SCAN_VALID_OBJECT,
-        #     None,
-        #     SCAN_VALID_JSON,
-        #     None,
-        #     True,
-        # ),
+        (
+            ConfigureRequest,
+            PARTIAL_CONFIGURATION_OFFSET_OBJECT,
+            mid_invalidator,
+            PARTIAL_CONFIGURATION_OFFSET_JSON,
+            None,
+            True,
+        ),
+        (
+            ConfigureRequest,
+            VALID_MID_CONFIGURE_OBJECT,
+            mid_invalidator,
+            VALID_MID_CONFIGURE_JSON,
+            INVALID_MID_CONFIGURE_JSON,
+            True,
+        ),
+        (
+            ConfigureRequest,
+            VALID_MID_DISH_ONLY_OBJECT,
+            None,  # no validation on MID
+            VALID_MID_DISH_ONLY_JSON,
+            None,
+            False,
+        ),
+        (
+            ConfigureRequest,
+            VALID_NULL_OBJECT,
+            None,  # no validation for null object
+            VALID_NULL_JSON,
+            None,
+            False,
+        ),
+        (
+            ConfigureRequest,
+            VALID_LOW_CONFIGURE_OBJECT,
+            None,
+            VALID_LOW_CONFIGURE_JSON,
+            None,
+            False,
+        ),
+        (
+            ConfigureRequest,
+            VALID_LOW_CONFIGURE_OBJECT_4_0,
+            None,
+            VALID_LOW_CONFIGURE_JSON_4_0,
+            None,
+            True,
+        ),
+        (
+            ConfigureRequest,
+            VALID_LOW_CONFIGURE_OBJECT_4_0,
+            None,
+            VALID_LOW_CONFIGURE_JSON_4_0,
+            None,
+            False,
+        ),
+        (
+            ConfigureRequest,
+            VALID_MID_CONFIGURE_OBJECT,
+            None,
+            VALID_MID_CONFIGURE_JSON,
+            None,
+            True,
+        ),
+        (
+            ScanRequest,
+            SCAN_VALID_OBJECT,
+            None,
+            SCAN_VALID_JSON,
+            None,
+            True,
+        ),
         (
             ConfigureRequest,
             CONFIGURE_MID_HOLOGRAPHY,
             None,  # no validation on MID
-            CONFIGURE_MID_HOLOGRAPHY_JSON,
+            json.dumps(CONFIGURE_MID_HOLOGRAPHY_JSON),
             None,
-            True,
+            False,
         ),
     ],
 )
