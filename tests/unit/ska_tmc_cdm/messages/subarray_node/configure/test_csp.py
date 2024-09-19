@@ -96,43 +96,53 @@ def test_fsp_configuration_channel_avg_map_length(
 
 
 class ValidationCase(NamedTuple):
-    args: dict
-    expected: ContextManager
+    interface: str
+    common_subarray_id: int
+    common_config_id: str
+    expectation: ContextManager
 
 
 INTERFACE_VALIDATION_CASES = (
     ValidationCase(
-        args={
-            "interface": MID_CSP_SCHEMA,
-            "subarray_id": 1,
-        },
-        expected=pytest.raises(ValidationError),
+        interface=MID_CSP_SCHEMA,
+        common_subarray_id=None,
+        common_config_id="SomeConfigID",
+        expectation=does_not_raise(),
     ),
     ValidationCase(
-        args={
-            "interface": MID_CSP_SCHEMA,
-            "subarray_id": None,
-        },
-        expected=pytest.raises(ValidationError),
+        interface=MID_CSP_SCHEMA,
+        common_subarray_id=999,
+        common_config_id="SomeConfigID",
+        expectation=pytest.raises(ValidationError),
     ),
     ValidationCase(
-        args={
-            "interface": MID_CSP_SCHEMA_DEPRECATED,
-            "subarray_id": None,
-        },
-        expected=pytest.raises(ValidationError),
+        interface=MID_CSP_SCHEMA,
+        common_subarray_id=None,
+        common_config_id=None,
+        expectation=pytest.raises(ValidationError),
     ),
     ValidationCase(
-        args={"interface": MID_CSP_SCHEMA_DEPRECATED, "subarray_id": 1},
-        expected=does_not_raise(),
+        interface=MID_CSP_SCHEMA_DEPRECATED,
+        common_subarray_id=999,
+        common_config_id="SomeConfigID",
+        expectation=does_not_raise(),
+    ),
+    ValidationCase(
+        interface=MID_CSP_SCHEMA_DEPRECATED,
+        common_subarray_id=None,
+        common_config_id="SomeConfigID",
+        expectation=pytest.raises(ValidationError),
     ),
 )
 
 
-@pytest.mark.parametrize(("args, expected"), INTERFACE_VALIDATION_CASES)
-def test_interface_validation(args, expected):
-    with expected:
+@pytest.mark.parametrize("tc", INTERFACE_VALIDATION_CASES)
+def test_interface_validation(tc):
+    with tc.expectation:
         CSPConfigurationBuilder(
-            interface=args["interface"],
-            common=CommonConfigurationBuilder(subarray_id=args["subarray_id"]),
+            interface=tc.interface,
+            common=CommonConfigurationBuilder(
+                subarray_id=tc.common_subarray_id,
+                config_id=tc.common_config_id,
+            ),
         )
