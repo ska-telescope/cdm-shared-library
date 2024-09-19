@@ -3,10 +3,12 @@ This module contains high-level functions that invoke validation against
 the telmodel schemas.
 """
 
+from os import environ
 from typing import Callable, Optional
 
 from ..jsonschema.json_schema import JsonSchema
 
+SEMANTIC_VALIDATION = environ.get("SEMANTIC_VALIDATION", "true")
 
 def _identity(x):
     return x
@@ -51,16 +53,20 @@ def semantic_validate_json(data, process_fn=_identity, **_):
     :param process_fn: data processing function called before validation
     :return:
     """
-
+    
     interface = data.get("interface", None)
     # TODO: This fails 'open' instead of failing 'closed', if the
     # caller is requesting strict validation and we can't even tell
     # what interface to validate against, that should be an error.
-    if interface and (
-        # These magic srings seem dodgy. Can we re/move them?
-        "ska-tmc-assignresources" in interface
-        or "ska-tmc-configure" in interface
-        or "ska-low-tmc-assignresources" in interface
-        or "ska-low-tmc-configure" in interface
-    ):
-        JsonSchema.semantic_validate_schema(process_fn(data), interface)
+    if SEMANTIC_VALIDATION == "true":
+        print("Semantic validation is true")
+        if interface and (
+            # These magic srings seem dodgy. Can we re/move them?
+            "ska-tmc-assignresources" in interface
+            or "ska-tmc-configure" in interface
+            or "ska-low-tmc-assignresources" in interface
+            or "ska-low-tmc-configure" in interface
+        ):
+            JsonSchema.semantic_validate_schema(process_fn(data), interface)
+    else:
+        print("SEMANTIC VALIDATION IS FALSE")
