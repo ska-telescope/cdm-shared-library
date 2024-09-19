@@ -113,7 +113,7 @@ INTERFACE_VALIDATION_CASES = (
             "interface": MID_CSP_SCHEMA,
             "subarray_id": None,
         },
-        expected=pytest.raises(ValidationError),
+        expected=does_not_raise(),
     ),
     ValidationCase(
         args={
