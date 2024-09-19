@@ -1711,7 +1711,7 @@ def partial_invalidator(o: ConfigureRequest):
             None,  # no validation on MID
             json.dumps(CONFIGURE_MID_HOLOGRAPHY_JSON),
             None,
-            False,
+            True,
         ),
     ],
 )
