@@ -115,7 +115,7 @@ class CommonConfiguration(CdmObject):
     :param eb_id: eb_id
     """
 
-    config_id: Optional[str] = ""
+    config_id: Optional[str] = None
     frequency_band: Optional[core.ReceiverBand] = None
     subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
