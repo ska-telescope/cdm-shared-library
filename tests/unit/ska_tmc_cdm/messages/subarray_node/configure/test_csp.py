@@ -111,7 +111,7 @@ INTERFACE_VALIDATION_CASES = (
     ValidationCase(
         args={
             "interface": MID_CSP_SCHEMA,
-            "config_id": None,
+            "subarray_id": None,
         },
         expected=pytest.raises(ValidationError),
     ),
@@ -129,6 +129,10 @@ INTERFACE_VALIDATION_CASES = (
 )
 
 
-@pytest.mark.parametrize(("test_input, expected"), INTERFACE_VALIDATION_CASES)
-def test_interface_validation(test_input, expected):
-    assert expected
+@pytest.mark.parametrize(("args, expected"), INTERFACE_VALIDATION_CASES)
+def test_interface_validation(args, expected):
+    with expected:
+        CSPConfigurationBuilder(
+            interface=args["interface"],
+            common=CommonConfigurationBuilder(subarray_id=args["subarray_id"]),
+        )
