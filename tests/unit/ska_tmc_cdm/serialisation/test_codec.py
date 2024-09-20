@@ -48,8 +48,8 @@ from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
     VALID_LOW_CONFIGURE_OBJECT,
     VALID_LOW_CONFIGURE_OBJECT_3_1,
     VALID_LOW_CONFIGURE_OBJECT_4_0,
-    VALID_MID_CONFIGURE_JSON,
-    VALID_MID_CONFIGURE_OBJECT,
+    VALID_MID_CONFIGURE_JSON_2_3,
+    VALID_MID_CONFIGURE_OBJECT_2_3,
 )
 
 TEST_PARAMETERS = [
@@ -73,8 +73,8 @@ TEST_PARAMETERS = [
     ),
     (
         ConfigureRequest,
-        VALID_MID_CONFIGURE_JSON,
-        VALID_MID_CONFIGURE_OBJECT,
+        VALID_MID_CONFIGURE_JSON_2_3,
+        VALID_MID_CONFIGURE_OBJECT_2_3,
         True,
     ),
     (
