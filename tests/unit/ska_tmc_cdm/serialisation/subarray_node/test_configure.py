@@ -1629,7 +1629,6 @@ def partial_invalidator(o: ConfigureRequest):
     o.tmc.partial_configuration = False
 
 
-@pytest.mark.test
 @pytest.mark.parametrize(
     "model_class,instance,modifier_fn,valid_json,invalid_json,is_validate",
     [
