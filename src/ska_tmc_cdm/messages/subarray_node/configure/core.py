@@ -290,7 +290,7 @@ class PointingCorrection(Enum):
     RESET = "RESET"
 
 
-class GenericPattern(Enum):
+class GenericPattern(str, Enum):
     """
     Holography Scan Pattern
     """
