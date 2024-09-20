@@ -39,7 +39,9 @@ def validate_json(
         )
 
 
-def semantic_validate_json(data, process_fn=_identity, **_):
+def semantic_validate_json(
+    data, process_fn=_identity, semantic_validation=True, **_
+):
     """
     Validate JSON using the Telescope Model schema.
 
@@ -51,7 +53,6 @@ def semantic_validate_json(data, process_fn=_identity, **_):
     :param process_fn: data processing function called before validation
     :return:
     """
-
     interface = data.get("interface", None)
     # TODO: This fails 'open' instead of failing 'closed', if the
     # caller is requesting strict validation and we can't even tell
@@ -63,4 +64,6 @@ def semantic_validate_json(data, process_fn=_identity, **_):
         or "ska-low-tmc-assignresources" in interface
         or "ska-low-tmc-configure" in interface
     ):
-        JsonSchema.semantic_validate_schema(process_fn(data), interface)
+        JsonSchema.semantic_validate_schema(
+            process_fn(data), interface, semantic_validation
+        )

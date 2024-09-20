@@ -80,7 +80,9 @@ class JsonSchema:
                 raise JsonValidationError(exc, uri, instance) from exc
 
     @staticmethod
-    def semantic_validate_schema(instance: dict, uri: str) -> None:
+    def semantic_validate_schema(
+        instance: dict, uri: str, semantic_validation: bool = True
+    ) -> None:
         """
         Validate an instance dictionary under the given schema.
 
@@ -95,17 +97,19 @@ class JsonSchema:
             data_sources = CAR_OSD_SOURCE
 
         tm_data = TMData(source_uris=list(data_sources), update=True)
-        try:
-            return televalidation_schema.semantic_validate(
-                observing_command_input=instance,
-                tm_data=tm_data,
-                interface=uri,
-            )
 
-        except SchematicValidationError as exc:
+        if semantic_validation:
             try:
-                schema.schema_by_uri(uri)
-            except ValueError:
-                raise SchemaNotFound(uri) from exc
-            else:
-                raise exc
+                return televalidation_schema.semantic_validate(
+                    observing_command_input=instance,
+                    tm_data=tm_data,
+                    interface=uri,
+                )
+
+            except SchematicValidationError as exc:
+                try:
+                    schema.schema_by_uri(uri)
+                except ValueError:
+                    raise SchemaNotFound(uri) from exc
+                else:
+                    raise exc
