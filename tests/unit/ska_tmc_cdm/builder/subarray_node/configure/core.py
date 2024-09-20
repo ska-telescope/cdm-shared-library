@@ -2,11 +2,14 @@ import functools
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
+    GenericPattern,
+    HolographyReceptorGroupConfig,
     PointingConfiguration,
     ReceiverBand,
     SolarSystemObject,
     SpecialTarget,
     Target,
+    TrajectoryConfig,
 )
 
 SpecialTargetBuilder = functools.partial(
@@ -29,4 +32,12 @@ PointingConfigurationBuilder = functools.partial(
 
 DishConfigurationBuilder = functools.partial(
     DishConfiguration, receiver_band=ReceiverBand.BAND_1
+)
+
+TrajectoryConfigBuilder = functools.partial(
+    TrajectoryConfig, name=GenericPattern.MOSAIC
+)
+
+HolographyReceptorGroupConfigBuilder = functools.partial(
+    HolographyReceptorGroupConfig, receptors=["SKA001", "SKA002", "SKA003"]
 )

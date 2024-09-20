@@ -304,18 +304,23 @@ class TrajectoryConfig(CdmObject):
     """Trajectory config for Holography"""
 
     name: GenericPattern
-    attrs: dict = Field(default_factory=dict)
+    attrs: dict = {}
 
-    # @model_validator(mode="after")
-    # def validate_trajectory_name(self) -> Self:
-    #     name = self.name
-    #
-    #     if name == GenericPattern.MOSAIC:
-    #         x_offset = self.attrs['x-offsets']
-    #         y_offset = self.attrs['y-offsets']
-    #         if type(x_offset) is not list and type(y_offset) is not list:
-    #             raise ValueError("x_offset and y_offset should be list")
-    #     return self
+    @model_validator(mode="after")
+    def validate_trajectory_name(self) -> Self:
+        name = self.name
+        # For now added validation for mosaic but later validation added for other patter as well
+        if name == GenericPattern.MOSAIC:
+            if any(
+                [
+                    "x-offsets" not in self.attrs.keys(),
+                    "y-offsets" not in self.attrs.keys(),
+                ]
+            ):
+                raise ValueError(
+                    f"x_offsets and y_offsets should be provided for pattern {self.name.value}"
+                )
+        return self
 
 
 class HolographyReceptorGroupConfig(CdmObject):

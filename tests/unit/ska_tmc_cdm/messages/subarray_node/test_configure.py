@@ -13,9 +13,11 @@ from ska_tmc_cdm.messages.subarray_node.configure import (
 )
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
     DishConfigurationBuilder,
+    HolographyReceptorGroupConfigBuilder,
     PointingConfigurationBuilder,
     SpecialTargetBuilder,
     TargetBuilder,
+    TrajectoryConfigBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import (
     MCCSConfigurationBuilder,
@@ -102,4 +104,66 @@ def test_configure_partial_configuration():
             ),
             tmc=TMCConfigurationBuilder(partial_configuration=False),
             ish=DishConfigurationBuilder(),
+        )
+
+
+def test_configure_holography_pattern():
+    """
+    Verify that for mosiac pattern x-offsets and y-offsets attrs required
+    """
+    ConfigureRequest(
+        pointing=PointingConfigurationBuilder(
+            groups=[
+                HolographyReceptorGroupConfigBuilder(
+                    field={
+                        "target_name": "Cen-A",
+                        "reference_frame": "ICRS",
+                        "attrs": {
+                            "c1": 201.365,
+                            "c2": -43.0191667,
+                        },
+                    },
+                    trajectory=TrajectoryConfigBuilder(
+                        attrs={
+                            "x-offsets": [-5, 0, 5, -5, 0, 5, -5, 0, 5],
+                            "y-offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
+                        },
+                    ),
+                    projection={"name": "SSN", "alignment": "ICRS"},
+                )
+            ]
+        ),
+        tmc=TMCConfigurationBuilder(
+            partial_configuration=False, scan_duration=timedelta(10)
+        ),
+        dish=DishConfigurationBuilder(),
+    )
+
+    with pytest.raises(ValueError):
+        ConfigureRequest(
+            pointing=PointingConfigurationBuilder(
+                groups=[
+                    HolographyReceptorGroupConfigBuilder(
+                        field={
+                            "target_name": "Cen-A",
+                            "reference_frame": "ICRS",
+                            "attrs": {
+                                "c1": 201.365,
+                                "c2": -43.0191667,
+                            },
+                        },
+                        trajectory=TrajectoryConfigBuilder(
+                            attrs={
+                                "x": 10,
+                                "y": 10,
+                            },
+                        ),
+                        projection={"name": "SSN", "alignment": "ICRS"},
+                    )
+                ]
+            ),
+            tmc=TMCConfigurationBuilder(
+                partial_configuration=False, scan_duration=timedelta(10)
+            ),
+            dish=DishConfigurationBuilder(),
         )
