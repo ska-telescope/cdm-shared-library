@@ -168,6 +168,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		CSPConfiguration *-- "1" SubarrayConfiguration
 		CSPConfiguration *-- "0..1" CBFConfiguration
 		CSPConfiguration *-- "1" LowCBFConfiguration
+		CSPConfiguration *-- "1" MidCBFConfiguration
 		CSPConfiguration *-- "1" PSTConfiguration
 		PSTConfiguration *-- "1" PSTBeamConfiguration
 		PSTBeamConfiguration *-- "1" PSTScanConfiguration
