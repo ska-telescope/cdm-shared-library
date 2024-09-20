@@ -4,6 +4,11 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+12.2.0
+**********
+* Configure schema updated for Holography as per ADR-106
+* groups key added in pointing configuration
+
 12.1.0
 **********
 * Integrated latest OSD version into CDM.

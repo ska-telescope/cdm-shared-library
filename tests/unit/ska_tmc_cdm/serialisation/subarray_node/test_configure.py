@@ -19,11 +19,11 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
     GenericPattern,
     HolographyReceptorGroupConfig,
+    MosaicTrajectoryConfig,
     PointingConfiguration,
     PointingCorrection,
     ReceiverBand,
     Target,
-    TrajectoryConfig,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
@@ -370,11 +370,11 @@ HOLOGRAPHY_POINTING = PointingConfiguration(
                     "c2": -43.0191667,
                 },
             },
-            trajectory=TrajectoryConfig(
+            trajectory=MosaicTrajectoryConfig(
                 name=GenericPattern.MOSAIC,
                 attrs={
-                    "x-offsets": [-5, 0, 5, -5, 0, 5, -5, 0, 5],
-                    "y-offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
+                    "x_offsets": [-5, 0, 5, -5, 0, 5, -5, 0, 5],
+                    "y_offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
                 },
             ),
             projection={"name": "SSN", "alignment": "ICRS"},
@@ -479,8 +479,8 @@ CONFIGURE_MID_HOLOGRAPHY_JSON = {
                 "trajectory": {
                     "name": "mosaic",
                     "attrs": {
-                        "x-offsets": [-5, 0, 5, -5, 0, 5, -5, 0, 5],
-                        "y-offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
+                        "x_offsets": [-5, 0, 5, -5, 0, 5, -5, 0, 5],
+                        "y_offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
                     },
                 },
                 "projection": {"name": "SSN", "alignment": "ICRS"},
@@ -1710,7 +1710,7 @@ def partial_invalidator(o: ConfigureRequest):
             None,  # no validation on MID
             json.dumps(CONFIGURE_MID_HOLOGRAPHY_JSON),
             None,
-            True,
+            False,
         ),
     ],
 )

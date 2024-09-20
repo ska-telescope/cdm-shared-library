@@ -295,33 +295,78 @@ class GenericPattern(Enum):
     Holography Scan Pattern
     """
 
+    FIXED = "fixed"
     MOSAIC = "mosaic"
     SPIRAL = "spiral"
     RASTER = "raster"
+    CONSTANT_VELOCITY = "constant-velocity"
+    TABLE = "table"
+    HYPOTROCHOID = "hypotrochoid"
 
 
-class TrajectoryConfig(CdmObject):
-    """Trajectory config for Holography"""
+class TableAttrsConfig(CdmObject):
+    """Attrs for table pattern"""
 
-    name: GenericPattern
-    attrs: dict = {}
+    x: int | list[int]
+    y: int | list[int]
+    t: Optional[int | list[int]]
 
-    @model_validator(mode="after")
-    def validate_trajectory_name(self) -> Self:
-        name = self.name
-        # For now added validation only for mosaic
-        # as implementation for other pattern progress validation for it will be added
-        if name == GenericPattern.MOSAIC:
-            if any(
-                [
-                    "x-offsets" not in self.attrs.keys(),
-                    "y-offsets" not in self.attrs.keys(),
-                ]
-            ):
-                raise ValueError(
-                    f"x_offsets and y_offsets should be provided for pattern {self.name.value}"
-                )
-        return self
+
+class MosaicAttrsConfig(CdmObject):
+    """Attrs for mosiac pattern"""
+
+    x_offsets: list[int]
+    y_offsets: list[int]
+
+
+class MosaicTrajectoryConfig(CdmObject):
+    name: Literal[GenericPattern.MOSAIC] = GenericPattern.MOSAIC
+    attrs: MosaicAttrsConfig
+
+
+class TableTrajectoryConfig(CdmObject):
+    name: Literal[GenericPattern.TABLE] = GenericPattern.TABLE
+    attrs: TableAttrsConfig
+
+
+class FixedTrajectoryConfig(CdmObject):
+    name: Literal[GenericPattern.FIXED] = GenericPattern.FIXED
+    attrs: TableAttrsConfig
+
+
+TrajectoryConfig = Annotated[
+    Union[
+        Annotated[MosaicTrajectoryConfig, Tag(GenericPattern.MOSAIC)],
+        Annotated[TableTrajectoryConfig, Tag(GenericPattern.TABLE)],
+        Annotated[FixedTrajectoryConfig, Tag(GenericPattern.FIXED)],
+    ],
+    Field(discriminator="name"),
+]
+
+
+class ProjectionName(Enum):
+    """Projection Names"""
+
+    SIN = "SIN"
+    TAN = "TAN"
+    ARC = "ARC"
+    STG = "STG"
+    CAR = "CAR"
+    SSN = "SSN"
+
+
+class ProjectionAlignment(Enum):
+    """Projection Alignment"""
+
+    ICRS = "ICRS"
+    ALTAZ = "AltAz"
+
+
+class ProjectionConfig(CdmObject):
+    """Projection Config"""
+
+    name: ProjectionName = ProjectionName.SIN
+    alignment: ProjectionAlignment = ProjectionAlignment.ICRS
 
 
 class HolographyReceptorGroupConfig(CdmObject):
@@ -330,7 +375,7 @@ class HolographyReceptorGroupConfig(CdmObject):
     receptors: list[str] = Field(default_factory=list)
     field: dict = Field(default_factory=dict)
     trajectory: Optional[TrajectoryConfig] = None
-    projection: dict = Field(default_factory=dict)
+    projection: Optional[ProjectionConfig] = None
 
 
 class PointingConfiguration(CdmObject):
