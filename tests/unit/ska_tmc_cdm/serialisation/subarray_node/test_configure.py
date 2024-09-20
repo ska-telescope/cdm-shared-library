@@ -1007,7 +1007,7 @@ VALID_MID_CONFIGURE_JSON_2_3 = """
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
+    "interface": "https://schema.skao.int/ska-csp-configurescan/2.0",
     "subarray": {
       "subarray_name": "science period 23"
     },
@@ -1107,7 +1107,7 @@ VALID_MID_CONFIGURE_JSON_4_0 = """
     "receiver_band": "1"
   },
   "csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/4.0",
+    "interface": "https://schema.skao.int/ska-csp-configurescan/4.0",
     "common": {
       "config_id": "sbi-mvp01-20200325-00001-science_A",
       "frequency_band": "1"
