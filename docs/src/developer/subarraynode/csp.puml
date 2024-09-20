@@ -7,23 +7,30 @@ remove VLBIConfiguration
 remove PSTConfiguration
 remove PSSConfiguration
 
-set separator none 
+set separator none
 package ska_tmc_cdm.messages.subarray_node.configure {
 	package csp <<Rectangle>> {
-	    class SubarrayConfiguration {
-	        subarray_name: str
-	    }
+		class SubarrayConfiguration {
+			subarray_name: str
+		}
 
-	    class CommonConfiguration {
-	        config_id: str
-            frequency_band: core.ReceiverBand
-            subarray_id: int
-            band_5_tuning: List[float]
-	    }
+		class CommonConfiguration {
+			config_id: str
+			frequency_band: core.ReceiverBand
+			subarray_id: int
+			band_5_tuning: List[float]
+		}
 
-	    class CBFConfiguration {
-            vlbi: dict
-	    }
+		class CBFConfiguration {
+			interface: Optional[str]
+			interface: str
+			subarray: Optional[SubarrayConfiguration]
+			common: Optional[CommonConfiguration]
+			common: CommonConfiguration
+			cbf_config: Optional[CBFConfiguration]
+			midcbf: Optional[MidCBFConfiguration]
+			lowcbf: Optional[LowCBFConfiguration]
+		}
 
 		enum FSPFunctionMode {
 			CORR
@@ -77,7 +84,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 
 		class PSTBeamConfiguration {
 			beam_id: int
-            scan: Optional[PSTScanConfiguration]
+			scan: Optional[PSTScanConfiguration]
 		}
 
 		class PSTScanCoordinates {
@@ -98,16 +105,27 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		}
 
 		class CSPConfiguration {
-	        interface: str
-	        pss: dict
-	        pst: Optional[PSTConfiguration | dict]
+			interface: str
+			pss: dict
+			pst: Optional[PSTConfiguration | dict]
 
 		}
 
+		class CorrelationConfiguration {
+			processing_regions: list[ProcessingRegionConfiguration]
+		}
+
 		class LowCBFConfiguration {
-			stations: StationConfiguration 
+			stations: StationConfiguration
 			vis: VisConfiguration
 			timing_beams: TimingBeamsConfiguration
+		}
+
+		class MidCBFConfiguration {
+			frequency_band_offset_stream1: Optional[int]
+			frequency_band_offset_stream2: Optional[int]
+			correlation: Optional[CorrelationConfiguration]
+			vlbi_config: Optional[VLBIConfiguration]
 		}
 
 		class TimingBeamsConfiguration {
@@ -123,9 +141,9 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 
 		class StationConfiguration {
 			stns: List[List[int]]
-        	stn_beams: List[StnBeamConfiguration]
+			stn_beams: List[StnBeamConfiguration]
 		}
-		
+
 		class StnBeamConfiguration {
 			stn_beam_id: int
 			freq_ids: List[int]
@@ -150,6 +168,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		CSPConfiguration *-- "1" SubarrayConfiguration
 		CSPConfiguration *-- "0..1" CBFConfiguration
 		CSPConfiguration *-- "1" LowCBFConfiguration
+		CSPConfiguration *-- "1" MidCBFConfiguration
 		CSPConfiguration *-- "1" PSTConfiguration
 		PSTConfiguration *-- "1" PSTBeamConfiguration
 		PSTBeamConfiguration *-- "1" PSTScanConfiguration
@@ -163,6 +182,6 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		VisConfiguration *-- "1" VisFspConfiguration
 		VisConfiguration *-- "*" StnBeamConfiguration
 		StationConfiguration *-- "*" StnBeamConfiguration
-	}	
+	}
 }
 @enduml

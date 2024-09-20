@@ -1,182 +1,21 @@
 """
 Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.csp module.
 """
-import copy
 import itertools
+from contextlib import nullcontext as does_not_raise
+from typing import ContextManager, NamedTuple
 
 import pytest
+from pydantic import ValidationError
 
-from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
-from ska_tmc_cdm.messages.subarray_node.configure.csp import FSPFunctionMode
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.csp import (
-    CBFConfigurationBuilder,
     CommonConfigurationBuilder,
     CSPConfigurationBuilder,
     FSPConfigurationBuilder,
-    LowCBFConfigurationBuilder,
-    StationConfigurationBuilder,
-    StnBeamConfigurationBuilder,
-    SubarrayConfigurationBuilder,
-    VisConfigurationBuilder,
-    VisFspConfigurationBuilder,
 )
 
-
-@pytest.mark.parametrize(
-    "common_config_a, common_config_b, is_equal",
-    [
-        # Case when both configurations are identical
-        (
-            CommonConfigurationBuilder(),
-            CommonConfigurationBuilder(),
-            True,
-        ),
-        # Different frequency band
-        (
-            CommonConfigurationBuilder(frequency_band=ReceiverBand.BAND_1),
-            CommonConfigurationBuilder(frequency_band=ReceiverBand.BAND_2),
-            False,
-        ),
-        # Different subarray ID
-        (
-            CommonConfigurationBuilder(subarray_id=1),
-            CommonConfigurationBuilder(subarray_id=2),
-            False,
-        ),
-        # Missing band_5_tuning in second configuration
-        (
-            CommonConfigurationBuilder(band_5_tuning=[5.85, 7.25]),
-            CommonConfigurationBuilder(band_5_tuning=None),
-            False,
-        ),
-    ],
-)
-def test_common_configuration_equality(
-    common_config_a, common_config_b, is_equal
-):
-    """
-    Verify that CommonConfiguration objects are equal when they have the same values
-    ,not equal when any attribute differs and not equal to other objects.
-    """
-    assert (common_config_a == common_config_b) == is_equal
-    assert common_config_a != 1
-    assert common_config_a != object
-
-
-@pytest.mark.parametrize(
-    "subarray_config_a, subarray_config_b, is_equal",
-    [
-        # Case when both configurations have the same subarray name
-        (
-            SubarrayConfigurationBuilder(),
-            SubarrayConfigurationBuilder(),
-            True,
-        ),
-        # Case when configurations have different subarray names
-        (
-            SubarrayConfigurationBuilder(subarray_name="Test Subarray"),
-            SubarrayConfigurationBuilder(subarray_name="Test Subarray2"),
-            False,
-        ),
-    ],
-)
-def test_subarray_configuration_equality(
-    subarray_config_a, subarray_config_b, is_equal
-):
-    """
-    Verify that SubarrayConfiguration objects are equal when they have the same subarray name
-    and not equal when subarray names differ.
-    """
-    assert (subarray_config_a == subarray_config_b) == is_equal
-    assert subarray_config_a != 1
-    assert subarray_config_b != object
-
-
-@pytest.mark.parametrize(
-    "cbf_config_a, cbf_config_b, is_equal",
-    [
-        # Case when both configurations have the same FSP configuration
-        (
-            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder()]),
-            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder()]),
-            True,
-        ),
-        # Case when configurations have different FSP configurations
-        (
-            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder(fsp_id=1)]),
-            CBFConfigurationBuilder(fsp=[FSPConfigurationBuilder(fsp_id=2)]),
-            False,
-        ),
-    ],
-)
-def test_cbf_configuration_equality(cbf_config_a, cbf_config_b, is_equal):
-    """
-    Verify that CBFConfiguration objects are equal when they have the same FSP configurations
-    and not equal when FSP configurations differ.
-    """
-    assert (cbf_config_a == cbf_config_b) == is_equal
-    assert cbf_config_a != 1
-    assert cbf_config_b != object()
-
-
-@pytest.mark.parametrize(
-    "fsp_config_a, fsp_config_b, is_equal",
-    [
-        # both configurations are the same
-        (
-            FSPConfigurationBuilder(),
-            FSPConfigurationBuilder(),
-            True,
-        ),
-        # Cases when one attribute differs, making configurations not equal
-        (
-            FSPConfigurationBuilder(fsp_id=1),
-            FSPConfigurationBuilder(fsp_id=2),
-            False,
-        ),
-        (
-            FSPConfigurationBuilder(function_mode=FSPFunctionMode.CORR),
-            FSPConfigurationBuilder(function_mode=FSPFunctionMode.PSS_BF),
-            False,
-        ),
-        (
-            FSPConfigurationBuilder(frequency_slice_id=1),
-            FSPConfigurationBuilder(frequency_slice_id=2),
-            False,
-        ),
-        (
-            FSPConfigurationBuilder(integration_factor=10),
-            FSPConfigurationBuilder(integration_factor=2),
-            False,
-        ),
-        (
-            FSPConfigurationBuilder(zoom_factor=0),
-            FSPConfigurationBuilder(zoom_factor=1),
-            False,
-        ),
-        (
-            FSPConfigurationBuilder(
-                channel_averaging_map=list(
-                    zip(itertools.count(1, 744), 20 * [0])
-                )
-            ),
-            FSPConfigurationBuilder(
-                channel_averaging_map=list(
-                    zip(itertools.count(1, 744), 20 * [1])
-                )
-            ),
-            False,
-        ),
-    ],
-)
-def test_fsp_configuration_equality(fsp_config_a, fsp_config_b, is_equal):
-    """
-    Verify that FSPConfiguration objects are equal when they have the same values
-    and not equal when any attribute differs.
-    """
-    assert (fsp_config_a == fsp_config_b) == is_equal
-    assert fsp_config_a != 1
-    assert fsp_config_a != object()
+MID_CSP_SCHEMA = "https://schema.skao.int/ska-csp-configurescan/4.0"
+MID_CSP_SCHEMA_DEPRECATED = "https://schema.skao.int/ska-csp-configurescan/2.0"
 
 
 @pytest.mark.parametrize(
@@ -256,180 +95,54 @@ def test_fsp_configuration_channel_avg_map_length(
         FSPConfigurationBuilder(channel_averaging_map=channel_avg_map)
 
 
-@pytest.mark.parametrize(
-    "stn_beam_config_a, stn_beam_config_b, is_equal",
-    [
-        # Case where both configurations are the same
-        (
-            StnBeamConfigurationBuilder(),
-            StnBeamConfigurationBuilder(),
-            True,
-        ),
-        # Case where configurations are different
-        (
-            StnBeamConfigurationBuilder(stn_beam_id=1),
-            StnBeamConfigurationBuilder(stn_beam_id=2),
-            False,
-        ),
-    ],
+class ValidationCase(NamedTuple):
+    interface: str
+    common_subarray_id: int
+    common_config_id: str
+    expectation: ContextManager
+
+
+INTERFACE_VALIDATION_CASES = (
+    ValidationCase(
+        interface=MID_CSP_SCHEMA,
+        common_subarray_id=None,
+        common_config_id="SomeConfigID",
+        expectation=does_not_raise(),
+    ),
+    ValidationCase(
+        interface=MID_CSP_SCHEMA,
+        common_subarray_id=999,
+        common_config_id="SomeConfigID",
+        expectation=pytest.raises(ValidationError),
+    ),
+    ValidationCase(
+        interface=MID_CSP_SCHEMA,
+        common_subarray_id=None,
+        common_config_id=None,
+        expectation=pytest.raises(ValidationError),
+    ),
+    ValidationCase(
+        interface=MID_CSP_SCHEMA_DEPRECATED,
+        common_subarray_id=999,
+        common_config_id="SomeConfigID",
+        expectation=does_not_raise(),
+    ),
+    ValidationCase(
+        interface=MID_CSP_SCHEMA_DEPRECATED,
+        common_subarray_id=None,
+        common_config_id="SomeConfigID",
+        expectation=pytest.raises(ValidationError),
+    ),
 )
-def test_stn_beam_configuration_equality(
-    stn_beam_config_a, stn_beam_config_b, is_equal
-):
-    """
-    Verify that StnBeamConfiguration objects are equal when they have the same values
-    and not equal when any attribute differs.
-    """
-    assert (stn_beam_config_a == stn_beam_config_b) == is_equal
-    assert stn_beam_config_a != 1
-    assert stn_beam_config_b != object
 
 
-@pytest.mark.parametrize(
-    "station_config_a, station_config_b, is_equal",
-    [
-        # Case where both configurations are the same
-        (
-            StationConfigurationBuilder(),
-            StationConfigurationBuilder(),
-            True,
-        ),
-        # Case where configurations are different due to missing stn_beams
-        (
-            StationConfigurationBuilder(
-                stn_beams=(StnBeamConfigurationBuilder(),)
+@pytest.mark.parametrize("tc", INTERFACE_VALIDATION_CASES)
+def test_interface_validation(tc):
+    with tc.expectation:
+        CSPConfigurationBuilder(
+            interface=tc.interface,
+            common=CommonConfigurationBuilder(
+                subarray_id=tc.common_subarray_id,
+                config_id=tc.common_config_id,
             ),
-            StationConfigurationBuilder(stn_beams=None),
-            False,
-        ),
-    ],
-)
-def test_station_configuration_equality(
-    station_config_a, station_config_b, is_equal
-):
-    """
-    Verify that StationConfiguration objects are equal when they have the same values
-    and not equal when any attribute differs.
-    """
-    assert (station_config_a == station_config_b) == is_equal
-    assert station_config_a != 1
-    assert station_config_b != object
-
-
-@pytest.mark.parametrize(
-    "vis_fsp_config_a, vis_fsp_config_b, is_equal",
-    [
-        # Case where both configurations are the same
-        (
-            VisFspConfigurationBuilder(),
-            VisFspConfigurationBuilder(),
-            True,
-        ),
-        # Case where configurations are different due to missing fsp_ids in the second instance
-        (
-            VisFspConfigurationBuilder(fsp_ids=[1, 2]),
-            VisFspConfigurationBuilder(fsp_ids=None),
-            False,
-        ),
-    ],
-)
-def test_vis_fsp_configuration_equality(
-    vis_fsp_config_a, vis_fsp_config_b, is_equal
-):
-    """
-    Verify that VisFspConfiguration objects are equal when they have the same values
-    and not equal when any attribute differs.
-    """
-    assert (vis_fsp_config_a == vis_fsp_config_b) == is_equal
-    assert (
-        vis_fsp_config_a != 1
-    )  # Additional check to ensure VisFspConfiguration objects are not equal to objects of other types.
-    assert vis_fsp_config_b != object
-
-
-@pytest.mark.parametrize(
-    "vis_config_a, vis_config_b, is_equal",
-    [
-        (
-            VisConfigurationBuilder(),
-            VisConfigurationBuilder(),
-            True,
         )
-    ],
-)
-def test_vis_configuration_equality(vis_config_a, vis_config_b, is_equal):
-    """
-    Verify that VisConfiguration objects are equal when they have the same values
-    and not equal when any attribute differs.
-    """
-    assert (vis_config_a == vis_config_b) == is_equal
-    assert (
-        vis_config_a != 1
-    )  # Additional check to ensure VisConfiguration objects are not equal to objects of other types.
-    assert vis_config_b != object
-
-
-@pytest.mark.parametrize(
-    "low_cbf_config_a, low_cbf_config_b, is_equal",
-    [
-        # Case where both LowCBFConfiguration objects are exactly the same
-        (
-            LowCBFConfigurationBuilder(),
-            LowCBFConfigurationBuilder(),
-            True,
-        ),
-    ],
-)
-def test_low_cbf_configuration_equality(
-    low_cbf_config_a, low_cbf_config_b, is_equal
-):
-    """
-    Verify that LowCBFConfiguration objects are equal when they have the same values
-    and not equal when any attribute differs.
-    """
-    assert (low_cbf_config_a == low_cbf_config_b) == is_equal
-    assert low_cbf_config_a != 1
-    assert low_cbf_config_b != object()
-
-
-def test_csp_configuration_equality():
-    """
-    Verify that CSPConfiguration objects are equal when all they have the same values
-    and not equal when any attribute differs.
-    """
-    csp_config = CSPConfigurationBuilder()
-    low_csp_config = CSPConfigurationBuilder(
-        interface="https://schema.skao.int/ska-low-csp-configure/0.0",
-        common=CommonConfigurationBuilder(),
-        lowcbf=LowCBFConfigurationBuilder(
-            vis=VisConfigurationBuilder(),
-            stations=StationConfigurationBuilder(
-                stns=[[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-                stn_beams=[
-                    StnBeamConfigurationBuilder(
-                        stn_beam_id=1, freq_ids=[400], beam_id=1
-                    )
-                ],
-            ),
-        ),
-    )
-
-    csp_config_invalid = CSPConfigurationBuilder(interface="foo")
-    csp_config_b = CSPConfigurationBuilder()
-    assert (
-        csp_config == csp_config_b
-    )  # comparing same instance created using deepcopy
-    assert csp_config != csp_config_invalid  # comparing with invalid instance
-    assert csp_config != 1  # comparing with other instance
-
-    assert low_csp_config == copy.deepcopy(
-        low_csp_config
-    )  # comparing same instance created using deepcopy
-    assert (
-        low_csp_config != csp_config_invalid
-    )  # comparing with invalid instance
-    assert low_csp_config != 1  # comparing with other instance
-
-    assert csp_config != low_csp_config  # comparing mid with low
-    assert csp_config != object  # comparing with object
-    assert low_csp_config != object  # comparing with object

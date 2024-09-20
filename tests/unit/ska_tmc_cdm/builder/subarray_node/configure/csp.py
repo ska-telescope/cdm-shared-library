@@ -9,6 +9,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     FSPConfiguration,
     FSPFunctionMode,
     LowCBFConfiguration,
+    ProcessingRegionConfiguration,
     StationConfiguration,
     StnBeamConfiguration,
     SubarrayConfiguration,
@@ -35,7 +36,7 @@ SubarrayConfigurationBuilder = functools.partial(
 CommonConfigurationBuilder = functools.partial(
     CommonConfiguration,
     config_id="sbi-mvp01-20200325-00001-science_A",
-    frequency_band=ReceiverBand.BAND_1,
+    frequency_band=ReceiverBand.BAND_5A,
     subarray_id=1,
     band_5_tuning=(5.85, 7.25),
 )
@@ -108,4 +109,8 @@ LowCBFConfigurationBuilder = functools.partial(
     stations=StationConfigurationBuilder(),
     vis=VisConfigurationBuilder(),
     timing_beams=TimingBeamsConfigurationBuilder(),
+)
+
+ProcessingRegionConfigurationBuilder = functools.partial(
+    ProcessingRegionConfiguration, fsp_ids=(1, 2, 3), start_freq=5
 )
