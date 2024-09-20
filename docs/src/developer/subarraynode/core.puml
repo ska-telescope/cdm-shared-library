@@ -18,11 +18,36 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			RESET
 		}
 
+		class HolographyReceptorGroupConfig {
+		    receptors: list
+		    field: dict
+		    projection: dict
+		}
+
+		enum GenericPattern {
+		    FIXED
+            MOSAIC
+            SPIRAL
+            RASTER
+            CONSTANT_VELOCITY
+            TABLE
+            HYPOTROCHOID
+		}
+
+		class TrajectoryConfig {
+		    name: GenericPattern
+		    attrs: dict
+		}
+
 		class PointingConfiguration {
 			correction: PointingCorrection
+			groups: list[HolographyReceptorGroupConfig]
 		}
 		
 		PointingConfiguration *-- "1" Target
+		PointingConfiguration "1"-- "*" HolographyReceptorGroupConfig
+
+		HolographyReceptorGroupConfig *-- "1" TrajectoryConfig
 
 		class DishConfiguration {
 			receiver_band : ReceiverBand
