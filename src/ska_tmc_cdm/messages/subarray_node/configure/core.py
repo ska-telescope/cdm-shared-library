@@ -309,7 +309,8 @@ class TrajectoryConfig(CdmObject):
     @model_validator(mode="after")
     def validate_trajectory_name(self) -> Self:
         name = self.name
-        # For now added validation for mosaic but later validation added for other patter as well
+        # For now added validation only for mosaic
+        # as implementation for other pattern progress validation for it will be added
         if name == GenericPattern.MOSAIC:
             if any(
                 [
