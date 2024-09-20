@@ -289,8 +289,8 @@ class PointingCorrection(Enum):
     UPDATE = "UPDATE"
     RESET = "RESET"
 
-
-class GenericPattern(Enum):
+# If we upgrade to Py 3.11 use StrEnum
+class GenericPattern(str, Enum):
     """
     Holography Scan Pattern
     """
@@ -300,28 +300,20 @@ class GenericPattern(Enum):
     RASTER = "raster"
 
 
-class TrajectoryConfig(CdmObject):
-    """Trajectory config for Holography"""
+class MosaicTrajectoryConfig(CdmObject):
+    name: Literal[GenericPattern.MOSAIC] = GenericPattern.MOSAIC
+    x_offsets: int
+    y_offsets: int
 
-    name: GenericPattern
-    attrs: dict = {}
 
-    @model_validator(mode="after")
-    def validate_trajectory_name(self) -> Self:
-        name = self.name
-        # For now added validation only for mosaic
-        # as implementation for other pattern progress validation for it will be added
-        if name == GenericPattern.MOSAIC:
-            if any(
-                [
-                    "x-offsets" not in self.attrs.keys(),
-                    "y-offsets" not in self.attrs.keys(),
-                ]
-            ):
-                raise ValueError(
-                    f"x_offsets and y_offsets should be provided for pattern {self.name.value}"
-                )
-        return self
+class SpiralTrajectoryConfig(CdmObject):
+    name: Literal[GenericPattern.SPIRAL] = GenericPattern.SPIRAL
+
+
+TrajectoryConfig = Annotated[
+    Union[MosaicTrajectoryConfig, SpiralTrajectoryConfig],
+    Field(discriminator="name"),
+]
 
 
 class HolographyReceptorGroupConfig(CdmObject):
