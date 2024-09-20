@@ -6,9 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 Unreleased Changes
 ******************
-* Deprecated csp.FSPConfiguration
-* Deprecated csp.CBFConfiguration
-* Adds new MidCBFConfiguration and LowCBFConfiguration
+* Data model changes to support ADR-99:
+  - Deprecated csp.FSPConfiguration
+  - Deprecated csp.CBFConfiguration
+  - Adds new MidCBFConfiguration.
 
 12.1.0
 **********
