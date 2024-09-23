@@ -307,9 +307,9 @@ class GenericPattern(str, Enum):
 class TableAttrsConfig(CdmObject):
     """Attrs for table pattern"""
 
-    x: int | list[int]
-    y: int | list[int]
-    t: Optional[int | list[int]]
+    x: list[float]
+    y: list[float]
+    t: Optional[list[float]]
 
 
 class MosaicAttrsConfig(CdmObject):
