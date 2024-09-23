@@ -2,9 +2,7 @@ import functools
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
-    GenericPattern,
     HolographyReceptorGroupConfig,
-    MosaicTrajectoryConfig,
     PointingConfiguration,
     ReceiverBand,
     SolarSystemObject,
@@ -34,10 +32,16 @@ DishConfigurationBuilder = functools.partial(
     DishConfiguration, receiver_band=ReceiverBand.BAND_1
 )
 
-TrajectoryConfigBuilder = functools.partial(
-    MosaicTrajectoryConfig, name=GenericPattern.MOSAIC
-)
-
 HolographyReceptorGroupConfigBuilder = functools.partial(
-    HolographyReceptorGroupConfig, receptors=["SKA001", "SKA002", "SKA003"]
+    HolographyReceptorGroupConfig,
+    receptors=["SKA001", "SKA002", "SKA003"],
+    field={
+        "target_name": "Cen-A",
+        "reference_frame": "ICRS",
+        "attrs": {
+            "c1": 201.365,
+            "c2": -43.0191667,
+        },
+    },
+    projection={"name": "SSN", "alignment": "ICRS"},
 )

@@ -11,13 +11,16 @@ from ska_tmc_cdm.messages.subarray_node.configure import (
     MID_SCHEMA,
     ConfigureRequest,
 )
+from ska_tmc_cdm.messages.subarray_node.configure.core import (
+    GenericPattern,
+    MosaicTrajectoryConfig,
+)
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
     DishConfigurationBuilder,
     HolographyReceptorGroupConfigBuilder,
     PointingConfigurationBuilder,
     SpecialTargetBuilder,
     TargetBuilder,
-    TrajectoryConfigBuilder,
 )
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.mccs import (
     MCCSConfigurationBuilder,
@@ -115,15 +118,8 @@ def test_configure_holography_pattern():
         pointing=PointingConfigurationBuilder(
             groups=[
                 HolographyReceptorGroupConfigBuilder(
-                    field={
-                        "target_name": "Cen-A",
-                        "reference_frame": "ICRS",
-                        "attrs": {
-                            "c1": 201.365,
-                            "c2": -43.0191667,
-                        },
-                    },
-                    trajectory=TrajectoryConfigBuilder(
+                    trajectory=MosaicTrajectoryConfig(
+                        name=GenericPattern.MOSAIC,
                         attrs={
                             "x_offsets": [
                                 -5.0,
@@ -149,7 +145,6 @@ def test_configure_holography_pattern():
                             ],
                         },
                     ),
-                    projection={"name": "SSN", "alignment": "ICRS"},
                 )
             ]
         ),
@@ -164,21 +159,13 @@ def test_configure_holography_pattern():
             pointing=PointingConfigurationBuilder(
                 groups=[
                     HolographyReceptorGroupConfigBuilder(
-                        field={
-                            "target_name": "Cen-A",
-                            "reference_frame": "ICRS",
-                            "attrs": {
-                                "c1": 201.365,
-                                "c2": -43.0191667,
-                            },
-                        },
-                        trajectory=TrajectoryConfigBuilder(
+                        trajectory=MosaicTrajectoryConfig(
+                            name=GenericPattern.MOSAIC,
                             attrs={
                                 "x": 10,
                                 "y": 10,
                             },
                         ),
-                        projection={"name": "SSN", "alignment": "ICRS"},
                     )
                 ]
             ),
