@@ -315,8 +315,8 @@ class TableAttrsConfig(CdmObject):
 class MosaicAttrsConfig(CdmObject):
     """Attrs for mosiac pattern"""
 
-    x_offsets: list[int | float]
-    y_offsets: list[int | float]
+    x_offsets: list[float]
+    y_offsets: list[float]
 
 
 class MosaicTrajectoryConfig(CdmObject):
