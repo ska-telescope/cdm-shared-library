@@ -309,7 +309,7 @@ class TableAttrsConfig(CdmObject):
 
     x: list[float]
     y: list[float]
-    t: Optional[list[float]]
+    t: list[float] = Field(default_factory=list)
 
 
 class MosaicAttrsConfig(CdmObject):
