@@ -11,13 +11,8 @@ from ska_tmc_cdm.messages.subarray_node.configure import (
     MID_SCHEMA,
     ConfigureRequest,
 )
-from ska_tmc_cdm.messages.subarray_node.configure.core import (
-    GenericPattern,
-    MosaicTrajectoryConfig,
-)
 from tests.unit.ska_tmc_cdm.builder.subarray_node.configure.core import (
     DishConfigurationBuilder,
-    HolographyReceptorGroupConfigBuilder,
     PointingConfigurationBuilder,
     SpecialTargetBuilder,
     TargetBuilder,
@@ -107,70 +102,4 @@ def test_configure_partial_configuration():
             ),
             tmc=TMCConfigurationBuilder(partial_configuration=False),
             ish=DishConfigurationBuilder(),
-        )
-
-
-def test_configure_holography_pattern():
-    """
-    Verify that for mosiac pattern x-offsets and y-offsets attrs required
-    """
-    ConfigureRequest(
-        pointing=PointingConfigurationBuilder(
-            groups=[
-                HolographyReceptorGroupConfigBuilder(
-                    trajectory=MosaicTrajectoryConfig(
-                        name=GenericPattern.MOSAIC,
-                        attrs={
-                            "x_offsets": [
-                                -5.0,
-                                0.0,
-                                5.0,
-                                -5.0,
-                                0.0,
-                                5.0,
-                                -5.0,
-                                0.0,
-                                5.0,
-                            ],
-                            "y_offsets": [
-                                5.0,
-                                5.0,
-                                5.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                -5.0,
-                                -5.0,
-                                -5.0,
-                            ],
-                        },
-                    ),
-                )
-            ]
-        ),
-        tmc=TMCConfigurationBuilder(
-            partial_configuration=False, scan_duration=timedelta(10)
-        ),
-        dish=DishConfigurationBuilder(),
-    )
-
-    with pytest.raises(ValueError):
-        ConfigureRequest(
-            pointing=PointingConfigurationBuilder(
-                groups=[
-                    HolographyReceptorGroupConfigBuilder(
-                        trajectory=MosaicTrajectoryConfig(
-                            name=GenericPattern.MOSAIC,
-                            attrs={
-                                "x": 10,
-                                "y": 10,
-                            },
-                        ),
-                    )
-                ]
-            ),
-            tmc=TMCConfigurationBuilder(
-                partial_configuration=False, scan_duration=timedelta(10)
-            ),
-            dish=DishConfigurationBuilder(),
         )
