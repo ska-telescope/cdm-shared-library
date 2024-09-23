@@ -406,7 +406,7 @@ HOLOGRAPHY_POINTING = PointingConfiguration(
 )
 
 CONFIGURE_MID_HOLOGRAPHY = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/5.0",
+    interface="https://schema.skao.int/ska-tmc-configure/4.1",
     transaction_id="txn-....-00001",
     pointing=HOLOGRAPHY_POINTING,
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
@@ -452,7 +452,7 @@ CONFIGURE_MID_HOLOGRAPHY = ConfigureRequest(
 )
 
 CONFIGURE_MID_HOLOGRAPHY_JSON = {
-    "interface": "https://schema.skao.int/ska-tmc-configure/5.0",
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
     "transaction_id": "txn-....-00001",
     "pointing": {
         "groups": [
