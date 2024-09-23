@@ -336,9 +336,7 @@ class FixedTrajectoryConfig(CdmObject):
 
 TrajectoryConfig = Annotated[
     Union[
-        Annotated[MosaicTrajectoryConfig, Tag(GenericPattern.MOSAIC)],
-        Annotated[TableTrajectoryConfig, Tag(GenericPattern.TABLE)],
-        Annotated[FixedTrajectoryConfig, Tag(GenericPattern.FIXED)],
+        MosaicTrajectoryConfig, TableTrajectoryConfig, FixedTrajectoryConfig
     ],
     Field(discriminator="name"),
 ]
