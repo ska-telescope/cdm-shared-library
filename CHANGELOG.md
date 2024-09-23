@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 12.2.0
 **********
 * Configure schema updated for Holography as per ADR-106
+* In this release validation added only for mosaic, table, fixed pattern
 * groups key added in pointing configuration
 Unreleased Changes
 ******************
