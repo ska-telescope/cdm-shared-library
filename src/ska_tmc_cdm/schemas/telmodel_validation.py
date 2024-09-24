@@ -8,7 +8,7 @@ from typing import Callable, Optional
 
 from ..jsonschema.json_schema import JsonSchema
 
-SEMANTIC_VALIDATION = environ.get("SEMANTIC_VALIDATION", "true")
+SEMANTIC_VALIDATION = environ.get("SEMANTIC_VALIDATION", True)
 
 
 def _identity(x):
@@ -59,7 +59,7 @@ def semantic_validate_json(data, process_fn=_identity, **_):
     # TODO: This fails 'open' instead of failing 'closed', if the
     # caller is requesting strict validation and we can't even tell
     # what interface to validate against, that should be an error.
-    if SEMANTIC_VALIDATION == "true":
+    if SEMANTIC_VALIDATION:
         print("Semantic validation is true")
         if interface and (
             # These magic srings seem dodgy. Can we re/move them?
