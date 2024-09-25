@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 Unreleased Changes
 ******************
+
+12.2.0
+******************
 * Data model changes to support ADR-99:
   - Deprecated csp.FSPConfiguration
   - Deprecated csp.CBFConfiguration
