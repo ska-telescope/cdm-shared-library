@@ -310,6 +310,7 @@ class CBFConfiguration(CdmObject):
         serialization_alias="vlbi",
         validation_alias=AliasChoices("vlbi", "vlbi_config"),
     )
+    delay_model_subscription_point: Optional[str] = None
 
 
 class MidCBFConfiguration(CdmObject):
