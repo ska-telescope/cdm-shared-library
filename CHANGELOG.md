@@ -4,6 +4,7 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
 Unreleased Changes
 ******************
 
@@ -13,6 +14,13 @@ Unreleased Changes
   - Deprecated csp.FSPConfiguration
   - Deprecated csp.CBFConfiguration
   - Adds new MidCBFConfiguration.
+
+* Data Model changes to support Holography as per ADR-106 
+  - Configure schema updated for Holography as per ADR-106
+  - Groups key added in pointing configuration
+  - In this release validation added only for mosaic, table, fixed pattern 
+  - Adds HolographyReceptorGroupConfig , TrajectoryConfig and ProjectionConfig to subarray_node/configuration 
+  - Adds MosaicTrajectoryConfig, TableTrajectoryConfig, FixedTrajectoryConfig to support for Table, Mosaic and Fixed pattern
 
 12.1.0
 **********

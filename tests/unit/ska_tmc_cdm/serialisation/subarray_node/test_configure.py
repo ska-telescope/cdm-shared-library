@@ -17,6 +17,9 @@ from ska_tmc_cdm.messages.subarray_node.configure import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
+    HolographyPattern,
+    HolographyReceptorGroupConfig,
+    MosaicTrajectoryConfig,
     PointingConfiguration,
     PointingCorrection,
     ReceiverBand,
@@ -357,6 +360,184 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
   }
 }
 """
+
+HOLOGRAPHY_POINTING = PointingConfiguration(
+    groups=[
+        HolographyReceptorGroupConfig(
+            receptors=["SKA001", "SKA002"],
+            field={
+                "target_name": "Cen-A",
+                "reference_frame": "ICRS",
+                "attrs": {
+                    "c1": 201.365,
+                    "c2": -43.0191667,
+                },
+            },
+            trajectory=MosaicTrajectoryConfig(
+                name=HolographyPattern.MOSAIC,
+                attrs={
+                    "x_offsets": [
+                        -5.0,
+                        0.0,
+                        5.0,
+                        -5.0,
+                        0.0,
+                        5.0,
+                        -5.0,
+                        0.0,
+                        5.0,
+                    ],
+                    "y_offsets": [
+                        5.0,
+                        5.0,
+                        5.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        -5.0,
+                        -5.0,
+                        -5.0,
+                    ],
+                },
+            ),
+            projection={"name": "SSN", "alignment": "ICRS"},
+        )
+    ]
+)
+
+CONFIGURE_MID_HOLOGRAPHY = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/4.1",
+    transaction_id="txn-....-00001",
+    pointing=HOLOGRAPHY_POINTING,
+    dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
+    sdp=SDPConfiguration(
+        interface="https://schema.skao.int/ska-sdp-configure/0.4",
+        scan_type="science_A",
+    ),
+    csp=CSPConfiguration(
+        interface="https://schema.skao.int/ska-csp-configurescan/4.0",
+        common=CommonConfiguration(
+            config_id="sbi-mvp01-20200325-00001-science_A",
+            frequency_band=ReceiverBand.BAND_1,
+        ),
+        midcbf=MidCBFConfiguration(
+            frequency_band_offset_stream1=80,
+            frequency_band_offset_stream2=80,
+            correlation=CorrelationConfiguration(
+                processing_regions=[
+                    ProcessingRegionConfiguration(
+                        fsp_ids=[1, 2, 3, 4],
+                        receptors=["SKA063", "SKA001", "SKA100"],
+                        start_freq=350000000,
+                        channel_width=13440,
+                        channel_count=52080,
+                        sdp_start_channel_id=0,
+                        integration_factor=1,
+                    ),
+                    ProcessingRegionConfiguration(
+                        fsp_ids=[1, 2, 3, 4],
+                        receptors=["SKA063", "SKA001", "SKA100"],
+                        start_freq=548437600,
+                        channel_width=13440,
+                        channel_count=14880,
+                        sdp_start_channel_id=1,
+                        integration_factor=10,
+                    ),
+                ]
+            ),
+            vlbi_config={},
+        ),
+    ),
+    tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
+)
+
+CONFIGURE_MID_HOLOGRAPHY_JSON = {
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
+    "transaction_id": "txn-....-00001",
+    "pointing": {
+        "groups": [
+            {
+                "receptors": ["SKA001", "SKA002"],
+                "field": {
+                    "target_name": "Cen-A",
+                    "reference_frame": "ICRS",
+                    "attrs": {
+                        "c1": 201.365,
+                        "c2": -43.0191667,
+                    },
+                },
+                "trajectory": {
+                    "name": "mosaic",
+                    "attrs": {
+                        "x_offsets": [
+                            -5.0,
+                            0.0,
+                            5.0,
+                            -5.0,
+                            0.0,
+                            5.0,
+                            -5.0,
+                            0.0,
+                            5.0,
+                        ],
+                        "y_offsets": [
+                            5.0,
+                            5.0,
+                            5.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            -5.0,
+                            -5.0,
+                            -5.0,
+                        ],
+                    },
+                },
+                "projection": {"name": "SSN", "alignment": "ICRS"},
+            }
+        ]
+    },
+    "dish": {"receiver_band": "1"},
+    "csp": {
+        "interface": "https://schema.skao.int/ska-csp-configurescan/4.0",
+        "common": {
+            "config_id": "sbi-mvp01-20200325-00001-science_A",
+            "frequency_band": "1",
+        },
+        "midcbf": {
+            "frequency_band_offset_stream1": 80,
+            "frequency_band_offset_stream2": 80,
+            "correlation": {
+                "processing_regions": [
+                    {
+                        "fsp_ids": [1, 2, 3, 4],
+                        "receptors": ["SKA063", "SKA001", "SKA100"],
+                        "start_freq": 350000000,
+                        "channel_width": 13440,
+                        "channel_count": 52080,
+                        "sdp_start_channel_id": 0,
+                        "integration_factor": 1,
+                    },
+                    {
+                        "fsp_ids": [1, 2, 3, 4],
+                        "receptors": ["SKA063", "SKA001", "SKA100"],
+                        "start_freq": 548437600,
+                        "channel_width": 13440,
+                        "channel_count": 14880,
+                        "sdp_start_channel_id": 1,
+                        "integration_factor": 10,
+                    },
+                ]
+            },
+            "vlbi": {},
+        },
+    },
+    "sdp": {
+        "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+        "scan_type": "science_A",
+    },
+    "tmc": {"scan_duration": 10.0},
+}
 
 VALID_LOW_CONFIGURE_JSON = """
 {
@@ -1617,6 +1798,14 @@ def partial_invalidator(o: ConfigureRequest):
             None,
             True,
         ),
+        (
+            ConfigureRequest,
+            CONFIGURE_MID_HOLOGRAPHY,
+            None,  # no validation on MID
+            json.dumps(CONFIGURE_MID_HOLOGRAPHY_JSON),
+            None,
+            True,
+        ),
     ],
 )
 def test_configure_serialisation_and_validation(
@@ -1630,6 +1819,7 @@ def test_configure_serialisation_and_validation(
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
+
     utils.test_serialisation_and_validation(
         model_class,
         instance,

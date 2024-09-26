@@ -40,6 +40,9 @@ __all__ = [
     "PointingCorrection",
     "ReceiverBand",
     "DishConfiguration",
+    "HolographyPattern",
+    "HolographyReceptorGroupConfig",
+    "TrajectoryConfig",
 ]
 
 UnitStr = str | u.Unit
@@ -287,6 +290,92 @@ class PointingCorrection(Enum):
     RESET = "RESET"
 
 
+class HolographyPattern(str, Enum):
+    """
+    Holography Scan Pattern
+    """
+
+    FIXED = "fixed"
+    MOSAIC = "mosaic"
+    SPIRAL = "spiral"
+    RASTER = "raster"
+    CONSTANT_VELOCITY = "constant-velocity"
+    TABLE = "table"
+    HYPOTROCHOID = "hypotrochoid"
+
+
+class TableAttrsConfig(CdmObject):
+    """Attrs for table pattern"""
+
+    x: float
+    y: float
+    t: list[float] = Field(default_factory=list)
+
+
+class MosaicAttrsConfig(CdmObject):
+    """Attrs for mosiac pattern"""
+
+    x_offsets: list[float]
+    y_offsets: list[float]
+
+
+class MosaicTrajectoryConfig(CdmObject):
+    name: Literal[HolographyPattern.MOSAIC] = HolographyPattern.MOSAIC
+    attrs: MosaicAttrsConfig
+
+
+class TableTrajectoryConfig(CdmObject):
+    name: Literal[HolographyPattern.TABLE] = HolographyPattern.TABLE
+    attrs: TableAttrsConfig
+
+
+class FixedTrajectoryConfig(CdmObject):
+    name: Literal[HolographyPattern.FIXED] = HolographyPattern.FIXED
+    attrs: TableAttrsConfig
+
+
+TrajectoryConfig = Annotated[
+    Union[
+        MosaicTrajectoryConfig, TableTrajectoryConfig, FixedTrajectoryConfig
+    ],
+    Field(discriminator="name"),
+]
+
+
+class ProjectionName(Enum):
+    """Projection Names"""
+
+    SIN = "SIN"
+    TAN = "TAN"
+    ARC = "ARC"
+    STG = "STG"
+    CAR = "CAR"
+    SSN = "SSN"
+
+
+class ProjectionAlignment(Enum):
+    """Projection Alignment"""
+
+    ICRS = "ICRS"
+    ALTAZ = "AltAz"
+
+
+class ProjectionConfig(CdmObject):
+    """Projection Config"""
+
+    name: ProjectionName = ProjectionName.SIN
+    alignment: ProjectionAlignment = ProjectionAlignment.ICRS
+
+
+class HolographyReceptorGroupConfig(CdmObject):
+    """Holography Receptor Group to apply"""
+
+    receptors: list[str] = Field(default_factory=list)
+    field: dict = Field(default_factory=dict)
+    trajectory: Optional[TrajectoryConfig] = None
+    projection: Optional[ProjectionConfig] = None
+
+
 class PointingConfiguration(CdmObject):
     """
     PointingConfiguration specifies where the subarray receptors are going to
@@ -295,6 +384,7 @@ class PointingConfiguration(CdmObject):
 
     target: Optional[TargetUnion] = None
     correction: Optional[PointingCorrection] = None
+    groups: list[HolographyReceptorGroupConfig] = Field(default_factory=list)
 
 
 class ReceiverBand(Enum):
