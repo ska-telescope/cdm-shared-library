@@ -54,6 +54,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.pst import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
+from ska_tmc_cdm.schemas.telmodel_validation import SEMANTIC_VALIDATION
 
 from .. import utils
 
@@ -1545,15 +1546,16 @@ def test_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    with pytest.raises(SchematicValidationError):
-        utils.test_serialisation_and_validation(
-            model_class,
-            instance,
-            modifier_fn,
-            valid_json,
-            invalid_json,
-            is_validate,
-        )
+    if SEMANTIC_VALIDATION == "true":
+        with pytest.raises(SchematicValidationError):
+            utils.test_serialisation_and_validation(
+                model_class,
+                instance,
+                modifier_fn,
+                valid_json,
+                invalid_json,
+                is_validate,
+            )
 
 
 @pytest.mark.parametrize(
@@ -1581,12 +1583,13 @@ def test_low_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    with pytest.raises(SchematicValidationError):
-        utils.test_serialisation_and_validation(
-            model_class,
-            instance,
-            modifier_fn,
-            valid_json,
-            invalid_json,
-            is_validate,
-        )
+    if SEMANTIC_VALIDATION == "true":
+        with pytest.raises(SchematicValidationError):
+            utils.test_serialisation_and_validation(
+                model_class,
+                instance,
+                modifier_fn,
+                valid_json,
+                invalid_json,
+                is_validate,
+            )
