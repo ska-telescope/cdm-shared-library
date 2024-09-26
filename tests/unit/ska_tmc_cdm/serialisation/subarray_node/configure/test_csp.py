@@ -231,7 +231,6 @@ def test_marshall_fsp_configuration_with_undefined_optional_parameters():
         function_mode=FSPFunctionMode.CORR,
         frequency_slice_id=1,
         integration_factor=10,
-        zoom_factor=0,
     )
     marshalled = CODEC.dumps(fsp_config)
 
@@ -263,7 +262,6 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
         function_mode=FSPFunctionMode.CORR,
         frequency_slice_id=1,
         integration_factor=10,
-        zoom_factor=0,
         **null_kwargs,
     )
     marshalled = CODEC.dumps(fsp_config)

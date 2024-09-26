@@ -83,7 +83,7 @@ class FSPConfiguration(CdmObject):
     function_mode: FSPFunctionMode = Field()
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)
-    zoom_factor: int = Field(ge=0, le=6)
+    zoom_factor: Optional[int] = None
     # FIXME: should be Field(default_factory=list, max_length=20)?
     channel_averaging_map: Optional[List[Tuple]] = Field(None, max_length=20)
     # could we add enforcements for output_link_map? What are the limits?

@@ -27,9 +27,9 @@ classifiers = [
 name = 'ska-nexus'
 url = 'https://artefact.skao.int/repository/pypi-internal/simple'
 
-[[tool.poetry.source]]
-name = 'PyPI'
-priority = 'primary'
+# [[tool.poetry.source]]
+# name = 'PyPI'
+# priority = 'primary'
 
 
 [tool.poetry.dependencies]
@@ -39,7 +39,7 @@ deepdiff = "^5.8.1"
 pydantic = "^2.7.0"
 pydantic-core = "^2.18.1"
 annotated-types = "^0.6.0"
-ska-ost-osd = "2.0.1"
+ska-ost-osd = { git = "https://gitlab.com/ska-telescope/ost/ska-ost-osd.git", branch = "sah-1597" }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1.3"

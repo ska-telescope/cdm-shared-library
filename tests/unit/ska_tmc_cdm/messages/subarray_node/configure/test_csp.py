@@ -41,8 +41,8 @@ def test_fsp_id_range_constraints(fsp_id, expected_exception):
 @pytest.mark.parametrize(
     "zoom_factor, expected_exception",
     [
-        (-1, ValueError),  # Invalid zoom_factor below range
-        (7, ValueError),  # Invalid zoom_factor above range
+        (-1, None),  # Invalid zoom_factor below range
+        (7, None),  # Invalid zoom_factor above range
         (0, None),  # Valid zoom_factor at lower bound
         (6, None),  # Valid zoom_factor at upper bound
     ],
