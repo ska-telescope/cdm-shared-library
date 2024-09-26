@@ -17,7 +17,7 @@ from ska_tmc_cdm.messages.subarray_node.configure import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
-    GenericPattern,
+    HolographyPattern,
     HolographyReceptorGroupConfig,
     MosaicTrajectoryConfig,
     PointingConfiguration,
@@ -374,7 +374,7 @@ HOLOGRAPHY_POINTING = PointingConfiguration(
                 },
             },
             trajectory=MosaicTrajectoryConfig(
-                name=GenericPattern.MOSAIC,
+                name=HolographyPattern.MOSAIC,
                 attrs={
                     "x_offsets": [
                         -5.0,

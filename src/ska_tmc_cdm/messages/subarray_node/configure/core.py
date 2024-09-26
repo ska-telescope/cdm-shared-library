@@ -40,7 +40,7 @@ __all__ = [
     "PointingCorrection",
     "ReceiverBand",
     "DishConfiguration",
-    "GenericPattern",
+    "HolographyPattern",
     "HolographyReceptorGroupConfig",
     "TrajectoryConfig",
 ]
@@ -290,7 +290,7 @@ class PointingCorrection(Enum):
     RESET = "RESET"
 
 
-class GenericPattern(str, Enum):
+class HolographyPattern(str, Enum):
     """
     Holography Scan Pattern
     """
@@ -307,8 +307,8 @@ class GenericPattern(str, Enum):
 class TableAttrsConfig(CdmObject):
     """Attrs for table pattern"""
 
-    x: list[float]
-    y: list[float]
+    x: float
+    y: float
     t: list[float] = Field(default_factory=list)
 
 
@@ -320,17 +320,17 @@ class MosaicAttrsConfig(CdmObject):
 
 
 class MosaicTrajectoryConfig(CdmObject):
-    name: Literal[GenericPattern.MOSAIC] = GenericPattern.MOSAIC
+    name: Literal[HolographyPattern.MOSAIC] = HolographyPattern.MOSAIC
     attrs: MosaicAttrsConfig
 
 
 class TableTrajectoryConfig(CdmObject):
-    name: Literal[GenericPattern.TABLE] = GenericPattern.TABLE
+    name: Literal[HolographyPattern.TABLE] = HolographyPattern.TABLE
     attrs: TableAttrsConfig
 
 
 class FixedTrajectoryConfig(CdmObject):
-    name: Literal[GenericPattern.FIXED] = GenericPattern.FIXED
+    name: Literal[HolographyPattern.FIXED] = HolographyPattern.FIXED
     attrs: TableAttrsConfig
 
 

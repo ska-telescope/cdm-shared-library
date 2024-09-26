@@ -24,7 +24,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		    projection: dict
 		}
 
-		enum GenericPattern {
+		enum HolographyPattern {
 		    FIXED
             MOSAIC
             SPIRAL
@@ -35,7 +35,7 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		}
 
 		class TrajectoryConfig {
-		    name: GenericPattern
+		    name: HolographyPattern
 		    attrs: dict
 		}
 
