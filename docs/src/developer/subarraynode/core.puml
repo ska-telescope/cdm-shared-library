@@ -26,12 +26,12 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 
 		enum HolographyPattern {
 		    FIXED
-            MOSAIC
-            SPIRAL
-            RASTER
-            CONSTANT_VELOCITY
-            TABLE
-            HYPOTROCHOID
+		    MOSAIC
+		    SPIRAL
+		    RASTER
+		    CONSTANT_VELOCITY
+		    TABLE
+		    HYPOTROCHOID
 		}
 
 		class TrajectoryConfig {
