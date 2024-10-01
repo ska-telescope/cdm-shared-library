@@ -294,7 +294,7 @@ def test_marshall_csp_configuration_does_not_modify_original():
         subarray=SubarrayConfiguration(subarray_name="subarray name"),
         common=CommonConfiguration(
             config_id="config_id",
-            frequency_band=ReceiverBand.BAND_1,
+            frequency_band=ReceiverBand.BAND_5A,
             subarray_id=1,
             band_5_tuning=[5.85, 7.25],
         ),

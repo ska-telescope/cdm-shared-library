@@ -3,10 +3,11 @@ The configure.csp module contains Python classes that represent the various
 aspects of CSP configuration that may be specified in a SubArrayNode.configure
 command.
 """
+import warnings
 from enum import Enum
 from typing import List, Optional, Tuple
 
-from pydantic import AliasChoices, Field
+from pydantic import AliasChoices, Field, model_validator
 
 from ska_tmc_cdm.messages.base import CdmObject
 
@@ -14,20 +15,29 @@ from . import core
 from .pst import PSTConfiguration
 
 __all__ = [
-    "CSPConfiguration",
     "FSPConfiguration",
     "FSPFunctionMode",
+    "CSPConfiguration",
     "CBFConfiguration",
+    "CorrelationConfiguration",
     "SubarrayConfiguration",
     "CommonConfiguration",
     "LowCBFConfiguration",
+    "MidCBFConfiguration",
     "StationConfiguration",
     "StnBeamConfiguration",
     "VisFspConfiguration",
+    "VisStnBeamConfiguration",
     "VisConfiguration",
+    "VLBIConfiguration",
     "TimingBeamsConfiguration",
+    "ProcessingRegionConfiguration",
+    "PSSConfiguration",
     "BeamsConfiguration",
 ]
+
+MID_CSP_SCHEMA = "https://schema.skao.int/ska-csp-configurescan/4.0"
+MID_CSP_SCHEMA_DEPRECATED = "https://schema.skao.int/ska-csp-configurescan/2.0"
 
 
 class FSPFunctionMode(Enum):
@@ -43,6 +53,8 @@ class FSPFunctionMode(Enum):
 
 class FSPConfiguration(CdmObject):
     """
+    DEPRECATED IN CSP CONFIGURE SCAN 4.0
+
     FSPConfiguration defines the configuration for a CSP Frequency Slice
     Processor.
 
@@ -61,7 +73,13 @@ class FSPConfiguration(CdmObject):
     :raises ValueError: Invalid parameter values entered
     """
 
-    fsp_id: int = Field(ge=1, le=27)  # 1 <= id <= 27
+    warnings.warn(
+        "This class is deprecated and will be removed in a future version.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+
+    fsp_id: int = Field(ge=1, le=27)
     function_mode: FSPFunctionMode = Field()
     frequency_slice_id: int = Field(ge=1, le=26)
     integration_factor: int = Field(ge=1, le=10)
@@ -92,15 +110,25 @@ class CommonConfiguration(CdmObject):
 
     :param config_id: CSP configuration ID
     :param frequency_band: the frequency band to set
-    :param subarray_id: an ID of sub-array device
+    :param subarray_id: subarray_id
     :param band_5_tuning: band 5 receiver to set (optional)
+    :param eb_id: eb_id
     """
 
-    config_id: Optional[str] = ""
+    config_id: Optional[str] = None
     frequency_band: Optional[core.ReceiverBand] = None
     subarray_id: Optional[int] = None
     band_5_tuning: Optional[List[float]] = None
     eb_id: Optional[str] = None
+
+    @model_validator(mode="after")
+    def validate_subarray_id_only_band_5(self):
+        band5 = (core.ReceiverBand.BAND_5A, core.ReceiverBand.BAND_5B)
+        if self.frequency_band in band5 and self.band_5_tuning is None:
+            raise ValueError("Band 5 must have a band 5 tuning")
+        if self.frequency_band not in band5 and self.band_5_tuning is not None:
+            raise ValueError("Only Band 5 may have a band 5 tuning")
+        return self
 
 
 class StnBeamConfiguration(CdmObject):
@@ -218,13 +246,58 @@ class VLBIConfiguration(CdmObject):
     pass
 
 
-class CBFConfiguration(CdmObject):
+class PSSConfiguration(CdmObject):
+    pass
+
+
+class ProcessingRegionConfiguration(CdmObject):
     """
+    Class to hold Processing Region Configuration.
+
+    :param fsp_ids: fsp_ids
+    :param receptors: receptors
+    :param start_freq: start_freq
+    :param channel_width: channel_width
+    :param channel_count: channel_count
+    :param integration_factor: integration_factor
+    :param sdp_start_channel_id: sdp_start_channel_id
+    """
+
+    fsp_ids: List[int]
+    receptors: Optional[List[str]] = None
+    start_freq: int = Field(ge=350_000_000, le=15_400_000_000)
+    channel_width: int = 13440
+    channel_count: int = Field(ge=1, le=58982, multiple_of=20)
+    integration_factor: int = Field(ge=1, le=10)
+    sdp_start_channel_id: int = Field(ge=0, le=4294901760)
+
+
+class CorrelationConfiguration(CdmObject):
+    """
+    Class to hold Correlation Configuration.
+
+    :param processing_regions: processing_regions
+    """
+
+    processing_regions: List[ProcessingRegionConfiguration]
+
+
+class CBFConfiguration(CdmObject):
+
+    """
+    DEPRECATED, future work should make use of MidCBFConfiguration
+
     Class to hold all FSP and VLBI configurations.
 
     :param fsp_configs: the FSP configurations to set
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
+
+    warnings.warn(
+        "This class is deprecated and will be removed in a future version.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
 
     fsp_configs: List[FSPConfiguration] = Field(
         serialization_alias="fsp",
@@ -239,8 +312,28 @@ class CBFConfiguration(CdmObject):
     )
 
 
-class PSSConfiguration(CdmObject):
-    pass
+class MidCBFConfiguration(CdmObject):
+    """
+    Class to hold all FSP and VLBI configurations.
+
+    Note: frequency band offset (FBO)
+    Bands 1 and 2 should be specified for Stream 1 only.
+    Bands 5a and 5b input from the receptor consists of two data streams (1 and 2)
+
+    :param frequency_band_offset_stream1: a specified offset so that the entire observed band is shifted in Hz
+    :param frequency_band_offset_stream2: a specified offset so that the entire observed band is shifted in Hz
+    :param correlation: correlation specific parameters
+    :param vlbi_config: the VLBI configurations to set, it is optional
+    """
+
+    frequency_band_offset_stream1: Optional[int] = Field(ge=-1e8, le=1e8)
+    frequency_band_offset_stream2: Optional[int] = Field(ge=-1e8, le=1e8)
+    correlation: Optional[CorrelationConfiguration]
+    vlbi_config: Optional[VLBIConfiguration] = Field(
+        default=None,
+        serialization_alias="vlbi",
+        validation_alias=AliasChoices("vlbi", "vlbi_config"),
+    )
 
 
 class CSPConfiguration(CdmObject):
@@ -250,21 +343,25 @@ class CSPConfiguration(CdmObject):
     support of new attributes as per ADR-18
 
     :param interface: url string to determine JsonSchema version
-    :param subarray: Sub-array configuration to set
-    :param common: the common CSP elemenets to set
-    :param cbf_config: the CBF configurations to set
+    :param common: the common CSP elements to set
+    :param cbf_config: the CBF configurations to set [DEPRECATED]
+    :param midcbf: the MID CBF configurations to set
+    :param lowcbf: the LOW CBF configurations to set
     :param pst_config: the PST configurations to set
     :param pss_config: the PSS configurations to set
     """
 
-    interface: Optional[str] = None
+    interface: str = MID_CSP_SCHEMA
     subarray: Optional[SubarrayConfiguration] = None
-    common: Optional[CommonConfiguration] = None
+    common: CommonConfiguration
     cbf_config: Optional[CBFConfiguration] = Field(
         default=None,
         serialization_alias="cbf",
         validation_alias=AliasChoices("cbf", "cbf_config"),
+        deprecated=True,
     )
+    midcbf: Optional[MidCBFConfiguration] = None
+    lowcbf: Optional[LowCBFConfiguration] = None
     # TODO: In the future when csp Interface 2.2 is adopted, pst_config and pss_config
     # should not accept dict types as inputs.
     pst_config: Optional[PSTConfiguration | dict] = Field(
@@ -277,4 +374,23 @@ class CSPConfiguration(CdmObject):
         serialization_alias="pss",
         validation_alias=AliasChoices("pss", "pss_config"),
     )
-    lowcbf: Optional[LowCBFConfiguration] = None
+
+    @model_validator(mode="after")
+    def validate_interface(self):
+        if self.interface == MID_CSP_SCHEMA:
+            if self.common.subarray_id is not None:
+                raise ValueError(
+                    f"subarray_id is not supported for CSP Configuration schema version {MID_CSP_SCHEMA}"
+                )
+            elif self.common.config_id is None:
+                raise ValueError(
+                    f"config_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA}"
+                )
+        if (
+            self.interface == MID_CSP_SCHEMA_DEPRECATED
+            and self.common.subarray_id is None
+        ):
+            raise ValueError(
+                f"subarray_id is mandatory for CSP Configuration schema version {MID_CSP_SCHEMA_DEPRECATED}"
+            )
+        return self

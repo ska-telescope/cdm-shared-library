@@ -125,99 +125,48 @@ csp.py
    csp.py object model
 
 The ``csp.py`` module models CSP configuration JSON elements. In the context
-of a full CDM JSON object, the elements this maps to are:
+of a full CDM JSON object, the elements this maps to for MID are:
 
 .. code::
 
-  #Mid JSON specifically by csp.py
   {
     ...
-    csp": {
-    "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-    "subarray": {
-      "subarray_name": "science period 23"
-    },
-    "common": {
-      "config_id": "sbi-mvp01-20200325-00001-science_A",
-      "frequency_band": "1",
-      "subarray_id": 1
-    },
-    "cbf": {
-      "fsp": [
-        {
-          "fsp_id": 1,
-          "function_mode": "CORR",
-          "frequency_slice_id": 1,
-          "integration_factor": 1,
-          "zoom_factor": 0,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
-          "channel_offset": 0,
-          "output_link_map": [
-            [
-              0,
-              0
-            ],
-            [
-              200,
-              1
-            ]
-          ]
+        "csp": {
+        "interface": "https://schema.skao.int/ska-csp-configurescan/4.0",
+        "common": {
+            "config_id": "sbi-mvp01-20200325-00001-science_A",
+            "frequency_band": "1"
         },
-        {
-          "fsp_id": 2,
-          "function_mode": "CORR",
-          "frequency_slice_id": 2,
-          "integration_factor": 1,
-          "zoom_factor": 1,
-          "channel_averaging_map": [
-            [
-              0,
-              2
-            ],
-            [
-              744,
-              0
-            ]
-          ],
-          "channel_offset": 744,
-          "output_link_map": [
-            [
-              0,
-              4
-            ],
-            [
-              200,
-              5
-            ]
-          ],
-          "zoom_window_tuning": 650000
-        }
-      ],
-      "vlbi": {
-
-      }
-    },
-    "pss": {
-
-    },
-    "pst": {
-
-    },
-   },
+        "midcbf": {
+            "frequency_band_offset_stream1": 80,
+            "correlation": {
+                "processing_regions": [{
+                    "fsp_ids": [1, 2, 3, 4],
+                    "receptors": ["SKA063", "SKA001", "SKA100"],
+                    "start_freq": 350000000,
+                    "channel_width": 13440,
+                    "channel_count": 52080,
+                    "sdp_start_channel_id": 0,
+                    "integration_factor": 1
+                }, {
+                    "fsp_ids": [1],
+                    "start_freq": 548437600,
+                    "channel_width": 13440,
+                    "channel_count": 14880,
+                    "sdp_start_channel_id": 1,
+                    "integration_factor": 10
+                }]
+            },
+            "vlbi": {}
     ...
   }
 
-  #Low JSON  specifically by csp.py
-  
+And for LOW are:
+
+.. code::
+
+  {
+    ...
     "csp": {
               "interface": "https://schema.skao.int/ska-low-csp-configure/3.2",
               "common": {
@@ -303,8 +252,10 @@ of a full CDM JSON object, the elements this maps to are:
                       }
                   }
               ]
-        }
-
+            }
+    }
+    ...
+  }
 
 sdp.py
 ------
