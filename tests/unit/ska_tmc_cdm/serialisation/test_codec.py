@@ -40,6 +40,8 @@ from tests.unit.ska_tmc_cdm.serialisation.central_node.test_release_resources im
     VALID_MID_FULL_RELEASE_OBJECT,
 )
 from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
+    CONFIGURE_MID_HOLOGRAPHY,
+    CONFIGURE_MID_HOLOGRAPHY_JSON,
     INVALID_LOW_CONFIGURE_JSON,
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
@@ -104,6 +106,12 @@ TEST_PARAMETERS = [
         AssignResourcesRequest,
         VALID_LOW_ASSIGNRESOURCESREQUEST_JSON_4_0,
         VALID_LOW_ASSIGNRESOURCESREQUEST_OBJECT_4_0,
+        True,
+    ),
+    (
+        ConfigureRequest,
+        json.dumps(CONFIGURE_MID_HOLOGRAPHY_JSON),
+        CONFIGURE_MID_HOLOGRAPHY,
         True,
     ),
 ]

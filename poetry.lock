@@ -1359,13 +1359,13 @@ pylint = "*"
 
 [[package]]
 name = "pyright"
-version = "1.1.382.post1"
+version = "1.1.382.post0"
 description = "Command line wrapper for pyright"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pyright-1.1.382.post1-py3-none-any.whl", hash = "sha256:21a4749dd1740e209f88d3a601e9f40748670d39481ea32b9d77edf7f3f1fb2e"},
-    {file = "pyright-1.1.382.post1.tar.gz", hash = "sha256:66a5d4e83be9452853d73e9dd9e95ba0ac3061845270e4e331d0070a597d3445"},
+    {file = "pyright-1.1.382.post0-py3-none-any.whl", hash = "sha256:a82a20b6a6511d71c6c95de19c0f874f7e50a013f332e3799deaae66a4d237d1"},
+    {file = "pyright-1.1.382.post0.tar.gz", hash = "sha256:4b84dd4439b0cbc662dff6aaf012cc0860f1c788932ac4c2a4b5d6c1280a5e20"},
 ]
 
 [package.dependencies]
@@ -1797,13 +1797,13 @@ files = [
 
 [[package]]
 name = "ska-ost-osd"
-version = "2.0.1"
+version = "2.1.0"
 description = "Simplest form OSD consists of configuration files that are required by OSO tools."
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ska_ost_osd-2.0.1-py3-none-any.whl", hash = "sha256:db60dbea512cf494ff54d5527d709bbfb60240d9c2e1ed2027b095794f5d7cd4"},
-    {file = "ska_ost_osd-2.0.1.tar.gz", hash = "sha256:3fd70ebbed11ff52f81c24f7714183802ecd5da07eaf6543b6af8200f43109a3"},
+    {file = "ska_ost_osd-2.1.0-py3-none-any.whl", hash = "sha256:bc39d99560e9d9a8bab3dbb64f305bb7fedd0282c148b30a931d200a720d8909"},
+    {file = "ska_ost_osd-2.1.0.tar.gz", hash = "sha256:5e061de81c500dbce7bc9d6131a25657c47f6cc793a37490b89ff50128f3ba32"},
 ]
 
 [package.dependencies]
@@ -1818,7 +1818,7 @@ requests = ">=2.27.1,<3.0.0"
 simpleeval = ">=0.9.13,<0.10.0"
 ska-ser-logging = ">=0.4.1,<0.5.0"
 ska-ser-skuid = ">=3.3.3,<4.0.0"
-ska-telmodel = ">=1.19.2,<2.0.0"
+ska-telmodel = ">=1.19.4,<2.0.0"
 
 [package.source]
 type = "legacy"
@@ -2201,4 +2201,4 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "47a8cbdefa1e34f58a4b1de03651cd27848d70002f569e37dfe16d1ece9c1735"
+content-hash = "2db69d87cfffacb77d174d1e53b6c359757c3b9c2538148780a94532a2d9f912"
