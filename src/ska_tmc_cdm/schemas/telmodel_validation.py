@@ -60,7 +60,6 @@ def semantic_validate_json(data, process_fn=_identity, **_):
     # caller is requesting strict validation and we can't even tell
     # what interface to validate against, that should be an error.
     if SEMANTIC_VALIDATION == "true":
-        print("Semantic validation is true")
         if interface and (
             # These magic srings seem dodgy. Can we re/move them?
             "ska-tmc-assignresources" in interface
@@ -70,4 +69,4 @@ def semantic_validate_json(data, process_fn=_identity, **_):
         ):
             JsonSchema.semantic_validate_schema(process_fn(data), interface)
     else:
-        print("SEMANTIC VALIDATION IS FALSE")
+        return True
