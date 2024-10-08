@@ -2,6 +2,7 @@
 Unit tests for the ska_tmc_cdm.schemas.codec module.
 """
 import json
+import os
 import tempfile
 from contextlib import nullcontext as does_not_raise
 
@@ -19,7 +20,6 @@ from ska_tmc_cdm.messages.central_node.release_resources import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
-from ska_tmc_cdm.schemas.telmodel_validation import SEMANTIC_VALIDATION
 from ska_tmc_cdm.utils import assert_json_is_equal
 from tests.unit.ska_tmc_cdm.serialisation.central_node.test_assign_resources import (
     INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
@@ -176,7 +176,7 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_json = json.loads(INVALID_MID_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    if SEMANTIC_VALIDATION == "true":
+    if os.environ.get("SEMANTIC_VALIDATION") == "true":
         with pytest.raises((SchematicValidationError, JsonValidationError)):
             CODEC.loads(
                 AssignResourcesRequest,
@@ -187,7 +187,7 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
     invalid_json_configure = json.dumps(invalid_json)
 
-    if SEMANTIC_VALIDATION == "true":
+    if os.environ.get("SEMANTIC_VALIDATION") == "true":
         with pytest.raises((SchematicValidationError, JsonValidationError)):
             CODEC.loads(
                 ConfigureRequest, invalid_json_configure, strictness=strict
@@ -196,7 +196,7 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_json = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    if SEMANTIC_VALIDATION == "true":
+    if os.environ.get("SEMANTIC_VALIDATION") == "true":
         with pytest.raises((SchematicValidationError, JsonValidationError)):
             CODEC.loads(
                 AssignResourcesRequest,
@@ -210,7 +210,7 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     ] = "tango://delays.skao.int/low/stn-beam/1"
     invalid_json_configure = json.dumps(invalid_json)
 
-    if SEMANTIC_VALIDATION == "true":
+    if os.environ.get("SEMANTIC_VALIDATION") == "true":
         with pytest.raises((SchematicValidationError, JsonValidationError)):
             CODEC.loads(
                 ConfigureRequest, invalid_json_configure, strictness=strict

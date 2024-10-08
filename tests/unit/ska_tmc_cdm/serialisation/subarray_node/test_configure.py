@@ -4,6 +4,7 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 
 import json
 from datetime import timedelta
+import os
 
 import pytest
 from ska_ost_osd.telvalidation.semantic_validator import (
@@ -60,7 +61,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.pst import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
-from ska_tmc_cdm.schemas.telmodel_validation import SEMANTIC_VALIDATION
 
 from .. import utils
 
@@ -1856,7 +1856,7 @@ def test_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    if SEMANTIC_VALIDATION == "true":
+    if os.environ.get("SEMANTIC_VALIDATION") == "true":
         with pytest.raises(SchematicValidationError):
             utils.test_serialisation_and_validation(
                 model_class,
@@ -1893,7 +1893,7 @@ def test_low_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    if SEMANTIC_VALIDATION == "true":
+    if os.environ.get("SEMANTIC_VALIDATION") == "true":
         with pytest.raises(SchematicValidationError):
             utils.test_serialisation_and_validation(
                 model_class,
