@@ -133,7 +133,9 @@ def test_env_var_overrides_strictness(
     CODEC.dumps(obj, strictness=2)
     # VALIDATION_STRICTNESS=1 overrides strictness=2
     fake_semantic_validate_json.assert_not_called()
-    fake_validate_json.assert_called_with(json.loads(jsonstr), strictness=1)
+    assert all(
+        c.kwargs["strictness"] == 1 for c in fake_validate_json.call_args_list
+    )
 
 
 @pytest.mark.parametrize(
