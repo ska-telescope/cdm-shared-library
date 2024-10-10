@@ -6,7 +6,7 @@ remember to pass all the arguments to `model_dump()`
 __all__ = ["Codec"]
 
 import json
-from os import PathLike
+from os import PathLike, environ
 from typing import Optional, TypeVar
 
 from ska_tmc_cdm.messages.base import CdmObject
@@ -14,6 +14,7 @@ from ska_tmc_cdm.messages.base import CdmObject
 from .telmodel_validation import semantic_validate_json, validate_json
 
 DEFAULT_STRICTNESS = None
+ENVIRONMENT_STRICTNESS = environ.get("VALIDATION_STRICTNESS", None)
 
 T = TypeVar("T", bound=CdmObject)
 
@@ -22,7 +23,7 @@ class Codec:
     @staticmethod
     def _telmodel_validation(
         enforced: bool, jsonable_data: dict, strictness: Optional[int] = 0
-    ):
+    ):  # Env var VALIDATION_STRICTNESS overrides
         if not enforced:
             return
         validate_json(jsonable_data, strictness=strictness)
@@ -49,6 +50,10 @@ class Codec:
         :param strictness: optional validation strictness level (0=min, 2=max)
         :return: an instance of CdmObject
         """
+        # Env var VALIDATION_STRICTNESS takes precedence over
+        # other ways to set this parameter, see NAK-1044.
+        if ENVIRONMENT_STRICTNESS is not None:
+            strictness = int(ENVIRONMENT_STRICTNESS)
         # Making Pydantic the first line of validation gives us
         # basic checks up front, and also yields performance benefits
         # because it uses a fast Rust JSON parser internally.
@@ -76,6 +81,10 @@ class Codec:
         :param strictness: optional validation strictness level (0=min, 2=max)
         :return: JSON representation of obj
         """
+        # Env var VALIDATION_STRICTNESS takes precedence over
+        # other ways to set this parameter, see NAK-1044.
+        if ENVIRONMENT_STRICTNESS is not None:
+            strictness = int(ENVIRONMENT_STRICTNESS)
         jsonable_dict = obj.model_dump(
             mode="json", exclude_none=True, by_alias=True
         )
