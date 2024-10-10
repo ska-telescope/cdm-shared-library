@@ -5,6 +5,7 @@ import json
 import os
 import tempfile
 from contextlib import nullcontext as does_not_raise
+from unittest.mock import patch
 
 import pytest
 from ska_ost_osd.telvalidation.semantic_validator import (
@@ -115,6 +116,24 @@ TEST_PARAMETERS = [
         True,
     ),
 ]
+
+
+@patch("ska_tmc_cdm.schemas.codec.semantic_validate_json")
+@patch("ska_tmc_cdm.schemas.codec.validate_json")
+def test_env_var_overrides_strictness(
+    fake_validate_json, fake_semantic_validate_json, monkeypatch
+):
+    """
+    Verify that the VALIDATION_STRICTNESS environment variable overrides
+    the strictness value passed by the caller.
+    """
+    cls, jsonstr, obj, _ = TEST_PARAMETERS[0]
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "1")
+    CODEC.loads(cls, jsonstr, strictness=2)
+    CODEC.dumps(obj, strictness=2)
+    # VALIDATION_STRICTNESS=1 overrides strictness=2
+    fake_semantic_validate_json.assert_not_called()
+    fake_validate_json.assert_called_with(json.loads(jsonstr), strictness=1)
 
 
 @pytest.mark.parametrize(

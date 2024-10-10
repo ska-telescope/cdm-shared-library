@@ -14,7 +14,6 @@ from ska_tmc_cdm.messages.base import CdmObject
 from .telmodel_validation import semantic_validate_json, validate_json
 
 DEFAULT_STRICTNESS = None
-ENVIRONMENT_STRICTNESS = environ.get("VALIDATION_STRICTNESS", None)
 
 T = TypeVar("T", bound=CdmObject)
 
@@ -26,8 +25,8 @@ class Codec:
     ):
         # Env var VALIDATION_STRICTNESS takes precedence over
         # other ways to set this parameter, see NAK-1044.
-        if ENVIRONMENT_STRICTNESS is not None:
-            strictness = int(ENVIRONMENT_STRICTNESS)
+        if env_strictness := environ.get("VALIDATION_STRICTNESS"):
+            strictness = int(env_strictness)
         if not enforced:
             return
         validate_json(jsonable_data, strictness=strictness)
