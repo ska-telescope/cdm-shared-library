@@ -2,6 +2,7 @@
 Unit tests for ska_tmc_cdm.schemas module.
 """
 import os
+
 import pytest
 from ska_ost_osd.telvalidation.semantic_validator import (
     SchematicValidationError,

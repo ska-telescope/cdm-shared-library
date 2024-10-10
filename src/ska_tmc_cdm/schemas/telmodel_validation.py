@@ -66,4 +66,4 @@ def semantic_validate_json(data, process_fn=_identity, **_):
         ):
             JsonSchema.semantic_validate_schema(process_fn(data), interface)
     else:
-        return data
+        return process_fn(data)

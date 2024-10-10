@@ -3,8 +3,8 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
 import json
-from datetime import timedelta
 import os
+from datetime import timedelta
 
 import pytest
 from ska_ost_osd.telvalidation.semantic_validator import (
