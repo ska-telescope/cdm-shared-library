@@ -31,6 +31,10 @@ url = 'https://artefact.skao.int/repository/pypi-internal/simple'
 name = 'PyPI'
 priority = 'primary'
 
+[[tool.poetry.source]]
+name = 'ska-telmodel-gitlab'
+url = 'https://gitlab.com/api/v4/projects/19213064/packages/pypi/simple'
+priority = 'explicit'
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -40,6 +44,8 @@ pydantic = "^2.7.0"
 pydantic-core = "^2.18.1"
 annotated-types = "^0.6.0"
 ska-ost-osd = "^2.1.0"
+# to be removed once telmodel MR accepted
+ska-telmodel = { version="1.19.4+dev.cd6f8a9dd", source="ska-telmodel-gitlab" }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1.3"
