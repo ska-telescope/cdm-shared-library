@@ -76,7 +76,7 @@ class FSPConfiguration(CdmObject):
     """
 
     warnings.warn(
-        "This class is deprecated and will be removed in a future version.",
+        "FSPConfiguration is deprecated and will be removed in a future version.",
         DeprecationWarning,
         stacklevel=2,
     )
@@ -298,7 +298,7 @@ class CBFConfiguration(CdmObject):
     """
 
     warnings.warn(
-        "This class is deprecated and will be removed in a future version.",
+        "CBFConfiguration class is deprecated and will be removed in a future version.",
         DeprecationWarning,
         stacklevel=2,
     )
