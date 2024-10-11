@@ -1,7 +1,5 @@
 import functools
 
-from tests.unit.ska_tmc_cdm.builder.skydirection import ICRSFieldBuilder
-
 from ska_tmc_cdm.messages.subarray_node.configure.core import ReceiverBand
 from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     BeamsConfiguration,
@@ -20,6 +18,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     VisFspConfiguration,
     VisStnBeamConfiguration,
 )
+from tests.unit.ska_tmc_cdm.builder.skydirection import ICRSFieldBuilder
 
 FSPConfigurationBuilder = functools.partial(
     FSPConfiguration,
