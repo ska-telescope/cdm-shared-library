@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 Unreleased Changes
 ******************
+* Data model changes to support ADR-99:
+  - Updated MidCBFConfiguration default None for frequency_band_offset_stream1, frequency_band_offset_stream2 and correlation.
 
 12.3.0
 ******************
