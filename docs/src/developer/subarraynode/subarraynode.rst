@@ -33,10 +33,11 @@ configure
    High-level overview of the configure package
 
 The configuration JSON is complex, the module is split between several
-modules. The ``configure`` package contains five modules:
+modules. The ``configure`` package contains seven modules:
 
 * __init__.py
 * `core.py`_
+* `receptorgroup.py`_
 * `tmc.py`_
 * `csp.py`_
 * `sdp.py`_
@@ -52,11 +53,27 @@ container object, while the sub-modules define the details.
 
   # JSON modelled specifically by __init__.py
   {
-    "scanID": 12345,
-    ...
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
+    "transaction_id": "txn-....-00001",
+    "pointing": {
+        ... # see core.py
+    },
+    "tmc": {
+        ... # see tmc.py
+    },
+    "dish": {
+        ... # see core.py
+    },
+    "mccs": {
+        ... # see mccs.py
+    },
+    "csp": {
+        ... # see csp.py
+    },
+    "sdp": {
+        ... # see sdp.py
+    }
   }
-
-
 
 
 core.py
@@ -84,12 +101,59 @@ are:
         "ra": 1.0,
         "dec": 1.0
       },
+      "correction": "UPDATE",
+      "ca_offset_arcsec": 5.0,
+      "ia_offset_arcsec": 0.0,
+      "groups": [
+        ...  # see receptorgroup.py
+      ]
     },
     ...
     "dish": {
       "receiver_band": "1"
     }
-    ....
+    ...
+  }
+
+
+receptorgroup.py
+----------------
+
+.. figure:: receptorgroup.png
+   :align: center
+   :alt: receptorgroup.py object model
+
+   receptorgroup.py object model
+
+The ``receptorgroup.py`` module models receptor pointing and tracking in an
+ADR-63 and ADR-106 compliant way. An example of the JSON these classes
+represent is given is:
+
+.. code::
+
+  # Example of JSON modelled specifically by receptorgroup.py
+  {
+      ... # pointing.groups array contains a Receptorgroup object like below
+       {
+        "receptors": ["SKA001", "SKA002"],
+        "field": {
+          "target_name": "Cen-A",
+          "reference_frame": "icrs",
+          "attrs": {
+            "c1": 201.365,
+            "c2": -43.0191667,
+          },
+        },
+        "trajectory": {
+          "name": "mosaic",
+          "attrs": {
+            "x_offsets": [-5.0, 0.0, 5.0],
+            "y_offsets": [5.0, 0.0, -5.0]
+          },
+        },
+        "projection": {"name": "SSN", "alignment": "ICRS"},
+      }
+      ...
   }
 
 
@@ -111,6 +175,7 @@ example JSON command argument that this code can model.
   {
     "tmc": {
       "scan_duration": 10.0,
+      "partial_configuration": true,
     }
   }
 
@@ -168,91 +233,112 @@ And for LOW are:
   {
     ...
     "csp": {
-              "interface": "https://schema.skao.int/ska-low-csp-configure/3.2",
-              "common": {
-                  "config_id": "sbi-mvp01-20200325-00001-science_A",
-                  "eb_id": "eb-test-20220916-00000"
+      "interface": "https://schema.skao.int/ska-low-csp-configure/3.2",
+      "common": {
+        "config_id": "sbi-mvp01-20200325-00001-science_A",
+        "eb_id": "eb-test-20220916-00000"
+      },
+      "lowcbf": {
+        "stations": {
+          "stns": [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
+          "stn_beams": [
+            {
+              "beam_id": 1,
+              "freq_ids": [400]
+            }
+          ]
+        },
+        "vis": {
+          "fsp": {
+            "firmware": "vis",
+            "fsp_ids": [1]
+          },
+          "stn_beams": [
+            {
+              "stn_beam_id": 1,
+              "integration_ms": 849
+            }
+          ]
+        },
+        "timing_beams": {
+          "fsp": {
+            "firmware": "pst",
+            "fsp_ids": [2]
+          },
+          "beams": [
+            {
+              "pst_beam_id": 1,
+              "field": {
+                "target_name": "PSR J0024-7204R",
+                "reference_frame": "icrs",
+                "attrs": {
+                  "c1": 6.023625,
+                  "c2": -72.08128333,
+                  "pm_c1": 4.8,
+                  "pm_c2": -3.3
+                }
               },
-              "lowcbf": {
-                  "stations": {
-                      "stns": [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-                      "stn_beams": [{"beam_id": 1, "freq_ids": [400]}]
-                  },
-                  "vis": {
-                      "fsp": {"firmware": "vis", "fsp_ids": [1]},
-                      "stn_beams": [
-                          {
-                              "stn_beam_id": 1,
-                              "integration_ms": 849
-                          }
-                      ]
-                  },
-                  "timing_beams": {
-                      "fsp": {"firmware": "pst", "fsp_ids": [2]},
-                      "beams": [
-                          {
-                              "pst_beam_id": 1,
-                              "stn_beam_id": 1,
-                              "stn_weights": [0.9, 1.0, 1.0, 1.0, 0.9, 1.0]
-                          }
-                      ]
-                  }
+              "stn_beam_id": 1,
+              "stn_weights": [0.9, 1.0, 1.0, 1.0, 0.9, 1.0]
+            }
+          ]
+        }
+      },
+      "pst": {
+        "beams": [
+          {
+            "beam_id": 1,
+            "scan": {
+              "activation_time": "2022-01-19T23:07:45Z",
+              "bits_per_sample": 32,
+              "num_of_polarizations": 2,
+              "udp_nsamp": 32,
+              "wt_nsamp": 32,
+              "udp_nchan": 24,
+              "num_frequency_channels": 432,
+              "centre_frequency": 200000000.0,
+              "total_bandwidth": 1562500.0,
+              "observation_mode": "VOLTAGE_RECORDER",
+              "observer_id": "jdoe",
+              "project_id": "project1",
+              "pointing_id": "pointing1",
+              "source": "J1921+2153",
+              "itrf": [5109360.133, 2006852.586, -3238948.127],
+              "receiver_id": "receiver3",
+              "feed_polarization": "LIN",
+              "feed_handedness": 1,
+              "feed_angle": 1.234,
+              "feed_tracking_mode": "FA",
+              "feed_position_angle": 10.0,
+              "oversampling_ratio": [8, 7],
+              "coordinates": {
+                "equinox": 2000.0,
+                "ra": "19:21:44.815",
+                "dec": "21:53:02.400"
               },
-            "pst": {
-              "beams": [
-                  {
-                      "beam_id": 1,
-                      "scan": {
-                          "activation_time": "2022-01-19T23:07:45Z",
-                          "bits_per_sample": 32,
-                          "num_of_polarizations": 2,
-                          "udp_nsamp": 32,
-                          "wt_nsamp": 32,
-                          "udp_nchan": 24,
-                          "num_frequency_channels": 432,
-                          "centre_frequency": 200000000.0,
-                          "total_bandwidth": 1562500.0,
-                          "observation_mode": "VOLTAGE_RECORDER",
-                          "observer_id": "jdoe",
-                          "project_id": "project1",
-                          "pointing_id": "pointing1",
-                          "source": "J1921+2153",
-                          "itrf": [5109360.133, 2006852.586, -3238948.127],
-                          "receiver_id": "receiver3",
-                          "feed_polarization": "LIN",
-                          "feed_handedness": 1,
-                          "feed_angle": 1.234,
-                          "feed_tracking_mode": "FA",
-                          "feed_position_angle": 10.0,
-                          "oversampling_ratio": [8, 7],
-                          "coordinates": {
-                              "equinox": 2000.0,
-                              "ra": "19:21:44.815",
-                              "dec": "21:53:02.400"
-                          },
-                          "max_scan_length": 20000.0,
-                          "subint_duration": 30.0,
-                          "receptors": ["receptor1", "receptor2"],
-                          "receptor_weights": [0.4, 0.6],
-                          "num_channelization_stages": 2,
-                          "channelization_stages": [
-                              {
-                                  "num_filter_taps": 1,
-                                  "filter_coefficients": [1.0],
-                                  "num_frequency_channels": 1024,
-                                  "oversampling_ratio": [32, 27]
-                              },
-                              {
-                                  "num_filter_taps": 1,
-                                  "filter_coefficients": [1.0],
-                                  "num_frequency_channels": 256,
-                                  "oversampling_ratio": [4, 3]
-                              }
-                          ]
-                      }
-                  }
+              "max_scan_length": 20000.0,
+              "subint_duration": 30.0,
+              "receptors": ["receptor1", "receptor2"],
+              "receptor_weights": [0.4, 0.6],
+              "num_channelization_stages": 2,
+              "channelization_stages": [
+                {
+                  "num_filter_taps": 1,
+                  "filter_coefficients": [1.0],
+                  "num_frequency_channels": 1024,
+                  "oversampling_ratio": [32, 27]
+                },
+                {
+                  "num_filter_taps": 1,
+                  "filter_coefficients": [1.0],
+                  "num_frequency_channels": 256,
+                  "oversampling_ratio": [4, 3]
+                }
               ]
             }
+          }
+        ]
+      }
     }
     ...
   }
@@ -388,243 +474,240 @@ Example configuration JSON for MID
 
 .. code-block:: JSON
 
-    {
-      "interface": "https://schema.skao.int/ska-tmc-configure/2.1",
-      "transaction_id": "txn-....-00001",
-      "pointing": {
-        "target": {
-          "reference_frame": "ICRS",
-          "target_name": "Polaris Australis",
-          "ra": "21:08:47.92",
-          "dec": "-88:57:22.9"
-        }
-      },
-      "dish": {
-        "receiver_band": "1"
-      },
-      "csp": {
-        "interface": "https://schema.skao.int/ska-csp-configure/2.0",
-        "subarray": {
-          "subarray_name": "science period 23"
-        },
-        "common": {
-          "config_id": "sbi-mvp01-20200325-00001-science_A",
-          "frequency_band": "1",
-          "subarray_id": 1
-        },
-        "cbf": {
-          "fsp": [
-            {
-              "fsp_id": 1,
-              "function_mode": "CORR",
-              "frequency_slice_id": 1,
-              "integration_factor": 1,
-              "zoom_factor": 0,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
-              "channel_offset": 0,
-              "output_link_map": [
-                [
-                  0,
-                  0
-                ],
-                [
-                  200,
-                  1
-                ]
-              ]
+  {
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
+    "transaction_id": "txn-....-00001",
+    "pointing": {
+      "groups": [
+        {
+          "field": {
+            "attrs": {
+              "c1": 201.365,
+              "c2": -43.0191667
             },
-            {
-              "fsp_id": 2,
-              "function_mode": "CORR",
-              "frequency_slice_id": 2,
-              "integration_factor": 1,
-              "zoom_factor": 1,
-              "channel_averaging_map": [
-                [
-                  0,
-                  2
-                ],
-                [
-                  744,
-                  0
-                ]
-              ],
-              "channel_offset": 744,
-              "output_link_map": [
-                [
-                  0,
-                  4
-                ],
-                [
-                  200,
-                  5
-                ]
-              ],
-              "zoom_window_tuning": 650000
-            }
-          ],
-          "vlbi": {
-
+            "reference_frame": "icrs",
+            "target_name": "Cen-A"
+          },
+          "projection": {
+            "alignment": "ICRS",
+            "name": "SSN"
+          },
+          "receptors": ["SKA001", "SKA002"],
+          "trajectory": {
+            "attrs": {
+              "x_offsets": [5, 5, 5, 0, 0, 0, -5, -5, -5],
+              "y_offsets": [5, 0, -5, 5, 0, -5, 5, 0, -5]
+            },
+            "name": "mosaic"
           }
-        },
-        "pss": {
-
-        },
-        "pst": {
-
         }
+      ]
+    },
+    "csp": {
+      "interface": "https://schema.skao.int/ska-csp-configurescan/4.0",
+      "common": {
+        "config_id": "sbi-mvp01-20200325-00001-science_A",
+        "frequency_band": "1"
       },
-      "sdp": {
-        "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
-        "scan_type": "science_A"
-      },
-      "tmc": {
-        "scan_duration": 10.0
+      "midcbf": {
+        "correlation": {
+          "processing_regions": [
+            {
+              "channel_count": 52080,
+              "channel_width": 13440,
+              "fsp_ids": [1],
+              "integration_factor": 1,
+              "receptors": ["SKA001", "SKA002"],
+              "sdp_start_channel_id": 0,
+              "start_freq": 350000000
+            }, {
+              "channel_count": 14880,
+              "channel_width": 13440,
+              "fsp_ids": [1],
+              "integration_factor": 10,
+              "receptors": ["SKA001", "SKA002"],
+              "sdp_start_channel_id": 1,
+              "start_freq": 548437600
+            }
+          ]
+        },
+        "frequency_band_offset_stream1": 80,
+        "frequency_band_offset_stream2": 80,
+        "vlbi": {}
       }
+    },
+    "dish": {
+      "receiver_band": "1"
+    },
+    "sdp": {
+      "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+      "scan_type": "science_A"
+    },
+    "tmc": {
+      "scan_duration": 10.0
     }
-
+  }
 
 Example configuration JSON for LOW
 ==================================
 
 .. code-block:: JSON
 
-    {
-        "interface": "https://schema.skao.int/ska-low-tmc-configure/4.0",
-        "transaction_id": "txn-....-00001",
-        "mccs": {
-            "subarray_beams": [
-                {
-                    "subarray_beam_id": 1,
-                    "update_rate": 0.0,
-                    "logical_bands": [
-                        {"start_channel": 80, "number_of_channels": 16},
-                        {"start_channel": 384, "number_of_channels": 16},
-                    ],
-                    "apertures": [
-                        {
-                            "aperture_id": "AP001.01",
-                            "weighting_key_ref": "aperture2",
-                        },
-                        {
-                            "aperture_id": "AP001.02",
-                            "weighting_key_ref": "aperture3",
-                        },
-                        {
-                            "aperture_id": "AP002.01",
-                            "weighting_key_ref": "aperture2",
-                        },
-                        {
-                            "aperture_id": "AP002.02",
-                            "weighting_key_ref": "aperture3",
-                        },
-                        {
-                            "aperture_id": "AP003.01",
-                            "weighting_key_ref": "aperture1",
-                        },
-                    ],
-                    "sky_coordinates": {
-                        "reference_frame": "ICRS",
-                        "c1": 180.0,
-                        "c2": 45.0,
-                    },
+  {
+    "interface": "https://schema.skao.int/ska-low-tmc-configure/4.1",
+    "transaction_id": "txn-....-00001",
+    "mccs": {
+      "subarray_beams": [
+        {
+          "subarray_beam_id": 1,
+          "update_rate": 0.0,
+          "logical_bands": [
+            {
+              "start_channel": 80,
+              "number_of_channels": 16
+            }, {
+              "start_channel": 384,
+              "number_of_channels": 16
+            }
+          ],
+          "apertures": [
+            {
+              "aperture_id": "AP001.01",
+              "weighting_key_ref": "aperture2"
+            }, {
+              "aperture_id": "AP001.02",
+              "weighting_key_ref": "aperture3"
+            }, {
+              "aperture_id": "AP002.01",
+              "weighting_key_ref": "aperture2"
+            }, {
+              "aperture_id": "AP002.02",
+              "weighting_key_ref": "aperture3"
+            }, {
+              "aperture_id": "AP003.01",
+              "weighting_key_ref": "aperture1"
+            }
+          ],
+          "sky_coordinates": {
+            "reference_frame": "ICRS",
+            "c1": 180.0,
+            "c2": 45.0
+          }
+        }
+      ]
+    },
+    "sdp": {
+      "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
+      "scan_type": "target:a"
+    },
+    "csp": {
+      "interface": "https://schema.skao.int/ska-low-csp-configure/3.2",
+      "common": {
+        "config_id": "sbi-mvp01-20200325-00001-science_A",
+        "eb_id": "eb-test-20220916-00000"
+      },
+      "lowcbf": {
+        "stations": {
+          "stns": [[1, 1], [2, 1], [3, 1], [4, 1]],
+          "stn_beams": [
+            {
+              "beam_id": 1,
+              "freq_ids": [400]
+            }
+          ]
+        },
+        "vis": {
+          "fsp": {
+            "firmware": "vis",
+            "fsp_ids": [1]
+          },
+          "stn_beams": [
+            {
+              "stn_beam_id": 1,
+              "integration_ms": 849
+            }
+          ]
+        },
+        "timing_beams": {
+          "fsp": {
+            "firmware": "pst",
+            "fsp_ids": [2]
+          },
+          "beams": [
+            {
+              "pst_beam_id": 1,
+              "field": {
+                "target_name": "PSR J0024-7204R",
+                "reference_frame": "icrs",
+                "attrs": {
+                  "c1": 6.023625,
+                  "c2": -72.08128333,
+                  "pm_c1": 4.8,
+                  "pm_c2": -3.3
                 }
-            ]
-        },
-        "sdp": {
-            "interface": "https://schema.skao.int/ska-sdp-configure/0.4",
-            "scan_type": "target:a",
-        },
-        "csp": {
-            "interface": "https://schema.skao.int/ska-low-csp-configure/3.2",
-            "common": {
-                "config_id": "sbi-mvp01-20200325-00001-science_A",
-                "eb_id": "eb-test-20220916-00000",
-            },
-            "lowcbf": {
-                "stations": {
-                    "stns": [[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]],
-                    "stn_beams": [{"beam_id": 1, "freq_ids": [400]}],
-                },
-                "vis": {
-                    "fsp": {"firmware": "vis", "fsp_ids": [1]},
-                    "stn_beams": [{"stn_beam_id": 1, "integration_ms": 849}],
-                },
-                "timing_beams": {
-                    "fsp": {"firmware": "pst", "fsp_ids": [2]},
-                    "beams": [
-                        {
-                            "pst_beam_id": 1,
-                            "stn_beam_id": 1,
-                            "stn_weights": [0.9, 1.0, 1.0, 1.0, 0.9, 1.0],
-                        }
-                    ],
-                },
-            },
-            "pst": {
-                "beams": [
-                    {
-                        "beam_id": 1,
-                        "scan": {
-                            "activation_time": "2022-01-19T23:07:45Z",
-                            "bits_per_sample": 32,
-                            "num_of_polarizations": 2,
-                            "udp_nsamp": 32,
-                            "wt_nsamp": 32,
-                            "udp_nchan": 24,
-                            "num_frequency_channels": 432,
-                            "centre_frequency": 200000000.0,
-                            "total_bandwidth": 1562500.0,
-                            "observation_mode": "VOLTAGE_RECORDER",
-                            "observer_id": "jdoe",
-                            "project_id": "project1",
-                            "pointing_id": "pointing1",
-                            "source": "J1921+2153",
-                            "itrf": [5109360.133, 2006852.586, -3238948.127],
-                            "receiver_id": "receiver3",
-                            "feed_polarization": "LIN",
-                            "feed_handedness": 1,
-                            "feed_angle": 1.234,
-                            "feed_tracking_mode": "FA",
-                            "feed_position_angle": 10.0,
-                            "oversampling_ratio": [8, 7],
-                            "coordinates": {
-                                "equinox": 2000.0,
-                                "ra": "19:21:44.815",
-                                "dec": "21:53:02.400",
-                            },
-                            "max_scan_length": 20000.0,
-                            "subint_duration": 30.0,
-                            "receptors": ["receptor1", "receptor2"],
-                            "receptor_weights": [0.4, 0.6],
-                            "num_channelization_stages": 2,
-                            "channelization_stages": [
-                                {
-                                    "num_filter_taps": 1,
-                                    "filter_coefficients": [1.0],
-                                    "num_frequency_channels": 1024,
-                                    "oversampling_ratio": [32, 27],
-                                },
-                                {
-                                    "num_filter_taps": 1,
-                                    "filter_coefficients": [1.0],
-                                    "num_frequency_channels": 256,
-                                    "oversampling_ratio": [4, 3],
-                                },
-                            ],
-                        },
-                    }
-                ]
-            },
-        },
-        "tmc": {"scan_duration": 10.0},
+              },
+              "stn_beam_id": 1,
+              "stn_weights": [0.9, 1.0, 1.0, 1.0, 0.9, 1.0]
+            }
+          ]
+        }
+      },
+      "pst": {
+        "beams": [
+          {
+            "beam_id": 1,
+            "scan": {
+              "activation_time": "2022-01-19T23:07:45Z",
+              "bits_per_sample": 32,
+              "num_of_polarizations": 2,
+              "udp_nsamp": 32,
+              "wt_nsamp": 32,
+              "udp_nchan": 24,
+              "num_frequency_channels": 432,
+              "centre_frequency": 200000000.0,
+              "total_bandwidth": 1562500.0,
+              "observation_mode": "VOLTAGE_RECORDER",
+              "observer_id": "jdoe",
+              "project_id": "project1",
+              "pointing_id": "pointing1",
+              "source": "J1921+2153",
+              "itrf": [5109360.133, 2006852.586, -3238948.127],
+              "receiver_id": "receiver3",
+              "feed_polarization": "LIN",
+              "feed_handedness": 1,
+              "feed_angle": 1.234,
+              "feed_tracking_mode": "FA",
+              "feed_position_angle": 10.0,
+              "oversampling_ratio": [8, 7],
+              "coordinates": {
+                "equinox": 2000.0,
+                "ra": "19:21:44.815",
+                "dec": "21:53:02.400"
+              },
+              "max_scan_length": 20000.0,
+              "subint_duration": 30.0,
+              "receptors": ["receptor1", "receptor2"],
+              "receptor_weights": [0.4, 0.6],
+              "num_channelization_stages": 2,
+              "channelization_stages": [
+                {
+                  "num_filter_taps": 1,
+                  "filter_coefficients": [1.0],
+                  "num_frequency_channels": 1024,
+                  "oversampling_ratio": [32, 27]
+                }, {
+                  "num_filter_taps": 1,
+                  "filter_coefficients": [1.0],
+                  "num_frequency_channels": 256,
+                  "oversampling_ratio": [4, 3]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "tmc": {
+      "scan_duration": 10.0
     }
+  }

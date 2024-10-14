@@ -3,55 +3,49 @@ hide empty members
 
 
 package ska_tmc_cdm {
-	package messages {
-		package "<<//name of Tango device//>>" as device {
-			package "<<//name of device command//>>" as command.py <<Rectangle>> {
-				class Request
-				note top of Request
-					Object model for
-					JSON passed as an
-					argument to this
-					command
-				end note
+  package messages {
+    note as N1
+      One Python package per Tango device.
+    end note
+    N1 .. "<<//name of Tango device//>>"
 
-				class Response
-				note top of Response
-					Object model for
-					JSON returned by
-					this command
-				end note
-			}
-		}
-	}
-  package jsonschema {
-        package json_schema.py <<Rectangle>> {
-            class JsonSchema {
+    package "<<//name of Tango device//>>" {
+      package "<<//name of device command//>>" as command_py <<Rectangle>> {
+        class Request
+        note top of Request
+          Object model for
+          JSON passed as an
+          argument to this
+          command
+        end note
 
-                }
-            note top of JsonSchema
-               This Class is used
-               for Json schema validation
-            end note
-        }
+        class Response
+        note top of Response
+          Object model for
+          JSON returned by
+          this command
+        end note
+      }
+
+      note as N2
+        One Python module per Tango command. Could
+        become a Python package if the object is complex.
+      end note
+      N2 .. command_py
+
     }
-	note as N1
-		One Python package
-		per Tango device.
-	end note
-	P2 .. N1
-	N1 .. device
+  }
 
-	note as N2
-		One Python module per
-		Tango command, or a
-		Python package if the
-		object is complex.
-	end note
-	P2 .. N2
-	N2 .. command.py
-
-
-
+  package jsonschema {
+    package json_schema.py as json_schema_py <<Rectangle>> {
+      class JsonSchema {}
+      note top of JsonSchema
+         This Class is used
+         for Json schema
+         validation
+      end note
+    }
+  }
 }
 
 @enduml
