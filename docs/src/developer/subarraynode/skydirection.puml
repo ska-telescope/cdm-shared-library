@@ -1,0 +1,100 @@
+@startuml
+hide empty members
+
+package ska_tmc_cdm.messages {
+
+	package skydirection <<Rectangle>> {
+
+        enum SolarSystemObject {
+            SUN
+            MOON
+            MERCURY
+            VENUS
+            MARS
+            JUPITER
+            SATURN
+            URANUS
+            NEPTUNE
+        }
+
+        enum ReferenceFrame {
+            ICRS
+            ALTAZ
+            GALACTIC
+            SPECIAL
+            TLE
+        }
+
+        class ICRSField {
+            reference_frame = ReferenceFrame.ICRS
+            target_name: str
+        }
+        class "Attrs" as ICRSAttrs {
+            c1: float
+            c2: float
+            pm_c1: Optional[float]
+            pm_c2: Optional[float]
+            epoch: Optional[float]
+            parallax: Optional[float]
+            radial_velocity: Optional[float]
+        }
+        ICRSField +-- "attrs" ICRSAttrs
+
+
+        class AltAzField {
+            reference_frame = ReferenceFrame.ALTAZ
+            target_name: str
+        }
+        class "Attrs" as AltAzAttrs {
+            c1: float
+            c2: float
+        }
+        AltAzField +-- "attrs" AltAzAttrs
+
+
+        class GalacticField {
+            reference_frame = ReferenceFrame.GALACTIC
+            target_name: str
+        }
+        class "Attrs" as GalacticAttrs {
+            c1: float
+            c2: float
+            pm_c1: Optional[float]
+            pm_c2: Optional[float]
+            epoch: Optional[float]
+            parallax: Optional[float]
+            radial_velocity: Optional[float]
+        }
+        GalacticField +-- "attrs" GalacticAttrs
+
+
+        class SpecialField {
+            reference_frame = ReferenceFrame.SPECIAL
+            target_name: str
+        }
+
+
+        class TLEField {
+            reference_frame = ReferenceFrame.TLE
+            target_name: str
+        }
+        class "Attrs" as TLEAttrs {
+            c1: float
+            c2: float
+        }
+        TLEField +-- "attrs" TLEAttrs
+
+
+        abstract class SkyDirection {
+            {abstract} reference_frame: ReferenceFrame
+            target_name: str
+        }
+        SkyDirection <|-- TLEField
+        SkyDirection <|-- SpecialField
+        SkyDirection <|-- ICRSField
+        SkyDirection <|-- GalacticField
+        SkyDirection <|-- AltAzField
+    }
+}
+
+@enduml
