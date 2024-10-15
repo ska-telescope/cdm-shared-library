@@ -1819,7 +1819,6 @@ def test_configure_serialisation_and_validation(
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
-
     utils.test_serialisation_and_validation(
         model_class,
         instance,
@@ -1850,11 +1849,13 @@ def test_configure_serialisation_and_validation_invalid_json(
     valid_json,
     invalid_json,
     is_validate,
+    monkeypatch,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "2")
     with pytest.raises(SchematicValidationError):
         utils.test_serialisation_and_validation(
             model_class,
@@ -1886,11 +1887,13 @@ def test_low_configure_serialisation_and_validation_invalid_json(
     valid_json,
     invalid_json,
     is_validate,
+    monkeypatch,
 ):
     """
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "2")
     with pytest.raises(SchematicValidationError):
         utils.test_serialisation_and_validation(
             model_class,

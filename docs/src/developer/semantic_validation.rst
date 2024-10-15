@@ -60,7 +60,7 @@ Using :code:`VALIDATION_STRICTNESS` environment variable
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The :code:`strictness` parameter passed to :code:`CODEC.loads()` or :code:`CODEC.dumps()` is the primary
-way to configure what validation logic is applied to JSON input and output fom the CDM library.
+way to configure what validation logic is applied to JSON input and output from the CDM library.
 
 This takes an integer value, but the levels are not strictly defined.
 At time of writing,

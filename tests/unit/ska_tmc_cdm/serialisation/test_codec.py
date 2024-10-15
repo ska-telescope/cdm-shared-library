@@ -2,7 +2,6 @@
 Unit tests for the ska_tmc_cdm.schemas.codec module.
 """
 import json
-import os
 import tempfile
 from contextlib import nullcontext as does_not_raise
 from unittest.mock import patch
@@ -179,7 +178,7 @@ def test_codec_load_from_file(msg_cls, json_str, expected, is_validate):
         assert unmarshalled == expected
 
 
-def test_codec_loads_raises_exception_on_invalid_schema():
+def test_codec_loads_raises_exception_on_invalid_schema(monkeypatch):
     """
     Verify that loading data that references an invalid schema raises
     SchemaNotFound when strictness=2.
@@ -189,7 +188,7 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_data["interface"] = "https://foo.com/badschema/2.0"
     invalid_data = json.dumps(invalid_data)
 
-    strict = 2
+    strict = monkeypatch.setenv("VALIDATION_STRICTNESS", "2")
 
     with pytest.raises(SchemaNotFound):
         CODEC.loads(ConfigureRequest, invalid_data, strictness=strict)
@@ -197,33 +196,30 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     invalid_json = json.loads(INVALID_MID_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    if os.environ.get("SEMANTIC_VALIDATION") == "true":
-        with pytest.raises((SchematicValidationError, JsonValidationError)):
-            CODEC.loads(
-                AssignResourcesRequest,
-                invalid_json_assign_resources,
-                strictness=strict,
-            )
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            AssignResourcesRequest,
+            invalid_json_assign_resources,
+            strictness=strict,
+        )
 
     invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
     invalid_json_configure = json.dumps(invalid_json)
 
-    if os.environ.get("SEMANTIC_VALIDATION") == "true":
-        with pytest.raises((SchematicValidationError, JsonValidationError)):
-            CODEC.loads(
-                ConfigureRequest, invalid_json_configure, strictness=strict
-            )
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            ConfigureRequest, invalid_json_configure, strictness=strict
+        )
 
     invalid_json = json.loads(INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON)
     invalid_json_assign_resources = json.dumps(invalid_json)
 
-    if os.environ.get("SEMANTIC_VALIDATION") == "true":
-        with pytest.raises((SchematicValidationError, JsonValidationError)):
-            CODEC.loads(
-                AssignResourcesRequest,
-                invalid_json_assign_resources,
-                strictness=strict,
-            )
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            AssignResourcesRequest,
+            invalid_json_assign_resources,
+            strictness=strict,
+        )
 
     invalid_json = json.loads(INVALID_LOW_CONFIGURE_JSON)
     invalid_json["csp"]["lowcbf"]["stations"]["stn_beams"][0][
@@ -231,14 +227,13 @@ def test_codec_loads_raises_exception_on_invalid_schema():
     ] = "tango://delays.skao.int/low/stn-beam/1"
     invalid_json_configure = json.dumps(invalid_json)
 
-    if os.environ.get("SEMANTIC_VALIDATION") == "true":
-        with pytest.raises((SchematicValidationError, JsonValidationError)):
-            CODEC.loads(
-                ConfigureRequest, invalid_json_configure, strictness=strict
-            )
+    with pytest.raises((SchematicValidationError, JsonValidationError)):
+        CODEC.loads(
+            ConfigureRequest, invalid_json_configure, strictness=strict
+        )
 
 
-def test_codec_dumps_raises_exception_on_invalid_schema():
+def test_codec_dumps_raises_exception_on_invalid_schema(monkeypatch):
     """
     Verify that dumping data that references an invalid schema raises
     SchemaNotFound when strictness=2.
@@ -247,8 +242,12 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
     invalid_data = VALID_LOW_CONFIGURE_OBJECT_3_1.model_copy(deep=True)
     invalid_data.interface = "https://foo.com/badschema/2.0"
     # only raised when strictness=2
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "0")
     CODEC.dumps(invalid_data, strictness=0)
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "1")
     CODEC.dumps(invalid_data, strictness=1)
+
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "2")
     with pytest.raises(SchemaNotFound):
         CODEC.dumps(invalid_data, strictness=2)
 
@@ -274,15 +273,28 @@ def test_exception_handling_strictness_with_syntactically_invalid_json(
     request = CODEC.loads(ConfigureRequest, VALID_LOW_CONFIGURE_JSON)
     request.csp.common.subarray_id = -1
 
-    with expectation:
-        CODEC.loads(
-            ConfigureRequest,
-            CODEC.dumps(request),
-            validate=True,
-            strictness=strictness,
-        )
-        # note: if exception raised, this will not be asserted
-        assert "WARNING" in caplog.text
+    if strictness == 2:
+        with patch.dict("os.environ", {"VALIDATION_STRICTNESS": "2"}):
+            with expectation:
+                CODEC.loads(
+                    ConfigureRequest,
+                    CODEC.dumps(request),
+                    validate=True,
+                    strictness=strictness,
+                )
+                # note: if exception raised, this will not be asserted
+                assert "WARNING" in caplog.text
+    else:
+        with patch.dict("os.environ", {"VALIDATION_STRICTNESS": "1"}):
+            with expectation:
+                CODEC.loads(
+                    ConfigureRequest,
+                    CODEC.dumps(request),
+                    validate=True,
+                    strictness=strictness,
+                )
+                # note: if exception raised, this will not be asserted
+                assert "WARNING" in caplog.text
 
 
 @pytest.mark.parametrize("strictness", [0, 1, 2])
