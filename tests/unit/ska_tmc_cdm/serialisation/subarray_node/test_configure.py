@@ -3,7 +3,6 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
 
 import json
-import os
 from datetime import timedelta
 
 import pytest
@@ -1856,16 +1855,15 @@ def test_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    if os.environ.get("SEMANTIC_VALIDATION") == "true":
-        with pytest.raises(SchematicValidationError):
-            utils.test_serialisation_and_validation(
-                model_class,
-                instance,
-                modifier_fn,
-                valid_json,
-                invalid_json,
-                is_validate,
-            )
+    with pytest.raises(SchematicValidationError):
+        utils.test_serialisation_and_validation(
+            model_class,
+            instance,
+            modifier_fn,
+            valid_json,
+            invalid_json,
+            is_validate,
+        )
 
 
 @pytest.mark.parametrize(
@@ -1893,13 +1891,12 @@ def test_low_configure_serialisation_and_validation_invalid_json(
     Verifies that the schema marshals, unmarshals, and validates correctly
     for invalid json and raise SchematicValidationError.
     """
-    if os.environ.get("SEMANTIC_VALIDATION") == "true":
-        with pytest.raises(SchematicValidationError):
-            utils.test_serialisation_and_validation(
-                model_class,
-                instance,
-                modifier_fn,
-                valid_json,
-                invalid_json,
-                is_validate,
-            )
+    with pytest.raises(SchematicValidationError):
+        utils.test_serialisation_and_validation(
+            model_class,
+            instance,
+            modifier_fn,
+            valid_json,
+            invalid_json,
+            is_validate,
+        )
