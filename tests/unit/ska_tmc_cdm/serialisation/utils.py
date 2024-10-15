@@ -1,5 +1,4 @@
 from typing import Callable, Type
-from unittest.mock import patch
 
 import pytest
 from pydantic import ValidationError
@@ -101,9 +100,8 @@ def test_deserialising_invalid_json_raises_exception_when_strict(
     :param model_class: CdmObject class
     :param invalid_json: JSON string
     """
-    with patch.dict("os.environ", {"VALIDATION_STRICTNESS": "2"}):
-        with pytest.raises((JsonValidationError, ValidationError)):
-            CODEC.loads(model_class, invalid_json, is_validate, strictness=2)
+    with pytest.raises((JsonValidationError, ValidationError)):
+        CODEC.loads(model_class, invalid_json, is_validate, strictness=2)
 
 
 def test_serialising_valid_object_does_not_raise_exception_when_strict(
@@ -135,7 +133,6 @@ def test_serialising_invalid_object_raises_exception_when_strict(
     """
     obj = instance.model_copy(deep=True)
 
-    with patch.dict("os.environ", {"VALIDATION_STRICTNESS": "2"}):
-        with pytest.raises((JsonValidationError, ValidationError)):
-            modifier_fn(obj)
-            CODEC.dumps(obj, is_validate)
+    with pytest.raises((JsonValidationError, ValidationError)):
+        modifier_fn(obj)
+        CODEC.dumps(obj, is_validate, strictness=2)

@@ -278,7 +278,7 @@ def test_marshall_fsp_configuration_with_optional_parameters_as_none():
         assert field not in marshalled
 
 
-def test_marshall_csp_configuration_does_not_modify_original(monkeypatch):
+def test_marshall_csp_configuration_does_not_modify_original():
     """
     Verify that serialising a CspConfiguration does not change the object.
     """
@@ -303,7 +303,6 @@ def test_marshall_csp_configuration_does_not_modify_original(monkeypatch):
         pst_config=None,
     )
     copied = config.model_copy(deep=True)
-    monkeypatch.setenv("VALIDATION_STRICTNESS", "0")
     CODEC.dumps(config)
 
     assert config.interface == copied.interface

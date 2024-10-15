@@ -178,7 +178,7 @@ def test_codec_load_from_file(msg_cls, json_str, expected, is_validate):
         assert unmarshalled == expected
 
 
-def test_codec_loads_raises_exception_on_invalid_schema(monkeypatch):
+def test_codec_loads_raises_exception_on_invalid_schema():
     """
     Verify that loading data that references an invalid schema raises
     SchemaNotFound when strictness=2.
@@ -188,7 +188,7 @@ def test_codec_loads_raises_exception_on_invalid_schema(monkeypatch):
     invalid_data["interface"] = "https://foo.com/badschema/2.0"
     invalid_data = json.dumps(invalid_data)
 
-    strict = monkeypatch.setenv("VALIDATION_STRICTNESS", "2")
+    strict = 2
 
     with pytest.raises(SchemaNotFound):
         CODEC.loads(ConfigureRequest, invalid_data, strictness=strict)
@@ -233,7 +233,7 @@ def test_codec_loads_raises_exception_on_invalid_schema(monkeypatch):
         )
 
 
-def test_codec_dumps_raises_exception_on_invalid_schema(monkeypatch):
+def test_codec_dumps_raises_exception_on_invalid_schema():
     """
     Verify that dumping data that references an invalid schema raises
     SchemaNotFound when strictness=2.
@@ -242,12 +242,9 @@ def test_codec_dumps_raises_exception_on_invalid_schema(monkeypatch):
     invalid_data = VALID_LOW_CONFIGURE_OBJECT_3_1.model_copy(deep=True)
     invalid_data.interface = "https://foo.com/badschema/2.0"
     # only raised when strictness=2
-    monkeypatch.setenv("VALIDATION_STRICTNESS", "0")
     CODEC.dumps(invalid_data, strictness=0)
-    monkeypatch.setenv("VALIDATION_STRICTNESS", "1")
     CODEC.dumps(invalid_data, strictness=1)
 
-    monkeypatch.setenv("VALIDATION_STRICTNESS", "2")
     with pytest.raises(SchemaNotFound):
         CODEC.dumps(invalid_data, strictness=2)
 
@@ -273,28 +270,15 @@ def test_exception_handling_strictness_with_syntactically_invalid_json(
     request = CODEC.loads(ConfigureRequest, VALID_LOW_CONFIGURE_JSON)
     request.csp.common.subarray_id = -1
 
-    if strictness == 2:
-        with patch.dict("os.environ", {"VALIDATION_STRICTNESS": "2"}):
-            with expectation:
-                CODEC.loads(
-                    ConfigureRequest,
-                    CODEC.dumps(request),
-                    validate=True,
-                    strictness=strictness,
-                )
-                # note: if exception raised, this will not be asserted
-                assert "WARNING" in caplog.text
-    else:
-        with patch.dict("os.environ", {"VALIDATION_STRICTNESS": "1"}):
-            with expectation:
-                CODEC.loads(
-                    ConfigureRequest,
-                    CODEC.dumps(request),
-                    validate=True,
-                    strictness=strictness,
-                )
-                # note: if exception raised, this will not be asserted
-                assert "WARNING" in caplog.text
+    with expectation:
+        CODEC.loads(
+            ConfigureRequest,
+            CODEC.dumps(request),
+            validate=True,
+            strictness=strictness,
+        )
+        # note: if exception raised, this will not be asserted
+        assert "WARNING" in caplog.text
 
 
 @pytest.mark.parametrize("strictness", [0, 1, 2])
