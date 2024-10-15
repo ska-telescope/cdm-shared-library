@@ -8,6 +8,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 Unreleased Changes
 ******************
 
+12.3.1
+******************
+* Data model changes to support ADR-99:
+  - Updated MidCBFConfiguration default None for frequency_band_offset_stream1, frequency_band_offset_stream2 and correlation.
+
 12.3.0
 ******************
 * Data Model changes to support Holography as per ADR-106 

@@ -326,9 +326,9 @@ class MidCBFConfiguration(CdmObject):
     :param vlbi_config: the VLBI configurations to set, it is optional
     """
 
-    frequency_band_offset_stream1: Optional[int] = Field(ge=-1e8, le=1e8)
-    frequency_band_offset_stream2: Optional[int] = Field(ge=-1e8, le=1e8)
-    correlation: Optional[CorrelationConfiguration]
+    frequency_band_offset_stream1: Optional[int] = Field(None, ge=-1e8, le=1e8)
+    frequency_band_offset_stream2: Optional[int] = Field(None, ge=-1e8, le=1e8)
+    correlation: Optional[CorrelationConfiguration] = None
     vlbi_config: Optional[VLBIConfiguration] = Field(
         default=None,
         serialization_alias="vlbi",
