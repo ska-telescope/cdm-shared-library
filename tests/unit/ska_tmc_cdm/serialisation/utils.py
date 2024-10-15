@@ -131,6 +131,7 @@ def test_serialising_invalid_object_raises_exception_when_strict(
     :param instance: valid CdmObject instance
     :param modifier_fn: function that makes the valid object invalid
     """
+
     obj = instance.model_copy(deep=True)
 
     with pytest.raises((JsonValidationError, ValidationError)):

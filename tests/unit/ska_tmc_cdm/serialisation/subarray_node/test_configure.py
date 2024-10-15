@@ -1819,6 +1819,7 @@ def test_configure_serialisation_and_validation(
     """
     Verifies that the schema marshals, unmarshals, and validates correctly.
     """
+
     utils.test_serialisation_and_validation(
         model_class,
         instance,
