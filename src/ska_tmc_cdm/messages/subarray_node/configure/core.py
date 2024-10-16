@@ -81,7 +81,7 @@ class TargetBase:
         Load to lowercase for compatibility with removed Marshmallow schema
         """
         if isinstance(value, str):
-            return value.lower()
+            return str.lower(value)
         # Not a str, downstream validators will catch:
         return value
 
