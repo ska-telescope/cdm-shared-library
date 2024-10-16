@@ -83,7 +83,7 @@ package "ska_tmc_cdm.messages" as base {
       }
 
       class ReceptorGroup {
-        receptors: list[str]
+        receptors: set[str]
       }
       ReceptorGroup *-- "0..1" Trajectory
       ReceptorGroup *-- "0..1" Projection
