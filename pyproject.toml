@@ -45,7 +45,7 @@ pydantic-core = "^2.18.1"
 annotated-types = "^0.6.0"
 ska-ost-osd = "^2.1.0"
 # to be removed once telmodel MR accepted
-ska-telmodel = { version="1.19.4+dev.cd6f8a9dd", source="ska-telmodel-gitlab" }
+ska-telmodel = { version="1.19.4+dev.cb10b4c4d", source="ska-telmodel-gitlab" }
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1.3"
