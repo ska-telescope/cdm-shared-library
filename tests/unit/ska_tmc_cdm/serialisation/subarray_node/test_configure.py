@@ -1,7 +1,6 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
-import copy
 import json
 from datetime import timedelta
 
@@ -1207,7 +1206,7 @@ def _create_low_configure_v4_1_example():
     The only change between v4.0 and v4.1 is that v4.1 adds an
     optional ADR-63 field to PST beams.
     """
-    example = copy.deepcopy(VALID_LOW_CONFIGURE_OBJECT_4_0)
+    example = VALID_LOW_CONFIGURE_OBJECT_4_0.model_copy(deep=True)
     example.interface = "https://schema.skao.int/ska-low-tmc-configure/4.1"
     example.csp.lowcbf.timing_beams.beams[0].field = ICRSFieldBuilder()
     return example
