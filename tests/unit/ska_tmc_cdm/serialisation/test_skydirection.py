@@ -202,7 +202,7 @@ class TestSpecialField:
             "target_name": "{target_name}",
             "reference_frame": "special"
         }}
-        """
+        """  # noqa: E202,E231,E241
         actual = CODEC.loads(SpecialField, deserialised)
         assert actual == expected
 
@@ -255,7 +255,7 @@ class TestSkyDirection:
             {{
                 "field": {TestTLEField.FULL_JSON.replace('tle', new_frame)}
             }}
-        """
+        """  # noqa: E202
 
         # ValidationError would be raised if Enum not recognised
         TestModel.model_validate_json(input_json)
@@ -288,7 +288,7 @@ class TestSkyDirection:
             {{
                 "field": {json_str}
             }}
-        """
+        """  # noqa: E202
 
         instance = TestModel.model_validate_json(input_json)
         assert isinstance(instance.field, cls)
