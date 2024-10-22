@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## Unreleased Changes
+
+## 12.4.0
 * Added a new `messages.skydirection` module containing classes for ADR-63 sky directions, which are all unified under
   a `messages.skydirection.SkyDirection` union. The `SkyDirection` union should be used whenever an SKA-standard target
   coordinate is required.
@@ -13,24 +15,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * **DEPRECATED** `pointing.target` now deprecated and will be removed in a future release. Developers should start 
     populating `ReceptorGroup` and `ReceptorGroup.field` objects. `pointing.Target` should continue to be populated
     where the reference frame and observation type allows, i.e., a simple point-and-stare at an ICRS coordinate.
-* PST beams now accept an ADR-63 sky direction. Specifically, `csp.BeamsConfiguration.field` is now a `SkyDirection`
-  instance.
-* Moved classes related to receptor grouping, pointing and trajectory into a new `receptorgroup` module. Many classes
+* PST beams now have an optional `SkyDirection` at `csp.BeamsConfiguration.field`.
+* Class related to receptor grouping, pointing and trajectory were moved into a new `receptorgroup` module. Classes
   related to projection and trajectory were renamed for brevity and consistency, and to reflect that they are not
-  specific to Holography:
-  - `core.TrajectoryConfig` -> `receptorgroup.Trajectory`
-  - `core.HolographyPattern` -> `receptorgroup.TrajectoryType`
-  - `core.MosaicTrajectoryConfig` -> `receptorgroup.MosaicTrajectory`
-  - `core.TableTrajectoryConfig` -> `receptorgroup.TableTrajectory`
-  - `core.FixedTrajectoryConfig` -> `receptorgroup.FixedTrajectory`
+  specific to Holography. Change are:
+  - `core.TrajectoryConfig` renamed to `receptorgroup.Trajectory`
+  - `core.HolographyPattern` renamed to `receptorgroup.TrajectoryType`
+  - `core.MosaicTrajectoryConfig` renamed to `receptorgroup.MosaicTrajectory`
+  - `core.TableTrajectoryConfig` renamed to `receptorgroup.TableTrajectory`
+  - `core.FixedTrajectoryConfig` renamed to `receptorgroup.FixedTrajectory`
   - Trajectory `attrs` classes refactored to be child classes of the associated `Trajectory`.
     - `core.MosaicAttrsConfig` -> `receptorgroup.MosaicTrajectory.Attrs`
     - `core.TableAttrsConfig` -> `receptorgroup.TableTrajectory.Attrs`
     - new: `receptorgroup.FixedTrajectory.Attrs`
-  - `core.HolographyReceptorGroupConfig` -> `receptorgroup.ReceptorGroup`
-  - `core.ProjectionConfig` -> `receptorgroup.Projection`
-  - `core.ProjectionName` -> `receptorgroup.ProjectionType`
-  - `core.ProjectionAlignment` -> `receptorgroup.ProjectionAlignment`
+  - `core.HolographyReceptorGroupConfig` renamed to `receptorgroup.ReceptorGroup`
+  - `core.ProjectionConfig` renamed to `receptorgroup.Projection`
+  - `core.ProjectionName` rename to `receptorgroup.ProjectionType`
+  - `core.ProjectionAlignment` rename to `receptorgroup.ProjectionAlignment`
 
 ## 12.3.1
 ******************
