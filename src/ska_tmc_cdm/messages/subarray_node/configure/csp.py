@@ -11,6 +11,7 @@ from pydantic import AliasChoices, Field, model_validator
 
 from ska_tmc_cdm.messages.base import CdmObject
 
+from ...skydirection import SkyDirection
 from . import core
 from .pst import PSTConfiguration
 
@@ -35,6 +36,7 @@ __all__ = [
     "PSSConfiguration",
     "BeamsConfiguration",
 ]
+
 
 MID_CSP_SCHEMA = "https://schema.skao.int/ska-csp-configurescan/4.0"
 MID_CSP_SCHEMA_DEPRECATED = "https://schema.skao.int/ska-csp-configurescan/2.0"
@@ -74,7 +76,7 @@ class FSPConfiguration(CdmObject):
     """
 
     warnings.warn(
-        "This class is deprecated and will be removed in a future version.",
+        "FSPConfiguration is deprecated and will be removed in a future version.",
         DeprecationWarning,
         stacklevel=2,
     )
@@ -215,6 +217,8 @@ class BeamsConfiguration(CdmObject):
     pst_beam_id: Optional[int] = None
     stn_beam_id: Optional[int] = None
     stn_weights: List[float] = Field(default_factory=list)
+    # LowCBF Field introduced in v4.1. If omitted, MCCS target coords would be applied.
+    field: Optional[SkyDirection] = None
 
 
 class TimingBeamsConfiguration(CdmObject):
@@ -294,7 +298,7 @@ class CBFConfiguration(CdmObject):
     """
 
     warnings.warn(
-        "This class is deprecated and will be removed in a future version.",
+        "CBFConfiguration class is deprecated and will be removed in a future version.",
         DeprecationWarning,
         stacklevel=2,
     )

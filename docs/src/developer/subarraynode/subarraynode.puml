@@ -1,76 +1,92 @@
 @startuml
 hide empty members
 
-package ska_tmc_cdm.messages.subarray_node {
-        package scan.py <<Rectangle>> {
-		note as N1
-			This models the
-			input for
-			""SubArrayNode.Scan()""
-		end note
-	}
-	note top of scan.py
-		The JSON payload for
-		""SubArrayNode.Scan()""
-		is simple and can be
-		contained in a single
-		Python module.
-	end note
+package "ska_tmc_cdm.messages" as messages {
+    package skydirection.py as skydirection <<Rectangle>> {
+        note as skydirection_note
+            This module models
+            the SKA standard for
+            sky directions (i.e.,
+            coordinates).
+        end note
+    }
 
-	package configure {
-		package core.py <<Rectangle>> {
-		}
+    package subarraynode {
 
-		package csp.py <<Rectangle>> {
-		}
-
-		package sdp.py <<Rectangle>> {
-		}
-
-        package mccs.py <<Rectangle>> {
+        package scan.py as scan <<Rectangle>> {
+            note as scan_note
+                This module models the input
+                for ""SubArrayNode.Scan()""
+            end note
         }
 
-		package tmc.py <<Rectangle>> {
-		}
+        package configure {
+            package ~__init__.py as init <<Rectangle>> {
+            }
 
-		package __init__.py <<Rectangle>> {
-		}
+            package core.py as core <<Rectangle>> {
+            }
 
-		note as N2
-			Individually or combined, these model the
-			input for ""SubArrayNode.Configure()""
-		end note
+            package csp.py as csp <<Rectangle>> {
+            }
 
-		N2 -- __init__.py
-		N2 -- core.py
-		N2 -- csp.py
-		N2 -- sdp.py
-		N2 -- mccs.py
-		N2 -- tmc.py
-	}
-	note top of configure
-		The JSON payload for
-		""SubArrayNode.Configure()""
-		is complex so it is coded as
-		a package containing modules
-		split roughly along the
-		system Element boundaries.
-	end note
+            package receptor_group.py as receptor_group  <<Rectangle>> {
+            }
 
-	package assigned_resources.py <<Rectangle>> {
-		note as N3
-			This models the
-			input for
-			""SubArrayNode.assigned_resources""
-		end note
-	}
-	note top of assigned_resources.py
-		The JSON payload for
-		""SubArrayNode.assigned_resources""
-		is simple and can be
-		contained in a single
-		Python module.
-	end note
+            package sdp.py as sdp <<Rectangle>> {
+            }
+
+            package mccs.py as mccs <<Rectangle>> {
+            }
+
+            package tmc.py as tmc <<Rectangle>> {
+            }
+
+            note as N2
+                Collectively, these model the input
+                for ""SubArrayNode.Configure()""
+            end note
+
+            N2 -- init
+            N2 -- core
+            N2 -- csp
+            N2 -- sdp
+            N2 -- mccs
+            N2 -- tmc
+            N2 -- receptor_group
+
+            note as complex_module_note
+                The JSON payload for
+                ""SubArrayNode.Configure()""
+                is complex so it is coded as
+                a package containing modules
+                split roughly along the
+                system Element boundaries.
+            end note
+        }
+
+        package assigned_resources.py as assigned_resources <<Rectangle>> {
+            note as assigned_resources_note
+                This module models the output of
+                ""SubArrayNode.assigned_resources""
+            end note
+        }
+
+        note as simple_modules_note
+            These JSON payloads
+            are simple and can be
+            contained in a single
+            Python module.
+        end note
+
+        simple_modules_note .up.. assigned_resources
+        simple_modules_note .up.. scan
+
+    }
+
+'    assigned_resources -down[hidden]- configure
+'    configure -down[hidden]- scan
+'    scan -up[hidden]- configure
 }
 
 @enduml
