@@ -4,6 +4,7 @@ Unit tests for the ska_tmc_cdm.schemas.codec module.
 import json
 import tempfile
 from contextlib import nullcontext as does_not_raise
+from unittest.mock import patch
 
 import pytest
 from ska_ost_osd.telvalidation.semantic_validator import (
@@ -124,6 +125,68 @@ TEST_PARAMETERS = [
 ]
 
 
+@patch("ska_tmc_cdm.schemas.codec.semantic_validate_json")
+@patch("ska_tmc_cdm.schemas.codec.validate_json")
+def test_env_var_overrides_strictness(
+    fake_validate_json, fake_semantic_validate_json, monkeypatch
+):
+    """
+    Verify that the VALIDATION_STRICTNESS environment variable overrides
+    the strictness value passed by the caller.
+    """
+    cls, jsonstr, obj, _ = TEST_PARAMETERS[0]
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "1")
+    CODEC.loads(cls, jsonstr, strictness=2)
+    CODEC.dumps(obj, strictness=2)
+    # VALIDATION_STRICTNESS=1 overrides strictness=2
+    fake_semantic_validate_json.assert_not_called()
+    assert all(
+        c.kwargs["strictness"] == 1 for c in fake_validate_json.call_args_list
+    )
+
+
+@patch("ska_tmc_cdm.schemas.codec.semantic_validate_json")
+@patch("ska_tmc_cdm.schemas.codec.validate_json")
+def test_env_var_overrides_strictness_zero(
+    fake_validate_json, fake_semantic_validate_json, monkeypatch
+):
+    """
+    Verify that the VALIDATION_STRICTNESS environment variable overrides set to 0
+    the strictness value passed by the caller.
+    """
+    cls, jsonstr, obj, _ = TEST_PARAMETERS[0]
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "0")
+    CODEC.loads(cls, jsonstr, strictness=2)
+    CODEC.dumps(obj, strictness=2)
+    # VALIDATION_STRICTNESS=0 overrides strictness=2
+    fake_validate_json.assert_called()
+    fake_semantic_validate_json.assert_not_called()
+    assert all(
+        c.kwargs["strictness"] == 0 for c in fake_validate_json.call_args_list
+    )
+
+
+@patch("ska_tmc_cdm.schemas.codec.semantic_validate_json")
+@patch("ska_tmc_cdm.schemas.codec.validate_json")
+def test_env_var_overrides_strictness_two(
+    fake_validate_json, fake_semantic_validate_json, monkeypatch
+):
+    """
+    Verify that the VALIDATION_STRICTNESS environment variable overrides set to 2
+    the strictness value passed by the caller.
+    """
+    cls, jsonstr, obj, _ = TEST_PARAMETERS[0]
+    monkeypatch.setenv("VALIDATION_STRICTNESS", "2")
+    CODEC.loads(cls, jsonstr, strictness=0)
+    CODEC.dumps(obj, strictness=0)
+    # VALIDATION_STRICTNESS=2 overrides strictness=0
+    fake_validate_json.assert_called()
+    fake_semantic_validate_json.assert_called()
+    assert all(
+        c.kwargs["strictness"] == 2 for c in fake_validate_json.call_args_list
+    )
+
+
 @pytest.mark.parametrize(
     "msg_cls,json_str,expected, is_validate", TEST_PARAMETERS
 )
@@ -189,7 +252,6 @@ def test_codec_loads_raises_exception_on_invalid_schema():
             invalid_json_assign_resources,
             strictness=strict,
         )
-
     invalid_json = json.loads(NON_COMPLIANCE_MID_CONFIGURE_JSON)
     invalid_json_configure = json.dumps(invalid_json)
 
@@ -231,6 +293,7 @@ def test_codec_dumps_raises_exception_on_invalid_schema():
     # only raised when strictness=2
     CODEC.dumps(invalid_data, strictness=0)
     CODEC.dumps(invalid_data, strictness=1)
+
     with pytest.raises(SchemaNotFound):
         CODEC.dumps(invalid_data, strictness=2)
 

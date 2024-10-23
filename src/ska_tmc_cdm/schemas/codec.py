@@ -6,7 +6,7 @@ remember to pass all the arguments to `model_dump()`
 __all__ = ["Codec"]
 
 import json
-from os import PathLike
+from os import PathLike, environ
 from typing import Optional, TypeVar
 
 from ska_tmc_cdm.messages.base import CdmObject
@@ -23,6 +23,10 @@ class Codec:
     def _telmodel_validation(
         enforced: bool, jsonable_data: dict, strictness: Optional[int] = 0
     ):
+        # Env var VALIDATION_STRICTNESS takes precedence over
+        # other ways to set this parameter, see NAK-1044.
+        if env_strictness := environ.get("VALIDATION_STRICTNESS"):
+            strictness = int(env_strictness)
         if not enforced:
             return
         validate_json(jsonable_data, strictness=strictness)
