@@ -18,6 +18,7 @@ from typing import (
     cast,
 )
 
+import typing_extensions
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import (
@@ -33,6 +34,10 @@ from pydantic import (
 from typing_extensions import Annotated, Self
 
 from ska_tmc_cdm.messages.base import CdmObject
+from ska_tmc_cdm.messages.skydirection import SolarSystemObject
+from ska_tmc_cdm.messages.subarray_node.configure.receptorgroup import (
+    ReceptorGroup,
+)
 
 __all__ = [
     "PointingConfiguration",
@@ -40,10 +45,8 @@ __all__ = [
     "PointingCorrection",
     "ReceiverBand",
     "DishConfiguration",
-    "HolographyPattern",
-    "HolographyReceptorGroupConfig",
-    "TrajectoryConfig",
 ]
+
 
 UnitStr = str | u.Unit
 UnitInput = UnitStr | tuple[UnitStr, UnitStr]
@@ -67,19 +70,6 @@ class TargetType(str, Enum):
                 return cls.DEFAULT
 
 
-# If we upgrade to Py 3.11 use StrEnum
-class SolarSystemObject(str, Enum):
-    SUN = "Sun"
-    MOON = "Moon"
-    MERCURY = "Mercury"
-    VENUS = "Venus"
-    MARS = "Mars"
-    JUPITER = "Jupiter"
-    SATURN = "Saturn"
-    URANUS = "Uranus"
-    NEPTUNE = "Neptune"
-
-
 T = TypeVar("T")
 
 
@@ -91,7 +81,7 @@ class TargetBase:
         Load to lowercase for compatibility with removed Marshmallow schema
         """
         if isinstance(value, str):
-            return value.lower()
+            return str.lower(value)
         # Not a str, downstream validators will catch:
         return value
 
@@ -290,101 +280,22 @@ class PointingCorrection(Enum):
     RESET = "RESET"
 
 
-class HolographyPattern(str, Enum):
-    """
-    Holography Scan Pattern
-    """
-
-    FIXED = "fixed"
-    MOSAIC = "mosaic"
-    SPIRAL = "spiral"
-    RASTER = "raster"
-    CONSTANT_VELOCITY = "constant-velocity"
-    TABLE = "table"
-    HYPOTROCHOID = "hypotrochoid"
-
-
-class TableAttrsConfig(CdmObject):
-    """Attrs for table pattern"""
-
-    x: float
-    y: float
-    t: list[float] = Field(default_factory=list)
-
-
-class MosaicAttrsConfig(CdmObject):
-    """Attrs for mosiac pattern"""
-
-    x_offsets: list[float]
-    y_offsets: list[float]
-
-
-class MosaicTrajectoryConfig(CdmObject):
-    name: Literal[HolographyPattern.MOSAIC] = HolographyPattern.MOSAIC
-    attrs: MosaicAttrsConfig
-
-
-class TableTrajectoryConfig(CdmObject):
-    name: Literal[HolographyPattern.TABLE] = HolographyPattern.TABLE
-    attrs: TableAttrsConfig
-
-
-class FixedTrajectoryConfig(CdmObject):
-    name: Literal[HolographyPattern.FIXED] = HolographyPattern.FIXED
-    attrs: TableAttrsConfig
-
-
-TrajectoryConfig = Annotated[
-    Union[
-        MosaicTrajectoryConfig, TableTrajectoryConfig, FixedTrajectoryConfig
-    ],
-    Field(discriminator="name"),
-]
-
-
-class ProjectionName(Enum):
-    """Projection Names"""
-
-    SIN = "SIN"
-    TAN = "TAN"
-    ARC = "ARC"
-    STG = "STG"
-    CAR = "CAR"
-    SSN = "SSN"
-
-
-class ProjectionAlignment(Enum):
-    """Projection Alignment"""
-
-    ICRS = "ICRS"
-    ALTAZ = "AltAz"
-
-
-class ProjectionConfig(CdmObject):
-    """Projection Config"""
-
-    name: ProjectionName = ProjectionName.SIN
-    alignment: ProjectionAlignment = ProjectionAlignment.ICRS
-
-
-class HolographyReceptorGroupConfig(CdmObject):
-    """Holography Receptor Group to apply"""
-
-    receptors: list[str] = Field(default_factory=list)
-    field: dict = Field(default_factory=dict)
-    trajectory: Optional[TrajectoryConfig] = None
-    projection: Optional[ProjectionConfig] = None
-
-
 class PointingConfiguration(CdmObject):
     """
     PointingConfiguration specifies where the subarray receptors are going to
     point.
     """
 
-    target: Optional[TargetUnion] = None
+    target: Optional[TargetUnion] = Field(
+        None,
+        deprecated=typing_extensions.deprecated(
+            "PointingConfiguration.target is deprecated and will be removed "
+            "in a future version. Use PointingConfiguration.groups instead.",
+            stacklevel=2,
+        ),
+    )
     correction: Optional[PointingCorrection] = None
-    groups: list[HolographyReceptorGroupConfig] = Field(default_factory=list)
+    groups: Optional[list[ReceptorGroup]] = None
 
 
 class ReceiverBand(Enum):

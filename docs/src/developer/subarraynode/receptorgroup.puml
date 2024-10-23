@@ -1,0 +1,95 @@
+@startuml
+hide empty members
+
+package "ska_tmc_cdm.messages" as base {
+
+  package "skydirection.py" as skydirection <<Rectangle>> {
+    abstract class SkyDirection {}
+    SkyDirection <|-- TLEField
+    SkyDirection <|-- SpecialField
+    SkyDirection <|-- ICRSField
+    SkyDirection <|-- GalacticField
+    SkyDirection <|-- AltAzField
+  }
+
+  package "subarraynode.configure" as main {
+
+    package "receptorgroup.py" as bar <<Rectangle>> {
+
+      enum TrajectoryType {
+        FIXED
+        MOSAIC
+        SPIRAL
+        RASTER
+        CONSTANT_VELOCITY
+        TABLE
+        HYPOTROCHOID
+      }
+
+      class MosaicTrajectory {
+        name = TrajectoryType.MOSAIC
+      }
+      class "Attrs" as MosaicAttrs {
+        x_offsets: list[float]
+        y_offsets: list[float]
+      }
+      MosaicTrajectory +-- "attrs" MosaicAttrs
+
+      class TableTrajectory {
+        name = TrajectoryType.TABLE
+      }
+      class "Attrs" as TableTrajectoryAttrs {
+        x: float
+        y: float
+        t: list[float]
+      }
+      TableTrajectory +-- "attrs" TableTrajectoryAttrs
+
+      class FixedTrajectory {
+        name = TrajectoryType.FIXED
+      }
+      class "Attrs" as FixedTrajectoryAttrs {
+        x: float
+        y: float
+        t: list[float]
+      }
+      FixedTrajectory +-- "attrs" FixedTrajectoryAttrs
+
+
+      abstract class Trajectory {
+        {abstract} name: TrajectoryType
+      }
+      Trajectory <|--- MosaicTrajectory
+      Trajectory <|--- TableTrajectory
+      Trajectory <|--- FixedTrajectory
+
+      enum ProjectionType {
+        SIN
+        TAN
+        ARC
+        STG
+        CAR
+        SSN
+      }
+
+      enum ProjectionAlignment {
+        ICRS
+        ALTAZ
+      }
+
+      class Projection {
+        name: ProjectionType = ProjectionType.SIN
+        alignment: ProjectionAlignment = ProjectionAlignment.ICRS
+      }
+
+      class ReceptorGroup {
+        receptors: set[str]
+      }
+      ReceptorGroup *-- "0..1" Trajectory
+      ReceptorGroup *-- "0..1" Projection
+      ReceptorGroup *- "1" SkyDirection
+    }
+  }
+}
+
+@enduml

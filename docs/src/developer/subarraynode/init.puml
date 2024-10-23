@@ -1,33 +1,33 @@
 @startuml
 hide empty members
 
-package ska_tmc_cdm.messages.subarray_node.configure {
-	package core.py <<Rectangle>> {
+package ska_tmc_cdm.messages.subarray_node.configure as base {
+	package core.py as core <<Rectangle>> {
 		class PointingConfiguration
 		class DishConfiguration
 	}
 
-	package csp.py <<Rectangle>> {
+	package csp.py as csp <<Rectangle>> {
 		class CSPConfiguration
 	}
 
-	package sdp.py <<Rectangle>> {
+	package sdp.py as sdp <<Rectangle>> {
 		class SDPConfiguration
 	}
 
-    package sdp.py <<Rectangle>> {
-        class SDPConfiguration
+    package receptorgroup.py as receptorgroup <<Rectangle>> {
+        class ReceptorGroup
     }
 
-    package mccs.py <<Rectangle>> {
+    package mccs.py as mccs <<Rectangle>> {
         class MCCSConfiguration
     }
 
-	package tmc.py <<Rectangle>> {
+	package tmc.py as tmc <<Rectangle>> {
 		class TMCConfiguration
 	}
 
-	package ~__init__.py <<Rectangle>> {
+	package ~__init__.py as init <<Rectangle>> {
 		class ConfigureRequest {
             interface: str
 			transaction_id
@@ -54,6 +54,8 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 		is no Response class in this
 		package.
 	end note
+
+    PointingConfiguration *-- ReceptorGroup
 }
 
 @enduml

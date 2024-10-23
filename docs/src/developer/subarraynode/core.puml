@@ -1,9 +1,13 @@
 @startuml
 hide empty members
 
-package ska_tmc_cdm.messages.subarray_node.configure {
+package "ska_tmc_cdm.messages.subarray_node.configure" as base {
 
-	package core.py <<Rectangle>> {
+	package "receptorgroup.py" as _receptorgroup <<Rectangle>> {
+        class ReceptorGroup {}
+    }
+
+	package "core.py" as _core <<Rectangle>> {
 
 		class Target {
 			coord : astropy.SkyCoord
@@ -11,6 +15,11 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			ca_offset_arcsec: float = 0
 			ie_offset_arcsec: float = 0
 		}
+        note left of Target
+        <u>**DEPRECATED**</u>
+        Superseded by
+        ReceptorGroup
+        end note
 
 		enum PointingCorrection {
 			MAINTAIN
@@ -18,36 +27,11 @@ package ska_tmc_cdm.messages.subarray_node.configure {
 			RESET
 		}
 
-		class HolographyReceptorGroupConfig {
-		    receptors: list
-		    field: dict
-		    projection: dict
-		}
-
-		enum HolographyPattern {
-		    FIXED
-		    MOSAIC
-		    SPIRAL
-		    RASTER
-		    CONSTANT_VELOCITY
-		    TABLE
-		    HYPOTROCHOID
-		}
-
-		class TrajectoryConfig {
-		    name: HolographyPattern
-		    attrs: dict
-		}
-
 		class PointingConfiguration {
 			correction: PointingCorrection
-			groups: list[HolographyReceptorGroupConfig]
 		}
-		
 		PointingConfiguration *-- "1" Target
-		PointingConfiguration "1"-- "*" HolographyReceptorGroupConfig
-
-		HolographyReceptorGroupConfig *-- "1" TrajectoryConfig
+		PointingConfiguration *- "0..*" ReceptorGroup
 
 		class DishConfiguration {
 			receiver_band : ReceiverBand

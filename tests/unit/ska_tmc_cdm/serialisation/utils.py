@@ -14,9 +14,9 @@ ModifierType = Callable[[CdmObject], None]
 def test_serialisation_and_validation(
     model_class: Type[CdmObject],
     instance: CdmObject,
-    modifier_fn: ModifierType,
+    modifier_fn: ModifierType | None,
     valid_json: str,
-    invalid_json: str,
+    invalid_json: str | None,
     is_validate: bool = True,
 ):
     """

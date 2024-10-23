@@ -18,6 +18,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     VisFspConfiguration,
     VisStnBeamConfiguration,
 )
+from tests.unit.ska_tmc_cdm.builder.skydirection import ICRSFieldBuilder
 
 FSPConfigurationBuilder = functools.partial(
     FSPConfiguration,
@@ -46,11 +47,13 @@ CBFConfigurationBuilder = functools.partial(
     CBFConfiguration, fsp=[FSPConfigurationBuilder()]
 )
 
+
 BeamsConfigurationBuilder = functools.partial(
     BeamsConfiguration,
     pst_beam_id=1,
     stn_beam_id=1,
     stn_weights=(0.9, 1.0, 1.0, 1.0, 0.9, 1.0),
+    field=ICRSFieldBuilder(),
 )
 
 StnBeamConfigurationBuilder = functools.partial(

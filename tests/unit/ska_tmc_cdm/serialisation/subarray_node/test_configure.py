@@ -1,7 +1,6 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
-
 import json
 from datetime import timedelta
 
@@ -11,15 +10,13 @@ from ska_ost_osd.telvalidation.semantic_validator import (
 )
 
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
+from ska_tmc_cdm.messages.skydirection import ICRSField
 from ska_tmc_cdm.messages.subarray_node.configure import (
     MID_SCHEMA,
     ConfigureRequest,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
-    HolographyPattern,
-    HolographyReceptorGroupConfig,
-    MosaicTrajectoryConfig,
     PointingConfiguration,
     PointingCorrection,
     ReceiverBand,
@@ -58,10 +55,40 @@ from ska_tmc_cdm.messages.subarray_node.configure.pst import (
     PSTScanConfiguration,
     PSTScanCoordinates,
 )
+from ska_tmc_cdm.messages.subarray_node.configure.receptorgroup import (
+    MosaicTrajectory,
+    ReceptorGroup,
+    TrajectoryType,
+)
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 
+from ...builder.skydirection import ICRSFieldBuilder
 from .. import utils
+
+
+def _recursive_merge(dict1, dict2):
+    """
+    Recursively merges two dictionaries.
+
+    This function modifies dict1, merging in values from dict 2.
+
+    @param dict1: dictionary to modify
+    @param dict2: dictionary to merge into dict1
+    """
+    for key, value in dict2.items():
+        if (
+            key in dict1
+            and isinstance(dict1[key], dict)
+            and isinstance(value, dict)
+        ):
+            # Recursively merge nested dictionaries
+            dict1[key] = _recursive_merge(dict1[key], value)
+        else:
+            # Merge non-dictionary values
+            dict1[key] = value
+    return dict1
+
 
 PARTIAL_CONFIGURATION_OFFSET_OBJECT = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/2.3",
@@ -363,18 +390,14 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 
 HOLOGRAPHY_POINTING = PointingConfiguration(
     groups=[
-        HolographyReceptorGroupConfig(
+        ReceptorGroup(
             receptors=["SKA001", "SKA002"],
-            field={
-                "target_name": "Cen-A",
-                "reference_frame": "ICRS",
-                "attrs": {
-                    "c1": 201.365,
-                    "c2": -43.0191667,
-                },
-            },
-            trajectory=MosaicTrajectoryConfig(
-                name=HolographyPattern.MOSAIC,
+            field=ICRSField(
+                target_name="Cen-A",
+                attrs=ICRSField.Attrs(c1=201.365, c2=-43.0191667),
+            ),
+            trajectory=MosaicTrajectory(
+                name=TrajectoryType.MOSAIC,
                 attrs={
                     "x_offsets": [
                         -5.0,
@@ -460,7 +483,7 @@ CONFIGURE_MID_HOLOGRAPHY_JSON = {
                 "receptors": ["SKA001", "SKA002"],
                 "field": {
                     "target_name": "Cen-A",
-                    "reference_frame": "ICRS",
+                    "reference_frame": "icrs",
                     "attrs": {
                         "c1": 201.365,
                         "c2": -43.0191667,
@@ -859,6 +882,39 @@ VALID_LOW_CONFIGURE_JSON_4_0 = """
 }
 """
 
+# v4.1 adds field to a PST beam, but as beams is a list we must replace the whole list
+VALID_LOW_CONFIGURE_JSON_4_1 = json.dumps(
+    _recursive_merge(
+        json.loads(VALID_LOW_CONFIGURE_JSON_4_0),
+        {
+            "interface": "https://schema.skao.int/ska-low-tmc-configure/4.1",
+            "csp": {
+                "lowcbf": {
+                    "timing_beams": {
+                        "beams": [
+                            {
+                                "pst_beam_id": 1,
+                                "field": {
+                                    "target_name": "PSR J0024-7204R",
+                                    "reference_frame": "icrs",
+                                    "attrs": {
+                                        "c1": 6.023625,
+                                        "c2": -72.08128333,
+                                        "pm_c1": 4.8,
+                                        "pm_c2": -3.3,
+                                    },
+                                },
+                                "stn_beam_id": 1,
+                                "stn_weights": [0.9, 1.0, 1.0, 1.0, 0.9, 1.0],
+                            },
+                        ]
+                    }
+                }
+            },
+        },
+    )
+)
+
 VALID_LOW_CONFIGURE_OBJECT_3_1 = ConfigureRequest(
     interface="https://schema.skao.int/ska-low-tmc-configure/3.2",
     transaction_id="txn-....-00001",
@@ -1141,6 +1197,23 @@ VALID_LOW_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
     ),
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
+
+
+def _create_low_configure_v4_1_example():
+    """
+    Create a valid JSON example for ska-low-tmc-configure v4.1
+
+    The only change between v4.0 and v4.1 is that v4.1 adds an
+    optional ADR-63 field to PST beams.
+    """
+    example = VALID_LOW_CONFIGURE_OBJECT_4_0.model_copy(deep=True)
+    example.interface = "https://schema.skao.int/ska-low-tmc-configure/4.1"
+    example.csp.lowcbf.timing_beams.beams[0].field = ICRSFieldBuilder()
+    return example
+
+
+VALID_LOW_CONFIGURE_OBJECT_4_1 = _create_low_configure_v4_1_example()
+
 
 VALID_MID_DISH_ONLY_JSON = (
     """
@@ -1900,3 +1973,14 @@ def test_low_configure_serialisation_and_validation_invalid_json(
             invalid_json,
             is_validate,
         )
+
+
+@pytest.mark.parametrize(
+    "json_str,model_cls", [(VALID_MID_CONFIGURE_JSON_4_0, ConfigureRequest)]
+)
+def test_backwards_compatibility(json_str, model_cls):
+    """
+    Verify that the current CDM can load JSON it claims to be
+    backwards-compatible with.
+    """
+    model_cls.model_validate_json(json_str)
