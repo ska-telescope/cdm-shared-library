@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## Unreleased Changes
+## 12.5.0
+* Added VALIDATION_STRICTNESS environment variable to enable the functionality of semantic validation to turn on/off.
+* Integrated latest OSD version into CDM.
 
 ## 12.4.0
 * Added a new `messages.skydirection` module containing classes for ADR-63 sky directions, which are all unified under
