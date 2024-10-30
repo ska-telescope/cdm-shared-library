@@ -9,16 +9,51 @@ package "ska_tmc_cdm.messages.subarray_node.configure" as base {
 
 	package "core.py" as _core <<Rectangle>> {
 
-		class Target {
+        enum LegacyTargetReferenceFrame {
+            ICRS
+            FK5
+            SPECIAL"
+        }
+
+        class SpecialTarget {
+            reference_frame = LegacyTargetReferenceFrame.SPECIAL
+            target_name: str
+        }
+
+        class ICRSTarget {
+            reference_frame = LegacyTargetReferenceFrame.ICRS
+        }
+
+        class FK5Target {
+            reference_frame = LegacyTargetReferenceFrame.FK5
+        }
+
+		class _TargetBase {
 			coord : astropy.SkyCoord
 			target_name : str = ""
 			ca_offset_arcsec: float = 0
 			ie_offset_arcsec: float = 0
 		}
-        note left of Target
+
+        _TargetBase <|-up- FK5Target
+        _TargetBase <|-up- ICRSTarget
+
+        abstract class TargetUnion {}
+        note left of TargetUnion
         <u>**DEPRECATED**</u>
         Superseded by
         ReceptorGroup
+        end note
+
+        TargetUnion <|--- ICRSTarget
+        TargetUnion <|--- FK5Target
+        TargetUnion <|--- SpecialTarget
+
+        note top of ICRSTarget
+        <u>**DEPRECATED**</u>
+        Also importable as
+        ""Target"" for backwards
+        compatability.
         end note
 
 		enum PointingCorrection {
@@ -28,9 +63,9 @@ package "ska_tmc_cdm.messages.subarray_node.configure" as base {
 		}
 
 		class PointingConfiguration {
-			correction: PointingCorrection
+			correction: Optional[PointingCorrection]
 		}
-		PointingConfiguration *-- "1" Target
+		PointingConfiguration *-- "0..1" TargetUnion
 		PointingConfiguration *- "0..*" ReceptorGroup
 
 		class DishConfiguration {

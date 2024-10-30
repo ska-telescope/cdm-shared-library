@@ -5,9 +5,11 @@ Unit tests for the ska_tmc_cdm.messages.subarray_node.configure.common module.
 from typing import NamedTuple, Optional
 
 import pytest
+from pydantic import ValidationError
 
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
     DishConfiguration,
+    FK5Target,
     PointingConfiguration,
     ReceiverBand,
     Target,
@@ -35,14 +37,14 @@ def test_target_defaults():
 
 TARGET_EQ_CASES = (
     (
-        Target(
+        FK5Target(
             ra=1,
             dec=2,
             target_name="a source",
             reference_frame="fk5",
             unit="deg",
         ),
-        Target(
+        FK5Target(
             ra=1,
             dec=2,
             target_name="a source",
@@ -72,7 +74,7 @@ TARGET_EQ_CASES = (
     ),
     (
         Target(ra=1, dec=1),
-        Target(
+        FK5Target(
             ra=1,
             dec=2,
             target_name="a source",
@@ -148,7 +150,9 @@ TARGET_VALIDATION_CASES = (
             "reference_frame": "fk5",
             "unit": "deg",
         },
-        expected_error=None,
+        # error expected because this tries to set an ICRS target to FK5
+        # reference frame
+        expected_error=ValidationError,
     ),
     ValidationCase(
         args={"ca_offset_arcsec": -1, "ie_offset_arcsec": 1},
@@ -190,7 +194,7 @@ def test_target_repr():
         reference_frame="icrs",
         unit=("deg", "arcsec"),
     )
-    expected = "Target(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'), ca_offset_arcsec=0.0, ie_offset_arcsec=0.0)"
+    expected = "ICRSTarget(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'), ca_offset_arcsec=0.0, ie_offset_arcsec=0.0)"
     assert expected == repr(target)
 
 

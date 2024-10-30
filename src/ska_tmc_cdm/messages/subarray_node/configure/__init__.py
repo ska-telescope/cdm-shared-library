@@ -17,7 +17,7 @@ from .pst import PSTConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 
-MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.3"
+MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/4.0"
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-configure/4.1"
 
 

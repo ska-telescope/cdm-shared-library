@@ -7,34 +7,26 @@ this package.
 """
 import math
 from enum import Enum
-from typing import (
-    Any,
-    Callable,
-    ClassVar,
-    Literal,
-    Optional,
-    TypeVar,
-    Union,
-    cast,
-)
+from typing import Callable, ClassVar, Literal, Optional, Union, cast
 
 import typing_extensions
 from astropy import units as u
 from astropy.coordinates import SkyCoord
 from pydantic import (
+    BeforeValidator,
     ConfigDict,
-    Discriminator,
     Field,
-    Tag,
-    field_serializer,
-    field_validator,
     model_serializer,
     model_validator,
 )
 from typing_extensions import Annotated, Self
 
 from ska_tmc_cdm.messages.base import CdmObject
-from ska_tmc_cdm.messages.skydirection import SolarSystemObject
+from ska_tmc_cdm.messages.skydirection import (
+    CaseInsensitiveEnum,
+    SolarSystemObject,
+    _normalise_enum_case,
+)
 from ska_tmc_cdm.messages.subarray_node.configure.receptorgroup import (
     ReceptorGroup,
 )
@@ -42,6 +34,9 @@ from ska_tmc_cdm.messages.subarray_node.configure.receptorgroup import (
 __all__ = [
     "PointingConfiguration",
     "Target",
+    "ICRSTarget",
+    "FK5Target",
+    "SpecialTarget",
     "PointingCorrection",
     "ReceiverBand",
     "DishConfiguration",
@@ -51,57 +46,45 @@ __all__ = [
 UnitStr = str | u.Unit
 UnitInput = UnitStr | tuple[UnitStr, UnitStr]
 
-# If we upgrade to Py 3.11 use StrEnum
-class TargetType(str, Enum):
+
+class LegacyTargetReferenceFrame(CaseInsensitiveEnum):
+    """
+    ** DEPRECATED **
+
+    This class supports the legacy Target class and will be removed in a
+    future release.
+
+    Enumeration of supported coordinate reference frames, one for each legacy
+    Target coordinate class.
+
+    """
+
+    # these enum values becomes case-insensitive on reading, case-sensitive on writing.
+    ICRS = "ICRS"
+    FK5 = "fk5"
     SPECIAL = "special"
-    DEFAULT = "default"
-
-    @classmethod
-    def determine(cls, val: Any) -> "TargetType":
-        if isinstance(val, dict):
-            reference_frame = val.get("reference_frame", "")
-        else:
-            reference_frame = getattr(val, "reference_frame", "")
-
-        match reference_frame.lower():
-            case cls.SPECIAL:
-                return cls.SPECIAL
-            case _:
-                return cls.DEFAULT
 
 
-T = TypeVar("T")
-
-
-class TargetBase:
-    @field_validator("reference_frame", mode="before")
-    @classmethod
-    def _to_lowercase(cls, value: T) -> T:
-        """
-        Load to lowercase for compatibility with removed Marshmallow schema
-        """
-        if isinstance(value, str):
-            return str.lower(value)
-        # Not a str, downstream validators will catch:
-        return value
-
-    @field_serializer("reference_frame")
-    def _to_uppercase(self, value: str) -> str:
-        """
-        Dump to uppercase for compatibility with removed Marshmallow schema
-        """
-        return value.upper()
-
-
-class SpecialTarget(TargetBase, CdmObject):
-    reference_frame: Literal[TargetType.SPECIAL] = TargetType.SPECIAL
-    target_name: SolarSystemObject
+# normalise case on deserialisation. see comments in skydirection.py for info
+# on how this works
+_ICRS = Annotated[
+    Literal[LegacyTargetReferenceFrame.ICRS],
+    BeforeValidator(_normalise_enum_case(LegacyTargetReferenceFrame)),
+]
+_FK5 = Annotated[
+    Literal[LegacyTargetReferenceFrame.FK5],
+    BeforeValidator(_normalise_enum_case(LegacyTargetReferenceFrame)),
+]
+_SPECIAL = Annotated[
+    Literal[LegacyTargetReferenceFrame.SPECIAL],
+    BeforeValidator(_normalise_enum_case(LegacyTargetReferenceFrame)),
+]
 
 
 # TODO: Target() is doing too much fancy logic IMHO.
 # Could we annotate astropy.SkyCoord and use that directly
 # instead?
-class Target(TargetBase, CdmObject):
+class _TargetBase(CdmObject):
     """
     Target encapsulates source coordinates and source metadata.
 
@@ -118,12 +101,16 @@ class Target(TargetBase, CdmObject):
     )
     ra: Optional[str | float] = None
     dec: Optional[str | float] = None
-    # TODO: Can this be Literal["ICRS"] instead?
-    reference_frame: str = "icrs"
     unit: UnitInput = Field(default=("hourangle", "deg"), exclude=True)
     target_name: str = ""
     ca_offset_arcsec: float = 0.0
     ie_offset_arcsec: float = 0.0
+
+    # just here to indicate what the coord functions expects. The scope will
+    # be reduced to a single StrEnum enumerated frame by the subclass. Note,
+    # we can't say _FK5 | _ICRS as pyright objects to the subclass redefining
+    # the type class
+    reference_frame: str
 
     @property
     def coord(self) -> Optional[SkyCoord]:
@@ -132,7 +119,8 @@ class Target(TargetBase, CdmObject):
                 ra=self.ra,
                 dec=self.dec,
                 unit=self.unit,
-                frame=self.reference_frame,
+                # astropy ref frames are all lower case
+                frame=self.reference_frame.lower(),
             )
 
     @model_serializer(mode="wrap")
@@ -160,7 +148,9 @@ class Target(TargetBase, CdmObject):
             #     Process Target co-ordinates by converting them to ICRS frame before
             #     the JSON marshalling process begins.
             icrs_coord = self.coord.transform_to("icrs")
-            data["reference_frame"] = icrs_coord.frame.name.upper()
+            data["reference_frame"] = LegacyTargetReferenceFrame(
+                icrs_coord.frame.name
+            )
             coord_str = cast(str, icrs_coord.to_string("hmsdms", sep=":"))
             data["ra"], data["dec"] = coord_str.split(" ")
 
@@ -184,7 +174,7 @@ class Target(TargetBase, CdmObject):
         return self
 
     def __eq__(self, other) -> bool:
-        if not isinstance(other, Target):
+        if not isinstance(other, self.__class__):
             return False
         # Either both are None or both defined...
         if bool(self.coord) != bool(other.coord):
@@ -231,7 +221,9 @@ class Target(TargetBase, CdmObject):
             units = (self_coord.ra.unit.name, self_coord.dec.unit.name)
             reference_frame = self_coord.frame.name
             target_name = self.target_name
-            return "Target(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
+            cls = self.__class__.__name__
+            return "{!s}(ra={!r}, dec={!r}, target_name={!r}, reference_frame={!r}, unit={!r}, ca_offset_arcsec={!r}, ie_offset_arcsec={!r})".format(
+                cls,
                 raw_ra,
                 raw_dec,
                 target_name,
@@ -258,13 +250,26 @@ class Target(TargetBase, CdmObject):
         )
 
 
-TargetUnion = Annotated[
-    Union[
-        Annotated[Target, Tag(TargetType.DEFAULT)],
-        Annotated[SpecialTarget, Tag(TargetType.SPECIAL)],
-    ],
-    Discriminator(TargetType.determine),
-]
+class ICRSTarget(_TargetBase):
+    reference_frame: _ICRS = LegacyTargetReferenceFrame.ICRS
+
+
+class FK5Target(_TargetBase):
+    reference_frame: _FK5 = LegacyTargetReferenceFrame.FK5
+
+
+class SpecialTarget(CdmObject):
+    reference_frame: _SPECIAL = LegacyTargetReferenceFrame.SPECIAL
+    target_name: SolarSystemObject
+
+
+TargetUnion = Union[ICRSTarget, FK5Target, SpecialTarget]
+
+
+# alias for backwards compatibility for anyone create Targets in notebooks.
+# This should be sufficient because in practise the FK5 reference frame was
+# never used apart from the unit tests for this project.
+Target = ICRSTarget
 
 
 class PointingCorrection(Enum):

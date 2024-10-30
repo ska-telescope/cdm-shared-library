@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## Unreleased
+* Updated default schema for Mid TMC Configure from `2.3` to `4.0`
+* Bug fix: Updated `(Special)Target.reference_frame` to be case-insensitive on read but convert to correct case on write
+
 ## 12.5.0
 * Added VALIDATION_STRICTNESS environment variable to enable the functionality of semantic validation to turn on/off.
 * Integrated latest OSD version into CDM.
@@ -36,7 +40,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   - `core.ProjectionAlignment` rename to `receptorgroup.ProjectionAlignment`
 
 ## 12.3.1
-******************
 * Data model changes to support ADR-99:
   - Updated MidCBFConfiguration default None for frequency_band_offset_stream1, frequency_band_offset_stream2 and correlation.
 

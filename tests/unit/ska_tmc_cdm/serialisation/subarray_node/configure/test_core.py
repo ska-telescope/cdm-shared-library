@@ -42,7 +42,7 @@ OFFSET_TARGET_JSON = {
 }
 
 
-NON_SIDEREAL_TARGET_JSON = {"target_name": "Sun", "reference_frame": "SPECIAL"}
+NON_SIDEREAL_TARGET_JSON = {"target_name": "Sun", "reference_frame": "special"}
 
 VALID_DISH_CONFIGURATION_JSON = '{"receiver_band": "5a"}'
 
