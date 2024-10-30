@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## Unreleased
+* 
+
 ## 12.5.1
 * Updated default schema for Mid TMC Configure from `2.3` to `4.0`
 * Bug fix: Updated `(Special)Target.reference_frame` to be case-insensitive on read but convert to correct case on write
