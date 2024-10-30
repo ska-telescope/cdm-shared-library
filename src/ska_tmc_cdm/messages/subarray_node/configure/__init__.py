@@ -17,10 +17,7 @@ from .pst import PSTConfiguration
 from .sdp import SDPConfiguration
 from .tmc import TMCConfiguration
 
-# TODO determine if this should be ska-tmc-configure/3.0 for Jack. If so, the
-# _2.3 examples should be updated and get rid of the _2.3 aspect, as this
-# project is not designed to be backwards compatible with previous major # versions.
-MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/2.3"
+MID_SCHEMA = "https://schema.skao.int/ska-tmc-configure/4.0"
 LOW_SCHEMA = "https://schema.skao.int/ska-low-tmc-configure/4.1"
 
 
