@@ -64,7 +64,8 @@ class CdmObject(BaseModel):
     def _is_default(self, key: str) -> bool:
         field_name, field_info = self._get_field_info(key)
         if field_info.default_factory is not None:
-            default = field_info.default_factory()
+            # adding a pyright ignore as it seems to be confused by both no posn args and the presence of args
+            default = field_info.default_factory()  # type: ignore
         elif field_info.default is not PydanticUndefined:
             default = field_info.default
         else:
