@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## Unreleased
-* 
+* Updated to AstroPyv6.1, Pydanticv2.9.2 and OSDv2.3
 
 ## 12.5.1
 * Updated default schema for Mid TMC Configure from `2.3` to `4.0`
