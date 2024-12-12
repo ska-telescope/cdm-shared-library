@@ -188,13 +188,13 @@ def test_target_repr():
     Verify the repr representation of a Target.
     """
     target = Target(
-        ra=30,
-        dec=-3600,
+        ra=30.0,
+        dec=-3600.0,
         target_name="target name",
         reference_frame="icrs",
         unit=("deg", "arcsec"),
     )
-    expected = "ICRSTarget(ra=30.0, dec=-1.0, target_name='target name', reference_frame='icrs', unit=('deg', 'deg'), ca_offset_arcsec=0.0, ie_offset_arcsec=0.0)"
+    expected = "ICRSTarget(ra=np.float64(30.0), dec=np.float64(-1.0), target_name='target name', reference_frame='icrs', unit=('deg', 'deg'), ca_offset_arcsec=0.0, ie_offset_arcsec=0.0)"
     assert expected == repr(target)
 
 

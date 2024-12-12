@@ -38,13 +38,13 @@ priority = 'explicit'
 
 [tool.poetry.dependencies]
 python = "^3.10"
-astropy = ">=5.0.3,<7"
-deepdiff = "^5.8.1"
+astropy = "^6.1"
 pydantic = "^2.7.0"
 pydantic-core = "^2.18.1"
 annotated-types = "^0.6.0"
-ska-ost-osd = "^2.2.0"
+ska-ost-osd = { git = "https://gitlab.com/ska-telescope/ost/ska-ost-osd.git", branch = "low-1128-deepdiff-issue" }
 ska-telmodel = "^1.19.5"
+deepdiff = "7.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.1.3"
