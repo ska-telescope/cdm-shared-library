@@ -1,6 +1,7 @@
 from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.central_node.csp import CSPConfiguration
-from ska_tmc_cdm.utils import assert_json_is_equal
+
+from .....utils import assert_json_is_equal
 
 VALID_CSP_LOW_JSON = """
 {

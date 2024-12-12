@@ -16,7 +16,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
     Target,
     TargetUnion,
 )
-from ska_tmc_cdm.utils import assert_json_is_equal
+
+from ......utils import assert_json_is_equal
 
 
 class Case(NamedTuple):

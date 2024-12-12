@@ -11,7 +11,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.mccs import (
     SubarrayBeamLogicalBands,
     SubarrayBeamSkyCoordinates,
 )
-from ska_tmc_cdm.utils import assert_json_is_equal
+
+from ......utils import assert_json_is_equal
 
 VALID_LOGICAL_BANDS_JSON = """
 [{
