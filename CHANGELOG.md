@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## Unreleased
-* 
+* Updated to astropy v6.1, pydantic v2.10.3, deepdiff v7.0 and ska-ost-osd v 2.3.1
 
 ## 12.5.1
 * Updated default schema for Mid TMC Configure from `2.3` to `4.0`
