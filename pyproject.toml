@@ -42,7 +42,6 @@ astropy = "^6.1"
 annotated-types = "^0.6.0"
 ska-ost-osd = "^2.3.1"
 ska-telmodel = "^1.19.5"
-deepdiff = "7.0.0"
 pydantic = "^2.10.3"
 
 [tool.poetry.group.dev.dependencies]
@@ -56,6 +55,7 @@ isort = "^5.10.1"
 black = "^22.8.0"
 flake8 = "^5.0.4"
 pyright = "^1.1.370"
+deepdiff = "7.0.0"
 
 [tool.poetry.group.docs.dependencies]
 tomli = "^2.0.1"
