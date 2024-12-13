@@ -7,9 +7,7 @@ import pytest
 from ska_tmc_cdm.messages.mccssubarray.assigned_resources import (
     AssignedResources,
 )
-
 from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
-
 
 VALID_JSON = """
 {

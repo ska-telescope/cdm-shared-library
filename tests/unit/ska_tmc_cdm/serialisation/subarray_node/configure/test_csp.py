@@ -19,7 +19,6 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     VisFspConfiguration,
     VisStnBeamConfiguration,
 )
-
 from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
 
 VALID_CSP_JSON_PI16 = """{

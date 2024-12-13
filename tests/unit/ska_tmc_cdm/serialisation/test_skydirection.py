@@ -13,7 +13,6 @@ from ska_tmc_cdm.messages.skydirection import (
     SpecialField,
     TLEField,
 )
-
 from tests.utils import assert_json_is_equal
 
 

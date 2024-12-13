@@ -8,9 +8,7 @@ from ska_tmc_cdm.messages.central_node.common import DishAllocation
 from ska_tmc_cdm.messages.central_node.release_resources import (
     ReleaseResourcesRequest,
 )
-
 from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
-
 
 VALID_MID_PARTIAL_RELEASE_JSON = """
 {

@@ -5,9 +5,7 @@ Unit tests for serialisation of ska_tmc_cdm modules.
 import pytest
 
 from ska_tmc_cdm.messages.central_node.mccs import MCCSAllocate
-
 from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
-
 
 VALID_MCCSALLOCATE_JSON = """
 {

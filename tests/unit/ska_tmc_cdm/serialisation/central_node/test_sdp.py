@@ -12,7 +12,6 @@ from ska_tmc_cdm.messages.central_node.sdp import (
     ProcessingBlockConfiguration,
     SDPConfiguration,
 )
-
 from tests.utils import assert_json_is_equal
 
 VALID_SCAN_TYPES_JSON_PI16 = """[
