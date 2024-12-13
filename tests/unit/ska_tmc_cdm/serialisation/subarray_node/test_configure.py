@@ -63,8 +63,8 @@ from ska_tmc_cdm.messages.subarray_node.configure.receptorgroup import (
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
 
-from ...builder.skydirection import ICRSFieldBuilder
-from .. import utils
+from tests.unit.ska_tmc_cdm.builder.skydirection import ICRSFieldBuilder
+from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
 
 
 def _recursive_merge(dict1, dict2):

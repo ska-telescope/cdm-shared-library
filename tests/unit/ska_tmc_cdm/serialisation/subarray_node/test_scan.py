@@ -6,7 +6,7 @@ import pytest
 
 from ska_tmc_cdm.messages.subarray_node.scan import ScanRequest
 
-from .. import utils
+from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
 
 VALID_MID_JSON = """
 {

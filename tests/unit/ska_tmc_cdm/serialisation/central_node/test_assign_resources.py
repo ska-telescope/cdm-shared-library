@@ -37,7 +37,7 @@ from ska_tmc_cdm.messages.central_node.sdp import (
 )
 from ska_tmc_cdm.messages.mccssubarray.scan import ScanRequest
 
-from .. import utils
+from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
 
 VALID_MID_ASSIGNRESOURCESREQUEST_OBJECT_PI16 = AssignResourcesRequest(
     interface="https://schema.skao.int/ska-tmc-assignresources/2.1",

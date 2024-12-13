@@ -6,7 +6,8 @@ import pytest
 
 from ska_tmc_cdm.messages.mccscontroller.allocate import AllocateRequest
 
-from .. import utils
+from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
+
 
 VALID_JSON = """
 {

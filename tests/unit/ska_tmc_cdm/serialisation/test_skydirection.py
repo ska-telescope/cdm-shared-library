@@ -14,7 +14,7 @@ from ska_tmc_cdm.messages.skydirection import (
     TLEField,
 )
 
-from ....utils import assert_json_is_equal
+from tests.utils import assert_json_is_equal
 
 
 def case_permutations(val: str) -> list[str]:

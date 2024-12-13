@@ -54,7 +54,7 @@ from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
     VALID_MID_CONFIGURE_OBJECT_2_3,
 )
 
-from ....utils import assert_json_is_equal
+from tests.utils import assert_json_is_equal
 
 TEST_PARAMETERS = [
     (

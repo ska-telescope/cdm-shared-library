@@ -20,7 +20,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.csp import (
     VisStnBeamConfiguration,
 )
 
-from ... import utils
+from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
 
 VALID_CSP_JSON_PI16 = """{
     "interface": "https://schema.skao.int/ska-csp-configure/2.0",
