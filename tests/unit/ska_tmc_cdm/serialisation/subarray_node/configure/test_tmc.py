@@ -8,8 +8,7 @@ import pytest
 
 from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
-
-from ... import utils
+from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
 
 VALID_JSON = """
 {

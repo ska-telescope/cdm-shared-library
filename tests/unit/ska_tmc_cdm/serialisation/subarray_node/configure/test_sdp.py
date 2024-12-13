@@ -5,8 +5,7 @@ Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure.sdp module.
 import pytest
 
 from ska_tmc_cdm.messages.subarray_node.configure import SDPConfiguration
-
-from ... import utils
+from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
 
 VALID_JSON = """
 {

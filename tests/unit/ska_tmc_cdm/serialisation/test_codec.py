@@ -20,7 +20,6 @@ from ska_tmc_cdm.messages.central_node.release_resources import (
 )
 from ska_tmc_cdm.messages.subarray_node.configure import ConfigureRequest
 from ska_tmc_cdm.schemas import CODEC
-from ska_tmc_cdm.utils import assert_json_is_equal
 from tests.unit.ska_tmc_cdm.serialisation.central_node.test_assign_resources import (
     INVALID_LOW_ASSIGNRESOURCESREQUEST_JSON,
     INVALID_MID_ASSIGNRESOURCESREQUEST_JSON,
@@ -54,6 +53,7 @@ from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
     VALID_MID_CONFIGURE_JSON_2_3,
     VALID_MID_CONFIGURE_OBJECT_2_3,
 )
+from tests.utils import assert_json_is_equal
 
 TEST_PARAMETERS = [
     (

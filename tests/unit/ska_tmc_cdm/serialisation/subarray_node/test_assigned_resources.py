@@ -4,8 +4,7 @@ from ska_tmc_cdm.messages.subarray_node.assigned_resources import (
     AssignedResources,
     MCCSAllocation,
 )
-
-from .. import utils
+from tests.unit.ska_tmc_cdm.serialisation import serialisation_utils as utils
 
 VALID_MCCSALLOCATION_JSON = """
 {

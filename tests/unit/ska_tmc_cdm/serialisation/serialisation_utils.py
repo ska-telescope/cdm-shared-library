@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from ska_tmc_cdm import CdmObject
 from ska_tmc_cdm.exceptions import JsonValidationError, SchemaNotFound
 from ska_tmc_cdm.schemas import CODEC
-from ska_tmc_cdm.utils import assert_json_is_equal
+from tests.utils import assert_json_is_equal
 
 ModifierType = Callable[[CdmObject], None]
 
