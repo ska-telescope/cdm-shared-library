@@ -43,8 +43,9 @@ class TableTrajectory(CdmObject):
         t: list[float] = Field(default_factory=list)
 
 
-class FixedTrajectoryConfig(CdmObject):
+class FixedTrajectory(CdmObject):
     name: Literal[TrajectoryType.FIXED] = TrajectoryType.FIXED
+    attrs: FixedTrajectory.Attrs
 
     class Attrs(CdmObject):
         x: float
@@ -53,7 +54,7 @@ class FixedTrajectoryConfig(CdmObject):
 
 
 Trajectory = Annotated[
-    Union[MosaicTrajectory, TableTrajectory, FixedTrajectoryConfig],
+    Union[MosaicTrajectory, TableTrajectory, FixedTrajectory],
     Discriminator("name"),
 ]
 
