@@ -16,21 +16,11 @@ class TrajectoryType(str, Enum):
     """
 
     FIXED = "fixed"
-    MOSAIC = "mosaic"
     SPIRAL = "spiral"
     RASTER = "raster"
     CONSTANT_VELOCITY = "constant-velocity"
     TABLE = "table"
     HYPOTROCHOID = "hypotrochoid"
-
-
-class MosaicTrajectory(CdmObject):
-    name: Literal[TrajectoryType.MOSAIC] = TrajectoryType.MOSAIC
-    attrs: MosaicTrajectory.Attrs
-
-    class Attrs(CdmObject):
-        x_offsets: list[float]
-        y_offsets: list[float]
 
 
 class TableTrajectory(CdmObject):
@@ -53,7 +43,7 @@ class FixedTrajectory(CdmObject):
 
 
 Trajectory = Annotated[
-    Union[MosaicTrajectory, TableTrajectory, FixedTrajectory],
+    Union[TableTrajectory, FixedTrajectory],
     Discriminator("name"),
 ]
 

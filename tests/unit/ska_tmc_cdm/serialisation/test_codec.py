@@ -39,8 +39,10 @@ from tests.unit.ska_tmc_cdm.serialisation.central_node.test_release_resources im
     VALID_MID_FULL_RELEASE_OBJECT,
 )
 from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
-    CONFIGURE_MID_HOLOGRAPHY,
-    CONFIGURE_MID_HOLOGRAPHY_JSON,
+    CONFIGURE_MID_HOLOGRAPHY_DELTA,
+    CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON,
+    CONFIGURE_MID_HOLOGRAPHY_INITIAL,
+    CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON,
     INVALID_LOW_CONFIGURE_JSON,
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
@@ -55,6 +57,11 @@ from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
 )
 from tests.utils import assert_json_is_equal
 
+# items are:
+# - class being serialised/deserialised
+# - expected JSON for instance
+# - equivalent instance for expected JSON
+# - 'is_validate' parameter
 TEST_PARAMETERS = [
     (
         AssignResourcesRequest,
@@ -118,8 +125,14 @@ TEST_PARAMETERS = [
     ),
     (
         ConfigureRequest,
-        json.dumps(CONFIGURE_MID_HOLOGRAPHY_JSON),
-        CONFIGURE_MID_HOLOGRAPHY,
+        json.dumps(CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON),
+        CONFIGURE_MID_HOLOGRAPHY_INITIAL,
+        True,
+    ),
+    (
+        ConfigureRequest,
+        json.dumps(CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON),
+        CONFIGURE_MID_HOLOGRAPHY_DELTA,
         True,
     ),
 ]

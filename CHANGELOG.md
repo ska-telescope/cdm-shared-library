@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Bug fix: aligned Projection defaults with revised ADR-106
 * Bug fix: makes 'field' and 'receptors' optional in a receptor group, to align with revised ADR-106 and OSO/TMC
   agreement.
+* Bug fix: removes MosaicTrajectory, reflecting removal of mosaic trajectory in ADR-106
 
 
 ## 12.6.0

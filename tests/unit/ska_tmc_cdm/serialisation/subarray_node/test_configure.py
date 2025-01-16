@@ -56,9 +56,11 @@ from ska_tmc_cdm.messages.subarray_node.configure.pst import (
     PSTScanCoordinates,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.receptorgroup import (
-    MosaicTrajectory,
+    FixedTrajectory,
+    Projection,
+    ProjectionAlignment,
+    ProjectionType,
     ReceptorGroup,
-    TrajectoryType,
 )
 from ska_tmc_cdm.messages.subarray_node.configure.sdp import SDPConfiguration
 from ska_tmc_cdm.messages.subarray_node.configure.tmc import TMCConfiguration
@@ -387,50 +389,41 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 }
 """
 
-HOLOGRAPHY_POINTING = PointingConfiguration(
+HOLOGRAPHY_POINTING_INITIAL = PointingConfiguration(
     groups=[
         ReceptorGroup(
-            receptors=["SKA001", "SKA002"],
             field=ICRSField(
                 target_name="Cen-A",
                 attrs=ICRSField.Attrs(c1=201.365, c2=-43.0191667),
             ),
-            trajectory=MosaicTrajectory(
-                name=TrajectoryType.MOSAIC,
-                attrs={
-                    "x_offsets": [
-                        -5.0,
-                        0.0,
-                        5.0,
-                        -5.0,
-                        0.0,
-                        5.0,
-                        -5.0,
-                        0.0,
-                        5.0,
-                    ],
-                    "y_offsets": [
-                        5.0,
-                        5.0,
-                        5.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        -5.0,
-                        -5.0,
-                        -5.0,
-                    ],
-                },
+            trajectory=FixedTrajectory(
+                attrs=FixedTrajectory.Attrs(x=-5.0, y=5.0)
             ),
-            projection={"name": "SSN", "alignment": "ICRS"},
+            projection=Projection(
+                name=ProjectionType.SSN, alignment=ProjectionAlignment.ICRS
+            ),
         )
     ]
 )
 
-CONFIGURE_MID_HOLOGRAPHY = ConfigureRequest(
+HOLOGRAPHY_POINTING_DELTA = PointingConfiguration(
+    groups=[
+        ReceptorGroup(
+            trajectory=FixedTrajectory(
+                attrs=FixedTrajectory.Attrs(x=-5.0, y=5.0)
+            ),
+            projection=Projection(
+                name=ProjectionType.SSN, alignment=ProjectionAlignment.ICRS
+            ),
+        )
+    ]
+)
+
+
+CONFIGURE_MID_HOLOGRAPHY_INITIAL = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/4.1",
     transaction_id="txn-....-00001",
-    pointing=HOLOGRAPHY_POINTING,
+    pointing=HOLOGRAPHY_POINTING_INITIAL,
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
     sdp=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-configure/0.4",
@@ -473,13 +466,24 @@ CONFIGURE_MID_HOLOGRAPHY = ConfigureRequest(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
-CONFIGURE_MID_HOLOGRAPHY_JSON = {
+
+CONFIGURE_MID_HOLOGRAPHY_DELTA = ConfigureRequest(
+    interface="https://schema.skao.int/ska-tmc-configure/4.1",
+    transaction_id="txn-....-00001",
+    pointing=HOLOGRAPHY_POINTING_DELTA,
+    tmc=TMCConfiguration(
+        scan_duration=timedelta(seconds=10),
+        partial_configuration=True,
+    ),
+)
+
+
+CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON = {
     "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
     "transaction_id": "txn-....-00001",
     "pointing": {
         "groups": [
             {
-                "receptors": ["SKA001", "SKA002"],
                 "field": {
                     "target_name": "Cen-A",
                     "reference_frame": "icrs",
@@ -489,31 +493,8 @@ CONFIGURE_MID_HOLOGRAPHY_JSON = {
                     },
                 },
                 "trajectory": {
-                    "name": "mosaic",
-                    "attrs": {
-                        "x_offsets": [
-                            -5.0,
-                            0.0,
-                            5.0,
-                            -5.0,
-                            0.0,
-                            5.0,
-                            -5.0,
-                            0.0,
-                            5.0,
-                        ],
-                        "y_offsets": [
-                            5.0,
-                            5.0,
-                            5.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            -5.0,
-                            -5.0,
-                            -5.0,
-                        ],
-                    },
+                    "name": "fixed",
+                    "attrs": {"x": -5.0, "y": 5.0},
                 },
                 "projection": {"name": "SSN", "alignment": "ICRS"},
             }
@@ -560,6 +541,25 @@ CONFIGURE_MID_HOLOGRAPHY_JSON = {
     },
     "tmc": {"scan_duration": 10.0},
 }
+
+
+CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON = {
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
+    "transaction_id": "txn-....-00001",
+    "pointing": {
+        "groups": [
+            {
+                "trajectory": {
+                    "name": "fixed",
+                    "attrs": {"x": -5.0, "y": 5.0},
+                },
+                "projection": {"name": "SSN", "alignment": "ICRS"},
+            }
+        ]
+    },
+    "tmc": {"scan_duration": 10.0, "partial_configuration": True},
+}
+
 
 VALID_LOW_CONFIGURE_JSON = """
 {
@@ -1872,9 +1872,17 @@ def partial_invalidator(o: ConfigureRequest):
         ),
         (
             ConfigureRequest,
-            CONFIGURE_MID_HOLOGRAPHY,
+            CONFIGURE_MID_HOLOGRAPHY_INITIAL,
             None,  # no validation on MID
-            json.dumps(CONFIGURE_MID_HOLOGRAPHY_JSON),
+            json.dumps(CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON),
+            None,
+            True,
+        ),
+        (
+            ConfigureRequest,
+            CONFIGURE_MID_HOLOGRAPHY_DELTA,
+            None,  # no validation on MID
+            json.dumps(CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON),
             None,
             True,
         ),
