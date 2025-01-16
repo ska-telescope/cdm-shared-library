@@ -78,11 +78,11 @@ class ProjectionAlignment(str, Enum):
 
 class Projection(CdmObject):
     """
-    Projection Config
+    Projection defines the projection for trajectory offsets.
     """
 
-    name: ProjectionType = ProjectionType.SIN
-    alignment: ProjectionAlignment = ProjectionAlignment.ICRS
+    name: Optional[ProjectionType] = ProjectionType.SSN
+    alignment: Optional[ProjectionAlignment] = ProjectionAlignment.ICRS
 
 
 class ReceptorGroup(CdmObject):
