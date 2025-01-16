@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 * Bug fix: updated `FixedTrajectory` object to have `attrs` kwarg and removed 't' list of timestamps
+* Bug fix: TableTrajectory x and y attribute made lists of floats to match ADR-106
 
 ## 12.6.0
 * Updated to astropy v6.1, pydantic v2.10.3, deepdiff v7.0 and ska-ost-osd v 2.3.1

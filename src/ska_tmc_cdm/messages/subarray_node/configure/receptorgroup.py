@@ -38,9 +38,9 @@ class TableTrajectory(CdmObject):
     attrs: TableTrajectory.Attrs
 
     class Attrs(CdmObject):
-        x: float
-        y: float
-        t: list[float] = Field(default_factory=list)
+        x: list[float]
+        y: list[float]
+        t: list[float]
 
 
 class FixedTrajectory(CdmObject):
