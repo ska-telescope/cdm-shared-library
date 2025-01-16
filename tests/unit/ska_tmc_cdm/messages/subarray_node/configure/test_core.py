@@ -159,6 +159,14 @@ TARGET_VALIDATION_CASES = (
         expected_error=None,
     ),
     ValidationCase(
+        args={"ra": 0, "dec": 0},
+        expected_error=None,
+    ),
+    ValidationCase(
+        args={"ra": 0, "dec": 10},
+        expected_error=None,
+    ),
+    ValidationCase(
         args={
             "ra": None,
             "dec": None,
@@ -169,6 +177,10 @@ TARGET_VALIDATION_CASES = (
     ),
     ValidationCase(
         args={"ra": 5, "dec": None},
+        expected_error=ValueError,
+    ),
+    ValidationCase(
+        args={"ra": None, "dec": 0},
         expected_error=ValueError,
     ),
 )
