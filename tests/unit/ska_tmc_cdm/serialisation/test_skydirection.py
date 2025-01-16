@@ -56,22 +56,24 @@ class TestICRSField:
     }
     """
 
+    FULL_INSTANCE = ICRSField(
+        target_name="foo",
+        attrs=ICRSField.Attrs(
+            c1=1.23,
+            c2=-4.56,
+            pm_c1=1.0,
+            pm_c2=2.0,
+            epoch=2000.0,
+            parallax=3.0,
+            radial_velocity=4.0,
+        ),
+    )
+
     def test_full_instance_round_trip(self):
         """
         Test serialisation and deserialisation of a fully-defined ICRSField.
         """
-        instance = ICRSField(
-            target_name="foo",
-            attrs=ICRSField.Attrs(
-                c1=1.23,
-                c2=-4.56,
-                pm_c1=1.0,
-                pm_c2=2.0,
-                epoch=2000.0,
-                parallax=3.0,
-                radial_velocity=4.0,
-            ),
-        )
+        instance = TestICRSField.FULL_INSTANCE
         assert_json_is_equal(TestICRSField.FULL_JSON, CODEC.dumps(instance))
         assert instance == CODEC.loads(ICRSField, TestICRSField.FULL_JSON)
 

@@ -90,7 +90,7 @@ class ReceptorGroup(CdmObject):
     Receptor Group defines a set of receptors plus the sky direction and
     tracking/mapping strategy for target tracking."""
 
-    receptors: set[str] = Field(default_factory=set)
-    field: SkyDirection
+    receptors: Optional[set[str]] = Field(default_factory=set)
+    field: Optional[SkyDirection] = None
     trajectory: Optional[Trajectory] = None
     projection: Optional[Projection] = None
