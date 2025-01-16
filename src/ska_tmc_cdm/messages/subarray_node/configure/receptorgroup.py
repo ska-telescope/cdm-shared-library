@@ -50,7 +50,6 @@ class FixedTrajectory(CdmObject):
     class Attrs(CdmObject):
         x: float
         y: float
-        t: list[float] = Field(default_factory=list)
 
 
 Trajectory = Annotated[
