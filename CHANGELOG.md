@@ -6,6 +6,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## Unreleased
+* Bug fix: updated `FixedTrajectory` object to have `attrs` kwarg and removed 't' list of timestamps
+* Bug fix: TableTrajectory x and y attributes made lists of floats to match revised ADR-106
+* Bug fix: aligned Projection defaults with revised ADR-106
+* Bug fix: makes 'field' and 'receptors' optional in a receptor group, to align with revised ADR-106 and OSO/TMC
+  agreement.
+* Bug fix: removes MosaicTrajectory, reflecting removal of mosaic trajectory in ADR-106
+
+
+## 12.6.0
 * Updated to astropy v6.1, pydantic v2.10.3, deepdiff v7.0 and ska-ost-osd v 2.3.1
 
 ## 12.5.1

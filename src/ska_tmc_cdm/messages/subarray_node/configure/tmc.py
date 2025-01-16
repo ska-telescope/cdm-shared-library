@@ -36,9 +36,7 @@ class TMCConfiguration(CdmObject):
         return output
 
     @model_validator(mode="after")
-    def partial_configuration_xor_scan_duration(self) -> Self:
-        if self.scan_duration is not None:
-            assert self.partial_configuration is False
+    def scan_duration_is_mandatory_if_full_configuration(self) -> Self:
         if self.partial_configuration is False:
             assert self.scan_duration is not None
         return self
