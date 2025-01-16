@@ -145,10 +145,10 @@ represent is given is:
           },
         },
         "trajectory": {
-          "name": "mosaic",
+          "name": "fixed",
           "attrs": {
-            "x_offsets": [-5.0, 0.0, 5.0],
-            "y_offsets": [5.0, 0.0, -5.0]
+            "x": -5.0,
+            "y": 5.0
           },
         },
         "projection": {"name": "SSN", "alignment": "ICRS"},

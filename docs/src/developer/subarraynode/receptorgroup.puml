@@ -18,7 +18,6 @@ package "ska_tmc_cdm.messages" as base {
 
       enum TrajectoryType {
         FIXED
-        MOSAIC
         SPIRAL
         RASTER
         CONSTANT_VELOCITY
@@ -26,21 +25,13 @@ package "ska_tmc_cdm.messages" as base {
         HYPOTROCHOID
       }
 
-      class MosaicTrajectory {
-        name = TrajectoryType.MOSAIC
-      }
-      class "Attrs" as MosaicAttrs {
-        x_offsets: list[float]
-        y_offsets: list[float]
-      }
-      MosaicTrajectory +-- "attrs" MosaicAttrs
 
       class TableTrajectory {
         name = TrajectoryType.TABLE
       }
       class "Attrs" as TableTrajectoryAttrs {
-        x: float
-        y: float
+        x: list[float]
+        y: list[float]
         t: list[float]
       }
       TableTrajectory +-- "attrs" TableTrajectoryAttrs
@@ -51,7 +42,6 @@ package "ska_tmc_cdm.messages" as base {
       class "Attrs" as FixedTrajectoryAttrs {
         x: float
         y: float
-        t: list[float]
       }
       FixedTrajectory +-- "attrs" FixedTrajectoryAttrs
 
@@ -59,7 +49,6 @@ package "ska_tmc_cdm.messages" as base {
       abstract class Trajectory {
         {abstract} name: TrajectoryType
       }
-      Trajectory <|--- MosaicTrajectory
       Trajectory <|--- TableTrajectory
       Trajectory <|--- FixedTrajectory
 
