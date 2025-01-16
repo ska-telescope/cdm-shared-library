@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## 12.6.2
+* Bug fix: updated documentation
+
 ## 12.6.1
 * Bug fix: updated `FixedTrajectory` object to have `attrs` kwarg and removed 't' list of timestamps
 * Bug fix: TableTrajectory x and y attributes made lists of floats to match revised ADR-106
