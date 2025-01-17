@@ -114,7 +114,7 @@ class _TargetBase(CdmObject):
 
     @property
     def coord(self) -> Optional[SkyCoord]:
-        if self.ra and self.dec:
+        if self.ra is not None and self.dec is not None:
             return SkyCoord(
                 ra=self.ra,
                 dec=self.dec,

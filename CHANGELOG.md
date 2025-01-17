@@ -4,6 +4,8 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+* Big fix: Updated `configure.subarray_node.core._TargetBase` to allow ra/dec to be 0.
 
 ## 12.6.2
 * Bug fix: updated documentation
@@ -33,7 +35,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   a `messages.skydirection.SkyDirection` union. The `SkyDirection` union should be used whenever an SKA-standard target
   coordinate is required.
 * `ReceptorGroup.field` now uses an ADR-63 `SkyDirection`.
-* **DEPRECATED** `pointing.target` now deprecated and will be removed in a future release. Developers should start 
+* **DEPRECATED** `pointing.target` now deprecated and will be removed in a future release. Developers should start
     populating `ReceptorGroup` and `ReceptorGroup.field` objects. `pointing.Target` should continue to be populated
     where the reference frame and observation type allows, i.e., a simple point-and-stare at an ICRS coordinate.
 * PST beams now have an optional `SkyDirection` at `csp.BeamsConfiguration.field`.
@@ -59,11 +61,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   - Updated MidCBFConfiguration default None for frequency_band_offset_stream1, frequency_band_offset_stream2 and correlation.
 
 ## 12.3.0
-* Data Model changes to support Holography as per ADR-106 
+* Data Model changes to support Holography as per ADR-106
   - Configure schema updated for Holography as per ADR-106
   - Groups key added in pointing configuration
-  - In this release validation added only for mosaic, table, fixed pattern 
-  - Adds HolographyReceptorGroupConfig , TrajectoryConfig and ProjectionConfig to subarray_node/configuration 
+  - In this release validation added only for mosaic, table, fixed pattern
+  - Adds HolographyReceptorGroupConfig , TrajectoryConfig and ProjectionConfig to subarray_node/configuration
   - Adds MosaicTrajectoryConfig, TableTrajectoryConfig, FixedTrajectoryConfig to support for Table, Mosaic and Fixed pattern
 
 ## 12.2.0
