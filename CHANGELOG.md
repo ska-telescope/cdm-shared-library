@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
-* Big fix: Updated `configure.subarray_node.core._TargetBase` to allow ra/dec to be 0.
+
+## 12.6.3
+* Bug fix: Updated `configure.subarray_node.core._TargetBase` to allow ra/dec to be 0.
 
 ## 12.6.2
 * Bug fix: updated documentation
