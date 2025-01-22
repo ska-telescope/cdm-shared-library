@@ -81,13 +81,13 @@ class TestTableTrajectory:
 class TestProjection:
     FULL_JSON = """
     {
-        "name": "SSN",
+        "name": "SIN",
         "alignment": "ICRS"
     }
     """
 
     full_instance = partial(
-        Projection, name=ProjectionType.SSN, alignment=ProjectionAlignment.ICRS
+        Projection, name=ProjectionType.SIN, alignment=ProjectionAlignment.ICRS
     )
 
     def test_round_trip(self):
