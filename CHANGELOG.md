@@ -4,7 +4,7 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## 12.6.4
 * Bug fix: Updated default schema for Mid TMC Configure from `4.0` to `4.1`
 * Bug fix: Updated default projection for trajectory offsets to `SIN`
 
