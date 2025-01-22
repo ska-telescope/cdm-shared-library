@@ -71,7 +71,7 @@ class Projection(CdmObject):
     Projection defines the projection for trajectory offsets.
     """
 
-    name: Optional[ProjectionType] = ProjectionType.SSN
+    name: Optional[ProjectionType] = ProjectionType.SIN
     alignment: Optional[ProjectionAlignment] = ProjectionAlignment.ICRS
 
 
