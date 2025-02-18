@@ -1054,13 +1054,13 @@ reference = "ska-nexus"
 
 [[package]]
 name = "ska-telmodel"
-version = "1.20.0"
+version = "1.19.8"
 description = ""
 optional = false
 python-versions = "*"
 files = [
-    {file = "ska_telmodel-1.20.0-py3-none-any.whl", hash = "sha256:cc4894c720d9fd2cb653a584055b5f77d5ef315db496bac0228ac88f9158d63e"},
-    {file = "ska_telmodel-1.20.0.tar.gz", hash = "sha256:9001260c518d2bca802dcea1b1ae242cc169d51e6cf15a5e39e83b1d536bab63"},
+    {file = "ska_telmodel-1.19.8-py3-none-any.whl", hash = "sha256:9a973fe16b540c384cf339a0dd25f8ab47056e197989d85c031dd5d71fdc79f1"},
+    {file = "ska_telmodel-1.19.8.tar.gz", hash = "sha256:057750e10cbbd4747edc045feb581309c4fb6c90ed825f5fda161a2a4611cc80"},
 ]
 
 [package.source]
@@ -1324,4 +1324,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "e8ea66fe20238823f81c914fbe75b9d35482ca0a9864525892ab03804b8eefac"
+content-hash = "481eae8dca5cd2fea707f956165dd8e2d6bb9f01d095d7af0f186970800e8dc4"

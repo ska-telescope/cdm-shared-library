@@ -39,8 +39,8 @@ priority = 'explicit'
 [tool.poetry.dependencies]
 python = "^3.10"
 annotated-types = "^0.6.0"
-ska-ost-osd = "^3.0.0"
-ska-telmodel = "^1.19.5"
+ska-ost-osd = "3.0.0"
+ska-telmodel = "1.19.8"
 pydantic = "^2.10.3"
 
 [tool.poetry.group.dev.dependencies]
