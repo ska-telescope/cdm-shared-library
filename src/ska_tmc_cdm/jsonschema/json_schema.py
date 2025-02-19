@@ -67,6 +67,7 @@ class JsonSchema:
             extra_kwargs["strictness"] = strictness
 
         try:
+            extra_kwargs["strictness"] = 2
             return schema.validate(uri, instance, **extra_kwargs)
         except ValueError as exc:
             # Distinguish ValueErrors caused by schema not found from
