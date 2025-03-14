@@ -40,7 +40,7 @@ priority = 'explicit'
 python = "^3.10"
 annotated-types = "^0.6.0"
 ska-ost-osd = "^2.3.1"
-ska-telmodel = "^1.19.5"
+ska-telmodel = {version="1.20.0+dev.cea8764fa", source="ska-telmodel-gitlab"}
 pydantic = "^2.10.3"
 
 [tool.poetry.group.dev.dependencies]
