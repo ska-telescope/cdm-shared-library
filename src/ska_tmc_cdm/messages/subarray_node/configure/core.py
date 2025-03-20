@@ -301,6 +301,12 @@ class PointingConfiguration(CdmObject):
     )
     correction: Optional[PointingCorrection] = None
     groups: Optional[list[ReceptorGroup]] = None
+    wrap_sector: Optional[int] = Field(
+        None,
+        ge=-1,
+        le=0,
+        description="Indicates which sector the dishes should rotate to before starting the scan, while omission or None is interpreted as 'no change'.",
+    )
 
 
 class ReceiverBand(Enum):

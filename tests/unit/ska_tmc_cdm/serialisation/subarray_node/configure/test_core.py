@@ -2,9 +2,11 @@
 Unit tests for the ska_tmc_cdm.subarray_node.configure.common module.
 """
 import json
-from typing import NamedTuple
+from contextlib import nullcontext as does_not_raise
+from typing import NamedTuple, Optional
 
 import pytest
+from pydantic import ValidationError
 
 from ska_tmc_cdm import CODEC
 from ska_tmc_cdm.messages.subarray_node.configure.core import (
@@ -19,7 +21,7 @@ from ska_tmc_cdm.messages.subarray_node.configure.core import (
 from tests.utils import assert_json_is_equal
 
 
-class Case(NamedTuple):
+class TargetCase(NamedTuple):
     target: TargetUnion
     json: str
 
@@ -31,7 +33,6 @@ VALID_TARGET_JSON = {
     "target_name": "NGC123",
 }
 
-
 OFFSET_TARGET_JSON = {
     "ra": "12:34:56.78",
     "dec": "+12:34:56.78",
@@ -41,17 +42,16 @@ OFFSET_TARGET_JSON = {
     "ie_offset_arcsec": -25.0,
 }
 
-
 NON_SIDEREAL_TARGET_JSON = {"target_name": "Sun", "reference_frame": "special"}
 
 VALID_DISH_CONFIGURATION_JSON = '{"receiver_band": "5a"}'
 
 TARGET_PAIRS = (
-    Case(
+    TargetCase(
         Target(ra="12h34m56.78s", dec="+12d34m56.78s", target_name="NGC123"),
         VALID_TARGET_JSON,
     ),
-    Case(
+    TargetCase(
         Target(
             ra="12h34m56.78s",
             dec="+12d34m56.78s",
@@ -61,7 +61,7 @@ TARGET_PAIRS = (
         ),
         VALID_TARGET_JSON,
     ),
-    Case(
+    TargetCase(
         Target(
             ra="12h34m56.78s",
             dec="+12d34m56.78s",
@@ -71,11 +71,16 @@ TARGET_PAIRS = (
         ),
         OFFSET_TARGET_JSON,
     ),
-    Case(
+    TargetCase(
         SpecialTarget(target_name=SolarSystemObject.SUN),
         NON_SIDEREAL_TARGET_JSON,
     ),
 )
+
+
+class WrapSectorCase(NamedTuple):
+    wrap_sector: Optional[int]
+    json: str
 
 
 @pytest.mark.parametrize("target,expected", TARGET_PAIRS)
@@ -136,3 +141,41 @@ def test_marshall_dish_configuration_does_not_modify_original():
     original_config = config.model_copy(deep=True)
     CODEC.dumps(config)
     assert config == original_config
+
+
+@pytest.mark.parametrize(
+    "value,expectation",
+    [
+        pytest.param(
+            -1,
+            does_not_raise(),
+            id="wrap_sector equals lower limit",
+        ),
+        pytest.param(
+            0,
+            does_not_raise(),
+            id="wrap_sector equals upper limit",
+        ),
+        pytest.param(
+            -2,
+            pytest.raises(ValidationError),
+            id="wrap_sector less than lower limit",
+        ),
+        pytest.param(
+            1,
+            pytest.raises(ValidationError),
+            id="wrap_sector exceeds upper limit",
+        ),
+    ],
+)
+def test_wrap_sector_limits(value, expectation):
+    """
+    Verify it's not possible to set the wrap_sector attribute to a value other than 0 and -1
+    """
+
+    with expectation:
+        PointingConfiguration(wrap_sector=value)
+
+    as_json = f'{{"wrap_sector": {value}}}'
+    with expectation:
+        PointingConfiguration.model_validate_json(as_json)
