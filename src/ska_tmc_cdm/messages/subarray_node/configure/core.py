@@ -16,6 +16,7 @@ from pydantic import (
     BeforeValidator,
     ConfigDict,
     Field,
+    conint,
     model_serializer,
     model_validator,
 )
@@ -301,6 +302,7 @@ class PointingConfiguration(CdmObject):
     )
     correction: Optional[PointingCorrection] = None
     groups: Optional[list[ReceptorGroup]] = None
+    wrap_sector: Optional[Annotated[int, conint(le=0, ge=-1)]] = None
 
 
 class ReceiverBand(Enum):

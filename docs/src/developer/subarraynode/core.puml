@@ -64,6 +64,7 @@ package "ska_tmc_cdm.messages.subarray_node.configure" as base {
 
 		class PointingConfiguration {
 			correction: Optional[PointingCorrection]
+			wrap_sector: Optional[int]
 		}
 		PointingConfiguration *-- "0..1" TargetUnion
 		PointingConfiguration *- "0..*" ReceptorGroup
