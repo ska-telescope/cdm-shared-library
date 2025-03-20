@@ -421,7 +421,7 @@ HOLOGRAPHY_POINTING_DELTA = PointingConfiguration(
 
 
 CONFIGURE_MID_HOLOGRAPHY_INITIAL = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/4.1",
+    interface="https://schema.skao.int/ska-tmc-configure/4.2",
     transaction_id="txn-....-00001",
     pointing=HOLOGRAPHY_POINTING_INITIAL,
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
@@ -468,7 +468,7 @@ CONFIGURE_MID_HOLOGRAPHY_INITIAL = ConfigureRequest(
 
 
 CONFIGURE_MID_HOLOGRAPHY_DELTA = ConfigureRequest(
-    interface="https://schema.skao.int/ska-tmc-configure/4.1",
+    interface="https://schema.skao.int/ska-tmc-configure/4.2",
     transaction_id="txn-....-00001",
     pointing=HOLOGRAPHY_POINTING_DELTA,
     tmc=TMCConfiguration(
@@ -479,7 +479,7 @@ CONFIGURE_MID_HOLOGRAPHY_DELTA = ConfigureRequest(
 
 
 CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON = {
-    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.2",
     "transaction_id": "txn-....-00001",
     "pointing": {
         "groups": [
@@ -544,7 +544,7 @@ CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON = {
 
 
 CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON = {
-    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.2",
     "transaction_id": "txn-....-00001",
     "pointing": {
         "groups": [
