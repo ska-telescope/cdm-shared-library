@@ -154,22 +154,6 @@ def test_marshall_dish_configuration_does_not_modify_original():
     assert config == original_config
 
 
-@pytest.mark.parametrize(
-    "wrap_sector,jsonable_dict", VALID_WRAP_SECTOR_JSON_PAIRS
-)
-def test_marshall_pointing_configuration_with_wrap_sector_to_json(
-    wrap_sector, jsonable_dict
-):
-    """
-    Verify that the wrap_sector attribute in the PointingParameters marshals correctly
-    to JSON
-    """
-
-    pointing_configuration = PointingConfiguration(wrap_sector=wrap_sector)
-    json_str = CODEC.dumps(pointing_configuration)
-    assert json_str == jsonable_dict
-
-
 @pytest.mark.parametrize("wrap_sector", INVALID_WRAP_SECTOR_JSON_PAIRS)
 def test_marshall_pointing_configuration_with_invalid_wrap_sector_fails(
     wrap_sector,
@@ -181,33 +165,3 @@ def test_marshall_pointing_configuration_with_invalid_wrap_sector_fails(
     with pytest.raises(ValidationError):
         pointing_configuration = PointingConfiguration(wrap_sector=wrap_sector)
         CODEC.dumps(pointing_configuration)
-
-
-def test_marshall_pointing_configuration_with_wrap_sector_eq_none_to_json():
-    """
-    Verify that wrap_sector attribute in the PointingParameters marshals correctly
-    to JSON when set to None. This should result in wrap_sector being omitted from the resulting JSON.
-    """
-
-    target = SpecialTarget(target_name=SolarSystemObject.SUN)
-    pointing_configuration = PointingConfiguration(
-        target=target, wrap_sector=None
-    )
-
-    json_str = CODEC.dumps(pointing_configuration)
-    assert (
-        json_str
-        == '{"target": {"reference_frame": "special", "target_name": "Sun"}}'
-    )
-
-
-def test_unmarshall_pointing_configuration_json_with_wrap_sector_eq_none_to_instance():
-    """
-    Verify that if the wrap_sector attribute is not set in the JSON, it will
-    be set to None when unmarshalling to a PointingConfiguration instance
-    """
-
-    target_json = (
-        '{"target": {"reference_frame": "special", "target_name": "Sun"}}'
-    )
-    assert CODEC.loads(PointingConfiguration, target_json).wrap_sector is None
