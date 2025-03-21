@@ -2,6 +2,7 @@
 Unit tests for the ska_tmc_cdm.subarray_node.configure.common module.
 """
 import json
+from contextlib import nullcontext as does_not_raise
 from typing import NamedTuple, Optional
 
 import pytest
@@ -82,18 +83,6 @@ class WrapSectorCase(NamedTuple):
     json: str
 
 
-VALID_WRAP_SECTOR_JSON_PAIRS = (
-    WrapSectorCase(0, '{"wrap_sector": 0}'),
-    WrapSectorCase(-1, '{"wrap_sector": -1}'),
-    WrapSectorCase(None, "{}"),
-)
-
-INVALID_WRAP_SECTOR_JSON_PAIRS = (
-    WrapSectorCase(-2, '{"wrap_sector": -2}'),
-    WrapSectorCase(2, '{"wrap_sector": 2}'),
-)
-
-
 @pytest.mark.parametrize("target,expected", TARGET_PAIRS)
 def test_marshall_target_to_json(target, expected):
     """
@@ -154,14 +143,39 @@ def test_marshall_dish_configuration_does_not_modify_original():
     assert config == original_config
 
 
-@pytest.mark.parametrize("wrap_sector", INVALID_WRAP_SECTOR_JSON_PAIRS)
-def test_marshall_pointing_configuration_with_invalid_wrap_sector_fails(
-    wrap_sector,
-):
+@pytest.mark.parametrize(
+    "value,expectation",
+    [
+        pytest.param(
+            -1,
+            does_not_raise(),
+            id="wrap_sector equals lower limit",
+        ),
+        pytest.param(
+            0,
+            does_not_raise(),
+            id="wrap_sector equals upper limit",
+        ),
+        pytest.param(
+            -2,
+            pytest.raises(ValidationError),
+            id="wrap_sector less than lower limit",
+        ),
+        pytest.param(
+            1,
+            pytest.raises(ValidationError),
+            id="wrap_sector exceeds upper limit",
+        ),
+    ],
+)
+def test_wrap_sector_limits(value, expectation):
     """
     Verify it's not possible to set the wrap_sector attribute to a value other than 0 and -1
     """
 
-    with pytest.raises(ValidationError):
-        pointing_configuration = PointingConfiguration(wrap_sector=wrap_sector)
-        CODEC.dumps(pointing_configuration)
+    with expectation:
+        PointingConfiguration(wrap_sector=value)
+
+    as_json = f'{{"wrap_sector": {value}}}'
+    with expectation:
+        PointingConfiguration.model_validate_json(as_json)
