@@ -478,6 +478,7 @@ Example configuration JSON for MID
     "interface": "https://schema.skao.int/ska-tmc-configure/4.2",
     "transaction_id": "txn-....-00001",
     "pointing": {
+      "wrap_sector": -1,
       "groups": [
         {
           "field": {
