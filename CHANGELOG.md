@@ -4,6 +4,12 @@ Change Log
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## 12.6.6
+* Updated default schema for TMC-Mid Configure from v4.1 to v4.2
+* Introduced wrap_sector attribute to PointingConfiguration class
+* Updated Pydantic to 2.10.6
+
 ## 12.6.5
 * removed explicity dependency on annotated-types
 

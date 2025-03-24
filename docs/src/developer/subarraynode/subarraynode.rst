@@ -53,7 +53,7 @@ container object, while the sub-modules define the details.
 
   # JSON modelled specifically by __init__.py
   {
-    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.2",
     "transaction_id": "txn-....-00001",
     "pointing": {
         ... # see core.py
@@ -475,9 +475,10 @@ Example configuration JSON for MID
 .. code-block:: JSON
 
   {
-    "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
+    "interface": "https://schema.skao.int/ska-tmc-configure/4.2",
     "transaction_id": "txn-....-00001",
     "pointing": {
+      "wrap_sector": -1,
       "groups": [
         {
           "field": {

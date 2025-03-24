@@ -43,5 +43,15 @@ diagrams:  ## recreate PlantUML diagrams whose source has been modified
 	@for i in $$(git diff --name-only -- '*.puml'); \
 	do \
 		echo "Recreating $${i%%.*}.png"; \
-		cat $$i | docker run --rm -i think/plantuml -tpng $$i > $${i%%.*}.png; \
+		cat $$i | $(OCI_BUILDER) run --rm -i think/plantuml -tpng $$i > $${i%%.*}.png; \
+	done
+
+PUML_FILES := $(shell find . -type f -name '*.puml')
+diagrams-all:  ## recreate all PlantUML diagrams, regardless of whether they have been modified
+	@for file in $(PUML_FILES); \
+	do \
+		if [ -e "$$file" ]; then \
+			echo "Processing $$file"; \
+			cat $$file | $(OCI_BUILDER) run --rm -i think/plantuml -tpng $$file > $${file%.puml}.png; \
+		fi; \
 	done

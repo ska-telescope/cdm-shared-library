@@ -1,6 +1,7 @@
 """
 Unit tests for the ska_tmc_cdm.schemas.subarray_node.configure module.
 """
+import copy
 import json
 from datetime import timedelta
 
@@ -389,7 +390,7 @@ NON_COMPLIANCE_MID_CONFIGURE_JSON = """
 }
 """
 
-HOLOGRAPHY_POINTING_INITIAL = PointingConfiguration(
+FIXED_OFFSET_POINTING_FULL = PointingConfiguration(
     groups=[
         ReceptorGroup(
             field=ICRSField(
@@ -406,7 +407,7 @@ HOLOGRAPHY_POINTING_INITIAL = PointingConfiguration(
     ]
 )
 
-HOLOGRAPHY_POINTING_DELTA = PointingConfiguration(
+FIXED_OFFSET_POINTING_DELTA = PointingConfiguration(
     groups=[
         ReceptorGroup(
             trajectory=FixedTrajectory(
@@ -420,10 +421,10 @@ HOLOGRAPHY_POINTING_DELTA = PointingConfiguration(
 )
 
 
-CONFIGURE_MID_HOLOGRAPHY_INITIAL = ConfigureRequest(
+VALID_MID_CONFIGURE_OBJECT_4_1 = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/4.1",
     transaction_id="txn-....-00001",
-    pointing=HOLOGRAPHY_POINTING_INITIAL,
+    pointing=FIXED_OFFSET_POINTING_FULL,
     dish=DishConfiguration(receiver_band=ReceiverBand.BAND_1),
     sdp=SDPConfiguration(
         interface="https://schema.skao.int/ska-sdp-configure/0.4",
@@ -467,10 +468,10 @@ CONFIGURE_MID_HOLOGRAPHY_INITIAL = ConfigureRequest(
 )
 
 
-CONFIGURE_MID_HOLOGRAPHY_DELTA = ConfigureRequest(
+VALID_MID_CONFIGURE_DELTA_OBJECT_4_1 = ConfigureRequest(
     interface="https://schema.skao.int/ska-tmc-configure/4.1",
     transaction_id="txn-....-00001",
-    pointing=HOLOGRAPHY_POINTING_DELTA,
+    pointing=FIXED_OFFSET_POINTING_DELTA,
     tmc=TMCConfiguration(
         scan_duration=timedelta(seconds=10),
         partial_configuration=True,
@@ -478,7 +479,7 @@ CONFIGURE_MID_HOLOGRAPHY_DELTA = ConfigureRequest(
 )
 
 
-CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON = {
+VALID_MID_CONFIGURE_JSON_4_1 = {
     "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
     "transaction_id": "txn-....-00001",
     "pointing": {
@@ -543,7 +544,7 @@ CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON = {
 }
 
 
-CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON = {
+VALID_MID_CONFIGURE_DELTA_JSON_4_1 = {
     "interface": "https://schema.skao.int/ska-tmc-configure/4.1",
     "transaction_id": "txn-....-00001",
     "pointing": {
@@ -1609,6 +1610,31 @@ VALID_MID_CONFIGURE_OBJECT_4_0 = ConfigureRequest(
     tmc=TMCConfiguration(scan_duration=timedelta(seconds=10)),
 )
 
+
+def _create_mid_configure_v4_2_example():
+    """
+    Create a valid JSON example for ska-tmc-configure v4.2
+
+    Changes introduced in v4.2 are:
+     - addition of pointing.wrap_sector
+    """
+    example = VALID_MID_CONFIGURE_OBJECT_4_1.model_copy(deep=True)
+    example.interface = "https://schema.skao.int/ska-tmc-configure/4.2"
+    example.pointing.wrap_sector = -1
+    return example
+
+
+VALID_MID_CONFIGURE_OBJECT_4_2 = _create_mid_configure_v4_2_example()
+
+VALID_MID_CONFIGURE_JSON_4_2 = _recursive_merge(
+    copy.deepcopy(VALID_MID_CONFIGURE_JSON_4_1),
+    {
+        "interface": "https://schema.skao.int/ska-tmc-configure/4.2",
+        "pointing": {"wrap_sector": -1},
+    },
+)
+
+
 INVALID_LOW_CONFIGURE_JSON = """
 {
   "interface": "https://schema.skao.int/ska-low-tmc-configure/3.2",
@@ -1872,17 +1898,25 @@ def partial_invalidator(o: ConfigureRequest):
         ),
         (
             ConfigureRequest,
-            CONFIGURE_MID_HOLOGRAPHY_INITIAL,
-            None,  # no validation on MID
-            json.dumps(CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON),
+            VALID_MID_CONFIGURE_OBJECT_4_1,
+            mid_invalidator,
+            json.dumps(VALID_MID_CONFIGURE_JSON_4_1),
             None,
             True,
         ),
         (
             ConfigureRequest,
-            CONFIGURE_MID_HOLOGRAPHY_DELTA,
-            None,  # no validation on MID
-            json.dumps(CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON),
+            VALID_MID_CONFIGURE_DELTA_OBJECT_4_1,
+            mid_invalidator,
+            json.dumps(VALID_MID_CONFIGURE_DELTA_JSON_4_1),
+            None,
+            True,
+        ),
+        (
+            ConfigureRequest,
+            VALID_MID_CONFIGURE_OBJECT_4_2,
+            mid_invalidator,
+            json.dumps(VALID_MID_CONFIGURE_JSON_4_2),
             None,
             True,
         ),

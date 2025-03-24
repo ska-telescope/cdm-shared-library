@@ -39,10 +39,6 @@ from tests.unit.ska_tmc_cdm.serialisation.central_node.test_release_resources im
     VALID_MID_FULL_RELEASE_OBJECT,
 )
 from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
-    CONFIGURE_MID_HOLOGRAPHY_DELTA,
-    CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON,
-    CONFIGURE_MID_HOLOGRAPHY_INITIAL,
-    CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON,
     INVALID_LOW_CONFIGURE_JSON,
     NON_COMPLIANCE_MID_CONFIGURE_JSON,
     VALID_LOW_CONFIGURE_JSON,
@@ -52,8 +48,14 @@ from tests.unit.ska_tmc_cdm.serialisation.subarray_node.test_configure import (
     VALID_LOW_CONFIGURE_OBJECT_3_1,
     VALID_LOW_CONFIGURE_OBJECT_4_0,
     VALID_LOW_CONFIGURE_OBJECT_4_1,
+    VALID_MID_CONFIGURE_DELTA_JSON_4_1,
+    VALID_MID_CONFIGURE_DELTA_OBJECT_4_1,
     VALID_MID_CONFIGURE_JSON_2_3,
+    VALID_MID_CONFIGURE_JSON_4_1,
+    VALID_MID_CONFIGURE_JSON_4_2,
     VALID_MID_CONFIGURE_OBJECT_2_3,
+    VALID_MID_CONFIGURE_OBJECT_4_1,
+    VALID_MID_CONFIGURE_OBJECT_4_2,
 )
 from tests.utils import assert_json_is_equal
 
@@ -125,14 +127,20 @@ TEST_PARAMETERS = [
     ),
     (
         ConfigureRequest,
-        json.dumps(CONFIGURE_MID_HOLOGRAPHY_INITIAL_JSON),
-        CONFIGURE_MID_HOLOGRAPHY_INITIAL,
+        json.dumps(VALID_MID_CONFIGURE_JSON_4_1),
+        VALID_MID_CONFIGURE_OBJECT_4_1,
         True,
     ),
     (
         ConfigureRequest,
-        json.dumps(CONFIGURE_MID_HOLOGRAPHY_DELTA_JSON),
-        CONFIGURE_MID_HOLOGRAPHY_DELTA,
+        json.dumps(VALID_MID_CONFIGURE_DELTA_JSON_4_1),
+        VALID_MID_CONFIGURE_DELTA_OBJECT_4_1,
+        True,
+    ),
+    (
+        ConfigureRequest,
+        json.dumps(VALID_MID_CONFIGURE_JSON_4_2),
+        VALID_MID_CONFIGURE_OBJECT_4_2,
         True,
     ),
 ]
