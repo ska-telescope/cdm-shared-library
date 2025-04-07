@@ -308,6 +308,9 @@ class PointingConfiguration(CdmObject):
         description="Indicates which sector the dishes should rotate to before starting the scan, while omission or None is interpreted as 'no change'.",
     )
 
+    ca_offset_arcsec: Optional[float] = None
+    ie_offset_arcsec: Optional[float] = None
+
 
 class ReceiverBand(Enum):
     """

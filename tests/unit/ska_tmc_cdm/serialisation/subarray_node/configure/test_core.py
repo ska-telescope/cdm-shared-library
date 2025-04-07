@@ -77,6 +77,19 @@ TARGET_PAIRS = (
     ),
 )
 
+IE_CA_OFFSET_POINTING_CONFIGURATION_JSON = {
+    "target": {
+        "reference_frame": "ICRS",
+        "target_name": "Polaris Australis",
+        "ra": "21:08:47.92",
+        "dec": "-88:57:22.9",
+        "ca_offset_arcsec": 5.0,
+        "ie_offset_arcsec": -5.0,
+    },
+    "ie_offset_arcsec": 5.0,
+    "ca_offset_arcsec": -5.0,
+}
+
 
 class WrapSectorCase(NamedTuple):
     wrap_sector: Optional[int]
@@ -179,3 +192,31 @@ def test_wrap_sector_limits(value, expectation):
     as_json = f'{{"wrap_sector": {value}}}'
     with expectation:
         PointingConfiguration.model_validate_json(as_json)
+
+
+def test_ca_and_ie_offset_in_pointing_configuration():
+    """
+    Verify we can marshall and unmarshall a PointingConfiguration with the expected new attributes
+    ie_offset_arcsec and ca_offset_arcsec present.
+    """
+
+    pointing_configuration = PointingConfiguration(
+        ie_offset_arcsec=5.0,
+        ca_offset_arcsec=10,
+        target=Target(
+            ra="12h08m47.92s",
+            dec="-88d57m22.9s",
+            target_name="Polaris Australis",
+            ie_offset_arcsec=-5.0,
+            ca_offset_arcsec=5.0,
+        ),
+    )
+
+    # Verify that we can marshall to JSON
+    CODEC.dumps(pointing_configuration)
+
+    # Verify we can unmarshall the JSON containing the new attributes to a pointing configuration
+    CODEC.loads(
+        PointingConfiguration,
+        json.dumps(IE_CA_OFFSET_POINTING_CONFIGURATION_JSON),
+    )

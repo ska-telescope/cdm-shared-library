@@ -103,7 +103,7 @@ are:
       },
       "correction": "UPDATE",
       "ca_offset_arcsec": 5.0,
-      "ia_offset_arcsec": 0.0,
+      "ie_offset_arcsec": 0.0,
       "groups": [
         ...  # see receptorgroup.py
       ]
@@ -479,6 +479,8 @@ Example configuration JSON for MID
     "transaction_id": "txn-....-00001",
     "pointing": {
       "wrap_sector": -1,
+      "ie_offset_arcsec": 3.0,
+      "ca_offset_arcsec": -3.0,
       "groups": [
         {
           "field": {
