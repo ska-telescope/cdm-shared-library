@@ -54,6 +54,7 @@ class CdmObject(BaseModel):
 
     def _get_field_info(self, key: str) -> Tuple[str, FieldInfo]:
         try:
+            # pylint: disable=unsubscriptable-object
             return key, self.model_fields[key]
         except KeyError:
             for name, info in self.model_fields.items():
